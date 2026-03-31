@@ -56,13 +56,11 @@ tables:
       - logement
       - ants_pre_demande_number
       - franceconnect_openid_sub
-      - pro_connect_idp_id
       - pro_connect_openid_sub
       - encrypted_password
       - confirmation_token
       - reset_password_token
       - invitation_token
-      - remember_created_at
       - rdv_invitation_token
     non_anonymized_column_names:
       - confirmed_at
@@ -84,6 +82,7 @@ tables:
       - notify_by_sms
       - logged_once_with_franceconnect
       - rdv_invitation_token_updated_at
+      - latest_login_at
 
   - table_name: agents
     anonymized_column_names:
@@ -94,7 +93,6 @@ tables:
       - encrypted_password
       - unconfirmed_email
       - uid
-      - external_id
       - calendar_uid
       - reset_password_token
       - confirmation_token
@@ -102,7 +100,6 @@ tables:
       - tokens
       - microsoft_graph_token
       - refresh_microsoft_graph_token
-      - remember_created_at
       - pro_connect_openid_sub
       - pro_connect_2fa_active
       - pro_connect_idp_id
@@ -128,6 +125,7 @@ tables:
       - unknown_past_rdv_count
       - display_saturdays
       - display_cancelled_rdv
+      - display_extended_hours
       - plage_ouverture_notification_level
       - absence_notification_level
       - outlook_disconnect_in_progress
@@ -135,10 +133,9 @@ tables:
       - deleted_at
       - created_at
       - updated_at
-      - connected_with_agent_connect
       - proconnect_siret
       - feature_flags
-      - caldav_disconnect_in_progress
+      - caldav_disconnect_started_at
       - blog_read_at
       - group_by_agent
 
@@ -156,7 +153,6 @@ tables:
       - motif_id
       - uuid
       - lieu_id
-      - old_location
       - created_by_id
       - created_by_type
       - ends_at
@@ -193,7 +189,6 @@ tables:
     non_anonymized_column_names:
       - created_at
       - updated_at
-      - participation_id
 
   - table_name: super_admins
     anonymized_column_names:
@@ -213,9 +208,7 @@ tables:
       - created_at
       - updated_at
       - name
-      - departement
       - horaires
-      - human_id
       - website
       - external_id
       - verticale
@@ -229,7 +222,6 @@ tables:
   - table_name: absences
     anonymized_column_names:
       - title
-      - caldav_url
     non_anonymized_column_names:
       - created_at
       - updated_at
@@ -250,12 +242,11 @@ tables:
     non_anonymized_column_names:
       - created_at
       - updated_at
-      - old_address
       - latitude
       - longitude
-      - old_enabled
       - availability
       - code_postal
+      - address_without_geocoding
 
   - table_name: participations
     anonymized_column_names:
@@ -293,6 +284,7 @@ tables:
       - expired_cached
       - recurrence_ends_at
       - minutes_between_rdvs
+      - hex_color
 
   - table_name: webhook_endpoints
     anonymized_column_names:
@@ -310,8 +302,6 @@ tables:
     non_anonymized_column_names:
       - departement_number
       - name
-      - phone_number
-      - phone_number_formatted
       - created_at
       - updated_at
       - sms_provider
@@ -333,6 +323,7 @@ tables:
       - category
       - work_on_sunday
       - operator_id
+      - public_stats
 
   # Tables sans données personnelles
   - table_name: agent_territorial_roles
@@ -359,7 +350,6 @@ tables:
       - updated_at
       - allow_to_manage_access_rights
       - allow_to_invite_agents
-      - allow_to_download_metrics
 
   - table_name: teams
     non_anonymized_column_names:
@@ -373,7 +363,6 @@ tables:
       - created_at
       - updated_at
       - default_duration_in_min
-      - legacy_bookable_publicly
       - min_public_booking_delay
       - max_public_booking_delay
       - deleted_at
@@ -381,7 +370,6 @@ tables:
       - restriction_for_rdv
       - instruction_for_rdv
       - for_secretariat
-      - old_location_type
       - follow_up
       - visibility_type
       - sectorisation_level
@@ -429,7 +417,6 @@ tables:
 
   - table_name: sectors
     non_anonymized_column_names:
-      - departement
       - name
       - human_id
       - created_at
@@ -474,6 +461,9 @@ tables:
       - options
       - created_at
       - updated_at
+
+  - table_name: export_file_blobs
+    truncated: true
 
   - table_name: oauth_applications
     anonymized_column_names:
@@ -546,9 +536,10 @@ tables:
       - source_organisation_id
       - status
   - table_name: operators
-    anonymized_column_names:
-      - name
     non_anonymized_column_names:
+      - name
+      - siret
+      - support_link
       - created_at
       - updated_at
   - table_name: operator_managers
@@ -578,5 +569,4 @@ tables:
     non_anonymized_column_names:
       - used_at
       - created_at
-      - updated_at
       - domain_id

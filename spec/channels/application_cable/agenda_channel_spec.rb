@@ -48,6 +48,15 @@ RSpec.describe AgendaChannel do
       end.to have_broadcasted_to(rdv_agent.id).from_channel(described_class)
     end
 
+    it "fires on User in Waiting Room status change" do
+      rdv_agent = create(:agent)
+      rdv = create(:rdv, agents: [rdv_agent])
+
+      expect do
+        rdv.set_user_in_waiting_room!
+      end.to have_broadcasted_to(rdv_agent.id).from_channel(described_class)
+    end
+
     it "fires when adding, updating or removing a participation" do
       rdv_agent = create(:agent)
       rdv = create(:rdv, agents: [rdv_agent])

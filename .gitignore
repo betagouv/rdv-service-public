@@ -63,3 +63,6 @@ docs/domain_model.svg
 
 # Fichiers créés quand on fait un gem build sur une des gems définies dans lib
 lib/**/*.gem
+
+# Added by ggshield
+.cache_ggshield

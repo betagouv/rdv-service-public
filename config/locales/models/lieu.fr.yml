@@ -4,6 +4,7 @@ fr:
       lieu: Lieu
     attributes:
       lieu:
+        address_without_geocoding: Adresse à l'étranger ou introuvable
         availability: Ouverture
         enabled: Ouvert
         latitude: Latitude

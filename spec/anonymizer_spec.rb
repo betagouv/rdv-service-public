@@ -11,7 +11,11 @@ RSpec.describe Anonymizer do
     end
 
     context "user" do
-      let!(:user) { create(:user, email: "user@example.com", first_name: "jean", last_name: "jacques", confirmation_token: "CONFIRM_ME") }
+      let!(:user) { create(:user, email: "user@example.com", first_name: "jean", last_name: "jacques") }
+
+      before do
+        ActiveRecord::Base.connection.execute("UPDATE users SET confirmation_token = 'CONFIRM_ME' WHERE id = #{user.id}")
+      end
 
       it "anonymizes first and last name and email" do
         described_class.anonymize_record!(user)
@@ -21,7 +25,7 @@ RSpec.describe Anonymizer do
 
       it "anonymizes unique confirmation_token" do
         described_class.anonymize_record!(user)
-        expect(user.reload.confirmation_token).to eq "[valeur unique anonymisée #{user.id}]"
+        expect(ActiveRecord::Base.connection.execute("SELECT confirmation_token FROM users WHERE id = #{user.id}").first["confirmation_token"]).to eq "[valeur unique anonymisée #{user.id}]"
       end
     end
 
@@ -121,9 +125,14 @@ RSpec.describe Anonymizer do
 
   describe "#anonymize_records!" do
     context "users" do
-      let!(:user1) { create(:user, email: "user@example.com", first_name: "jean", last_name: "jacques", confirmation_token: "CONFIRM_ME") }
-      let!(:user2) { create(:user, email: "user2@example.com", first_name: "marco", last_name: "polo", confirmation_token: "WAT") }
+      let!(:user1) { create(:user, email: "user@example.com", first_name: "jean", last_name: "jacques") }
+      let!(:user2) { create(:user, email: "user2@example.com", first_name: "marco", last_name: "polo") }
       let!(:user_without_email) { create(:user, email: nil) }
+
+      before do
+        ActiveRecord::Base.connection.execute("UPDATE users SET confirmation_token = 'CONFIRM_ME' WHERE id = #{user1.id}")
+        ActiveRecord::Base.connection.execute("UPDATE users SET confirmation_token = 'WAT' WHERE id = #{user2.id}")
+      end
 
       it "anonymizes the correct columns" do
         described_class.anonymize_records!("users")
@@ -133,8 +142,8 @@ RSpec.describe Anonymizer do
         expect(user1.reload.email).to eq "email_anonymise_#{user1.id}@exemple.fr"
         expect(user2.reload.email).to eq "email_anonymise_#{user2.id}@exemple.fr"
         expect(user_without_email.reload.email).to be_nil
-        expect(user1.reload.confirmation_token).to eq "[valeur unique anonymisée #{user1.id}]"
-        expect(user2.reload.confirmation_token).to eq "[valeur unique anonymisée #{user2.id}]"
+        expect(ActiveRecord::Base.connection.execute("SELECT confirmation_token FROM users WHERE id = #{user1.id}").first["confirmation_token"]).to eq "[valeur unique anonymisée #{user1.id}]"
+        expect(ActiveRecord::Base.connection.execute("SELECT confirmation_token FROM users WHERE id = #{user2.id}").first["confirmation_token"]).to eq "[valeur unique anonymisée #{user2.id}]"
       end
     end
 
@@ -193,6 +202,16 @@ RSpec.describe Anonymizer do
     it "should be exhaustive" do
       errors = described_class.exhaustivity_errors
       expect(errors).to eq([]), errors.join("\n")
+    end
+  end
+
+  describe "colonnes obsolètes" do
+    it "ne référence pas de colonnes qui n'existent plus en base de données" do
+      stale_columns = described_class.default_config.table_configs.reject(&:truncated?).flat_map do |table_config|
+        table_config.non_existent_columns(described_class.db_connection).map { "#{table_config.table_name}.#{_1}" }
+      end
+
+      expect(stale_columns).to eq([]), "Colonnes obsolètes dans la config anonymizer (supprimées de la base) :\n#{stale_columns.join("\n")}"
     end
   end
 end

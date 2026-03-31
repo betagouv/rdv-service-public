@@ -1,6 +1,10 @@
 module AgentsHelper
   def may_need_onboarding_help?
     if defined?(current_territory)
+      # Si un opérateur est rattaché au territoire et qu’il assure le support, c’est lui qui se charge de l’accompagnement
+      # de ses adhérents.
+      return false if current_territory.operator&.support_link
+
       Rdv.joins(:organisation).where(organisation: { territory_id: current_territory.id }).limit(5).count < 5
     end
   end
@@ -45,35 +49,6 @@ module AgentsHelper
       "menu-organisation-stats" => "stats",
       "menu-stats" => "stats",
     }[content_for(:menu_item)]
-  end
-
-  def planning_agent_select(agent, path_helper_name)
-    # See also planning-agent-select.js
-    # path_helper_name lets us build the path of the current subsection (Agenda, PlageOuverture, Absence)
-    url_template = send(path_helper_name, current_organisation, agent_id: "__AGENT__")
-    preselected_option = [
-      agent.reverse_full_name_or_email,
-      agent.id,
-      {
-        "data-url": send(path_helper_name, current_organisation, agent_id: agent.id),
-      },
-    ]
-    select_tag(
-      :planning_agent_select,
-      options_for_select([preselected_option],
-                         selected: agent.id),
-      class: "select2-input form-control js-planning-agent-select",
-      data: {
-        "select2-config": {
-          ajax: {
-            url: search_agents_agents_path(organisation_id: current_organisation),
-            dataType: "json",
-            delay: 250,
-          },
-        },
-        "url-template": url_template,
-      }
-    )
   end
 
   def navigation_scoped_by_agent_services?(current_agent, current_organisation)

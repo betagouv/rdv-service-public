@@ -33,23 +33,4 @@ RSpec.describe "Un super admin peut chercher un utilisateur", js: true do
     expect(page).to have_selector("tr", text: user.first_name)
     expect(page).not_to have_selector("tr", text: another_user.first_name)
   end
-
-  context "quand l’usager est FranceConnecté (pas d’email mais un notification_email)" do
-    let!(:user) { create(:user, :using_france_connect) }
-
-    it "par notification_email" do
-      login_as(super_admin, scope: :super_admin)
-      visit super_admins_users_path
-
-      field = find_field("search")
-      field.set(user.notification_email)
-      page.execute_script <<-JS
-        var form = document.querySelector('form');
-        form.requestSubmit();
-      JS
-
-      expect(page).to have_selector("tr", text: user.first_name)
-      expect(page).not_to have_selector("tr", text: another_user.first_name)
-    end
-  end
 end

@@ -64,6 +64,6 @@ class Api::V1::PlageOuverturesController < Api::V1::AgentAuthBaseController
 
     params[:agent_id] ||= current_agent.id
 
-    params.permit(:agent_id, :title, :first_day, :start_time, :end_day, :end_time, :organisation_id)
+    params.permit(:agent_id, :title, :first_day, :start_time, :end_day, :end_time, :organisation_id, :hex_color)
   end
 end

@@ -36,11 +36,6 @@
             #reset_agents[class=(@agents.size > 1 ? "" : "hidden")]
               = link_to "Revenir à mon agenda", admin_organisation_planning_agenda_path(current_organisation, agent_id: current_agent), class: "fr-btn fr-btn--tertiary"
 
-    - unless @agents.size > 1 # Pas la place pour le toggle quand plusieurs agents sont sélectionnés
-      div.rdv-display-flex.rdv-gap-05rem.rdv-flex-wrap-wrap
-        div= link_to "Revenir à l'ancienne vue", admin_organisation_planning_toggle_new_planning_path(current_organisation, set_to: "false"), method: :put, class: "fr-link fr-link--sm js-new-planning-toggle"
-        div= link_to("Donnez votre avis", "https://tally.so/r/3jORDR", target: "_blank", class: "fr-link fr-link--sm js-new-planning-toggle")
-
 .container-fluid.px-2.d-flex[style="background-color: white; border-bottom: 1px solid #EEE;align-items: center;"]
   .flex-grow-1
     = render partial: "admin/planning/planning_tabs"

@@ -1,7 +1,7 @@
 class RdvBlueprint < Blueprinter::Base
   identifier :id
 
-  fields :uuid, :status, :starts_at, :ends_at, :duration_in_min, :address, :context, :cancelled_at,
+  fields :uuid, :status, :duration_in_min, :address, :context, :cancelled_at,
          :max_participants_count, :users_count, :name, :collectif, :created_by_type, :created_by_id, :created_at,
          :visio_url
 
@@ -19,6 +19,14 @@ class RdvBlueprint < Blueprinter::Base
 
   field :url_for_agents do |rdv, _options|
     Rails.application.routes.url_helpers.agents_rdv_url(rdv, host: rdv.domain.host_name)
+  end
+
+  field :starts_at do |rdv, _options|
+    rdv.starts_at_in_time_zone
+  end
+
+  field :ends_at do |rdv, _options|
+    rdv.ends_at_in_time_zone
   end
 
   # On permet des associations optionnelles, mais on les charge toutes si le paramètre `include` n'est pas utilisé

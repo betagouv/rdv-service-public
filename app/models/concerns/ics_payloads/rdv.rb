@@ -2,7 +2,7 @@ module IcsPayloads
   module Rdv
     def payload(action = nil, recipient = users.first)
       payload = {
-        name: "rdv-#{motif&.name&.parameterize}-#{starts_at.strftime('%Y-%m-%d-%Hh%M')}.ics",
+        attachement_filename: "rdv-#{motif&.name&.parameterize}-#{starts_at.strftime('%Y-%m-%d-%Hh%M')}.ics",
         starts_at: starts_at,
         ends_at: ends_at,
         ical_uid: uuid,
@@ -20,20 +20,9 @@ module IcsPayloads
         payload[:attendees] = agents.pluck(:email)
       end
 
-      payload[:name] = name if name.present?
       payload[:action] = action if action.present?
 
       payload
-    end
-
-    private
-
-    def ics_status
-      if cancelled?
-        "CANCELLED"
-      else
-        "CONFIRMED"
-      end
     end
 
     def ics_location
@@ -62,6 +51,16 @@ module IcsPayloads
       end
 
       description
+    end
+
+    private
+
+    def ics_status
+      if cancelled?
+        "CANCELLED"
+      else
+        "CONFIRMED"
+      end
     end
   end
 end

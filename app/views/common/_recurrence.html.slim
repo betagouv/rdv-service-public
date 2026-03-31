@@ -1,7 +1,7 @@
-.recurrence-select.recurrence-select--weekly.js-recurrence-container data-controller="recurrence"
+.recurrence-select.recurrence-select--weekly.js-recurrence-container
   .row
     .col
-      = date_input(f, :first_day, input_html: { id: "recurrence-source", data: { target: "recurrence.firstDay", action: "recurrence#updateRecurrence" }, class: "js-recurrence-first-day js-recurrence-input"} )
+      = date_input(f, :first_day, input_html: { id: "recurrence-source", class: "js-recurrence-first-day js-recurrence-input"} )
     - if defined?(model.end_day)
       .col
         = date_input(f, :end_day)
@@ -14,34 +14,34 @@
     .row.mb-2
       .col
         button.fr-btn.fr-btn--tertiary.fr-btn--sm.fr-btn--icon-left.fr-icon-add-line.js-plages-form-add-secondary-times-button[type="button" style="width: 100%"]
-          | Ajouter un second créneau à la plage
+          | Ajouter une seconde période à la plage
     .row.mb-2.hidden.js-plages-form-secondary-times-container
       .col = f.input :secondary_start_time, as: :time, ignore_date: true, minute_step: 5, include_blank: true
       .col = f.input :secondary_end_time,   as: :time, ignore_date: true, minute_step: 5, include_blank: true
     .row.mb-2
       .col
         button.fr-btn.fr-btn--tertiary.fr-btn--sm.fr-btn--icon-left.fr-icon-close-line.js-plages-form-remove-secondary-times-button.hidden[type="button" style="width: 100%"]
-          | Retirer le second créneau à la plage
+          | Retirer la seconde période de la plage
 
-  = f.input :recurrence, as: :hidden, input_html: { value: model.recurrence ? model.recurrence.as_json.to_json : "", "data-target": "recurrence.recurrenceComputed", class: "js-recurrence-computed" }
+  = f.input :recurrence, as: :hidden, input_html: { value: model.recurrence ? model.recurrence.as_json.to_json : "", class: "js-recurrence-computed" }
 
   = simple_fields_for :recurrence do |n|
-    = n.input :has_recurrence, as: :boolean, label: "Répéter…", input_html: { data: { target: "recurrence.hasRecurrence", action: "recurrence#updateRecurrence" }, class: "js-recurrence-toggle js-recurrence-input" }
+    = n.input :has_recurrence, as: :boolean, label: "Répéter…", input_html: { class: "js-recurrence-toggle js-recurrence-input" }
 
     .all-select
       .form-group
         .form-inline
           = n.label :interval, "Répéter tou(te)s les", class: "form-control-label mr-2"
-          = n.input_field :interval, as: :select, collection: 1..5, include_blank: false, class: "custom-select js-recurrence-interval js-recurrence-input", data: { target: "recurrence.interval", action: "recurrence#updateRecurrence" }
-          = n.input_field :every, as: :select, collection: { semaine: "week", mois: "month" }, include_blank: false, class: "custom-select js-recurrence-every js-recurrence-input", data: { target: "recurrence.every", action: "recurrence#updateRecurrence" }
+          = n.input_field :interval, as: :select, collection: 1..5, include_blank: false, class: "custom-select js-recurrence-interval js-recurrence-input"
+          = n.input_field :every, as: :select, collection: { semaine: "week", mois: "month" }, include_blank: false, class: "custom-select js-recurrence-every js-recurrence-input"
 
       .weekly-select
         - weekdays = { Lundi: "monday", Mardi: "tuesday", Mercredi: "wednesday", Jeudi: "thursday", Vendredi: "friday", Samedi: "saturday" }
         - weekdays[:Dimanche] = "sunday" if current_territory.work_on_sunday?
-        = n.input :on, as: :check_boxes, label: "Répéter les", collection: weekdays, include_blank: false, input_html: { data: { target: "recurrence.on", action: "recurrence#updateRecurrence" }, class: "js-recurrence-on js-recurrence-input" }
+        = n.input :on, as: :check_boxes, label: "Répéter les", collection: weekdays, include_blank: false, input_html: { class: "js-recurrence-on js-recurrence-input" }
 
       .monthly-select.form-group
-        span.js-recurrence-monthly data-target="recurrence.monthly" Tous les X du mois
+        span.js-recurrence-monthly Tous les X du mois
 
       .until-select
-        = date_input(n, :until, required: false, label: "Finir la répétition le (si aucune laisser vide)", input_html: { id: "recurrence-until", data: { target: "recurrence.until", action: "recurrence#updateRecurrence" }, class: "js-recurrence-until js-recurrence-input" } )
+        = date_input(n, :until, required: false, label: "Finir la répétition le (si aucune laisser vide)", input_html: { id: "recurrence-until", class: "js-recurrence-until js-recurrence-input" } )

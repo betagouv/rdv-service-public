@@ -43,6 +43,6 @@
   hr
 
   .fr-alert.fr-alert--info.fr-mb-2w
-    = t(".technical_email_explanation")
+    = t(".technical_email_explanation", domain_name: current_domain.name)
 
   .text-right= f.submit t("helpers.submit.submit"), class: "fr-btn"

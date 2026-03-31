@@ -157,16 +157,16 @@ RSpec.describe "User can update their information" do
     end
   end
 
-  describe "updating notification_email" do
+  describe "updating email for FranceConnect user" do
     context "when the user is connected with FranceConnect" do
       let(:user) { create(:user, :using_france_connect, organisations: [organisation]) }
 
-      it "allows changing the notification email" do
+      it "allows changing the email" do
         visit users_informations_path
-        fill_in("Email de notification", with: "nouvelle.adresse@exemple.fr")
+        fill_in("Email", with: "nouvelle.adresse@exemple.fr")
         click_on("Enregistrer")
         expect(page).to have_content "Vos informations ont été mises à jour."
-        expect(user.reload.notification_email).to eq "nouvelle.adresse@exemple.fr"
+        expect(user.reload.email).to eq "nouvelle.adresse@exemple.fr"
       end
     end
   end

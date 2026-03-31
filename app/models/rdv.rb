@@ -12,6 +12,7 @@ class Rdv < ApplicationRecord
   include Rdv::Updatable
   include Rdv::UsingWaitingRoom
   include Rdv::HardcodedAttributeNamesConcern
+  include Rdv::TimezoneConcern
   include IcsPayloads::Rdv
   include Ants::AppointmentSerializerAndListener
   include CreatedByConcern

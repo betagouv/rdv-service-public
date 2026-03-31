@@ -50,6 +50,7 @@ class User::RdvPolicy < ApplicationPolicy
       !record.in_the_past?
   end
 
+  alias ics? show?
   alias creneaux? edit?
   alias update? edit?
 

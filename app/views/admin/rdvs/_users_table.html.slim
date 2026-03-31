@@ -1,5 +1,10 @@
 /# locals: (rdv:, contextual_agents:)
 
+- if rdv.collectif?
+  .float-right.mb-2
+    - download_url = download_participants_admin_organisation_rdv_path(organisation_id: current_organisation.id, id: rdv.id)
+    = link_to("Télécharger la liste des participants", download_url, class: "fr-btn fr-btn--secondary")
+
 .table-responsive.users-table[style="overflow: inherit"]
   table.table.light-gray-table
     thead

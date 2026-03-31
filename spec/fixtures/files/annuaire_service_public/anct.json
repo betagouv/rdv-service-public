@@ -48,7 +48,7 @@
       "code_insee_commune": null,
       "statut_de_diffusion": "true",
       "adresse": "[{\"type_adresse\": \"Adresse\", \"complement1\": \"\", \"complement2\": \"\", \"numero_voie\": \"20 avenue de Ségur\", \"service_distribution\": \"\", \"code_postal\": \"75007\", \"nom_commune\": \"Paris\", \"pays\": \"\", \"continent\": \"\", \"longitude\": \"2.308339\", \"latitude\": \"48.850518\"}, {\"type_adresse\": \"Adresse postale\", \"complement1\": \"\", \"complement2\": \"\", \"numero_voie\": \"\", \"service_distribution\": \"TSA 10717\", \"code_postal\": \"75334\", \"nom_commune\": \"Paris Cedex 07\", \"pays\": \"\", \"continent\": \"\", \"longitude\": \"\", \"latitude\": \"\"}]",
-      "url_service_public": "https://lannuaire.service-public.fr/gouvernement/da837b24-afa7-46ab-b56a-427dd4bcc159",
+      "url_service_public": "https://lannuaire.service-public.gouv.fr/gouvernement/da837b24-afa7-46ab-b56a-427dd4bcc159",
       "information_complementaire": null,
       "date_diffusion": null
     }

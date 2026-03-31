@@ -4,6 +4,9 @@ install: ## Setup development environment
 run: ## Start the application (web, jobs et webpack)
 	OVERMIND_SKIP_ENV=true overmind start -f Procfile.dev
 
+run_single_instance: ## Run only the RDV Service Public instance
+	OVERMIND_SKIP_ENV=true overmind start -f Procfile.dev -l "web,jobs,js"
+
 lint: lint_rubocop lint_slim lint_brakeman ## Run all linters
 
 lint_rubocop: ## Ruby linter
@@ -40,7 +43,7 @@ rswag_api_v1: ## Re-generate swagger/v1/api.json by running API specs
 	git checkout swagger/conseillers_numeriques/api.json
 	git checkout swagger/visioplainte/api.json
 
-.PHONY: install run lint lint_rubocop lint_brakeman test test_unit test_features autocorrect clean generate_db_diagram help
+.PHONY: install run run_single_instance lint lint_rubocop lint_brakeman test test_unit test_features autocorrect clean generate_db_diagram help
 .DEFAULT_GOAL := help
 
 review_app: ## Create Scalingo review app for the PR linked to the current branch

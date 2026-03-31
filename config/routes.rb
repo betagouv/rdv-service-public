@@ -62,14 +62,16 @@ Rails.application.routes.draw do
   end
   get "super_admin", to: redirect("super_admins", status: 301)
 
-  devise_scope :user do
-    get "users/pending_registration" => "users/registrations#pending"
-    get "invitation", to: "users/invitations#invitation", as: "invitations_landing"
-  end
-
   ## APP ##
-  devise_for :users,
-             controllers: { registrations: "users/registrations", sessions: "users/sessions", passwords: "users/passwords", confirmations: "users/confirmations", invitations: "users/invitations" }
+  devise_for :users
+
+  devise_scope :user do
+    get    "users/sign_in",  to: "users/sessions#new",          as: "new_user_session"
+    delete "users/sign_out", to: "users/sessions#destroy",      as: "destroy_user_session"
+    get    "users/edit",     to: "users/registrations#edit",    as: "edit_user_registration"
+    patch  "users",          to: "users/registrations#update",  as: "user_registration"
+    delete "users",          to: "users/registrations#destroy"
+  end
 
   namespace :users do
     resource :rdv_wizard_step, only: %i[new create]
@@ -78,6 +80,7 @@ Rails.application.routes.draw do
       put "participations/cancel", to: "participations#cancel"
       member do
         get :creneaux
+        get :ics
         put :cancel
       end
     end
@@ -87,8 +90,14 @@ Rails.application.routes.draw do
     get :user_name_initials_verification, to: redirect(path: "/users/user_name_initials_verification/new")
 
     post "file_attente", to: "file_attentes#create_or_delete"
+    get "file_attente/unsubscribe/:token", to: "file_attentes#unsubscribe", as: "unsubscribe_file_attente"
 
-    resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code"
+    resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code" do
+      collection do
+        get :liste_fiches_usagers
+        post :choix_fiche_usager
+      end
+    end
     resources :login_codes, only: %i[create]
     get "login_codes", to: redirect(path: "/users/sign_in")
   end
@@ -283,6 +292,7 @@ Rails.application.routes.draw do
           resources :participations, only: %i[update destroy]
           resource :user_in_waiting_room, only: [:create]
           member do
+            get :download_participants
             post :send_reminder_manually
           end
           collection do
@@ -317,7 +327,6 @@ Rails.application.routes.draw do
         end
         resources :users do
           member do
-            post :invite
             get :link_to_organisation
           end
           collection do
@@ -330,7 +339,6 @@ Rails.application.routes.draw do
         namespace :planning do
           get :agenda, to: "agendas#show"
           put :toggle_displays, to: "agendas#toggle_displays"
-          put :toggle_new_planning, to: "agendas#toggle_new_planning"
 
           resources :absences
           resources :plage_ouvertures do
@@ -436,6 +444,15 @@ Rails.application.routes.draw do
 
   get "accueil_mds", to: redirect("presentation_agent", status: 307)
   get "presentation_agent" => "static_pages#presentation_for_agents"
+
+  resource :onboarding, controller: :onboarding do
+    get "step_1"
+    get "step_2"
+    get "step_3"
+    get "usager"
+    get "webinaire"
+    get "help_needed"
+  end
 
   root "search#home"
 

@@ -40,7 +40,7 @@ fr:
     reply_transfer_mailer:
       notify_agent_of_user_reply:
         title: Message d'usager⋅e au sujet de votre RDV %{date}
-        intro: "Dans le cadre du RDV du %{date}, l'usager⋅e %{author} a envoyé la réponse suivante par e-mail :"
+        intro: "Dans le cadre du RDV %{date}, l'usager⋅e %{author} a envoyé la réponse suivante par e-mail :"
         instructions: Merci de ne pas répondre à cet e-mail. Vous pouvez contacter l'usager⋅e à l'aide des informations inclues dans le RDV.
       forward_to_default_mailbox:
         title: Message d'usager⋅e en réponse à un e-mail de notification
@@ -68,4 +68,4 @@ fr:
         title: Participation annulée au RDV du %{date} avec %{organisation}
   prescripteurs_mailer:
     rdv_created:
-      title: RDV confirmé le %{date}
+      title: RDV confirmé pour %{date}

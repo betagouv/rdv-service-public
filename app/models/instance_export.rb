@@ -7,10 +7,10 @@ class InstanceExport < ApplicationRecord
   encrypts :refresh_token
 
   scope :finished_exports_for_organisation, lambda { |source_organisation_id|
-    where(source_organisation_id: source_organisation_id, status: "motifs_archived")
+    where(source_organisation_id: source_organisation_id, status: %w[planning_copied motifs_archived])
   }
 
-  validates :status, inclusion: { in: %w[oauth_connected copying_configuration copying_planning motifs_archived] }
+  validates :status, inclusion: { in: %w[oauth_connected copying_configuration copying_planning planning_copied motifs_archived] }
 
   def new_instance_organisations
     @new_instance_organisations ||= api_client.get("organisations")["organisations"]
@@ -35,8 +35,8 @@ class InstanceExport < ApplicationRecord
 
   def copy_to_new_instance!(current_domain)
     transaction do
-      InstanceExports::CopyConfiguration.new(self).enqueue_batch(current_domain)
       update(status: "copying_configuration")
+      InstanceExports::CopyConfiguration.new(self).enqueue_batch(current_domain)
     end
   end
 end

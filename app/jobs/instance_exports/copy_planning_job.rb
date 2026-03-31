@@ -22,8 +22,13 @@ class InstanceExports::CopyPlanningJob < ApplicationJob
 
     source_organisation = instance_export.source_organisation
 
+    instance_export.update(status: "copying_planning")
+
     instance_export.transaction do
       copy_planning_batch = GoodJob::Batch.new(instance_export_id: instance_export.id)
+
+      copy_planning_batch.properties = { instance_export_id: instance_export.id }
+      copy_planning_batch.on_success = "InstanceExports::PlanningCopiedJob"
 
       copy_planning_batch.enqueue do
         source_organisation.rdvs.future.not_cancelled.pluck(:id).each do |rdv_id|
@@ -44,11 +49,6 @@ class InstanceExports::CopyPlanningJob < ApplicationJob
           CopyPlageOuvertureJob.perform_later(instance_export.id, plage_ouverture_id)
         end
       end
-
-      instance_export.update(
-        good_job_batch_id: copy_planning_batch.id,
-        status: "copying_planning"
-      )
     end
   end
 

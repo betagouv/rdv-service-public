@@ -288,13 +288,12 @@ user_org_paris_nord_patricia = User.new(
   last_name: "Duroy",
   email: "patricia_duroy@demo.rdv-solidarites.fr",
   birth_date: Date.parse("20/06/1975"),
-  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   phone_number: "0101010101",
   organisation_ids: [org_paris_nord.id, org_arques.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
+  latest_login_at: Time.zone.now
 )
 
-user_org_paris_nord_patricia.skip_confirmation!
 user_org_paris_nord_patricia.save!
 user_org_paris_nord_patricia.update!(logement: 2)
 
@@ -313,13 +312,12 @@ user_org_paris_nord_lea = User.new(
   last_name: "Dupont",
   email: "lea_dupont@demo.rdv-solidarites.fr",
   birth_date: Date.parse("01/12/1982"),
-  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   phone_number: "0101010102",
   organisation_ids: [org_paris_nord.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
+  latest_login_at: Time.zone.now
 )
 
-user_org_paris_nord_lea.skip_confirmation!
 user_org_paris_nord_lea.save!
 user_org_paris_nord_lea.update!(logement: 2)
 
@@ -328,13 +326,12 @@ user_org_paris_nord_jean = User.new(
   last_name: "Moustache",
   email: "jean_moustache@demo.rdv-solidarites.fr",
   birth_date: Date.parse("10/01/1973"),
-  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   phone_number: "0101010103",
   organisation_ids: [org_paris_nord.id, org_bapaume.id, org_arques.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
+  latest_login_at: Time.zone.now
 )
 
-user_org_paris_nord_jean.skip_confirmation!
 user_org_paris_nord_jean.save!
 user_org_paris_nord_jean.update!(logement: 2)
 
@@ -343,38 +340,35 @@ user_org_paris_sud = User.new(
   last_name: "Factice",
   email: "francis.factice@demo.rdv-solidarites.fr",
   birth_date: Date.parse("10/01/1973"),
-  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   phone_number: "0101010103",
   organisation_ids: [org_paris_sud.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
+  latest_login_at: Time.zone.now
 )
 
-user_org_paris_sud.skip_confirmation!
 user_org_paris_sud.save!
 user_org_paris_sud.update!(logement: 2)
 
 user_org_arques = User.new(
   first_name: "Francis",
   last_name: "Factice",
-  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   phone_number: "0611223344",
   organisation_ids: [org_arques.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
+  latest_login_at: Time.zone.now
 )
 
-user_org_arques.skip_confirmation!
 user_org_arques.save!
 
 user_org_bapaume = User.new(
   first_name: "François",
   last_name: "Factice",
-  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   email: "francois@factice.cool",
   organisation_ids: [org_bapaume.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
+  latest_login_at: Time.zone.now
 )
 
-user_org_bapaume.skip_confirmation!
 user_org_bapaume.save!
 
 # Insert a lot of users and add them to the paris_nord organisation
@@ -414,8 +408,7 @@ agent_org_paris_nord_pmi_martine = Agent.new(
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
     allow_to_invite_agents: true,
-  }],
-  feature_flags: { new_planning: true }
+  }]
 )
 agent_org_paris_nord_pmi_martine.skip_confirmation!
 agent_org_paris_nord_pmi_martine.save!
@@ -429,14 +422,14 @@ agent_org_paris_nord_pmi_marco = Agent.new(
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
+  last_sign_in_at: 2.days.ago,
   roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
   agent_territorial_access_rights_attributes: [{
     territory: territory75,
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-  }],
-  feature_flags: { new_planning: true }
+  }]
 )
 agent_org_paris_nord_pmi_marco.skip_confirmation!
 agent_org_paris_nord_pmi_marco.save!
@@ -449,6 +442,7 @@ agent_org_paris_nord_pmi_elsa = Agent.new(
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
+  last_sign_in_at: 2.days.ago,
   roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
   agent_territorial_access_rights_attributes: [{
     territory: territory75,
@@ -538,28 +532,72 @@ agent_org_bapaume_pmi_gina = Agent.new(
 agent_org_bapaume_pmi_gina.skip_confirmation!
 agent_org_bapaume_pmi_gina.save!
 
-# Insert a lot of agents and add them to the paris_nord organisation
-# rubocop:disable Rails/SkipsModelValidations
-agents_attributes = 1_000.times.map do |i|
-  {
-    created_at: now,
-    updated_at: now,
-    email: "email_#{i}@test.com",
-    uid: "email_#{i}@test.com",
-    invitation_created_at: now,
-    invitation_sent_at: now,
-  }
+# 95% des orgas ont moins de 32 agents
+# cf https://rdv-service-public-metabase.osc-secnum-fr1.scalingo.io/question/858-pourcentile-95-nombre-dagents-par-orga
+[
+  ["Audran", "Lemaire"],
+  ["Perrine", "Gay"],
+  ["Pie", "Le gall"],
+  ["Agathon", "Laine"],
+  ["Paule", "Roussel"],
+  ["Armeline", "Garcia"],
+  ["Adolphie", "Perrin"],
+  ["Georgette", "Le Gall"],
+  ["Octave", "Arnaud"],
+  ["Séverine", "Marechal"],
+  ["Odilon", "Riviere"],
+  ["Arsinoé", "Girard"],
+  ["Amandin", "Royer"],
+  ["Aurelle", "Guillot"],
+  ["Amarande", "Le Goff"],
+  ["Archange", "Gay"],
+  ["Adeline", "Colin"],
+  ["Régine", "Lemaire"],
+  ["Blandine", "Berger"],
+  ["Améthyste", "Laine"],
+  ["Armand", "Klein"],
+  ["Vital", "Bertrand"],
+  ["Libère", "Lefevre"],
+  ["Waleran", "Lopéz"],
+  ["Didier", "Da Silva"],
+].map do |first_name, last_name|
+  email = ["#{first_name} #{last_name}".parameterize, "@demo.rdv-solidarites.fr"].join
+  Agent.new(
+    first_name:, last_name:,
+    created_at: now, updated_at: now,
+    email:, uid: email,
+    invitation_accepted_at: 10.days.ago,
+    last_sign_in_at: 2.days.ago,
+    password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
+    services: [service_social],
+    roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
+    agent_territorial_access_rights_attributes: [
+      { territory: territory75, allow_to_manage_teams: false, allow_to_manage_access_rights: false, allow_to_invite_agents: false },
+    ]
+  ).tap(&:skip_confirmation!).save!
 end
-results = Agent.insert_all!(agents_attributes, returning: Arel.sql("id")) # [{"id"=>1}, {"id"=>2}, ...]
-agent_ids = results.flat_map(&:values) # [1, 2, ...]
-agent_role_attributes = agent_ids.map { |id| { agent_id: id, organisation_id: org_paris_nord.id } }
-AgentRole.insert_all!(agent_role_attributes)
-agent_service_attributes = agent_ids.map { |id| { agent_id: id, service_id: service_social.id } }
-AgentService.insert_all!(agent_service_attributes)
 
-agent_territorial_access_rights_attributes = agent_ids.map { |id| { agent_id: id, territory_id: territory75.id, created_at: Time.zone.now, updated_at: Time.zone.now } }
-AgentTerritorialAccessRight.insert_all!(agent_territorial_access_rights_attributes)
-# rubocop:enable Rails/SkipsModelValidations
+# invited agents that have not accepted yet
+# bypass validations since this mirrors AdminCreatesAgent behavior with allow_blank_name
+# the agent is in "invited, not yet accepted" state so name is optional
+%w[
+  adeline-caron@demo.rdv-solidarites.fr
+  denis-fabre@demo.rdv-solidarites.fr
+  fabre-guyot@demo.rdv-solidarites.fr
+].each do |email|
+  agent = Agent.new(
+    email: email, uid: email,
+    invitation_sent_at: now,
+    password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"], # password required to avoid validation errors
+    services: [service_social],
+    roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
+    agent_territorial_access_rights_attributes: [
+      { territory: territory75, allow_to_manage_teams: false, allow_to_manage_access_rights: false, allow_to_invite_agents: false },
+    ]
+  )
+  agent.allow_blank_name = true
+  agent.save!
+end
 
 # SECTOR ATTRIBUTIONS - AGENT LEVEL
 

@@ -13,6 +13,8 @@ class PlacesInput {
         map(name => ({ name, elt: form.querySelector(`input[name*=${name}]`)})).
         filter(i => !!i.elt) // filter only present inputs
 
+    this.addressWithoutGeocodingInput = form.querySelector('input[type="hidden"][name*="address_without_geocoding"]');
+
     $(container).autocomplete(
       { hint: false },
       [{
@@ -20,12 +22,21 @@ class PlacesInput {
         debounce: 800,
         templates: { suggestion: this.suggestionTemplate }
       }]
-    ).on('autocomplete:selected', (_event, suggestion, _dataset, _context) =>
-      this.setDependentInputs(suggestion)
-    );
+    ).on('autocomplete:selected', (_event, suggestion, _dataset, _context) => {
+      if (suggestion.type === 'no_address') {
+        this.setDependentInputs({})
+        if (this.addressWithoutGeocodingInput) this.addressWithoutGeocodingInput.value = "1"
+      } else {
+        this.setDependentInputs(suggestion)
+        if (this.addressWithoutGeocodingInput) this.addressWithoutGeocodingInput.value = "0"
+      }
+    });
 
     // clear dependent fields upon input event (before selecting suggestion)
-    container.addEventListener("input", () => this.setDependentInputs({}))
+    container.addEventListener("input", () => {
+      this.setDependentInputs({})
+      if (this.addressWithoutGeocodingInput) this.addressWithoutGeocodingInput.value = "0"
+    })
   }
 
   getSuggestions = (query, callback) => {
@@ -35,7 +46,11 @@ class PlacesInput {
     if (this.addressType) searchParams.append("type", this.addressType)
     fetch(`${url}?${searchParams}`).
       then(res => res.json()).
-      then(this.remapBanFeatures).
+      then(data => {
+        const suggestions = this.remapBanFeatures(data)
+        if (this.addressWithoutGeocodingInput) suggestions.push({ type: 'no_address', value: query })
+        return suggestions
+      }).
       then(callback)
   }
 
@@ -75,6 +90,15 @@ class PlacesInput {
     })
 
   suggestionTemplate = suggestion => {
+    if (suggestion.type === 'no_address') {
+      return `
+        <div class='d-flex'>
+          <div class='fr-ml-1w'><i class="fr-icon-question-fill"></i></div>
+          <div class='fr-ml-1w text-muted'><em>Adresse introuvable ou à l'étranger ?</em></div>
+        </div>
+      `
+    }
+
     const { type, name } = suggestion
     const icon = {
       housenumber: "home-4-fill",

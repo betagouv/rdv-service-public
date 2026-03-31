@@ -25,14 +25,6 @@ RSpec.describe "Agent can create user" do
 
     user = User.last
     expect(user.annotation_for(organisation.territory)).to eq "souhaite participer au prochain atelier collectif"
-
-    expect(page).to have_no_content("Inviter")
-    within("#spec-primary-user-card") { click_link "Modifier" }
-    fill_in "Email", with: "marco@lebreton.bzh"
-    click_button "Enregistrer"
-    click_link "Inviter"
-    open_email("marco@lebreton.bzh")
-    expect(current_email.subject).to eq("Vous avez été invité sur RDV Aide Numérique")
   end
 
   context "user already exists in other organisation of the same territory" do
@@ -45,11 +37,24 @@ RSpec.describe "Agent can create user" do
       fill_in :user_last_name, with: "Green"
       fill_in :user_email, with: "ceelo@green.com"
       click_on "Enregistrer"
-      expect(page).to have_content("Un usager avec le même email a déjà un compte sur RDV Service Public")
-      click_link "Importer cet usager"
+      expect(page).to have_content("Un usager avec le même email a déjà une fiche au sein de l'espace #{territory.name}")
+      expect(page).to have_content(existing_user.organisations.sole.name)
+      click_link "Importer cette fiche dans #{organisation.name}"
       expect_page_title("Cee-Lo GREEN")
       expect(page).to have_content("L'usager a été associé à votre organisation.")
       expect(existing_user.reload.organisations).to include(organisation)
+    end
+
+    it "also allows creating a dupe after warning bypass" do
+      fill_in :user_first_name, with: "Cee-Lo"
+      fill_in :user_last_name, with: "Green"
+      fill_in :user_email, with: "ceelo@green.com"
+      click_on "Enregistrer"
+      expect(page).to have_content("Un usager avec le même email a déjà une fiche au sein de l'espace #{territory.name}")
+      expect(page).to have_content(existing_user.organisations.sole.name)
+      expect { click_on "Confirmer en ignorant les avertissements" }.to change(User, :count).by(1)
+      expect_page_title("Cee-Lo GREEN")
+      expect(page).to have_content("L'usager a été créé.")
     end
   end
 
@@ -74,5 +79,18 @@ RSpec.describe "Agent can create user" do
       click_on "Enregistrer"
       expect_page_title("Marco LEBRETON")
     end
+  end
+
+  it "création de proche", js: true do
+    choose("Proche")
+    fill_in("Prénom", with: "enfant-prenom", match: :first)
+    fill_in("Nom", with: "enfant-nom", match: :first)
+    click_on("Nouvel Usager")
+    fill_in("user_responsible_attributes_first_name", with: "parent-prenom")
+    fill_in("user_responsible_attributes_last_name", with: "parent-nom")
+
+    click_button("Enregistrer")
+    expect_page_title("enfant-prenom ENFANT-NOM")
+    expect(User.last(2).map(&:last_name)).to eq(%w[parent-nom enfant-nom])
   end
 end

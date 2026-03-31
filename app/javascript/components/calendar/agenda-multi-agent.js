@@ -7,9 +7,10 @@ import {
   setupRealtimeRefresh,
   handleAjaxError,
   dayHeaderContent,
-  betaWeekTitleFormat,
+  weekTitleFormat,
   preferencesModalToggle,
   hiddenDays,
+  calendarTimeRange,
 } from "./utils";
 
 class AgendaMultiAgent {
@@ -27,6 +28,7 @@ class AgendaMultiAgent {
   }
   initFullCalendar = () => {
     const options = {
+      ...calendarTimeRange(this.data),
       plugins: [resourceTimegridPlugin, interactionPlugin],
       schedulerLicenseKey: "GPL-My-Project-Is-Open-Source",
       resources: this.resources,
@@ -39,7 +41,7 @@ class AgendaMultiAgent {
         center: "resourceTimeGridDay,resourceTimeGridWeek",
         right: "preferencesModalToggle",
       },
-      titleFormat: betaWeekTitleFormat,
+      titleFormat: weekTitleFormat,
       dayHeaderContent: dayHeaderContent,
       customButtons: { preferencesModalToggle },
       datesAboveResources: this.data.groupByAgent !== "true",

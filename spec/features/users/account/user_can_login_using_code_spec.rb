@@ -23,12 +23,73 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
     expect(page).to have_field("user_first_name", with: "Marco")
   end
 
+  context "quand l'usager possède plusieurs fiches dans des espaces différents" do
+    let!(:territory_1) { create(:territory) }
+    let!(:territory_2) { create(:territory) }
+    let!(:orga_1) { create(:organisation, territory: territory_1) }
+    let!(:orga_2) { create(:organisation, territory: territory_2) }
+    let!(:user_1) { create(:user, email: "marco@lolmail.fr", organisations: [orga_1]) }
+    let!(:user_2) { create(:user, email: "marco@lolmail.fr", organisations: [orga_2]) }
+
+    it "affiche l'écran de sélection avec les deux fiches" do
+      create(:login_code, email: "marco@lolmail.fr", code: "123456")
+      visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
+      fill_in("Code à 6 chiffres", with: "123456")
+      click_on "Valider"
+      expect(page).to have_content(%(Plusieurs fiches usagers sont liées à l'adresse "marco@lolmail.fr".))
+      expect(page).to have_content(user_1.full_name)
+      expect(page).to have_content(user_2.full_name)
+    end
+
+    it "connecte sur la fiche choisie après sélection" do
+      create(:login_code, email: "marco@lolmail.fr", code: "123456")
+      visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
+      fill_in("Code à 6 chiffres", with: "123456")
+      click_on "Valider"
+      click_on territory_1.name
+      expect(page).to have_content("Connexion réussie")
+      click_on "Vos informations"
+      expect(page).to have_field("user_first_name", with: user_1.first_name)
+    end
+
+    it "connecte sur une autre fiche après sélection" do
+      create(:login_code, email: "marco@lolmail.fr", code: "123456")
+      visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
+      fill_in("Code à 6 chiffres", with: "123456")
+      click_on "Valider"
+      click_on territory_2.name
+      expect(page).to have_content("Connexion réussie")
+      click_on "Vos informations"
+      expect(page).to have_field("user_first_name", with: user_2.first_name)
+    end
+  end
+
+  context "accès direct à l'écran de sélection sans session" do
+    it "redirige vers la page de connexion avec une erreur" do
+      visit liste_fiches_usagers_users_sessions_by_code_path
+      expect(page).to have_content("Échec de la connexion")
+      expect(page).to have_current_path(new_user_session_path)
+    end
+  end
+
   context "l’usager rentre une adresse email pour laquelle il n’existe pas de compte usager" do
     specify do
       visit new_user_session_path
       fill_in "Adresse email", with: "nina@personne.fr"
       expect { click_on "Recevoir un code de connexion" }.not_to change(LoginCode, :count)
       expect(page).not_to have_content("code à 6 chiffres")
+    end
+  end
+
+  context "l’usager est connecté via FranceConnect (SSO)" do
+    let!(:fc_user) { create(:user, :using_france_connect, email: "fc@lolmail.fr") }
+
+    it "ne peut pas demander un code de connexion" do
+      visit new_user_session_path
+      fill_in "Adresse email", with: "fc@lolmail.fr"
+      expect { click_on "Recevoir un code de connexion" }.not_to change(LoginCode, :count)
+      expect(page).not_to have_content("code à 6 chiffres")
+      expect(page).to have_content("Aucun compte usager n’existe pour cet email")
     end
   end
 

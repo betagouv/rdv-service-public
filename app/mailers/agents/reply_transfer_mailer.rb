@@ -12,7 +12,7 @@ class Agents::ReplyTransferMailer < ApplicationMailer
     @reply_subject = source_mail.subject
     @reply_body = reply_body
     @attachment_names = source_mail.attachments.map(&:filename).join(", ")
-    @date = relative_date(@rdv.starts_at)
+    @date = relative_date_with_preposition(@rdv.starts_at)
 
     mail(to: agents.map(&:email), subject: t(".title", date: @date))
   end
@@ -27,9 +27,9 @@ class Agents::ReplyTransferMailer < ApplicationMailer
     @reply_subject = source_mail.subject
     @reply_body = reply_body
     @attachment_names = source_mail.attachments.map(&:filename).join(", ")
-    @date = relative_date(@rdv.starts_at)
+    @date = relative_date_with_preposition(@rdv.starts_at)
 
-    mail(to: organisation.email, subject: "Message d'usager⋅e au sujet d’un RDV du #{@date}")
+    mail(to: organisation.email, subject: "Message d'usager⋅e au sujet d’un RDV #{@date}")
   end
 
   # @param [String] reply_body

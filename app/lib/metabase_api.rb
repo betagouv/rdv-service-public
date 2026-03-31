@@ -7,7 +7,7 @@ class MetabaseApi
   def self.sql_query(query, raw_json: false, timeout: DEFAULT_TYPHOEUS_TIMEOUT)
     res = Typhoeus.post(
       "#{HOST_URL}/api/dataset/json",
-      params: { query: { database: DATABASE_ID, native: { query: }, type: "native" }.to_json },
+      body: { query: { database: DATABASE_ID, native: { query: }, type: "native" } }.to_json,
       headers: {
         "x-api-key" => ENV["METABASE_API_KEY"],
         "Content-Type" => "application/json",

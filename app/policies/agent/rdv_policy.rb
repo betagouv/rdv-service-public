@@ -21,6 +21,7 @@ class Agent::RdvPolicy < ApplicationPolicy
     same_agent_or_has_access?
   end
   alias versions? show?
+  alias download_participants? show?
 
   def destroy?
     current_agent.admin_in_organisation?(@record.organisation)

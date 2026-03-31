@@ -51,5 +51,18 @@ RSpec.describe Admin::Planning::AgendasController, type: :controller do
         expect(agent.reload.display_cancelled_rdv).to be(true)
       end
     end
+
+    context "pour l'amplitude horaire étendue" do
+      it "active l'affichage de l'amplitude horaire étendue pour l'agent courant" do
+        put :toggle_displays, params: { id: agent.id, organisation_id: organisation.id, agent: { display_extended_hours: true } }
+        expect(agent.reload.display_extended_hours).to be(true)
+      end
+
+      it "désactive l'affichage de l'amplitude horaire étendue pour l'agent courant" do
+        agent.update!(display_extended_hours: true)
+        put :toggle_displays, params: { id: agent.id, organisation_id: organisation.id, agent: { display_extended_hours: false } }
+        expect(agent.reload.display_extended_hours).to be(false)
+      end
+    end
   end
 end

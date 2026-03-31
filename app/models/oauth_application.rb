@@ -1,6 +1,4 @@
 class OauthApplication < Doorkeeper::Application
-  self.ignored_columns += %w[default_service_id]
-
   def self.agent_is_verified_by_an_application?(agent)
     OauthApplication
       .joins(:access_tokens)

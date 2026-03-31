@@ -1,7 +1,7 @@
 #
 # Voir docs/interconnexions/carto_anct.md
 #
-module CartoAnct
+module CartoANCT
   CACHE_KEY = "carto_anct_metrics".freeze
 
   def self.cached_metrics

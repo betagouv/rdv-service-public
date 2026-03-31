@@ -96,4 +96,20 @@ RSpec.describe "Un agent peut ajouter des usagers à un RDV Collectif", js: true
       expect(rdv.reload.participations.first.send_lifecycle_notifications).to be false
     end
   end
+
+  context "quand la mise à jour échoue" do
+    let!(:user) { create(:user, organisations: [organisation]) }
+
+    it "affiche le formulaire sans erreur 500" do
+      rdv = create(:rdv, :collectif, motif:, agents: [agent_noe], organisation:)
+      login_as(agent_noe, scope: :agent)
+      visit edit_admin_organisation_rdvs_collectif_path(organisation, rdv, add_user: [user.id])
+      allow(Rdv).to receive(:find).and_return(rdv)
+      allow(rdv).to receive(:update_and_notify).and_return(false)
+      rdv.errors.add(:base, "Une erreur est survenue")
+      click_button "Enregistrer"
+      expect(page).to have_content("Ajouter un participant")
+      expect(page).to have_content("Une erreur est survenue")
+    end
+  end
 end

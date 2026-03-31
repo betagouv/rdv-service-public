@@ -5,25 +5,36 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   before_action :set_plage_ouverture, only: %i[show edit update destroy]
   before_action :build_plage_ouverture, only: [:create]
   before_action :set_agents
+  before_action { @planning_layout = true }
 
   def show
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
   end
 
   def index
+    # TODO: retirer ce code 2 semaines après la mise en prod, il affiche une pastille sur les nouveaux onglets.
+    unless current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
+      current_agent.update_columns(feature_flags: current_agent.feature_flags.merge("new_planning" => true)) # rubocop:disable Rails/SkipsModelValidations
+    end
+
     @multiple_agents_makes_sense = true
     render :multi_agents_index and return if @agents.size > 1
 
     all_plage_ouvertures = policy_scope(current_organisation.plage_ouvertures, policy_scope_class: Agent::PlageOuverturePolicy::Scope)
       .includes(:lieu, :organisation, :motifs, :agent)
       .where(agent: @agent)
-      .order(updated_at: :desc)
     @plage_ouvertures = all_plage_ouvertures
       .where(expired_cached: filter_params[:current_tab] == "expired")
       .page(page_number)
     @plage_ouvertures_before_text_search = @plage_ouvertures
 
     @plage_ouvertures = @plage_ouvertures.search_by_text(params[:search]) if params[:search].present?
+
+    if filter_params[:current_tab] == "expired"
+      @plage_ouvertures.order!(first_day: :desc)
+    else
+      @plage_ouvertures.order!(first_day: :asc)
+    end
     @display_tabs = all_plage_ouvertures.where(expired_cached: true).any? || params[:current_tab] == "expired"
   end
 
@@ -128,7 +139,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
   def plage_ouverture_params
     params.require(:plage_ouverture).permit(
-      :title, :agent_id, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :lieu_id, :recurrence, :minutes_between_rdvs, :ignore_benign_errors, motif_ids: []
+      :title, :agent_id, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :lieu_id, :hex_color, :recurrence, :minutes_between_rdvs, :ignore_benign_errors, motif_ids: []
     )
   end
 

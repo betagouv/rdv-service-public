@@ -176,8 +176,6 @@ RSpec.configure do |config|
               created_at: { type: "string" },
               email: { type: "string", nullable: true },
               first_name: { type: "string" },
-              invitation_accepted_at: { type: "string", nullable: true },
-              invitation_created_at: { type: "string", nullable: true },
               last_name: { type: "string" },
               notify_by_email: { type: "boolean" },
               notify_by_sms: { type: "boolean" },
@@ -191,8 +189,8 @@ RSpec.configure do |config|
                 items: { "$ref" => "#/components/schemas/user_profile" },
               },
             },
-            required: %w[id address address_details affiliation_number birth_date birth_name created_at first_name invitation_accepted_at
-                         invitation_created_at last_name notify_by_email notify_by_sms phone_number phone_number_formatted responsible responsible_id user_profiles],
+            required: %w[id address address_details affiliation_number birth_date birth_name created_at first_name
+                         last_name notify_by_email notify_by_sms phone_number phone_number_formatted responsible responsible_id user_profiles],
           },
           user_profile_with_root: {
             type: "object",

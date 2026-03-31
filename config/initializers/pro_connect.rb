@@ -6,8 +6,10 @@ Rails.configuration.x.pro_connect_unreachable_at_boot_time = false
 
 if ENV["PRO_CONNECT_BASE_URL"].present?
   begin
-    # la méthode .discover! fait un appel à l'API de ProConnect
-    Rails.configuration.x.pro_connect_config = OpenIDConnect::Discovery::Provider::Config.discover!(ENV["PRO_CONNECT_BASE_URL"])
+    Rails.configuration.x.pro_connect_config = Rails.cache.fetch("pro_connect_discovery_config", expires_in: 3.days) do
+      # la méthode .discover! fait un appel à l'API de ProConnect
+      OpenIDConnect::Discovery::Provider::Config.discover!(ENV["PRO_CONNECT_BASE_URL"])
+    end
   rescue StandardError => e
     error_message = <<~MSG
       ProConnect n'est pas joignable au démarrage de l'application.

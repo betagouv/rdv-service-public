@@ -1,7 +1,6 @@
 div
   p= t("mailers.common.hello")
   p
-    - date = relative_date(@rdv.starts_at)
     - author = @author.full_name
     - if @author == @agent
       | Vous avez annulé la participation de #{@participation.user} au RDV collectif le #{l(@rdv.starts_at, format: :short)}.

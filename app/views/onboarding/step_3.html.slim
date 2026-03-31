@@ -1,0 +1,22 @@
+.rdv-background-color-alt-blue-ecume.fr-py-6v
+  .fr-container
+    = link_to root_path, class: "fr-btn fr-btn--tertiary fr-btn--sm fr-btn--icon-left fr-icon-arrow-left-line" do
+      | Retour à l’accueil
+
+    .fr-grid-row.justify-content-md-center
+      .card.fr-mt-6v.fr-mb-12v.fr-p-12v.fr-col-lg-8
+        .fr-container
+          = dsfr_stepper title: "Votre administration", value: 3, max: 3, header_level: 1
+
+          h2.fr-h4 Combien d’agents seront amenés à utiliser la solution ?
+          .fr-grid-row.fr-grid-row--gutters
+            .fr-col-12.fr-col-md-6
+              = dsfr_tile title: "Moins de 10 agents",
+                      url: webinaire_onboarding_path,
+                      image_src: "/assets/artwork/pictograms/buildings/city-hall.svg"
+            .fr-col-12.fr-col-md-6
+              = dsfr_tile title: "Plus de 10 agents",
+                      url: help_needed_onboarding_path,
+                      image_src: "/assets/artwork/pictograms/buildings/city-hall.svg"
+
+          = link_to "Précédent", step_2_onboarding_path, class: "fr-btn fr-btn--tertiary fr-btn--sm fr-btn--icon-left fr-icon-arrow-left-line fr-mt-6v"

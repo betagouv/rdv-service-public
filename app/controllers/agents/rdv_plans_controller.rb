@@ -80,7 +80,7 @@ class Agents::RdvPlansController < AgentAuthController
   def create_rdv
     rdv_plan_params = params.require(:rdv_plan)
 
-    user_attributes = rdv_plan_params.require(:user).permit(:notification_email, :phone_number)
+    user_attributes = rdv_plan_params.require(:user).permit(:email, :phone_number)
 
     # TODO: possible à mettre en commun ?
     participation_attributes = if @rdv_plan.motif.visible_and_notified?
@@ -135,12 +135,12 @@ class Agents::RdvPlansController < AgentAuthController
     organisation = agent.organisations.first
 
     event_sources = [
-      { id: "Rdv",                    url: admin_api_agenda_rdvs_path(agent_id: agent.id, organisation_id: organisation.id, format: :json) },
-      { id: "Absence",                url: admin_api_agenda_absences_path(agent_id: agent.id, organisation_id: organisation.id, format: :json) },
-      { id: "ExternalCalendarEvent",  url: admin_api_agenda_external_calendar_events_path(agent_id: agent.id, format: :json) },
-      { id: "PlageOuverture",         url: admin_api_agenda_plage_ouvertures_path(agent_id: agent.id, organisation_id: organisation.id, mixed_with_rdvs: true, format: :json) },
+      { id: "Rdv",            url: admin_api_agenda_rdvs_path(agent_id: agent.id, organisation_id: organisation.id, format: :json) },
+      { id: "Absence",        url: admin_api_agenda_absences_path(agent_id: agent.id, organisation_id: organisation.id, format: :json) },
+      { id: "PlageOuverture", url: admin_api_agenda_plage_ouvertures_path(agent_id: agent.id, organisation_id: organisation.id, mixed_with_rdvs: true, format: :json) },
       OffDays.to_full_calendar_array,
     ]
+    event_sources.push({ id: "ExternalCalendarEvent", url: admin_api_agenda_external_calendar_events_path(agent_id: agent.id, format: :json) }) if agent.caldav_configured?
 
     if @rdv_plan.starts_at
       event_sources << [

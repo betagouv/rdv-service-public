@@ -4,6 +4,21 @@
 # Cette validation fait des requêtes HTTP externes à l’API de l’ANTS
 #
 # cf /docs/interconnexions/ants.md
+#
+MOCK_RESPONSES = {
+  "RDVSPUB001" => { status: "validated", appointments: [] },
+  "RDVSPUB002" => { status: "validated", appointments: [] },
+  "RDVSPUB003" => { status: "validated", appointments: [] },
+  "RDVSPUB004" => { status: "consumed", appointments: [] },
+  "RDVSPUB005" => { status: "consumed", appointments: [] },
+  "RDVSPUB006" => { status: "consumed", appointments: [] },
+  "RDVSPUB007" => { status: "declared", appointments: [] },
+  "RDVSPUB008" => { status: "declared", appointments: [] },
+  "RDVSPUB009" => { status: "declared", appointments: [] },
+  "RDVSPUB010" => { status: "expired", appointments: [] },
+  "RDVSPUB011" => { status: "expired", appointments: [] },
+  "RDVSPUB012" => { status: "expired", appointments: [] },
+}.freeze
 
 class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
   include ActionView::Helpers::SanitizeHelper
@@ -17,11 +32,7 @@ class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
       record.ants_pre_demande_number.blank? ||
       !record.ants_pre_demande_number.upcase.match?(AntsPreDemandeNumberFormatValidator::REGEX)
 
-    status, appointments = AntsApi.status(
-      ants_pre_demande_number: record.ants_pre_demande_number.upcase,
-      meeting_point_id: get_meeting_point_id(record),
-      timeout: 4
-    ).values_at("status", "appointments")
+    status, appointments = fetch_ants_api_status(record).values_at("status", "appointments")
 
     return unless validate_status_validated(status, record)
 
@@ -35,6 +46,19 @@ class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
   end
 
   private
+
+  def fetch_ants_api_status(record)
+    if ENV["ANTS_RDV_API_MOCK_RESPONSES"] == "true"
+      MOCK_RESPONSES[record.ants_pre_demande_number.upcase]&.stringify_keys ||
+        { "status" => "unknown", "appointments" => [] }
+    else
+      AntsApi.status(
+        ants_pre_demande_number: record.ants_pre_demande_number.upcase,
+        meeting_point_id: get_meeting_point_id(record),
+        timeout: 4
+      )
+    end
+  end
 
   def get_meeting_point_id(record)
     meeting_point_id = record.respond_to?(:ants_meeting_point_id) ? record.ants_meeting_point_id : nil

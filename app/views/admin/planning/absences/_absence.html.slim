@@ -9,7 +9,7 @@ tr
       - if absence.first_day != absence.end_day
         | Du #{l(absence.starts_at, format: :human)} au #{l(absence.first_occurrence_ends_at, format: :human)}
       - else
-        | Le #{l(absence.first_day, format: :human)} #{display_time_range(absence)}
+        | #{human_date_format(absence.first_day).capitalize} #{display_time_range(absence)}
 
   td
     .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.rdv-gap-05rem

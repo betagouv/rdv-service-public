@@ -61,7 +61,7 @@ RSpec.describe "OAuth provider", js: true do
 
     # La fois suivante, il y a uniquement besoin de se connecter, pas de reconfirmer qu'on donne la permission à l'appli
     # Et on peut se connecter avant de faire l'oauth
-    click_on "Espace Agent"
+    click_on "Connexion Agent"
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"

@@ -26,5 +26,7 @@ dialog#agenda-preferences-modal.fr-modal[aria-labelledby="agenda-preferences-mod
                 - if group_by_agent
                   = f.dsfr_check_box :group_by_agent, label: "Grouper par agent"
 
+                = f.dsfr_check_box :display_extended_hours, label: "Afficher l'amplitude horaire complète (00h–24h)"
+
               / .mt-2
               = f.submit "Enregistrer", class: "fr-btn"

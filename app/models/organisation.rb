@@ -21,7 +21,7 @@ class Organisation < ApplicationRecord
   has_many :sector_attributions, dependent: :destroy
   has_many :plage_ouvertures, dependent: :destroy
   has_many :agent_roles, dependent: :delete_all # skips last admin validation
-  has_many :user_profiles, dependent: :restrict_with_error
+  has_many :user_profiles, dependent: :destroy
   has_many :external_references, as: :item, dependent: :destroy
 
   # Through relations
@@ -115,6 +115,13 @@ class Organisation < ApplicationRecord
 
   def sectorized?
     sector_attributions.any? && motifs.active.sectorized.any?
+  end
+
+  def online_booking_only_proconnect?
+    # Pour l’espace de RDV Service Public, on veut obliger les usagers à s'authentifier avec ProConnect
+    # pour éviter que des usagers prennent RDV alors que c’est un service réservé aux agents publics.
+    # Dans le futur, on permettra peut-être à d’autres organisations ou espaces de faire de même
+    domain == Domain::RDV_SERVICE_PUBLIC && territory_id == 2
   end
 
   private

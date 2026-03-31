@@ -6,12 +6,10 @@ class StatsController < ApplicationController
 
   def lieux_map_data
     render(json: Rails.cache.fetch("stats.both_instances.lieux_map_data") || [])
-  rescue MetabaseApi::Error => e
-    render(json: { error: e.message }, status: :internal_server_error)
   end
 
   def territories
-    @territories = Territory.all
+    @territories = Territory.where(public_stats: true)
   end
 
   def territory
@@ -41,7 +39,7 @@ class StatsController < ApplicationController
   private
 
   def set_territory_and_records
-    @territory = Territory.find(params[:territory])
+    @territory = Territory.where(public_stats: true).find(params[:territory])
     @rdvs = @territory.rdvs
     @users = @territory.users
     @organisations = @territory.organisations

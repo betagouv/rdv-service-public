@@ -162,7 +162,7 @@ RSpec.describe "RDV Plan API" do
         expect(rdv_plan.user).to have_attributes(
           first_name: "Francis",
           last_name: "Factice",
-          notification_email: "francis@factice.org",
+          email: "francis@factice.org",
           phone_number: "0611223344",
           address: "21 rue des Ardennes, 75019 Paris",
           birth_date: Date.parse("1990-12-31")
@@ -192,6 +192,30 @@ RSpec.describe "RDV Plan API" do
       it "returns an error" do
         get "/api/v1/rdv_plans/#{rdv_plan.id}", headers: headers, params: {}, as: :json
         expect(response.status).to eq 404
+      end
+    end
+
+    describe "utilise la bonne timezone" do
+      let(:organisation) { create(:organisation, time_zone: "America/Guadeloupe") }
+      let(:rdv) { create(:rdv, organisation: organisation) }
+      let(:rdv_plan) { create(:rdv_plan, planning_agent: agent, rdv: rdv) }
+
+      context "lorsque la timezone de l'organisation est la timezone par défaut (Europe/Paris)" do
+        let(:organisation) { create(:organisation) }
+
+        it "utilise la timezone de l'instance" do
+          get "/api/v1/rdv_plans/#{rdv_plan.id}", headers: headers, params: {}, as: :json
+          expect(parsed_response_body.dig("rdv_plan", "rdv", "starts_at")).to eq rdv.starts_at.to_s
+        end
+      end
+
+      context "lorsque la timezone de l'organisation est définie" do
+        let(:rdv) { create(:rdv, organisation: organisation, starts_at: Time.zone.parse("2025-01-15 10:00:00")) }
+
+        it "utilise la timezone de l'organisation" do
+          get "/api/v1/rdv_plans/#{rdv_plan.id}", headers: headers, params: {}, as: :json
+          expect(parsed_response_body.dig("rdv_plan", "rdv", "starts_at")).to eq "2025-01-15 10:00:00 -0400"
+        end
       end
     end
   end

@@ -1,5 +1,5 @@
-class CronJob::RefreshCartoAnctStatsJob < CronJob
+class CronJob::RefreshCartoANCTStatsJob < CronJob
   def perform
-    CartoAnct.write_cache
+    CartoANCT.write_cache if ENV["CARTO_ANCT_SHARED_SECRET"]
   end
 end

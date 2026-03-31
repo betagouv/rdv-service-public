@@ -5,11 +5,11 @@
   - if user.notify_by_email?
     = boolean_tag(true) do
       div= t(".email_present_and_enabled")
-      code= user.preferred_email
+      code= user.email
   - else
     = boolean_tag(false) do
       div= t(".email_disabled")
-      code= user.preferred_email
+      code= user.email
 - else
   = boolean_tag(false) do
     = t(".email_absent")

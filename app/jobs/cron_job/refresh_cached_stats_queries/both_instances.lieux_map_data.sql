@@ -11,9 +11,11 @@ WITH rdv_solidarites_lieux_actifs AS (
     rdvs.lieux
     LEFT JOIN rdvs.rdvs ON rdvs.lieu_id = lieux.id
     LEFT JOIN rdvs.organisations ON organisations.id = lieux.organisation_id
+    LEFT JOIN rdvs.territories ON territories.id = organisations.territory_id
   WHERE
     lieux.availability = 'enabled'
     AND rdvs.created_at > (CURRENT_DATE - INTERVAL '1 month')
+    AND territories.public_stats
   GROUP BY
     lieux.id,
     lieux.latitude,
@@ -27,8 +29,10 @@ rdv_solidarites_orgas_actives AS (
     organisations.name,
     count(rdvs.id) AS rdv_count_orga
   FROM rdvs.organisations
-  LEFT JOIN rdvs.rdvs ON rdvs.organisation_id = organisations.id
+    LEFT JOIN rdvs.rdvs ON rdvs.organisation_id = organisations.id
+    LEFT JOIN rdvs.territories ON territories.id = organisations.territory_id
   WHERE rdvs.created_at > (CURRENT_DATE - INTERVAL '1 month')
+    AND territories.public_stats
   GROUP BY organisations.id
   HAVING COUNT(rdvs.id) > 5
 ),
@@ -62,9 +66,11 @@ rdv_service_public_lieux_actifs AS (
     rdvsp.lieux
     LEFT JOIN rdvsp.rdvs ON rdvs.lieu_id = lieux.id
     LEFT JOIN rdvsp.organisations ON organisations.id = lieux.organisation_id
+    LEFT JOIN rdvsp.territories ON territories.id = organisations.territory_id
   WHERE
     lieux.availability = 'enabled'
     AND rdvs.created_at > (CURRENT_DATE - INTERVAL '1 month')
+    AND territories.public_stats
   GROUP BY
     lieux.id,
     lieux.latitude,
@@ -80,8 +86,10 @@ rdv_service_public_orgas_actives AS (
     organisations.ants_connectable,
     count(rdvs.id) AS rdv_count_orga
   FROM rdvsp.organisations
-  LEFT JOIN rdvsp.rdvs ON rdvs.organisation_id = organisations.id
+    LEFT JOIN rdvsp.rdvs ON rdvs.organisation_id = organisations.id
+    LEFT JOIN rdvsp.territories ON territories.id = organisations.territory_id
   WHERE rdvs.created_at > (CURRENT_DATE - INTERVAL '1 month')
+    AND territories.public_stats
   GROUP BY organisations.id
   HAVING COUNT(rdvs.id) > 5
 ),

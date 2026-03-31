@@ -1,6 +1,8 @@
 class Admin::Planning::AgendasController < AgentAuthController
   include Admin::Planning::SetAgentsConcern
 
+  before_action { @planning_layout = true }
+
   def show
     set_agents
 
@@ -24,19 +26,9 @@ class Admin::Planning::AgendasController < AgentAuthController
     redirect_back fallback_location: admin_organisation_planning_agenda_path(current_organisation)
   end
 
-  def toggle_new_planning
-    authorize(current_agent, :edit?, policy_class: Agent::AgentPolicy)
-    if params[:set_to] == "true"
-      current_agent.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
-    else
-      current_agent.disable_feature!(Agent::FeatureFlags::NEW_PLANNING)
-    end
-    redirect_back fallback_location: admin_organisation_planning_agenda_path(current_organisation)
-  end
-
   private
 
   def permitted_agent_params
-    params.require(:agent).permit(:display_saturdays, :display_cancelled_rdv, :group_by_agent)
+    params.require(:agent).permit(:display_saturdays, :display_cancelled_rdv, :group_by_agent, :display_extended_hours)
   end
 end

@@ -4,8 +4,6 @@
 # For further information see the following documentation
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
 
-# InStatus est le service dont on se sert pour communiquer les incidents
-in_status = "*.instatus.com"
 # Nous faisons des appels vers cette API dans notre recherche par adresse
 api_adresse_ign = "data.geopf.fr"
 # Nous utilisons mapbox via unpkg et les tiles etalab pour les interfaces de config de sectorisation
@@ -14,8 +12,6 @@ tiles_etalab = "etalab-tiles.fr"
 unpkg_cdn = "unpkg.com"
 tiles_osm = "tile.openstreetmap.org"
 tiles_data_gouv = "openmaptiles.data.gouv.fr"
-# Utilisé sur nos pages statiques (404.html, 500.html)
-bootstrap_cdn = "*.bootstrapcdn.com"
 # Metabase permet d’embedder des rapports dans l’application
 metabase = "rdv-service-public-metabase.osc-secnum-fr1.scalingo.io"
 # La suite (pour afficher les services dans la gaufre)
@@ -39,9 +35,9 @@ Rails.application.config.content_security_policy do |policy|
   policy.object_src :none
   policy.worker_src :blob
   policy.child_src :blob, :self
-  policy.frame_src :self, in_status, metabase
+  policy.frame_src :self, metabase
   policy.img_src :self, :data, :blob, tiles_osm, tiles_data_gouv, lasuite
-  policy.style_src :self, :unsafe_inline, bootstrap_cdn, unpkg_cdn
+  policy.style_src :self, :unsafe_inline, unpkg_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv, lasuite
 
   policy.script_src :self, mapbox_js_sha, maplibre_js_sha, *swagger_shas

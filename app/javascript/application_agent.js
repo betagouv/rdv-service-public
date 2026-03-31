@@ -6,7 +6,7 @@ import "@hotwired/turbo-rails"
 Turbo.session.drive = false
 
 import 'bootstrap'
-import 'select2/dist/js/select2.full.min.js'
+import 'select2/dist/js/select2'
 import 'select2/dist/js/i18n/fr.js'
 import { Datetimepicker } from './components/datetimepicker'
 import { Menu } from './components/menu'
@@ -27,7 +27,6 @@ import { MergeUsersForm } from './components/merge-users-form.js'
 import { SectorAttributionForm } from './components/sector-attribution-form.js'
 import { ZoneForm } from './components/zone-form.js'
 import { initializeSelect2 } from './components/select2-inputs'
-import { PlanningAgentSelect } from './components/planning-agent-select'
 import { planningAgentsSelect } from './components/planning-agents-select'
 import { AgendaMonoAgent } from './components/calendar'
 import { AgendaMultiAgent} from './components/calendar/agenda-multi-agent'
@@ -46,13 +45,18 @@ import CheckboxSelectAll from '@stimulus-components/checkbox-select-all'
 import MotifFormController from './controllers/motif_form_controller'
 import DestroyableController from './controllers/destroyable_controller'
 import DependentInputController from './controllers/dependent_input_controller'
-import './controllers'
+import FormController from "./controllers/form_controller"
+import PrintController from "./controllers/print_controller"
+import LagaufreController from "./controllers/lagaufre"
 
 window.Stimulus = Application.start()
 Stimulus.register('checkbox-select-all', CheckboxSelectAll)
 Stimulus.register('motif-form', MotifFormController)
 Stimulus.register('destroyable', DestroyableController)
 Stimulus.register('dependent-input', DependentInputController)
+Stimulus.register('form', FormController)
+Stimulus.register('print', PrintController)
+Stimulus.register('lagaufre', LagaufreController)
 
 import './stylesheets/print'
 import './stylesheets/application_agent'
@@ -117,7 +121,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
   new ZoneForm()
 
-  new PlanningAgentSelect()
   planningAgentsSelect()
 
   new AgendaMonoAgent()

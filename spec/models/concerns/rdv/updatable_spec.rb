@@ -121,6 +121,26 @@ RSpec.describe Rdv::Updatable, type: :concern do
         rdv_co.update_and_notify(agent, context: "some context")
         expect_no_notifications
       end
+
+      it "notifies when visio_url_custom is set on an existing collective visio rdv" do
+        motif_visio_co = create(:motif, :collectif, location_type: :visio, organisation:)
+        rdv_visio_co = create(:rdv, motif: motif_visio_co, users: [user_co1, user_co2], agents: [agent], organisation:, lieu: nil)
+        rdv_visio_co.reload
+        rdv_visio_co.update_and_notify(agent, visio_url_custom: "https://teams.live.com/somemeeting")
+        expect_notifications_sent_for(rdv_visio_co, user_co1, :rdv_updated)
+        expect_notifications_sent_for(rdv_visio_co, user_co2, :rdv_updated)
+        expect_notifications_sent_for(rdv_visio_co, agent, :rdv_updated)
+      end
+
+      it "notifies when visio_url_custom changes to a new value for collective visio rdv" do
+        motif_visio_co = create(:motif, :collectif, location_type: :visio, organisation:)
+        rdv_visio_co = create(:rdv, motif: motif_visio_co, users: [user_co1, user_co2], agents: [agent], organisation:, lieu: nil, visio_url_custom: "https://teams.live.com/originalmeeting")
+        rdv_visio_co.reload
+        rdv_visio_co.update_and_notify(agent, visio_url_custom: "https://teams.live.com/newmeeting")
+        expect_notifications_sent_for(rdv_visio_co, user_co1, :rdv_updated)
+        expect_notifications_sent_for(rdv_visio_co, user_co2, :rdv_updated)
+        expect_notifications_sent_for(rdv_visio_co, agent, :rdv_updated)
+      end
     end
 
     it "call Notifiers::RdvCreated when reloaded status from cancelled status" do

@@ -42,6 +42,7 @@ module SuperAdmins
 
     def invite
       authorize(:agent, :invite?, policy_class: SuperAdmin::AgentPolicy)
+      UnblockBrevoTransactionalContact.new(requested_resource.email).call
       requested_resource.invited_by = current_super_admin
       requested_resource.invite!(nil, validate: false)
       redirect_to(

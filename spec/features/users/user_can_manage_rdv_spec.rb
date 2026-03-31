@@ -82,9 +82,9 @@ RSpec.describe "User can manage their rdvs" do
           # Check Notifications
           perform_enqueued_jobs
           deliveries = ActionMailer::Base.deliveries
-          expect(deliveries.any? { |mail| mail.to == [agent1.email] && mail.subject == "RDV annulé #{relative_date(original_date)}" }).to be true
+          expect(deliveries.any? { |mail| mail.to == [agent1.email] && mail.subject == "RDV #{relative_date_with_preposition(original_date)} annulé" }).to be true
           expect(deliveries.any? do |mail|
-                   mail.to == [agent2.email] && mail.subject == "Nouveau RDV ajouté sur votre agenda RDV Service Public pour #{relative_date(rdv.reload.starts_at)}"
+                   mail.to == [agent2.email] && mail.subject == "Nouveau RDV ajouté pour #{relative_date(rdv.reload.starts_at)} sur votre agenda RDV Service Public"
                  end).to be true
           expect(deliveries.any? { |mail| mail.to == [user.email] && mail.subject == "RDV du #{I18n.l(original_date, format: :human)} modifié" }).to be true
         end

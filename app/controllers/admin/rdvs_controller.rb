@@ -75,6 +75,12 @@ class Admin::RdvsController < AgentAuthController
     authorize(@rdv, policy_class: Agent::RdvPolicy)
   end
 
+  def download_participants
+    authorize(@rdv, policy_class: Agent::RdvPolicy)
+    generator = ParticipantsCsv.new(@rdv)
+    send_data generator.generate_csv, filename: generator.filename, type: "text/csv"
+  end
+
   def edit
     add_user_ids = params[:add_user].to_a + params[:user_ids].to_a
     users_to_add = Agent::UserPolicy::TerritoryScope.new(pundit_user, User.where(id: add_user_ids)).resolve.distinct

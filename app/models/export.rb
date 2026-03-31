@@ -1,6 +1,4 @@
 class Export < ApplicationRecord
-  include RedisFileStorable
-
   STATUS_PENDING = :pending
   STATUS_EXPIRED = :expired
   STATUS_AVAILABLE = :available
@@ -15,6 +13,7 @@ class Export < ApplicationRecord
 
   # Relations
   belongs_to :agent
+  has_many :export_file_blobs, dependent: :destroy
 
   # Validations
   validates :expires_at, :file_name, presence: true
@@ -45,6 +44,18 @@ class Export < ApplicationRecord
 
   def organisations
     Organisation.where(id: organisation_ids)
+  end
+
+  def load_file
+    blob = export_file_blobs.where(page_index: nil).sole
+    Zlib.inflate(blob.data)
+  end
+
+  def store_file(content)
+    transaction do
+      update!(computed_at: Time.zone.now)
+      export_file_blobs.create!(page_index: nil, data: Zlib.deflate(content))
+    end
   end
 
   private

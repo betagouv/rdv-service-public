@@ -51,7 +51,7 @@ RSpec.describe Export do
     it "works" do
       export = create(:export)
 
-      expect { export.load_file }.to raise_error(Export::FileNotFoundError)
+      expect { export.load_file }.to raise_error(ActiveRecord::RecordNotFound)
       expect(export.computed_at).to be_nil
 
       export.store_file("dummy_data")

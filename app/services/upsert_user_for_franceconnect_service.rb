@@ -21,20 +21,19 @@ class UpsertUserForFranceconnectService < BaseService
 
   def update_existing_user
     @user.assign_attributes(user_attribute_values_from_fc)
-    if @user.encrypted_password.blank?
-      @user.notification_email = omniauth_info.email&.downcase
-    end
+    email_from_fc = omniauth_info.email.presence&.downcase
+    @user.email = email_from_fc if email_from_fc
     @user.save!(context: :france_connect_login)
   end
 
   def create_new_user
     @user = User.new(
       user_attribute_values_from_fc.merge(
-        notification_email: omniauth_info.email&.downcase,
+        email: omniauth_info.email&.downcase,
         created_through: "franceconnect_sign_up"
       )
     )
-    @user.skip_confirmation!
+    @user.latest_login_at = Time.zone.now
     @user.save!(context: :france_connect_login)
     @user
   end

@@ -1,7 +1,7 @@
 class PlageOuvertureBlueprint < Blueprinter::Base
   identifier :id
 
-  fields :ical_uid, :title, :first_day, :start_time, :end_time
+  fields :ical_uid, :title, :first_day, :start_time, :end_time, :hex_color
   association :agent, blueprint: AgentBlueprint
   association :organisation, blueprint: OrganisationBlueprint
   association :lieu, blueprint: LieuBlueprint

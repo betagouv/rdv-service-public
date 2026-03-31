@@ -20,6 +20,10 @@ module Rdv::UsingWaitingRoom
     Redis.with_connection do |redis|
       redis.sadd?(REDIS_WAITING_ROOM_KEY, id)
     end
+
+    agent_ids_from_db.each do |agent_id|
+      AgendaChannel.broadcast_to(agent_id, model: "Rdv", refresh_periods: [[starts_at, ends_at]])
+    end
   end
 
   class_methods do

@@ -12,7 +12,7 @@ class Admin::UsersController < AgentAuthController
     family_situation number_of_children
     notify_by_sms notify_by_email
     case_number address_details
-    logement ants_pre_demande_number notification_email
+    logement ants_pre_demande_number
   ].freeze
 
   PERMITTED_NESTED_ATTRIBUTES = {
@@ -55,12 +55,7 @@ class Admin::UsersController < AgentAuthController
   def create
     prepare_create
     authorize(@user, policy_class: Agent::UserPolicy)
-    @user.skip_confirmation_notification!
     user_persisted = @user_form.save(annotation_content: params.dig(:user, :annotation_content), current_territory:)
-
-    if invite_user?(@user, params)
-      @user.invite!(domain: current_domain)
-    end
 
     prepare_new unless user_persisted
 
@@ -87,7 +82,6 @@ class Admin::UsersController < AgentAuthController
   def update
     @user.assign_attributes(user_params)
     @user_form = user_form_object
-    @user.skip_reconfirmation! if @user.encrypted_password.blank?
     user_updated = @user_form.save(annotation_content: params.dig(:user, :annotation_content), current_territory:)
     if from_modal?
       respond_modal_with @user_form, location: modal_return_location
@@ -96,11 +90,6 @@ class Admin::UsersController < AgentAuthController
     else
       render :edit
     end
-  end
-
-  def invite
-    @user.invite!(domain: current_domain)
-    redirect_to admin_organisation_user_path(current_organisation, @user), flash: { success: "L’usager a été invité." }
   end
 
   def destroy
@@ -145,10 +134,6 @@ class Admin::UsersController < AgentAuthController
     params[:return_location].presence || request.referer
   end
 
-  def invite_user?(user, params)
-    user.persisted? && user.email.present? && (params[:invite_on_create] == "1")
-  end
-
   def prepare_new
     return unless @user.responsible.nil?
 
@@ -156,7 +141,7 @@ class Admin::UsersController < AgentAuthController
   end
 
   def prepare_create
-    @user = User.new(user_params.merge(invited_by: current_agent, created_through: "agent_creation"))
+    @user = User.new(user_params.merge(created_through: "agent_creation"))
     @user.responsible.created_through = "agent_creation" if @user.responsible&.new_record?
     @user_form = user_form_object
     @user.user_profiles.build(organisation: current_organisation)

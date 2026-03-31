@@ -22,6 +22,18 @@ RSpec.describe Lieu, type: :model do
       expect(lieu.errors.full_messages).to eq(["Adresse doit être valide"])
     end
 
+    describe "address_without_geocoding" do
+      it "est valide sans coordonnées si address_without_geocoding est vrai" do
+        lieu = build(:lieu, latitude: nil, longitude: nil, address_without_geocoding: true)
+        expect(lieu).to be_valid
+      end
+
+      it "reste invalide sans coordonnées si address_without_geocoding est faux" do
+        lieu = build(:lieu, latitude: nil, longitude: nil, address_without_geocoding: false)
+        expect(lieu).to be_invalid
+      end
+    end
+
     describe "availability changes" do
       let(:lieu) { create :lieu, availability: initial_value }
 

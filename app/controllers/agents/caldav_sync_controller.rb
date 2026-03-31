@@ -15,6 +15,7 @@ class Agents::CaldavSyncController < AgentAuthController
 
     error = caldav_config_error
     if error.nil?
+      flash[:success] = "La synchronisation avec votre agenda CalDAV #{current_agent.caldav_username} est activée."
       current_agent.save!
       Caldav::MassExportEventToCaldavJob.perform_later(current_agent)
     else
@@ -26,7 +27,7 @@ class Agents::CaldavSyncController < AgentAuthController
 
   def destroy
     skip_authorization
-    current_agent.update!(caldav_disconnect_in_progress: true)
+    current_agent.update!(caldav_disconnect_started_at: Time.current)
     Caldav::MassDestroyEventsAndAbsencesJob.perform_later(current_agent)
     redirect_to agents_calendar_sync_caldav_sync_path
   end

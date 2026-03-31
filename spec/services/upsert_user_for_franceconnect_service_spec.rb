@@ -9,8 +9,7 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
   end
 
   def expect_france_connect_fields_to_be_up_to_date(user)
-    expect(user.email).to be_nil # Pour un usager qui ne se connecte pas par email/mot de passe
-    expect(user.notification_email).to eq("jeanne@longo.fr")
+    expect(user.email).to eq("jeanne@longo.fr")
 
     expect(user.first_name).to eq("jeanne")
     expect(user.birth_name).to eq("longo")
@@ -35,7 +34,6 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
         create(
           :user,
           email: nil,
-          encrypted_password: "",
           franceconnect_openid_sub: "hvdiuds4357",
           logged_once_with_franceconnect: true,
           first_name: "Jeannine",
@@ -67,17 +65,16 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
           expect { service.perform }.not_to change(User, :count)
           expect(service.new_user?).to be(false)
           user = service.user.reload
-          expect(user.notification_email).to eq("jeanne@longo.fr")
+          expect(user.email).to eq("jeanne@longo.fr")
         end
       end
     end
 
-    context "when the user also users Devise to login with an email and a passowrd" do
+    context "when the user also uses a login code to login with an email" do
       before do
         create(
           :user,
           email: "jeanne@longo.fr",
-          password: "coRrect!h0rse",
           franceconnect_openid_sub: "hvdiuds4357",
           logged_once_with_franceconnect: true,
           first_name: "Jeannine",
@@ -95,7 +92,6 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
         expect(user).to have_attributes(
           {
             email: "jeanne@longo.fr",
-            notification_email: nil,
             birth_name: "longo",
           }
         )

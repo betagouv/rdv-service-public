@@ -106,8 +106,8 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
       end
     end
 
-    context "l’utilisateur n'a pas confirmé son compte" do
-      let(:user1) { create(:user, confirmed_at: nil) }
+    context "l’utilisateur ne s’est jamais connecté" do
+      let(:user1) { create(:user, latest_login_at: nil) }
 
       it "l'utilisateur reçoit un SMS de confirmation" do
         expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user1, token1)

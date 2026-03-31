@@ -256,7 +256,7 @@ RSpec.describe ProConnectController do
           pro_connect_openid_sub: "ab70770d-1285-46e6-b4d0-3601b49698d4",
           first_name: "Francis",
           last_name: "Factice",
-          confirmed_at: be_within(10.seconds).of(Time.zone.now)
+          latest_login_at: be_within(10.seconds).of(Time.zone.now)
         )
         expect(session["pro_connect_id_token"]).to be_present
 

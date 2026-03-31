@@ -8,13 +8,12 @@ import {
   eventRenderer,
   setupRealtimeRefresh,
   handleAjaxError,
-  classicHeaderToolbarLayout,
-  betaHeaderToolbarLayout,
-  betaWeekTitleFormat,
+  headerToolbarLayout,
+  weekTitleFormat,
   dayHeaderContent,
-  betaPlanningEnabled,
   preferencesModalToggle,
   hiddenDays,
+  calendarTimeRange,
 } from './calendar/utils'
 
 import Bowser from "bowser";
@@ -39,16 +38,17 @@ export class AgendaMonoAgent {
 
   initFullCalendar = () => {
     const options = {
+      ...calendarTimeRange(this.data),
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: handleAjaxError,
       initialDate: this.getDefaultDate(),
       initialView: this.getDefaultView(),
       hiddenDays: hiddenDays(this.data),
-      titleFormat: betaPlanningEnabled() ? betaWeekTitleFormat : null,
+      titleFormat: weekTitleFormat,
       dayHeaderContent: dayHeaderContent,
       select: this.selectEvent,
-      headerToolbar: betaPlanningEnabled() ? betaHeaderToolbarLayout : classicHeaderToolbarLayout,
+      headerToolbar: headerToolbarLayout,
       customButtons: { preferencesModalToggle },
       views: {
         timeGridOneDay: {

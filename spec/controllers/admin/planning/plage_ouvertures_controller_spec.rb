@@ -50,7 +50,7 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
         expect(assigns(:plage_ouvertures)).to eq([plage_ouverture])
       end
 
-      it "dispay tab when any expired plage" do
+      it "display tab when any expired plage" do
         now = Time.zone.parse("2020-11-23 13h30")
         travel_to(now)
         create(:plage_ouverture, organisation: organisation, agent: agent, first_day: now + 3.days)

@@ -8,7 +8,7 @@ import DsfrNewPassword from "./components/dsfr-new-password";
 import DsfrAlertClose from "./components/dsfr-alert-close";
 import { Modal } from './components/modal';
 import './components/browser-detection';
-import 'select2/dist/js/select2.min.js';
+import 'select2/dist/js/select2';
 import 'select2/dist/js/i18n/fr.js';
 import { initializeSelect2 } from './components/select2-inputs';
 import 'bootstrap';

@@ -37,6 +37,14 @@ module Anonymizer
     def truncated? = @data.fetch(:truncated, false)
     def anonymized_column_names = @data.fetch(:anonymized_column_names, [])
     def non_anonymized_column_names = @data.fetch(:non_anonymized_column_names, [])
+    def all_column_names = anonymized_column_names + non_anonymized_column_names
+
+    def non_existent_columns(connection)
+      return [] unless connection.table_exists?(table_name)
+
+      actual_columns = connection.columns(table_name).map(&:name)
+      all_column_names.reject { |col| actual_columns.include?(col) }
+    end
 
     private
 

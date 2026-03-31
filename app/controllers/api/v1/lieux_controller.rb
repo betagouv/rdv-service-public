@@ -6,7 +6,7 @@ class Api::V1::LieuxController < Api::V1::AgentAuthBaseController
   end
 
   def create
-    lieu = Lieu.new(params.permit(:organisation_id, :name, :address, :latitude, :longitude, :phone_number, :availability))
+    lieu = Lieu.new(params.permit(:organisation_id, :name, :address, :latitude, :longitude, :phone_number, :availability, :address_without_geocoding))
 
     authorize(lieu, policy_class: Agent::LieuPolicy)
 

@@ -43,10 +43,8 @@ class Admin::RdvsCollectifsController < AgentAuthController
 
   def edit
     @rdv = Rdv.find(params[:id])
-
     @add_user_ids = params[:add_user].to_a + params[:user_ids].to_a
-    users_to_add = Agent::UserPolicy::TerritoryScope.new(pundit_user, User.where(id: @add_user_ids)).resolve.distinct
-    @participations_to_add = users_to_add.ids.map { @rdv.participations.build(user_id: _1, created_by: current_agent) }
+    set_participations_to_add
 
     authorize(@rdv, policy_class: Agent::RdvPolicy)
   end
@@ -63,6 +61,8 @@ class Admin::RdvsCollectifsController < AgentAuthController
       flash[:success] = "Participants mis à jour"
       redirect_to edit_admin_organisation_rdvs_collectif_path(current_organisation, @rdv)
     else
+      @add_user_ids = update_users_params[:user_ids]
+      set_participations_to_add
       render :edit
     end
   end
@@ -89,5 +89,10 @@ class Admin::RdvsCollectifsController < AgentAuthController
       user_ids: [],
       participations_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy]
     )
+  end
+
+  def set_participations_to_add
+    users_to_add = Agent::UserPolicy::TerritoryScope.new(pundit_user, User.where(id: @add_user_ids)).resolve.distinct
+    @participations_to_add = users_to_add.ids.map { @rdv.participations.build(user_id: _1, created_by: current_agent) }
   end
 end

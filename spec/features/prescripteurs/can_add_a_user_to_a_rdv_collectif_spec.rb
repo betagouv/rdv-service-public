@@ -74,7 +74,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
     )
 
     perform_enqueued_jobs(only: ApplicationMailerDeliveryJob)
-    expect(first_email_sent_to(agent.email).subject).to include("Nouvelle participation au RDV collectif sur votre agenda RDV Service Public")
+    expect(first_email_sent_to(agent.email).subject).to match(/Nouvelle participation au RDV collectif .+ sur votre agenda RDV Service Public/)
     expect(first_email_sent_to("alex@prescripteur.fr").subject).to include("RDV confirmé")
     expect(first_email_sent_to("alex@prescripteur.fr").body).to include("RDV Aide Numérique")
 

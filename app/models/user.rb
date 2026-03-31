@@ -1,9 +1,19 @@
 class User < ApplicationRecord
+  # Ces colonnes sont orphelines suite à la suppression des modules Devise
+  # correspondants. Elles seront supprimées dans une migration ultérieure.
+  self.ignored_columns += %w[
+    encrypted_password
+    reset_password_token reset_password_sent_at
+    confirmed_at confirmation_token confirmation_sent_at unconfirmed_email
+    invitation_token invitation_created_at invitation_sent_at invitation_accepted_at invitation_limit invited_by_type invited_by_id
+    notification_email
+  ]
+
   # Mixins
   has_paper_trail(
     only: %w[
-      email notification_email first_name last_name birth_name
-      created_at confirmed_at invitation_accepted_at deleted_at
+      email first_name last_name birth_name
+      created_at latest_login_at deleted_at
       invited_through created_through
       address phone_number birth_date
       responsible_id
@@ -14,21 +24,16 @@ class User < ApplicationRecord
     ]
   )
 
-  devise :invitable, :database_authenticatable, :registerable, :timeoutable,
-         :recoverable, :validatable, :confirmable, :async
-
+  devise :timeoutable
   def timeout_in = 30.minutes # Used by Devise's :timeoutable
 
   include PgSearch::Model
   include FullNameConcern
   include User::FranceconnectFrozenFieldsConcern
   include User::NotificableConcern
-  include User::ImprovedUnicityErrorConcern
-  include User::DeviseInvitableWithDomain
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
   include TextSearch
-  include StrongPasswordConcern
   include User::SoftDeleteConcern
 
   def self.search_options
@@ -39,7 +44,7 @@ class User < ApplicationRecord
 
   # Attributes
   ONGOING_MARGIN = 1.hour.freeze
-  auto_strip_attributes :email, :notification_email, :first_name, :last_name, :birth_name
+  auto_strip_attributes :email, :first_name, :last_name, :birth_name
 
   enum :caisse_affiliation, { aucune: 0, caf: 1, msa: 2 }
   enum :family_situation, { single: 0, in_a_relationship: 1, divorced: 2 }
@@ -80,13 +85,13 @@ class User < ApplicationRecord
   validates :ants_pre_demande_number, ants_pre_demande_number_format: true
 
   EMAIL_REGEXP = Devise.email_regexp
-  validates :notification_email, format: { with: EMAIL_REGEXP }, allow_blank: true
+  validates :email, format: { with: EMAIL_REGEXP }, allow_blank: true
 
   validate :birth_date_validity
 
   # Hooks
   before_save :set_email_to_null_if_blank
-  before_save :clear_notification_email_if_email_present
+  before_save :reset_latest_login_at_on_email_change
   normalizes :email, with: ->(email) { email.downcase }
 
   # Scopes
@@ -94,6 +99,15 @@ class User < ApplicationRecord
 
   scope :responsible, -> { where(responsible_id: nil) }
   scope :relative, -> { where.not(responsible_id: nil) }
+  scope :fiches_for_email, ->(email) { where(email:) }
+  scope :without_sso, -> { where(franceconnect_openid_sub: nil, pro_connect_openid_sub: nil) }
+  scope :loginable_by_code_for_email, ->(email) { fiches_for_email(email).without_sso }
+  scope :loginable_by_code_for_email_in_territory_or_without_territory, lambda { |email, territory_id:|
+    loginable_by_code_for_email(email)
+      .left_joins(organisations: :territory)
+      .where(territories: { id: [territory_id, nil] })
+      .distinct
+  }
 
   ## -
 
@@ -110,10 +124,6 @@ class User < ApplicationRecord
     super(sanitize_email(email))
   end
 
-  def notification_email=(email)
-    super(sanitize_email(email))
-  end
-
   def add_organisation(organisation)
     self_and_relatives_and_responsible.each do |u|
       u.organisations << organisation if u.organisation_ids.exclude?(organisation.id)
@@ -121,14 +131,7 @@ class User < ApplicationRecord
   end
 
   def delete_credentials_and_access_informations
-    update!(
-      encrypted_password: "",
-      confirmed_at: nil,
-      logged_once_with_franceconnect: false,
-      franceconnect_openid_sub: nil,
-      reset_password_token: nil,
-      reset_password_sent_at: nil
-    )
+    update!(latest_login_at: nil, logged_once_with_franceconnect: false, franceconnect_openid_sub: nil)
   end
 
   def available_users_for_rdv
@@ -141,14 +144,6 @@ class User < ApplicationRecord
 
   def self_and_relatives_and_responsible
     [self, relatives, responsible].compact.flatten
-  end
-
-  def invitable?
-    invitation_accepted_at.nil? &&
-      encrypted_password.blank? &&
-      email.present? && !relative? &&
-      invited_through != "external" &&
-      !logged_once_with_franceconnect?
   end
 
   def active_for_authentication?
@@ -232,8 +227,6 @@ class User < ApplicationRecord
   def domain
     if rdvs.any?
       rdvs.order(created_at: :desc).first.domain
-    elsif sign_up_domain
-      sign_up_domain
     else
       Domain.default_domain_for_current_instance
     end
@@ -270,8 +263,21 @@ class User < ApplicationRecord
     Annotation.upsert!(content, user: self, territory:)
   end
 
+  def self.create_from_login_code!(email:, login_code:)
+    create!(
+      email:,
+      first_name: login_code.first_name,
+      last_name: login_code.last_name,
+      created_through: "auto_through_login"
+    )
+  end
+
   def connected_with_sso?
     (franceconnect_openid_sub || pro_connect_openid_sub).present?
+  end
+
+  def already_logged_in?
+    latest_login_at?
   end
 
   protected
@@ -283,32 +289,12 @@ class User < ApplicationRecord
     end
   end
 
-  def password_required?
-    false # users without passwords and emails can be created by agents
-  end
-
-  def email_required?
-    false # users without passwords and emails can be created by agents
-  end
-
-  def confirmation_required?
-    return false if signed_in_with_invitation_token?
-
-    super
-  end
-
-  def reconfirmation_required?
-    return false if signed_in_with_invitation_token?
-
-    super
-  end
-
   def set_email_to_null_if_blank
     self.email = nil if email.blank?
   end
 
-  def clear_notification_email_if_email_present
-    self.notification_email = nil if email.present?
+  def reset_latest_login_at_on_email_change
+    self.latest_login_at = nil if email_changed? && email_was.present?
   end
 
   def birth_date_validity

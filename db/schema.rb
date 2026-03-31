@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_19_141217) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_25_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -147,7 +147,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_141217) do
     t.string "caldav_agenda_url"
     t.string "caldav_username"
     t.string "caldav_password"
-    t.boolean "caldav_disconnect_in_progress", default: false, null: false
     t.datetime "blog_read_at"
     t.string "pro_connect_openid_sub"
     t.string "caldav_sync_token"
@@ -155,6 +154,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_141217) do
     t.boolean "group_by_agent", default: false, null: false
     t.string "pro_connect_idp_id", comment: "Fournisseur d'identité ProConnect (identity provider)"
     t.boolean "sensitive_account", default: false, null: false
+    t.datetime "caldav_disconnect_started_at"
+    t.boolean "display_extended_hours", default: false, null: false
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -209,6 +210,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_141217) do
     t.string "categories", default: [], array: true
     t.string "external_url", null: false
     t.datetime "published_at", null: false
+  end
+
+  create_table "export_file_blobs", force: :cascade do |t|
+    t.uuid "export_id", null: false
+    t.integer "page_index"
+    t.binary "data", null: false
+    t.datetime "created_at", null: false
+    t.index ["export_id", "page_index"], name: "index_export_file_blobs_on_export_id_and_page_index"
   end
 
   create_table "exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -374,6 +383,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_141217) do
     t.enum "availability", default: "enabled", null: false, comment: "Permet de savoir si le lieu est un lieu normal (enabled), un lieu ponctuel qui sera utilisé pour un seul rdv (single_use), ou un lieu supprimé par soft-delete (disabled). Dans la plupart des cas on s'intéresse uniquement aux lieux enabled\n", enum_type: "lieu_availability"
     t.string "address", null: false
     t.string "code_postal"
+    t.boolean "address_without_geocoding", default: false, null: false
     t.index ["availability"], name: "index_lieux_on_availability"
     t.index ["name"], name: "index_lieux_on_name"
     t.index ["organisation_id"], name: "index_lieux_on_organisation_id"
@@ -491,9 +501,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_141217) do
     t.datetime "updated_at", null: false
     t.text "logo_base64"
     t.text "post_logout_redirect_uri"
-    t.bigint "default_service_id", comment: "Indique le service qui sera ajouté au territoire par défaut si un agent qui utilise cette application ouvre un nouvel espace.\nCette colonne indique aussi que les agents qui utilisent cette application sont autorisés à ouvrir un nouvel espace.\n"
     t.boolean "grants_autonomous_signup", default: false, null: false
-    t.index ["default_service_id"], name: "index_oauth_applications_on_default_service_id"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
@@ -513,6 +521,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_141217) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "siret"
+    t.string "support_link"
   end
 
   create_table "organisations", force: :cascade do |t|
@@ -583,6 +593,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_141217) do
     t.time "secondary_start_time"
     t.time "secondary_end_time"
     t.integer "minutes_between_rdvs", default: 0, null: false
+    t.string "hex_color", limit: 7, default: "#c6ecff", null: false
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_plage_ouvertures_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_plage_ouvertures_on_agent_id"
     t.index ["expired_cached"], name: "index_plage_ouvertures_on_expired_cached"
@@ -748,8 +759,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_141217) do
   create_table "territories", force: :cascade do |t|
     t.string "departement_number", default: "", null: false
     t.string "name"
-    t.string "phone_number"
-    t.string "phone_number_formatted"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.enum "sms_provider", enum_type: "sms_provider"
@@ -772,6 +781,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_141217) do
     t.boolean "enable_address_field", default: false
     t.boolean "work_on_sunday", default: false
     t.bigint "operator_id"
+    t.boolean "public_stats", default: true, null: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", where: "((departement_number)::text <> ''::text)"
     t.index ["operator_id"], name: "index_territories_on_operator_id"
   end
@@ -862,11 +872,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_141217) do
     t.string "notification_email", comment: "Used for notifications only, multiple users can share the same email notification address"
     t.virtual "text_search_terms_with_notification_email", type: :tsvector, as: "((((((setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(last_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(first_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(birth_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'C'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(notification_email, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(email, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(phone_number_formatted, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE((id)::text, ''::text)), 'D'::\"char\"))", stored: true
     t.string "pro_connect_openid_sub"
+    t.datetime "latest_login_at"
     t.index ["ants_pre_demande_number"], name: "index_users_on_ants_pre_demande_number", where: "(ants_pre_demande_number IS NOT NULL)"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
-    t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
+    t.index ["email"], name: "index_users_on_email", where: "(email IS NOT NULL)"
     t.index ["first_name"], name: "index_users_on_first_name"
     t.index ["franceconnect_openid_sub"], name: "index_users_on_franceconnect_openid_sub", where: "(franceconnect_openid_sub IS NOT NULL)"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
@@ -932,6 +943,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_141217) do
   add_foreign_key "annotations", "territories"
   add_foreign_key "annotations", "users"
   add_foreign_key "api_calls", "agents"
+  add_foreign_key "export_file_blobs", "exports"
   add_foreign_key "exports", "agents"
   add_foreign_key "external_calendar_events", "agents"
   add_foreign_key "external_references", "oauth_applications"
@@ -951,7 +963,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_141217) do
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "agents", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
-  add_foreign_key "oauth_applications", "services", column: "default_service_id"
   add_foreign_key "operator_managers", "operators"
   add_foreign_key "organisations", "territories"
   add_foreign_key "participations", "rdvs"

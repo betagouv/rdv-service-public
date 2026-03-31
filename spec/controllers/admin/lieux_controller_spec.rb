@@ -48,6 +48,23 @@ RSpec.describe Admin::LieuxController, type: :controller do
       end
     end
 
+    context "with address_without_geocoding and no coordinates" do
+      let(:valid_attributes) do
+        build(:lieu, latitude: nil, longitude: nil, address_without_geocoding: true).attributes
+      end
+
+      it "creates a new Lieu" do
+        expect do
+          post :create, params: { organisation_id: organisation.id, lieu: valid_attributes }
+        end.to change(Lieu, :count).by(1)
+      end
+
+      it "persiste address_without_geocoding à true" do
+        post :create, params: { organisation_id: organisation.id, lieu: valid_attributes }
+        expect(Lieu.last.address_without_geocoding).to be true
+      end
+    end
+
     context "with invalid params" do
       let(:invalid_attributes) do
         {

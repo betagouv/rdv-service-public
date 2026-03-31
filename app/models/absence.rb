@@ -1,6 +1,4 @@
 class Absence < ApplicationRecord
-  self.ignored_columns += %w[caldav_url]
-
   # Mixins
   has_paper_trail
   include WebhookDeliverable

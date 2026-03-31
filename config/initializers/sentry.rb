@@ -9,7 +9,7 @@ Sentry.init do |config|
 
   # cf docs/5-role-de-vigie.md
   # et https://docs.sentry.io/platforms/ruby/guides/rails/configuration/filtering/
-  config.excluded_exceptions -= ["ActiveRecord::RecordNotFound"]
+  config.excluded_exceptions -= ["ActiveRecord::RecordNotFound", "ActionController::InvalidAuthenticityToken"]
 
   # send_default_pii est désactivé par défaut
   # L’activer envoie par défaut pour toutes les requêtes HTTP : les params, le body, les cookies, l’IP.

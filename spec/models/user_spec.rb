@@ -1,4 +1,55 @@
 RSpec.describe User, type: :model do
+  describe ".fiches_for_email" do
+    let!(:user_1)     { create(:user, email: "test@example.fr") }
+    let!(:user_2)     { create(:user, email: "test@example.fr") }
+    let!(:user_other) { create(:user, email: "other@example.fr") }
+
+    it "retourne les fiches dont l'email correspond" do
+      expect(described_class.fiches_for_email("test@example.fr")).to contain_exactly(user_1, user_2)
+    end
+
+    it "ne retourne pas les fiches sans lien avec l'email" do
+      expect(described_class.fiches_for_email("test@example.fr")).not_to include(user_other)
+    end
+  end
+
+  describe ".loginable_by_code_for_email" do
+    let!(:user_normal) { create(:user, email: "test@example.fr") }
+    let!(:user_sso)    { create(:user, email: "test@example.fr", franceconnect_openid_sub: "abc123") }
+
+    it "exclut les fiches connectées via SSO" do
+      expect(described_class.loginable_by_code_for_email("test@example.fr")).to contain_exactly(user_normal)
+    end
+  end
+
+  describe ".loginable_by_code_for_email_in_territory_or_without_territory" do
+    let!(:territory_1)    { create(:territory) }
+    let!(:territory_2)    { create(:territory) }
+    let!(:orga_1)         { create(:organisation, territory: territory_1) }
+    let!(:orga_2)         { create(:organisation, territory: territory_2) }
+    let!(:user_in)        { create(:user, email: "test@example.fr", organisations: [orga_1]) }
+    let!(:user_out)       { create(:user, email: "test@example.fr", organisations: [orga_2]) }
+    let!(:user_no_org)    { create(:user, email: "test@example.fr") }
+    let!(:user_sso)       { create(:user, email: "test@example.fr", franceconnect_openid_sub: "abc123", organisations: [orga_1]) }
+
+    it "retourne les fiches du territoire donné et les fiches sans territoire, en excluant le SSO" do
+      expect(described_class.loginable_by_code_for_email_in_territory_or_without_territory("test@example.fr", territory_id: territory_1.id)).to contain_exactly(user_in, user_no_org)
+    end
+  end
+
+  describe ".create_from_login_code!" do
+    let(:login_code) { build(:login_code, email: "new@example.fr", first_name: "Alice", last_name: "Dupont") }
+
+    it "crée un usager avec les attributs du login code" do
+      user = described_class.create_from_login_code!(email: "new@example.fr", login_code:)
+      expect(user).to be_persisted
+      expect(user.email).to eq("new@example.fr")
+      expect(user.first_name).to eq("Alice")
+      expect(user.last_name).to eq("Dupont")
+      expect(user.created_through).to eq("auto_through_login")
+    end
+  end
+
   describe "#email=" do
     it %(automatically fixes ".@" typo) do
       expect(described_class.new(email: "francis.@exemple.fr").email).to eq("francis@exemple.fr")
@@ -145,30 +196,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  # cf https://github.com/heartcombo/devise/wiki/How-To:-Email-only-sign-up
-  describe "#set_reset_password_token" do
-    it "returns the plaintext token" do
-      user = build(:user)
-      potential_token = user.send(:set_reset_password_token)
-      potential_token_digest = Devise.token_generator.digest(user, :reset_password_token, potential_token)
-      actual_token_digest = user.reset_password_token
-      expect(potential_token_digest).to eql(actual_token_digest)
-    end
-  end
-
-  describe "#invitation_period_valid?" do
-    subject { user.send(:invitation_period_valid?) }
-
-    let(:invitation_created_at) { Time.zone.parse("2022-04-05 13:00") }
-    let(:user) { create(:user, invitation_created_at: invitation_created_at) }
-
-    before { travel_to(Time.zone.parse("2022-04-05 13:45")) }
-
-    it "is valid" do
-      expect(subject).to be(true)
-    end
-  end
-
   describe "#minor?" do
     it "return true when user birth in 2016 and we are un 2020" do
       now = Time.zone.parse("2020-4-3 13:45")
@@ -244,17 +271,106 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "when notification_email is not valid" do
-    it "does not allow invalid email with single letter domain name" do
-      user = build(:user, :without_devise_email, notification_email: "test@domain.a")
-      expect(user).not_to be_valid
-      expect(user.errors[:notification_email]).to include("n'est pas valide")
+  describe "#domain" do
+    context "when user has no RDV" do
+      let(:user) { create(:user) }
+
+      context "on the RDV Solidarités instance" do
+        stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: "true")
+
+        it "uses RDV_SOLIDARITES" do
+          expect(user.domain).to eq(Domain::RDV_SOLIDARITES)
+        end
+      end
+
+      context "on another instance" do
+        stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: nil)
+
+        it "uses RDV Service Public" do
+          expect(user.domain).to eq(Domain::RDV_SERVICE_PUBLIC)
+        end
+      end
     end
 
-    it "does not allow invalid email that starts with a dot" do
-      user = build(:user, :without_devise_email, notification_email: ".test@domain.com")
-      expect(user).not_to be_valid
-      expect(user.errors[:notification_email]).to include("n'est pas valide")
+    context "when user only has RDV Solidarités rdvs" do
+      let!(:organisation) { create(:organisation, verticale: :rdv_solidarites) }
+      let!(:user) { create(:user) }
+      let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, users: [user]) }
+
+      it "uses RDV_SOLIDARITES" do
+        expect(user.domain).to eq(Domain::RDV_SOLIDARITES)
+      end
+    end
+
+    context "when user has some rdvs" do
+      let!(:user) { create(:user) }
+      let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, users: [user]) }
+
+      context "in a RDV Insertion organisation" do
+        let!(:organisation) { create(:organisation, verticale: :rdv_insertion) }
+
+        it "uses RDV_SOLIDARITES" do
+          expect(user.domain).to eq(Domain::RDV_SOLIDARITES)
+        end
+      end
+
+      context "in a RDV Aide Numerique organisation" do
+        let!(:organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
+
+        it "uses RDV_AIDE_NUMERIQUE" do
+          expect(user.domain).to eq(Domain::RDV_AIDE_NUMERIQUE)
+        end
+      end
+
+      context "in a RDV Mairie organisation" do
+        let!(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+
+        it "uses RDV_SERVICE_PUBLIC" do
+          expect(user.domain).to eq(Domain::RDV_SERVICE_PUBLIC)
+        end
+      end
+    end
+
+    context "when user has mixed RDV domains and most recent is rdv_aide_numerique" do
+      let!(:user) { create(:user) }
+      let!(:old_domain_organisation) { create(:organisation, verticale: :rdv_solidarites) }
+      let!(:old_domain_organisation2) { create(:organisation, verticale: :rdv_insertion) }
+      let!(:new_domain_organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
+      let!(:recent_rdv) { create(:rdv, organisation: new_domain_organisation, created_at: 2.days.ago, users: [user]) }
+      let!(:old_rdv) { create(:rdv, organisation: old_domain_organisation, created_at: 3.months.ago, users: [user]) }
+      let!(:old_rdv2) { create(:rdv, organisation: old_domain_organisation2, created_at: 4.months.ago, users: [user]) }
+
+      it "uses the domain of the most recently created rdv" do
+        expect(user.domain).to eq(Domain::RDV_AIDE_NUMERIQUE)
+      end
+    end
+
+    context "when user has mixed RDV domains and most recent is rdv_solidarites" do
+      let!(:user) { create(:user) }
+      let!(:old_domain_organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
+      let!(:old_domain_organisation2) { create(:organisation, verticale: :rdv_insertion) }
+      let!(:new_domain_organisation) { create(:organisation, verticale: :rdv_solidarites) }
+      let!(:recent_rdv) { create(:rdv, organisation: new_domain_organisation, created_at: 2.days.ago, users: [user]) }
+      let!(:old_rdv) { create(:rdv, organisation: old_domain_organisation, created_at: 3.months.ago, users: [user]) }
+      let!(:old_rdv2) { create(:rdv, organisation: old_domain_organisation2, created_at: 4.months.ago, users: [user]) }
+
+      it "uses the domain of the most recently created rdv" do
+        expect(user.domain).to eq(Domain::RDV_SOLIDARITES)
+      end
+    end
+
+    context "when user has mixed RDV domains and most recent is rdv_insertion" do
+      let!(:user) { create(:user) }
+      let!(:old_domain_organisation) { create(:organisation, verticale: :rdv_solidarites) }
+      let!(:old_domain_organisation2) { create(:organisation, verticale: :rdv_aide_numerique) }
+      let!(:new_domain_organisation) { create(:organisation, verticale: :rdv_insertion) }
+      let!(:recent_rdv) { create(:rdv, organisation: new_domain_organisation, created_at: 2.days.ago, users: [user]) }
+      let!(:old_rdv) { create(:rdv, organisation: old_domain_organisation, created_at: 3.months.ago, users: [user]) }
+      let!(:old_rdv2) { create(:rdv, organisation: old_domain_organisation2, created_at: 4.months.ago, users: [user]) }
+
+      it "uses the domain of the most recently created rdv" do
+        expect(user.domain).to eq(Domain::RDV_SOLIDARITES)
+      end
     end
   end
 end

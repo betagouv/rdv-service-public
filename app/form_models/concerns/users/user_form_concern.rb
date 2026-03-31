@@ -8,14 +8,14 @@ module Users::UserFormConcern
 
     delegate :first_name, :last_name, :birth_name, :birth_date,
              :phone_number, :phone_number_mobile?,
-             :email, :email_changed?, :notification_email,
+             :email, :email_changed?,
              :address, :address_details, :city_code, :post_code, :city_name,
              :caisse_affiliation, :affiliation_number, :logement,
              :notify_by_email, :notify_by_sms,
              :connected_with_sso?, :pro_connect_openid_sub,
              :logged_once_with_franceconnect?, :signed_in_with_invitation_token?,
              :errors, :errors_are_all_benign?, :benign_errors,
-             :ants_pre_demande_number,
+             :ants_pre_demande_number, :already_logged_in?,
              to: :user
 
     def self.human_attribute_name(...) = User.human_attribute_name(...)
@@ -35,20 +35,13 @@ module Users::UserFormConcern
 
   def show_franceconnect_frozen_fields_warning? = logged_once_with_franceconnect?
 
-  # Pour des raisons historiques on garde le champ email
-  def show_email_field? = signed_in_with_invitation_token? && email.present?
+  # Champ email du parcours de RDV :
+  # - Usager invité via token → affiché, modifiable sauf si il s'est déjà connecté
+  # - SSO (FC/ProConnect) → affiché, modifiable
+  # - Usager connecté via code → pas affiché (A voir plus tard https://github.com/betagouv/rdv-service-public/pull/6259#discussion_r2959304082)
+  def show_email_field? = signed_in_with_invitation_token? || connected_with_sso?
 
-  def email_disabled? = email.present? && !email_changed?
-
-  def show_notification_email_field?
-    email.blank? && (signed_in_with_invitation_token? || (notification_email && connected_with_sso?))
-  end
-
-  def notification_email_label = signed_in_with_invitation_token? ? "Email" : "Email de notification"
-
-  # Nous ne voulons pas perdre d'informations si l'utilisateur a déjà un email de notification, donc le champ est requis.
-  # L'utilisateur peut définir un email de notification s'il n'en a pas encore, mais ce n'est pas obligatoire.
-  def notification_email_required? = signed_in_with_invitation_token? && notification_email.present?
+  def email_disabled? = signed_in_with_invitation_token? && email.present? && already_logged_in?
 
   def show_landline_phone_number_warning? = phone_number.present? && !phone_number_mobile?
 

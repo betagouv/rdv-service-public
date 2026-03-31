@@ -19,11 +19,21 @@ RSpec.describe "Agent can update user" do
     fill_in :user_last_name, with: "reynolds"
     fill_in "Email", with: "jeanne@reynolds.com"
     click_button "Enregistrer"
-    # When the user has already a pwd, changing email send a confirmation email
-    open_email("jeanne@reynolds.com")
-    expect(current_email.subject).to eq "Instructions de confirmation de votre nouvelle adresse email"
     expect_page_title("jeanne REYNOLDS")
-    expect(page).to have_content("En attente de confirmation pour jeanne@reynolds.com")
+    expect(page).to have_content("jeanne@reynolds.com")
+  end
+
+  it "affiche un avertissement quand l'usager s'est déjà connecté" do
+    within("#spec-primary-user-card") { click_link "Modifier" }
+    expect(page).to have_content("Cet usager utilise cette adresse email pour se connecter.")
+  end
+
+  it "réinitialise le statut de connexion lors d'un changement d'email" do
+    expect(user.already_logged_in?).to be true
+    within("#spec-primary-user-card") { click_link "Modifier" }
+    fill_in "Email", with: "nouveau@email.fr"
+    click_button "Enregistrer"
+    expect(user.reload.already_logged_in?).to be false
   end
 
   describe "optional fields" do
@@ -71,22 +81,20 @@ RSpec.describe "Agent can update user" do
 
   context "unregistered user" do
     let!(:user) do
-      create(:user, :unregistered, first_name: "Jean", last_name: "LEGENDE", email: nil, organisations: [organisation])
+      create(:user, latest_login_at: nil, first_name: "Jean", last_name: "LEGENDE", email: nil, organisations: [organisation])
     end
 
     it "add email to existing user" do
       within("#spec-primary-user-card") { click_link "Modifier" }
       fill_in "Email", with: "jean@legende.com"
       click_button "Enregistrer"
-      click_link "Inviter"
-      open_email("jean@legende.com")
-      expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
+      expect(page).to have_content("jean@legende.com")
     end
   end
 
-  context "usager n’a pas encore confirmé son compte" do
+  context "usager ne s'est jamais connecté" do
     # lorsqu’un usager a confirmé son compte, l’agent n’a plus la main sur ses préférences de notifs
-    let!(:user) { create(:user, :unconfirmed, organisations: [organisation]) }
+    let!(:user) { create(:user, latest_login_at: nil, organisations: [organisation]) }
 
     it "permet de désactiver et réactiver les préférences de notifications SMS et email" do
       within("#spec-primary-user-card") { click_link "Modifier" }
