@@ -243,7 +243,7 @@ jobs:
       - name: Cache js dependencies
         uses: actions/cache@v5
         with:
-          key: node_modules-${{ hashFiles(‘yarn.lock’) }}
+          key: node_modules-${{ hashFiles('yarn.lock') }}
           path: node_modules
       - name: Install JS dependencies
         run: yarn install --immutable
@@ -273,8 +273,8 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: tmp/capybara/autodoc
-        continue-on-error: true # On ne veut pas faire échouer le build si l’upload de l’artifact de la doc échoue
-        if: ${{ github.ref == ‘refs/heads/production’ }}
+        continue-on-error: true # On ne veut pas faire échouer le build si l'upload de l’artifact de la doc échoue
+        if: ${{ github.ref == 'refs/heads/production' }}
       - uses: actions/upload-artifact@v6
         if: always()
         with:
