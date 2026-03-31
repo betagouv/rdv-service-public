@@ -61,6 +61,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
         let(:date_fin) { "2024-08-20T08:00:00+02:00" }
       end
     end
+
     post "Prendre un rdv" do
       with_visioplainte_authentication
 

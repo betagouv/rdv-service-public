@@ -90,6 +90,7 @@ Rails.application.routes.draw do
     get :user_name_initials_verification, to: redirect(path: "/users/user_name_initials_verification/new")
 
     post "file_attente", to: "file_attentes#create_or_delete"
+    get "file_attente/unsubscribe/:token", to: "file_attentes#unsubscribe", as: "unsubscribe_file_attente"
 
     resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code" do
       collection do

@@ -1,6 +1,6 @@
 require "swagger_helper"
 
-RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rubocop:disable RSpec/EmptyExampleGroup
+RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
   stub_env_with(DB_SEEDS_USERS_AND_AGENTS_PASSWORD: "Rdvservicepublictest1!")
 
   before do
@@ -22,17 +22,27 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
         Cet endpoint ne prend pas encore en compte les absences." do
       with_visioplainte_authentication
       tags "Plages d'ouverture"
+
+      parameter name: "date_debut", in: :query, type: :string, description: "date au format iso8601 (YYYY-MM-DD), premier jour de la liste qu’on renverra",
+                example: "2024-12-22", required: true
+      parameter name: "date_fin", in: :query, type: :string, description: "date au format iso8601 (YYYY-MM-DD), dernier jour de la liste qu’on renverra (inclus dans les résultats)",
+                example: "2024-12-28", required: true
+      parameter name: "guichet_ids[]", in: :query, type: :array,
+                description: "Une liste d'ids des guichets sur lesquels on veut filtrer les plages d'ouverture", required: false
+
+      let(:date_debut) { "2024-08-19" }
+      let(:date_fin) { "2024-08-25" }
+
       response 200, "Renvoie la liste des plages d'ouverture" do
         run_test!
-        parameter name: "date_debut", in: :query, type: :string, description: "date au format iso8601 (YYYY-MM-DD), premier jour de la liste qu’on renverra",
-                  example: "2024-12-22", required: true
-        parameter name: "date_fin", in: :query, type: :string, description: "date au format iso8601 (YYYY-MM-DD), dernier jour de la liste qu’on renverra (inclus dans les résultats)",
-                  example: "2024-12-28", required: true
-        parameter name: "guichet_ids[]", in: :query, type: :array,
-                  description: "Une liste d'ids des guichets sur lesquels on veut filtrer les plages d'ouverture", required: false
+      end
 
-        let(:date_debut) { "2024-08-19" }
-        let(:date_fin) { "2024-08-25" }
+      response 400, "Renvoie une erreur 400 si un date_debut ou date_fin est manquant" do
+        run_test!
+        let(:date_fin) { nil }
+        specify do
+          expect(parsed_response_body["errors"].first).to eq "Vous devez préciser les paramètres date_debut et date_fin"
+        end
       end
     end
   end

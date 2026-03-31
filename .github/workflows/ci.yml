@@ -141,10 +141,7 @@ jobs:
           --health-retries 5
         ports: ["6379:6379"]
     steps:
-      - uses: actions/checkout@v6
-      - uses: hoang-rio/set-timezone@v1
-        with:
-          timezoneLinux: "Europe/Paris"
+      - uses: actions/checkout@v4
       - name: Prevent https://github.com/rails/rails/issues/53661
         run: touch tmp/local_secret.txt && openssl rand -hex 64 > tmp/local_secret.txt
       - name: Set up Node.js
@@ -226,10 +223,7 @@ jobs:
           --health-retries 5
         ports: ["6379:6379"]
     steps:
-      - uses: actions/checkout@v6
-      - uses: hoang-rio/set-timezone@v1
-        with:
-          timezoneLinux: "Europe/Paris"
+      - uses: actions/checkout@v4
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
