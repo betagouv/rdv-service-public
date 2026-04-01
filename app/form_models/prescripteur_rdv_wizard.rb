@@ -39,10 +39,10 @@ class PrescripteurRdvWizard
       lieu: rdv_builder.lieu,
       organisation: motif.organisation,
       agents: [creneau.agent],
-      participations: [participation]
+      participations: [participation],
+      minutes_after_rdv: creneau.minutes_after_rdv
     )
 
-    rdv.set_minutes_after_rdv_from_plage_ouvertures
     rdv.save!
 
     Notifiers::RdvCreated.perform_with(rdv, @prescripteur)
