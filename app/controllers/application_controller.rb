@@ -7,6 +7,8 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :store_user_location!, if: :storable_location?
   before_action :set_sentry_context
+  after_action :verify_authorized, except: :index
+  after_action :verify_policy_scoped, only: :index
 
   def after_sign_in_path_for(resource)
     home_page_when_logged = resource.is_a?(Agent) ? authenticated_agent_root_path : users_rdvs_path

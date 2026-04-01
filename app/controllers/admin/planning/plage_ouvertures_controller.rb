@@ -1,4 +1,4 @@
-class Admin::Planning::PlageOuverturesController < AgentAuthController
+class Admin::Planning::PlageOuverturesController < OrgaCentricController
   include Admin::Planning::SetAgentsConcern
   respond_to :html, :json
 

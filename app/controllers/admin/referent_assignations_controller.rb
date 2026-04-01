@@ -1,4 +1,4 @@
-class Admin::ReferentAssignationsController < AgentAuthController
+class Admin::ReferentAssignationsController < OrgaCentricController
   def index
     @user = policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find(index_params[:user_id])
     authorize(@user, :update?, policy_class: Agent::UserPolicy)

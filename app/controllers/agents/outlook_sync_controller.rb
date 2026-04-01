@@ -1,4 +1,4 @@
-class Agents::OutlookSyncController < AgentAuthController
+class Agents::OutlookSyncController < ApplicationController
   include Admin::AuthenticatedControllerConcern
 
   layout "application_agent_config"

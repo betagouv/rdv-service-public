@@ -1,4 +1,4 @@
-class Admin::AgentsController < AgentAuthController
+class Admin::AgentsController < OrgaCentricController
   respond_to :html
 
   before_action :ensure_agent_is_admin, except: :index

@@ -1,4 +1,4 @@
-class Admin::Organisations::StatsController < AgentAuthController
+class Admin::Organisations::StatsController < OrgaCentricController
   before_action :set_organisation
 
   def index

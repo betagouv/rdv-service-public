@@ -1,4 +1,4 @@
-class Admin::LieuxController < AgentAuthController
+class Admin::LieuxController < OrgaCentricController
   respond_to :html, :json
 
   def index

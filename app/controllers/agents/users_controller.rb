@@ -1,12 +1,15 @@
-class Agents::UsersController < AgentAuthController
+class Agents::UsersController < ApplicationController
+  include Admin::AuthenticatedControllerConcern
+
   respond_to :json
 
   MAX_RESULTS = 4
 
   def search
+    authorize(current_agent, current_organisation, :show?, policy_class: Agent::OrganisationPolicy)
     skip_authorization # On scope les usagers par organisation puis par espace via de la logique métier plutôt qu'une policy Pundit
     # Dans cette recherche, on autorise un périmètre plus grand que la policy de base, puisqu'on est en train d'ajouter un usager à l'organisation en créant un rdv
-    # ce skip_authorization ne skippe pas le AgentAuthController#authorize_organisation
+    # ce skip_authorization ne skippe pas le OrgaCentricController#authorize_organisation
 
     territory_scope = Agent::UserPolicy::TerritoryScope.new(pundit_user, User.all).resolve
     current_org_scope = Agent::UserPolicy::Scope.new(pundit_user, User.all).resolve

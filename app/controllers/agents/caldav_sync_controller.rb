@@ -1,4 +1,6 @@
-class Agents::CaldavSyncController < AgentAuthController
+class Agents::CaldavSyncController < ApplicationController
+  include Admin::AuthenticatedControllerConcern
+
   layout "application_agent_config"
 
   def show

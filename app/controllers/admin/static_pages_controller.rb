@@ -1,4 +1,4 @@
-class Admin::StaticPagesController < AgentAuthController
+class Admin::StaticPagesController < OrgaCentricController
   def support
     skip_authorization
   end

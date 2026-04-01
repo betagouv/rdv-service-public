@@ -1,4 +1,4 @@
-class Admin::Organisations::OnlineBooking::MotifsController < AgentAuthController
+class Admin::Organisations::OnlineBooking::MotifsController < OrgaCentricController
   before_action :set_organisation
   before_action :set_motif
 

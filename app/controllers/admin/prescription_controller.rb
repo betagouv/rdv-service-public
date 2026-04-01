@@ -1,4 +1,4 @@
-class Admin::PrescriptionController < AgentAuthController
+class Admin::PrescriptionController < OrgaCentricController
   before_action :set_rdv_wizard, only: %i[user_selection recapitulatif create_rdv]
   before_action :redirect_if_creneau_unavailable, only: %i[user_selection recapitulatif create_rdv]
 

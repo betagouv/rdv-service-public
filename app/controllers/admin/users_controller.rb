@@ -1,4 +1,4 @@
-class Admin::UsersController < AgentAuthController
+class Admin::UsersController < OrgaCentricController
   respond_to :html, :json
 
   before_action :set_organisation, only: %i[new create]

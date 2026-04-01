@@ -1,4 +1,4 @@
-class Admin::CreneauxSearchController < AgentAuthController
+class Admin::CreneauxSearchController < OrgaCentricController
   before_action :set_form
 
   helper_method :motif_selected?

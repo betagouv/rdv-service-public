@@ -1,4 +1,4 @@
-class Admin::RdvsController < AgentAuthController
+class Admin::RdvsController < OrgaCentricController
   include RdvsHelper
 
   respond_to :html, :json

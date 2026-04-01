@@ -1,4 +1,4 @@
-class Admin::RdvWizardStepsController < AgentAuthController
+class Admin::RdvWizardStepsController < OrgaCentricController
   include RdvsHelper
 
   before_action :set_agent

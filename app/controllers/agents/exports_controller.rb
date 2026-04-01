@@ -1,4 +1,6 @@
-class Agents::ExportsController < AgentAuthController
+class Agents::ExportsController < ApplicationController
+  include Admin::AuthenticatedControllerConcern
+
   layout "application_agent_config"
 
   before_action { @active_agent_preferences_menu_item = :exports }

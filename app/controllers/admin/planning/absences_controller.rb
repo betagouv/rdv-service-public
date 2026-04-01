@@ -1,4 +1,4 @@
-class Admin::Planning::AbsencesController < AgentAuthController
+class Admin::Planning::AbsencesController < OrgaCentricController
   include Admin::Planning::SetAgentsConcern
   respond_to :html, :json
 

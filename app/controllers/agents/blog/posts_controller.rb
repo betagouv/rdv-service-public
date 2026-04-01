@@ -1,4 +1,6 @@
-class Agents::Blog::PostsController < AgentAuthController
+class Agents::Blog::PostsController < ApplicationController
+  include Admin::AuthenticatedControllerConcern
+
   layout "modal"
 
   respond_to :html

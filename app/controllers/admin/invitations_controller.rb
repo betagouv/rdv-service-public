@@ -1,4 +1,4 @@
-class Admin::InvitationsController < AgentAuthController
+class Admin::InvitationsController < OrgaCentricController
   def index
     @invited_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
       .joins(:organisations).where(organisations: { id: current_organisation.id })

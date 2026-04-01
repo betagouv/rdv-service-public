@@ -1,4 +1,6 @@
-class Agents::TerritoriesController < AgentAuthController
+class Agents::TerritoriesController < ApplicationController
+  include Admin::AuthenticatedControllerConcern
+
   layout "application"
   def new
     authorize(Territory.new, policy_class: Agent::TerritoryPolicy)

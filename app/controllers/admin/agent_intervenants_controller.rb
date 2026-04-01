@@ -1,4 +1,4 @@
-class Admin::AgentIntervenantsController < AgentAuthController
+class Admin::AgentIntervenantsController < OrgaCentricController
   respond_to :html, :json
 
   def update

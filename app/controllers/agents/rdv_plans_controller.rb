@@ -1,4 +1,6 @@
-class Agents::RdvPlansController < AgentAuthController
+class Agents::RdvPlansController < ApplicationController
+  include Admin::AuthenticatedControllerConcern
+
   layout "application"
   before_action :find_rdv_plan
   before_action :redirect_to_rdv, if: -> { @rdv_plan.rdv.present? }, except: [:rdv]

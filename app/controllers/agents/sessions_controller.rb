@@ -9,6 +9,7 @@ class Agents::SessionsController < Devise::SessionsController
   #
   # De cette façon c'est nous qui gérons la redirection le cas échéant.
   skip_before_action :verify_signed_out_user, only: :destroy
+  skip_after_action :verify_authorized
 
   def new
     # Le flash d'erreur est trop agressif pour le cas d'un agent non connecté.

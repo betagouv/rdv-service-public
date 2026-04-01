@@ -1,4 +1,4 @@
-class Admin::MotifsController < AgentAuthController
+class Admin::MotifsController < OrgaCentricController
   respond_to :html, :json
 
   FORM_ATTRIBUTES = %i[

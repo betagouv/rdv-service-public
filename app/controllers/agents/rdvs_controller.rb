@@ -1,4 +1,6 @@
-class Agents::RdvsController < AgentAuthController
+class Agents::RdvsController < ApplicationController
+  include Admin::AuthenticatedControllerConcern
+
   def show
     @rdv = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).find(params[:id])
     authorize(@rdv, policy_class: Agent::RdvPolicy)

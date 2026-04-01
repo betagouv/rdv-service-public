@@ -1,4 +1,4 @@
-class Admin::MergeUsersController < AgentAuthController
+class Admin::MergeUsersController < OrgaCentricController
   before_action :set_organisation
 
   def new

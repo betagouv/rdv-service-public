@@ -1,4 +1,6 @@
-class Agents::AgendasController < AgentAuthController
+class Agents::AgendasController < ApplicationController
+  include Admin::AuthenticatedControllerConcern
+
   def show
     skip_authorization # On appelle un policy_scope, donc pas besoin d'authorization
 

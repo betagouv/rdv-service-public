@@ -1,4 +1,4 @@
-class Admin::ParticipationsController < AgentAuthController
+class Admin::ParticipationsController < OrgaCentricController
   # Participation is @rdv.participations
   include ParticipationsHelper
   respond_to :js

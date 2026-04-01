@@ -1,4 +1,6 @@
-class Agents::TerritoryCreationRequestsController < AgentAuthController
+class Agents::TerritoryCreationRequestsController < ApplicationController
+  include Admin::AuthenticatedControllerConcern
+
   layout "application"
   def new
     authorize(TerritoryCreationRequest.new, policy_class: Agent::TerritoryCreationRequestPolicy)

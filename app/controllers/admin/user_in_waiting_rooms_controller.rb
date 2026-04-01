@@ -1,4 +1,4 @@
-class Admin::UserInWaitingRoomsController < AgentAuthController
+class Admin::UserInWaitingRoomsController < OrgaCentricController
   respond_to :turbo_stream
 
   def create

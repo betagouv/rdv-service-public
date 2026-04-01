@@ -1,4 +1,4 @@
-class Admin::Organisations::OnlineBookingsController < AgentAuthController
+class Admin::Organisations::OnlineBookingsController < OrgaCentricController
   before_action :set_organisation
 
   def show

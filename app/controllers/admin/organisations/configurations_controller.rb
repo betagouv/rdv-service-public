@@ -1,4 +1,4 @@
-class Admin::Organisations::ConfigurationsController < AgentAuthController
+class Admin::Organisations::ConfigurationsController < OrgaCentricController
   before_action :set_organisation, only: [:show]
 
   # Cette action permet à des apps externes qui sont intégrées via OAuth de fournir un lien vers la configuration sans avoir

@@ -1,11 +1,9 @@
-class AgentAuthController < ApplicationController
+class OrgaCentricController < ApplicationController
   include Admin::AuthenticatedControllerConcern
 
   layout "application_agent"
 
-  before_action :authorize_organisation, if: -> { params[:organisation_id].present? }
-  after_action :verify_authorized, except: :index
-  after_action :verify_policy_scoped, only: :index
+  before_action :authorize_organisation
 
   helper_method :current_organisation, :current_territory, :policy_scope, :from_modal?
 
@@ -15,10 +13,6 @@ class AgentAuthController < ApplicationController
     @pundit_user ||= AgentOrganisationContext.new(current_agent, current_organisation)
   end
   helper_method :pundit_user
-
-  def set_organisation
-    @organisation = current_organisation
-  end
 
   def current_agent
     super.tap { _1&.preload_roles }

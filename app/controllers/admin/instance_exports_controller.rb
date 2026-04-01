@@ -1,4 +1,4 @@
-class Admin::InstanceExportsController < AgentAuthController
+class Admin::InstanceExportsController < OrgaCentricController
   before_action { redirect_to(root_path) unless current_domain == Domain::RDV_AIDE_NUMERIQUE }
 
   def index

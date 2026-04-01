@@ -1,4 +1,4 @@
-class Admin::Planning::AgendasController < AgentAuthController
+class Admin::Planning::AgendasController < OrgaCentricController
   include Admin::Planning::SetAgentsConcern
 
   before_action { @planning_layout = true }

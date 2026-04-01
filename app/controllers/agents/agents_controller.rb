@@ -1,4 +1,6 @@
-class Agents::AgentsController < AgentAuthController
+class Agents::AgentsController < ApplicationController
+  include Admin::AuthenticatedControllerConcern
+
   respond_to :json
 
   def search

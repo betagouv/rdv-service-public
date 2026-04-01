@@ -1,4 +1,4 @@
-class Admin::RdvsCollectifsController < AgentAuthController
+class Admin::RdvsCollectifsController < OrgaCentricController
   include RdvsHelper
 
   def index

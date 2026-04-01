@@ -1,4 +1,4 @@
-class Admin::OrganisationsController < AgentAuthController
+class Admin::OrganisationsController < OrgaCentricController
   respond_to :html, :json
 
   before_action :set_organisation, except: :index
@@ -57,7 +57,7 @@ class Admin::OrganisationsController < AgentAuthController
   private
 
   def current_organisation
-    # overrides AgentAuthController's because here it's params[:id]
+    # overrides OrgaCentricController's because here it's params[:id]
     if params[:id].present?
       current_agent.organisations.find(params[:id])
     else
