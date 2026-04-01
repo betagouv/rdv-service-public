@@ -17,6 +17,10 @@ class EspaceOperateurANCT
     parsed_response&.fetch("operator", nil)
   end
 
+  def potential_operators
+    parsed_response&.fetch("potentialOperators", nil)
+  end
+
   def can_access?
     return false unless entitlements
 
