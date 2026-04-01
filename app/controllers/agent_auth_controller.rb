@@ -3,7 +3,7 @@ class AgentAuthController < ApplicationController
 
   layout "application_agent"
 
-  before_action :authorize_organisation, if: -> { params[:organisation_id].present? }
+  before_action :authorize_organisation, if: :current_organisation
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
@@ -47,6 +47,6 @@ class AgentAuthController < ApplicationController
 
   def authorize_organisation
     # on n’utilise pas le helper authorize directement pour obliger à faire un autre appel à authorize avec la ressource qui sera réellement utilisée par l'action (par exemple le motif ou le rdv)
-    Pundit.authorize(current_agent, current_organisation, :show?, policy_class: Agent::OrganisationPolicy) if current_organisation
+    Pundit.authorize(current_agent, current_organisation, :show?, policy_class: Agent::OrganisationPolicy)
   end
 end
