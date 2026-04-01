@@ -30,7 +30,8 @@ class Admin::AgentsController < AgentAuthController
       agent_params: create_agent_params,
       current_agent: current_agent,
       organisations: [current_organisation],
-      access_level: params[:agent][:agent_role][:access_level]
+      access_level: params[:agent][:agent_role][:access_level],
+      agent_accueil: params[:agent][:agent_role][:agent_accueil]
     )
 
     @agent = create_agent.call
@@ -59,6 +60,7 @@ class Admin::AgentsController < AgentAuthController
       agent: @agent,
       organisation: current_organisation,
       new_access_level: params[:agent][:agent_role][:access_level],
+      new_agent_accueil: params[:agent][:agent_role][:agent_accueil],
       agent_params: update_agent_params,
       inviting_agent: current_agent
     )
@@ -116,17 +118,11 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def access_levels_collection
-    base = if @agent != current_agent && @agent.organisations.count < 2
-             AgentRole::ACCESS_LEVELS_WITH_INTERVENANT
-           else
-             AgentRole::ACCESS_LEVELS
-           end
-
-    unless current_organisation.territory.services.any? || @agent.roles.any?(&:agent_accueil?)
-      base = base.reject { |l| l == AgentRole::ACCESS_LEVEL_AGENT_ACCUEIL }
+    if @agent != current_agent && @agent.organisations.count < 2
+      AgentRole::ACCESS_LEVELS_WITH_INTERVENANT
+    else
+      AgentRole::ACCESS_LEVELS
     end
-
-    base
   end
 
   def create_agent_params

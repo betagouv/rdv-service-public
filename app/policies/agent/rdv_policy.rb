@@ -126,14 +126,11 @@ class Agent::RdvPolicy < ApplicationPolicy
   def same_agent_or_has_access?
     return true if current_agent.participates_in?(@record)
 
-    case current_agent.access_level_in(@record.organisation)
-    when AgentRole::ACCESS_LEVEL_ADMIN, AgentRole::ACCESS_LEVEL_AGENT_ACCUEIL
-      true
-    when AgentRole::ACCESS_LEVEL_BASIC
-      same_service? || rdv_without_service?
-    else
-      false
-    end
+    role = current_agent.role_in_organisation(@record.organisation)
+    return false unless role
+    return true if role.can_access_others_planning?
+
+    role.basic? && (same_service? || rdv_without_service?)
   end
 
   def rdv_without_service?
@@ -151,8 +148,8 @@ class Agent::RdvPolicy < ApplicationPolicy
         .where(
           "agents_rdvs.agent_id = ?
             OR motifs.service_id is null
-            OR (motifs.service_id IN (?) AND agent_roles.access_level IN ('basic', 'agent_accueil'))
-            OR (agent_roles.access_level IN ('admin', 'agent_accueil'))",
+            OR (motifs.service_id IN (?) AND agent_roles.access_level = 'basic')
+            OR (agent_roles.access_level = 'admin' OR agent_roles.agent_accueil = true)",
           current_agent.id, current_agent.service_ids
         )
     end

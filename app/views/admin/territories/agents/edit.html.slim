@@ -100,8 +100,9 @@ h1
                 .card-body
                   = f.input :organisation_id, as: :hidden, input_html: { value: organisation.id }
                   = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
-                  - available_access_levels = AgentRole::ACCESS_LEVELS.select { |l| l != AgentRole::ACCESS_LEVEL_AGENT_ACCUEIL || organisation.territory.services.any? || role&.agent_accueil? }
-                  = f.input :access_level, as: :radio_buttons, collection: available_access_levels, label_method: -> { AgentRole.human_attribute_value(:access_level, _1) }, checked: role&.access_level || "none"
+                  = f.input :access_level, as: :radio_buttons, collection: AgentRole::ACCESS_LEVELS, label_method: -> { AgentRole.human_attribute_value(:access_level, _1) }, checked: role&.access_level || "none"
+                  - if organisation.territory.services.any? || role&.agent_accueil?
+                    = f.input :agent_accueil, as: :boolean, label: "Agent d'accueil", hint: "Peut consulter et modifier les agendas de tous les agents de l'organisation"
                 .card-footer
                   .row
                     .col.text-left

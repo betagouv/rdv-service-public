@@ -220,7 +220,7 @@ class Agent < ApplicationRecord
   end
 
   def agent_accueil_orgs
-    organisations.merge(roles.where(access_level: AgentRole::ACCESS_LEVEL_AGENT_ACCUEIL))
+    organisations.merge(roles.where(agent_accueil: true))
   end
 
   def basic_orgs
@@ -236,7 +236,7 @@ class Agent < ApplicationRecord
   end
 
   def agent_accueil_in_organisation?(organisation)
-    access_level_in(organisation) == AgentRole::ACCESS_LEVEL_AGENT_ACCUEIL
+    role_in_organisation(organisation)&.agent_accueil?
   end
 
   def access_level_in(organisation_or_id)

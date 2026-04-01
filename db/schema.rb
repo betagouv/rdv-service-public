@@ -20,7 +20,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_01_000001) do
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
-  create_enum "access_level", ["admin", "basic", "intervenant", "agent_accueil"]
+  create_enum "access_level", ["admin", "basic", "intervenant"]
   create_enum "agents_absence_notification_level", ["all", "none"]
   create_enum "agents_plage_ouverture_notification_level", ["all", "none"]
   create_enum "agents_rdv_notifications_level", ["all", "others", "soon", "none"]
@@ -63,6 +63,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_01_000001) do
     t.bigint "agent_id", null: false
     t.bigint "organisation_id", null: false
     t.enum "access_level", default: "basic", null: false, enum_type: "access_level"
+    t.boolean "agent_accueil", default: false, null: false
     t.index ["access_level"], name: "index_agent_roles_on_access_level"
     t.index ["agent_id"], name: "index_agent_roles_on_agent_id"
     t.index ["organisation_id", "agent_id"], name: "index_agent_roles_on_organisation_id_and_agent_id", unique: true

@@ -5,15 +5,13 @@ class AgentRole < ApplicationRecord
 
   # Attributes
   ACCESS_LEVEL_BASIC = "basic".freeze
-  ACCESS_LEVEL_AGENT_ACCUEIL = "agent_accueil".freeze
   ACCESS_LEVEL_ADMIN = "admin".freeze
   ACCESS_LEVEL_INTERVENANT = "intervenant".freeze
-  ACCESS_LEVELS = [ACCESS_LEVEL_BASIC, ACCESS_LEVEL_AGENT_ACCUEIL, ACCESS_LEVEL_ADMIN].freeze
-  ACCESS_LEVELS_WITH_INTERVENANT = [ACCESS_LEVEL_BASIC, ACCESS_LEVEL_AGENT_ACCUEIL, ACCESS_LEVEL_ADMIN, ACCESS_LEVEL_INTERVENANT].freeze
+  ACCESS_LEVELS = [ACCESS_LEVEL_BASIC, ACCESS_LEVEL_ADMIN].freeze
+  ACCESS_LEVELS_WITH_INTERVENANT = [ACCESS_LEVEL_BASIC, ACCESS_LEVEL_ADMIN, ACCESS_LEVEL_INTERVENANT].freeze
 
   enum :access_level, {
     basic: "basic", # Basic Role
-    agent_accueil: "agent_accueil", # Agent d'accueil Role
     admin: "admin", # Admin Role
     intervenant: "intervenant", # Intervenant Role
   }
@@ -50,7 +48,6 @@ class AgentRole < ApplicationRecord
 
   # Scopes
   scope :access_level_basic, -> { where(access_level: :basic) }
-  scope :access_level_agent_accueil, -> { where(access_level: :agent_accueil) }
   scope :access_level_admin, -> { where(access_level: :admin) }
 
   ## -

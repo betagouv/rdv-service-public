@@ -9,7 +9,7 @@ FactoryBot.define do
     end
 
     trait :agent_accueil do
-      access_level { AgentRole::ACCESS_LEVEL_AGENT_ACCUEIL }
+      agent_accueil { true }
     end
 
     trait :intervenant do

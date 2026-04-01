@@ -8,7 +8,7 @@ RSpec.describe AgentRole, type: :model do
       it { is_expected.to be_truthy }
     end
 
-    context "agent_accueil access_level" do
+    context "agent_accueil boolean" do
       let(:agent_role) { build(:agent_role, :agent_accueil) }
 
       it { is_expected.to be_truthy }
