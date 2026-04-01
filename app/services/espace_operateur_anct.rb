@@ -47,6 +47,8 @@ class EspaceOperateurANCT
 
   def client
     @client ||= Faraday.new(url: "https://operateurs.suite.anct.gouv.fr/api/v1.0/") do |faraday|
+      faraday.options.timeout = 3
+      faraday.options.open_timeout = 3
       faraday.headers = {
         "X-Service-Auth": ENV.fetch("ESPACE_OPERATEUR_ANCT_AUTH_TOKEN", nil),
       }
