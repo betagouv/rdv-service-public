@@ -2,6 +2,7 @@ RSpec.describe TokenInvitable, type: :controller do
   controller(ApplicationController) do
     include TokenInvitable
     prepend_before_action :store_invitation_in_session_and_redirect
+    skip_after_action :verify_authorized
 
     def fake_action
       render plain: "ok"

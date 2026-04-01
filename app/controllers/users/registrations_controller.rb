@@ -5,7 +5,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :set_rdv_insertion_organisations, only: %i[edit destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
 
   layout "application"
-  layout "application_narrow", only: %i[update edit]
 
   def destroy
     authorize(resource, policy_class: User::UserPolicy)

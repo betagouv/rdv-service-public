@@ -9,6 +9,8 @@ class HealthController < ApplicationController
     http_basic_authenticate_with name: basic_auth_name, password: basic_auth_password, only: :raise_on_purpose
   end
 
+  skip_after_action :verify_authorized
+
   def db_connection
     Territory.count # cette ligne raisera en cas de problème de connexion
     render status: :ok, plain: "health OK"

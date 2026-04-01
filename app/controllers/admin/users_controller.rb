@@ -130,6 +130,10 @@ class Admin::UsersController < OrgaCentricController
 
   private
 
+  def set_organisation
+    @organisation = current_organisation
+  end
+
   def modal_return_location
     params[:return_location].presence || request.referer
   end

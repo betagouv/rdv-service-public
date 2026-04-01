@@ -1,4 +1,6 @@
 class Admin::Api::Agenda::ExternalCalendarEventsController < Admin::Api::BaseController
+  skip_after_action :verify_policy_scoped
+
   def index
     external_calendar_events = ExternalCalendarEvent
       .within_range(time_range_params)

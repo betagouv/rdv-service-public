@@ -56,6 +56,10 @@ class Admin::OrganisationsController < OrgaCentricController
 
   private
 
+  def set_organisation
+    @organisation = current_organisation
+  end
+
   def current_organisation
     # overrides OrgaCentricController's because here it's params[:id]
     if params[:id].present?

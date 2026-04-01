@@ -3,6 +3,8 @@ class Users::SessionsByCodeController < ApplicationController
 
   include CanHaveRdvWizardContext
 
+  skip_after_action :verify_authorized
+
   def new
     @email = params[:email]
     return redirect_to(new_user_session_path) if @email.blank?

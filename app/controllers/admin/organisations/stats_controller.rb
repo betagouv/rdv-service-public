@@ -1,6 +1,4 @@
 class Admin::Organisations::StatsController < OrgaCentricController
-  before_action :set_organisation
-
   def index
     @stats = Stat.new(
       rdvs: rdv_scope,

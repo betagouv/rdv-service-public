@@ -1,4 +1,6 @@
 class Aide::DemandesSupportController < ApplicationController
+  skip_after_action :verify_authorized
+
   def new
     form_params = { current_domain: }
     if current_user.present?

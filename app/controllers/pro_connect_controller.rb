@@ -1,6 +1,8 @@
 # Le guide pour configurer ProConnect en local : docs/interconnexions/proconnect.md
 
 class ProConnectController < ApplicationController
+  skip_after_action :verify_authorized
+
   def auth
     auth_client = ProConnectOpenIdClient::Auth.new(
       login_hint: params[:login_hint],

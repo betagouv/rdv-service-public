@@ -2,6 +2,8 @@ class FranceConnectV2Controller < ApplicationController
   STATE_SESSION_KEY = "france_connect_v2_state".freeze
   NONCE_SESSION_KEY = "france_connect_v2_nonce".freeze
 
+  skip_after_action :verify_authorized
+
   def auth
     auth_client = FranceConnectV2OpenIdClient::Auth.new(
       client_id: ENV["FRANCECONNECT_V2_CLIENT_ID"]

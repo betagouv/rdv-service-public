@@ -4,6 +4,8 @@ class Users::SessionsController < Devise::SessionsController
   include CanHaveRdvWizardContext
   include Users::DeviseOrSsoLogout
 
+  skip_after_action :verify_authorized
+
   def new
     # on supprime le flash « vous devez vous connecter ou vous inscrire pour vous connecter »
     flash[:alert] = nil if flash[:alert] == I18n.t("devise.failure.unauthenticated")

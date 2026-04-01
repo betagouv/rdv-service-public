@@ -24,7 +24,6 @@ class Admin::MotifsController < OrgaCentricController
     duplicated_from_motif_id
   ].freeze
 
-  before_action :set_organisation, only: %i[new create]
   before_action :set_motif, only: %i[show edit update archive unarchive destroy]
 
   def index
