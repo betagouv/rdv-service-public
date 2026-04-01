@@ -13,8 +13,16 @@
   .fr-col-12.fr-col-md-10.mb-3
     .card
       .card-body
-        - if @plage_ouverture.title.present?
-          h1.fr-h2 =@plage_ouverture.title
+        .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+          h1.fr-h2=@plage_ouverture.title_with_default
+          .fr-btns-group.fr-btns-group--inline-md
+            = link_to("Dupliquer",
+                new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: @plage_ouverture.agent.id, duplicate_plage_ouverture_id: @plage_ouverture.id),
+                class: "fr-btn fr-btn--secondary")
+            = link_to("Modifier",
+                edit_admin_organisation_planning_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture),
+                class: "fr-btn")
+
         div.mt-2.d-flex
           .flex-shrink-0.mr-1.font-weight-bold Agent&nbsp;:
           span= @plage_ouverture.agent.full_name
@@ -66,22 +74,6 @@
             data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}, \
             class: "btn btn-danger" \
           )
-        div
-          = link_to( \
-            "Dupliquer", \
-             new_admin_organisation_planning_plage_ouverture_path( \
-              current_organisation, \
-              agent_id: @plage_ouverture.agent.id, \
-              duplicate_plage_ouverture_id: @plage_ouverture.id \
-            ), \
-            class: "btn btn-link" \
-          )
-          = link_to( \
-            "Modifier", \
-             edit_admin_organisation_planning_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture), \
-            class: "btn btn-primary" \
-          )
-
 .fr-grid-row
   .fr-col-12.fr-col-md-10.mb-3
     = render "admin/versions/resource_versions_row", resource_policy: policy(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy), resource: @plage_ouverture
