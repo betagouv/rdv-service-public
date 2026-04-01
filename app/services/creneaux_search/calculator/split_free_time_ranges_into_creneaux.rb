@@ -26,7 +26,7 @@ class CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux
     possible_slot_start = earliest_possible_slot_start(free_time)
     duration_in_min ||= @motif.default_duration_in_min
 
-    rdv_duration_for_agent = duration_in_min.minutes + @plage_ouverture.minutes_between_rdvs.minutes
+    rdv_duration_for_agent = duration_in_min.minutes + @plage_ouverture.minutes_after_rdvs.minutes
     last_possible_slot_start = free_time.end - rdv_duration_for_agent
 
     slots = []
@@ -37,7 +37,8 @@ class CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux
         motif: @motif,
         duration_in_min:,
         lieu_id: @plage_ouverture.lieu_id,
-        agent: @plage_ouverture.agent
+        agent: @plage_ouverture.agent,
+        minutes_after_rdv: @plage_ouverture.minutes_after_rdvs
       )
       possible_slot_start += rdv_duration_for_agent
     end

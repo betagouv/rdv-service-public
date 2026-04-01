@@ -283,7 +283,7 @@ tables:
       - recurrence
       - expired_cached
       - recurrence_ends_at
-      - minutes_between_rdvs
+      - minutes_after_rdvs
       - hex_color
 
   - table_name: webhook_endpoints

@@ -391,7 +391,7 @@ class Rdv < ApplicationRecord
 
   def set_minutes_after_rdv_from_plage_ouvertures
     self.minutes_after_rdv = PlageOuverture.joins(:motifs).where(agent: agents.map(&:id), motifs: motif)
-      .overlapping_range(starts_at..ends_at).maximum(:minutes_between_rdvs) || 0
+      .overlapping_range(starts_at..ends_at).maximum(:minutes_after_rdvs) || 0
   end
 
   private

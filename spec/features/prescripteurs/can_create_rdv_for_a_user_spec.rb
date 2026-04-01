@@ -11,7 +11,7 @@ RSpec.describe "un prescripteur peut prendre rendez-vous pour un usager" do
     create(:motif, organisation: organisation, service: agent.services.first, bookable_by: bookable_by, instruction_for_rdv: "Instructions après confirmation", name: "Formation emails")
   end
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Bureau") }
-  let!(:plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu, minutes_between_rdvs: 10) }
+  let!(:plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu, minutes_after_rdvs: 10) }
 
   it "works" do
     visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"

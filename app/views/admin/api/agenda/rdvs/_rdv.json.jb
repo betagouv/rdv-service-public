@@ -14,7 +14,6 @@ json = {
     lieu: sanitize(rdv.public_office? && rdv.lieu&.name),
     past: rdv.past?,
     duration: rdv.duration_in_min,
-    minutesAfterRdv: rdv.minutes_after_rdv,
   },
 
   # https://fullcalendar.io/docs/resources-and-events
