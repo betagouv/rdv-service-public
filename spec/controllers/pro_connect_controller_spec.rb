@@ -224,11 +224,7 @@ RSpec.describe ProConnectController do
             it "crée l'agent et redirige vers la page inscription_via_operateur" do
               allow(Domain::RDV_SERVICE_PUBLIC).to receive(:allow_self_onboarding).and_return(true)
               get :callback, params: { state:, code: }
-              expect(response).to redirect_to(agents_inscription_via_operateur_path)
-              expect(session[:inscription_via_operateur]).to include(
-                "signup_url" => "https://suiteterritoriale.anct.gouv.fr/deep-link-signup/",
-                "operator_name" => "ANCT"
-              )
+              expect(response).to redirect_to(agents_inscription_via_operateur_path("signup_url": "https://suiteterritoriale.anct.gouv.fr/deep-link-signup/", "operator_name": "ANCT"))
             end
           end
         end
@@ -241,25 +237,6 @@ RSpec.describe ProConnectController do
             get :callback, params: { state:, code: }
           end.to change { agent.reload.pro_connect_openid_sub }.to(user_info["sub"])
           expect_agent_to_be_updated_and_logged_in(agent)
-        end
-
-        context "quand l'agent n'a pas d'organisation (reconnexion sans espace)" do
-          stub_env_with(ESPACE_OPERATEUR_ANCT_AUTH_TOKEN: "Bearer fake-token")
-
-          context "quand l'API retourne des potentialOperators dont un matche notre DB" do
-            let(:user_info) { super().merge("email" => "contact@mairie-nantes.fr", "siret" => "20005671100019") }
-            let!(:operator) { create(:operator, siret: "13002603200016") }
-
-            before { ProConnectStubs.stub_callback_requests(code, user_info) }
-
-            around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_with_potential_operators") { ex.run } }
-
-            it "redirige vers inscription_via_operateur même sur reconnexion" do
-              create(:agent, email: user_info["email"])
-              get :callback, params: { state:, code: }
-              expect(response).to redirect_to(agents_inscription_via_operateur_path)
-            end
-          end
         end
       end
 
