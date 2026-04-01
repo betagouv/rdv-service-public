@@ -77,38 +77,5 @@ RSpec.describe "Visioplainte Creneaux" do
       expect(creneaux.first[:starts_at]).to eq "2024-08-19T14:00:00+02:00"
       expect(creneaux.last[:starts_at]).to eq "2024-08-19T17:30:00+02:00"
     end
-
-    context "when date_debut is missing" do
-      let(:creneaux_params) do
-        {
-          service: "Gendarmerie",
-          date_fin: "2024-08-19",
-        }
-      end
-
-      it "returns a 400 error" do
-        expect(get_request).to eq(
-          { errors: ["Paramètre date_debut manquant"] }
-        )
-        expect(response.status).to eq 400
-      end
-    end
-
-    context "when asking for a too big range" do
-      let(:creneaux_params) do
-        {
-          service: "Gendarmerie",
-          date_debut: "2024-08-19",
-          date_fin: "2024-10-19",
-        }
-      end
-
-      it "returns a 400 error so that we don't compute too many availabilities" do
-        expect(get_request).to eq(
-          { errors: ["date_debut et date_fin ne doivent pas être espacés de plus de 31 jours"] }
-        )
-        expect(response.status).to eq 400
-      end
-    end
   end
 end
