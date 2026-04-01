@@ -59,7 +59,7 @@ RSpec.describe PlageOuverture, type: :model do
   describe "#expired?" do
     subject { plage_ouverture.expired? }
 
-    context "with exceptionnelles plages" do
+    context "with ponctuelles plages" do
       describe "when first_day is in past" do
         let(:plage_ouverture) { create(:plage_ouverture, :no_recurrence, first_day: Date.parse("2020-07-30"), organisation: organisation) }
 
@@ -216,7 +216,7 @@ RSpec.describe PlageOuverture, type: :model do
       end
     end
 
-    describe "exceptionnelle" do
+    describe "ponctuelle" do
       let(:plage_ouverture) do
         build(
           :plage_ouverture,

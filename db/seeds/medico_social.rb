@@ -650,7 +650,7 @@ _plage_ouverture_org_paris_nord_martine_mercredi = PlageOuverture.create!(
   end_time: Tod::TimeOfDay.new(12),
   recurrence: Montrose.every(:week, on: [:wednesday], interval: 1, starts: Date.tomorrow)
 )
-_plage_ouverture_org_paris_nord_martine_exceptionnelle = PlageOuverture.create!(
+_plage_ouverture_org_paris_nord_martine_ponctuelle = PlageOuverture.create!(
   title: "Aprem PMI exptn",
   organisation_id: org_paris_nord.id,
   agent_id: agent_org_paris_nord_pmi_martine.id,
