@@ -185,12 +185,8 @@ function eventRenderer(selectedEventId) {
       }
     } else {
       if (extendedProps.duration) {
-        if (extendedProps.minutesAfterRdv && extendedProps.minutesAfterRdv  != "0") {
-          title += ` <small>(${extendedProps.duration} min de RDV puis ${extendedProps.minutesAfterRdv} min de battement)</small>`;
-        } else {
-          title += ` <small>(${extendedProps.duration} min)</small>`;
-        }
-        title += ` <br>${extendedProps.motif}`;
+        title += ` <small>(${extendedProps.duration} min)</small>`;
+       title += ` <br>${extendedProps.motif}`;
       }
 
       title += `<br><strong>${info.event.title}</strong>`;

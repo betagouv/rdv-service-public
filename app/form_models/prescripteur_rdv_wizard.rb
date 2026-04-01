@@ -42,7 +42,6 @@ class PrescripteurRdvWizard
       participations: [participation],
       minutes_after_rdv: creneau.minutes_after_rdv
     )
-
     rdv.save!
 
     Notifiers::RdvCreated.perform_with(rdv, @prescripteur)
