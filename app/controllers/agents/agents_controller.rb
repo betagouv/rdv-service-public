@@ -16,6 +16,11 @@ class Agents::AgentsController < AgentAuthController
     @agents = @agents.load.uniq
   end
 
+  # On s'assure ainsi d'éviter d'accidentellement appeler le code qui gère les logiques d'orga courante
+  def current_organisation
+    nil
+  end
+
   def pundit_user
     current_agent
   end

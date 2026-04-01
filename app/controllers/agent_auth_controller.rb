@@ -3,7 +3,7 @@ class AgentAuthController < ApplicationController
 
   layout "application_agent"
 
-  before_action :authorize_organisation, if: -> { params[:organisation_id].present? }
+  before_action :authorize_organisation, if: :current_organisation
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
@@ -25,11 +25,20 @@ class AgentAuthController < ApplicationController
   end
 
   def current_organisation
-    @current_organisation ||= Organisation.find(params[:organisation_id])
+    return @current_organisation if defined?(@current_organisation)
+
+    # Le param `:organisation_id` qui nous intéresse est forcément dans le path puisque les
+    # routes de notre interface orga-centric sont imbriquées dans `resources :organisations`.
+    path_org_id = request.path_parameters[:organisation_id].presence&.to_i
+    return unless path_org_id
+
+    @current_organisation = Organisation.find(path_org_id).tap do |found_org|
+      session[:latest_used_organisation_id] = found_org.id if found_org
+    end
   end
 
   def current_territory
-    @current_territory ||= current_organisation.territory
+    @current_territory ||= current_organisation&.territory
   end
 
   def from_modal?
