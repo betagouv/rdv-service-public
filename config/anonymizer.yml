@@ -323,6 +323,7 @@ tables:
       - work_on_sunday
       - operator_id
       - public_stats
+      - siret
 
   # Tables sans données personnelles
   - table_name: agent_territorial_roles
