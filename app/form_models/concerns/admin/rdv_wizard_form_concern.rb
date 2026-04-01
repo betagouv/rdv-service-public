@@ -28,10 +28,15 @@ module Admin::RdvWizardFormConcern
       @agent_author = agent_author
       @rdv = ::Rdv.new(rdv_defaults.merge(rdv_attributes))
       @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
-      @rdv.set_minutes_after_rdv_from_plage_ouvertures
+      @rdv.minutes_after_rdv = minutes_after_rdv_from_plage_ouvertures
       @rdv.participations.each(&:set_default_notifications_flags)
       @service_id = attributes.to_h.symbolize_keys[:service_id]
     end
+  end
+
+  def minutes_after_rdv_from_plage_ouvertures
+    PlageOuverture.joins(:motifs).where(agent: @rdv.agents.map(&:id), motifs: @rdv.motif)
+      .overlapping_range(@rdv.starts_at..@rdv.ends_at).maximum(:minutes_after_rdvs) || 0
   end
 
   def to_query # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity

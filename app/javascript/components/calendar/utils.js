@@ -186,7 +186,7 @@ function eventRenderer(selectedEventId) {
     } else {
       if (extendedProps.duration) {
         title += ` <small>(${extendedProps.duration} min)</small>`;
-       title += ` <br>${extendedProps.motif}`;
+        title += ` <br>${extendedProps.motif}`;
       }
 
       title += `<br><strong>${info.event.title}</strong>`;

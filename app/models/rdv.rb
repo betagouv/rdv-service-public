@@ -389,11 +389,6 @@ class Rdv < ApplicationRecord
     ends_at > Time.zone.now && status.in?(Rdv::NOT_CANCELLED_STATUSES)
   end
 
-  def set_minutes_after_rdv_from_plage_ouvertures
-    self.minutes_after_rdv = PlageOuverture.joins(:motifs).where(agent: agents.map(&:id), motifs: motif)
-      .overlapping_range(starts_at..ends_at).maximum(:minutes_after_rdvs) || 0
-  end
-
   private
 
   def agent_ids_from_db
