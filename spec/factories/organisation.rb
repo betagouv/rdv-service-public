@@ -8,7 +8,7 @@ FactoryBot.define do
 
     trait :with_contact do
       email { generate(:orga_email) }
-      phone_number { Faker::PhoneNumber.phone_number }
+      phone_number { Faker::PhoneNumber.phone_number_with_country_code }
       website { Faker::Internet.url }
     end
   end

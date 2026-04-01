@@ -203,12 +203,16 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
 
     it "fonctionne depuis la vue jour", js: true do
+      # On navigue vers la prochaine journée non-fériée pour éviter que l'événement
+      # "Jour férié" ne bloque le clic sur le créneau horaire
+      target_date = (Time.zone.today + 1.day..).lazy.find { |d| OffDays::JOURS_FERIES.exclude?(d) }
+      days_forward = (target_date - Time.zone.today).to_i
+
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
-      find(".fc-next-button").click
       click_button "Journée"
+      days_forward.times { find(".fc-next-button").click }
       find('.fc-timegrid-slot-lane[data-time="08:30:00"]').click
-      monday_next_week = Time.zone.today.beginning_of_week + 1.week
-      expect(page).to have_content("Nouveau RDV pour le #{I18n.l(monday_next_week, format: '%-d/%m/%Y')} à 08:30")
+      expect(page).to have_content("Nouveau RDV pour le #{I18n.l(target_date, format: '%-d/%m/%Y')} à 08:30")
     end
   end
 

@@ -21,6 +21,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     work_on_sunday: Field::Boolean,
+    siret: Field::String,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -48,6 +49,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     category
     territory_tags
     operator
+    siret
     created_at
     updated_at
   ].freeze
@@ -63,6 +65,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     operator
     departement_number
     work_on_sunday
+    siret
   ].freeze
 
   def display_resource(territory)
