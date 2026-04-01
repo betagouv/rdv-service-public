@@ -1,6 +1,4 @@
 class Admin::MergeUsersController < OrgaCentricController
-  before_action :set_organisation
-
   def new
     user1 = policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find(params[:user1_id]) if params[:user1_id].present?
     user2 = policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find(params[:user2_id]) if params[:user2_id].present?

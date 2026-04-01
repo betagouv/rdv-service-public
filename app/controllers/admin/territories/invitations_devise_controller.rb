@@ -5,6 +5,8 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   # Bloque l'accès aux méthodes du controller parent pour éviter de permettre d'envoyer des invitations n'importe comment
   before_action :block_controller_action, except: %i[edit update] # rubocop:disable Rails/LexicallyScopedActionFilter
 
+  skip_after_action :verify_authorized
+
   def block_controller_action
     raise Pundit::NotAuthorizedError, "not authorized"
   end

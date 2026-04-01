@@ -57,6 +57,10 @@ class Admin::Organisations::OnlineBookingsController < OrgaCentricController
 
   private
 
+  def set_organisation
+    @organisation = current_organisation
+  end
+
   def pundit_user
     current_agent
   end

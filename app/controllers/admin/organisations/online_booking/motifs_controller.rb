@@ -43,6 +43,10 @@ class Admin::Organisations::OnlineBooking::MotifsController < OrgaCentricControl
 
   private
 
+  def set_organisation
+    @organisation = current_organisation
+  end
+
   def set_motif
     @motif = Motif.find(params[:id])
     authorize(@motif, policy_class: Agent::MotifPolicy)

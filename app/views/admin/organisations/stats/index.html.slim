@@ -13,19 +13,19 @@
 
 .card.fr-mb-5v
   .card-body
-    = link_to "stats", rdvs_admin_organisation_stats_path(@organisation, departement: @departement, format: :json)
+    = link_to "stats", rdvs_admin_organisation_stats_path(current_organisation, departement: @departement, format: :json)
     = self_anchor "rdvs"
       h4.card-title RDV créés (#{@stats.rdvs.count})
-    = column_chart rdvs_admin_organisation_stats_path(@organisation, departement: @departement), stacked: true
+    = column_chart rdvs_admin_organisation_stats_path(current_organisation, departement: @departement), stacked: true
 
 .card.fr-mb-5v
   .card-body
     = self_anchor "rdvs-service"
       h4.card-title RDV créés par service (#{@stats.rdvs.count})
-    = column_chart rdvs_admin_organisation_stats_path(@organisation, by_service: true, departement: @departement), stacked: true
+    = column_chart rdvs_admin_organisation_stats_path(current_organisation, by_service: true, departement: @departement), stacked: true
 
 .card.fr-mb-5v
   .card-body
     = self_anchor "rdvs-type"
       h4.card-title RDV par type (#{@stats.rdvs.count})
-    = column_chart rdvs_admin_organisation_stats_path(@organisation, by_location_type: true, departement: @departement), stacked: true
+    = column_chart rdvs_admin_organisation_stats_path(current_organisation, by_location_type: true, departement: @departement), stacked: true
