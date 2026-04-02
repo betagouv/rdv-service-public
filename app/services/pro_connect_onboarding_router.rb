@@ -1,4 +1,11 @@
 class ProConnectOnboardingRouter
+  ANCT_TYPE_TO_CATEGORY = {
+    "commune" => "Commune",
+    "epci" => "Intercommunalité",
+    "departement" => "Département",
+    "region" => "Région",
+  }.freeze
+
   Result = Struct.new(:action, :signup_url, :operator_name, keyword_init: true)
 
   def initialize(agent, domain)
@@ -65,7 +72,10 @@ class ProConnectOnboardingRouter
 
   def attach_or_create_territory(operator, anct_client)
     ActiveRecord::Base.transaction do
-      territory = operator.territories.first || Territory.create!(operator: operator)
+      territory = operator.territories.first || Territory.create!(
+        operator: operator,
+        category: ANCT_TYPE_TO_CATEGORY.fetch(anct_client.organization&.fetch("type", nil), "Inconnu")
+      )
       organisation = territory.organisations.first || Organisation.create!(
         name: anct_client.organization&.fetch("name", nil) || operator.name,
         territory: territory,

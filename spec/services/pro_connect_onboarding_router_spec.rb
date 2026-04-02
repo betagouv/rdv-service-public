@@ -83,6 +83,7 @@ RSpec.describe ProConnectOnboardingRouter do
             territory = Territory.last
             expect(territory.operator).to eq(operator)
             expect(territory.name).to be_nil
+            expect(territory.category).to eq("Inconnu") # la cassette VCR retourne type "other"
 
             organisation = Organisation.last
             expect(organisation.name).to eq("Bezonvaux")
