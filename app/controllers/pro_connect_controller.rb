@@ -213,7 +213,7 @@ class ProConnectController < ApplicationController
   # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
   def redirect_after_first_proconnect_login(agent)
-    result = ProConnectFirstLoginHandler.new(agent, current_domain).call
+    result = ProConnectOnboardingRouter.new(agent, current_domain).call
 
     case result.action
     when :attached_as_admin

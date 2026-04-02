@@ -1,4 +1,4 @@
-RSpec.describe ProConnectFirstLoginHandler do
+RSpec.describe ProConnectOnboardingRouter do
   subject(:handler) { described_class.new(agent, domain) }
 
   let(:domain) { Domain::RDV_SERVICE_PUBLIC }
@@ -119,6 +119,29 @@ RSpec.describe ProConnectFirstLoginHandler do
       it "ne crée pas de territoire" do
         handler.call
         expect(Territory.count).to eq(0)
+      end
+    end
+
+    context "Cas B bis : plusieurs potentialOperators matchent notre DB" do
+      let(:agent) { create(:agent, email: "contact@mairie-nantes.fr", proconnect_siret: "20005671100019") }
+      let!(:operator_1) { create(:operator, siret: "13002603200016") }
+      let!(:operator_2) { create(:operator, siret: "12345678901234") }
+
+      around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_with_potential_operators") { ex.run } }
+
+      it "envoie un message Sentry" do
+        expect(Sentry).to receive(:capture_message).with(
+          "ProConnectOnboardingRouter: plusieurs potentialOperators matchent notre DB",
+          extra: { agent_id: agent.id, sirets: %w[13002603200016 12345678901234] }
+        )
+        handler.call
+      end
+
+      it "retourne quand même :signup_via_operator avec le premier match" do
+        allow(Sentry).to receive(:capture_message)
+        result = handler.call
+        expect(result.action).to eq(:signup_via_operator)
+        expect(result.operator_name).to eq("ANCT")
       end
     end
 

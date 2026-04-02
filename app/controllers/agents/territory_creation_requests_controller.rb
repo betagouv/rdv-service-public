@@ -25,7 +25,7 @@ class Agents::TerritoryCreationRequestsController < AgentAuthController
     return unless current_domain.allow_self_onboarding
     return unless current_agent.agent_territorial_access_rights.none?
 
-    result = ProConnectFirstLoginHandler.new(current_agent, current_domain).call
+    result = ProConnectOnboardingRouter.new(current_agent, current_domain).call
 
     case result.action
     when :contact_admin
