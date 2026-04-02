@@ -201,7 +201,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     expect(absence_representing_rdv.external_references.last.external_url).to eq "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/rdvs/#{future_rdv.id}"
 
     # On crée aussi des copies des absences futures
-    expect(agent_rdv_sp.absences.exceptionnelles.first.starts_at).to eq absence.starts_at
+    expect(agent_rdv_sp.absences.ponctuelles.first.starts_at).to eq absence.starts_at
 
     new_absence_without_end_date = agent_rdv_sp.absences.regulieres.where(recurrence_ends_at: nil).first
     expect(Montrose::Recurrence.dump(new_absence_without_end_date.recurrence)).to eq Montrose::Recurrence.dump(recurrent_absence.recurrence)
