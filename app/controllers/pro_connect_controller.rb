@@ -219,7 +219,8 @@ class ProConnectController < ApplicationController
     when :attached_as_admin
       redirect_to after_sign_in_path_for(agent)
     when :contact_admin
-      flash[:info] = "Votre organisation est rattachée à un opérateur RDV Service Public, mais vous n'avez pas les droits d'administrateur. Rapprochez-vous de votre administrateur pour qu'il vous accorde les accès sur votre espace."
+      flash[:info] = "Votre organisation est rattachée à un espace RDV Service Public, mais vous n'avez pas les droits " \
+                     "d'administrateur. Rapprochez-vous de votre administrateur pour qu'il vous accorde les accès sur votre espace."
       redirect_to after_sign_in_path_for(agent)
     when :signup_via_operator
       redirect_to agents_inscription_via_operateur_path(operator_name: result.operator_name, signup_url: result.signup_url)

@@ -9,9 +9,9 @@ class ProConnectFirstLoginHandler
     @domain = domain
   end
 
-  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def call
-    return Result.new(action: :classic) unless @agent.proconnect_siret.present?
+    return Result.new(action: :classic) if @agent.proconnect_siret.blank?
 
     # TODO: Rennomer cette variable
     anct = build_anct_client
@@ -20,7 +20,7 @@ class ProConnectFirstLoginHandler
     begin
       operator_data = anct.operator
       potential_operators_data = anct.potential_operators
-    rescue => e
+    rescue StandardError => e
       Sentry.capture_exception(e)
       return Result.new(action: :classic)
     end
@@ -41,13 +41,13 @@ class ProConnectFirstLoginHandler
 
     Result.new(action: :classic)
   end
-  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   private
 
   def build_anct_client
     EspaceOperateurANCT.new(@agent.proconnect_siret, @agent.email)
-  rescue => e
+  rescue StandardError => e
     Sentry.capture_exception(e)
     nil
   end

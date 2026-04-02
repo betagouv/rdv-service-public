@@ -29,7 +29,8 @@ class Agents::TerritoryCreationRequestsController < AgentAuthController
 
     case result.action
     when :contact_admin
-      flash[:info] = "Votre organisation est rattachée à un opérateur RDV Service Public, mais vous n'avez pas les droits d'administrateur. Rapprochez-vous de votre administrateur pour qu'il vous accorde les accès sur votre espace."
+      flash[:info] = "Votre organisation est rattachée à un espace RDV Service Public, mais vous n'avez pas les droits " \
+                     "d'administrateur. Rapprochez-vous de votre administrateur pour qu'il vous accorde les accès sur votre espace."
       redirect_to authenticated_agent_root_path
     when :signup_via_operator
       redirect_to agents_inscription_via_operateur_path(signup_url: result.signup_url, operator_name: result.operator_name)
