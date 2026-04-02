@@ -72,6 +72,39 @@ RSpec.describe "/api/v1/users" do
       end
     end
 
+    context "quand l'usager a une adresse" do
+      let(:params) do
+        {
+          first_name: "Francis",
+          last_name: "Factice",
+          address: "20 avenue de Ségur, Paris, 75007",
+          organisation_ids: [my_organisation.id],
+        }
+      end
+
+      it "enqueue un job de geocoding" do
+        expect do
+          post "/api/v1/users", headers:, params:, as: :json
+        end.to have_enqueued_job(GeocodingUserJob)
+      end
+    end
+
+    context "quand l'usager n'a pas d'adresse" do
+      let(:params) do
+        {
+          first_name: "Francis",
+          last_name: "Factice",
+          organisation_ids: [my_organisation.id],
+        }
+      end
+
+      it "n'enqueue pas de job de geocoding" do
+        expect do
+          post "/api/v1/users", headers:, params:, as: :json
+        end.not_to have_enqueued_job(GeocodingUserJob)
+      end
+    end
+
     describe "external references" do
       let(:params) do
         {
@@ -142,6 +175,27 @@ RSpec.describe "/api/v1/users" do
         existing_user.referent_agents << myself
         put "/api/v1/users/#{existing_user.id}", headers:, params:, as: :json
         expect(existing_user.reload.referent_agents).to eq([myself])
+      end
+    end
+
+    context "quand l'adresse change" do
+      let(:params) { { address: "10 rue de Rivoli, Paris, 75001" } }
+
+      it "enqueue un job de geocoding" do
+        expect do
+          put "/api/v1/users/#{existing_user.id}", headers:, params:, as: :json
+        end.to have_enqueued_job(GeocodingUserJob)
+      end
+    end
+
+    context "quand l'adresse ne change pas" do
+      let(:existing_user) { create(:user, organisations: [my_organisation], address: "10 rue de Rivoli") }
+      let(:params) { { last_name: "Nouveau" } }
+
+      it "n'enqueue pas de job de geocoding" do
+        expect do
+          put "/api/v1/users/#{existing_user.id}", headers:, params:, as: :json
+        end.not_to have_enqueued_job(GeocodingUserJob)
       end
     end
 

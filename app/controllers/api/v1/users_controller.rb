@@ -19,6 +19,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     @user.assign_attributes(user_params.merge(created_through: "agent_creation_api"))
     authorize(@user, policy_class: Agent::UserPolicy)
     @user.save!
+    enqueue_geocoding(@user)
     render_record @user
   end
 
@@ -32,6 +33,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     end
 
     @user.update!(user_params)
+    enqueue_geocoding(@user) if @user.saved_change_to_address?
     render_record @user
   end
 
@@ -99,5 +101,9 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
       Agent.where(id: params[:referent_agent_ids]),
       policy_scope_class: Agent::AgentPolicy::Scope
     ).ids
+  end
+
+  def enqueue_geocoding(user)
+    GeocodingUserJob.perform_later(user.id) if user.address?
   end
 end
