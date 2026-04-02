@@ -21,7 +21,8 @@ RSpec.describe ProConnectOnboardingRouter do
       stub_env_with(ESPACE_OPERATEUR_ANCT_AUTH_TOKEN: nil)
 
       it "retourne :classic et capture l'exception dans Sentry" do
-        expect(Sentry).to receive(:capture_exception)
+        expect { handler.call }.to change(sentry_events, :size).by(1)
+        expect(sentry_events.last.exception.values.first.value).to eq("Ce service n’est pas utilisable dans cet environnement. (RuntimeError)")
         expect(handler.call.action).to eq(:classic)
       end
     end

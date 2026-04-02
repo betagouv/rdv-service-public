@@ -177,7 +177,7 @@ RSpec.describe ProConnectController do
           before { ProConnectStubs.stub_callback_requests(code, user_info) }
           around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_admin") { ex.run } }
 
-          it "crée l'agent, le rattache au territoire de l'opérateur et redirige normalement" do
+          it "crée l'agent, son espace et son orga puis le redirige normalement" do
             allow(Domain::RDV_SERVICE_PUBLIC).to receive(:allow_self_onboarding).and_return(true)
             expect do
               get :callback, params: { state:, code: }
