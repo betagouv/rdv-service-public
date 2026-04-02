@@ -466,7 +466,7 @@ GEM
     pg_search (2.3.6)
       activerecord (>= 5.2)
       activesupport (>= 5.2)
-    phonelib (0.7.7)
+    phonelib (0.10.17)
     playwright-ruby-client (1.56.0)
       concurrent-ruby (>= 1.1.6)
       mime-types (>= 3.0)
@@ -1041,7 +1041,7 @@ CHECKSUMS
   pg (1.6.2-arm64-darwin) sha256=4d44500b28d5193b26674583d199a6484f80f1f2ea9cf54f7d7d06a1b7e316b6
   pg (1.6.2-x86_64-linux) sha256=525f438137f2d1411a1ebcc4208ec35cb526b5a3b285a629355c73208506a8ea
   pg_search (2.3.6) sha256=682f2a1272d81906463069e214f1026e1e105de54ec0a70c5a9847c378be00a3
-  phonelib (0.7.7) sha256=d83adc9069aca9bd2603fb3714366fc6f03323504778b1bc054b7463d0eaa64f
+  phonelib (0.10.17) sha256=8c97b6abc1877a8313ef32f9438cd35e24a943f9a70666af85eb69ab81caf4e3
   playwright-ruby-client (1.56.0) sha256=f7a772fabda46f0d04a2b20d86a8e7d2897e6c9b05d1fe49555626d499e9b104
   pp (0.6.3) sha256=2951d514450b93ccfeb1df7d021cae0da16e0a7f95ee1e2273719669d0ab9df6
   premailer (1.18.0) sha256=b930beb10a7d8b5e60dbff0d0b35b4ab3f0b10d8263ea6482aab7ecab9b3d335
