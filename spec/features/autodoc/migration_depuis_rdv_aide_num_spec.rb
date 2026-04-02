@@ -1,6 +1,11 @@
 RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", js: true do
   around { |example| perform_enqueued_jobs { example.run } }
 
+  before do
+    stub_request(:get, %r{data\.geopf\.fr/geocodage/search})
+      .to_return(status: 200, body: { type: "FeatureCollection", features: [] }.to_json, headers: {})
+  end
+
   # Pour simplifier les test, on crée deux agents sur la même instance
   let(:organisation_rdv_aide_num) do
     create(:organisation, name: "France Service de Montreuil",
