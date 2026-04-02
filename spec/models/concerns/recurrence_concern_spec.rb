@@ -222,7 +222,7 @@ RSpec.describe RecurrenceConcern do
   end
 
   describe "plage avec horaires d'après-midi" do
-    context "quand elle est exceptionnelle" do
+    context "quand elle est ponctuelle" do
       it "works" do
         plage = build(:plage_ouverture, :no_recurrence,
                       first_day: Date.new(2025, 2, 10),
