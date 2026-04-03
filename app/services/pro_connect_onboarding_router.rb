@@ -72,15 +72,21 @@ class ProConnectOnboardingRouter
 
   def attach_or_create_territory(operator, anct_client)
     ActiveRecord::Base.transaction do
-      territory = operator.territories.first || Territory.create!(
+      existing_territory = operator.territories.first
+      territory = existing_territory || Territory.create!(
         operator: operator,
         category: ANCT_TYPE_TO_CATEGORY.fetch(anct_client.organization&.fetch("type", nil), "Inconnu")
       )
-      organisation = territory.organisations.first || Organisation.create!(
+
+      existing_organisation = territory.organisations.first
+      organisation = existing_organisation || Organisation.create!(
         name: anct_client.organization&.fetch("name", nil) || operator.name,
         territory: territory,
         verticale: @domain.verticale
       )
+
+      capture_attach_sentry_message(operator, territory, organisation, new_account: existing_territory.nil? || existing_organisation.nil?)
+
       AgentRole.create!(agent: @agent, organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
       AgentTerritorialRole.create!(agent: @agent, territory: territory)
       AgentTerritorialAccessRight.create!(
@@ -89,5 +95,14 @@ class ProConnectOnboardingRouter
         allow_to_invite_agents: true
       )
     end
+  end
+
+  def capture_attach_sentry_message(operator, territory, organisation, new_account:)
+    message = if new_account
+                "ProConnectOnboardingRouter: création d'un compte (territory/organisation) via ANCT"
+              else
+                "ProConnectOnboardingRouter: ajout d'un administrateur sur un compte existant via ANCT"
+              end
+    Sentry.capture_message(message, level: "info", extra: { agent_id: @agent.id, operator_id: operator.id, territory_id: territory.id, organisation_id: organisation.id })
   end
 end
