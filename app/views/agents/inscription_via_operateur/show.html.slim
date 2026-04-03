@@ -1,0 +1,16 @@
+/# locals: (operator_name:, signup_url:)
+
+.fr-grid-row.fr-mb-8w
+  .fr-col-12.fr-col-md-8.fr-col-offset-md-2
+    .card
+      .card-body
+        h1.fr-h2 Inscription via votre opérateur
+
+        p
+          | Votre organisation est rattachée à l'opérateur
+          strong  #{operator_name}
+          | , qui gère votre accès à RDV Service Public.
+
+        p Pour créer votre espace, vous devez faire une demande d'accès directement auprès de cet opérateur.
+
+        = external_link_to "Faire une demande d'accès auprès de #{operator_name}", signup_url, class: "fr-btn"

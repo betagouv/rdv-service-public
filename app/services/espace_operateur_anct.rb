@@ -17,6 +17,10 @@ class EspaceOperateurANCT
     parsed_response&.fetch("operator", nil)
   end
 
+  def potential_operators
+    parsed_response&.fetch("potentialOperators", nil)
+  end
+
   def can_access?
     return false unless entitlements
 
@@ -43,6 +47,8 @@ class EspaceOperateurANCT
 
   def client
     @client ||= Faraday.new(url: "https://operateurs.suite.anct.gouv.fr/api/v1.0/") do |faraday|
+      faraday.options.timeout = 3
+      faraday.options.open_timeout = 3
       faraday.headers = {
         "X-Service-Auth": ENV.fetch("ESPACE_OPERATEUR_ANCT_AUTH_TOKEN", nil),
       }
