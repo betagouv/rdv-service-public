@@ -8,6 +8,15 @@ RSpec.describe ProConnectOnboardingRouter do
   stub_env_with(ESPACE_OPERATEUR_ANCT_AUTH_TOKEN: "Bearer fake-token")
 
   describe "#call" do
+    context "quand l'agent a un email d'un domaine de l'État" do
+      let(:agent) { create(:agent, email: "agent@etat.gouv.fr", proconnect_siret: siret) }
+
+      it "retourne :classic sans appeler l'API" do
+        expect(EspaceOperateurANCT).not_to receive(:new)
+        expect(handler.call.action).to eq(:classic)
+      end
+    end
+
     context "quand l'agent n'a pas de SIRET ProConnect" do
       let(:agent) { create(:agent, proconnect_siret: nil) }
 

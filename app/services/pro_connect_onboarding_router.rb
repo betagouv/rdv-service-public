@@ -15,6 +15,7 @@ class ProConnectOnboardingRouter
 
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def call
+    return Result.new(action: :classic) if VerifiedServicePublicDomainNames.verified?(@agent.email)
     return Result.new(action: :classic) if @agent.proconnect_siret.blank?
 
     anct_client = build_anct_client
