@@ -176,6 +176,7 @@ Rails.application.routes.draw do
 
       resources :territories, only: %i[new create]
       resources :territory_creation_requests, only: %i[new create]
+      get "inscription_via_operateur", to: "inscription_via_operateur#show", as: :inscription_via_operateur
       resources :instance_exports, only: %i[index]
       resources :exports, only: %i[index] do
         get :download

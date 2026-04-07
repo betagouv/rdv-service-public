@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://operateurs.suite.anct.gouv.fr/api/v1.0/entitlements/?account_email=contact@mairie-nantes.fr&account_type=user&service_id=49&siret=21550050500015
+    uri: https://operateurs.suite.anct.gouv.fr/api/v1.0/entitlements/?account_email=contact@mairie-nantes.fr&account_type=user&service_id=49&siret=20005671100019
     body:
       encoding: US-ASCII
       string: ''
@@ -21,17 +21,18 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 01 Apr 2026 09:59:46 GMT
+      - Wed, 01 Apr 2026 09:51:20 GMT
       Content-Type:
       - application/json
-      Content-Length:
-      - '197'
+      Transfer-Encoding:
+      - chunked
       Connection:
       - keep-alive
       X-Request-Id:
-      - ff70c1ec-53d5-439a-8660-cb4cd33e34e6
+      - b7efebcc-e70e-49ad-8145-14ca39769ef4
       Vary:
       - Accept, origin, Accept-Language, Cookie
+      - Accept-Encoding
       Allow:
       - GET, HEAD, OPTIONS
       X-Frame-Options:
@@ -53,20 +54,31 @@ http_interactions:
       string: |-
         {
           "organization": {
-            "type": "other",
-            "name": "Bezonvaux",
+            "type": "commune",
+            "name": "Jugon-les-Lacs",
             "oidc_valid": null
           },
-          "operator": {
-            "name": "TEST",
-            "siret": "21550050500015",
-            "url": null,
-            "config": {}
-          },
+          "operator": null,
           "entitlements": {
-            "can_access": true,
-            "is_admin": false
-          }
+            "can_access": false,
+            "can_access_reason": "not_activated"
+          },
+          "potentialOperators": [
+            {
+              "name": "ANCT",
+              "siret": "13002603200016",
+              "url": "https://anct.gouv.fr/",
+              "config": {},
+              "signupUrl": "https://suiteterritoriale.anct.gouv.fr/deep-link-signup/"
+            },
+            {
+              "name": "Nom OPSN",
+              "siret": "12345678901234",
+              "url": "https://site.opsn/offre-lst/",
+              "config": {},
+              "signupUrl": "https://suiteterritoriale.anct.gouv.fr/deep-link-signup/"
+            }
+          ]
         }
-  recorded_at: Wed, 01 Apr 2026 09:59:46 GMT
+  recorded_at: Wed, 01 Apr 2026 09:51:20 GMT
 recorded_with: VCR 6.4.0

@@ -19,6 +19,10 @@ RSpec.describe EspaceOperateurANCT do
       expect(service.operator).to be_present
     end
 
+    it "n’a pas d’opérateurs potentiels" do
+      expect(service.potential_operators).to be_nil
+    end
+
     it "retourne les entitlements" do
       expect(service.entitlements).to be_present
     end
@@ -28,6 +32,22 @@ RSpec.describe EspaceOperateurANCT do
       service.operator
       service.entitlements
       expect(WebMock).to have_requested(:get, /entitlements/).once
+    end
+
+    context "quand l’organisation a des opérateurs potentiels" do
+      let(:siret) { "20005671100019" }
+
+      around do |example|
+        VCR.use_cassette("espace_operateur_anct/entitlements_with_potential_operators") { example.run }
+      end
+
+      it "a un opérateur null" do
+        expect(service.operator).to be_nil
+      end
+
+      it "retourne les opérateurs potentiels" do
+        expect(service.potential_operators).to be_present
+      end
     end
   end
 

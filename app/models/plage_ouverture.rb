@@ -140,12 +140,12 @@ class PlageOuverture < ApplicationRecord
       .not_expired
       .where.not(id: id)
 
-    if exceptionnelle?
+    if ponctuelle?
       candidate_pos.regulieres.where(first_day: ..first_day)
-        .or(candidate_pos.exceptionnelles.where(first_day: first_day))
+        .or(candidate_pos.ponctuelles.where(first_day: first_day))
     else
       candidate_pos.regulieres
-        .or(candidate_pos.exceptionnelles.where(first_day: first_day..))
+        .or(candidate_pos.ponctuelles.where(first_day: first_day..))
     end
   end
 

@@ -165,6 +165,7 @@ class ProConnectController < ApplicationController
     end
 
     agent = agent_by_sub || agent_by_email
+    was_new_agent = agent.nil?
 
     if agent.nil?
       if current_domain.allow_self_onboarding
@@ -202,9 +203,31 @@ class ProConnectController < ApplicationController
 
     bypass_sign_in agent, scope: :agent
     session[:pro_connect_id_token] = callback_client.id_token_for_logout
-    redirect_to after_sign_in_path_for(agent)
+
+    if was_new_agent && current_domain.allow_self_onboarding
+      redirect_after_first_proconnect_login(agent)
+    else
+      redirect_to after_sign_in_path_for(agent)
+    end
   end
   # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+
+  def redirect_after_first_proconnect_login(agent)
+    result = ProConnectOnboardingRouter.new(agent, current_domain).call
+
+    case result.action
+    when :attached_as_admin
+      redirect_to after_sign_in_path_for(agent)
+    when :contact_admin
+      flash[:info] = "Votre organisation est rattachée à un espace RDV Service Public, mais vous n'avez pas les droits " \
+                     "d'administrateur. Rapprochez-vous de votre administrateur pour qu'il vous accorde les accès sur votre espace."
+      redirect_to after_sign_in_path_for(agent)
+    when :signup_via_operator
+      redirect_to agents_inscription_via_operateur_path(operator_name: result.operator_name, signup_url: result.signup_url)
+    else # :classic
+      redirect_to new_agents_territory_creation_request_path
+    end
+  end
 
   def generic_error_message
     support_link = new_aide_demande_support_path(role: "agent", sujet: "Connexion ProConnect")
