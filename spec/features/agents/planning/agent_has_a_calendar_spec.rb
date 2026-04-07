@@ -186,11 +186,11 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
 
     it "fonctionne depuis la vue mensuelle", js: true do
+      page.driver.with_playwright_page { _1.clock.pause_at(Time.zone.parse("2026-04-14 08:00")) }
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
       click_button "Mois"
-      monday = Time.zone.now.beginning_of_week.to_date
-      find(%(.fc-daygrid-day[data-date="#{monday}"])).click
-      expect(page).to have_content("Nouveau RDV pour le #{I18n.l(monday, format: '%-d/%m/%Y')} à 00:00")
+      find(%(.fc-daygrid-day[data-date="2026-04-13"])).click
+      expect(page).to have_content("Nouveau RDV pour le 13/04/2026 à 00:00")
     end
 
     it "fonctionne depuis la vue semaine", js: true do
