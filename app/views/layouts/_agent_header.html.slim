@@ -1,6 +1,7 @@
 header.header.bg-white
   = render "layouts/rdv_solidarites_instance_name"
   = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
+  = render "layouts/force_2fa_notice"
   nav.navbar.navbar-expand-lg.bg-transparent.navbar-dsfr[role="navigation" aria-label="navigation"]
     = link_to root_path, class: "header-brand ml-4" do
       = image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "logo-dsfr logo-dsfr--compactable"
