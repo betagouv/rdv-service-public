@@ -1,5 +1,5 @@
 class CronJob::RefreshAgentsSensitiveAccountJob < CronJob
-  SENSITIVE_TERRITORY_RDV_THRESHOLD = 10_000
+  SENSITIVE_TERRITORY_RDV_THRESHOLD = 5_000
 
   def perform
     sensitive_territory_ids = Territory.joins(:organisations)
