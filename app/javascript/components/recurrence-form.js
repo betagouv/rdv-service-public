@@ -3,7 +3,8 @@ class RecurrenceForm {
     this.element = document.querySelector('.js-recurrence-container')
     if (!this.element) return;
 
-    this.hasRecurrenceTarget = document.querySelector('.js-recurrence-toggle')
+    this.radioButtonRecurring = document.querySelector(".js-radio-recurring");
+    this.radioButtonNonRecurring = document.querySelector(".js-radio-non-recurring");
     this.recurrenceComputedTarget = document.querySelector('.js-recurrence-computed')
     this.intervalTarget = document.querySelector('.js-recurrence-interval')
     this.everyTarget = document.querySelector('.js-recurrence-every')
@@ -17,9 +18,9 @@ class RecurrenceForm {
 
     let model = this.getRecurrenceComputed() || {};
     if (model.every == undefined) {
-      this.hasRecurrenceTarget.checked = false;
+      this.radioButtonNonRecurring.click();
     } else {
-      this.hasRecurrenceTarget.checked = true;
+      this.radioButtonRecurring.click();
       this.everyTarget.value = model.every;
       this.intervalTarget.value = model.interval;
       if (model.until) {
@@ -61,7 +62,8 @@ class RecurrenceForm {
   updateRecurrence = () => {
     let model = {};
 
-    if (this.hasRecurrenceTarget.checked) {
+    const recurringRadio = this.radioButtonRecurring.checked;
+    if (recurringRadio) {
       model.every = this.everyTarget.value;
       model.interval = Number(this.intervalTarget.value);
       model.starts = this.firstDayTarget.value
@@ -93,9 +95,11 @@ class RecurrenceForm {
     } else if (model.every == "month") {
       this.monthlyTarget.innerHTML = this.getDayText(this.getFirstDay());
       this.element.classList.add("recurrence-select--monthly");
-    } else {
+    } else { // no recurrence
       this.element.classList.add("recurrence-select--never");
     }
+
+    setLabel('label[for="recurrence-source"]', model.every ? 'Premier jour ' : 'Date ')
   }
 
   getWeekday = (date) => {
@@ -119,5 +123,13 @@ class RecurrenceForm {
     return `Tous les ${nthWeekdayOfMonth} ${Intl.DateTimeFormat("fr", {weekday: "long"}).format(date).toLowerCase()} du mois`;
   }
 }
+
+const setLabel = (selector, newContent) => {
+  document.querySelector(selector).childNodes.forEach((node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      node.textContent = newContent;
+    }
+  });
+};
 
 export { RecurrenceForm }
