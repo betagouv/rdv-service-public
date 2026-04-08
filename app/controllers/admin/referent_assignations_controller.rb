@@ -1,4 +1,6 @@
 class Admin::ReferentAssignationsController < AgentAuthController
+  before_action { @current_menu_item = :users }
+
   def index
     @user = policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find(index_params[:user_id])
     authorize(@user, :update?, policy_class: Agent::UserPolicy)

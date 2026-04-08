@@ -40,17 +40,6 @@ module AgentsHelper
     agents.map(&:full_name_and_service).sort.to_sentence
   end
 
-  def menu_top_level_item
-    {
-      "menu-agendas" => "planning",
-      "menu-plages-ouvertures" => "planning",
-      "menu-absences" => "planning",
-      "menu-settings" => "settings",
-      "menu-organisation-stats" => "stats",
-      "menu-stats" => "stats",
-    }[content_for(:menu_item)]
-  end
-
   def navigation_scoped_by_agent_services?(current_agent, current_organisation)
     return false if current_agent.secretaire?
 

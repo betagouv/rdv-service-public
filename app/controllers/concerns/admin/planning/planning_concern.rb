@@ -3,6 +3,7 @@ module Admin::Planning::PlanningConcern
 
   included do
     before_action { @planning_layout = true }
+    before_action { @current_menu_item = :planning }
   end
 
   private

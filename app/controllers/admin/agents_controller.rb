@@ -2,6 +2,7 @@ class Admin::AgentsController < AgentAuthController
   respond_to :html
 
   before_action :ensure_agent_is_admin, except: :index
+  before_action { @current_menu_item = :settings }
 
   def index
     @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active

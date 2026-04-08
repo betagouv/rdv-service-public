@@ -1,5 +1,6 @@
 class Admin::Organisations::OnlineBookingsController < AgentAuthController
   before_action :set_organisation
+  before_action { @current_menu_item = :settings }
 
   def show
     authorize(@organisation, policy_class: Agent::OrganisationPolicy)

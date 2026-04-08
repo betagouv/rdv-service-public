@@ -1,5 +1,6 @@
 class Admin::MergeUsersController < AgentAuthController
   before_action :set_organisation
+  before_action { @current_menu_item = :users }
 
   def new
     user1 = policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find(params[:user1_id]) if params[:user1_id].present?

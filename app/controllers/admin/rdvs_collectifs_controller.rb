@@ -1,6 +1,8 @@
 class Admin::RdvsCollectifsController < AgentAuthController
   include RdvsHelper
 
+  before_action { @current_menu_item = :rdvs_collectifs }
+
   def index
     @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif).available_motifs_for_organisation_and_agent(current_organisation, current_agent).collectif
 

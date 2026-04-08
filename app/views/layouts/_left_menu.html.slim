@@ -34,22 +34,22 @@ nav.left-side-menu-wrapper
           - selected_agent = @agent || @contextual_agents&.first
 
           - query_params = selected_agent ? { agent_id: selected_agent } : {}
-          = active_link_to(admin_organisation_planning_agenda_path(current_organisation, **query_params), active: menu_top_level_item == "planning", class: "side-menu__item")
+          = active_link_to(admin_organisation_planning_agenda_path(current_organisation, **query_params), active: @current_menu_item == :planning, class: "side-menu__item")
             span.fr-icon-calendar-event-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Planning
 
         li.fr-pb-0
-          = active_link_to(admin_organisation_users_path(current_organisation), class: "side-menu__item")
+          = active_link_to(admin_organisation_users_path(current_organisation), active: @current_menu_item == :users, class: "side-menu__item")
             span.fr-icon-group-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Usagers
 
         li.fr-pb-0
-          = active_link_to(admin_organisation_rdvs_path(current_organisation), class: "side-menu__item")
+          = active_link_to(admin_organisation_rdvs_path(current_organisation), active: @current_menu_item == :liste_rdvs, class: "side-menu__item")
             span.fr-icon-survey-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Liste des RDV
 
         li.fr-pb-0
-          = active_link_to(admin_organisation_rdvs_collectifs_path(current_organisation), class: "side-menu__item")
+          = active_link_to(admin_organisation_rdvs_collectifs_path(current_organisation), active: @current_menu_item == :rdvs_collectifs, class: "side-menu__item")
             span.fr-icon-team-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | RDV collectifs
 
@@ -60,7 +60,7 @@ nav.left-side-menu-wrapper
 
         - unless current_agent.admin_in_organisation?(current_organisation)
           li.fr-pb-0
-            = active_link_to admin_organisation_lieux_path(current_organisation), class: "side-menu__item"
+            = active_link_to(admin_organisation_lieux_path(current_organisation), class: "side-menu__item")
               = lieu_icon(class: "fr-icon--sm fr-mr-1w")
               | Lieux
           li.fr-pb-0
@@ -70,11 +70,11 @@ nav.left-side-menu-wrapper
 
         - if current_agent.admin_in_organisation?(current_organisation)
           li.fr-pb-0
-            = link_to admin_organisation_configuration_path(current_organisation), class: "side-menu__item #{'active' if menu_top_level_item == 'settings'}"
+            = link_to admin_organisation_configuration_path(current_organisation), class: "side-menu__item #{'active' if @current_menu_item == :settings}"
               span.fr-icon-settings-5-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
               | Configuration
               / On ajoute une condition sur la date de création de l'organisation pour éviter de faire des requêtes sur les tables motifs et lieux à chaque chargement de page
-              - if menu_top_level_item != "settings" && current_organisation.created_at > 30.days.ago && needs_configuration(current_organisation)
+              - if @current_menu_item != :settings && current_organisation.created_at > 30.days.ago && needs_configuration(current_organisation)
                 .fr-ml-1w.rdv-pastille
 
         li.fr-pb-0

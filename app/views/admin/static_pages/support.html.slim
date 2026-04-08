@@ -1,7 +1,6 @@
 ruby:
   @hide_meet_the_team_banner = true
   content_for(:title) { "Aide et support" }
-  content_for(:menu_item) { "menu-support" }
   operator = current_territory.operator
   operator_support_link = operator&.support_link.presence
 

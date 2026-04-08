@@ -3,6 +3,7 @@ class Admin::UsersController < AgentAuthController
 
   before_action :set_organisation, only: %i[new create]
   before_action :set_user, except: %i[index search new create link_to_organisation]
+  before_action { @current_menu_item = :users }
 
   PERMITTED_ATTRIBUTES = %i[
     id
