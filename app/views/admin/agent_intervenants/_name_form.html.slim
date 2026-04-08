@@ -2,7 +2,6 @@
   .col-md-12.col-lg-8
     .card
       .card-body
-        = simple_form_for [:admin, current_organisation,  agent_intervenant], url: admin_organisation_agent_intervenant_path(current_organisation, agent_intervenant), html: { method: :put, class: "form-inline full-width-inline-form" }, wrapper: :inline_form do |f|
-          .d-flex.w-100
-            = f.input :last_name, label: "Nom", placeholder: "Avocat #1", input_html: { autocomplete: "off", class: "full-width-input" }
-            = f.button :submit, "Modifier le nom"
+        = form_for [:admin, current_organisation, agent_intervenant], url: admin_organisation_agent_intervenant_path(current_organisation, agent_intervenant), html: { method: :put }, builder: Dsfr::FormBuilder do |f|
+          = f.dsfr_text_field :last_name, label: "Nom", placeholder: "Avocat #1", autocomplete: "off"
+          = f.submit "Modifier le nom", class: "fr-btn"

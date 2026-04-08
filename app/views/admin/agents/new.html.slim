@@ -4,42 +4,50 @@
 = render "admin/agents/fil_ariane", current_page_title: content_for(:title)
 - content_for(:menu_item) { "menu-settings" }
 
-.row.justify-content-center
-  .col-md-12.col-lg-8
+.fr-grid-row.fr-grid-row--gutters
+  .fr-col-md-12.fr-col-lg-8
     .card
       .card-body.js_agent_role_form
-        = simple_form_for [:admin, @agent], url: admin_organisation_agents_path(current_organisation), html: { method: :post } do |f|
+        = form_for [:admin, @agent], url: admin_organisation_agents_path(current_organisation), html: { method: :post }, builder: Dsfr::FormBuilder do |f|
           = render "devise/shared/error_messages", resource: @agent
-          = f.simple_fields_for @agent_role do |ff|
+          = f.fields_for @agent_role do |ff|
+            ruby:
+              role_choices = @roles.map do |role|
+                {
+                  value: role,
+                  label: render("admin/agents/role_labels/#{role}"),
+                  hint: render("admin/agents/role_hints/#{role}", services: @services),
+                  checked: ff.object.access_level == role,
+                }
+              end
+            ruby:
+              access_level_hint = "Quel type d’agent souhaitez-vous ajouter ?"
+              access_level_hint += " Les agents peuvent avoir des permissions différentes sur chaque organisation." if current_agent.organisations_count > 1
+            = ff.dsfr_radio_buttons :access_level, role_choices,
+              legend: "Niveau de permissions",
+              hint: access_level_hint,
+              rich: true
 
-            label.big-label Niveau de permissions
-            .text-muted.form-text
-              | Quel type d'agent souhaitez-vous ajouter ?
-            = ff.input :access_level,
-              collection: @roles,
-              label_method: -> { render("admin/agents/role_labels/#{_1}", { services: @services }) },
-              hint: ("Les agents peuvent avoir des permissions différentes sur chaque organisation." if current_agent.organisations_count > 1),
-              as: :radio_buttons,
-              label: "",
-              html: { class: "mt-4" }
+          = f.dsfr_email_field :email, label: "Email", placeholder: "a.dupond@departement.fr", autocomplete: "off", hint: "Une invitation sera envoyée automatiquement à cette adresse", class: "js_agent_role_form__agent_with_account_fields"
 
-          .js_agent_role_form__agent_with_account_fields
-            = f.input :email, placeholder: "a.dupond@departement.fr", input_html: { autocomplete: "off"}, label_html: { class: "big-label mt-3" }, hint: "Une invitation sera envoyée automatiquement à cette adresse"
-
-          .js_agent_role_form__intervenant_fields
-            = f.input :last_name, input_html: { autocomplete: "off"}, label: "Nom", label_html: { class: "big-label mt-3" }
+          = f.dsfr_text_field :last_name, label: "Nom", autocomplete: "off", class: "js_agent_role_form__intervenant_fields"
 
           - if @services.any?
-            label.big-label.mt-3 Services
-            .text-muted.form-text
-              | Dans quel domaine d'activité est-ce que cet agent effectue des rendez-vous ?
-            = f.association :services, collection: @services, include_blank: false, as: :check_boxes, label: ""
-            - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
-              small.form-text.text-muted.mb-4
-                |> Si le service dont vous avez besoin n'apparaît pas dans cette liste, vous pouvez
-                = link_to("activer des services supplémentaires", edit_admin_territory_services_path(current_territory, redirect_to_organisation_id: current_organisation.id))
-            - else
-              | Si le service dont vous avez besoin n'apparaît pas dans cette liste, vous pouvez demander à un admin de votre espace d'activer des services supplémentaires.
+            fieldset.fr-fieldset
+              legend.fr-fieldset__legend--regular.fr-fieldset__legend
+                | Services
+                span.fr-hint-text Dans quel domaine d'activité est-ce que cet agent effectue des rendez-vous ?
+              = f.collection_check_boxes :service_ids, @services, :id, :name do |cb|
+                .fr-fieldset__element
+                  .fr-checkbox-group
+                    = cb.check_box
+                    = cb.label
+              - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
+                p.fr-hint-text
+                  |> Si le service dont vous avez besoin n'apparaît pas dans cette liste, vous pouvez
+                  = link_to("activer des services supplémentaires", edit_admin_territory_services_path(current_territory, redirect_to_organisation_id: current_organisation.id))
+              - else
+                p.fr-hint-text Si le service dont vous avez besoin n'apparaît pas dans cette liste, vous pouvez demander à un admin de votre espace d'activer des services supplémentaires.
 
           .text-right
-            = f.button :submit, "Enregistrer"
+            = f.submit "Enregistrer", class: "fr-btn"
