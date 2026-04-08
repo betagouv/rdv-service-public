@@ -26,6 +26,12 @@
               legend: "Niveau de permissions",
               hint: access_level_hint,
               rich: true
+            - if @services.any?
+              fieldset.fr-fieldset
+                legend.fr-fieldset__legend--regular.fr-fieldset__legend
+                  | Permissions supplémentaires
+                .fr-fieldset__element
+                  = ff.dsfr_check_box :agent_accueil, label: "Agent d'accueil", hint: "Peut consulter et modifier les agendas de tous les agents de l'organisation"
 
           = f.dsfr_email_field :email, label: "Email", placeholder: "a.dupond@departement.fr", autocomplete: "off", hint: "Une invitation sera envoyée automatiquement à cette adresse", class: "js_agent_role_form__agent_with_account_fields"
 

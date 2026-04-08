@@ -48,6 +48,12 @@
               legend: "Niveau de permissions",
               hint: ("Les agents peuvent avoir des permissions différentes sur chaque organisation." if current_agent.organisations_count > 1),
               rich: true
+            - if current_territory.services.any? || ff.object.agent_accueil?
+              fieldset.fr-fieldset
+                legend.fr-fieldset__legend--regular.fr-fieldset__legend
+                  | Permissions supplémentaires
+                .fr-fieldset__element
+                  = ff.dsfr_check_box :agent_accueil, label: "Agent d'accueil", hint: "Peut consulter et modifier les agendas de tous les agents de l'organisation"
 
           / allow turning an intervenant into an agent with an account
           - if AgentRole.find(@agent_role.id).access_level == "intervenant"
