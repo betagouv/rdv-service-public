@@ -58,16 +58,6 @@ nav.left-side-menu-wrapper
             span.fr-icon-bar-chart-box-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Statistiques
 
-        - unless current_agent.admin_in_organisation?(current_organisation)
-          li.fr-pb-0
-            = active_link_to(admin_organisation_lieux_path(current_organisation), class: "side-menu__item")
-              = lieu_icon(class: "fr-icon--sm fr-mr-1w")
-              | Lieux
-          li.fr-pb-0
-            = active_link_to(admin_organisation_motifs_path(current_organisation), class: "side-menu__item")
-              = motif_icon(class: "fr-icon--sm fr-mr-1w")
-              | Motifs
-
         - if current_agent.admin_in_organisation?(current_organisation)
           li.fr-pb-0
             = link_to admin_organisation_configuration_path(current_organisation), class: "side-menu__item #{'active' if @current_menu_item == :settings}"
@@ -76,6 +66,16 @@ nav.left-side-menu-wrapper
               / On ajoute une condition sur la date de création de l'organisation pour éviter de faire des requêtes sur les tables motifs et lieux à chaque chargement de page
               - if @current_menu_item != :settings && current_organisation.created_at > 30.days.ago && needs_configuration(current_organisation)
                 .fr-ml-1w.rdv-pastille
+
+        - else
+          li.fr-pb-0
+            = active_link_to(admin_organisation_lieux_path(current_organisation), class: "side-menu__item")
+              = lieu_icon(class: "fr-icon--sm fr-mr-1w")
+              | Lieux
+          li.fr-pb-0
+            = active_link_to(admin_organisation_motifs_path(current_organisation), class: "side-menu__item")
+              = motif_icon(class: "fr-icon--sm fr-mr-1w")
+              | Motifs
 
         li.fr-pb-0
           = active_link_to admin_organisation_support_path(current_organisation), class: "side-menu__item"
