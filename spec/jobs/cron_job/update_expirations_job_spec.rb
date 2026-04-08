@@ -7,15 +7,15 @@ RSpec.describe CronJob::UpdateExpirationsJob, type: :job do
 
   context "PO without recurrence" do
     it "expired past first_day" do
-      plage_ouverture_exceptionnelle = create(:plage_ouverture, :no_recurrence, first_day: now.to_date - 1.week)
+      plage_ouverture_ponctuelle = create(:plage_ouverture, :no_recurrence, first_day: now.to_date - 1.week)
       described_class.perform_now
-      expect(plage_ouverture_exceptionnelle.reload.expired_cached).to be true
+      expect(plage_ouverture_ponctuelle.reload.expired_cached).to be true
     end
 
     it "not expired futur first_day" do
-      plage_ouverture_exceptionnelle = create(:plage_ouverture, :no_recurrence, first_day: now.to_date + 1.week)
+      plage_ouverture_ponctuelle = create(:plage_ouverture, :no_recurrence, first_day: now.to_date + 1.week)
       described_class.perform_now
-      expect(plage_ouverture_exceptionnelle.reload.expired_cached).to be false
+      expect(plage_ouverture_ponctuelle.reload.expired_cached).to be false
     end
   end
 
@@ -35,15 +35,15 @@ RSpec.describe CronJob::UpdateExpirationsJob, type: :job do
 
   context "Absence without recurrence" do
     it "expired past first_day" do
-      absence_exceptionnelle = create(:absence, :no_recurrence, first_day: now.to_date - 1.week)
+      absence_ponctuelle = create(:absence, :no_recurrence, first_day: now.to_date - 1.week)
       described_class.perform_now
-      expect(absence_exceptionnelle.reload.expired_cached).to be true
+      expect(absence_ponctuelle.reload.expired_cached).to be true
     end
 
     it "not expired futur first_day" do
-      absence_exceptionnelle = create(:absence, :no_recurrence, first_day: now.to_date + 1.week)
+      absence_ponctuelle = create(:absence, :no_recurrence, first_day: now.to_date + 1.week)
       described_class.perform_now
-      expect(absence_exceptionnelle.reload.expired_cached).to be false
+      expect(absence_ponctuelle.reload.expired_cached).to be false
     end
   end
 

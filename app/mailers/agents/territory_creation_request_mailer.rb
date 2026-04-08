@@ -6,6 +6,12 @@ class Agents::TerritoryCreationRequestMailer < ApplicationMailer
     mail(to: agent.email, subject: t(".title", domain_name: domain))
   end
 
+  def refused(agent:, domain_id:)
+    @agent = agent
+    @domain = Domain.find(domain_id)
+    mail(to: agent.email, subject: t(".title", domain_name: domain))
+  end
+
   private
 
   attr_reader :domain

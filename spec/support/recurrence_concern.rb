@@ -5,7 +5,7 @@ RSpec.shared_examples_for "recurrence" do
   describe "#starts_at" do
     subject { model_instance.starts_at }
 
-    context "exceptionnelle" do
+    context "ponctuelle" do
       let(:model_instance) { create(model_symbol, first_day: Date.new(2019, 7, 22), start_time: Tod::TimeOfDay.new(9)) }
 
       it { is_expected.to eq(Time.zone.local(2019, 7, 22, 9)) }
@@ -15,7 +15,7 @@ RSpec.shared_examples_for "recurrence" do
   describe "#ends_at" do
     subject { model_instance.ends_at }
 
-    context "exceptionnelle" do
+    context "ponctuelle" do
       let(:model_instance) { create(model_symbol, first_day: Date.new(2019, 7, 22), end_time: Tod::TimeOfDay.new(12)) }
 
       it { is_expected.to eq(Time.zone.local(2019, 7, 22, 12)) }

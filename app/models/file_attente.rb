@@ -62,7 +62,7 @@ class FileAttente < ApplicationRecord
   end
 
   def invitation_token_for(rdv, user)
-    participation = Participation.find_by(rdv: rdv, user: user)
+    participation = user.participation_for(rdv)
     return nil unless participation
 
     # TODO: Supprimer ce if une fois que toutes les participations ont des restricted_auth_token
