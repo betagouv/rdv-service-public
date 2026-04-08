@@ -26,6 +26,25 @@ RSpec.describe Agents::SessionsController do
         expect(controller.current_agent).to eq(agent)
       end
     end
+
+    context "quand l'agent a un compte sensible" do
+      let(:agent) { create(:agent, password: "c0rrecThorse!", sensitive_account: true) }
+
+      it "ne connecte pas l'agent" do
+        post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
+        expect(session["warden.agent.key"]).to be_nil
+      end
+
+      it "stocke l'id de l'agent dans la session comme connexion en attente" do
+        post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
+        expect(session[:pending_agent_login_id]).to eq(agent.id)
+      end
+
+      it "redirige vers le formulaire de vérification par code" do
+        post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
+        expect(response).to redirect_to(new_agents_sessions_by_code_path)
+      end
+    end
   end
 
   describe "#destroy" do
