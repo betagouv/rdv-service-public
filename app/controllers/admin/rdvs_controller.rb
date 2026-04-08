@@ -4,7 +4,7 @@ class Admin::RdvsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_rdv, :set_contextual_agents, except: %i[index a_renseigner export participations_export]
-  before_action { @current_menu_item = :liste_rdvs }
+  before_action { @current_menu_item = @contextual_agents.present? ? :planning : :liste_rdvs }
 
   PERMITTED_PER_PAGE = [10, 25, 50].freeze
 
