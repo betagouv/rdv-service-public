@@ -42,6 +42,9 @@
               legend.fr-fieldset__legend--regular.fr-fieldset__legend
                 | Services
                 span.fr-hint-text Dans quel domaine d'activité est-ce que cet agent effectue des rendez-vous ?
+              - if current_territory.services.any?(&:secretariat?)
+                = dsfr_callout do
+                  | Le service secrétariat a été remplacé par une nouvelle permission « Agent d’accueil » que vous pouvez activer dans la section « Permissions supplémentaires » ci-dessus.
               = f.collection_check_boxes :service_ids, @services, :id, :name do |cb|
                 .fr-fieldset__element
                   .fr-checkbox-group

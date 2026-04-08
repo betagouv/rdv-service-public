@@ -11,6 +11,9 @@
 
         p Vous pouvez activer ou désactiver les services auxquels vos agents peuvent être affectés.
 
+        = dsfr_callout do
+          | Le service secrétariat a été remplacé par une nouvelle permission « Agent d’accueil » que vous pouvez activer pour chaque agent dans les paramètres de l’organisation.
+
         = simple_form_for current_territory, url: admin_territory_services_path(current_territory, redirect_to_organisation_id: params[:redirect_to_organisation_id]) do |f|
           = render "model_errors", model: current_territory
 
