@@ -1,5 +1,9 @@
-module Admin::Planning::SetAgentsConcern
+module Admin::Planning::PlanningConcern
   extend ActiveSupport::Concern
+
+  included do
+    before_action { @planning_layout = true }
+  end
 
   private
 
