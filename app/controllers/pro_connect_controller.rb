@@ -1,6 +1,10 @@
 # Le guide pour configurer ProConnect en local : docs/interconnexions/proconnect.md
 
 class ProConnectController < ApplicationController
+  # IDP ProConnect nécessitant une double authentification pour les agents qui ont des comptes sensibles.
+  # Configurable via la variable d'environnement IDP_PRO_CONNECT_FORCE_2FA_ENABLED (liste séparée par des virgules).
+  IDP_PRO_CONNECT_FORCE_2FA_ENABLED = ENV.fetch("IDP_PRO_CONNECT_FORCE_2FA_ENABLED", "").split(",").map(&:strip).freeze
+
   def auth
     auth_client = ProConnectOpenIdClient::Auth.new(
       login_hint: params[:login_hint],
