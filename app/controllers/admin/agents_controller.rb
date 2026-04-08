@@ -97,7 +97,7 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def render_new
-    @services = current_territory.services
+    @services = current_territory.services.reject(&:secretariat?)
     @roles = access_levels_collection
     @agent_role = AgentRole.new
 
