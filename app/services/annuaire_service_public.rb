@@ -18,6 +18,15 @@ class AnnuaireServicePublic
     first_result&.fetch("nom", nil)
   end
 
+  def code_insee
+    return nil unless first_result&.fetch("pivot", nil)
+
+    JSON.parse(first_result["pivot"]).first&.dig("code_insee_commune")&.first
+  rescue StandardError => e
+    Sentry.capture_exception(e)
+    nil
+  end
+
   private
 
   def first_result
