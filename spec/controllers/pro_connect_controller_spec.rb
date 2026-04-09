@@ -146,7 +146,7 @@ RSpec.describe ProConnectController do
           expect(current_agent_id).to be_nil
         end
 
-        it "creates the agent if the domain allows it, et redirige vers la demande d'ouverture classique quand l'ANCT ne retourne rien" do
+        it "crée l'agent si le domaine le permet, et redirige vers la page de retour quand l'ANCT ne retourne rien" do
           allow(Domain::RDV_SERVICE_PUBLIC).to receive(:allow_self_onboarding).and_return(true)
           # Sans token ANCT configuré, le handler renvoie :classic
           expect do
@@ -164,7 +164,7 @@ RSpec.describe ProConnectController do
           expect(agent).to have_attributes(expected_attrs)
           expect(current_agent_id).to eq(agent.id)
           expect(session["pro_connect_id_token"]).to be_present
-          expect(response).to redirect_to(new_agents_territory_creation_request_path)
+          expect(response).to redirect_to("/agents/edit") # stored location via after_sign_in_path_for
         end
 
         context "avec token ANCT : opérateur admin qui matche notre DB" do
