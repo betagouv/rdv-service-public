@@ -65,6 +65,15 @@ RSpec.describe CronJob::FileAttenteJob do
         subject
       end
     end
+
+    context "when the max number of notifications has already been sent" do
+      let!(:file_attente) { create(:file_attente, rdv:, user:, notifications_sent: 3) }
+
+      it "does not send notification" do
+        expect { subject }.not_to change { file_attente.reload.notifications_sent }
+        expect(Receipt.count).to eq 0
+      end
+    end
   end
 
   context "without availabilities before rdv" do

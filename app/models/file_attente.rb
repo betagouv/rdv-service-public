@@ -14,6 +14,7 @@ class FileAttente < ApplicationRecord
 
   # Scopes
   scope :with_upcoming_rdvs, -> { joins(:rdv).where("rdvs.starts_at > ?", NO_MORE_NOTIFICATIONS.from_now).order(created_at: :desc) }
+  scope :with_remaining_notifications, -> { where("notifications_sent < ?", MAX_NOTIFICATIONS) }
 
   ## -
 
@@ -31,7 +32,7 @@ class FileAttente < ApplicationRecord
   private
 
   def valid_for_notification?(creneaux)
-    !creneaux.empty? && notifications_sent < MAX_NOTIFICATIONS && (last_creneau_sent_at.nil? || last_creneau_sent_at.to_date < Time.zone.today)
+    !creneaux.empty? && (last_creneau_sent_at.nil? || last_creneau_sent_at.to_date < Time.zone.today)
   end
 
   def send_notification

@@ -34,8 +34,8 @@ class CronJob < ApplicationJob
     )
 
     def perform
-      FileAttente.with_upcoming_rdvs.each do |fa|
-        SingleFileAttenteJob.perform_later(fa.id)
+      FileAttente.with_upcoming_rdvs.with_remaining_notifications.pluck(:id).each do |fa_id|
+        SingleFileAttenteJob.perform_later(fa_id)
       end
     end
   end
