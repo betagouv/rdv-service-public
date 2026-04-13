@@ -1,5 +1,22 @@
 RSpec.describe PlageOuverture, type: :model do
-  let!(:organisation) { create(:organisation) }
+  let(:organisation) { create(:organisation) }
+
+  describe "#title_with_default" do
+    it "displays the title if present" do
+      expect(described_class.new(title: "Permanence").title_with_default).to eq("Permanence")
+    end
+
+    it "displays the times if title is blank" do
+      plage = described_class.new
+      expect(described_class.new.title_with_default).to eq("Plage d'ouverture")
+
+      plage.assign_attributes(start_time: "08:15", end_time: "11:30")
+      expect(plage.title_with_default).to eq("Plage de 8h15-11h30")
+
+      plage.assign_attributes(secondary_start_time: "14:00", secondary_end_time: "17:45")
+      expect(plage.title_with_default).to eq("Plage de 8h15-11h30 et 14h-17h45")
+    end
+  end
 
   describe "time validation" do
     it "validates that end_time is strictly greater than start_time" do
