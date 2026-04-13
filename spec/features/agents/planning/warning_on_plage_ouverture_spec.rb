@@ -14,7 +14,6 @@ RSpec.describe "Recurrence works on plage d'ouverture even in case of a warning 
     find('[for="radio_recurring"]').click
     fill_in("recurrence-until", with: "30/12/2019")
     check("recurrence_on_monday")
-    check("recurrence_on_tuesday")
 
     click_button("Créer la plage d'ouverture")
     expect(page).to have_content("Conflit de dates et d'horaires avec d'autres plages d'ouvertures")
