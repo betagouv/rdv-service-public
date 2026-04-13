@@ -17,18 +17,18 @@ class FileAttente < ApplicationRecord
 
   ## -
 
-  def self.send_notifications
-    FileAttente.with_upcoming_rdvs.each do |fa|
-      next if fa.rdv.motif.phone?
+  def send_notification_if_valid
+    return if rdv.motif.phone?
 
-      end_time = fa.rdv.starts_at - 2.days
-      date_range = Time.zone.today..end_time.to_date
-      creneaux = fa.rdv.creneaux_available(date_range)
-      next unless fa.valid_for_notification?(creneaux)
+    end_time = rdv.starts_at - 2.days
+    date_range = Time.zone.today..end_time.to_date
+    creneaux = rdv.creneaux_available(date_range)
+    return unless valid_for_notification?(creneaux)
 
-      fa.send_notification
-    end
+    send_notification
   end
+
+  private
 
   def valid_for_notification?(creneaux)
     !creneaux.empty? && notifications_sent < MAX_NOTIFICATIONS && (last_creneau_sent_at.nil? || last_creneau_sent_at.to_date < Time.zone.today)

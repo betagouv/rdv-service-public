@@ -34,7 +34,9 @@ class CronJob < ApplicationJob
     )
 
     def perform
-      FileAttente.send_notifications
+      FileAttente.with_upcoming_rdvs.each do |fa|
+        SingleFileAttenteJob.perform_later(fa.id)
+      end
     end
   end
 
