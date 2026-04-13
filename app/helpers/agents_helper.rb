@@ -40,6 +40,17 @@ module AgentsHelper
     agents.map(&:full_name_and_service).sort.to_sentence
   end
 
+  def active_menu_item
+    case controller_name
+    when "lieux", "agents", "invitations", "motifs", "online_bookings", "configurations", "organisations"
+      :menu_settings
+    when "users", "merge_users", "referent_assignations"
+      :menu_users
+    when "rdvs"
+      :menu_liste_rdvs
+    end
+  end
+
   def navigation_scoped_by_agent_services?(current_agent, current_organisation)
     return false if current_agent.secretaire?
 

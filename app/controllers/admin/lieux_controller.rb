@@ -1,8 +1,6 @@
 class Admin::LieuxController < AgentAuthController
   respond_to :html, :json
 
-  before_action { @current_menu_item = :settings }
-
   def index
     @lieux = policy_scope(Lieu, policy_scope_class: Agent::LieuPolicy::Scope)
       .where(organisation: current_organisation)

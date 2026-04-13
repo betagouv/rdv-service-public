@@ -1,8 +1,6 @@
 class Admin::MotifsController < AgentAuthController
   respond_to :html, :json
 
-  before_action { @current_menu_item = :settings }
-
   FORM_ATTRIBUTES = %i[
     name
     service_id

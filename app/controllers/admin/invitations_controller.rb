@@ -1,5 +1,4 @@
 class Admin::InvitationsController < AgentAuthController
-  before_action { @current_menu_item = :settings }
   def index
     @invited_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
       .joins(:organisations).where(organisations: { id: current_organisation.id })

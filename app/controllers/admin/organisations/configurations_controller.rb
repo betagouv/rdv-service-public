@@ -1,6 +1,5 @@
 class Admin::Organisations::ConfigurationsController < AgentAuthController
   before_action :set_organisation, only: [:show]
-  before_action { @current_menu_item = :settings }
 
   # Cette action permet à des apps externes qui sont intégrées via OAuth de fournir un lien vers la configuration sans avoir
   # à connaitre l'id de l'organisation de l'agent

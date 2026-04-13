@@ -13,12 +13,10 @@ class Admin::OrganisationsController < AgentAuthController
   end
 
   def show
-    @current_menu_item = :settings
     authorize(@organisation, policy_class: Agent::OrganisationPolicy)
   end
 
   def edit
-    @current_menu_item = :settings
     authorize(@organisation, policy_class: Agent::OrganisationPolicy)
   end
 
