@@ -346,11 +346,10 @@ RSpec.describe ProConnectController do
             create(:agent, email: user_info["email"])
             get :callback, params: { state:, code: }
 
-            expect(session["pro_connect"]).to include(
-              connection_for: "agent",
-              state: be_a(String),
-              nonce: be_a(String)
-            )
+            new_redirect_url = Rack::Utils.parse_query(URI.parse(response.headers["Location"]).query)
+            expect(session["pro_connect"]).to include(connection_for: "agent",
+                                                      state: new_redirect_url["state"],
+                                                      nonce: new_redirect_url["nonce"])
           end
         end
 
