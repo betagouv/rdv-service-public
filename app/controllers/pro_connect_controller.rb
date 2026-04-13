@@ -220,16 +220,14 @@ class ProConnectController < ApplicationController
     result = ProConnectOnboardingRouter.new(agent, current_domain).call
 
     case result.action
-    when :attached_as_admin
-      redirect_to after_sign_in_path_for(agent)
     when :contact_admin
       flash[:info] = "Votre organisation est rattachée à un espace RDV Service Public, mais vous n'avez pas les droits " \
                      "d'administrateur. Rapprochez-vous de votre administrateur pour qu'il vous accorde les accès sur votre espace."
       redirect_to after_sign_in_path_for(agent)
     when :signup_via_operator
       redirect_to agents_inscription_via_operateur_path(operator_name: result.operator_name, signup_url: result.signup_url)
-    else # :classic
-      redirect_to new_agents_territory_creation_request_path
+    else # :attached_as_admin, :classic
+      redirect_to after_sign_in_path_for(agent)
     end
   end
 
