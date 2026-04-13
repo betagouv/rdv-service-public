@@ -4,13 +4,29 @@
   .fr-col-12.fr-col-md-8.fr-col-offset-md-2
     .card
       .card-body
-        h1.fr-h2 Inscription via votre opérateur
+        h1.fr-h2 Demande d’ouverture de compte
+
+        h2.fr-h3 Ouvrir un compte pour le besoin d’un dispositif
 
         p
-          | Votre organisation est rattachée à l'opérateur
+          | Vous souhaitez ouvrir un compte RDV Service Public pour l’un des dispositif suivant :
+        ul
+          li CCAS équipé de MSS (Mon Suivi Social)
+          li Conseillers Numériques
+          li France Services
+        p
+          | Veuillez faire une demande d’ouverture de compte en cliquant sur le bouton ci-dessous.
+
+        .fr-mb-4w
+          = link_to "Demande d’ouverture de compte pour un dispositif", "#", class: "fr-btn fr-btn--primary"
+
+        h2.fr-h3 Ouverture de compte pour un autre besoin
+
+        p
+          | Pour tous les autres cas d’usage, votre organisation est rattachée à l'opérateur
           strong  #{operator_name}
           | , qui gère votre accès à RDV Service Public.
 
         p Pour créer votre espace, vous devez faire une demande d'accès directement auprès de cet opérateur.
 
-        = external_link_to "Faire une demande d'accès auprès de #{operator_name}", signup_url, class: "fr-btn"
+        = external_link_to "Faire une demande d'accès auprès de #{operator_name}", signup_url, class: "fr-btn fr-btn--secondary"
