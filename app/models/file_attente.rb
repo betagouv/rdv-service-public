@@ -40,24 +40,26 @@ class FileAttente < ApplicationRecord
 
       invitation_token = invitation_token_for(rdv, user)
 
-      if user.notifiable_by_sms?
-        Users::FileAttenteSms.new_creneau_available(rdv, user, invitation_token).deliver_later
+      ActiveRecord::Base.transaction do
+        if user.notifiable_by_sms?
+          Users::FileAttenteSms.new_creneau_available(rdv, user, invitation_token).deliver_later
+        end
+
+        if user.notifiable_by_email?
+          Users::FileAttenteMailer.with(rdv: rdv, user: user, token: invitation_token).new_creneau_available.deliver_later
+
+          Receipt.create!(
+            rdv: rdv,
+            user: user,
+            event: :new_creneau_available,
+            channel: :mail,
+            result: :processed,
+            email_address: user.email
+          )
+        end
+
+        update!(notifications_sent: notifications_sent + 1, last_creneau_sent_at: Time.zone.now)
       end
-
-      if user.notifiable_by_email?
-        Users::FileAttenteMailer.with(rdv: rdv, user: user, token: invitation_token).new_creneau_available.deliver_later
-
-        Receipt.create!(
-          rdv: rdv,
-          user: user,
-          event: :new_creneau_available,
-          channel: :mail,
-          result: :processed,
-          email_address: user.email
-        )
-      end
-
-      update!(notifications_sent: notifications_sent + 1, last_creneau_sent_at: Time.zone.now)
     end
   end
 

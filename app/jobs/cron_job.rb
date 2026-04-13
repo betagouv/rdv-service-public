@@ -24,9 +24,14 @@ class CronJob < ApplicationJob
   end
 
   class FileAttenteJob < CronJob
+    include GoodJob::ActiveJobExtensions::Concurrency
+    include MonitorConcern
+
     queue_as :latency_30s
 
-    include MonitorConcern
+    good_job_control_concurrency_with(
+      perform_limit: 1
+    )
 
     def perform
       FileAttente.send_notifications
