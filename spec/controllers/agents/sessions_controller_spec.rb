@@ -37,7 +37,7 @@ RSpec.describe Agents::SessionsController do
 
       it "stocke l'id de l'agent dans la session comme connexion en attente" do
         post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
-        expect(session[:pending_agent_login_id]).to eq(agent.id)
+        expect(session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY]).to eq(agent.id)
       end
 
       it "redirige vers le formulaire de vérification par code" do

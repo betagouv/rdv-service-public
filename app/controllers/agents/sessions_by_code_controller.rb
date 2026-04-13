@@ -1,4 +1,7 @@
 class Agents::SessionsByCodeController < ApplicationController
+  SESSION_AGENT_ID_KEY = :pending_agent_login_id
+  SESSION_PRO_CONNECT_ID_TOKEN_KEY = :pending_pro_connect_id_token
+
   before_action :require_pending_agent_login
 
   def new
@@ -18,9 +21,9 @@ class Agents::SessionsByCodeController < ApplicationController
 
     if validator.valid?
       validator.valid_login_code.update!(used_at: Time.zone.now)
-      session.delete(:pending_agent_login_id)
-      if session[:pending_pro_connect_id_token]
-        session[:pro_connect_id_token] = session.delete(:pending_pro_connect_id_token)
+      session.delete(SESSION_AGENT_ID_KEY)
+      if session[SESSION_PRO_CONNECT_ID_TOKEN_KEY]
+        session[:pro_connect_id_token] = session.delete(SESSION_PRO_CONNECT_ID_TOKEN_KEY)
       end
       bypass_sign_in(agent, scope: :agent)
       redirect_to after_sign_in_path_for(agent), flash: { success: "Connexion réussie" }
@@ -35,11 +38,11 @@ class Agents::SessionsByCodeController < ApplicationController
   private
 
   def require_pending_agent_login
-    redirect_to new_agent_session_path unless session[:pending_agent_login_id]
+    redirect_to new_agent_session_path unless session[SESSION_AGENT_ID_KEY]
   end
 
   def pending_agent
-    @pending_agent ||= Agent.find(session[:pending_agent_login_id])
+    @pending_agent ||= Agent.find(session[SESSION_AGENT_ID_KEY])
   end
 
   def storable_location?

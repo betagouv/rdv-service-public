@@ -333,13 +333,13 @@ RSpec.describe ProConnectController do
           it "stocke l’id de l’agent dans la session comme connexion en attente" do
             agent = create(:agent, email: user_info["email"], sensitive_account: true)
             get :callback, params: { state:, code: }
-            expect(session[:pending_agent_login_id]).to eq(agent.id)
+            expect(session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY]).to eq(agent.id)
           end
 
           it "stocke le token ProConnect comme pending et non comme token actif" do
             create(:agent, email: user_info["email"], sensitive_account: true)
             get :callback, params: { state:, code: }
-            expect(session[:pending_pro_connect_id_token]).to be_present
+            expect(session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY]).to be_present
             expect(session[:pro_connect_id_token]).to be_nil
           end
 

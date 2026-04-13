@@ -10,7 +10,7 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
     end
 
     context "quand il y a une connexion en attente dans la session" do
-      before { session[:pending_agent_login_id] = agent.id }
+      before { session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = agent.id }
 
       it "affiche le formulaire de saisie du code" do
         get :new
@@ -49,7 +49,7 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
     end
 
     context "quand il y a une connexion en attente dans la session" do
-      before { session[:pending_agent_login_id] = agent.id }
+      before { session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = agent.id }
 
       context "avec un code valide" do
         it "connecte l'agent" do
@@ -59,7 +59,7 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
 
         it "supprime la connexion en attente de la session" do
           post :create, params: { login_code: { code: login_code.code } }
-          expect(session[:pending_agent_login_id]).to be_nil
+          expect(session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY]).to be_nil
         end
 
         it "redirige après la connexion" do
@@ -73,12 +73,12 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
         end
 
         context "quand un token ProConnect en attente est présent dans la session" do
-          before { session[:pending_pro_connect_id_token] = "fake_pro_connect_token" }
+          before { session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY] = "fake_pro_connect_token" }
 
           it "transfère le token vers pro_connect_id_token et supprime le pending" do
             post :create, params: { login_code: { code: login_code.code } }
             expect(session[:pro_connect_id_token]).to eq("fake_pro_connect_token")
-            expect(session[:pending_pro_connect_id_token]).to be_nil
+            expect(session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY]).to be_nil
           end
         end
       end
