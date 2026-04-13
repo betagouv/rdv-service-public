@@ -74,27 +74,25 @@ RSpec.describe CronJob::FileAttenteJob do
         expect(Receipt.count).to eq 0
       end
     end
+
+    context "when creneau was already sent" do
+      before { file_attente.update(last_creneau_sent_at: now) }
+
+      it "does not send notification" do
+        expect(Users::FileAttenteSms).not_to receive(:new_creneau_available)
+        expect(Users::FileAttenteMailer).not_to receive(:with)
+        subject
+      end
+    end
   end
 
   context "without availabilities before rdv" do
     let!(:plage_ouverture2) { create(:plage_ouverture, first_day: Date.yesterday, lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
 
     it "does not send notification" do
-      subject
       expect(Users::FileAttenteSms).not_to receive(:new_creneau_available)
       expect(Users::FileAttenteMailer).not_to receive(:with)
-    end
-  end
-
-  context "when creneau was already sent" do
-    let!(:plage_ouverture2) { create(:plage_ouverture, first_day: 1.day.from_now, start_time: Tod::TimeOfDay.new(9), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
-
-    it "does not send notification" do
-      file_attente.update(last_creneau_sent_at: now)
-      file_attente.reload
       subject
-      expect(Users::FileAttenteSms).not_to receive(:new_creneau_available)
-      expect(Users::FileAttenteMailer).not_to receive(:with)
     end
   end
 
