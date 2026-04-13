@@ -58,7 +58,7 @@ class OffDays
     JOURS_FERIES.intersection(date_range)
   end
 
-  def self.to_full_calendar_array
+  def self.to_full_calendar_array(agent_ids = nil)
     JOURS_FERIES.map do |jour_ferie|
       {
         title: "Jour férié",
@@ -66,7 +66,8 @@ class OffDays
         end: jour_ferie.end_of_day.as_json,
         backgroundColor: AbsencesHelper::CALENDAR_BACKGROUND_COLOR,
         textColor: "white",
-      }
+        resourceIds: agent_ids,
+      }.compact
     end
   end
 end
