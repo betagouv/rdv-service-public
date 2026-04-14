@@ -15,7 +15,7 @@
         .col-md-8
           .form-group.string.optional._search
             = label_tag :search, "Recherche", {class: "form-control-label string optional"}
-            = text_field_tag :search, {}, {placeholder: "Prénom, Nom, Email, Téléphone", autocomplete: "off", class: "form-control string optional search-form-control", value: params[:search] }
+            = text_field_tag :search, {}, {placeholder: "Prénom, Nom, Email, Téléphone", autofocus: params[:search].blank?, autocomplete: "off", class: "form-control string optional search-form-control", value: params[:search] }
         .col-md-4
           .form-group.string.optional._search
             = f.label :agent_id, "Agent référent", {class: "form-control-label select optional"}
