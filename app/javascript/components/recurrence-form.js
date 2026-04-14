@@ -29,6 +29,7 @@ class RecurrenceForm {
     }
     if(model.every == "week") this.setOn(model);
     this.updateView(model);
+    this.updateRecurrence()
   }
 
   setOn = (model) => {
