@@ -69,7 +69,11 @@ class ProConnectController < ApplicationController
           redirect_to operators_root_path
         end
       when "agent"
-        connect_agent(callback_client)
+        if IDP_PRO_CONNECT_FORCE_2FA_ENABLED.include?(callback_client.user_idp_id) && !callback_client.went_through_2fa?
+          require_2fa_for_sensitive_agent(callback_client)
+        else
+          connect_agent(callback_client)
+        end
       else
         Sentry.capture_message("Unknown connection_for: #{pro_connect_session[:connection_for].inspect}", extra: { session: session.to_h, pro_connect_session: })
         flash[:error] = generic_error_message
@@ -215,6 +219,20 @@ class ProConnectController < ApplicationController
     end
   end
   # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+
+  def require_2fa_for_sensitive_agent(callback_client)
+    auth_client = ProConnectOpenIdClient::Auth.new(
+      login_hint: callback_client.user_email,
+      client_id: current_domain.pro_connect_client_id,
+      client_secret: current_domain.pro_connect_client_secret
+    )
+    session[:pro_connect] = {
+      state: auth_client.state,
+      nonce: auth_client.nonce,
+      connection_for: "agent",
+    }
+    redirect_to auth_client.redirect_url(pro_connect_callback_url, force_2fa: true), allow_other_host: true
+  end
 
   def redirect_after_first_proconnect_login(agent)
     result = ProConnectOnboardingRouter.new(agent, current_domain).call
