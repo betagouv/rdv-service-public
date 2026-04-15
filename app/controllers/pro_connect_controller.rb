@@ -69,12 +69,7 @@ class ProConnectController < ApplicationController
           redirect_to operators_root_path
         end
       when "agent"
-        sensitive_agent = Agent.active.where(pro_connect_openid_sub: callback_client.openid_sub).or(Agent.where(email: callback_client.user_email)).exists?(sensitive_account: true)
-        if IDP_PRO_CONNECT_FORCE_2FA_ENABLED.include?(callback_client.user_idp_id) && !callback_client.went_through_2fa? && sensitive_agent
-          require_2fa_for_sensitive_agent(callback_client)
-        else
-          connect_agent(callback_client)
-        end
+        connect_agent(callback_client)
       else
         Sentry.capture_message("Unknown connection_for: #{pro_connect_session[:connection_for].inspect}", extra: { session: session.to_h, pro_connect_session: })
         flash[:error] = generic_error_message
@@ -188,6 +183,8 @@ class ProConnectController < ApplicationController
         ERROR
         redirect_to new_agent_session_path and return
       end
+    elsif agent.sensitive_account? && !callback_client.went_through_2fa? && IDP_PRO_CONNECT_FORCE_2FA_ENABLED.include?(callback_client.user_idp_id)
+      require_2fa_for_sensitive_agent(callback_client) and return
     end
 
     if agent.email != callback_client.user_email
