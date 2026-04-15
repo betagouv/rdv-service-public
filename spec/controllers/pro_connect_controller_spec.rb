@@ -307,6 +307,76 @@ RSpec.describe ProConnectController do
           expect_agent_to_be_updated_and_logged_in(agent.reload, with_2fa: true)
         end
       end
+
+      context "when the agent's IDP is in the sensitive list" do
+        before do
+          stub_const("ProConnectController::IDP_PRO_CONNECT_FORCE_2FA_ENABLED", [user_info["idp_id"]])
+        end
+
+        context "without 2FA" do
+          it "redirects to ProConnect with force_2fa rather than logging in the agent" do
+            create(:agent, email: user_info["email"])
+            get :callback, params: { state:, code: }
+
+            expect(current_agent_id).to be_nil
+            expect(response).to redirect_to(start_with("https://fca.integ01.dev-agentconnect.fr/api/v2/authorize?"))
+
+            redirect_url_query_params = Rack::Utils.parse_query(URI.parse(response.headers["Location"]).query)
+            expect(redirect_url_query_params.symbolize_keys).to include(
+              login_hint: user_info["email"],
+              claims: {
+                id_token: {
+                  acr: {
+                    essential: true,
+                    values: %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa],
+                  },
+                },
+              }.to_json
+            )
+          end
+
+          it "does not update the agent record" do
+            agent = create(:agent, email: user_info["email"])
+            expect do
+              get :callback, params: { state:, code: }
+            end.not_to change { agent.reload.pro_connect_openid_sub }
+          end
+
+          it "sets up a new ProConnect session for the 2FA re-authentication" do
+            create(:agent, email: user_info["email"])
+            get :callback, params: { state:, code: }
+
+            new_redirect_url = Rack::Utils.parse_query(URI.parse(response.headers["Location"]).query)
+            expect(session["pro_connect"]).to include(connection_for: "agent",
+                                                      state: new_redirect_url["state"],
+                                                      nonce: new_redirect_url["nonce"])
+          end
+        end
+
+        context "with 2FA" do
+          before do
+            ProConnectStubs.stub_callback_requests(code, user_info, with_2fa: true)
+          end
+
+          it "logs in the agent normally" do
+            agent = create(:agent, email: user_info["email"])
+            get :callback, params: { state:, code: }
+            expect_agent_to_be_updated_and_logged_in(agent.reload, with_2fa: true)
+          end
+        end
+      end
+
+      context "when the agent's IDP is not in the sensitive list" do
+        before do
+          stub_const("ProConnectController::IDP_PRO_CONNECT_FORCE_2FA_ENABLED", ["autre-idp"])
+        end
+
+        it "logs in the agent normally without requiring 2FA" do
+          agent = create(:agent, email: user_info["email"])
+          get :callback, params: { state:, code: }
+          expect_agent_to_be_updated_and_logged_in(agent.reload)
+        end
+      end
     end
 
     context "when logging in a user" do
