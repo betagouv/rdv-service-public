@@ -55,7 +55,7 @@ gem "connection_pool"
 
 # Devise / auth
 # Flexible authentication solution for Rails with Warden
-gem "devise", git: "https://github.com/victormours/devise", ref: "0c502c8ab7f11e03ece9d9552cdf5d96e22c40c6"
+gem "devise", "5.0.3"
 # An invitation strategy for Devise
 gem "devise_invitable"
 # Deliver Devise's emails in the background using ActiveJob.
@@ -76,7 +76,8 @@ gem "omniauth-rails_csrf_protection"
 # OO authorization for Rails
 gem "pundit"
 # Token based authentication for rails. Uses Devise + OmniAuth.
-gem "devise_token_auth", "1.2.5"
+# until this is released on rubygems: https://github.com/lynndylanhurley/devise_token_auth/pull/1675
+gem "devise_token_auth", git: "https://github.com/lynndylanhurley/devise_token_auth", ref: "bcdc3a5"
 # List of frequently used passwords
 gem "common_french_passwords"
 

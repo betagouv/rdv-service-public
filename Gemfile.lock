@@ -6,6 +6,16 @@ GIT
     ice_cube (0.17.0)
 
 GIT
+  remote: https://github.com/lynndylanhurley/devise_token_auth
+  revision: bcdc3a5964086b6a08f3f98eb878a107af1334da
+  ref: bcdc3a5
+  specs:
+    devise_token_auth (1.2.5)
+      bcrypt (~> 3.0)
+      devise (> 3.5.2, < 6)
+      rails (>= 4.2.0, < 8.2)
+
+GIT
   remote: https://github.com/mattheworiordan/capybara-screenshot.git
   revision: 23a27be5392c7dbc706651d7adc124d8e7c920a0
   ref: 23a27be
@@ -13,18 +23,6 @@ GIT
     capybara-screenshot (1.0.26)
       capybara (>= 1.0, < 4)
       launchy
-
-GIT
-  remote: https://github.com/victormours/devise
-  revision: 0c502c8ab7f11e03ece9d9552cdf5d96e22c40c6
-  ref: 0c502c8ab7f11e03ece9d9552cdf5d96e22c40c6
-  specs:
-    devise (4.9.4)
-      bcrypt (~> 3.0)
-      orm_adapter (~> 0.1)
-      railties (>= 4.1.0)
-      responders
-      warden (~> 1.2.3)
 
 PATH
   remote: lib/anonymizer
@@ -196,16 +194,18 @@ GEM
       irb (~> 1.10)
       reline (>= 0.3.8)
     debug_inspector (1.2.0)
+    devise (5.0.3)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 7.0)
+      responders
+      warden (~> 1.2.3)
     devise-async (1.0.0)
       activejob (>= 5.0)
       devise (>= 4.0)
     devise_invitable (2.0.9)
       actionmailer (>= 5.0)
       devise (>= 4.6)
-    devise_token_auth (1.2.5)
-      bcrypt (~> 3.0)
-      devise (> 3.5.2, < 5)
-      rails (>= 4.2.0, < 8.1)
     diff-lcs (1.5.0)
     domain_name (0.6.20240107)
     doorkeeper (5.7.1)
@@ -791,10 +791,10 @@ DEPENDENCIES
   connection_pool
   csv
   debug
-  devise!
+  devise (= 5.0.3)
   devise-async
   devise_invitable
-  devise_token_auth (= 1.2.5)
+  devise_token_auth!
   doorkeeper
   doorkeeper-i18n
   dotenv-rails
@@ -926,10 +926,10 @@ CHECKSUMS
   date (3.5.0) sha256=5e74fd6c04b0e65d97ad4f3bb5cb2d8efb37f386cc848f46310b4593ffc46ee5
   debug (1.11.0) sha256=1425db64cfa0130c952684e3dc974985be201dd62899bf4bbe3f8b5d6cf1aef2
   debug_inspector (1.2.0) sha256=9bdfa02eebc3da163833e6a89b154084232f5766087e59573b70521c77ea68a2
-  devise (4.9.4)
+  devise (5.0.3) sha256=c4c065051cdc4ace11547b2b7f5c3c4c97d0f1269250f5fe90f614ff78f29546
   devise-async (1.0.0) sha256=a4d8c1871b02e53427fcd211dabd0af7d182cd419b0a4777bd922aa94e2553cf
   devise_invitable (2.0.9) sha256=d726c724ecc3481211f73752ed5020088e080c7fe9ef0b3899ece5b15056902e
-  devise_token_auth (1.2.5) sha256=f8b06bf33fec9c1e300c090fa29231a76250c7ec4dcd6c56f1822e9bf1121feb
+  devise_token_auth (1.2.5)
   diff-lcs (1.5.0) sha256=49b934001c8c6aedb37ba19daec5c634da27b318a7a3c654ae979d6ba1929b67
   domain_name (0.6.20240107) sha256=5f693b2215708476517479bf2b3802e49068ad82167bcd2286f899536a17d933
   doorkeeper (5.7.1) sha256=8b08f5946c62505be1a32f9094eb99eca32b280e956f515529e33b2b025bd628
