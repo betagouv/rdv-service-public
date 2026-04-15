@@ -69,7 +69,8 @@ class ProConnectController < ApplicationController
           redirect_to operators_root_path
         end
       when "agent"
-        if IDP_PRO_CONNECT_FORCE_2FA_ENABLED.include?(callback_client.user_idp_id) && !callback_client.went_through_2fa?
+        sensitive_agent = Agent.active.where(pro_connect_openid_sub: callback_client.openid_sub).or(Agent.where(email: callback_client.user_email)).exists?(sensitive_account: true)
+        if IDP_PRO_CONNECT_FORCE_2FA_ENABLED.include?(callback_client.user_idp_id) && !callback_client.went_through_2fa? && sensitive_agent
           require_2fa_for_sensitive_agent(callback_client)
         else
           connect_agent(callback_client)
