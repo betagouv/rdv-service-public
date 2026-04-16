@@ -172,7 +172,7 @@ RSpec.describe ProConnectController do
 
           # La cassette entitlements_admin est enregistrée avec email=test-admin@example.com et siret=21550050500015
           let(:user_info) { super().merge("email" => "test-admin@example.com", "siret" => "21550050500015") }
-          let!(:operator) { create(:operator, siret: user_info["siret"]) }
+          let!(:operator) { create(:operator, siret: "13002603200016") }
 
           before { ProConnectStubs.stub_callback_requests(code, user_info) }
           around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_admin") { ex.run } }
@@ -196,7 +196,7 @@ RSpec.describe ProConnectController do
 
           # La cassette entitlements_success est enregistrée avec email=contact@mairie-nantes.fr et siret=21550050500015
           let(:user_info) { super().merge("email" => "contact@mairie-nantes.fr", "siret" => "21550050500015") }
-          let!(:operator) { create(:operator, siret: "21550050500015") }
+          let!(:operator) { create(:operator, siret: "13002603200016") }
 
           before { ProConnectStubs.stub_callback_requests(code, user_info) }
           around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_success") { ex.run } }
