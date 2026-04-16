@@ -62,6 +62,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
       first_name birth_name last_name email address phone_number
       birth_date responsible_id caisse_affiliation affiliation_number
       family_situation number_of_children notify_by_sms notify_by_email
+      city_code post_code city_name
     ]
 
     attrs -= User::FranceconnectFrozenFieldsConcern::FROZEN_FIELDS if @user&.logged_once_with_franceconnect?
