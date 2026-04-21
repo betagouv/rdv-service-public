@@ -8,6 +8,8 @@
 module Rdv::TimezoneConcern
   extend ActiveSupport::Concern
 
+  delegate :time_zone, to: :organisation
+
   def starts_at_in_time_zone
     if organisation.time_zone == "Europe/Paris"
       starts_at

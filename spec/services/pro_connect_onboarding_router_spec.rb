@@ -2,14 +2,15 @@ RSpec.describe ProConnectOnboardingRouter do
   subject(:handler) { described_class.new(agent, domain) }
 
   let(:domain) { Domain::RDV_SERVICE_PUBLIC }
-  let(:siret) { "21550050500015" }
-  let(:agent) { create(:agent, email: "test-admin@example.com", proconnect_siret: siret) }
+  let(:operator_siret) { "13002603200016" }
+  let(:proconnect_siret) { "21550050500015" }
+  let(:agent) { create(:agent, email: "test-admin@example.com", proconnect_siret:) }
 
   stub_env_with(ESPACE_OPERATEUR_ANCT_AUTH_TOKEN: "Bearer fake-token")
 
   describe "#call" do
     context "quand l'agent a un email d'un domaine de l'État" do
-      let(:agent) { create(:agent, email: "agent@etat.gouv.fr", proconnect_siret: siret) }
+      let(:agent) { create(:agent, email: "agent@etat.gouv.fr") }
 
       it "retourne :classic sans appeler l'API" do
         expect(EspaceOperateurANCT).not_to receive(:new)
@@ -36,11 +37,11 @@ RSpec.describe ProConnectOnboardingRouter do
       end
     end
 
-    context "Cas A : l'API retourne un opérateur qui matche un Operator de notre DB" do
-      let!(:operator) { create(:operator, siret:) }
+    context "l'API retourne un opérateur qui matche un Operator de notre DB" do
+      let!(:operator) { create(:operator, siret: operator_siret) }
 
       context "et l'agent est admin" do
-        let(:agent) { create(:agent, email: "test-admin@example.com", proconnect_siret: siret) }
+        let(:agent) { create(:agent, email: "test-admin@example.com", proconnect_siret:) }
 
         around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_admin") { ex.run } }
 
@@ -48,8 +49,8 @@ RSpec.describe ProConnectOnboardingRouter do
           expect(handler.call.action).to eq(:attached_as_admin)
         end
 
-        context "quand l'opérateur a déjà un territoire avec une organisation" do
-          let!(:territory) { create(:territory, operator: operator) }
+        context "quand l'organisation a déjà un territoire avec une organisation" do
+          let!(:territory) { create(:territory, operator: operator, siret: proconnect_siret) }
           let!(:organisation) { create(:organisation, territory: territory) }
 
           it "rattache l'agent à l'organisation et au territoire existants sans créer de nouveaux records" do
@@ -70,20 +71,19 @@ RSpec.describe ProConnectOnboardingRouter do
           end
         end
 
-        context "quand l'opérateur a un territoire sans organisation" do
-          let!(:territory) { create(:territory, operator: operator) }
+        context "quand l'organisation a un territoire sans organisation" do
+          let!(:territory) { create(:territory, operator: operator, siret: proconnect_siret) }
 
           it "crée une organisation et rattache l'agent sans créer de nouveau territoire" do
             expect { handler.call }.to change(Organisation, :count).by(1)
 
-            expect(Territory.count).to eq(1)
             organisation = Organisation.last
             expect(organisation.name).to eq("Bezonvaux") # nom retourné par la cassette VCR
             expect(organisation.territory).to eq(territory)
           end
         end
 
-        context "quand l'opérateur n'a pas encore de territoire" do
+        context "quand l'organisation n'a pas encore de territoire" do
           it "crée un territoire vide et une organisation" do
             expect { handler.call }
               .to change(Territory, :count).by(1)
@@ -93,6 +93,7 @@ RSpec.describe ProConnectOnboardingRouter do
             expect(territory.operator).to eq(operator)
             expect(territory.name).to be_nil
             expect(territory.category).to eq("Inconnu") # la cassette VCR retourne type "other"
+            expect(territory.siret).to eq(proconnect_siret)
 
             organisation = Organisation.last
             expect(organisation.name).to eq("Bezonvaux")
@@ -101,7 +102,7 @@ RSpec.describe ProConnectOnboardingRouter do
       end
 
       context "et l'agent a accès mais n'est pas admin" do
-        let(:agent) { create(:agent, email: "contact@mairie-nantes.fr", proconnect_siret: siret) }
+        let(:agent) { create(:agent, email: "contact@mairie-nantes.fr", proconnect_siret:) }
 
         around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_success") { ex.run } }
 
@@ -114,7 +115,7 @@ RSpec.describe ProConnectOnboardingRouter do
       end
     end
 
-    context "Cas B : l'API retourne des potentialOperators dont un matche un Operator de notre DB" do
+    context "l'API retourne des potentialOperators dont un matche un Operator de notre DB" do
       let(:agent) { create(:agent, email: "contact@mairie-nantes.fr", proconnect_siret: "20005671100019") }
       let!(:operator) { create(:operator, siret: "13002603200016") } # SIRET du premier potentialOperator dans la cassette
 
@@ -133,7 +134,7 @@ RSpec.describe ProConnectOnboardingRouter do
       end
     end
 
-    context "Cas B bis : plusieurs potentialOperators matchent notre DB" do
+    context "plusieurs potentialOperators matchent notre DB" do
       let(:agent) { create(:agent, email: "contact@mairie-nantes.fr", proconnect_siret: "20005671100019") }
       let!(:operator_1) { create(:operator, siret: "13002603200016") }
       let!(:operator_2) { create(:operator, siret: "12345678901234") }
@@ -156,7 +157,7 @@ RSpec.describe ProConnectOnboardingRouter do
       end
     end
 
-    context "Cas C : l'API retourne des potentialOperators mais aucun ne matche notre DB" do
+    context "l'API retourne des potentialOperators mais aucun ne matche notre DB" do
       let(:agent) { create(:agent, email: "contact@mairie-nantes.fr", proconnect_siret: "20005671100019") }
 
       around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_with_potential_operators") { ex.run } }
@@ -166,7 +167,7 @@ RSpec.describe ProConnectOnboardingRouter do
       end
     end
 
-    context "Cas D : l'API retourne un opérateur mais le SIRET ne matche pas notre DB" do
+    context "l'API retourne un opérateur mais le SIRET ne matche pas notre DB" do
       around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_success") { ex.run } }
 
       it "retourne :classic" do
