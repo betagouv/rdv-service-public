@@ -213,4 +213,10 @@ class CronJob < ApplicationJob
       end
     end
   end
+
+  class RefreshProConnectDiscover < CronJob
+    def perform
+      ProConnectDiscover.write_cache
+    end
+  end
 end

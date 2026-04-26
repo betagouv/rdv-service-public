@@ -2,14 +2,19 @@
 
 require_relative "sentry"
 
+module ProConnectDiscover
+  CACHE_KEY = "pro_connect_discovery_config".freeze
+
+  def self.cached = Rails.cache.fetch(CACHE_KEY) { discover! }
+  def self.write_cache = Rails.cache.write(CACHE_KEY, discover!)
+  def self.discover! = OpenIDConnect::Discovery::Provider::Config.discover!(ENV["PRO_CONNECT_BASE_URL"])
+end
+
 Rails.configuration.x.pro_connect_unreachable_at_boot_time = false
 
 if ENV["PRO_CONNECT_BASE_URL"].present?
   begin
-    Rails.configuration.x.pro_connect_config = Rails.cache.fetch("pro_connect_discovery_config", expires_in: 3.days) do
-      # la méthode .discover! fait un appel à l'API de ProConnect
-      OpenIDConnect::Discovery::Provider::Config.discover!(ENV["PRO_CONNECT_BASE_URL"])
-    end
+    Rails.configuration.x.pro_connect_config = ProConnectDiscover.cached
   rescue StandardError => e
     error_message = <<~MSG
       ProConnect n'est pas joignable au démarrage de l'application.
