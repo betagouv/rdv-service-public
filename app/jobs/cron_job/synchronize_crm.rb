@@ -19,8 +19,8 @@ class CronJob::SynchronizeCrm < CronJob
     }
 
     client.database_query(database_id: NOTION_DATABASE_ID, filter:) do |page|
-      page.results.each do |notion_page|
-        SynchronizeCrmPageJob.perform_later(
+      page.results.each.with_index do |notion_page, index|
+        SynchronizeCrmPageJob.set(wait: index.seconds).perform_later(
           notion_page_id: notion_page.id,
           account_url: notion_page.properties["COMPTE PROD"].url,
           notion_page_url: notion_page.url,
