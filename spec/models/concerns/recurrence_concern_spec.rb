@@ -211,6 +211,9 @@ RSpec.describe RecurrenceConcern do
 
       object = build(factory, start_time: "09:15", end_time: "12:45")
       expect(described_class.human_time_range(object.start_time, object.end_time)).to eq("9h15-12h45")
+
+      object = build(factory, start_time: "09:05", end_time: "12:05")
+      expect(described_class.human_time_range(object.start_time, object.end_time)).to eq("9h05-12h05")
     end
   end
 
