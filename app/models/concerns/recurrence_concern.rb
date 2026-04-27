@@ -46,16 +46,6 @@ module RecurrenceConcern
 
       new(hash.merge(manually_deserialized_attrs))
     end
-
-    def human_time(datetime)
-      minutes = datetime.min.zero? ? nil : datetime.min
-      minute_zero_padding = datetime.min.in?(1..9) ? "0" : ""
-      "#{datetime.hour}h#{minute_zero_padding}#{minutes}"
-    end
-
-    def human_time_range(start_time, end_time)
-      [human_time(start_time), human_time(end_time)].join("-")
-    end
   end
 
   def starts_at

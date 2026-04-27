@@ -82,8 +82,8 @@ class PlageOuverture < ApplicationRecord
     return title if title.present?
     return "Plage d'ouverture" unless start_time && end_time # Probablement jamais exécuté, mais ça évite un crash au cas où.
 
-    default_title = "Plage de #{self.class.human_time_range(start_time, end_time)}"
-    default_title += " et #{self.class.human_time_range(secondary_start_time, secondary_end_time)}" if secondary_start_time && secondary_end_time
+    default_title = "Plage de #{TimeFormatter.french_time_range(start_time, end_time)}"
+    default_title += " et #{TimeFormatter.french_time_range(secondary_start_time, secondary_end_time)}" if secondary_start_time && secondary_end_time
     default_title
   end
 
