@@ -172,7 +172,7 @@ RSpec.describe ProConnectController do
 
           # La cassette entitlements_admin est enregistrée avec email=test-admin@example.com et siret=21550050500015
           let(:user_info) { super().merge("email" => "test-admin@example.com", "siret" => "21550050500015") }
-          let!(:operator) { create(:operator, siret: user_info["siret"]) }
+          let!(:operator) { create(:operator, siret: "13002603200016") }
 
           before { ProConnectStubs.stub_callback_requests(code, user_info) }
           around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_admin") { ex.run } }
@@ -196,7 +196,7 @@ RSpec.describe ProConnectController do
 
           # La cassette entitlements_success est enregistrée avec email=contact@mairie-nantes.fr et siret=21550050500015
           let(:user_info) { super().merge("email" => "contact@mairie-nantes.fr", "siret" => "21550050500015") }
-          let!(:operator) { create(:operator, siret: "21550050500015") }
+          let!(:operator) { create(:operator, siret: "13002603200016") }
 
           before { ProConnectStubs.stub_callback_requests(code, user_info) }
           around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_success") { ex.run } }
@@ -305,6 +305,82 @@ RSpec.describe ProConnectController do
           agent = create(:agent, email: user_info["email"])
           get :callback, params: { state:, code: }
           expect_agent_to_be_updated_and_logged_in(agent.reload, with_2fa: true)
+        end
+      end
+
+      context "quand l’agent utilise un fournisseur d’identité compatible avec le 2FA" do
+        before do
+          stub_const("ProConnectController::IDP_PRO_CONNECT_FORCE_2FA_ENABLED", [user_info["idp_id"]])
+        end
+
+        context "quand l’agent n’a pas de compte sensible" do
+          let!(:agent) { create(:agent, email: user_info["email"], sensitive_account: false) }
+
+          it "connecte l’agent normalement sans demander la double authentification" do
+            get :callback, params: { state:, code: }
+            expect_agent_to_be_updated_and_logged_in(agent.reload)
+          end
+        end
+
+        context "quand l’agent a un compte sensible et n’a pas utiliser son deuxième facteur d’authentification" do
+          let!(:agent) { create(:agent, email: user_info["email"], sensitive_account: true) }
+
+          it "redirects to ProConnect with force_2fa rather than logging in the agent" do
+            get :callback, params: { state:, code: }
+
+            expect(current_agent_id).to be_nil
+            expect(response).to redirect_to(start_with("https://fca.integ01.dev-agentconnect.fr/api/v2/authorize?"))
+
+            redirect_url_query_params = Rack::Utils.parse_query(URI.parse(response.headers["Location"]).query)
+            expect(redirect_url_query_params.symbolize_keys).to include(login_hint: user_info["email"],
+                                                                        claims: {
+                                                                          id_token: {
+                                                                            acr: {
+                                                                              essential: true,
+                                                                              values: %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa],
+                                                                            },
+                                                                          },
+                                                                        }.to_json)
+          end
+
+          it "ne met pas à jour l’agent" do
+            expect do
+              get :callback, params: { state:, code: }
+            end.not_to change { agent.reload.pro_connect_openid_sub }
+          end
+
+          it "met en place une nouvelle variable de session pour la ré-authentification avec ProConnect" do
+            get :callback, params: { state:, code: }
+
+            new_redirect_url = Rack::Utils.parse_query(URI.parse(response.headers["Location"]).query)
+            expect(session["pro_connect"]).to include(connection_for: "agent",
+                                                      state: new_redirect_url["state"],
+                                                      nonce: new_redirect_url["nonce"])
+          end
+        end
+
+        context "quand l’agent a déjà utiliser son deuxième facteur d’authentification" do
+          before do
+            ProConnectStubs.stub_callback_requests(code, user_info, with_2fa: true)
+          end
+
+          it "connecte l’agent normalement" do
+            agent = create(:agent, email: user_info["email"])
+            get :callback, params: { state:, code: }
+            expect_agent_to_be_updated_and_logged_in(agent.reload, with_2fa: true)
+          end
+        end
+      end
+
+      context "quand l’agent utilise un fournisseur d’identité non compatible avec le 2FA" do
+        before do
+          stub_const("ProConnectController::IDP_PRO_CONNECT_FORCE_2FA_ENABLED", ["autre-idp"])
+        end
+
+        it "connecte l’agent normalement" do
+          agent = create(:agent, email: user_info["email"])
+          get :callback, params: { state:, code: }
+          expect_agent_to_be_updated_and_logged_in(agent.reload)
         end
       end
     end

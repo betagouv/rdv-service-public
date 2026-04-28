@@ -73,15 +73,23 @@ class ProConnectOnboardingRouter
 
   def attach_or_create_territory(operator, anct_client)
     ActiveRecord::Base.transaction do
-      existing_territory = operator.territories.first
+      existing_territories = Territory.where(operator: operator, siret: @agent.proconnect_siret)
+
+      if existing_territories.many?
+        raise "ProConnectOnboardingRouter: plusieurs territoires avec le même SIRET et opérateur (#{existing_territories.pluck(:id).join(', ')})"
+      end
+
+      existing_territory = existing_territories.first
+
       territory = existing_territory || Territory.create!(
         operator: operator,
-        category: ANCT_TYPE_TO_CATEGORY.fetch(anct_client.organization&.fetch("type", nil), "Inconnu")
+        category: ANCT_TYPE_TO_CATEGORY.fetch(anct_client.organization&.fetch("type", nil), "Inconnu"),
+        siret: @agent.proconnect_siret
       )
 
       existing_organisation = territory.organisations.first
       organisation = existing_organisation || Organisation.create!(
-        name: anct_client.organization&.fetch("name", nil) || operator.name,
+        name: anct_client.organization&.fetch("name", nil),
         territory: territory,
         verticale: @domain.verticale
       )

@@ -79,6 +79,9 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       parameter name: "email", in: :query, type: :string, description: "Email", example: "johnny@77.com", required: false
       parameter name: "phone_number", in: :query, type: :string, description: "Numéro de téléphone", example: "33600008012", required: false
       parameter name: "address", in: :query, type: :string, description: "Adresse", example: "10 rue du Havre, Paris, 75016", required: false
+      parameter name: "city_code", in: :query, type: :string, description: "Code INSEE de la commune", example: "75116", required: false
+      parameter name: "post_code", in: :query, type: :string, description: "Code postal", example: "75016", required: false
+      parameter name: "city_name", in: :query, type: :string, description: "Nom de la commune", example: "Paris", required: false
       parameter name: "caisse_affiliation", in: :query, type: :string, description: "Caisse d'affiliation", example: "caf", required: false
       parameter name: "affiliation_number", in: :query, type: :string, description: "Numéro d'affiliation", example: "101010", required: false
       parameter name: "family_situation", in: :query, type: :string, description: "Situation familiale", example: "single", required: false
@@ -104,6 +107,9 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         let(:email) { "jean@jacques.fr" }
         let(:phone_number) { "33600008012" }
         let(:address) { "10 rue du Havre, Paris, 75016" }
+        let(:city_code) { "75116" }
+        let(:post_code) { "75016" }
+        let(:city_name) { "Paris" }
         let(:caisse_affiliation) { "caf" }
         let(:affiliation_number) { "101010" }
         let(:family_situation) { "single" }
@@ -127,6 +133,9 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
             email: email,
             phone_number: phone_number,
             address: address,
+            city_code: city_code,
+            post_code: post_code,
+            city_name: city_name,
             caisse_affiliation: caisse_affiliation,
             affiliation_number: affiliation_number,
             family_situation: family_situation,
@@ -369,6 +378,9 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       parameter name: "email", in: :query, type: :string, description: "Email", example: "johnny@77.com", required: false
       parameter name: "phone_number", in: :query, type: :string, description: "Numéro de téléphone", example: "33600008012", required: false
       parameter name: "address", in: :query, type: :string, description: "Adresse", example: "10 rue du Havre, Paris, 75016", required: false
+      parameter name: "city_code", in: :query, type: :string, description: "Code INSEE de la commune", example: "75116", required: false
+      parameter name: "post_code", in: :query, type: :string, description: "Code postal", example: "75016", required: false
+      parameter name: "city_name", in: :query, type: :string, description: "Nom de la commune", example: "Paris", required: false
       parameter name: "caisse_affiliation", in: :query, type: :string, description: "Caisse d'affiliation", example: "caf", required: false
       parameter name: "affiliation_number", in: :query, type: :string, description: "Numéro d'affiliation", example: "101010", required: false
       parameter name: "family_situation", in: :query, type: :string, description: "Situation familiale", example: "single", required: false
@@ -393,6 +405,9 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         let(:email) { "jean@jacques.fr" }
         let(:phone_number) { "33600008012" }
         let(:address) { "10 rue du Havre, Paris, 75016" }
+        let(:city_code) { "75116" }
+        let(:post_code) { "75016" }
+        let(:city_name) { "Paris" }
         let(:caisse_affiliation) { "caf" }
         let(:affiliation_number) { "101010" }
         let(:family_situation) { "single" }
@@ -421,6 +436,9 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
             email:,
             phone_number:,
             address:,
+            city_code:,
+            post_code:,
+            city_name:,
             caisse_affiliation:,
             affiliation_number:,
             family_situation:,

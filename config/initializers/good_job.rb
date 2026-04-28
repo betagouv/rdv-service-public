@@ -87,7 +87,7 @@ Rails.application.configure do
       class: "CronJob::WarnAboutExpiringAzureAppSecrets",
     },
     synchronize_crm: {
-      cron: "every day at 08:00 Europe/Paris",
+      cron: "every day at 20:00 Europe/Paris",
       class: "CronJob::SynchronizeCrm",
     },
     ign_health_check: {
