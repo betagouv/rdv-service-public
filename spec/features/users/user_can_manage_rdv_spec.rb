@@ -92,13 +92,13 @@ RSpec.describe "User can manage their rdvs" do
     end
   end
 
-  describe "l’usager suit un lien d’annulation envoyé par SMS ou mail", js: true do
+  describe "l’usager suit un lien d’annulation envoyé par SMS ou mail" do
     let(:user) { create(:user, last_name: "Factice") }
     let!(:organisation) { create(:organisation, name: "93 Social") }
     let(:lieu) { create(:lieu, name: "CCAS de Montreuil", organisation:) }
     let!(:rdv) { create(:rdv, organisation:, starts_at: 4.days.from_now, users: [user], lieu:) }
 
-    it "ne fait pas d’erreur si on rafraichit la page de vérification du nom" do # refresh does not seem to work without js: true 🤷
+    it "ne fait pas d’erreur si on rafraichit la page de vérification du nom", js: true do # refresh does not seem to work without js: true 🤷
       visit users_rdv_path(rdv.id, invitation_token: rdv.participations.first.restricted_auth_token)
       fill_in(:letters, with: "FAX") # voluntary error here
       click_on "Valider"
@@ -108,6 +108,17 @@ RSpec.describe "User can manage their rdvs" do
       fill_in(:letters, with: "FAC")
       click_on "Valider"
       expect(page).to have_content "Votre RDV"
+    end
+
+    context "quand l'usager ne met pas toutes les lettres en majuscule" do
+      before do
+        rdv.participations.first.update(restricted_auth_token: "ABCDEF")
+      end
+
+      it "fonctionne quand même" do
+        visit users_rdv_path(rdv.id, invitation_token: "abcdef")
+        expect(page).to have_content("veuillez entrer les 3 premières lettres")
+      end
     end
   end
 end
