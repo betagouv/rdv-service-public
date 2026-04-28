@@ -2,7 +2,6 @@
   | Modifier le niveau de permission de l'agent #{@agent.full_name_or_email}
 
 = render "admin/agents/fil_ariane", current_page_title: @agent.full_name_or_email
-- content_for(:menu_item) { "menu-settings" }
 
 - if @agent.is_an_intervenant?
   = render "admin/agent_intervenants/name_form", agent_intervenant: @agent

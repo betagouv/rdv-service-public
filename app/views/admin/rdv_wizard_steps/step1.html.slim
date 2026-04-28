@@ -1,4 +1,3 @@
-- content_for(:menu_item) { "menu-agendas" }
 - content_for(:title) { t(".page_title", starts_at: l(@rdv.starts_at, format: :dense)) }
 
 = render "card", rdv_wizard_form: @rdv_wizard, step_title: t(".step_title"), current_step: 1, next_step_title: t("admin.rdv_wizard_steps.step2.step_title")  do
