@@ -1,8 +1,6 @@
 / Include the charts pack in the <head> section
 - content_for(:additional_scripts) { javascript_include_tag "charts" }
 
-- content_for(:menu_item) { "menu-organisation-stats" }
-
 - content_for :title do
   div.mb-0.pb-0 Statistiques de #{current_organisation.name}
 

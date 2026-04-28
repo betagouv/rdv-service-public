@@ -3,8 +3,6 @@
 - content_for :fil_ariane do
   = render "common/fil_ariane", titles_and_paths: titles_and_paths, current_page_title: @motif.name
 
-- content_for(:menu_item) { "menu-settings" }
-
 - count = @motif.upcoming_availabilities.count
 
 - content_for :title do

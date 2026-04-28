@@ -1,8 +1,6 @@
 - content_for :title do
   | RDV collectifs
 
-- content_for(:menu_item) { "menu-rdvs-collectifs-list" }
-
 - needs_collectif_motif = current_organisation.motifs.collectif.active.none?
 - content_for :right_of_page_title do
   - unless needs_collectif_motif

@@ -1,11 +1,10 @@
 class Admin::Planning::AbsencesController < AgentAuthController
-  include Admin::Planning::SetAgentsConcern
+  include Admin::Planning::PlanningConcern
   respond_to :html, :json
 
   before_action :set_absence, only: %i[edit update destroy]
   before_action :build_absence, only: [:create]
   before_action :set_agents
-  before_action { @planning_layout = true }
 
   def index
     @multiple_agents_makes_sense = true
