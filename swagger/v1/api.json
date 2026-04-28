@@ -278,6 +278,14 @@
             ],
             "nullable": true
           },
+          "city_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "city_name": {
+            "type": "string",
+            "nullable": true
+          },
           "created_at": {
             "type": "string"
           },
@@ -305,6 +313,10 @@
             "type": "string",
             "nullable": true
           },
+          "post_code": {
+            "type": "string",
+            "nullable": true
+          },
           "responsible": {
             "type": "object",
             "nullable": true
@@ -328,6 +340,8 @@
           "affiliation_number",
           "birth_date",
           "birth_name",
+          "city_code",
+          "city_name",
           "created_at",
           "first_name",
           "last_name",
@@ -335,6 +349,7 @@
           "notify_by_sms",
           "phone_number",
           "phone_number_formatted",
+          "post_code",
           "responsible",
           "responsible_id",
           "user_profiles"
@@ -4717,6 +4732,36 @@
             }
           },
           {
+            "name": "city_code",
+            "in": "query",
+            "description": "Code INSEE de la commune",
+            "example": "75116",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "post_code",
+            "in": "query",
+            "description": "Code postal",
+            "example": "75016",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "city_name",
+            "in": "query",
+            "description": "Nom de la commune",
+            "example": "Paris",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "caisse_affiliation",
             "in": "query",
             "description": "Caisse d'affiliation",
@@ -5276,6 +5321,36 @@
             "in": "query",
             "description": "Adresse",
             "example": "10 rue du Havre, Paris, 75016",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "city_code",
+            "in": "query",
+            "description": "Code INSEE de la commune",
+            "example": "75116",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "post_code",
+            "in": "query",
+            "description": "Code postal",
+            "example": "75016",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "city_name",
+            "in": "query",
+            "description": "Nom de la commune",
+            "example": "Paris",
             "required": false,
             "schema": {
               "type": "string"

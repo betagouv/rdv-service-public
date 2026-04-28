@@ -35,6 +35,8 @@ class Participation < ApplicationRecord
   after_destroy :update_counter_cache
   # voir Outlook::EventSerializerAndListener pour d'autres callbacks
 
+  normalizes :restricted_auth_token, with: ->(restricted_auth_token) { restricted_auth_token.upcase }
+
   # Scopes
   scope :order_by_user_last_name, -> { includes(:user).order("users.last_name ASC") }
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
