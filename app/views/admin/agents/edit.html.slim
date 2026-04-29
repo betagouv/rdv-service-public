@@ -49,7 +49,7 @@
               hint: ("Les agents peuvent avoir des permissions différentes sur chaque organisation." if current_agent.organisations_count > 1),
               rich: true
             - if current_territory.services.any? || ff.object.agent_accueil?
-              fieldset.fr-fieldset
+              fieldset.fr-fieldset.js_agent_role_form__agent_with_account_fields
                 legend.fr-fieldset__legend--regular.fr-fieldset__legend
                   | Permissions supplémentaires
                 .fr-fieldset__element

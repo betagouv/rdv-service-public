@@ -27,7 +27,7 @@
               hint: access_level_hint,
               rich: true
             - if @services.any?
-              fieldset.fr-fieldset
+              fieldset.fr-fieldset.js_agent_role_form__agent_with_account_fields
                 legend.fr-fieldset__legend--regular.fr-fieldset__legend
                   | Permissions supplémentaires
                 = ff.dsfr_check_box :agent_accueil, label: "Agent d'accueil", hint: "Peut consulter et modifier les agendas de tous les agents de l'organisation"
