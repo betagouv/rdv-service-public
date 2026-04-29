@@ -1,5 +1,5 @@
 module Caldav
-  class MassExportEventToCaldavJob < Caldav::BaseJob
+  class MassExportEventToCaldavJob < ApplicationJob
     include ExtendedRetryStrategyConcern
 
     def perform(agent)

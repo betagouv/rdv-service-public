@@ -1,5 +1,5 @@
 module Caldav
-  class ExportRdvToCaldavJob < Caldav::BaseJob
+  class ExportRdvToCaldavJob < ApplicationJob
     include GoodJob::ActiveJobExtensions::Concurrency
 
     good_job_control_concurrency_with(
