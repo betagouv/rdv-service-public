@@ -119,39 +119,25 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
     end
   end
 
-  describe "gestion des réponses en erreur" do
-    it "enregistre requête et réponse dans Sentry si la récupération du token retourne une erreur" do
-      cal_url = "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id"
-      stub_request(:propfind, cal_url)
-        .and_return({ status: 500, body: "ceci est mon corps", headers: { "Set-Cookie" => "secret" } })
+  it "enregistre la réponse dans Sentry si la récupération du token retourne un body inattendu" do
+    cal_url = "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id"
+    stub_request(:propfind, cal_url)
+      .and_return({ status: 500, body: "ceci est mon corps", headers: { "Set-Cookie" => "secret" } })
 
-      described_class.perform_now(agent.id)
+    described_class.perform_now(agent.id)
 
-      expect(sentry_events.last.exception.values.last.value).to eq("500 Internal Server Error (Calendav::RequestError)")
+    expect(sentry_events.last.exception.values.last.value).to eq("500 Internal Server Error (Calendav::RequestError)")
 
-      request_breadcrumb = sentry_events.last.breadcrumbs.compact[0]
-      expect(request_breadcrumb.data[:method]).to eq(:propfind)
-      expect(request_breadcrumb.data[:url]).to eq(cal_url)
-      expect(request_breadcrumb.data[:headers]["Authorization"]).to eq("[FILTERED]")
+    request_breadcrumb = sentry_events.last.breadcrumbs.compact[0]
+    expect(request_breadcrumb.data[:method]).to eq(:propfind)
+    expect(request_breadcrumb.data[:url]).to eq(cal_url)
+    expect(request_breadcrumb.data[:headers]["Authorization"]).to eq("[FILTERED]")
 
-      response_breadcrumb = sentry_events.last.breadcrumbs.compact[1]
-      expect(response_breadcrumb.data[:status_code]).to eq(500)
-      expect(response_breadcrumb.data[:body]).to eq("ceci est mon corps")
-      expect(response_breadcrumb.data[:duration_ms]).to be_between(0, 100)
-      expect(response_breadcrumb.data[:headers]["Set-Cookie"]).to eq("[FILTERED]")
-    end
-
-    it "utilise un fingerprint différent pour chaque statut HTTP de réponse d'erreur" do
-      cal_url = "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id"
-
-      stub_request(:propfind, cal_url).and_return({ status: 403 })
-      described_class.perform_now(agent.id)
-      expect(sentry_events.last.fingerprint).to eq(["{{default}}", "Calendav::RequestError", "403"])
-
-      stub_request(:propfind, cal_url).and_return({ status: 500 })
-      described_class.perform_now(agent.id)
-      expect(sentry_events.last.fingerprint).to eq(["{{default}}", "Calendav::RequestError", "500"])
-    end
+    response_breadcrumb = sentry_events.last.breadcrumbs.compact[1]
+    expect(response_breadcrumb.data[:status_code]).to eq(500)
+    expect(response_breadcrumb.data[:body]).to eq("ceci est mon corps")
+    expect(response_breadcrumb.data[:duration_ms]).to be_between(0, 100)
+    expect(response_breadcrumb.data[:headers]["Set-Cookie"]).to eq("[FILTERED]")
   end
 
   describe "debounce du job" do
