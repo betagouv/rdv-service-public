@@ -1,5 +1,3 @@
-- content_for(:menu_item) { @contextual_agents ? "menu-agendas" : "menu-rdvs-list" }
-
 - content_for :fil_ariane do
   - if @contextual_agents.present?
     = render partial: "admin/rdvs/bouton_retour_agenda", locals: { rdv: @rdv, contextual_agents: @contextual_agents }

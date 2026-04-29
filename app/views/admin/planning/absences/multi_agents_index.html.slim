@@ -1,5 +1,3 @@
-- content_for(:menu_item) { "menu-absences" }
-
 - content_for :title, "Indisponibilités (#{@agents.count} #{'agent'.pluralize(@agents.count)} sélectionnés)"
 
 - @agents.includes(:services).each do |agent|
