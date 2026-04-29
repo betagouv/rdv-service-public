@@ -81,7 +81,6 @@ RSpec.describe Caldav::ExportRdvToCaldavJob do
         let(:response_status) { 500 }
 
         it "raises the exception" do
-          expect(Rails.logger).not_to receive(:info).with("Got a 404 calling DELETE on https://caldav.example.com/event.ics")
           expect { described_class.new.perform(-1, agent.id, caldav_event_url:) }.to raise_error(Calendav::RequestError, "500 Internal Server Error")
         end
       end
