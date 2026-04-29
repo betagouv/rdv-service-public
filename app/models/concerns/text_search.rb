@@ -50,7 +50,7 @@ module TextSearch
     end
 
     def looks_like_email(string)
-      /^\S*@/.match?(string)
+      /^.*@.*$/.match?(string)
     end
 
     def looks_like_phone_number(string)

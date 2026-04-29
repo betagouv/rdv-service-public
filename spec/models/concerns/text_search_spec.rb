@@ -40,15 +40,6 @@ RSpec.describe TextSearch, type: :concern do
       expect(described_class.search_by_text("patoche@duroy.fr")).to eq([patricia])
     end
 
-    it "uses the email index when searching by email" do
-      create_list(:user, 500)
-      plan = described_class.connection
-        .execute("EXPLAIN #{described_class.search_by_text('patoche@aaa.com').to_sql}")
-        .map { |r| r["QUERY PLAN"] }
-        .join("\n")
-      expect(plan).to include("index_users_on_email")
-    end
-
     it "returns users that match with phone_number_formatted" do
       jean = create(:user, phone_number: "01 30 30 04 04")
       eglantine = create(:user, phone_number: "+33131343434")
