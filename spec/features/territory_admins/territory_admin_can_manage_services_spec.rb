@@ -1,14 +1,11 @@
-RSpec.describe "territory admin can manage agents", type: :feature do
-  # L'espace doit avoir au moins un agent admin d'espace restant
-  let!(:territory) { create(:territory, :mairies).tap { |t| t.roles.create!(agent: create(:agent)) } }
+RSpec.describe "territory admin can manage services", type: :feature do
+  let!(:territory) { create(:territory) }
   let!(:agent) { create(:agent, role_in_territories: [territory]) }
   let!(:service_a) { create(:service) }
   let!(:service_b) { create(:service) }
   let!(:service_c) { create(:service) }
 
   before do
-    create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
-    create(:agent_role, agent: agent, access_level: "basic")
     login_as(agent, scope: :agent)
   end
 
