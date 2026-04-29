@@ -34,10 +34,21 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
     describe ":description" do
       let(:user) { build(:user) }
       let(:agent) { build(:agent) }
-      let(:rdv) { create(:rdv, users: [user], agents: [agent]) }
+      let(:rdv) { create(:rdv, users: [user], agents: [agent], context: "Ceci est un RDV pour faire un passeport") }
 
       it "provides a link to the RDV index for users" do
         expect(rdv.payload[:description]).to eq("Infos et annulation: http://www.rdv-solidarites-test.localhost/r")
+      end
+
+      it "does not display the context" do
+        expect(rdv.payload[:description]).not_to include("Ceci est un RDV pour faire un passeport")
+      end
+
+      context "when sensitive data is enabled" do
+        it "includes the context in the description for agent only" do
+          expect(rdv.payload(nil, agent, true)[:description]).to include("Contexte : Ceci est un RDV pour faire un passeport")
+          expect(rdv.payload(nil, user, true)[:description]).not_to include("Contexte : Ceci est un RDV pour faire un passeport")
+        end
       end
 
       context "with a visio motif" do
@@ -75,12 +86,30 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
         let(:rdv) { build(:rdv, users: [user], motif: build(:motif, :by_phone)) }
 
         it { expect(rdv.payload[:location]).to be_nil }
+
+        context "with sensitive data enabled" do
+          it "includes the phone number in the location" do
+            expect(rdv.payload(nil, rdv.users.first, true)[:location]).to eq(user.phone_number_formatted)
+          end
+        end
       end
 
-      context "without a phone motif" do
+      context "with a public office motif" do
         let(:rdv) { build(:rdv, users: [user], motif: build(:motif, :public_office), lieu: build(:lieu, address: "17 rue de l'adresse, Paris, 75016")) }
 
         it { expect(rdv.payload[:location]).to eq("17 rue de l'adresse, Paris, 75016") }
+      end
+
+      context "with a home motif" do
+        let(:rdv) { build(:rdv, users: [user], motif: build(:motif, :home)) }
+
+        it { expect(rdv.payload[:location]).to eq(nil) }
+
+        context "with sensitive data enabled" do
+          it "includes the address in the location" do
+            expect(rdv.payload(nil, rdv.users.first, true)[:location]).to eq(user.address)
+          end
+        end
       end
 
       context "with a visio motif" do
@@ -103,7 +132,33 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
       let(:user) { build(:user, first_name: "Ethan", last_name: "DUVAL") }
       let(:rdv) { build(:rdv, users: [user], motif: build(:motif, name: "Consultation")) }
 
-      it { expect(rdv.payload[:summary]).to eq("RDV Consultation") }
+      context "with sensitive data enabled" do
+        it "includes the user's name in the summary" do
+          expect(rdv.payload(nil, rdv.users.first, true)[:summary]).to eq("RDV avec Ethan DUVAL - Consultation")
+        end
+
+        context "when RDV is collectif" do
+          let(:rdv) { build(:rdv, users: [user], motif: build(:motif, name: "Atelier", collectif: true)) }
+
+          it "display motif name" do
+            expect(rdv.payload(nil, rdv.users.first, true)[:summary]).to eq("RDV collectif - Atelier")
+          end
+        end
+      end
+
+      context "with sensitive data disabled" do
+        it "does not include the user's name in the summary" do
+          expect(rdv.payload[:summary]).to eq("RDV Consultation")
+        end
+
+        context "when RDV is collectif" do
+          let(:rdv) { build(:rdv, users: [user], motif: build(:motif, name: "Atelier", collectif: true)) }
+
+          it "display motif name" do
+            expect(rdv.payload(nil, rdv.users.first, true)[:summary]).to eq("RDV collectif - Atelier")
+          end
+        end
+      end
     end
   end
 end

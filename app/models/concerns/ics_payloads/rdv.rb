@@ -1,6 +1,6 @@
 module IcsPayloads
   module Rdv
-    def payload(action = nil, recipient = users.first)
+    def payload(action = nil, recipient = users.first, sensitive_data = false)
       payload = {
         attachement_filename: "rdv-#{motif&.name&.parameterize}-#{starts_at.strftime('%Y-%m-%d-%Hh%M')}.ics",
         starts_at: starts_at,
@@ -25,8 +25,9 @@ module IcsPayloads
       payload
     end
 
-    def ics_location
+    def ics_location(sensitive_data = false)
       if motif.phone?
+        # TODO: numéro de téléphone si RDV tel + données sensibles activés
         nil
       elsif motif.visio?
         visio_url

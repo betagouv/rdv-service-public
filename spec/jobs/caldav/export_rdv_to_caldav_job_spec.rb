@@ -40,6 +40,14 @@ RSpec.describe Caldav::ExportRdvToCaldavJob do
       described_class.new.perform(agents_rdv.id, agent.id)
       expect(agents_rdv.reload.caldav_url).to eq("https://caldav.example.com/event.ics")
     end
+
+    it "envoie un ICS sans données personnelles" do
+
+    end
+
+    context "quand l’agent a activé l’option permettant d’envoyer les données personnelles" do
+
+    end
   end
 
   context "quand l'agents_rdv existe avec une caldav_url (mise à jour)" do
