@@ -1,6 +1,6 @@
 module IcsPayloads
   module Rdv
-    def payload(action = nil, recipient = users.first, sensitive_data = false)
+    def payload(action: nil, recipient: users.first, sensitive_data: false) # rubocop:disable Lint/UnusedMethodArgument
       payload = {
         attachement_filename: "rdv-#{motif&.name&.parameterize}-#{starts_at.strftime('%Y-%m-%d-%Hh%M')}.ics",
         starts_at: starts_at,
@@ -25,7 +25,7 @@ module IcsPayloads
       payload
     end
 
-    def ics_location(sensitive_data = false)
+    def ics_location(sensitive_data: false) # rubocop:disable Lint/UnusedMethodArgument
       if motif.phone?
         # TODO: numéro de téléphone si RDV tel + données sensibles activés
         nil

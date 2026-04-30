@@ -46,8 +46,8 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
 
       context "when sensitive data is enabled" do
         it "includes the context in the description for agent only" do
-          expect(rdv.payload(nil, agent, true)[:description]).to include("Contexte : Ceci est un RDV pour faire un passeport")
-          expect(rdv.payload(nil, user, true)[:description]).not_to include("Contexte : Ceci est un RDV pour faire un passeport")
+          expect(rdv.payload(recipient: agent, sensitive_data: true)[:description]).to include("Contexte : Ceci est un RDV pour faire un passeport")
+          expect(rdv.payload(recipient: user, sensitive_data: true)[:description]).not_to include("Contexte : Ceci est un RDV pour faire un passeport")
         end
       end
 
@@ -62,7 +62,7 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
       context "when sending to an agent" do
         it "provides a link to the RDV in the agent interface" do
           description = "Voir sur RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{rdv.organisation_id}/rdvs/#{rdv.id}"
-          expect(rdv.payload(nil, agent)[:description]).to eq(description)
+          expect(rdv.payload(recipient: agent)[:description]).to eq(description)
         end
 
         context "when there is a link to a dossier in an external app" do
@@ -73,7 +73,7 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
           let(:oauth_application) { create(:oauth_application, name: "Démarches Simplifiées") }
 
           it "provides the link in the description" do
-            expect(rdv.payload(nil, agent)[:description]).to include("Voir sur Démarches Simplifiées: http://demarches-simplifies.test/exemple")
+            expect(rdv.payload(recipient: agent)[:description]).to include("Voir sur Démarches Simplifiées: http://demarches-simplifies.test/exemple")
           end
         end
       end
@@ -89,7 +89,7 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
 
         context "with sensitive data enabled" do
           it "includes the phone number in the location" do
-            expect(rdv.payload(nil, rdv.users.first, true)[:location]).to eq(user.phone_number_formatted)
+            expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:location]).to eq(user.phone_number_formatted)
           end
         end
       end
@@ -103,11 +103,11 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
       context "with a home motif" do
         let(:rdv) { build(:rdv, users: [user], motif: build(:motif, :home)) }
 
-        it { expect(rdv.payload[:location]).to eq(nil) }
+        it { expect(rdv.payload[:location]).to be_nil }
 
         context "with sensitive data enabled" do
           it "includes the address in the location" do
-            expect(rdv.payload(nil, rdv.users.first, true)[:location]).to eq(user.address)
+            expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:location]).to eq(user.address)
           end
         end
       end
@@ -134,14 +134,14 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
 
       context "with sensitive data enabled" do
         it "includes the user's name in the summary" do
-          expect(rdv.payload(nil, rdv.users.first, true)[:summary]).to eq("RDV avec Ethan DUVAL - Consultation")
+          expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:summary]).to eq("RDV avec Ethan DUVAL - Consultation")
         end
 
         context "when RDV is collectif" do
           let(:rdv) { build(:rdv, users: [user], motif: build(:motif, name: "Atelier", collectif: true)) }
 
           it "display motif name" do
-            expect(rdv.payload(nil, rdv.users.first, true)[:summary]).to eq("RDV collectif - Atelier")
+            expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:summary]).to eq("RDV collectif - Atelier")
           end
         end
       end
@@ -155,7 +155,7 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
           let(:rdv) { build(:rdv, users: [user], motif: build(:motif, name: "Atelier", collectif: true)) }
 
           it "display motif name" do
-            expect(rdv.payload(nil, rdv.users.first, true)[:summary]).to eq("RDV collectif - Atelier")
+            expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:summary]).to eq("RDV collectif - Atelier")
           end
         end
       end
