@@ -1,0 +1,5 @@
+- if field.data.present?
+  => field.data
+  = "("
+  = link_to "voir dans l'annuaire des entreprises", "https://annuaire-entreprises.data.gouv.fr/etablissement/#{field.data}", target: "_blank"
+  = ")"

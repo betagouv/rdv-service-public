@@ -21,7 +21,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     work_on_sunday: Field::Boolean,
-    siret: Field::String,
+    siret: SiretField,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
