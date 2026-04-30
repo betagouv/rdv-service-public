@@ -44,6 +44,13 @@ module Caldav
 
     def delete_event(caldav_event_url)
       agent.caldav_client.events.delete(caldav_event_url)
+    rescue Calendav::RequestError => e
+      if e.response.status.code == 404
+        # L'événement externe à supprimer est introuvable, pas la peine de retry
+        Rails.logger.info("Got a 404 calling DELETE on #{caldav_event_url}")
+      else
+        raise
+      end
     end
 
     def agent
