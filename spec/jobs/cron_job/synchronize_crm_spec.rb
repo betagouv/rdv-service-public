@@ -10,13 +10,13 @@ RSpec.describe CronJob::SynchronizeCrm, type: :job do
       }
     )
   end
-  let(:page_of_results) { Notion::Messages::Message.new(results: [notion_page, notion_page, notion_page, notion_page]) }
+  let(:page_of_4_results) { Notion::Messages::Message.new(results: [notion_page, notion_page, notion_page, notion_page]) }
   let(:notion_client) { instance_double(Notion::Client) }
 
   before do
     allow(Notion::Client).to receive(:new).and_return(notion_client)
     # On simule 2 pages de résultats
-    allow(notion_client).to receive(:database_query).and_yield(page_of_results).and_yield(page_of_results)
+    allow(notion_client).to receive(:database_query).and_yield(page_of_4_results).and_yield(page_of_4_results)
   end
 
   context "quand la clef NOTION_API_SECRET n'est pas définie" do
@@ -36,15 +36,6 @@ RSpec.describe CronJob::SynchronizeCrm, type: :job do
       ENV["NOTION_API_SECRET"] = "secret"
     end
 
-    let(:notion_pages) do
-      [
-        notion_page,
-        notion_page,
-        notion_page,
-        notion_page,
-      ]
-    end
-
     it "enqueue un job SynchronizeCrmPageJob pour chaque page Notion" do
       expect { described_class.new.perform }.to have_enqueued_job(SynchronizeCrmPageJob).with(
         notion_page_id: "page_id",
@@ -58,7 +49,6 @@ RSpec.describe CronJob::SynchronizeCrm, type: :job do
 
       # Les jobs sont scheduled pour s'exécuter à 400 ms d'intervalle
       0.upto(6) do |i|
-        puts i.inspect
         expect(Time.zone.parse(enqueued_jobs[i + 1]["scheduled_at"]) - Time.zone.parse(enqueued_jobs[i]["scheduled_at"])).to be >= 0.4.seconds
       end
     end
