@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_01_000001) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_04_133927) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -782,6 +782,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_01_000001) do
     t.bigint "operator_id"
     t.boolean "public_stats", default: true, null: false
     t.string "siret"
+    t.string "instance", comment: "Permet de savoir si le territoire a vocation à être sur l'instance de l'ANCT ou de la DINUM. Une valeur null indique qu'on ne sait pas encore."
     t.index ["departement_number"], name: "index_territories_on_departement_number", where: "((departement_number)::text <> ''::text)"
     t.index ["operator_id"], name: "index_territories_on_operator_id"
   end

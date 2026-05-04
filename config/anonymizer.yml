@@ -323,6 +323,7 @@ tables:
       - operator_id
       - public_stats
       - siret
+      - instance
 
   # Tables sans données personnelles
   - table_name: agent_territorial_roles
