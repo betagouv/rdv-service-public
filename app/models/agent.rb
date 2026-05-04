@@ -106,7 +106,7 @@ class Agent < ApplicationRecord
   # On désactive le cop pour inverse_of car les modèles sont gérés dans Doorkeeper, et on ne se sert pas de l'association inverse
   has_many :access_grants, class_name: "Doorkeeper::AccessGrant", foreign_key: :resource_owner_id, dependent: :delete_all # rubocop:disable Rails/InverseOf
   has_many :access_tokens, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id, dependent: :delete_all # rubocop:disable Rails/InverseOf
-  has_many :oauth_applications, through: :access_tokens
+  has_many :applications, through: :access_tokens
 
   attr_accessor :allow_blank_name
 
