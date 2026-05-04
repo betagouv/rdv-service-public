@@ -9,6 +9,7 @@ module Rdv::VisioConcern
     meet.google.com
     zoom.us
     meet.jit.si
+    kmeet.infomaniak.com
   ].freeze
 
   VISIO_URL_TYPES = %w[default custom].freeze
