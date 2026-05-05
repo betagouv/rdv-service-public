@@ -16,6 +16,15 @@ class Agents::PagesController < AgentAuthController
       policy = Agent::TerritoryPolicy.new(current_agent, Territory.new)
       if current_agent.possible_duplicate_organisations.empty? && policy.new?
         redirect_to new_agents_territory_path
+      else
+        result = ProConnectOnboardingRouter.new(agent, current_domain).call
+        case result.action
+        when :contact_admin
+          flash[:info] = "Votre organisation est rattachée à un espace RDV Service Public, mais vous n'avez pas les droits " \
+                         "d'administrateur. Rapprochez-vous de votre administrateur pour qu'il vous accorde les accès sur votre espace."
+        when :signup_via_operator
+          redirect_to agents_inscription_via_operateur_path(operator_name: result.operator_name, signup_url: result.signup_url)
+        end
       end
     end
   end
