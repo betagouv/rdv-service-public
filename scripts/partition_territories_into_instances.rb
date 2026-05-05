@@ -25,3 +25,9 @@ Territory.where(instance: nil).find_each do |territory|
 end
 
 puts Territory.group(:instance).count
+
+Territory.where(instance: nil, category: "État").map do |t|
+  t.admin_agents.pluck(:email).map do |e|
+    (e || "").split("@").last
+  end.uniq
+end.flatten.uniq
