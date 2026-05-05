@@ -57,4 +57,10 @@ p
     .fr-input-group
       label.fr-label for="caldav_agenda_url" URL de l’agenda CalDAV
       input#caldav_agenda_url.fr-input type="text" name="caldav_agenda_url"
+    .fr-checkbox-group.mb-3
+      input#caldav_include_sensitive_data.fr-checkbox.fr-input type="checkbox" name="caldav_include_sensitive_data"
+      label.fr-label for="caldav_include_sensitive_data"
+        | Inclure les données sensibles (nom, adresse, contexte du RDV)
+        span.fr-hint-text
+          | En cochant cette case, vous prenez la responsabilité de copier des données personnelles en dehors de cette plateforme
     = submit_tag "Enregistrer", class: "fr-btn"
