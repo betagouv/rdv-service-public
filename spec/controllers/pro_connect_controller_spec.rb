@@ -147,7 +147,6 @@ RSpec.describe ProConnectController do
         end
 
         it "crée l'agent si le domaine le permet, et redirige vers la page de retour quand l'ANCT ne retourne rien" do
-          allow(Domain::RDV_SERVICE_PUBLIC).to receive(:allow_self_onboarding).and_return(true)
           # Sans token ANCT configuré, le handler renvoie :classic
           expect do
             get :callback, params: { state:, code: }
@@ -178,7 +177,6 @@ RSpec.describe ProConnectController do
           around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_admin") { ex.run } }
 
           it "crée l'agent, son espace et son orga puis le redirige normalement" do
-            allow(Domain::RDV_SERVICE_PUBLIC).to receive(:allow_self_onboarding).and_return(true)
             expect do
               get :callback, params: { state:, code: }
             end.to change(Agent, :count).by(1)
@@ -202,7 +200,6 @@ RSpec.describe ProConnectController do
           around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_success") { ex.run } }
 
           it "crée l'agent avec un flash info et redirige normalement" do
-            allow(Domain::RDV_SERVICE_PUBLIC).to receive(:allow_self_onboarding).and_return(true)
             get :callback, params: { state:, code: }
             expect(flash[:info]).to include("Rapprochez-vous de votre administrateur")
             expect(response).to redirect_to("/agents/edit") # stored location via after_sign_in_path_for
@@ -220,7 +217,6 @@ RSpec.describe ProConnectController do
           around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_with_potential_operators") { ex.run } }
 
           it "crée l'agent et redirige vers la page inscription_via_operateur" do
-            allow(Domain::RDV_SERVICE_PUBLIC).to receive(:allow_self_onboarding).and_return(true)
             get :callback, params: { state:, code: }
             expect(response).to redirect_to(agents_inscription_via_operateur_path(signup_url: "https://suiteterritoriale.anct.gouv.fr/deep-link-signup/", operator_name: "ANCT"))
           end

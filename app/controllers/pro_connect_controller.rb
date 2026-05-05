@@ -210,6 +210,7 @@ class ProConnectController < ApplicationController
     bypass_sign_in agent, scope: :agent
     session[:pro_connect_id_token] = callback_client.id_token_for_logout
 
+    # redirect_to after_sign_in_path_for(agent)
     if was_new_agent && current_domain.allow_self_onboarding
       redirect_after_first_proconnect_login(agent)
     else
