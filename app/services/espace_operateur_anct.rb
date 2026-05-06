@@ -10,39 +10,33 @@ class EspaceOperateurANCT
   end
 
   def organization
-    parsed_response&.fetch("organization", nil)
+    parsed_response["organization"]
   end
 
   def operator
-    parsed_response&.fetch("operator", nil)
+    parsed_response["operator"]
   end
 
   def potential_operators
-    parsed_response&.fetch("potentialOperators", nil)
-  end
-
-  def can_access?
-    return false unless entitlements
-
-    Rails.logger.debug entitlements
-
-    entitlements["can_access"]
-  end
-
-  def admin?
-    return false unless entitlements
-
-    entitlements["is_admin"]
+    parsed_response["potentialOperators"]
   end
 
   def entitlements
-    parsed_response&.fetch("entitlements", nil)
+    parsed_response["entitlements"]
+  end
+
+  def can_access?
+    parsed_response.dig("entitlements", "can_access")
+  end
+
+  def admin?
+    parsed_response.dig("entitlements", "is_admin")
   end
 
   private
 
   def parsed_response
-    @parsed_response ||= JSON.parse(response.body) if response.success?
+    @parsed_response ||= response.success? ? JSON.parse(response.body) : {}
   end
 
   def client

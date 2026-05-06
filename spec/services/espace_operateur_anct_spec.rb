@@ -65,7 +65,7 @@ RSpec.describe EspaceOperateurANCT do
 
       around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_no_access") { ex.run } }
 
-      it { is_expected.to be false }
+      it { is_expected.to be_falsey }
     end
 
     context "quand l'API retourne une erreur" do
@@ -73,7 +73,7 @@ RSpec.describe EspaceOperateurANCT do
 
       around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_api_error") { ex.run } }
 
-      it { is_expected.to be false }
+      it { is_expected.to be_falsey }
     end
   end
 
@@ -91,7 +91,7 @@ RSpec.describe EspaceOperateurANCT do
     context "quand l'utilisateur n'est pas admin" do
       around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_success") { ex.run } }
 
-      it { is_expected.to be false }
+      it { is_expected.to be_falsey }
     end
   end
 
