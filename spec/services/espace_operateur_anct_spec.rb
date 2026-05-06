@@ -95,6 +95,19 @@ RSpec.describe EspaceOperateurANCT do
     end
   end
 
+  describe "caching" do
+    around do |example|
+      VCR.use_cassette("espace_operateur_anct/entitlements_success") { example.run }
+    end
+
+    it "only sends one requests even if we use two objects, to avoid allowing us to spam the api" do
+      described_class.new(siret, account_email).operator
+      described_class.new(siret, account_email).operator
+
+      expect(WebMock).to have_requested(:get, /entitlements/).once
+    end
+  end
+
   describe "initialize" do
     context "sans token d'authentification configuré" do
       stub_env_with(ESPACE_OPERATEUR_ANCT_AUTH_TOKEN: nil)

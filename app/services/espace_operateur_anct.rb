@@ -1,12 +1,11 @@
 class EspaceOperateurANCT
   ESPACE_OPERATEUR_SERVICE_ID = "49".freeze
 
-  def initialize(siret, account_email, account_type = "user")
+  def initialize(siret, account_email)
     raise "Ce service n’est pas utilisable dans cet environnement." unless ENV.fetch("ESPACE_OPERATEUR_ANCT_AUTH_TOKEN", nil)
 
     @siret = siret
     @account_email = account_email
-    @account_type = account_type
   end
 
   def organization
@@ -50,11 +49,17 @@ class EspaceOperateurANCT
   end
 
   def response
-    @response ||= client.get("entitlements/") do |request|
+    @response ||= Rails.cache.fetch("EspaceOperateurANCT:#{@siret}:#{@acount_email}", expires_in: 5.seconds) do
+      send_request(@siret, @account_email)
+    end
+  end
+
+  def send_request(siret, account_email)
+    client.get("entitlements/") do |request|
       request.params["service_id"] = ESPACE_OPERATEUR_SERVICE_ID
-      request.params["siret"] = @siret
-      request.params["account_email"] = @account_email
-      request.params["account_type"] = @account_type
+      request.params["siret"] = siret
+      request.params["account_email"] = account_email
+      request.params["account_type"] = "user"
     end
   end
 end
