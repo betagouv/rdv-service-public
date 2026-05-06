@@ -1,6 +1,6 @@
 class EspaceOperateurANCT::ApiClient
   ESPACE_OPERATEUR_SERVICE_ID = "49".freeze
-  ACCOUNT_TYPE = "user"
+  ACCOUNT_TYPE = "user".freeze
 
   def initialize(siret, account_email)
     raise "Ce service n’est pas utilisable dans cet environnement." unless ENV.fetch("ESPACE_OPERATEUR_ANCT_AUTH_TOKEN", nil)
