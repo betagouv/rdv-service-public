@@ -169,7 +169,6 @@ class ProConnectController < ApplicationController
     end
 
     agent = agent_by_sub || agent_by_email
-    agent.nil?
 
     if agent.nil?
       if current_domain.allow_self_onboarding
@@ -211,11 +210,6 @@ class ProConnectController < ApplicationController
     session[:pro_connect_id_token] = callback_client.id_token_for_logout
 
     redirect_to after_sign_in_path_for(agent)
-    # if was_new_agent && current_domain.allow_self_onboarding
-    #   redirect_after_first_proconnect_login(agent)
-    # else
-    #   redirect_to after_sign_in_path_for(agent)
-    # end
   end
   # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
