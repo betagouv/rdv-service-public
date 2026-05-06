@@ -17,7 +17,7 @@ class Agents::PagesController < AgentAuthController
       if current_agent.possible_duplicate_organisations.empty? && policy.new?
         redirect_to new_agents_territory_path
       else
-        result = ProConnectOnboardingRouter.new(current_agent, current_domain).call
+        result = EspaceOperateurANCT::AccountCreationRouter.new(current_agent, current_domain).call
         case result.action
         when :attached_as_admin
           redirect_to admin_organisation_planning_agenda_path(current_agent.organisations.first)

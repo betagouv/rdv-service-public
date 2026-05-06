@@ -1,4 +1,4 @@
-RSpec.describe EspaceOperateurANCT do
+RSpec.describe EspaceOperateurANCT::ApiClient do
   let(:siret) { "21550050500015" }
   let(:account_email) { "contact@mairie-nantes.fr" }
 
@@ -69,7 +69,11 @@ RSpec.describe EspaceOperateurANCT do
     end
 
     context "quand l'API retourne une erreur" do
-      subject { described_class.new(siret, account_email, "aienrustesr").can_access? }
+      subject { described_class.new(siret, account_email).can_access? }
+
+      before do
+        stub_const("EspaceOperateurANCT::ApiClient::ACCOUNT_TYPE", "aienrustesr")
+      end
 
       around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_api_error") { ex.run } }
 

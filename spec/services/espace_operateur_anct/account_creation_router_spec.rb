@@ -1,4 +1,4 @@
-RSpec.describe ProConnectOnboardingRouter do
+RSpec.describe EspaceOperateurANCT::AccountCreationRouter do
   subject(:handler) { described_class.new(agent, domain) }
 
   let(:domain) { Domain::RDV_SERVICE_PUBLIC }

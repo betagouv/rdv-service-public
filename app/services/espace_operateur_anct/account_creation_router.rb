@@ -1,4 +1,4 @@
-class ProConnectOnboardingRouter
+class EspaceOperateurANCT::AccountCreationRouter
   ANCT_TYPE_TO_CATEGORY = {
     "commune" => "Commune",
     "epci" => "Intercommunalité",
