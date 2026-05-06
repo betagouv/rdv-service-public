@@ -49,7 +49,7 @@ class EspaceOperateurANCT::AccountCreationRouter
   private
 
   def anct_client
-    @anct_client ||= EspaceOperateurANCT.new(@agent.proconnect_siret, @agent.email)
+    @anct_client ||= EspaceOperateurANCT::ApiClient.new(@agent.proconnect_siret, @agent.email)
   end
 
   def handle_operator_case(anct_client, operator)
