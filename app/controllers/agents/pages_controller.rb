@@ -22,8 +22,7 @@ class Agents::PagesController < AgentAuthController
         when :attached_as_admin
           redirect_to admin_organisation_planning_agenda_path(current_agent.organisations.first)
         when :contact_admin
-          flash[:info] = "Votre organisation est rattachée à un espace RDV Service Public, mais vous n'avez pas les droits " \
-                         "d'administrateur. Rapprochez-vous de votre administrateur pour qu'il vous accorde les accès sur votre espace."
+          @needs_permission_from_admin = true
         when :signup_via_operator
           redirect_to agents_inscription_via_operateur_path(operator_name: result.operator_name, signup_url: result.signup_url)
         end

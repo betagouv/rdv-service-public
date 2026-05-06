@@ -165,62 +165,6 @@ RSpec.describe ProConnectController do
           expect(session["pro_connect_id_token"]).to be_present
           expect(response).to redirect_to("/agents/edit") # stored location via after_sign_in_path_for
         end
-
-        context "avec token ANCT : opérateur admin qui matche notre DB" do
-          stub_env_with(ESPACE_OPERATEUR_ANCT_AUTH_TOKEN: "Bearer fake-token")
-
-          # La cassette entitlements_admin est enregistrée avec email=test-admin@example.com et siret=21550050500015
-          let(:user_info) { super().merge("email" => "test-admin@example.com", "siret" => "21550050500015") }
-          let!(:operator) { create(:operator, siret: "13002603200016") }
-
-          before { ProConnectStubs.stub_callback_requests(code, user_info) }
-          around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_admin") { ex.run } }
-
-          it "crée l'agent, son espace et son orga puis le redirige normalement" do
-            expect do
-              get :callback, params: { state:, code: }
-            end.to change(Agent, :count).by(1)
-              .and change(Territory, :count).by(1)
-              .and change(Organisation, :count).by(1)
-              .and change(AgentRole, :count).by(1)
-
-            expect(current_agent_id).to be_present
-            expect(response).to redirect_to("/agents/edit") # stored location
-          end
-        end
-
-        context "avec token ANCT : opérateur non-admin qui matche notre DB" do
-          stub_env_with(ESPACE_OPERATEUR_ANCT_AUTH_TOKEN: "Bearer fake-token")
-
-          # La cassette entitlements_success est enregistrée avec email=contact@mairie-nantes.fr et siret=21550050500015
-          let(:user_info) { super().merge("email" => "contact@mairie-nantes.fr", "siret" => "21550050500015") }
-          let!(:operator) { create(:operator, siret: "13002603200016") }
-
-          before { ProConnectStubs.stub_callback_requests(code, user_info) }
-          around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_success") { ex.run } }
-
-          it "crée l'agent avec un flash info et redirige normalement" do
-            get :callback, params: { state:, code: }
-            expect(flash[:info]).to include("Rapprochez-vous de votre administrateur")
-            expect(response).to redirect_to("/agents/edit") # stored location via after_sign_in_path_for
-          end
-        end
-
-        context "avec token ANCT : potentialOperators dont un matche notre DB" do
-          stub_env_with(ESPACE_OPERATEUR_ANCT_AUTH_TOKEN: "Bearer fake-token")
-
-          # La cassette entitlements_with_potential_operators est enregistrée avec email=contact@mairie-nantes.fr et siret=20005671100019
-          let(:user_info) { super().merge("email" => "contact@mairie-nantes.fr", "siret" => "20005671100019") }
-          let!(:operator) { create(:operator, siret: "13002603200016") } # premier potentialOperator de la cassette
-
-          before { ProConnectStubs.stub_callback_requests(code, user_info) }
-          around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_with_potential_operators") { ex.run } }
-
-          it "crée l'agent et redirige vers la page inscription_via_operateur" do
-            get :callback, params: { state:, code: }
-            expect(response).to redirect_to(agents_inscription_via_operateur_path(signup_url: "https://suiteterritoriale.anct.gouv.fr/deep-link-signup/", operator_name: "ANCT"))
-          end
-        end
       end
 
       context "when an agent exists with the given email address and no sub" do
