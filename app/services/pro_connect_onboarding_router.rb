@@ -17,15 +17,14 @@ class ProConnectOnboardingRouter
   def call
     return Result.new(action: :classic) if @agent.proconnect_siret.blank?
 
-    return Result.new(action: :classic) if anct_client.nil?
-
     operator_data = anct_client.operator
-    potential_operators_data = anct_client.potential_operators
 
     if operator_data.present?
       operator = Operator.find_by(siret: operator_data["siret"])
       return handle_operator_case(anct_client, operator) if operator
     end
+
+    potential_operators_data = anct_client.potential_operators
 
     if potential_operators_data.present?
       matches = potential_operators_data.select { |po| Operator.exists?(siret: po["siret"]) }
