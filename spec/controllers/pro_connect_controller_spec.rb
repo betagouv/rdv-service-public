@@ -224,8 +224,8 @@ RSpec.describe ProConnectController do
             get :callback, params: { state:, code: }
             expect(response).to redirect_to(agents_inscription_via_operateur_path)
             expect(session[:inscription_via_operateur]).to eq(
-              "operator_name" => "Megalis",
-              "signup_url" => "https://www.megalis-test-operateur.fr/deep-link-signup/"
+              "operator_name" => "ANCT",
+              "signup_url" => "https://suiteterritoriale.anct.gouv.fr/deep-link-signup/"
             )
           end
         end
