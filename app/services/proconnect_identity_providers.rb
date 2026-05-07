@@ -5,6 +5,7 @@
 # La classification entre collectivités et services de l'état a ensuite été faite manuellement par l'équipe technique.
 #
 class ProconnectIdentityProviders
+
   # Ces fournisseurs de service ont vocation à équiper les collectivités, mais il est possible
   # que les agents qui s'en servent soient des employés des opérateurs publics
   # de services numériques.
