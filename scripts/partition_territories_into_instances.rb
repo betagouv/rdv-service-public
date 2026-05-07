@@ -29,6 +29,8 @@ end
 
 puts Territory.group(:instance).count
 
+# Lever une erreur pour les espaces mal catégorisés
+
 Territory.where(instance: nil, category: "État").map do |t|
   t.admin_agents.pluck(:email).map do |e|
     (e || "").split("@").last

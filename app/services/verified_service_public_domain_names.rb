@@ -76,5 +76,22 @@ class VerifiedServicePublicDomainNames
     @cerema.fr
 
     .senat.fr
+
+    @senat.fr
+    @anr.fr
+    @anfr.fr
+    .sante.fr
+    @angdm.fr
+    .msa.fr
+    @caf.fr
+    .caf.fr
+    .cnrs.fr
+    @cnmss.fr
+    @cnc.fr
+    @defenseurdesdroits.fr
+    @justice.fr
+    .justice.fr
+    @ina.fr
+
   ].freeze
 end
