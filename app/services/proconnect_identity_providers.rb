@@ -5,7 +5,6 @@
 # La classification entre collectivités et services de l'état a ensuite été faite manuellement par l'équipe technique.
 #
 class ProconnectIdentityProviders
-
   # Ces fournisseurs de service ont vocation à équiper les collectivités, mais il est possible
   # que les agents qui s'en servent soient des employés des opérateurs publics
   # de services numériques.
@@ -78,13 +77,13 @@ class ProconnectIdentityProviders
     "8770f9c0-ba2b-4f41-b46a-e918cf9c162a", # ANJ - EntraID
     "8238dbe1-5b8f-4b46-a5c6-8c3020884261", # Institut de France
     "972344ed-2f17-49a6-84e2-027ad7e90a4e", # SIEEEN - LLNG
+    "84b185b6-4d68-4d92-a136-4e94d7add695", # Observatoire Oceanologique de Banyuls-sur-mer
   ].freeze
 
   # On n'est pas encore sur de comment classifier ces fournisseurs d'identité.
   # "fb401517-ee06-4b78-b86c-b6988f5a71f4", # Open Desk
   #  3f3b319e-3be5-4031-90f7-e79d1b3ecdf2	Authentification Orion du CEREMA
   # "fc2dd106-78a9-4663-915d-834bf67e4c25", # I-MILO
-  # "84b185b6-4d68-4d92-a136-4e94d7add695", # Observatoire Oceanologique de Banyuls-sur-mer
   #
   # On pense qu'il est possible que les fournisseurs d'identité des universités soient utilisés par
   # des étudiants, à qui on ne veut pas permettre d'ouvrir des comptes d'agent.
