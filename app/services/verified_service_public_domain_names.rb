@@ -93,6 +93,10 @@ class VerifiedServicePublicDomainNames
     @justice.fr
     .justice.fr
     @ina.fr
+    @asp-public.fr
+    @vnf.fr
+    @arcep.fr
+    @anses.fr
 
   ].freeze
 end
