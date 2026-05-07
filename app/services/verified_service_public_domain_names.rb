@@ -10,6 +10,7 @@ class VerifiedServicePublicDomainNames
   DOMAINS = %w[
     .gouv.fr
 
+    @ac-aix-marseille.fr
     @ac-amiens.fr
     @ac-besancon.fr
     @ac-bordeaux.fr
@@ -76,8 +77,8 @@ class VerifiedServicePublicDomainNames
     @cerema.fr
 
     .senat.fr
-
     @senat.fr
+
     @anr.fr
     @anfr.fr
     .sante.fr
