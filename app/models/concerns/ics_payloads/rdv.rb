@@ -6,7 +6,7 @@ module IcsPayloads
         starts_at: starts_at,
         ends_at: ends_at,
         ical_uid: uuid,
-        summary: ics_summary(recipient: recipient, sensitive_data: sensitive_data),
+        summary: ics_summary(sensitive_data: sensitive_data),
         location: ics_location(sensitive_data: sensitive_data),
         domain: domain,
         status: ics_status,
@@ -74,11 +74,11 @@ module IcsPayloads
       "\nContexte : #{context}"
     end
 
-    def ics_summary(recipient:, sensitive_data:)
+    def ics_summary(sensitive_data:)
       if motif.collectif?
         "RDV collectif - #{motif&.name}"
       elsif sensitive_data
-        "RDV avec #{recipient.full_name} - #{motif&.name}"
+        "RDV avec #{users.first.full_name} - #{motif&.name}"
       else
         "RDV #{motif&.name}"
       end
