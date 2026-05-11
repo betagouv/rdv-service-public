@@ -37,8 +37,8 @@ RSpec.describe Agent::PlageOuverturePolicy, type: :policy do
       end
     end
 
-    context "when she belongs to the plage's organisation as basic member" do
-      let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [plage_ouverture.organisation]) }
+    context "when she belongs to the plage's organisation as agent_accueil member" do
+      let(:agent) { create(:agent, agent_accueil_role_in_organisations: [plage_ouverture.organisation]) }
 
       it "allows read/write operations" do
         expect(policy.new?).to       be true

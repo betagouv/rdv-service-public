@@ -26,6 +26,11 @@
               legend: "Niveau de permissions",
               hint: access_level_hint,
               rich: true
+            - if @services.any?
+              fieldset.fr-fieldset.js_agent_role_form__agent_with_account_fields
+                legend.fr-fieldset__legend--regular.fr-fieldset__legend
+                  | Permissions supplémentaires
+                = ff.dsfr_check_box :agent_accueil, label: "Agent d'accueil", hint: "Peut consulter et modifier les agendas de tous les agents de l'organisation"
 
           = f.dsfr_email_field :email, label: "Email", placeholder: "a.dupond@departement.fr", autocomplete: "off", hint: "Une invitation sera envoyée automatiquement à cette adresse", class: "js_agent_role_form__agent_with_account_fields"
 
@@ -47,6 +52,9 @@
                   = link_to("activer des services supplémentaires", edit_admin_territory_services_path(current_territory, redirect_to_organisation_id: current_organisation.id))
               - else
                 p.fr-hint-text Si le service dont vous avez besoin n'apparaît pas dans cette liste, vous pouvez demander à un admin de votre espace d'activer des services supplémentaires.
+              - if current_territory.services.any?(&:secretariat?)
+                  = dsfr_callout icon_name: :none do
+                    span.fr-text--sm Le service secrétariat a été remplacé par une nouvelle permission « Agent d’accueil » que vous pouvez activer dans la section « Permissions supplémentaires » ci-dessus.
 
           .text-right
             = f.submit "Enregistrer", class: "fr-btn"

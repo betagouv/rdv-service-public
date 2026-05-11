@@ -52,7 +52,7 @@ module AgentsHelper
   end
 
   def navigation_scoped_by_agent_services?(current_agent, current_organisation)
-    return false if current_agent.secretaire?
+    return false if current_agent.agent_accueil_in_organisation?(current_organisation)
 
     !current_agent.admin_in_organisation?(current_organisation)
   end

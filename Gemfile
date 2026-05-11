@@ -55,7 +55,7 @@ gem "connection_pool"
 
 # Devise / auth
 # Flexible authentication solution for Rails with Warden
-gem "devise", "5.0.3"
+gem "devise", "5.0.4"
 # An invitation strategy for Devise
 gem "devise_invitable"
 # Deliver Devise's emails in the background using ActiveJob.

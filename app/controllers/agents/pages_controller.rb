@@ -24,7 +24,8 @@ class Agents::PagesController < AgentAuthController
         when :contact_admin
           @needs_permission_from_admin = true
         when :signup_via_operator
-          redirect_to agents_inscription_via_operateur_path(operator_name: result.operator_name, signup_url: result.signup_url)
+          session[:inscription_via_operateur] = { "operator_name" => result.operator_name, "signup_url" => result.signup_url }
+          redirect_to agents_inscription_via_operateur_path
         end
       end
     end

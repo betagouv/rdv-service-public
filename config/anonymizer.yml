@@ -333,6 +333,7 @@ tables:
   - table_name: agent_roles
     non_anonymized_column_names:
       - access_level
+      - agent_accueil
   - table_name: agents_rdvs
     anonymized_column_names:
       - caldav_url
