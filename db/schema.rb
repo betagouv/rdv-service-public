@@ -63,6 +63,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_01_000001) do
     t.bigint "agent_id", null: false
     t.bigint "organisation_id", null: false
     t.enum "access_level", default: "basic", null: false, enum_type: "access_level"
+    t.boolean "agent_accueil", default: false, null: false
     t.index ["access_level"], name: "index_agent_roles_on_access_level"
     t.index ["agent_id"], name: "index_agent_roles_on_agent_id"
     t.index ["organisation_id", "agent_id"], name: "index_agent_roles_on_organisation_id_and_agent_id", unique: true

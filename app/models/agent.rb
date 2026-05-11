@@ -219,6 +219,10 @@ class Agent < ApplicationRecord
     organisations.merge(roles.where(access_level: AgentRole::ACCESS_LEVEL_ADMIN))
   end
 
+  def agent_accueil_orgs
+    organisations.merge(roles.where(agent_accueil: true))
+  end
+
   def basic_orgs
     organisations.merge(roles.where(access_level: AgentRole::ACCESS_LEVEL_BASIC))
   end
@@ -229,6 +233,10 @@ class Agent < ApplicationRecord
 
   def admin_in_organisation?(organisation)
     access_level_in(organisation) == AgentRole::ACCESS_LEVEL_ADMIN
+  end
+
+  def agent_accueil_in_organisation?(organisation)
+    role_in_organisation(organisation)&.agent_accueil?
   end
 
   def access_level_in(organisation_or_id)
@@ -286,10 +294,6 @@ class Agent < ApplicationRecord
 
   def to_s
     "#{first_name} #{last_name}"
-  end
-
-  def secretaire?
-    services.any?(&:secretariat?)
   end
 
   # This is the main toggle to enable or disable features for Conseillers Numériques (cnfs)

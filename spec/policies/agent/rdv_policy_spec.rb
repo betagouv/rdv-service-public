@@ -38,8 +38,8 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
     it_behaves_like "not permit actions", :rdv, :show?, :download_participants?, :edit?, :update?, :destroy?
     it_behaves_like "not included in scope"
 
-    context "for secretariat" do
-      let(:service_agent) { build(:service, :secretariat) }
+    context "for agent d'accueil" do
+      let(:agent) { create(:agent, agent_accueil_role_in_organisations: [organisation]) }
 
       it_behaves_like "permit actions", :rdv, :show?, :download_participants?, :edit?, :update?
       it_behaves_like "not permit actions", :rdv, :destroy?
@@ -100,8 +100,8 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
     it_behaves_like "not permit actions", :rdv, :show?, :download_participants?, :edit?, :update?, :destroy?
     it_behaves_like "not included in scope"
 
-    context "for secretariat" do
-      let(:agent2) { create(:agent, basic_role_in_organisations: [organisation2], service: create(:service, :secretariat)) }
+    context "for agent d'accueil" do
+      let(:agent2) { create(:agent, agent_accueil_role_in_organisations: [organisation2]) }
 
       it_behaves_like "not permit actions", :rdv, :show?, :download_participants?, :edit?, :update?, :destroy?
       it_behaves_like "not included in scope"

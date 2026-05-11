@@ -39,6 +39,10 @@ FactoryBot.define do
     end
 
     transient do
+      agent_accueil_role_in_organisations { [] }
+    end
+
+    transient do
       admin_role_in_organisations { [] }
     end
 
@@ -49,6 +53,9 @@ FactoryBot.define do
     after(:build) do |agent, evaluator|
       evaluator.basic_role_in_organisations.each do |organisation|
         agent.roles << build(:agent_role, agent: agent, organisation: organisation)
+      end
+      evaluator.agent_accueil_role_in_organisations.each do |organisation|
+        agent.roles << build(:agent_role, :agent_accueil, agent: agent, organisation: organisation)
       end
       evaluator.admin_role_in_organisations.each do |organisation|
         agent.roles << build(:agent_role, :admin, agent: agent, organisation: organisation)
