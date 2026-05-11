@@ -222,7 +222,11 @@ RSpec.describe ProConnectController do
           it "crée l'agent et redirige vers la page inscription_via_operateur" do
             allow(Domain::RDV_SERVICE_PUBLIC).to receive(:allow_self_onboarding).and_return(true)
             get :callback, params: { state:, code: }
-            expect(response).to redirect_to(agents_inscription_via_operateur_path(signup_url: "https://suiteterritoriale.anct.gouv.fr/deep-link-signup/", operator_name: "ANCT"))
+            expect(response).to redirect_to(agents_inscription_via_operateur_path)
+            expect(session[:inscription_via_operateur]).to eq(
+              "operator_name" => "ANCT",
+              "signup_url" => "https://suiteterritoriale.anct.gouv.fr/deep-link-signup/"
+            )
           end
         end
       end
