@@ -6,20 +6,32 @@ p
 div.d-flex.justify-content-center.align-items-center.flex-wrap
   div.card.w-100
     div.card-body
-      h5.card-title CalDAV
+      h5.card-title
+        span CalDAV
+        - if current_agent.caldav_configured?
+          span.ml-2.fr-badge.fr-badge--success Synchronisation active
       p.fr-badge.fr-badge--pink-tuile Beta
       p
         |> Vos rendez-vous RDV Service Public s’ajoutent automatiquement à votre agenda externe.
         |> Les événements de votre agenda externe sont utilisés pour vérifier les conflits et éviter toute double réservation.
       div.rdv-text-align-center
-        = link_to "Synchronisation CalDAV", agents_calendar_sync_caldav_sync_path, class: "fr-btn"
+        - if current_agent.caldav_configured?
+          = link_to "Gérer la connexion avec mon agenda Caldav", agents_calendar_sync_caldav_sync_path, class: "fr-btn fr-btn--secondary"
+        - else
+          = link_to "Connecter mon agenda via Caldav", agents_calendar_sync_caldav_sync_path, class: "fr-btn fr-btn--primary"
 
   div.card.w-100
     div.card-body
-      h5.card-title Connexion Outlook (Microsoft 365)
+      h5.card-title
+        span Connexion Outlook (Microsoft 365)
+        - if current_agent.connected_to_outlook?
+          span.ml-2.fr-badge.fr-badge--success Synchronisation active
       p Vos rendez-vous seront synchronisés automatiquement dans votre agenda Outlook.
       div.rdv-text-align-center
-        = link_to "Connecter mon compte Outlook (Microsoft 365)", agents_calendar_sync_outlook_sync_path, class: "fr-btn"
+        - if current_agent.connected_to_outlook?
+          = link_to "Gérer la connexion avec mon compte Outlook", agents_calendar_sync_outlook_sync_path, class: "fr-btn fr-btn--secondary"
+        - else
+          = link_to "Connecter mon compte Outlook (Microsoft 365)", agents_calendar_sync_outlook_sync_path, class: "fr-btn fr-btn--primary"
 
   - if current_agent.calendar_uid.present?
     div.card.w-100
@@ -30,7 +42,10 @@ div.d-flex.justify-content-center.align-items-center.flex-wrap
         div.rdv-text-align-center
           = link_to "Synchronisation par lien Webcal", agents_calendar_sync_webcal_sync_path, class: "fr-btn fr-btn--secondary"
 
-  h2.fr-h6 Notifications par email
-  p.fr-col-12 Vous pouvez aussi recevoir un email avec une invitation ics pour chaque rendez-vous, absence et plage d'ouverture.
-  div.rdv-text-align-center
-    = link_to t("agents.preferences.show.title"), agents_preferences_path, class: "fr-btn fr-btn--secondary"
+  div.card.w-100
+    div.card-body
+      h5.card-title
+        span Notifications par email
+      p.fr-col-12 Vous pouvez aussi recevoir un email avec une invitation ics pour chaque rendez-vous, absence et plage d'ouverture.
+      div.rdv-text-align-center
+        = link_to t("agents.preferences.show.title"), agents_preferences_path, class: "fr-btn fr-btn--secondary"

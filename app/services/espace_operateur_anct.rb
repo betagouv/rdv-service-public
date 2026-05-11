@@ -52,6 +52,7 @@ class EspaceOperateurANCT
       faraday.headers = {
         "X-Service-Auth": ENV.fetch("ESPACE_OPERATEUR_ANCT_AUTH_TOKEN", nil),
       }
+      faraday.use :sentry_breadcrumbs
     end
   end
 
