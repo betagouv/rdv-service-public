@@ -29,6 +29,7 @@ module DocsNumeriqueChangelog
         f.request :json
         f.response :json
         f.response :raise_error
+        f.use :sentry_breadcrumbs
       end
     end
   end
