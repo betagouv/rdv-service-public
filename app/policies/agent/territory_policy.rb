@@ -15,7 +15,7 @@ class Agent::TerritoryPolicy
   def new?
     return false if @current_agent.agent_territorial_access_rights.any?
 
-    OauthApplication.agent_is_verified_by_an_application?(@current_agent) || VerifiedServicePublicDomainNames.verified?(@current_agent.email)
+    verified_by_email? || verified_by_proconnect_idp? || verified_by_partner_application?
   end
   alias create? new?
 
@@ -54,5 +54,19 @@ class Agent::TerritoryPolicy
 
       @scope.where_id_in_subqueries([territories_with_roles, territories_with_rights])
     end
+  end
+
+  private
+
+  def verified_by_partner_application?
+    OauthApplication.agent_is_verified_by_an_application?(@current_agent)
+  end
+
+  def verified_by_email?
+    VerifiedServicePublicDomainNames.verified?(@current_agent.email)
+  end
+
+  def verified_by_proconnect_idp?
+    @current_agent.pro_connect_idp_id.in?(ProconnectIdentityProviders::ETAT)
   end
 end
