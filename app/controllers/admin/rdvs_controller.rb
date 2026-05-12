@@ -32,6 +32,8 @@ class Admin::RdvsController < AgentAuthController
       ]
     )
 
+    PaginationCoherenceMonitor.from_paginated_arel(@rdvs, current_page_arel: @rdvs_in_page).call
+
     @form = Admin::RdvSearchForm.new(parsed_params.merge(pundit_user:))
     @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.ordered_by_name
     @motifs = Agent::MotifPolicy::ScopeForRdvsList.new(
