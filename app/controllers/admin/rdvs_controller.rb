@@ -30,7 +30,7 @@ class Admin::RdvsController < AgentAuthController
           users: %i[responsible organisations user_profiles],
         },
       ]
-    )
+    ).load # chargement anticipé pour que PaginationCoherenceMonitor.size n'émette pas de requête COUNT supplémentaire
 
     PaginationCoherenceMonitor.from_paginated_arel(@rdvs, current_page_arel: @rdvs_in_page).call
 

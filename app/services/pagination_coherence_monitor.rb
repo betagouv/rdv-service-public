@@ -12,10 +12,10 @@ class PaginationCoherenceMonitor
   end
 
   # current_page_arel is useful if you run a second query for the current_page only
-  def self.from_paginated_arel(paginated_arel:, current_page_arel: nil)
+  def self.from_paginated_arel(paginated_arel, current_page_arel: nil)
     new(
       current_page_number: paginated_arel.current_page,
-      current_page_items_count: current_page_arel.present? ? current_page_arel.count : paginated_arel.count,
+      current_page_items_count: current_page_arel.present? ? current_page_arel.size : paginated_arel.size,
       total_pages: paginated_arel.total_pages,
       total_items_count: paginated_arel.total_count,
       per_page: paginated_arel.limit_value

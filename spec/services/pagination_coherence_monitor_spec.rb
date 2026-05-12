@@ -7,7 +7,7 @@ RSpec.describe PaginationCoherenceMonitor do
     context "sans current_page_arel" do
       it "construit le monitor depuis le paginated_arel" do
         paginated_arel = Rdv.page(2).per(3)
-        monitor = described_class.from_paginated_arel(paginated_arel:)
+        monitor = described_class.from_paginated_arel(paginated_arel)
         expect(monitor).to have_attributes(
           current_page_number: 2,
           current_page_items_count: 3,
@@ -24,7 +24,7 @@ RSpec.describe PaginationCoherenceMonitor do
       it "utilise le count du current_page_arel pour la page courante" do
         paginated_arel = Rdv.page(2).per(3)
         current_page_arel = Rdv.where(id: paginated_arel.pluck(:id) + [rdv.id]) # we make it wrong on purpose
-        monitor = described_class.from_paginated_arel(paginated_arel:, current_page_arel:)
+        monitor = described_class.from_paginated_arel(paginated_arel, current_page_arel:)
         expect(monitor).to have_attributes(
           current_page_number: 2,
           current_page_items_count: 4, # here is the problematic diff
