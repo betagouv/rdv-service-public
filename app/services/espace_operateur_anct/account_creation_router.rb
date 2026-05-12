@@ -1,4 +1,4 @@
-class ProConnectOnboardingRouter
+class EspaceOperateurANCT::AccountCreationRouter
   ANCT_TYPE_TO_CATEGORY = {
     "commune" => "Commune",
     "epci" => "Intercommunalité",
@@ -15,24 +15,16 @@ class ProConnectOnboardingRouter
 
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def call
-    return Result.new(action: :classic) if VerifiedServicePublicDomainNames.verified?(@agent.email)
     return Result.new(action: :classic) if @agent.proconnect_siret.blank?
 
-    anct_client = build_anct_client
-    return Result.new(action: :classic) if anct_client.nil?
-
-    begin
-      operator_data = anct_client.operator
-      potential_operators_data = anct_client.potential_operators
-    rescue StandardError => e
-      Sentry.capture_exception(e)
-      return Result.new(action: :classic)
-    end
+    operator_data = anct_client.operator
 
     if operator_data.present?
       operator = Operator.find_by(siret: operator_data["siret"])
       return handle_operator_case(anct_client, operator) if operator
     end
+
+    potential_operators_data = anct_client.potential_operators
 
     if potential_operators_data.present?
       matches = potential_operators_data.select { |po| Operator.exists?(siret: po["siret"]) }
@@ -48,16 +40,16 @@ class ProConnectOnboardingRouter
     end
 
     Result.new(action: :classic)
+  rescue StandardError => e
+    Sentry.capture_exception(e)
+    Result.new(action: :classic)
   end
   # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   private
 
-  def build_anct_client
-    EspaceOperateurANCT.new(@agent.proconnect_siret, @agent.email)
-  rescue StandardError => e
-    Sentry.capture_exception(e)
-    nil
+  def anct_client
+    @anct_client ||= EspaceOperateurANCT::ApiClient.new(@agent.proconnect_siret, @agent.email)
   end
 
   def handle_operator_case(anct_client, operator)
