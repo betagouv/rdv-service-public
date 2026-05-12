@@ -1,4 +1,4 @@
-RSpec.describe ProConnectOnboardingRouter do
+RSpec.describe EspaceOperateurANCT::AccountCreationRouter do
   subject(:handler) { described_class.new(agent, domain) }
 
   let(:domain) { Domain::RDV_SERVICE_PUBLIC }
@@ -13,7 +13,7 @@ RSpec.describe ProConnectOnboardingRouter do
       let(:agent) { create(:agent, email: "agent@etat.gouv.fr") }
 
       it "retourne :classic sans appeler l'API" do
-        expect(EspaceOperateurANCT).not_to receive(:new)
+        expect(EspaceOperateurANCT::ApiClient).not_to receive(:new)
         expect(handler.call.action).to eq(:classic)
       end
     end
@@ -22,7 +22,7 @@ RSpec.describe ProConnectOnboardingRouter do
       let(:agent) { create(:agent, proconnect_siret: nil) }
 
       it "retourne :classic sans appeler l'API" do
-        expect(EspaceOperateurANCT).not_to receive(:new)
+        expect(EspaceOperateurANCT::ApiClient).not_to receive(:new)
         expect(handler.call.action).to eq(:classic)
       end
     end

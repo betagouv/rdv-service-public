@@ -25,16 +25,9 @@ class Agents::TerritoryCreationRequestsController < AgentAuthController
     return unless current_domain.allow_self_onboarding
     return unless current_agent.agent_territorial_access_rights.none?
 
-    result = ProConnectOnboardingRouter.new(current_agent, current_domain).call
-
-    case result.action
-    when :contact_admin
-      flash[:info] = "Votre organisation est rattachée à un espace RDV Service Public, mais vous n'avez pas les droits " \
-                     "d'administrateur. Rapprochez-vous de votre administrateur pour qu'il vous accorde les accès sur votre espace."
+    result = EspaceOperateurANCT::AccountCreationRouter.new(current_agent, current_domain).call
+    if result.action != :classic
       redirect_to authenticated_agent_root_path
-    when :signup_via_operator
-      session[:inscription_via_operateur] = { "operator_name" => result.operator_name, "signup_url" => result.signup_url }
-      redirect_to agents_inscription_via_operateur_path
     end
   end
 
