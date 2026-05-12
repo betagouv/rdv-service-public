@@ -55,13 +55,14 @@ RSpec.describe Admin::RdvsController, type: :controller do
     end
 
     context "quand il y a plus de RDVs que la limite par page et que certains ont plusieurs agents" do
-      it "rdvs_in_page ne contient pas plus de RDVs que la limite par page" do
+      it "rdvs_in_page contient le bon nombre de RDVs uniques : 10" do
         # Agent::RdvPolicy::Scope fait un INNER JOIN sur agents_rdvs, ce qui produit plusieurs lignes
         # par RDV quand celui-ci a plusieurs agents. Ce test s'assure qu'on dédoublonne correctement
 
         create_list(:rdv, 11, agents: [agent, agent2], organisation:, motif:)
         get :index, params: { organisation_id: organisation.id, per: 10 }
         expect(assigns(:rdvs_in_page).size).to eq(10)
+        expect(assigns(:rdvs_in_page).map(&:id).uniq.size).to eq(10)
       end
     end
   end
