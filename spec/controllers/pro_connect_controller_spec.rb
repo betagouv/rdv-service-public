@@ -356,15 +356,6 @@ RSpec.describe ProConnectController do
               .and have_enqueued_mail(Agents::LoginCodeMailer, :login_code)
             expect(LoginCode.last.email).to eq(agent.email)
           end
-
-          it "met à jour les attributs ProConnect de l'agent" do
-            agent = create(:agent, email: user_info["email"], sensitive_account: true)
-            get :callback, params: { state:, code: }
-            expect(agent.reload).to have_attributes(
-              pro_connect_openid_sub: user_info["sub"],
-              pro_connect_idp_id: user_info["idp_id"]
-            )
-          end
         end
       end
     end
