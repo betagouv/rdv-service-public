@@ -182,8 +182,15 @@ class ProConnectController < ApplicationController
         ERROR
         redirect_to new_agent_session_path and return
       end
-    elsif agent.sensitive_account? && !callback_client.went_through_2fa? && IDP_PRO_CONNECT_FORCE_2FA_ENABLED.include?(callback_client.user_idp_id)
-      require_2fa_for_sensitive_agent(callback_client) and return
+    elsif agent.sensitive_account? && !callback_client.went_through_2fa?
+      if IDP_PRO_CONNECT_FORCE_2FA_ENABLED.include?(callback_client.user_idp_id)
+        require_2fa_for_sensitive_agent(callback_client) and return
+      else
+        session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = agent.id
+        session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY] = callback_client.id_token_for_logout
+        Agents::LoginCodeSender.perform(email: agent.email, domain_id: current_domain.id)
+        redirect_to new_agents_sessions_by_code_path and return
+      end
     end
 
     if agent.email != callback_client.user_email
@@ -205,13 +212,6 @@ class ProConnectController < ApplicationController
     )
     agent.skip_reconfirmation!
     agent.save!
-
-    if agent.sensitive_account? && IDP_PRO_CONNECT_FORCE_2FA_ENABLED.exclude?(callback_client.user_idp_id)
-      session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = agent.id
-      session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY] = callback_client.id_token_for_logout
-      Agents::LoginCodeSender.perform(email: agent.email, domain_id: current_domain.id)
-      redirect_to new_agents_sessions_by_code_path and return
-    end
 
     bypass_sign_in agent, scope: :agent
     session[:pro_connect_id_token] = callback_client.id_token_for_logout
