@@ -39,8 +39,7 @@ class Agents::SessionsController < Devise::SessionsController
     if resource.sensitive_account?
       sign_out(resource)
       session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = resource.id
-      login_code = LoginCode.create!(email: resource.email, domain_id: current_domain.id)
-      Agents::LoginCodeMailer.with(login_code:).login_code.deliver_later
+      Agents::LoginCodeSender.perform(email: resource.email, domain_id: current_domain.id)
       redirect_to new_agents_sessions_by_code_path
       return
     end

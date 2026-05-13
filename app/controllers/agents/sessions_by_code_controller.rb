@@ -10,9 +10,7 @@ class Agents::SessionsByCodeController < ApplicationController
   end
 
   def resend
-    email = pending_agent.email
-    login_code = LoginCode.create!(email:, domain_id: current_domain.id)
-    Agents::LoginCodeMailer.with(login_code:).login_code.deliver_later
+    Agents::LoginCodeSender.perform(email: pending_agent.email, domain_id: current_domain.id)
     redirect_to new_agents_sessions_by_code_path
   end
 
