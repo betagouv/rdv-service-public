@@ -262,6 +262,13 @@ ETAT_DOMAIN_NAMEs = %w[
 ]
 
 class Territory
+  def france_service?
+    admin_agents.all? do |agent|
+      domain = agent.email.split("@").last || ""
+      domain.in?(["franceservices.gouv.fr", "france-services.gouv.fr"])
+    end
+  end
+
   def dinum?
     return false unless admin_agents.any?
 
@@ -276,6 +283,7 @@ class Territory
   end
 
   def anct?
+    return true if france_service?
     return false unless admin_agents.any?
     return true if mairies? # Le territorie ouvert historiquement pour les mairies
 
