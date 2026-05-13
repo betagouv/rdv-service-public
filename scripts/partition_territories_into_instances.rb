@@ -277,6 +277,7 @@ class Territory
 
   def anct?
     return false unless admin_agents.any?
+    return true if mairies? # Le territorie ouvert historiquement pour les mairies
 
     operator || organisations.any?(&:ants_connectable) || admin_agents.any? do |agent|
       agent.applications.where(oauth_applications: { name: ["La Coop de la médiation numérique", "Mon Suivi Social", "RDV Aide Numérique"] }).any?

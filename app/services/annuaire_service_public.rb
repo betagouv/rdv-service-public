@@ -14,6 +14,18 @@ class AnnuaireServicePublic
     nil
   end
 
+  def epci?
+    return false unless first_result&.fetch("pivot")
+
+    JSON.parse(first_result["pivot"]).any? do |pivot|
+      pivot["type_service_local"] == "mairie"
+    end
+  rescue StandardError => e
+    Sentry.capture_exception(e)
+    nil
+
+  end
+
   def nom
     first_result&.fetch("nom", nil)
   end
@@ -26,8 +38,6 @@ class AnnuaireServicePublic
     Sentry.capture_exception(e)
     nil
   end
-
-  private
 
   def first_result
     return nil unless @siret
@@ -43,6 +53,8 @@ class AnnuaireServicePublic
     Sentry.capture_exception(e)
     nil
   end
+
+  private
 
   def response
     @response ||= Faraday.get("https://api-lannuaire.service-public.gouv.fr/api/explore/v2.1/catalog/datasets/api-lannuaire-administration/records?where=siret%3D%22#{@siret}%22")
