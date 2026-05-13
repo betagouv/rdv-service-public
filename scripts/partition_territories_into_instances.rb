@@ -306,7 +306,7 @@ Territory.where(instance: nil).find_each do |territory|
     puts "Ambiguous territory: #{territory.id} #{territory.name_in_stats} (#{territory.admin_agents.count} admins)"
   elsif territory.dinum? && territory.category.in?(%w[État Opérateur Association Inconnu])
     territory.update(instance: "DINUM")
-  elsif territory.anct? && territory.category.in?(%w[Commune Intercommunalité Département Région])
+  elsif territory.anct? && territory.category.in?(%w[Commune Intercommunalité Département Région Opérateur])
     territory.update(instance: "ANCT")
   end
 end
@@ -314,3 +314,5 @@ end
 puts Territory.group(:instance).count
 
 # On demandera confirmation aux agents qu'ils sont classés correctement
+puts "Territoires catégorisés mais dont l'instance est inconnue"
+puts Territory.where(instance: nil).where.not(category: nil).count
