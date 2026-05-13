@@ -349,6 +349,14 @@ RSpec.describe ProConnectController do
             expect(response).to redirect_to(new_agents_sessions_by_code_path)
           end
 
+          it "crée et envoie un code de connexion par email" do
+            agent = create(:agent, email: user_info["email"], sensitive_account: true)
+            expect { get :callback, params: { state:, code: } }
+              .to change(LoginCode, :count).by(1)
+              .and have_enqueued_mail(Agents::LoginCodeMailer, :login_code)
+            expect(LoginCode.last.email).to eq(agent.email)
+          end
+
           it "met à jour les attributs ProConnect de l'agent" do
             agent = create(:agent, email: user_info["email"], sensitive_account: true)
             get :callback, params: { state:, code: }

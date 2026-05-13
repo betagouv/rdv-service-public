@@ -7,11 +7,13 @@ class Agents::SessionsByCodeController < ApplicationController
   def new
     @email = pending_agent.email
     @existing_login_code = LoginCode.most_recent_usable_for(email: @email)
+  end
 
-    unless @existing_login_code&.very_recent?
-      @existing_login_code = LoginCode.create!(email: @email, domain_id: current_domain.id)
-      Agents::LoginCodeMailer.with(login_code: @existing_login_code).login_code.deliver_later
-    end
+  def resend
+    email = pending_agent.email
+    login_code = LoginCode.create!(email:, domain_id: current_domain.id)
+    Agents::LoginCodeMailer.with(login_code:).login_code.deliver_later
+    redirect_to new_agents_sessions_by_code_path
   end
 
   def create

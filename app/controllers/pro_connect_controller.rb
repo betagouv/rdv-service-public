@@ -209,6 +209,8 @@ class ProConnectController < ApplicationController
     if agent.sensitive_account? && IDP_PRO_CONNECT_FORCE_2FA_ENABLED.exclude?(callback_client.user_idp_id)
       session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = agent.id
       session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY] = callback_client.id_token_for_logout
+      login_code = LoginCode.create!(email: agent.email, domain_id: current_domain.id)
+      Agents::LoginCodeMailer.with(login_code:).login_code.deliver_later
       redirect_to new_agents_sessions_by_code_path and return
     end
 

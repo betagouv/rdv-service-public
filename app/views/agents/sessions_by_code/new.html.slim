@@ -36,6 +36,6 @@
         |> Votre compte est considéré comme sensible. Pour des raisons de sécurité, la saisie d'un code de vérification envoyé par email est requise à chaque connexion.
         |> Pour en savoir plus sur la vérification par code, consultez notre
         => external_link_to "documentation", "https://aide.rdv-service-public.fr/toutes-les-notions/authentification-a-deux-facteurs-par-code", class: "fr-link"
-      p
+      div
         |> Si vous n'avez pas reçu le code, vous pouvez
-        => link_to "en demander un nouveau", new_agents_sessions_by_code_path, class: "fr-link"
+        = button_to "en demander un nouveau", resend_agents_sessions_by_code_path, class: "fr-link", form: { style: "display: inline" }

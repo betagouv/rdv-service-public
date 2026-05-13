@@ -17,23 +17,33 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
         expect(response).to have_http_status(:ok)
       end
 
-      it "crée et envoie un code de connexion par email" do
-        expect { get :new }
+      it "ne crée pas de code" do
+        expect { get :new }.not_to change(LoginCode, :count)
+      end
+    end
+  end
+
+  describe "#resend" do
+    context "quand il n'y a pas de connexion en attente dans la session" do
+      it "redirige vers la page de connexion" do
+        post :resend
+        expect(response).to redirect_to(new_agent_session_path)
+      end
+    end
+
+    context "quand il y a une connexion en attente dans la session" do
+      before { session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = agent.id }
+
+      it "crée et envoie un nouveau code par email" do
+        expect { post :resend }
           .to change(LoginCode, :count).by(1)
           .and have_enqueued_mail(Agents::LoginCodeMailer, :login_code)
         expect(LoginCode.last.email).to eq(agent.email)
       end
 
-      context "quand un code utilisable récent existe déjà" do
-        before { create(:login_code, email: agent.email, created_at: 1.minute.ago) }
-
-        it "ne crée pas de nouveau code" do
-          expect { get :new }.not_to change(LoginCode, :count)
-        end
-
-        it "n'envoie pas de nouvel email" do
-          expect { get :new }.not_to have_enqueued_mail(Agents::LoginCodeMailer, :login_code)
-        end
+      it "redirige vers le formulaire de saisie du code" do
+        post :resend
+        expect(response).to redirect_to(new_agents_sessions_by_code_path)
       end
     end
   end

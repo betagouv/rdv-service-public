@@ -44,6 +44,13 @@ RSpec.describe Agents::SessionsController do
         post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
         expect(response).to redirect_to(new_agents_sessions_by_code_path)
       end
+
+      it "crée et envoie un code de connexion par email" do
+        expect { post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } } }
+          .to change(LoginCode, :count).by(1)
+          .and have_enqueued_mail(Agents::LoginCodeMailer, :login_code)
+        expect(LoginCode.last.email).to eq(agent.email)
+      end
     end
   end
 
