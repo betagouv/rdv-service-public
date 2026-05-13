@@ -17,7 +17,7 @@ class Agents::SessionsByCodeController < ApplicationController
   def create
     agent = pending_agent
     code = params.require(:login_code).expect(:code)
-    validator = Users::LoginCodeValidator.new(email: agent.email, code:)
+    validator = LoginCodeValidator.new(email: agent.email, code:)
 
     if validator.valid?
       validator.valid_login_code.update!(used_at: Time.zone.now)
