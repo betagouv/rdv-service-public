@@ -1,14 +1,30 @@
 RSpec.describe GeoCoding do
   describe "#find_geo_coordinates" do
-    before do
-      stub_request(
-        :get,
-        "https://data.geopf.fr/geocodage/search/?q=03%20Rue%20Lambert,%20Paris,%2075018"
-      ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
+    context "quand l'API IGN répond avec succès" do
+      before do
+        stub_request(
+          :get,
+          "https://data.geopf.fr/geocodage/search/?q=03%20Rue%20Lambert,%20Paris,%2075018"
+        ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
+      end
+
+      it "retourne les coordonnées" do
+        expect(described_class.new.find_geo_coordinates("03 Rue Lambert, Paris, 75018")).to eq([2.372095, 48.88393])
+      end
     end
 
-    it "returns the coordinates" do
-      expect(described_class.new.find_geo_coordinates("03 Rue Lambert, Paris, 75018")).to eq([2.372095, 48.88393])
+    context "quand l'API IGN retourne une erreur" do
+      before do
+        stub_request(
+          :get,
+          "https://data.geopf.fr/geocodage/search/?q=03%20Rue%20Lambert,%20Paris,%2075018"
+        ).to_return(status: 400, body: "")
+        allow(Sentry).to receive(:capture_message)
+      end
+
+      it "retourne nil" do
+        expect(described_class.new.find_geo_coordinates("03 Rue Lambert, Paris, 75018")).to be_nil
+      end
     end
   end
 

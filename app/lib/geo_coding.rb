@@ -1,6 +1,6 @@
 class GeoCoding
   def find_geo_coordinates(address)
-    address_api_response(address).dig("features", 0, "geometry", "coordinates")
+    address_api_response(address)&.dig("features", 0, "geometry", "coordinates")
   end
 
   def get_geolocation_results(address, departement_number)
@@ -32,9 +32,13 @@ class GeoCoding
     cleaned_address = clean_address(address)
     return nil if cleaned_address.blank?
 
-    Rails.cache.fetch("api-adresse:#{cleaned_address}", expires_in: 7.days, skip_nil: true) do
-      fetch_and_parse(cleaned_address)
-    end
+    cache_key = "api-adresse:#{cleaned_address}"
+    cached_response = Rails.cache.read(cache_key)
+    return cached_response if cached_response
+
+    response = fetch_and_parse(cleaned_address)
+    Rails.cache.write(cache_key, response, expires_in: 7.days) if response
+    response
   end
 
   def fetch_and_parse(address)
