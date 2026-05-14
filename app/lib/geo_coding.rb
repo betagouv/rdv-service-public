@@ -32,11 +32,23 @@ class GeoCoding
     cleaned_address = clean_address(address)
     return nil if cleaned_address.blank?
 
-    response = Rails.cache.fetch("api-adresse:#{cleaned_address}") do
-      Faraday.get("https://data.geopf.fr/geocodage/search/", q: cleaned_address)
+    Rails.cache.fetch("api-adresse:#{cleaned_address}", expires_in: 7.days, skip_nil: true) do
+      fetch_and_parse(cleaned_address)
     end
+  end
 
-    JSON.parse(response.body)
+  def fetch_and_parse(address)
+    response = Faraday.get("https://data.geopf.fr/geocodage/search/", q: address)
+    return JSON.parse(response.body) if response.success?
+
+    Sentry.capture_message(
+      "GeoCoding: l'API IGN a retourné un status non-success (#{response.status})",
+      fingerprint: ["geo_coding_ign_non_success", response.status.to_s]
+    )
+    nil
+  rescue Faraday::Error, JSON::ParserError => e
+    Sentry.capture_exception(e)
+    nil
   end
 
   # L'API IGN refuse les requêtes qui ne commencent pas par un caractère alphanumérique.

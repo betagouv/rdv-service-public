@@ -112,12 +112,12 @@ RSpec.describe GeoCoding do
     context "quand l'adresse commence par des caractères non-alphanumériques" do
       let(:address) { ". LA BEGUDE 84750 SAINT-MARTIN-DE-CASTILLON" }
       let(:departement_number) { "84" }
+      let(:cleaned_request_url) do
+        "https://data.geopf.fr/geocodage/search/?q=LA%20BEGUDE%2084750%20SAINT-MARTIN-DE-CASTILLON"
+      end
 
       before do
-        stub_request(
-          :get,
-          "https://data.geopf.fr/geocodage/search/?q=LA%20BEGUDE%2084750%20SAINT-MARTIN-DE-CASTILLON"
-        ).to_return(
+        stub_request(:get, cleaned_request_url).to_return(
           status: 200,
           body: {
             type: "FeatureCollection",
@@ -137,10 +137,76 @@ RSpec.describe GeoCoding do
         )
       end
 
-      it "nettoie l'adresse avant d'appeler l'API IGN et retourne le résultat" do
-        result = geo_coding.get_geolocation_results(address, departement_number)
+      it "envoie l'adresse nettoyée à l'API IGN" do
+        geo_coding.get_geolocation_results(address, departement_number)
 
-        expect(result).to include(city_code: "84112")
+        expect(WebMock).to have_requested(:get, cleaned_request_url)
+      end
+    end
+
+    context "quand l'API IGN retourne un status non-success" do
+      let(:request_url) do
+        "https://data.geopf.fr/geocodage/search/?q=20%20avenue%20de%20S%C3%A9gur,%20Paris,%2075007"
+      end
+
+      before do
+        stub_request(:get, request_url).to_return(status: 400, body: "")
+        allow(Sentry).to receive(:capture_message)
+      end
+
+      it "retourne nil et signale l'erreur à Sentry" do
+        expect(Sentry).to receive(:capture_message)
+
+        expect(geo_coding.get_geolocation_results(address, departement_number)).to be_nil
+      end
+
+      it "ne met pas la réponse en cache pour permettre une nouvelle tentative" do
+        2.times { geo_coding.get_geolocation_results(address, departement_number) }
+
+        expect(WebMock).to have_requested(:get, request_url).twice
+      end
+    end
+
+    context "quand Faraday lève une exception" do
+      before do
+        stub_request(
+          :get,
+          "https://data.geopf.fr/geocodage/search/?q=20%20avenue%20de%20S%C3%A9gur,%20Paris,%2075007"
+        ).to_raise(Faraday::Error)
+      end
+
+      it "retourne nil et signale l'exception à Sentry" do
+        expect(Sentry).to receive(:capture_exception)
+
+        expect(geo_coding.get_geolocation_results(address, departement_number)).to be_nil
+      end
+    end
+
+    context "quand l'appel réussit" do
+      let(:request_url) do
+        "https://data.geopf.fr/geocodage/search/?q=20%20avenue%20de%20S%C3%A9gur,%20Paris,%2075007"
+      end
+
+      before do
+        stub_request(:get, request_url).to_return(
+          status: 200,
+          body: {
+            type: "FeatureCollection",
+            features: [
+              {
+                type: "Feature",
+                properties: { id: "75056_1234", citycode: "75056", context: "75, Paris, Île-de-France" },
+              },
+            ],
+          }.to_json
+        )
+      end
+
+      it "met le résultat en cache pour ne pas refaire l'appel une seconde fois" do
+        geo_coding.get_geolocation_results(address, departement_number)
+        geo_coding.get_geolocation_results(address, departement_number)
+
+        expect(WebMock).to have_requested(:get, request_url).once
       end
     end
   end
