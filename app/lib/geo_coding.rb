@@ -29,10 +29,19 @@ class GeoCoding
   end
 
   def address_api_response(address)
-    address_api_response = Rails.cache.fetch("api-adresse:#{address}") do
-      Faraday.get("https://data.geopf.fr/geocodage/search/", q: address)
+    cleaned_address = clean_address(address)
+    return nil if cleaned_address.blank?
+
+    response = Rails.cache.fetch("api-adresse:#{cleaned_address}") do
+      Faraday.get("https://data.geopf.fr/geocodage/search/", q: cleaned_address)
     end
 
-    JSON.parse(address_api_response.body)
+    JSON.parse(response.body)
+  end
+
+  # L'API IGN refuse les requêtes qui ne commencent pas par un caractère alphanumérique.
+  # On retire donc tous les caractères non-alphanumériques en début d'adresse.
+  def clean_address(address)
+    address&.gsub(/\A[^\p{Alnum}]+/, "")&.strip
   end
 end

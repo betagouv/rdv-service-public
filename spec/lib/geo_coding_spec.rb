@@ -108,5 +108,40 @@ RSpec.describe GeoCoding do
         expect(result).to be_nil
       end
     end
+
+    context "quand l'adresse commence par des caractères non-alphanumériques" do
+      let(:address) { ". LA BEGUDE 84750 SAINT-MARTIN-DE-CASTILLON" }
+      let(:departement_number) { "84" }
+
+      before do
+        stub_request(
+          :get,
+          "https://data.geopf.fr/geocodage/search/?q=LA%20BEGUDE%2084750%20SAINT-MARTIN-DE-CASTILLON"
+        ).to_return(
+          status: 200,
+          body: {
+            type: "FeatureCollection",
+            features: [
+              {
+                type: "Feature",
+                geometry: { type: "Point", coordinates: [5.51, 43.85] },
+                properties: {
+                  id: "84112_i530ru",
+                  citycode: "84112",
+                  context: "84, Vaucluse, Provence-Alpes-Côte d'Azur",
+                },
+              },
+            ],
+          }.to_json,
+          headers: {}
+        )
+      end
+
+      it "nettoie l'adresse avant d'appeler l'API IGN et retourne le résultat" do
+        result = geo_coding.get_geolocation_results(address, departement_number)
+
+        expect(result).to include(city_code: "84112")
+      end
+    end
   end
 end
