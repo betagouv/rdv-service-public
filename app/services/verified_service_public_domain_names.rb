@@ -102,6 +102,7 @@ class VerifiedServicePublicDomainNames
     @anses.fr
     @franceagrimer.fr
     @ihedn.fr
+    @anact.fr
 
   ].freeze
 end

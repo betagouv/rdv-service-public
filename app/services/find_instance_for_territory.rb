@@ -16,25 +16,34 @@ class FindInstanceForTerritory
     @territory = territory
   end
 
-  # Returns :anct, :dinum, :both, or :unknown
   def instance
-    anct = anct?
-    dinum = dinum?
+    anct = clearly_anct?
+    dinum = clearly_dinum?
 
-    if first_admin.nil?
-      :first_admin_unkown
-    elsif anct && dinum
-      :both
-    elsif anct
-      :anct
-    elsif dinum
-      :dinum
-    else
-      :unkown
-    end
+    return :anct if anct && !dinum
+
+    return :dinum if dinum && !anct
+
+    return :sdis if first_admin_email_domain&.start_with?("sdis")
+
+    return :mdph if first_admin_email_domain&.start_with?("mdph")
+
+    return :ehpad if first_admin_email_domain&.in?(%w[ehpadlesoiseaux.fr mr-bellevue.com])
+
+    return :inactive if inactive?
+
+    return :anct if anct_category? && !dinum_category?
+
+    return :dinum if dinum_category? && !anct_category?
+
+    puts "#{@territory.category} #{@territory.rdvs.count} http://www.#{first_admin_email_domain} https://rdv.anct.gouv.fr/super_admins/territories/#{@territory.id}"
+    :unkown
   end
 
-  def anct? # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
+  private
+
+  # Indique qu'on est confiant qu'il s'agit d'un espace à garder sur l'instance ANCT
+  def clearly_anct? # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
     return false unless first_admin&.email
 
     return true if @territory.mairies? # Le territorie ouvert historiquement pour les mairies
@@ -51,10 +60,19 @@ class FindInstanceForTerritory
 
     return true if first_admin.applications.where(oauth_applications: { name: ["La Coop de la médiation numérique", "Mon Suivi Social", "RDV Aide Numérique"] }).any?
 
+    return true if %w[ville- agglo- cc- ccas- mairie pays saint udaf].any? do |prefix|
+      first_admin_email_domain.start_with?(prefix)
+    end
+
     false
   end
 
-  def dinum?
+  def anct_category?
+    @territory.category.in?(%w[Association Commune Intercommunalité Département])
+  end
+
+  # Indique qu'on est confiant qu'il s'agit d'un espace à déplacer sur l'instance DINUM
+  def clearly_dinum?
     return false unless first_admin&.email
 
     return true if VerifiedServicePublicDomainNames.verified?(first_admin.email)
@@ -63,9 +81,29 @@ class FindInstanceForTerritory
 
     return true if first_admin_email_domain.in?(ETAT_DOMAIN_NAMES)
 
-    true if %w[ch- chu- univ-].any? do |prefix| # Centre Hospitalier ou Centre Hospitalier Universitaire ou Université
+    return true if %w[ch- chu- univ-].any? do |prefix| # Centre Hospitalier ou Centre Hospitalier Universitaire ou Université
       first_admin_email_domain.start_with?(prefix)
     end
+
+    false
+  end
+
+  def dinum_category?
+    @territory.category.in?(%w[État])
+  end
+
+  def inactive?
+    more_than_one_year_old_and_no_rdvs || more_than_six_month_old_and_admin_not_returned
+  end
+
+  def more_than_six_month_old_and_admin_not_returned
+    return false if first_admin.nil?
+
+    @territory.created_at < 6.months.ago && @territory.created_at > first_admin.last_sign_in_at && @territory.agent_territorial_access_rights.count == 1
+  end
+
+  def more_than_one_year_old_and_no_rdvs
+    @territory.created_at < 12.months.ago && @territory.rdvs.none?
   end
 
   # Contrairement aux noms de domaines de VerifiedServicePublicDomainNames, on ne veut pas forcément
@@ -75,8 +113,11 @@ class FindInstanceForTerritory
   # Une raison de ne pas proposer l'ouverture de compte pour certains de ces noms de domaines est qu'ils
   # représente des établissements d'enseignement supérieur, et qu'il est donc possible que des étudiants
   # aient des adresses email avec ces noms de domaine.
+  #
+  # Il y a aussi des centres hospitaliers dans cette liste.
   ETAT_DOMAIN_NAMES = %w[
     administration.gov.pf
+    gh-paulguiraud.fr
     ap-hm.fr
     aphp.fr
     bio.ens.psl.eu
@@ -87,12 +128,16 @@ class FindInstanceForTerritory
     cncr.fr
     cnes.fr
     conciliateurdejustice.fr
+    imt-bs.eu
+    aefe.fr
     crous-reunionmayotte.fr
+    inrae.fr
     drome.cci.fr
     educagri.fr
     eesab.fr
     ehess.fr
     ens.psl.eu
+    inalco.fr
     insa-lyon.fr
     insa-lyon.fr
     insa-rouen.fr
@@ -117,14 +162,63 @@ class FindInstanceForTerritory
     utoulouse.fr
     utt.fr
     uttop.fr
+    paris-belleville.archi.fr
+    entpe.fr
+    chdl.fr
+    chdl-darnetal.fr
+    agenceconsulaire.fr
+    ensfea.fr
+    parisnanterre.fr
+    lecnam.net
+
+    louvre.fr
+    imsa.msa.fr
+    ftlvreunion.fr
+    forets-parcnational.fr
   ].freeze
 
+  # Tous les noms de domaines clairement liés à des collectivités ou des opérateurs France Service
+  # On met aussi les noms de domaines de fournisseurs d'email gratuit (gmail, outlook, etc...) typiquement utilisés
+  # par les très petites communes
   COLLECTIVITE_DOMAIN_NAMES = %w[
+    ca-pso.fr
+    grenadesuradour.fr
+    cogolin.fr
+    ercepresliffre.fr
     7vallees.fr
+    galluis.fr
+    laudunlardoise.fr
+    odarc.fr
     7vents.eu
+    pemb.fr
     7vents.fr
     adour-madiran.fr
     agglo-casa.fr
+    legrandlemps.fr
+    gommegnies.fr
+    mamoudzou.yt
+    coevrons.fr
+    nersac.fr
+    recy.fr
+
+    mareil-marly.fr
+    gmvagglo.bzh
+    mireval34.fr
+    prevelles.fr
+    lasellecraonnaise.fr
+    bressehauteseille.fr
+    ergue-gaberic.bzh
+    pnr-millevaches.fr
+    istres.fr
+
+    csap.fr
+    epama.fr
+    meurchin.fr
+    pomponne.org
+    miradoux.org
+    cournon-auvergne.fr
+    blois.fr
+
     agglopole.fr
     allier.fr
     alpi40.fr
@@ -430,22 +524,37 @@ class FindInstanceForTerritory
     villetassinlademilune.fr
     wahagnies.fr
     wanadoo.fr
+    mlplainecentrale.org
+    comcomgq.com
+    roujan.fr
+    peyreenaubrac.fr
+    outlook.com
+    moulayres.fr
     wittenheim.fr
+    reolaisensudgironde.fr
+    legrandchalon.fr
     yahoo.fr
+    orne.fr
+    ensiie.fr
+    megalis.bretagne.bzh
+    nontron.fr
+    condesurifs.fr
+    flangebouche.fr
+    mulhouse-alsace.fr
+    pornicagglo.fr
+    me.com
   ].freeze
-
-  private
 
   def france_service?
     first_admin_email_domain.in?(["france-service.gouv.fr"])
   end
 
   def first_admin_email_domain
-    first_admin.email.split("@").last
+    first_admin&.email&.split("@")&.last
   end
 
   def first_admin
-    @first_admin ||= find_first_admin
+    @first_admin ||= find_first_admin_by_creation_date || default_single_admin
   end
 
   # On cherche à savoir qui a ouvert l'espace
@@ -456,10 +565,16 @@ class FindInstanceForTerritory
   #
   # La manière la plus fiable semble donc être de trouver l'admin dont le rôle a été créé en même temps
   # que l'espace (avec parfois quelques millisecondes de différence)
-  def find_first_admin
+  def find_first_admin_by_creation_date
     @territory.admin_agents.find do |agent|
       AgentTerritorialAccessRight.where(agent_id: agent.id, territory_id: @territory.id)
         .where("created_at > ? AND created_at < ?", @territory.created_at - 1.second, @territory.created_at + 1.second).any?
+    end
+  end
+
+  def default_single_admin
+    if @territory.admin_agents.count == 1
+      @territory.admin_agents.first
     end
   end
 end
