@@ -1,69 +1,14 @@
 # Exemple:
 # rails runner scripts/partition_territories_into_instances.rb
 
-# Les noms de domaines qui confirment qu'un agent travaille pour une collectivité ou un autre partenaire de l'anct
-# Vu que ça sert juste à la classification, il n'y a pas vraiment de risque de sécurité à ne pas vérifier de près ces noms
+# Les noms de domaines qui confirment qu'un agent travaille pour une collectivité ou un autre partenaire de l'anct (France Service et inclusion numerique)
 COLLECTIVITE_DOMAIN_NAMES = %w[
-  ceze-cevennes.fr
-  couillypontauxdames.fr
-  epagebourbre.fr
-  jauldes.fr
-
-  laposte.fr
-  lagrandemotte.fr
-  lemesnilsaintdenis.fr
-  leshautsdanjou.fr
-  lesportesbriardes.fr
-  lillemetropole.fr
-  lot.fr
-  larochesuryon.fr
-  laposte.net
-  espacecentrecalais.fr
-  essarts-le-roi.org
-  esterelcotedazur-agglo.fr
-  eybens.fr
-  flers-agglo.fr
-  fougeres-agglo.bzh
-  gmail.com
-  esseylesnancy.fr
-  grenoblealpesmetropole.fr
-  hauteloire.fr
-  hotmail.fr
-  hendaye.fr
-  hautbugey-agglomeration.fr
-  iledefrance.fr
-  epageloirelignon.fr
-  cornillonsurloule.fr
-  cg974.fr
-  ccapv.fr
-  ccba31.fr
-  cchnvy.fr
-  cchpb.net
-  cchvs.fr
-  cciamp.com
-  cclgv.fr
-  ccmpm.fr
-  ccplm.eu
-  ccplumbres.fr
-  ccpm-maiche.com
-  ccpom.fr
-  ccqb.fr
-  ccquercyblanc.fr
-  cctama.fr
-  ccvcommunaute.fr
-  ccvp.fr
-  ccvsc01.org
-  ccvt.fr
-  ccyn.fr
-
-  apt.fr
-  ccb3f.fr
-  assoflorimont.fr
-  agglo-casa.fr
-  agglopole.fr
   7vallees.fr
   7vents.eu
   7vents.fr
+  adour-madiran.fr
+  agglo-casa.fr
+  agglopole.fr
   allier.fr
   alpi40.fr
   alsacedunord.fr
@@ -76,7 +21,9 @@ COLLECTIVITE_DOMAIN_NAMES = %w[
   angersloiremetropole.fr
   annecy.fr
   annemasse-agglo.fr
+  apt.fr
   argonne-ardennaise.fr
+  assoflorimont.fr
   aube.fr
   aulnay-sous-bois.com
   autricourt.fr
@@ -113,18 +60,41 @@ COLLECTIVITE_DOMAIN_NAMES = %w[
   cauvaldor.fr
   cauxseine.fr
   cazeres-sur-adour.org
+  ccapv.fr
   ccasavignon.org
   ccasdenain.fr
   ccaslavoulte.fr
   ccasmacouria.fr
   ccasrennes.fr
+  ccb3f.fr
+  ccba31.fr
   ccbb.fr
   ccbugeysud.com
   cccasavignon.org
   ccdsv.fr
+  cchnvy.fr
+  cchpb.net
+  cchvs.fr
+  cciamp.com
+  cclgv.fr
   cclouelison.fr
+  ccmpm.fr
+  ccogolin.fr
   ccoisans.fr
   ccplc.fr
+  ccplm.eu
+  ccplumbres.fr
+  ccpm-maiche.com
+  ccpom.fr
+  ccqb.fr
+  ccquercyblanc.fr
+  cctama.fr
+  ccvcommunaute.fr
+  ccvp.fr
+  ccvsc01.org
+  ccvt.fr
+  ccyn.fr
+  cdcaag.fr
   cdchautsperche.fr
   cdg06.fr
   cdg42.fr
@@ -136,6 +106,8 @@ COLLECTIVITE_DOMAIN_NAMES = %w[
   centresocial-chemille.asso.fr
   centresocial-montbazens.fr
   centresocialdevitre.fr
+  ceze-cevennes.fr
+  cg974.fr
   chalons-agglo.fr
   chamonix.fr
   chamonix.fr
@@ -154,23 +126,41 @@ COLLECTIVITE_DOMAIN_NAMES = %w[
   communedeanaa.pf
   communederiviere.fr
   communesalome.fr
+  coop-numerique.anct.gouv.fr
+  cornillonsurloule.fr
+  cotedor.fr
+  couillypontauxdames.fr
+  cr-reunion.fr
   creuse-grand-sud.fr
   departement18.fr
   departement86.fr
   dourdan.fr
   douzy.fr
+  dromenet.org
   eau-loire-bretagne.fr
   eaureunion.fr
   ecouflant.fr
+  emmaus-connect.org
+  epagebourbre.fr
+  epageloirelignon.fr
+  espacecentrecalais.fr
+  essarts-le-roi.org
+  esseylesnancy.fr
   est-ensemble.fr
+  esterelcotedazur-agglo.fr
   etiolles.fr
   etreux.fr
   eure.fr
+  ext.anct.gouv.fr
+  eybens.fr
+  flers-agglo.fr
+  fougeres-agglo.bzh
   fouras-les-bains.fr
   fresnes-sur-escaut.fr
   geneuille.fr
   geyssans.fr
   gieres.fr
+  gmail.com
   gourdon.fr
   grand-cognac.fr
   grand-figeac.fr
@@ -178,31 +168,46 @@ COLLECTIVITE_DOMAIN_NAMES = %w[
   grandfortphilippe.fr
   grandparissud.fr
   grenoblealpesmetropole.f
+  grenoblealpesmetropole.fr
   grigny91.fr
+  hautbugey-agglomeration.fr
   haute-cornouaille.bzh
   haute-cornouaille.fr
   haute-marne.fr
+  hauteloire.fr
   hautesavoie.fr
+  hendaye.fr
   herault.fr
   herouvillette.fr
   holtzheim.fr
+  hotmail.fr
   houplin-ancoisne.fr
+  iledefrance.fr
   ivry94.fr
+  jauldes.fr
   lacanau.fr
   lacove.fr
   ladrome.fr
   lafibre64.fr
   lagrandemotte.fr
+  lagrandemotte.fr
   lamanon.fr
   lamayenne.fr
   langon33.fr
+  laposte.fr
+  laposte.net
+  larochesuryon.fr
   laverpilliere.fr
   le-drennec.fr
   le-gresivaudan.fr
   le-peage-de-roussillon.fr
   lebarsurloup.fr
   lehavremetro.fr
+  lemesnilsaintdenis.fr
+  leshautsdanjou.fr
+  lesportesbriardes.fr
   licourt.fr
+  lillemetropole.fr
   lillemetropole.fr
   limeil.fr
   limoges.fr
@@ -211,6 +216,7 @@ COLLECTIVITE_DOMAIN_NAMES = %w[
   loos-en-gohelle.fr
   loriol.com
   lormont.fr
+  lot.fr
   lyonmetropole-mmie.fr
   lyonmetropole-mmie.fr
   machilly.fr
@@ -231,10 +237,15 @@ COLLECTIVITE_DOMAIN_NAMES = %w[
   montmartin-sur-mer.fr
   montpellier.fr
   montreuil.fr
+  moyenmoutier.fr
   nancy.fr
   numeriquesudcharente.com
+  onflentcanigo.fr
+  orange.fr
+  ostwald.fr
   paris.fr
   pierre-chatel.fr
+  pimmsmediation.fr
   pithiveraisgatinais.fr
   plescop.bzh
   ploermelcommunaute.bzh
@@ -245,6 +256,10 @@ COLLECTIVITE_DOMAIN_NAMES = %w[
   quimperle.bzh
   rennesmetropole.fr
   riomesmontagnes.fr
+  rivesduloirenanjou.fr
+  rochechouart.com
+  routenouvelle.fr
+  ruralesentredeuxmers.fr
   salbris.fr
   sarcenas.fr
   sarzeau.fr
@@ -271,6 +286,7 @@ COLLECTIVITE_DOMAIN_NAMES = %w[
   strasbourg.eu
   sudalsace-largue.fr
   sudmessin.fr
+  suite.anct.gouv.fr
   tencin.fr
   terredeprovence-agglo.com
   terredes2caps.com
@@ -292,33 +308,13 @@ COLLECTIVITE_DOMAIN_NAMES = %w[
   vendeenumerique.fr
   vernet-les-bains.fr
   verrieres86.fr
-  moyenmoutier.fr
-  orange.fr
-  ostwald.fr
   ville.angers.fr
   villedezuydcoote.fr
-  pimmsmediation.fr
-  rochechouart.com
-  routenouvelle.fr
-  rivesduloirenanjou.fr
-  coop-numerique.anct.gouv.fr
-  cotedor.fr
-  ccogolin.fr
-  dromenet.org
-  onflentcanigo.fr
-  cr-reunion.fr
-  wanadoo.fr
-  yahoo.fr
-  cdcaag.fr
-  suite.anct.gouv.fr
-  adour-madiran.fr
-  ruralesentredeuxmers.fr
   villetassinlademilune.fr
   wahagnies.fr
-
-  ext.anct.gouv.fr
-  emmaus-connect.org
+  wanadoo.fr
   wittenheim.fr
+  yahoo.fr
 ].freeze
 
 ETAT_DOMAIN_NAMEs = %w[
