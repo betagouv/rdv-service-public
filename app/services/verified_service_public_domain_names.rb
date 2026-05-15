@@ -51,6 +51,7 @@ class VerifiedServicePublicDomainNames
     @hceres.fr
     @region-academique-auvergne-rhone-alpes.fr
     @region-academique-bourgogne-franche-comte.fr
+    @region-academique-bfc.fr
     @region-academique-bretagne.fr
     @region-academique-centre-val-de-loire.fr
     @region-academique-corse.fr
@@ -87,6 +88,8 @@ class VerifiedServicePublicDomainNames
     @caf.fr
     .caf.fr
     .cnrs.fr
+    @cnrs.fr
+    @cnes.fr
     @cnmss.fr
     @cnc.fr
     @defenseurdesdroits.fr
@@ -97,6 +100,8 @@ class VerifiedServicePublicDomainNames
     @vnf.fr
     @arcep.fr
     @anses.fr
+    @franceagrimer.fr
+    @ihedn.fr
 
   ].freeze
 end

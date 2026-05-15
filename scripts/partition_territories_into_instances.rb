@@ -4,6 +4,63 @@
 # Les noms de domaines qui confirment qu'un agent travaille pour une collectivité ou un autre partenaire de l'anct
 # Vu que ça sert juste à la classification, il n'y a pas vraiment de risque de sécurité à ne pas vérifier de près ces noms
 COLLECTIVITE_DOMAIN_NAMES = %w[
+  ceze-cevennes.fr
+  couillypontauxdames.fr
+  epagebourbre.fr
+  jauldes.fr
+
+  laposte.fr
+  lagrandemotte.fr
+  lemesnilsaintdenis.fr
+  leshautsdanjou.fr
+  lesportesbriardes.fr
+  lillemetropole.fr
+  lot.fr
+  larochesuryon.fr
+  laposte.net
+  espacecentrecalais.fr
+  essarts-le-roi.org
+  esterelcotedazur-agglo.fr
+  eybens.fr
+  flers-agglo.fr
+  fougeres-agglo.bzh
+  gmail.com
+  esseylesnancy.fr
+  grenoblealpesmetropole.fr
+  hauteloire.fr
+  hotmail.fr
+  hendaye.fr
+  hautbugey-agglomeration.fr
+  iledefrance.fr
+  epageloirelignon.fr
+  cornillonsurloule.fr
+  cg974.fr
+  ccapv.fr
+  ccba31.fr
+  cchnvy.fr
+  cchpb.net
+  cchvs.fr
+  cciamp.com
+  cclgv.fr
+  ccmpm.fr
+  ccplm.eu
+  ccplumbres.fr
+  ccpm-maiche.com
+  ccpom.fr
+  ccqb.fr
+  ccquercyblanc.fr
+  cctama.fr
+  ccvcommunaute.fr
+  ccvp.fr
+  ccvsc01.org
+  ccvt.fr
+  ccyn.fr
+
+  apt.fr
+  ccb3f.fr
+  assoflorimont.fr
+  agglo-casa.fr
+  agglopole.fr
   7vallees.fr
   7vents.eu
   7vents.fr
@@ -235,14 +292,54 @@ COLLECTIVITE_DOMAIN_NAMES = %w[
   vendeenumerique.fr
   vernet-les-bains.fr
   verrieres86.fr
+  moyenmoutier.fr
+  orange.fr
+  ostwald.fr
   ville.angers.fr
   villedezuydcoote.fr
+  pimmsmediation.fr
+  rochechouart.com
+  routenouvelle.fr
+  rivesduloirenanjou.fr
+  coop-numerique.anct.gouv.fr
+  cotedor.fr
+  ccogolin.fr
+  dromenet.org
+  onflentcanigo.fr
+  cr-reunion.fr
+  wanadoo.fr
+  yahoo.fr
+  cdcaag.fr
+  suite.anct.gouv.fr
+  adour-madiran.fr
+  ruralesentredeuxmers.fr
   villetassinlademilune.fr
   wahagnies.fr
+
+  ext.anct.gouv.fr
+  emmaus-connect.org
   wittenheim.fr
 ].freeze
 
 ETAT_DOMAIN_NAMEs = %w[
+  pompiersparis.fr
+  parcoursup.fr
+  cdad40.fr
+  chlaval.fr
+  ehess.fr
+  eesab.fr
+  cnes.fr
+  cncr.fr
+  chru-strasbourg.fr
+  drome.cci.fr
+  educagri.fr
+  bnf.fr
+  ap-hm.fr
+  ens.psl.eu
+  crous-reunionmayotte.fr
+  conciliateurdejustice.fr
+  bio.ens.psl.eu
+  aphp.fr
   administration.gov.pf
   region-academique-paca.fr
   securite-ferroviaire.fr
@@ -257,8 +354,16 @@ ETAT_DOMAIN_NAMEs = %w[
   unistra.fr
   universite-paris-saclay.fr
   utoulouse.fr
+  insa-lyon.fr
+  institut-agro.fr
+  insa-rouen.fr
+  insa-strasbourg.fr
+
+  meteo.fr
+  minesparis.psl.eu
   utt.fr
   uttop.fr
+  insa-lyon.fr
 ]
 
 class Territory
@@ -304,9 +409,9 @@ Territory.update_all(instance: nil)
 Territory.where(instance: nil).find_each do |territory|
   if territory.dinum? && territory.anct?
     puts "Ambiguous territory: #{territory.id} #{territory.name_in_stats} (#{territory.admin_agents.count} admins)"
-  elsif territory.dinum? && territory.category.in?(%w[État Opérateur Association Inconnu])
+  elsif territory.dinum?
     territory.update(instance: "DINUM")
-  elsif territory.anct? && territory.category.in?(%w[Commune Intercommunalité Département Région Opérateur])
+  elsif territory.anct?
     territory.update(instance: "ANCT")
   end
 end
