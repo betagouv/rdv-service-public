@@ -25,7 +25,7 @@ class Agents::SessionsByCodeController < ApplicationController
       if session[SESSION_PRO_CONNECT_ID_TOKEN_KEY]
         session[:pro_connect_id_token] = session.delete(SESSION_PRO_CONNECT_ID_TOKEN_KEY)
       end
-      bypass_sign_in(agent, scope: :agent)
+      sign_in(agent, scope: :agent)
       redirect_to after_sign_in_path_for(agent), flash: { success: "Connexion réussie" }
     else
       @email = agent.email
