@@ -32,6 +32,7 @@ module InstancePartition
       ehess.fr
       ens.psl.eu
       ensfea.fr
+      ensiie.fr
       entpe.fr
       forets-parcnational.fr
       ftlvreunion.fr
@@ -221,7 +222,6 @@ module InstancePartition
       eaureunion.fr
       ecouflant.fr
       emmaus-connect.org
-      ensiie.fr
       epagebourbre.fr
       epageloirelignon.fr
       epama.fr
