@@ -38,4 +38,4 @@
         => external_link_to "documentation", "https://aide.rdv-service-public.fr/toutes-les-notions/authentification-a-deux-facteurs-par-code", class: "fr-link"
       div
         |> Si vous n'avez pas reçu le code, vous pouvez
-        = button_to "en demander un nouveau", resend_agents_sessions_by_code_path, class: "fr-link", form: { style: "display: inline" }
+        = button_to "en demander un nouveau", resend_agents_sessions_by_code_path, class: "fr-link", form: { class: "d-inline" }
