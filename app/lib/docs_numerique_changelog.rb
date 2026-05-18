@@ -18,7 +18,7 @@ module DocsNumeriqueChangelog
     end
 
     def fetch_content(document_id)
-      response = connection.get("documents/#{document_id}/content/", content_format: "html")
+      response = connection.get("documents/#{document_id}/formatted-content/", content_format: "html")
       response.body.fetch("content")
     end
 
@@ -60,7 +60,7 @@ module DocsNumeriqueChangelog
       ^
       (?<title>.*)        # Vos RDV collectifs, maintenant en visio
       \p{Zs}?-\p{Zs}?     # -  (\p{Zs} = Separators: Space - handles non breaking spaces)
-      (?<date>[0-9\/]+)   # 15/01/2026
+      (?<date>[0-9/]+)    # 15/01/2026
       \p{Zs}?-\p{Zs}?     # -
       (?<category>.*)     # Nouveauté
       \p{Zs}*
