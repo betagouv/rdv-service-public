@@ -57,10 +57,21 @@ p
     .fr-input-group
       label.fr-label for="caldav_agenda_url" URL de l’agenda CalDAV
       input#caldav_agenda_url.fr-input type="text" name="caldav_agenda_url"
-    .fr-checkbox-group.mb-3
-      input#caldav_include_sensitive_data.fr-checkbox.fr-input type="checkbox" name="caldav_include_sensitive_data"
-      label.fr-label for="caldav_include_sensitive_data"
-        | Inclure les données sensibles (nom, adresse, contexte du RDV)
-        span.fr-hint-text
-          | En cochant cette case, vous prenez la responsabilité de copier des données personnelles en dehors de cette plateforme
+    fieldset.fr-fieldset
+      legend.fr-fieldset__legend--regular.fr-fieldset__legend
+        | Données personnelles dans l'agenda externe
+      .fr-fieldset__element
+        .fr-radio-group
+          input#caldav_include_sensitive_data_false type="radio" name="caldav_include_sensitive_data" value="false" checked="checked"
+          label.fr-label for="caldav_include_sensitive_data_false"
+            | Anonymiser les informations du rendez-vous
+            span.fr-hint-text
+              | Cette option vous permet de ne pas transmettre de données personnelles liées aux rendez-vous à votre agenda externe.
+      .fr-fieldset__element
+        .fr-radio-group
+          input#caldav_include_sensitive_data_true type="radio" name="caldav_include_sensitive_data" value="true"
+          label.fr-label for="caldav_include_sensitive_data_true"
+            | Inclure les données personnelles liées au rendez-vous dans mon agenda externe
+            span.fr-hint-text
+              | Cette option est plus pratique, mais les autres personnes qui ont accès à votre agenda externe auront accès aux données personnelles liées au rendez-vous.
     = submit_tag "Enregistrer", class: "fr-btn"
