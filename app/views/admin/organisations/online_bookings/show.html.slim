@@ -49,12 +49,16 @@
     .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
       h2.fr-h4 Modes de connexion
       = link_to "Modifier", edit_user_type_admin_organisation_online_booking_path(@organisation), class: "fr-btn fr-btn--secondary"
-    - if @organisation.online_booking_for_particuliers && @organisation.online_booking_for_professionnels
-      p Vos usagers peuvent se connecter avec #{dsfr_link_to("FranceConnect", "https://franceconnect.gouv.fr/", target: :_blank)} ou #{dsfr_link_to("ProConnect", "https://www.proconnect.gouv.fr/", target: :_blank)}.
-    - elsif @organisation.online_booking_for_particuliers
-      p Vos usagers peuvent se connecter avec #{dsfr_link_to("FranceConnect", "https://franceconnect.gouv.fr/", target: :_blank)}.
-    - elsif @organisation.online_booking_for_professionnels
-      p Vos usagers peuvent se connecter avec #{dsfr_link_to("ProConnect", "https://www.proconnect.gouv.fr/", target: :_blank)}.
+    p
+      |> Vos usagers peuvent se connecter avec
+      ruby:
+        connexion_modes = [
+          ("leur adresse email" if @organisation.online_booking_with_email),
+          (dsfr_link_to("FranceConnect", "https://franceconnect.gouv.fr/", target: :_blank) if @organisation.online_booking_for_particuliers),
+          (dsfr_link_to("ProConnect", "https://www.proconnect.gouv.fr/", target: :_blank) if @organisation.online_booking_for_professionnels),
+        ].compact.to_sentence(two_words_connector: " ou ", last_word_connector: " ou ")
+      = sanitize(connexion_modes, attributes: %w[href target])
+      | .
 
 .card
   .card-body

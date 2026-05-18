@@ -118,17 +118,14 @@ class Organisation < ApplicationRecord
   end
 
   def online_booking_only_proconnect?
-    # Pour l’espace de RDV Service Public, on veut obliger les usagers à s'authentifier avec ProConnect
-    # pour éviter que des usagers prennent RDV alors que c’est un service réservé aux agents publics.
-    # Dans le futur, on permettra peut-être à d’autres organisations ou espaces de faire de même
-    domain == Domain::RDV_SERVICE_PUBLIC && territory_id == 2
+    online_booking_for_professionnels && !online_booking_for_particuliers && !online_booking_with_email
   end
 
   private
 
   def validate_at_least_one_user_type
-    return if online_booking_for_particuliers || online_booking_for_professionnels
+    return if online_booking_with_email || online_booking_for_particuliers || online_booking_for_professionnels
 
-    errors.add(:base, "Vous devez choisir au moins un type d'usager entre particulier et professionnels.")
+    errors.add(:base, "Vous devez autoriser au moins un mode de connexion.")
   end
 end

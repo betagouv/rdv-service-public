@@ -217,6 +217,7 @@ tables:
       - disabled_at
       - online_booking_for_particuliers
       - online_booking_for_professionnels
+      - online_booking_with_email
 
   - table_name: absences
     anonymized_column_names:

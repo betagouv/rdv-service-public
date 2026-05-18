@@ -14,6 +14,7 @@
 
         p Comment souhaitez-vous permettre à vos usagers de se connecter lors de la prise de rendez-vous avec votre organisation ?
         = simple_form_for @organisation, url: update_user_type_admin_organisation_online_booking_path(@organisation), builder: Dsfr::FormBuilder  do |f|
+          = f.dsfr_check_box :online_booking_with_email, label: "Avec une adresse email", hint: sanitize("On leur demandera de confirmer leur adresse email, mais il n'y aura pas d'autre restrictions.", attributes: %w[href target])
           = f.dsfr_check_box :online_booking_for_particuliers, label: "FranceConnect", hint: sanitize("Recommandé si vos usagers sont des particuliers. #{dsfr_link_to('En savoir plus', 'https://franceconnect.gouv.fr/', target: :_blank)}", attributes: %w[href target])
           = f.dsfr_check_box :online_booking_for_professionnels, label: "ProConnect", hint: sanitize("Recommandé si vos usagers sont des professionnels  #{dsfr_link_to('En savoir plus', 'https://www.proconnect.gouv.fr/', target: :_blank)}", attributes: %w[href target])
           .d-flex.rdv-justify-content-space-between

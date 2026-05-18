@@ -108,7 +108,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     doc.add_screenshot(page,
                        text: "Je sélectionne la prise de rendez-vous par des professionnels et j'enregistre.",
-                       wait_for: "Comment souhaitez-vous permettre à vos usagers (les personnes qui prennent rendez-vous avec votre organisation) de se connecter lors de la prise de rendez-vous ?")
+                       wait_for: "Comment souhaitez-vous permettre à vos usagers de se connecter")
 
     click_on "Enregistrer"
 
