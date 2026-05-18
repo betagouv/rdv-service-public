@@ -99,16 +99,16 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     click_on "Enregistrer"
 
-    doc.add_screenshot(page, text: "Je clique sur Modifier dans la carte de Profil des usagers", wait_for: "Lien de réservation")
+    doc.add_screenshot(page, text: "Je clique sur Modifier dans la carte de Modes de connexion", wait_for: "Lien de réservation")
 
     click_on "Modifier", match: :first
 
-    find(:label, text: "des particuliers").click
-    find(:label, text: "des professionnels").click
+    find(:label, text: "FranceConnect").click
+    find(:label, text: "ProConnect").click
 
     doc.add_screenshot(page,
                        text: "Je sélectionne la prise de rendez-vous par des professionnels et j'enregistre.",
-                       wait_for: "Qui participe aux rendez-vous avec les agents de votre organisation ?")
+                       wait_for: "Comment souhaitez-vous permettre à vos usagers (les personnes qui prennent rendez-vous avec votre organisation) de se connecter lors de la prise de rendez-vous ?")
 
     click_on "Enregistrer"
 
