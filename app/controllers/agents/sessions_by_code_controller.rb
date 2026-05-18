@@ -45,6 +45,7 @@ class Agents::SessionsByCodeController < ApplicationController
     @pending_agent ||= Agent.find(session[SESSION_AGENT_ID_KEY])
   end
 
+  # Hook Devise — empêche que cette page intermédiaire soit mémorisée comme destination après connexion
   def storable_location?
     false
   end
