@@ -1,8 +1,9 @@
 class RdvServicePublicApiClient
   class RequestError < StandardError; end
 
-  def initialize(api_token)
+  def initialize(api_token, refresh_token)
     @api_token = api_token
+    @refresh_token = refresh_token
   end
 
   def post(path, params)
@@ -54,6 +55,7 @@ class RdvServicePublicApiClient
       builder.request :json
       builder.response :json
       builder.use :sentry_breadcrumbs
+      builder.request :oauth2_refresh, @refresh_token
     end
   end
 end
