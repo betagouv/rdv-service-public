@@ -36,6 +36,14 @@ class Agents::SessionsController < Devise::SessionsController
 
     return if reset_current_agent_password_if_weak!(params[:agent][:password])
 
+    if resource.sensitive_account?
+      sign_out(resource)
+      session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = resource.id
+      Agents::LoginCodeSender.perform(email: resource.email, domain_id: current_domain.id)
+      redirect_to new_agents_sessions_by_code_path
+      return
+    end
+
     super
     # super will repeat warden.authenticate! which will not repeat everything but fetch from the session
     # cf https://github.com/wardencommunity/warden/blob/master/lib/warden/proxy.rb#L332-L334

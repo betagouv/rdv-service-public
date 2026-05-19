@@ -106,6 +106,7 @@ tables:
       - caldav_agenda_url
       - caldav_username
       - caldav_password
+      - caldav_include_sensitive_data
       - caldav_sync_token
       - sensitive_account
     non_anonymized_column_names:

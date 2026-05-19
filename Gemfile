@@ -61,7 +61,7 @@ gem "devise_invitable"
 # Deliver Devise's emails in the background using ActiveJob.
 gem "devise-async"
 # omniauth provider for Microsoft Graph
-gem "omniauth-microsoft_graph"
+gem "omniauth-microsoft_graph", git: "https://github.com/betagouv/omniauth-microsoft_graph", ref: "8bcbaa37883454338a79606bdfd8e19d27e26673"
 # omniauth provider for inter-instance migrations
 gem "omniauth-rdv-service-public", path: "lib/omniauth-rdv-service-public"
 
