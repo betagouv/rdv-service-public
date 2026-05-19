@@ -52,32 +52,24 @@ RSpec.describe Organisation, type: :model do
     end
   end
 
-  describe "#online_booking_only_sso?" do
+  describe "#online_booking_only_proconnect?" do
     subject { organisation.online_booking_only_proconnect? }
 
-    let(:territory) { build(:territory, id: territory_id) }
-    let(:organisation) { build(:organisation, territory:, verticale:) }
-    let(:motif) { build(:motif, organisation:) }
+    context "when other connexion types are allowed" do
+      let(:organisation) { build(:organisation, online_booking_for_particuliers: true) }
 
-    context "when on RDV_SERVICE_PUBLIC domain with territory_id 2" do
-      let(:territory_id) { 2 }
-      let(:verticale) { :rdv_mairie }
+      it { is_expected.to be false }
+    end
+
+    context "when only proconnect is allowed" do
+      let(:organisation) do
+        build(:organisation,
+              online_booking_for_professionnels: true,
+              online_booking_for_particuliers: false,
+              online_booking_with_email: false)
+      end
 
       it { is_expected.to be true }
-    end
-
-    context "when on RDV_SERVICE_PUBLIC domain with a different territory_id" do
-      let(:territory_id) { 123 }
-      let(:verticale) { :rdv_mairie }
-
-      it { is_expected.to be false }
-    end
-
-    context "when on RDV_SOLIDARITES domain with territory_id 2" do
-      let(:territory_id) { 2 }
-      let(:verticale) { :rdv_solidarites }
-
-      it { is_expected.to be false }
     end
   end
 end
