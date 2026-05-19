@@ -312,15 +312,50 @@ RSpec.describe ProConnectController do
         end
       end
 
-      context "quand l’agent utilise un fournisseur d’identité non compatible avec le 2FA" do
+      context "quand l’id du founrisseur d’identité de l’agent n’est pas dans la liste des id double authentifiable" do
         before do
           stub_const("ProConnectController::IDP_PRO_CONNECT_FORCE_2FA_ENABLED", ["autre-idp"])
         end
 
-        it "connecte l’agent normalement" do
+        it "connecte l’agent normalement sans exiger le 2FA" do
           agent = create(:agent, email: user_info["email"])
           get :callback, params: { state:, code: }
           expect_agent_to_be_updated_and_logged_in(agent.reload)
+        end
+
+        context "quand l’agent a un compte sensible" do
+          it "ne connecte pas l'agent" do
+            create(:agent, email: user_info["email"], sensitive_account: true)
+            get :callback, params: { state:, code: }
+            expect(current_agent_id).to be_nil
+          end
+
+          it "stocke l’id de l’agent dans la session comme connexion en attente" do
+            agent = create(:agent, email: user_info["email"], sensitive_account: true)
+            get :callback, params: { state:, code: }
+            expect(session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY]).to eq(agent.id)
+          end
+
+          it "stocke le token ProConnect comme pending et non comme token actif" do
+            create(:agent, email: user_info["email"], sensitive_account: true)
+            get :callback, params: { state:, code: }
+            expect(session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY]).to be_present
+            expect(session[:pro_connect_id_token]).to be_nil
+          end
+
+          it "redirige vers le formulaire de vérification par code" do
+            create(:agent, email: user_info["email"], sensitive_account: true)
+            get :callback, params: { state:, code: }
+            expect(response).to redirect_to(new_agents_sessions_by_code_path)
+          end
+
+          it "crée et envoie un code de connexion par email" do
+            agent = create(:agent, email: user_info["email"], sensitive_account: true)
+            expect { get :callback, params: { state:, code: } }
+              .to change(LoginCode, :count).by(1)
+              .and have_enqueued_mail(Agents::LoginCodeMailer, :login_code)
+            expect(LoginCode.last.email).to eq(agent.email)
+          end
         end
       end
     end
