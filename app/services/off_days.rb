@@ -10,7 +10,7 @@ class OffDays
   JOURS_FERIES = [
     new(Date.new(2023, 1, 1), "Jour de l'An"),
     new(Date.new(2023, 4, 10), "Lundi de Pâques"),
-    new(Date.new(2023, 5, 1), "Fête du Travail"),
+    new(Date.new(2023, 5, 1), "Journée internationale des travailleurs"),
     new(Date.new(2023, 5, 8), "Victoire 1945"),
     new(Date.new(2023, 5, 18), "Ascension"),
     new(Date.new(2023, 5, 29), "Lundi de Pentecôte"),
@@ -22,7 +22,7 @@ class OffDays
 
     new(Date.new(2024, 1, 1), "Jour de l'An"),
     new(Date.new(2024, 4, 1), "Lundi de Pâques"),
-    new(Date.new(2024, 5, 1), "Fête du Travail"),
+    new(Date.new(2024, 5, 1), "Journée internationale des travailleurs"),
     new(Date.new(2024, 5, 8), "Victoire 1945"),
     new(Date.new(2024, 5, 9), "Ascension"),
     new(Date.new(2024, 5, 20), "Lundi de Pentecôte"),
@@ -34,7 +34,7 @@ class OffDays
 
     new(Date.new(2025, 1, 1), "Jour de l'An"),
     new(Date.new(2025, 4, 21), "Lundi de Pâques"),
-    new(Date.new(2025, 5, 1), "Fête du Travail"),
+    new(Date.new(2025, 5, 1), "Journée internationale des travailleurs"),
     new(Date.new(2025, 5, 8), "Victoire 1945"),
     new(Date.new(2025, 5, 29), "Ascension"),
     new(Date.new(2025, 7, 14), "Fête nationale"),
@@ -45,7 +45,7 @@ class OffDays
 
     new(Date.new(2026, 1, 1), "Jour de l'An"),
     new(Date.new(2026, 4, 6), "Lundi de Pâques"),
-    new(Date.new(2026, 5, 1), "Fête du Travail"),
+    new(Date.new(2026, 5, 1), "Journée internationale des travailleurs"),
     new(Date.new(2026, 5, 8), "Victoire 1945"),
     new(Date.new(2026, 5, 14), "Ascension"),
     new(Date.new(2026, 7, 14), "Fête nationale"),
@@ -56,7 +56,7 @@ class OffDays
 
     new(Date.new(2027, 1, 1), "Jour de l'An"),
     new(Date.new(2027, 3, 29), "Lundi de Pâques"),
-    new(Date.new(2027, 5, 1), "Fête du Travail"),
+    new(Date.new(2027, 5, 1), "Journée internationale des travailleurs"),
     new(Date.new(2027, 5, 6), "Ascension"),
     new(Date.new(2027, 5, 8), "Victoire 1945"),
     new(Date.new(2027, 7, 14), "Fête nationale"),
