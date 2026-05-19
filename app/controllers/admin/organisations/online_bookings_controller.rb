@@ -47,7 +47,7 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
     authorize(@organisation, :update?, policy_class: Agent::OrganisationPolicy)
 
     if @organisation.update(permitted_params)
-      flash[:success] = "Modes de connexion mis à jour"
+      flash[:success] = "Modes d'authentification mis à jour"
       redirect_to admin_organisation_online_booking_path(@organisation)
     else
       flash[:error] = @organisation.errors.full_messages.to_sentence
