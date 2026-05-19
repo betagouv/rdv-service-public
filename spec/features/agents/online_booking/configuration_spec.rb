@@ -160,7 +160,7 @@ RSpec.describe "Agents can configure online booking" do
     end
   end
 
-  describe "choix des modes de connexion pour les usagers d'usager qui participer au rendez-vous" do
+  describe "choix des modes d'authentification pour les usagers d'usager qui participer au rendez-vous" do
     before do
       visit edit_user_type_admin_organisation_online_booking_path(organisation)
     end
@@ -171,7 +171,7 @@ RSpec.describe "Agents can configure online booking" do
       find("label", text:  "ProConnect").click
       click_on "Enregistrer"
 
-      expect(page).to have_content "Modes de connexion mis à jour"
+      expect(page).to have_content "Modes d'authentification mis à jour"
 
       expect(organisation.reload).to have_attributes(
         online_booking_for_particuliers: false,
@@ -185,7 +185,7 @@ RSpec.describe "Agents can configure online booking" do
         find("label", text:  "FranceConnect").click
         find("label", text:  "Avec une adresse email").click
         click_on "Enregistrer"
-        expect(page).to have_content "Vous devez autoriser au moins un mode de connexion."
+        expect(page).to have_content "Vous devez autoriser au moins un mode d'authentification."
 
         expect(organisation.reload).to have_attributes(
           online_booking_for_particuliers: true,

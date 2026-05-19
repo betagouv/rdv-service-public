@@ -99,7 +99,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     click_on "Enregistrer"
 
-    doc.add_screenshot(page, text: "Je clique sur Modifier dans la carte de Modes de connexion", wait_for: "Lien de réservation")
+    doc.add_screenshot(page, text: "Je clique sur Modifier dans la carte de Modes d'authentificiation", wait_for: "Lien de réservation")
 
     click_on "Modifier", match: :first
 
@@ -108,7 +108,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     doc.add_screenshot(page,
                        text: "Je sélectionne la prise de rendez-vous par des professionnels et j'enregistre.",
-                       wait_for: "Comment souhaitez-vous permettre à vos usagers de se connecter")
+                       wait_for: "Comment préférez-vous que vos usagers s'authentifient lors de la prise de rendez-vous")
 
     click_on "Enregistrer"
 
