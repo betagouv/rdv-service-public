@@ -61,7 +61,7 @@ gem "devise_invitable"
 # Deliver Devise's emails in the background using ActiveJob.
 gem "devise-async"
 # omniauth provider for Microsoft Graph
-gem "omniauth-microsoft_graph"
+gem "omniauth-microsoft_graph", git: "https://github.com/betagouv/omniauth-microsoft_graph", ref: "8bcbaa37883454338a79606bdfd8e19d27e26673"
 # omniauth provider for inter-instance migrations
 gem "omniauth-rdv-service-public", path: "lib/omniauth-rdv-service-public"
 
@@ -128,7 +128,7 @@ gem "rails_autolink"
 # ActionView helper to render currently active links
 gem "active_link_to"
 gem "dsfr-assets", "~> 1.14.2"
-gem "dsfr-view-components", "~> 4.1"
+gem "dsfr-view-components", "~> 5.0.0"
 gem "dsfr-form_builder", "= 0.0.7" # On fixe la version tant qu’on est pas en 1.0
 
 # Easily create styled HTML emails in Rails.

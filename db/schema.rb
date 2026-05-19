@@ -157,6 +157,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_18_132616) do
     t.boolean "sensitive_account", default: false, null: false
     t.datetime "caldav_disconnect_started_at"
     t.boolean "display_extended_hours", default: false, null: false
+    t.boolean "caldav_include_sensitive_data", default: false, null: false
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
