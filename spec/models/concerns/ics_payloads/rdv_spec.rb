@@ -134,14 +134,14 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
 
       context "with sensitive data enabled" do
         it "includes the user's name in the summary" do
-          expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:summary]).to eq("RDV avec Ethan DUVAL - Consultation")
+          expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:summary]).to eq("Ethan DUVAL - Consultation")
         end
 
         context "when RDV is collectif" do
           let(:rdv) { build(:rdv, users: [user], motif: build(:motif, name: "Atelier", collectif: true)) }
 
           it "display motif name" do
-            expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:summary]).to eq("RDV collectif - Atelier")
+            expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:summary]).to eq("Atelier")
           end
         end
       end
@@ -155,7 +155,7 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
           let(:rdv) { build(:rdv, users: [user], motif: build(:motif, name: "Atelier", collectif: true)) }
 
           it "display motif name" do
-            expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:summary]).to eq("RDV collectif - Atelier")
+            expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:summary]).to eq("Atelier")
           end
         end
       end

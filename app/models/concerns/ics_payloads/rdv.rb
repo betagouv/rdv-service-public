@@ -76,9 +76,9 @@ module IcsPayloads
 
     def ics_summary(sensitive_data:)
       if motif.collectif?
-        "RDV collectif - #{motif&.name}"
+        motif&.name
       elsif sensitive_data
-        "RDV avec #{users.first.full_name} - #{motif&.name}"
+        "#{users.first.full_name} - #{motif&.name}"
       else
         "RDV #{motif&.name}"
       end
