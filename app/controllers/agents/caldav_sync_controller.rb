@@ -7,11 +7,7 @@ class Agents::CaldavSyncController < AgentAuthController
 
   def update
     skip_authorization
-    current_agent.assign_attributes(
-      caldav_agenda_url: params[:caldav_agenda_url],
-      caldav_username: params[:caldav_username],
-      caldav_password: params[:caldav_password]
-    )
+    current_agent.assign_attributes(permitted_params)
 
     error = caldav_config_error
     if error.nil?
@@ -33,6 +29,10 @@ class Agents::CaldavSyncController < AgentAuthController
   end
 
   private
+
+  def permitted_params
+    params.permit(:caldav_agenda_url, :caldav_username, :caldav_password, :caldav_include_sensitive_data)
+  end
 
   # Vérifie la configuration CalDAV en 3 étapes : authentification, lecture, écriture.
   # Retourne nil si tout est OK, ou un message d’erreur décrivant l’étape qui a échoué.
