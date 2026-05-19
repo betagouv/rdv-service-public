@@ -43,7 +43,7 @@ class Organisation < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :territory }
   validates :external_id, uniqueness: { scope: :territory, allow_nil: true }
   validate :validate_organisation_phone_number
-  validate :validate_at_least_one_user_type
+  validate :validate_at_least_one_user_authentication_type
   validates :time_zone,
             presence: true,
             inclusion: {
@@ -123,9 +123,9 @@ class Organisation < ApplicationRecord
 
   private
 
-  def validate_at_least_one_user_type
+  def validate_at_least_one_user_authentication_type
     return if online_booking_with_email || online_booking_for_particuliers || online_booking_for_professionnels
 
-    errors.add(:base, "Vous devez autoriser au moins un mode de connexion.")
+    errors.add(:base, "Vous devez autoriser au moins un mode d'authentification.")
   end
 end
