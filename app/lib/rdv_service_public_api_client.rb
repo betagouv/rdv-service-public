@@ -1,9 +1,10 @@
 class RdvServicePublicApiClient
   class RequestError < StandardError; end
 
-  def initialize(api_token, refresh_token)
+  def initialize(api_token, refresh_token, on_token_refresh: nil)
     @api_token = api_token
     @refresh_token = refresh_token
+    @on_token_refresh = on_token_refresh
   end
 
   def post(path, params)
@@ -27,7 +28,15 @@ class RdvServicePublicApiClient
   end
 
   def get(path, params = {})
-    connection.get("/api/v1/#{path}", params).body
+    response = connection.get("/api/v1/#{path}", params)
+
+    if response.status == 401 && @on_token_refresh
+      refresh_token!
+
+      connection.get("/api/v1/#{path}", params).body
+    else
+      response.body
+    end
   end
 
   private
@@ -56,5 +65,22 @@ class RdvServicePublicApiClient
       builder.response :json
       builder.use :sentry_breadcrumbs
     end
+  end
+
+  def refresh_token!
+    client = OAuth2::Client.new(
+      ENV["RDV_SERVICE_PUBLIC_OAUTH_APP_ID"],
+      ENV["RDV_SERVICE_PUBLIC_OAUTH_APP_SECRET"],
+      site: ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"]
+    )
+
+    old_token = OAuth2::AccessToken.new(client, @api_token, refresh_token: @refresh_token)
+
+    new_token = old_token.refresh!
+
+    @api_token = new_token.token
+    @refresh_token = new_token.refresh_token
+    @connection = nil # L'objet connection précédent avait encore l'api_token expiré en header, donc on doit en reconstruire un
+    @on_token_refresh.call(new_token.token, new_token.refresh_token)
   end
 end
