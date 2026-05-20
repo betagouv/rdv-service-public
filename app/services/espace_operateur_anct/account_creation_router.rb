@@ -16,20 +16,12 @@ class EspaceOperateurANCT::AccountCreationRouter
   def call
     return Result.new(action: :classic) if @agent.proconnect_siret.blank?
 
-    operator_data = anct_client.operator
-
-    if operator_data.present?
-      operator = Operator.find_by(siret: operator_data["siret"])
-      return handle_operator_case(anct_client, operator) if operator
+    if matching_operator
+      return handle_operator_case(anct_client, matching_operator)
     end
 
-    potential_operators_data = anct_client.potential_operators
-
-    if potential_operators_data.present?
-      matches = potential_operators_data.select { |po| Operator.exists?(siret: po["siret"]) }
-      if matches.any?
-        return Result.new(action: :signup_via_operator, signup_url: matches.first["signupUrl"], operator_name: matches.first["name"])
-      end
+    if matching_potential_operator
+      return Result.new(action: :signup_via_operator, signup_url: matching_potential_operator["signupUrl"], operator_name: matching_potential_operator["name"])
     end
 
     Result.new(action: :classic)
@@ -39,6 +31,21 @@ class EspaceOperateurANCT::AccountCreationRouter
   end
 
   private
+
+  def matching_operator
+    return @matching_operator if defined?(@matching_operator)
+
+    @matching_operator = nil
+    return if anct_client.operator.nil?
+
+    @matching_operator = Operator.find_by(siret: anct_client.operator["siret"])
+  end
+
+  def matching_potential_operator
+    return @matching_potential_operator if defined?(@matching_potential_operator)
+
+    @matching_potential_operator = anct_client.potential_operators.find { |po| Operator.exists?(siret: po["siret"]) }
+  end
 
   def anct_client
     @anct_client ||= EspaceOperateurANCT::ApiClient.new(@agent.proconnect_siret, @agent.email)
