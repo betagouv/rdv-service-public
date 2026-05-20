@@ -82,13 +82,13 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     doc.start_section("Migration")
 
     login_as(agent_rdv_aide_num, scope: :agent)
-    visit "http://www.rdv-aide-numerique-test.localhost/"
+    visit "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/configuration"
 
     doc.add_screenshot(page,
                        text: "Depuis toutes les pages de RDV Aide Numérique, j'ai un lien vers la migration dans le header. Je clique dessus.",
-                       wait_for: "Passer à RDV Service Public")
+                       wait_for: "Migration vers RDV Service Public")
 
-    click_on "Passer à RDV Service Public"
+    click_on "Migration vers RDV Service Public"
 
     Capybara.page.current_window.resize_to(1280, 1200)
 
