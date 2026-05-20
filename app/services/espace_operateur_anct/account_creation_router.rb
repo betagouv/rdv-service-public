@@ -17,7 +17,14 @@ class EspaceOperateurANCT::AccountCreationRouter
     return Result.new(action: :classic) if @agent.proconnect_siret.blank?
 
     if matching_operator
-      return handle_operator_case(anct_client, matching_operator)
+      if anct_client.admin?
+        attach_or_create_territory
+        Result.new(action: :attached_as_admin)
+      elsif anct_client.can_access?
+        Result.new(action: :contact_admin)
+      else
+        Result.new(action: :classic)
+      end
     end
 
     if matching_potential_operator
@@ -51,20 +58,9 @@ class EspaceOperateurANCT::AccountCreationRouter
     @anct_client ||= EspaceOperateurANCT::ApiClient.new(@agent.proconnect_siret, @agent.email)
   end
 
-  def handle_operator_case(anct_client, operator)
-    if anct_client.admin?
-      attach_or_create_territory(operator, anct_client)
-      Result.new(action: :attached_as_admin)
-    elsif anct_client.can_access?
-      Result.new(action: :contact_admin)
-    else
-      Result.new(action: :classic)
-    end
-  end
-
-  def attach_or_create_territory(operator, anct_client)
+  def attach_or_create_territory
     ActiveRecord::Base.transaction do
-      existing_territories = Territory.where(operator: operator, siret: @agent.proconnect_siret)
+      existing_territories = Territory.where(operator: matching_operator, siret: @agent.proconnect_siret)
 
       if existing_territories.many?
         raise "ProConnectOnboardingRouter: plusieurs territoires avec le même SIRET et opérateur (#{existing_territories.pluck(:id).join(', ')})"
@@ -73,7 +69,7 @@ class EspaceOperateurANCT::AccountCreationRouter
       existing_territory = existing_territories.first
 
       territory = existing_territory || Territory.create!(
-        operator: operator,
+        operator: matching_operator,
         category: ANCT_TYPE_TO_CATEGORY.fetch(anct_client.organization&.fetch("type", nil), "Inconnu"),
         siret: @agent.proconnect_siret
       )
@@ -85,7 +81,7 @@ class EspaceOperateurANCT::AccountCreationRouter
         verticale: @domain.verticale
       )
 
-      capture_attach_sentry_message(operator, territory, organisation, new_account: existing_territory.nil? || existing_organisation.nil?)
+      capture_attach_sentry_message(matching_operator, territory, organisation, new_account: existing_territory.nil? || existing_organisation.nil?)
 
       AgentRole.create!(agent: @agent, organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
       AgentTerritorialRole.create!(agent: @agent, territory: territory)
