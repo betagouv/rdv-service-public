@@ -1,7 +1,7 @@
 class RdvServicePublicApiClient
   class RequestError < StandardError; end
 
-  def initialize(api_token, refresh_token, on_token_refresh: nil)
+  def initialize(api_token, refresh_token = nil, on_token_refresh: nil)
     @api_token = api_token
     @refresh_token = refresh_token
     @on_token_refresh = on_token_refresh
