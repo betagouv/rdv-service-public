@@ -13,7 +13,6 @@ class EspaceOperateurANCT::AccountCreationRouter
     @domain = domain
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def call
     return Result.new(action: :classic) if @agent.proconnect_siret.blank?
 
@@ -29,12 +28,6 @@ class EspaceOperateurANCT::AccountCreationRouter
     if potential_operators_data.present?
       matches = potential_operators_data.select { |po| Operator.exists?(siret: po["siret"]) }
       if matches.any?
-        if matches.size > 1
-          Sentry.capture_message(
-            "ProConnectOnboardingRouter: plusieurs potentialOperators matchent notre DB",
-            extra: { agent_id: @agent.id, sirets: matches.pluck("siret") }
-          )
-        end
         return Result.new(action: :signup_via_operator, signup_url: matches.first["signupUrl"], operator_name: matches.first["name"])
       end
     end
@@ -44,7 +37,6 @@ class EspaceOperateurANCT::AccountCreationRouter
     Sentry.capture_exception(e)
     Result.new(action: :classic)
   end
-  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   private
 
