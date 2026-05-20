@@ -1,5 +1,5 @@
 RSpec.describe RdvServicePublicApiClient do
-  stub_env_with RDV_SERVICE_PUBLIC_OAUTH_BASE_URL: "http://rdv.localhost"
+  stub_env_with(RDV_SERVICE_PUBLIC_OAUTH_BASE_URL: "http://localhost:#{Capybara.server_port}")
 
   context "pour une requête qui renvoie une erreur 500" do
     before do

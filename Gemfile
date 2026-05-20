@@ -94,9 +94,6 @@ gem "blueprinter"
 # Parallel HTTP library on top of libcurl multi.
 gem "typhoeus"
 
-gem "faraday"
-gem "faraday_middleware-oauth2_refresh"
-
 # External services
 gem "notion-ruby-client", "~> 1.2"
 

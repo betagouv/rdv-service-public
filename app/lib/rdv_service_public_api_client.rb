@@ -55,7 +55,6 @@ class RdvServicePublicApiClient
       builder.request :json
       builder.response :json
       builder.use :sentry_breadcrumbs
-      builder.request :oauth2_refresh, @refresh_token
     end
   end
 end
