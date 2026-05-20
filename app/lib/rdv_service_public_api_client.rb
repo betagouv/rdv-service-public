@@ -10,6 +10,12 @@ class RdvServicePublicApiClient
   def post(path, params)
     response = connection.post("/api/v1/#{path}", params)
 
+    if response.status == 401 && @on_token_refresh
+      refresh_token!
+
+      response = connection.post("/api/v1/#{path}", params)
+    end
+
     return response.body if response.success?
 
     if response.status == 422
