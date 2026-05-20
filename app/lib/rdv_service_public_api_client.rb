@@ -66,7 +66,7 @@ class RdvServicePublicApiClient
       "Content-Type" => "application/json",
     }
 
-    @connection ||= Faraday.new(url:, headers:) do |builder|
+    Faraday.new(url:, headers:) do |builder|
       builder.request :json
       builder.response :json
       builder.use :sentry_breadcrumbs
@@ -86,7 +86,6 @@ class RdvServicePublicApiClient
 
     @api_token = new_token.token
     @refresh_token = new_token.refresh_token
-    @connection = nil # L'objet connection précédent avait encore l'api_token expiré en header, donc on doit en reconstruire un
     @on_token_refresh.call(new_token.token, new_token.refresh_token)
   end
 end
