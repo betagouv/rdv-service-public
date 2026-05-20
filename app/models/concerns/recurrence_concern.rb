@@ -12,7 +12,7 @@ module RecurrenceConcern
     validate :recurrence_starts_matches_first_day, if: :recurring?
     validate :recurrence_ends_after_first_day, if: :recurring?
 
-    scope :exceptionnelles, -> { where(recurrence: nil) }
+    scope :ponctuelles, -> { where(recurrence: nil) }
     scope :regulieres, -> { where.not(recurrence: nil) }
     scope :overlapping_range, lambda { |range|
       in_range(range).select { _1.occurrences_for(range).any? { |occurrence| occurrence.overlaps?(range) } }
@@ -45,6 +45,15 @@ module RecurrenceConcern
       manually_deserialized_attrs[:secondary_end_time] = Tod::TimeOfDay.parse(hash[:secondary_end_time]) if hash[:secondary_end_time].present?
 
       new(hash.merge(manually_deserialized_attrs))
+    end
+
+    def human_time(datetime)
+      minutes = datetime.min.zero? ? nil : datetime.min
+      "#{datetime.hour}h#{minutes}"
+    end
+
+    def human_time_range(start_time, ends_time)
+      [human_time(start_time), human_time(ends_time)].join("-")
     end
   end
 
@@ -84,21 +93,12 @@ module RecurrenceConcern
     (first_occurrence_ends_at - starts_at).to_i
   end
 
-  def exceptionnelle?
+  def ponctuelle?
     !recurring?
   end
 
   def recurring?
     recurrence.present?
-  end
-
-  def human_time_range
-    [human_time(starts_at), human_time(ends_at)].join("-")
-  end
-
-  def human_time(datetime)
-    minutes = datetime.min.zero? ? nil : datetime.min
-    "#{datetime.hour}h#{minutes}"
   end
 
   def secondary_times_present?
@@ -117,7 +117,7 @@ module RecurrenceConcern
     if recurring?
       occurrences_for_recurring(inclusive_datetime_range, inclusive_datetime_range)
     else
-      occurrences_for_exceptionnelle(inclusive_datetime_range)
+      occurrences_for_ponctuelle(inclusive_datetime_range)
     end
   end
 
@@ -144,7 +144,7 @@ module RecurrenceConcern
     occurrences.sort
   end
 
-  def occurrences_for_exceptionnelle(inclusive_datetime_range)
+  def occurrences_for_ponctuelle(inclusive_datetime_range)
     occurrences = []
     occurrences << occurrence_in_range(starts_at, ends_at, inclusive_datetime_range)
     occurrences << occurrence_in_range(secondary_starts_at, secondary_end_time.on(first_day), inclusive_datetime_range) if secondary_times_present?

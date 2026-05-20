@@ -1,10 +1,11 @@
 # La phrase du nom de la classe indique le contexte et l'action métier réalisés par ce service object en PORO
 class AdminCreatesAgent
-  def initialize(agent_params:, current_agent:, organisations:, access_level:)
+  def initialize(agent_params:, current_agent:, organisations:, access_level:, agent_accueil: nil)
     @agent_params = agent_params
     @current_agent = current_agent
     @organisations = organisations
     @access_level = access_level
+    @agent_accueil = agent_accueil
   end
 
   def call
@@ -68,7 +69,8 @@ class AdminCreatesAgent
         {
           organisation: organisation,
           access_level: @access_level,
-        }
+          agent_accueil: @agent_accueil,
+        }.compact
       end
     )
   end
@@ -84,8 +86,7 @@ class AdminCreatesAgent
       @agent.update(
         allow_blank_name: true,
         roles_attributes: [
-          organisation: organisation,
-          access_level: @access_level,
+          { organisation: organisation, access_level: @access_level, agent_accueil: @agent_accueil }.compact,
         ]
       )
     end

@@ -62,6 +62,29 @@ RSpec.describe Caldav::ExportRdvToCaldavJob do
       expect(caldav_events).to receive(:delete).with(caldav_event_url)
       described_class.new.perform(-1, agent.id, caldav_event_url:)
     end
+
+    context "et que le serveur répond à la suppression par une erreur" do
+      before do
+        allow(caldav_events).to receive(:delete).with(caldav_event_url).and_raise(Calendav::RequestError.new(instance_double(HTTP::Response, status: HTTP::Response::Status.new(response_status))))
+      end
+
+      context "404" do
+        let(:response_status) { 404 }
+
+        it "loggue l'info et ne retry pas" do
+          expect(Rails.logger).to receive(:info).with("Got a 404 calling DELETE on https://caldav.example.com/event.ics")
+          described_class.new.perform(-1, agent.id, caldav_event_url:)
+        end
+      end
+
+      context "500" do
+        let(:response_status) { 500 }
+
+        it "raises the exception" do
+          expect { described_class.new.perform(-1, agent.id, caldav_event_url:) }.to raise_error(Calendav::RequestError, "500 Internal Server Error")
+        end
+      end
+    end
   end
 
   context "quand l'agents_rdv n'existe plus et qu'aucun caldav_event_url n'est fourni" do

@@ -650,7 +650,7 @@ _plage_ouverture_org_paris_nord_martine_mercredi = PlageOuverture.create!(
   end_time: Tod::TimeOfDay.new(12),
   recurrence: Montrose.every(:week, on: [:wednesday], interval: 1, starts: Date.tomorrow)
 )
-_plage_ouverture_org_paris_nord_martine_exceptionnelle = PlageOuverture.create!(
+_plage_ouverture_org_paris_nord_martine_ponctuelle = PlageOuverture.create!(
   title: "Aprem PMI exptn",
   organisation_id: org_paris_nord.id,
   agent_id: agent_org_paris_nord_pmi_martine.id,
@@ -792,6 +792,21 @@ Rdv.create!(
     created_by: agent_org_paris_nord_pmi_elsa,
     users_count: 0,
     user_ids: []
+  )
+end
+
+# 11 RDVs binôme Martine+Marco il y a 1 mois : ils apparaissent en tête de liste (tri starts_at ASC)
+# s'il y a des bugs de dedoublonnage ils seront visibles dans la pagination en dev
+11.times do |i|
+  Rdv.create!(
+    starts_at: 1.month.ago.beginning_of_day + 8.hours + (i * 30.minutes),
+    duration_in_min: 30,
+    motif_id: motif_org_paris_nord_pmi_suivi.id,
+    lieu: lieu_org_paris_nord_bolivar,
+    organisation_id: org_paris_nord.id,
+    agent_ids: [agent_org_paris_nord_pmi_martine.id, agent_org_paris_nord_pmi_marco.id],
+    user_ids: [user_org_paris_nord_patricia.id],
+    created_by: agent_org_paris_nord_pmi_martine
   )
 end
 

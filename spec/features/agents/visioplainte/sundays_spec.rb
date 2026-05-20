@@ -16,7 +16,7 @@ RSpec.describe "Visioplainte agents can work on sunday" do
         visit new_admin_organisation_planning_plage_ouverture_path(organisation_id: organisation.id, agent_id: superviseur.id)
 
         check "Dépôt de plainte par visioconférence"
-        check "Répéter"
+        find('[for="radio_recurring"]').click
         check "Dimanche"
         click_button "Créer la plage d'ouverture"
         expect(page).to have_content("Plage d'ouverture créée")
@@ -30,7 +30,7 @@ RSpec.describe "Visioplainte agents can work on sunday" do
         visit new_admin_organisation_planning_absence_path(organisation_id: organisation.id, agent_id: superviseur.id)
 
         fill_in "Description", with: "réunion hebdo"
-        check "Répéter"
+        find('[for="radio_recurring"]').click
         check "Dimanche"
         click_button "Enregistrer"
         expect(page).to have_content("L'indisponibilité a été créée")
@@ -68,11 +68,11 @@ RSpec.describe "Visioplainte agents can work on sunday" do
 
     it "doesn't display these fields", js: true do
       visit new_admin_organisation_planning_plage_ouverture_path(organisation_id: organisation.id, agent_id: agent.id)
-      check "Répéter"
+      find('[for="radio_recurring"]').click
       expect(page).not_to have_content "Dimanche"
 
       visit new_admin_organisation_planning_absence_path(organisation_id: organisation.id, agent_id: agent.id)
-      check "Répéter"
+      find('[for="radio_recurring"]').click
       expect(page).not_to have_content "Dimanche"
     end
   end

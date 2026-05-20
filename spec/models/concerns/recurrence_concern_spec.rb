@@ -199,13 +199,18 @@ RSpec.describe RecurrenceConcern do
     end
   end
 
-  shared_examples "#human_time_range" do
+  shared_examples ".human_time_range" do
+    it "supports both Time-like objects and Tod::TimeOfDay objects" do
+      expect(described_class.human_time_range(Tod::TimeOfDay.new(8, 15), Tod::TimeOfDay.new(11, 30))).to eq("8h15-11h30")
+      expect(described_class.human_time_range(Time.zone.parse("2026-04-13 08:15"), Time.zone.parse("2026-04-13 11:30"))).to eq("8h15-11h30")
+    end
+
     it "does not show minutes if the are zero" do
       object = build(factory, start_time: "09:00", end_time: "12:00")
-      expect(object.human_time_range).to eq("9h-12h")
+      expect(described_class.human_time_range(object.start_time, object.end_time)).to eq("9h-12h")
 
       object = build(factory, start_time: "09:15", end_time: "12:45")
-      expect(object.human_time_range).to eq("9h15-12h45")
+      expect(described_class.human_time_range(object.start_time, object.end_time)).to eq("9h15-12h45")
     end
   end
 
@@ -217,12 +222,12 @@ RSpec.describe RecurrenceConcern do
       include_examples "#in_range"
       include_examples "#recurrence_ends_after_first_day"
       include_examples "#set_recurrence_ends_at"
-      include_examples "#human_time_range"
+      include_examples ".human_time_range"
     end
   end
 
   describe "plage avec horaires d'après-midi" do
-    context "quand elle est exceptionnelle" do
+    context "quand elle est ponctuelle" do
       it "works" do
         plage = build(:plage_ouverture, :no_recurrence,
                       first_day: Date.new(2025, 2, 10),

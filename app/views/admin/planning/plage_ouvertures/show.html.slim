@@ -1,5 +1,3 @@
-- content_for(:menu_item) { "menu-plages-ouvertures" }
-
 - content_for :title do
   = truncate(@plage_ouverture.title_with_default, length: 40)
 
@@ -32,7 +30,7 @@
             = sanitize(display_recurrence(@plage_ouverture).join(" "))
           - else
             | Le #{l(@plage_ouverture.first_day, format: :human)} #{display_time_range(@plage_ouverture)}
-          = exceptionnelle_tag(@plage_ouverture)
+          = ponctuelle_tag(@plage_ouverture)
         - if @plage_ouverture.lieu
           div.mt-2.d-flex
             .flex-shrink-0.mr-1.font-weight-bold Lieu&nbsp;:

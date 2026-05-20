@@ -1,6 +1,8 @@
 @plage_ouverture_occurrences.map do |plage_ouverture, occurrence|
+  title = sanitize(plage_ouverture.title) if plage_ouverture.title.present?
+  title ||= "Plage de #{PlageOuverture.human_time_range(occurrence.starts_at, occurrence.ends_at)}"
   {
-    title: sanitize(plage_ouverture.title_with_default),
+    title:,
     start: occurrence.starts_at.as_json,
     end: occurrence.ends_at.as_json,
     backgroundColor: plage_ouverture.organisation == @organisation ? plage_ouverture.hex_color : "grey",

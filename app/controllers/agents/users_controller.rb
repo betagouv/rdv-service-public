@@ -40,6 +40,10 @@ class Agents::UsersController < AgentAuthController
 
   private
 
+  def current_organisation
+    @current_organisation ||= Organisation.find(params[:organisation_id])
+  end
+
   def formatted_users_from_organisation(users)
     {
       text: nil,

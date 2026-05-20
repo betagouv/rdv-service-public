@@ -50,6 +50,6 @@ http_interactions:
       Set-Cookie: "[Filtered in vcr.rb -> before_record]"
     body:
       encoding: UTF-8
-      string: '{"organization":{"type":"other","name":"Bezonvaux","oidc_valid":null},"operator":{"id":"f33e9b4b-213f-4db9-8b39-ab17558f2931","name":"TEST","url":null,"config":{}},"entitlements":{"can_access":true,"is_admin":true,"is_admin_resolve_level":"service"}}'
+      string: '{"organization":{"type":"other","name":"Bezonvaux","oidc_valid":null},"operator":{"id":"f33e9b4b-213f-4db9-8b39-ab17558f2931","name":"TEST","siret":"13002603200016","url":null,"config":{}},"entitlements":{"can_access":true,"is_admin":true,"is_admin_resolve_level":"service"}}'
   recorded_at: Mon, 09 Mar 2026 17:05:01 GMT
 recorded_with: VCR 6.4.0

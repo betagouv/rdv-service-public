@@ -30,7 +30,8 @@ class Admin::AgentsController < AgentAuthController
       agent_params: create_agent_params,
       current_agent: current_agent,
       organisations: [current_organisation],
-      access_level: params[:agent][:agent_role][:access_level]
+      access_level: params[:agent][:agent_role][:access_level],
+      agent_accueil: params[:agent][:agent_role][:agent_accueil]
     )
 
     @agent = create_agent.call
@@ -59,6 +60,7 @@ class Admin::AgentsController < AgentAuthController
       agent: @agent,
       organisation: current_organisation,
       new_access_level: params[:agent][:agent_role][:access_level],
+      new_agent_accueil: params[:agent][:agent_role][:agent_accueil],
       agent_params: update_agent_params,
       inviting_agent: current_agent
     )
@@ -95,7 +97,7 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def render_new
-    @services = current_territory.services
+    @services = current_territory.services.reject(&:secretariat?)
     @roles = access_levels_collection
     @agent_role = AgentRole.new
 

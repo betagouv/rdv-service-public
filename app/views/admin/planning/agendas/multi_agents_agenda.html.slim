@@ -1,5 +1,3 @@
-- content_for(:menu_item) { "menu-agendas" }
-
 - content_for :title, "Agenda (#{@agents.count} #{'agent'.pluralize(@agents.count)} sélectionnés)"
 
 ruby:
@@ -10,7 +8,7 @@ ruby:
   ]
 
   event_sources.push({ id: "ExternalCalendarEvent", url: admin_api_agenda_external_calendar_events_path(agent_id: @agents.map(&:id), format: :json) }) if @agents.any?(&:caldav_configured?)
-  event_sources.push(OffDays.to_full_calendar_array) unless current_territory.work_on_sunday?
+  event_sources.push(OffDays.to_full_calendar_array(@agents.map(&:id))) unless current_territory.work_on_sunday?
 
   resources = @agents.map { { id: _1.id, title: _1.full_name_or_email } }
 

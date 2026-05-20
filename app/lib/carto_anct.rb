@@ -13,61 +13,31 @@ module CartoANCT
   end
 
   def self.fetch_and_merge_metrics
-    insee_hash = Hash.new(0)
     siret_hash = Hash.new(0)
 
-    nombre_agents_par_code_insee(db_name: "rdvs").each  { |row| insee_hash[row["insee"]] += row["tu"].to_i }
-    nombre_agents_par_code_insee(db_name: "rdvsp").each { |row| insee_hash[row["insee"]] += row["tu"].to_i }
-    nombre_agents_par_siret(db_name: "rdvs").each       { |row| siret_hash[row["siret"]] += row["tu"].to_i }
-    nombre_agents_par_siret(db_name: "rdvsp").each      { |row| siret_hash[row["siret"]] += row["tu"].to_i }
+    nombre_agents_par_siret_espace(db_name: "rdvs").each  { |row| siret_hash[row["siret"]] += row["tu"].to_i }
+    nombre_agents_par_siret_espace(db_name: "rdvsp").each { |row| siret_hash[row["siret"]] += row["tu"].to_i }
 
-    insee_metrics = insee_hash.sort.map { |insee, tu| { insee:, metrics: { tu: } } }
-    siret_metrics = siret_hash.sort.map { |siret, tu| { siret:, metrics: { tu: } } }
-
-    insee_metrics + siret_metrics
+    siret_hash.sort.map { |siret, tu| { siret:, metrics: { tu: } } }
   end
 
-  def self.nombre_agents_par_siret(db_name:)
+  def self.nombre_agents_par_siret_espace(db_name:)
     query = <<~SQL.squish.gsub("$db_name", db_name)
       SELECT
-        "$db_name"."agents"."proconnect_siret" AS "siret",
+        "$db_name"."territories"."siret" AS "siret",
         COUNT(DISTINCT "$db_name"."agents"."id") AS tu
       FROM
-        "$db_name"."agents"
+        "$db_name"."territories"
       JOIN
-        "$db_name"."agents_rdvs" ON "$db_name"."agents_rdvs"."agent_id" = "$db_name"."agents"."id"
+        "$db_name"."organisations" ON "$db_name"."organisations"."territory_id" = "$db_name"."territories"."id"
       JOIN
-        "$db_name"."rdvs" ON "$db_name"."rdvs"."id" = "$db_name"."agents_rdvs"."rdv_id"
+        "$db_name"."agent_roles" ON "$db_name"."agent_roles"."organisation_id" = "$db_name"."organisations"."id"
+      JOIN
+        "$db_name"."agents" ON "$db_name"."agents"."id" = "$db_name"."agent_roles"."agent_id"
       WHERE
-        "$db_name"."agents"."proconnect_siret" IS NOT NULL
+        "$db_name"."territories"."siret" IS NOT NULL
       GROUP BY
-        "$db_name"."agents"."proconnect_siret";
-    SQL
-    MetabaseApi.sql_query(query, timeout: 60)
-  end
-
-  def self.nombre_agents_par_code_insee(db_name:)
-    query = <<~SQL.squish.gsub("$db_name", db_name)
-      SELECT
-        "Correspondance Code Insee Code Postal - Code Postal"."code_insee" AS "insee",
-        COUNT(DISTINCT "$db_name"."agents"."id") AS "tu"
-      FROM
-        "$db_name"."agents"
-
-      JOIN "$db_name"."agents_rdvs" AS "Agents Rdvs" ON "$db_name"."agents"."id" = "Agents Rdvs"."agent_id"
-        JOIN "$db_name"."rdvs" AS "Rdvs" ON "Agents Rdvs"."rdv_id" = "Rdvs"."id"
-        JOIN "$db_name"."lieux" AS "Lieux - Lieu" ON "Rdvs"."lieu_id" = "Lieux - Lieu"."id"
-        JOIN (
-          SELECT
-            "csv_uploads"."correspondance_code_insee_code_postal_20251105084418"."code_insee" AS "code_insee",
-            "csv_uploads"."correspondance_code_insee_code_postal_20251105084418"."code_postal" AS "code_postal"
-          FROM
-            "csv_uploads"."correspondance_code_insee_code_postal_20251105084418"
-        ) AS "Correspondance Code Insee Code Postal - Code Postal" ON "Lieux - Lieu"."code_postal" = "Correspondance Code Insee Code Postal - Code Postal"."code_postal"
-      GROUP BY
-        "Correspondance Code Insee Code Postal - Code Postal"."code_insee"
-      ORDER BY
-        "insee" ASC
+        "$db_name"."territories"."siret";
     SQL
     MetabaseApi.sql_query(query, timeout: 60)
   end

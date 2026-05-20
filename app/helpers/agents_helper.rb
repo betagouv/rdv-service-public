@@ -40,19 +40,19 @@ module AgentsHelper
     agents.map(&:full_name_and_service).sort.to_sentence
   end
 
-  def menu_top_level_item
-    {
-      "menu-agendas" => "planning",
-      "menu-plages-ouvertures" => "planning",
-      "menu-absences" => "planning",
-      "menu-settings" => "settings",
-      "menu-organisation-stats" => "stats",
-      "menu-stats" => "stats",
-    }[content_for(:menu_item)]
+  def active_menu_item
+    case controller_name
+    when "lieux", "agents", "invitations", "motifs", "online_bookings", "configurations", "organisations"
+      :menu_settings
+    when "users", "merge_users", "referent_assignations"
+      :menu_users
+    when "rdvs"
+      :menu_liste_rdvs
+    end
   end
 
   def navigation_scoped_by_agent_services?(current_agent, current_organisation)
-    return false if current_agent.secretaire?
+    return false if current_agent.agent_accueil_in_organisation?(current_organisation)
 
     !current_agent.admin_in_organisation?(current_organisation)
   end

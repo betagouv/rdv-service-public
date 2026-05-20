@@ -28,7 +28,8 @@ module Caldav
     private
 
     def create_event
-      ics = IcalFormatters::Ics.from_payload(agents_rdv.rdv.payload(:create, agents_rdv.agent)).to_ical
+      payload = agents_rdv.rdv.payload(action: :create, recipient: agents_rdv.agent, sensitive_data: agent.caldav_include_sensitive_data)
+      ics = IcalFormatters::Ics.from_payload(payload).to_ical
       identifier = "agents_rdv-#{agents_rdv.id}.ics"
       event = agent.caldav_client.events.create(agent.caldav_agenda_url, identifier, ics)
       # Le provider Caldav n’utilise pas forcément l’identifiant qu’on lui donne pour créer l’event
@@ -38,12 +39,20 @@ module Caldav
     end
 
     def update_event
-      ics = IcalFormatters::Ics.from_payload(agents_rdv.rdv.payload(:update, agents_rdv.agent)).to_ical
+      payload = agents_rdv.rdv.payload(action: :update, recipient: agents_rdv.agent, sensitive_data: agent.caldav_include_sensitive_data)
+      ics = IcalFormatters::Ics.from_payload(payload).to_ical
       agent.caldav_client.events.update(agents_rdv.caldav_url, ics)
     end
 
     def delete_event(caldav_event_url)
       agent.caldav_client.events.delete(caldav_event_url)
+    rescue Calendav::RequestError => e
+      if e.response.status.code == 404
+        # L'événement externe à supprimer est introuvable, pas la peine de retry
+        Rails.logger.info("Got a 404 calling DELETE on #{caldav_event_url}")
+      else
+        raise
+      end
     end
 
     def agent

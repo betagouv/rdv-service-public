@@ -105,8 +105,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     end
   end
 
-  context "for a secretaire" do
-    let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
+  context "for an agent d'accueil" do
+    let(:agent) { create(:agent, agent_accueil_role_in_organisations: [organisation]) }
 
     it "cannot create plage_ouverture" do
       click_link "Créer une plage d'ouverture", match: :first

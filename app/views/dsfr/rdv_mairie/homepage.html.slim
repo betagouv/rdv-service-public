@@ -277,7 +277,7 @@ hr[aria-hidden="true"]
                 | Une solution développée par les services de l’État pour l’ensemble de la fonction publique. Nous adaptons la solution aux contraintes réglementaires publiques et intégrons l’écosystème numérique public à la solution.
           .fr-card__header.rdv-background-color-alt-blue-ecume
             .fr-card__img
-              = image_tag "rdv_mairie/republique-francaise-splash.png", alt: "", class: "fr-responsive-img"
+              = dsfr_svg "artwork/pictograms/map/location-overseas-france", class: "fr-responsive-img"
 
       .fr-col-12.fr-col-md-4
         .fr-card.fr-p-0
@@ -289,19 +289,19 @@ hr[aria-hidden="true"]
                 | Une solution utilisée dans des contextes et pour des enjeux variés. Nous mutualisons les besoins et co-construisons une vision commune pour enrichir une solution unique au bénéfice de toutes les administrations.
           .fr-card__header.rdv-background-color-alt-blue-ecume
             .fr-card__img
-              = image_tag "rdv_mairie/collaboration-bras-ampoules.png", alt: "", class: "fr-responsive-img"
+              = dsfr_svg "artwork/pictograms/environment/human-cooperation", class: "fr-responsive-img"
 
       .fr-col-12.fr-col-md-4
         .fr-card.fr-p-0
           .fr-card__body
             .fr-card__content
               h3.fr-card__title
-                | Gratuite
+                | Sécurisée
               p.fr-card__desc
-                | Une solution gratuite pour les administrations utilisatrices. Des financements interministériels garantissent la pérennité de la solution pour les administrations utilisatrices.
+                | Une solution hébergée en France, conçue dans le respect du RGPD et des exigences de sécurité du numérique public.
           .fr-card__header.rdv-background-color-alt-blue-ecume
             .fr-card__img
-              = image_tag "rdv_mairie/billet-0-euros.png", alt: "", class: "fr-responsive-img"
+              = dsfr_svg "artwork/pictograms/system/padlock", class: "fr-responsive-img"
 
 / Redis cache store is fault tolerant, it will return nil if unavailable, and we'll simply skip this section
 / cf https://github.com/rails/rails/blob/main/activesupport/lib/active_support/cache/redis_cache_store.rb#L31-L32

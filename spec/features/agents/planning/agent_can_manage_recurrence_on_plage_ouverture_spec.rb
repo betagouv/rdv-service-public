@@ -11,12 +11,12 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
   end
 
   it "default", js: true do
-    expect_not_checked("recurrence_has_recurrence")
+    expect(find("#radio_recurring", visible: false)).not_to be_checked
     expect(page).not_to have_text("Répéter tou(te)s les")
 
     # fill recurrence form
     check "Suivi bonjour"
-    check("recurrence_has_recurrence")
+    find('[for="radio_recurring"]').click
     expect(page).to have_text("Répéter tou(te)s les")
     check("recurrence_on_monday")
     check("recurrence_on_tuesday")
@@ -47,7 +47,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
 
     # reload page to check if form is filled correctly
     visit edit_admin_organisation_planning_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
-    expect_checked("recurrence_has_recurrence")
+    expect(find("#radio_recurring", visible: false)).to be_checked
     expect_checked("recurrence_on_monday")
     expect_checked("recurrence_on_tuesday")
     expect_checked("recurrence_on_wednesday")
@@ -109,7 +109,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
 
     # reload page to check if form is filled correctly
     visit edit_admin_organisation_planning_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
-    expect_checked("recurrence_has_recurrence")
+    expect(find("#radio_recurring", visible: false)).to be_checked
     expect(page).to have_select("recurrence_every", selected: "mois")
     expect(page).to have_select("recurrence_interval", selected: "1")
     expect(page).to have_text("Tous les 2ème mercredi du mois")
@@ -120,9 +120,5 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
 
   def expect_checked(element_selector)
     expect(page).to have_field(element_selector, checked: true)
-  end
-
-  def expect_not_checked(element_selector)
-    expect(page).to have_field(element_selector, checked: false)
   end
 end

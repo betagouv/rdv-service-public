@@ -4,6 +4,7 @@ class Admin::RdvsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_rdv, :set_contextual_agents, except: %i[index a_renseigner export participations_export]
+  before_action { @current_menu_item = :menu_planning if @contextual_agents.present? }
 
   PERMITTED_PER_PAGE = [10, 25, 50].freeze
 
@@ -20,7 +21,7 @@ class Admin::RdvsController < AgentAuthController
 
     # On fait cette requête en deux temps pour éviter de faire un `order` et un `include` sur le même scope,
     # parce que ça fait un sort et beaucoup de left outer joins
-    @rdvs_in_page = Rdv.where(id: @rdvs.pluck(:id)).order(order).includes(
+    @rdvs_in_page = Rdv.where(id: @rdvs.reselect("DISTINCT ON (#{distinct_on}) rdvs.id")).order(order).includes(
       [
         :agents_rdvs, :organisation, :lieu, :motif,
         {

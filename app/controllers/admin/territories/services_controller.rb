@@ -2,8 +2,8 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
   def edit
     authorize(current_territory, policy_class: Agent::TerritoryPolicy)
 
-    activated_services = format_for_checkboxes(current_territory.services)
-    other_services = format_for_checkboxes(Service.where.not(id: current_territory.service_ids))
+    activated_services = format_for_checkboxes(current_territory.services.reject(&:secretariat?))
+    other_services = format_for_checkboxes(Service.where.not(id: current_territory.service_ids).reject(&:secretariat?))
 
     @services = activated_services + other_services
   end

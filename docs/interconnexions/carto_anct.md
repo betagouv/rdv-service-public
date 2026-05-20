@@ -9,18 +9,17 @@ https://docs.numerique.gouv.fr/docs/6b33b32e-2f58-4179-8d1b-7c01414c44d3/
 
 ## Quelle données fournissons-nous ?
 
-La spec nous indique de fournir pour chaque code SIRET et INSEE présent dans la base le
-"Nombre total d'agents présents dans la base de donnée pour cette commune / collectivité".
+La spec nous indique de fournir pour chaque code SIRET présent dans la base le
+"Nombre total d'agents présents dans la base de donnée pour cette collectivité".
 
-Notre source de SIRET est le code SIRET fourni par ProConnect lors d'une connexion agent.
-Notre source de code INSEE est les lieux physiques où les agents organisent les rendez-vous. 
+Notre source de SIRET est le champ `siret` des espaces (territories).
+
+Suite à une demande de la suite territoriale, nous ne fournissons plus les codes INSEE.
 
 Nous avons besoin d'inclure ces données pour les instances RDV-Solidarités et RDV-SP.
-Nou faisons donc 4 requêtes à Metabse :
-- Nombre d'agents par code INSEE (RDV-Solidarités)
-- Nombre d'agents par code INSEE (RDV-SP)
-- Nombre d'agents par SIRET (RDV-Solidarités)
-- Nombre d'agents par SIRET (RDV-SP)
+Nous faisons donc 2 requêtes à Metabase :
+- Nombre d'agents par SIRET d'espace (RDV-Solidarités)
+- Nombre d'agents par SIRET d'espace (RDV-SP)
 
 Nous fusionnons ensuite les résultats pour qu'ils soient conformes à l'exemple de la spec :
 

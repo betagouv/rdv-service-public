@@ -136,6 +136,9 @@ Rails.application.routes.draw do
     put "agents/mot_de_passe" => "agents/mot_de_passes#update", as: "agent_mot_de_passes"
 
     namespace :agents do
+      resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code" do
+        post :resend, on: :collection
+      end
       resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
         resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync
@@ -176,6 +179,7 @@ Rails.application.routes.draw do
 
       resources :territories, only: %i[new create]
       resources :territory_creation_requests, only: %i[new create]
+      get "inscription_via_operateur", to: "inscription_via_operateur#show", as: :inscription_via_operateur
       resources :instance_exports, only: %i[index]
       resources :exports, only: %i[index] do
         get :download

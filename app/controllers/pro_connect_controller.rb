@@ -1,6 +1,10 @@
 # Le guide pour configurer ProConnect en local : docs/interconnexions/proconnect.md
 
 class ProConnectController < ApplicationController
+  # IDP ProConnect nécessitant une double authentification pour les agents qui ont des comptes sensibles.
+  # Configurable via la variable d'environnement IDP_PRO_CONNECT_FORCE_2FA_ENABLED (liste séparée par des virgules).
+  IDP_PRO_CONNECT_FORCE_2FA_ENABLED = ENV.fetch("IDP_PRO_CONNECT_FORCE_2FA_ENABLED", "").split(",").map(&:strip).freeze
+
   def auth
     auth_client = ProConnectOpenIdClient::Auth.new(
       login_hint: params[:login_hint],
@@ -178,6 +182,15 @@ class ProConnectController < ApplicationController
         ERROR
         redirect_to new_agent_session_path and return
       end
+    elsif agent.sensitive_account? && !callback_client.went_through_2fa?
+      if IDP_PRO_CONNECT_FORCE_2FA_ENABLED.include?(callback_client.user_idp_id)
+        require_2fa_for_sensitive_agent(callback_client) and return
+      else
+        session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = agent.id
+        session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY] = callback_client.id_token_for_logout
+        Agents::LoginCodeSender.perform(email: agent.email, domain_id: current_domain.id)
+        redirect_to new_agents_sessions_by_code_path and return
+      end
     end
 
     if agent.email != callback_client.user_email
@@ -202,9 +215,24 @@ class ProConnectController < ApplicationController
 
     bypass_sign_in agent, scope: :agent
     session[:pro_connect_id_token] = callback_client.id_token_for_logout
+
     redirect_to after_sign_in_path_for(agent)
   end
   # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+
+  def require_2fa_for_sensitive_agent(callback_client)
+    auth_client = ProConnectOpenIdClient::Auth.new(
+      login_hint: callback_client.user_email,
+      client_id: current_domain.pro_connect_client_id,
+      client_secret: current_domain.pro_connect_client_secret
+    )
+    session[:pro_connect] = {
+      state: auth_client.state,
+      nonce: auth_client.nonce,
+      connection_for: "agent",
+    }
+    redirect_to auth_client.redirect_url(pro_connect_callback_url, force_2fa: true), allow_other_host: true
+  end
 
   def generic_error_message
     support_link = new_aide_demande_support_path(role: "agent", sujet: "Connexion ProConnect")

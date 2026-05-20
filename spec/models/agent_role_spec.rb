@@ -8,11 +8,10 @@ RSpec.describe AgentRole, type: :model do
       it { is_expected.to be_truthy }
     end
 
-    context "basic access_level, but agent is secretaire" do
-      let(:agent) { create(:agent, :secretaire) }
-      let(:agent_role) { create(:agent_role, agent: agent) }
+    context "agent_accueil boolean" do
+      let(:agent_role) { build(:agent_role, :agent_accueil) }
 
-      it { expect(subject).to be_truthy }
+      it { is_expected.to be_truthy }
     end
 
     context "basic access_level" do

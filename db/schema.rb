@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_25_000001) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_18_132616) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -63,6 +63,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_25_000001) do
     t.bigint "agent_id", null: false
     t.bigint "organisation_id", null: false
     t.enum "access_level", default: "basic", null: false, enum_type: "access_level"
+    t.boolean "agent_accueil", default: false, null: false
     t.index ["access_level"], name: "index_agent_roles_on_access_level"
     t.index ["agent_id"], name: "index_agent_roles_on_agent_id"
     t.index ["organisation_id", "agent_id"], name: "index_agent_roles_on_organisation_id_and_agent_id", unique: true
@@ -156,6 +157,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_25_000001) do
     t.boolean "sensitive_account", default: false, null: false
     t.datetime "caldav_disconnect_started_at"
     t.boolean "display_extended_hours", default: false, null: false
+    t.boolean "caldav_include_sensitive_data", default: false, null: false
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -542,6 +544,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_25_000001) do
     t.datetime "disabled_at", comment: "Date de fermeture de l'organisation"
     t.string "time_zone", default: "Europe/Paris", null: false
     t.string "public_link_id", null: false
+    t.boolean "online_booking_with_email", default: true, null: false, comment: "Indique si on autorise ou non les usagers à se connecter via leur adresse email lors de la prise de rendez-vous en ligne."
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["public_link_id"], name: "index_organisations_on_public_link_id", unique: true
@@ -782,6 +785,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_25_000001) do
     t.boolean "work_on_sunday", default: false
     t.bigint "operator_id"
     t.boolean "public_stats", default: true, null: false
+    t.string "siret"
     t.index ["departement_number"], name: "index_territories_on_departement_number", where: "((departement_number)::text <> ''::text)"
     t.index ["operator_id"], name: "index_territories_on_operator_id"
   end

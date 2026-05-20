@@ -106,8 +106,8 @@ RSpec.describe Motif, type: :model do
     let!(:motif_without_service) { create(:motif, service: nil, organisation: organisation) }
     let(:plage_ouverture) { build(:plage_ouverture, agent: agent, organisation: organisation) }
 
-    describe "for secretaire" do
-      let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
+    describe "for agent d'accueil" do
+      let(:agent) { create(:agent, agent_accueil_role_in_organisations: [organisation]) }
 
       it { is_expected.to contain_exactly(motif3, motif_without_service) }
 

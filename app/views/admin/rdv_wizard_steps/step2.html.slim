@@ -1,5 +1,4 @@
 ruby:
-  content_for(:menu_item) { "menu-agendas" }
   content_for(:title) { t(".page_title", starts_at: l(@rdv.starts_at, format: :dense)) }
   modals_return_location = new_admin_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 2))
   previous_steps = [{ step: 1, value: motif_name_and_location_type(@rdv.motif) } ]
@@ -44,7 +43,7 @@ ruby:
       /On met un margin-left négatif pour que l'icône du bouton soit alignée avec celle de l'usager au-dessus
       = link_to t("helpers.add"), ".collapse-add-user-selection", style: "margin-left: -12px", class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-btn--icon-left fr-icon-add-circle-fill", data: { toggle: "collapse" }
     .collapse.collapse-add-user-selection.no-transition class=(show_add_user ? "show" : "")
-      - if current_organisation.users.any?
+      - if current_territory.users.any?  # La recherche d'usager se fait sur les autres organisations du territoire, donc on propose une recherche dès que possible
         = label_tag :user_search, "Rechercher un usager", {class: "form-control-label string optional"}
         div.form-row.grid-align-center
           .flex-grow-1.pr-4.ml-1

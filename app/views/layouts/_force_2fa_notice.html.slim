@@ -1,0 +1,6 @@
+- if current_agent&.sensitive_account && ProConnectController::IDP_PRO_CONNECT_FORCE_2FA_ENABLED.include?(current_agent.pro_connect_idp_id) && !current_agent.pro_connect_2fa_active
+  = dsfr_notice title: "Information",
+          description: "À partir du 15 avril, la connexion à votre compte #{current_domain.name} nécessitera une double authentification (2FA).",
+          link_label: "En savoir plus",
+          link_href: "https://aide.rdv-service-public.fr/toutes-les-notions/activation-de-la-double-authentification",
+          link_title: "En savoir plus - Nouvel onglet"

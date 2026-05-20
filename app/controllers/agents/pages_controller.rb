@@ -16,6 +16,17 @@ class Agents::PagesController < AgentAuthController
       policy = Agent::TerritoryPolicy.new(current_agent, Territory.new)
       if current_agent.possible_duplicate_organisations.empty? && policy.new?
         redirect_to new_agents_territory_path
+      else
+        result = EspaceOperateurANCT::AccountCreationRouter.new(current_agent, current_domain).call
+        case result.action
+        when :attached_as_admin
+          redirect_to admin_organisation_planning_agenda_path(current_agent.organisations.first)
+        when :contact_admin
+          @needs_permission_from_admin = true
+        when :signup_via_operator
+          session[:inscription_via_operateur] = { "operator_name" => result.operator_name, "signup_url" => result.signup_url }
+          redirect_to agents_inscription_via_operateur_path
+        end
       end
     end
   end

@@ -38,17 +38,17 @@ RSpec.describe Admin::Api::Agenda::PlageOuverturesController, type: :controller 
       describe "JSON response" do
         render_views
 
-        let!(:plage_ouverture) { create(:plage_ouverture, agent: agent, first_day: Time.zone.today, organisation: organisation) }
+        let(:start_date) { Time.zone.today.monday }
+        let(:end_date) { start_date.end_of_week }
 
         it "is serialized for FullCalendar" do
-          start_date = Time.zone.today.monday
-          end_date = start_date.end_of_week
+          plage_ouverture = create(:plage_ouverture, agent: agent, first_day: Time.zone.today, organisation: organisation, title: "Permanence")
 
           get :index, params: { agent_id: agent.id, organisation_id: organisation.id, start: start_date, end: end_date, format: :json }
 
           expected_response = [
             {
-              "title" => plage_ouverture.title_with_default,
+              "title" => "Permanence",
               "start" => plage_ouverture.starts_at.as_json,
               "end" => plage_ouverture.ends_at.as_json,
               "resourceIds" => [plage_ouverture.agent.id],
@@ -64,6 +64,15 @@ RSpec.describe Admin::Api::Agenda::PlageOuverturesController, type: :controller 
             },
           ]
           expect(response.parsed_body).to eq(expected_response)
+        end
+
+        it "displays times if title is missing" do
+          create(:plage_ouverture, agent:, organisation:, first_day: Time.zone.today, title: nil,
+                                   start_time: "08:00", end_time: "11:30", secondary_start_time: "14:00", secondary_end_time: "18:00")
+
+          get :index, params: { agent_id: agent.id, organisation_id: organisation.id, start: start_date, end: end_date, format: :json }
+
+          expect(response.parsed_body.sort_by { _1["start"] }.pluck("title")).to eq(["Plage de 8h-11h30", "Plage de 14h-18h"])
         end
       end
     end

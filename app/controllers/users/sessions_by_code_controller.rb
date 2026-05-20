@@ -12,7 +12,7 @@ class Users::SessionsByCodeController < ApplicationController
 
   def create
     email, code = params.require(:login_code).expect(:email, :code)
-    validator = Users::LoginCodeValidator.new(email:, code:)
+    validator = LoginCodeValidator.new(email:, code:)
 
     if validator.valid?
       valid_login_code = validator.valid_login_code

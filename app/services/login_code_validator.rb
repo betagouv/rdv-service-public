@@ -1,4 +1,4 @@
-class Users::LoginCodeValidator
+class LoginCodeValidator
   # dans ce service on distingue 2 LoginCodes :
   # - `usable` : moins de 30 minutes et pas utilisé, peut servir à se connecter
   # - `matching` : celui qui correspond au code saisi par l’usager et a moins de 24h

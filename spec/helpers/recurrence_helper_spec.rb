@@ -44,15 +44,15 @@ RSpec.describe RecurrenceHelper do
     end
   end
 
-  describe "#exceptionnelle_tag" do
-    it "return exceptionnelle badge without recurrence" do
+  describe "#ponctuelle_tag" do
+    it "return ponctuelle badge without recurrence" do
       plage_ouverture = build(:plage_ouverture)
-      expect(exceptionnelle_tag(plage_ouverture)).to eq(%(<span class="fr-badge fr-badge--sm fr-badge--green-archipel">Exceptionnelle</span>))
+      expect(ponctuelle_tag(plage_ouverture)).to eq(%(<span class="fr-badge fr-badge--sm fr-badge--green-archipel">Ponctuelle</span>))
     end
 
     it "return nil with recurrence" do
       plage_ouverture = build(:plage_ouverture, recurrence: Montrose.every(:week))
-      expect(exceptionnelle_tag(plage_ouverture)).to be_nil
+      expect(ponctuelle_tag(plage_ouverture)).to be_nil
     end
   end
 end

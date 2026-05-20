@@ -1,5 +1,3 @@
-- content_for(:menu_item) { "menu-plages-ouvertures" }
-
 - content_for :title, "Plages d'ouverture (#{@agents.count} #{'agent'.pluralize(@agents.count)} sélectionnés)"
 
 - @agents.includes(:services).each do |agent|

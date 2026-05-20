@@ -13,6 +13,12 @@ class Rack::Attack
     end
   end
 
+  throttle("saisie de code de connexion agent - throttling par email", limit: Rails.env.test? ? 2 : 60, period: 10.minutes) do |request|
+    if request.path.match(%r{agents/sessions_by_code}) && request.post? && request.params.dig("login_code", "email").present?
+      request.params.dig("login_code", "email")
+    end
+  end
+
   Rack::Attack.throttled_responder = lambda do |request|
     exception = ThrottleError.new(request.env["rack.attack.matched"])
     Sentry.set_context("rack_attack_match_data", request.env["rack.attack.match_data"])

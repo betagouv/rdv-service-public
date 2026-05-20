@@ -1,5 +1,3 @@
-- content_for(:menu_item) { "menu-absences" }
-
 - content_for :title do
   - if @absence.agent == current_agent
     = "Modifier votre indisponibilité"
@@ -30,9 +28,7 @@
 
 .row.justify-content-center
   .col-md-6
-    .card
-      .card-body
-        = render "form", absence: @absence, agent: @agent
+    = render "form", absence: @absence, agent: @agent
 
 .row.justify-content-center
   .col-md-12.col-lg-8

@@ -2,8 +2,6 @@
   - content_for :title do
     .d-print-none Liste des RDV
 
-  - content_for(:menu_item) { "menu-rdvs-list" }
-
   - content_for :fil_ariane do
     - if @breadcrumb_page == "agenda" && @form.agent.present?
       = render "common/fil_ariane", titles_and_paths: [["Agenda de #{@form.agent.full_name}", admin_organisation_planning_agenda_path(current_organisation, agent_id: @form.agent.id, date: @form.start)]], current_page_title: "Liste des RDV"
@@ -58,7 +56,7 @@
           span.mr-2.fr-pt-1v Nombre de RDV par page :
           .fr-pagination__list.rdv-per-page-list
             - Admin::RdvsController::PERMITTED_PER_PAGE.each do |per|
-              - path = admin_organisation_rdvs_path(@form.to_query.merge(per:, page: params[:page], organisation_id: current_organisation.id))
+              - path = admin_organisation_rdvs_path(@form.to_query.merge(per:, page: 1, organisation_id: current_organisation.id))
               - if per == params.fetch(:per, 10).to_i
                 = link_to per, path, class: "fr-pagination__link fr-pagination__link--current", "aria-current": "page"
               - else

@@ -73,7 +73,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     click_on "Renseigner mes disponibilités"
 
-    find(:label, text: "Répéter…").click
+    find('[for="radio_recurring"]').click
 
     expect(page.find("input#plage_ouverture_motif_ids_#{Motif.find_by(name: 'Suivi de dossier').id}")).to be_checked
 
@@ -99,16 +99,16 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     click_on "Enregistrer"
 
-    doc.add_screenshot(page, text: "Je clique sur Modifier dans la carte de Profil des usagers", wait_for: "Lien de réservation")
+    doc.add_screenshot(page, text: "Je clique sur Modifier dans la carte de Modes d'authentificiation", wait_for: "Lien de réservation")
 
     click_on "Modifier", match: :first
 
-    find(:label, text: "des particuliers").click
-    find(:label, text: "des professionnels").click
+    find(:label, text: "FranceConnect").click
+    find(:label, text: "ProConnect").click
 
     doc.add_screenshot(page,
                        text: "Je sélectionne la prise de rendez-vous par des professionnels et j'enregistre.",
-                       wait_for: "Qui participe aux rendez-vous avec les agents de votre organisation ?")
+                       wait_for: "Comment préférez-vous que vos usagers s'authentifient lors de la prise de rendez-vous")
 
     click_on "Enregistrer"
 
