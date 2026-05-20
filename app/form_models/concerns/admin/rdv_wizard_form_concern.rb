@@ -35,8 +35,12 @@ module Admin::RdvWizardFormConcern
   end
 
   def minutes_after_rdv_from_plage_ouvertures
-    PlageOuverture.joins(:motifs).where(agent: @rdv.agents.map(&:id), motifs: @rdv.motif)
-      .overlapping_range(@rdv.starts_at..@rdv.ends_at).maximum(:minutes_after_rdvs) || 0
+    PlageOuverture
+      .joins(:motifs)
+      .where(motifs: @rdv.motif)
+      .where(agent: @rdv.agents.map(&:id))
+      .overlapping_range(@rdv.starts_at..@rdv.ends_at)
+      .maximum(:minutes_after_rdvs) || 0
   end
 
   def to_query # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
