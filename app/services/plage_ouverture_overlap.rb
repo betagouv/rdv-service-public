@@ -6,7 +6,7 @@ class PlageOuvertureOverlap
     @po2 = po2
   end
 
-  def exists? # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def exists?
     return false if po1.agent != po2.agent
 
     if po1.ponctuelle? && po2.ponctuelle?
@@ -49,7 +49,7 @@ class PlageOuvertureOverlap
     !options1.day.intersect?(options2.day)
   end
 
-  def both_monthly_but_different_days? # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def both_monthly_but_different_days?
     return false unless po1.recurring? && po2.recurring?
 
     # both PO are monthly

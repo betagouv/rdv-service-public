@@ -1,7 +1,6 @@
 module Rdv::Updatable
   extend ActiveSupport::Concern
 
-  # rubocop:disable Metrics/PerceivedComplexity
   def update_and_notify(author, attributes, &block)
     Rdv.transaction do
       @old_agent_ids = agent_ids.to_a
