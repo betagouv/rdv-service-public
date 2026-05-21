@@ -15,18 +15,19 @@ class EspaceOperateurANCT::AccountCreationRouter
 
   # rubocop:disable Metrics/PerceivedComplexity
   def call
-    if @agent.proconnect_siret.present?
-      if matching_operator
-        if anct_client.admin?
-          attach_or_create_territory
-          return Result.new(action: :attached_as_admin)
-        elsif anct_client.can_access?
-          return Result.new(action: :contact_admin)
-        end
-      elsif matching_potential_operator
-        return Result.new(action: :signup_via_operator, signup_url: matching_potential_operator["signupUrl"], operator_name: matching_potential_operator["name"])
+    return Result.new(action: :classic) if @agent.proconnect_siret.blank?
+
+    if matching_operator
+      if anct_client.admin?
+        attach_or_create_territory
+        return Result.new(action: :attached_as_admin)
+      elsif anct_client.can_access?
+        return Result.new(action: :contact_admin)
       end
+    elsif matching_potential_operator
+      return Result.new(action: :signup_via_operator, signup_url: matching_potential_operator["signupUrl"], operator_name: matching_potential_operator["name"])
     end
+
     Result.new(action: :classic)
   rescue StandardError => e
     Sentry.capture_exception(e)
