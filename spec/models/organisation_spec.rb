@@ -72,4 +72,33 @@ RSpec.describe Organisation, type: :model do
       it { is_expected.to be true }
     end
   end
+
+  describe "after_update quand ants_connectable passe à true" do
+    let!(:cni_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
+    let!(:passport_category) { create(:motif_category, name: Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME) }
+    let!(:cni_passport_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME) }
+
+    context "quand ants_connectable passe de false à true" do
+      it "ajoute les catégories ANTS au territoire" do
+        organisation = create(:organisation, ants_connectable: false)
+        organisation.update!(ants_connectable: true)
+        expect(organisation.territory.motif_categories).to contain_exactly(cni_category, passport_category, cni_passport_category)
+      end
+    end
+
+    context "quand ants_connectable est déjà true à la création" do
+      it "n'ajoute pas les catégories ANTS au territoire" do
+        organisation = create(:organisation, ants_connectable: true)
+        expect(organisation.territory.motif_categories).to be_empty
+      end
+    end
+
+    context "quand un autre attribut change" do
+      it "n'ajoute pas les catégories ANTS au territoire" do
+        organisation = create(:organisation, ants_connectable: false)
+        organisation.update!(name: "Nouveau nom")
+        expect(organisation.territory.motif_categories).to be_empty
+      end
+    end
+  end
 end

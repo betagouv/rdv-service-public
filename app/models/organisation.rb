@@ -54,6 +54,9 @@ class Organisation < ApplicationRecord
 
   before_save { self.public_link_id ||= SecureRandom.base58(6) }
 
+  # Créé les catégories de motifs lorsque ants_connectable est activé depuis la super admin
+  after_update(if: -> { saved_change_to_ants_connectable?(to: true) }) { territory.add_ants_motif_categories }
+
   # Scopes
   scope :attributed_to_sectors, lambda { |sectors:, most_relevant: false|
     attributions = SectorAttribution
