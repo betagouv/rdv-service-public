@@ -8,7 +8,7 @@ class CreneauxSearch::Calculator
     @lieu = lieu
     @date_range = date_range
     @agents = agents
-    @duration_in_min = duration_in_min
+    @duration_in_min = duration_in_min || motif.default_duration_in_min
   end
 
   def available_slots
@@ -34,8 +34,9 @@ class CreneauxSearch::Calculator
         work_on_off_days:
       ).perform
 
-      creneaux = SplitFreeTimeRangesIntoCreneaux.new(free_times, @motif, duration_in_min: @duration_in_min).perform(@datetime_range)
+      creneaux = SplitFreeTimeRangesIntoCreneaux.new(free_times, duration_in_min: @duration_in_min).perform(@datetime_range)
       creneaux.each do |creneau|
+        creneau.motif = @motif
         creneau.agent = plage_ouverture.agent
         creneau.lieu_id = plage_ouverture.lieu_id
       end

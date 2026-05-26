@@ -1,7 +1,6 @@
 class CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux
-  def initialize(free_time_ranges, motif, duration_in_min:)
+  def initialize(free_time_ranges, duration_in_min:)
     @free_time_ranges = free_time_ranges
-    @motif = motif
     @duration_in_min = duration_in_min
   end
 
@@ -23,7 +22,6 @@ class CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux
 
   def calculate_slots(free_time, duration_in_min: nil)
     possible_slot_start = earliest_possible_slot_start(free_time)
-    duration_in_min ||= @motif.default_duration_in_min
     last_possible_slot_start = free_time.end - duration_in_min.minutes
 
     slots = []
@@ -31,7 +29,6 @@ class CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux
     while possible_slot_start <= last_possible_slot_start
       slots << Creneau.new(
         starts_at: possible_slot_start,
-        motif: @motif,
         duration_in_min:
       )
       possible_slot_start += duration_in_min.minutes
