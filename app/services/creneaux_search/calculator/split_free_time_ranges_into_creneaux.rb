@@ -1,8 +1,7 @@
 class CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux
-  def initialize(free_time_ranges, motif, plage_ouverture, duration_in_min:)
+  def initialize(free_time_ranges, motif, duration_in_min:)
     @free_time_ranges = free_time_ranges
     @motif = motif
-    @plage_ouverture = plage_ouverture
     @duration_in_min = duration_in_min
   end
 
@@ -33,9 +32,7 @@ class CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux
       slots << Creneau.new(
         starts_at: possible_slot_start,
         motif: @motif,
-        duration_in_min:,
-        lieu_id: @plage_ouverture.lieu_id,
-        agent: @plage_ouverture.agent
+        duration_in_min:
       )
       possible_slot_start += duration_in_min.minutes
     end
