@@ -97,6 +97,29 @@ RSpec.describe Territory, type: :model do
     end
   end
 
+  describe "#add_ants_motif_categories" do
+    let!(:cni_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
+    let!(:passport_category) { create(:motif_category, name: Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME) }
+    let!(:cni_passport_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME) }
+
+    context "quand le territoire n'a aucune catégorie ANTS" do
+      it "ajoute les 3 catégories ANTS" do
+        territory = create(:territory)
+        territory.add_ants_motif_categories
+        expect(territory.motif_categories).to contain_exactly(cni_category, passport_category, cni_passport_category)
+      end
+    end
+
+    context "quand le territoire a déjà certaines catégories ANTS" do
+      it "ajoute uniquement les catégories manquantes" do
+        territory = create(:territory)
+        territory.motif_categories << cni_category
+        territory.add_ants_motif_categories
+        expect(territory.motif_categories).to contain_exactly(cni_category, passport_category, cni_passport_category)
+      end
+    end
+  end
+
   # rubocop:disable RSpec/PredicateMatcher
   describe "#any_social_field_enabled?" do
     it "returns true if any social field is enabled" do
