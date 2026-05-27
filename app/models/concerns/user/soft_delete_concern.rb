@@ -39,11 +39,11 @@ module User::SoftDeleteConcern
       .each { |r| Anonymizer.anonymize_record!(r) }
     annotations.destroy_all
     versions.destroy_all
-    update_columns( # rubocop:disable Rails/SkipsModelValidations
+    update(
       first_name: "Usager supprimé",
       last_name: "Usager supprimé",
       deleted_at: Time.zone.now,
-      email: deleted_email
+      email: "user_#{id}@deleted.rdv-solidarites.fr"
     )
     reload # anonymizer operates outside the realm of rails knowledge
   end

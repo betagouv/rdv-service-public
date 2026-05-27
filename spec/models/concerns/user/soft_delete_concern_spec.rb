@@ -12,6 +12,11 @@ RSpec.describe User::SoftDeleteConcern do
       expect(user.address).to match %([valeur unique anonymisée \\d+])
       expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
 
+      # On a une version papertrail qui donne de la traçabilité sur la suppression
+      expect(user.versions.last.event).to eq "update"
+      # On n'envoie pas de notification de changement d'adresse email
+      expect(enqueued_jobs).to be_empty
+
       # on n'anonymise pas un autre utilisateur
       expect(other_user.reload.email).to eq("other_user@test.com")
     end
