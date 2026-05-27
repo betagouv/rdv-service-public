@@ -22,7 +22,7 @@ class EspaceOperateurANCT::ApiClient
   end
 
   def potential_operators
-    parsed_response["potentialOperators"]
+    parsed_response.fetch("potentialOperators", [])
   end
 
   def entitlements

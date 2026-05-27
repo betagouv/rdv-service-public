@@ -30,6 +30,8 @@ module Outlook
 
     def update_event!(outlook_event_id, payload)
       call_events_api("PATCH", "me/Events/#{outlook_event_id}", payload)
+    rescue NotFoundError => e
+      Rails.logger.error("Outlook error while updating event: #{e.message}")
     end
 
     def delete_event!(outlook_event_id)
