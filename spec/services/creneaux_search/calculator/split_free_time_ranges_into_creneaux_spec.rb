@@ -1,6 +1,6 @@
 RSpec.describe CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux do
   subject(:creneaux) do
-    described_class.new(free_time_ranges, duration_in_min:).perform(search_datetime_range)
+    described_class.new(free_time_ranges, duration_in_min:, minutes_after_rdvs:).perform(search_datetime_range)
   end
 
   let(:friday) { Time.zone.parse("20210430 8:00") }
@@ -8,6 +8,7 @@ RSpec.describe CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux do
     Time.zone.parse("20211027 0:00")..Time.zone.parse("20211028 0:00")
   end
   let(:duration_in_min) { 30 }
+  let(:minutes_after_rdvs) { 0 }
 
   before { travel_to(friday) }
 
@@ -38,10 +39,7 @@ RSpec.describe CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux do
 
   context "quand la plage définit un intervalle entre chaque RDV" do
     let(:free_time_ranges) { [Time.zone.parse("2021-10-27 09:00")..Time.zone.parse("2021-10-27 12:00")] }
-
-    before do
-      plage_ouverture.update!(minutes_after_rdvs: 10)
-    end
+    let(:minutes_after_rdvs) { 10 }
 
     it "returns slots that fit" do
       expect(creneaux.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "09:40", "10:20", "11:00"])

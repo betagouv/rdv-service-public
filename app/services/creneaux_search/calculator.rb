@@ -34,7 +34,8 @@ class CreneauxSearch::Calculator
         work_on_off_days:
       ).perform
 
-      creneaux = SplitFreeTimeRangesIntoCreneaux.new(free_times, duration_in_min: @duration_in_min).perform(@datetime_range)
+      minutes_after_rdvs = plage_ouverture.minutes_after_rdvs
+      creneaux = SplitFreeTimeRangesIntoCreneaux.new(free_times, duration_in_min: @duration_in_min, minutes_after_rdvs:).perform(@datetime_range)
       creneaux.each do |creneau|
         creneau.motif = @motif
         creneau.agent = plage_ouverture.agent
