@@ -284,7 +284,6 @@ RSpec.describe "un prescripteur peut prendre rendez-vous pour un usager" do
         click_on lieu.name
         click_on "08:00"
         click_on "Je suis un prescripteur"
-        raise "hello"
         expect(page).not_to have_content("Nouvelle fonctionnalité :\nla prescription dans l'espace agent")
       end
     end
