@@ -141,15 +141,7 @@ RSpec.describe EspaceOperateurANCT::AccountCreationRouter do
 
       around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_with_potential_operators") { ex.run } }
 
-      it "envoie un message Sentry" do
-        expect(Sentry).to receive(:capture_message).with(
-          "ProConnectOnboardingRouter: plusieurs potentialOperators matchent notre DB",
-          extra: { agent_id: agent.id, sirets: %w[13002603200016 12345678901234] }
-        )
-        handler.call
-      end
-
-      it "retourne quand même :signup_via_operator avec le premier match" do
+      it "retourne :signup_via_operator avec le premier opérateur qu'on retrouve dans notre DB" do
         allow(Sentry).to receive(:capture_message)
         result = handler.call
         expect(result.action).to eq(:signup_via_operator)

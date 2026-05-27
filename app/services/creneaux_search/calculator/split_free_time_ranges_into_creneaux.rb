@@ -1,8 +1,6 @@
 class CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux
-  def initialize(free_time_ranges, motif, plage_ouverture, duration_in_min:)
+  def initialize(free_time_ranges, duration_in_min:)
     @free_time_ranges = free_time_ranges
-    @motif = motif
-    @plage_ouverture = plage_ouverture
     @duration_in_min = duration_in_min
   end
 
@@ -10,7 +8,7 @@ class CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux
     slots = []
 
     @free_time_ranges.each do |free_time|
-      slots += calculate_slots(free_time, duration_in_min:)
+      slots += calculate_slots(free_time)
     end
 
     slots.select do |slot|
@@ -20,13 +18,10 @@ class CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux
 
   private
 
-  attr_reader :duration_in_min
-
-  def calculate_slots(free_time, duration_in_min: nil)
+  def calculate_slots(free_time)
     possible_slot_start = earliest_possible_slot_start(free_time)
-    duration_in_min ||= @motif.default_duration_in_min
 
-    rdv_duration_for_agent = duration_in_min.minutes + @plage_ouverture.minutes_after_rdvs.minutes
+    rdv_duration_for_agent = @duration_in_min.minutes + @plage_ouverture.minutes_after_rdvs.minutes
     last_possible_slot_start = free_time.end - rdv_duration_for_agent
 
     slots = []
@@ -34,10 +29,7 @@ class CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux
     while possible_slot_start <= last_possible_slot_start
       slots << Creneau.new(
         starts_at: possible_slot_start,
-        motif: @motif,
-        duration_in_min:,
-        lieu_id: @plage_ouverture.lieu_id,
-        agent: @plage_ouverture.agent,
+        duration_in_min: @duration_in_min,
         minutes_after_rdv: @plage_ouverture.minutes_after_rdvs
       )
       possible_slot_start += rdv_duration_for_agent
