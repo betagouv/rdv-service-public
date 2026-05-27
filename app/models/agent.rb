@@ -181,7 +181,7 @@ class Agent < ApplicationRecord
         uid: deleted_email
       )
       skip_reconfirmation!
-      save
+      save(validate: false)
     end
   end
 
