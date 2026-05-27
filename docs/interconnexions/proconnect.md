@@ -40,6 +40,24 @@ Définissez les variables d’environnement en local :
 - `PRO_CONNECT_RDVSP_CLIENT_ID` et AN et S
 - `PRO_CONNECT_RDVSP_CLIENT_SECRET` et AN et S
 
+## Setup review app
+
+- créer une app FS ProConnect depuis https://partenaires.proconnect.gouv.fr/apps
+- URL de redirection : https://rdv-service-public-review-app-prXXXX.osc-secnum-fr1.scalingo.io/agent_connect/callback
+- URL de déconnexion : https://rdv-service-public-review-app-prXXXX.osc-secnum-fr1.scalingo.io/
+- Algorithmes : ES256
+
+puis
+
+```sh
+scalingo --app rdv-service-public-review-app-prXXXX env-set \
+  REVIEW_APP_DOMAIN=RDV_SERVICE_PUBLIC_ETAT \
+  PRO_CONNECT_BASE_URL=https://fca.integ01.dev-agentconnect.fr/api/v2 \
+  PRO_CONNECT_RDVSP_ETAT_CLIENT_ID=987654321 \
+  PRO_CONNECT_RDVSP_ETAT_CLIENT_SECRET=123456789 && \
+scalingo --app rdv-service-public-review-app-prXXXX restart
+```
+
 ## Configuration des FS utilisés par nos services
 
 ### Identité des `sub` entre FS
