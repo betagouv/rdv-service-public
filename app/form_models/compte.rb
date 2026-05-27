@@ -40,7 +40,7 @@ class Compte
 
       if organisation.ants_connectable
         create_mairie_motifs!
-        add_mairie_motifs_categories!
+        organisation.territory.add_ants_motif_categories
       elsif OauthApplication.agent_is_verified_by_an_application?(agent)
         # On ne propose pas encore la création de motifs depuis les intégrations, donc on continue de créer des motifs par défaut dans ce cas
         create_example_motifs!
@@ -115,12 +115,6 @@ class Compte
       motif_category: MotifCategory.find_by(name: motif_category_name),
       bookable_by: :everyone
     )
-  end
-
-  def add_mairie_motifs_categories!
-    Api::Ants::EditorController::ANTS_MOTIF_CATEGORY_NAMES.each do |name|
-      organisation.territory.motif_categories << MotifCategory.find_by(name: name)
-    end
   end
 
   def create_example_motifs!
