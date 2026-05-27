@@ -30,7 +30,9 @@ RSpec.describe User::SoftDeleteConcern do
 
       expect(receipt.reload.sms_phone_number).to match %([valeur unique anonymisée \\d+])
       expect(rdv.reload.context).to match %([valeur unique anonymisée \\d+])
-      expect(user.versions).to be_empty
+      expect(user.versions.count).to eq 1
+
+      expect(user.versions.last.object_changes.keys).to eq ["deleted_at"]
     end
 
     it "interdit lorsqu’un RDV à venir existe" do
