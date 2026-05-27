@@ -47,7 +47,8 @@ module User::SoftDeleteConcern
 
     # Pour avoir une traçabilité de qui a anonymisé l'usager, on fait un update
     # simple ici pour avoir une version Papertrail
-    update(deleted_at: Time.zone.now)
+    assign_attributes(deleted_at: Time.zone.now)
+    save(validate: false)
 
     reload # anonymizer operates outside the realm of rails knowledge
   end
