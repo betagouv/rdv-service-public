@@ -174,12 +174,14 @@ class Agent < ApplicationRecord
       referent_assignations.destroy_all
       sector_attributions.destroy_all
 
-      update_columns(
+      assign_attributes(
         deleted_at: Time.zone.now,
         email_original: email,
         email: deleted_email,
         uid: deleted_email
       )
+      skip_reconfirmation!
+      save
     end
   end
 
