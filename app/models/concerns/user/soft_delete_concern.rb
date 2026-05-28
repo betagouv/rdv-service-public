@@ -42,9 +42,14 @@ module User::SoftDeleteConcern
     update_columns( # rubocop:disable Rails/SkipsModelValidations
       first_name: "Usager supprimé",
       last_name: "Usager supprimé",
-      deleted_at: Time.zone.now,
-      email: deleted_email
+      email: "user_#{id}@deleted.rdv-solidarites.fr"
     )
+
+    # Pour avoir une traçabilité de qui a anonymisé l'usager, on fait un update
+    # simple ici pour avoir une version Papertrail
+    assign_attributes(deleted_at: Time.zone.now)
+    save(validate: false)
+
     reload # anonymizer operates outside the realm of rails knowledge
   end
 end
