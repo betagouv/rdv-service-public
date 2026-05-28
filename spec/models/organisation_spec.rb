@@ -50,6 +50,11 @@ RSpec.describe Organisation, type: :model do
       organisation = build(:organisation, phone_number: "3949")
       expect(organisation).to be_valid
     end
+
+    it "autorise les numéros de téléphone des DROM" do
+      organisation = build(:organisation, phone_number: "0262 94 07 07")
+      expect(organisation).to be_valid
+    end
   end
 
   describe "#online_booking_only_proconnect?" do
