@@ -27,7 +27,7 @@
       = date_input(f, :first_day, input_html: { id: "recurrence-source", class: "js-recurrence-first-day js-recurrence-input"} )
     - if defined?(model.end_day)
       .col
-        = date_input(f, :end_day)
+        = date_input(f, :end_day, input_html: { class: "js-recurrence-end-day"}, wrapper_html: { class: "js-recurrence-end-day-with-label"})
 
   .row
     .col = f.input :start_time, as: :time, ignore_date: true, minute_step: 5

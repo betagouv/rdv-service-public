@@ -12,6 +12,8 @@ class RecurrenceForm {
     this.untilTarget = document.querySelector('.js-recurrence-until')
     this.firstDayTarget = document.querySelector('.js-recurrence-first-day')
     this.monthlyTarget = document.querySelector('.js-recurrence-monthly')
+    this.endDay = document.querySelector('.js-recurrence-end-day')
+    this.endDayWithLabel = document.querySelector('.js-recurrence-end-day-with-label')
 
     document.querySelectorAll('.js-recurrence-input').
       forEach(i => i.addEventListener('change', this.updateRecurrence))
@@ -101,6 +103,16 @@ class RecurrenceForm {
     }
 
     setLabel('label[for="recurrence-source"]', model.every ? 'Premier jour ' : 'Date ')
+
+    if (this.endDay) {
+      if (model.every) {
+        this.endDay.disable
+        this.endDayWithLabel.classList.add("hidden")
+      } else {
+        this.endDay.enable
+        this.endDayWithLabel.classList.remove("hidden")
+      }
+    }
   }
 
   getWeekday = (date) => {
