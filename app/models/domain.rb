@@ -131,6 +131,24 @@ class Domain
     }.fetch(self)
   end
 
+  def france_connect_v2_client_id
+    {
+      RDV_SOLIDARITES => ENV["FRANCECONNECT_V2_RDVS_CLIENT_ID"],
+      RDV_AIDE_NUMERIQUE => ENV["FRANCECONNECT_V2_RDVAN_CLIENT_ID"],
+      RDV_SERVICE_PUBLIC => ENV["FRANCECONNECT_V2_RDVSP_CLIENT_ID"],
+      RDV_SERVICE_PUBLIC_ETAT => ENV["FRANCECONNECT_V2_RDVSP_ETAT_CLIENT_ID"],
+    }.fetch(self)
+  end
+
+  def france_connect_v2_client_secret
+    {
+      RDV_SOLIDARITES => ENV["FRANCECONNECT_V2_RDVS_CLIENT_SECRET"],
+      RDV_AIDE_NUMERIQUE => ENV["FRANCECONNECT_V2_RDVAN_CLIENT_SECRET"],
+      RDV_SERVICE_PUBLIC => ENV["FRANCECONNECT_V2_RDVSP_CLIENT_SECRET"],
+      RDV_SERVICE_PUBLIC_ETAT => ENV["FRANCECONNECT_V2_RDVSP_ETAT_CLIENT_SECRET"],
+    }.fetch(self)
+  end
+
   def host_name
     case Rails.env.to_sym
     when :production
