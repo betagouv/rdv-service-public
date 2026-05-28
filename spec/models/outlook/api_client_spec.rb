@@ -65,26 +65,52 @@ RSpec.describe Outlook::ApiClient do
     end
 
     context "when the error is permanent" do
-      before do
-        stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")
-          .to_return(
-            status: 404,
-            body: {
-              error: {
-                code: "ErrorItemNotFound", # this error is permanent
-                message: "The specified object was not found in the store",
-              },
-            }.to_json,
-            headers: {}
-          )
+      context "for a deletion" do
+        before do
+          stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")
+            .to_return(
+              status: 404,
+              body: {
+                error: {
+                  code: "ErrorItemNotFound", # this error is permanent
+                  message: "The specified object was not found in the store",
+                },
+              }.to_json,
+              headers: {}
+            )
+        end
+
+        it "logs the error but does not warn Sentry" do
+          allow(Rails.logger).to receive(:error)
+          described_class.new(agent).delete_event!("abc")
+
+          expect(Rails.logger).to have_received(:error).with("Outlook error while deleting event: The specified object was not found in the store")
+          expect(sentry_events).to be_empty
+        end
       end
 
-      it "logs the error but does not warn Sentry" do
-        allow(Rails.logger).to receive(:error)
-        described_class.new(agent).delete_event!("abc")
+      context "for an update" do
+        before do
+          stub_request(:patch, "https://graph.microsoft.com/v1.0/me/Events/abc")
+            .to_return(
+              status: 404,
+              body: {
+                error: {
+                  code: "ErrorItemNotFound", # this error is permanent
+                  message: "The specified object was not found in the store",
+                },
+              }.to_json,
+              headers: {}
+            )
+        end
 
-        expect(Rails.logger).to have_received(:error).with("Outlook error while deleting event: The specified object was not found in the store")
-        expect(sentry_events).to be_empty
+        it "logs the error but does not warn Sentry" do
+          allow(Rails.logger).to receive(:error)
+          described_class.new(agent).update_event!("abc", expected_body)
+
+          expect(Rails.logger).to have_received(:error).with("Outlook error while updating event: The specified object was not found in the store")
+          expect(sentry_events).to be_empty
+        end
       end
     end
 

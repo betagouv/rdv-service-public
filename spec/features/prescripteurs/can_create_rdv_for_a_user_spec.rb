@@ -271,6 +271,24 @@ RSpec.describe "un prescripteur peut prendre rendez-vous pour un usager" do
       expect(page).not_to have_content("Nouvelle fonctionnalité :\nla prescription dans l'espace agent")
     end
 
+    context "when the agent is not part of the territory" do
+      let!(:organisation2) { create(:organisation, territory: create(:territory)) }
+
+      before do
+        # On crée ce motif pour entrer dans la condition d'affichage de la bannière
+        create(:motif, bookable_by: "everyone", organisation: organisation2)
+      end
+
+      it "doesn't display internal prescription incitation" do
+        visit public_link_to_motif_url(public_link_id: motif.public_link_id, motif_slug: motif.slug)
+
+        click_on lieu.name
+        click_on "08:00"
+        click_on "Je suis un prescripteur"
+        expect(page).not_to have_content("Nouvelle fonctionnalité :\nla prescription dans l'espace agent")
+      end
+    end
+
     context "when the agent belongs to a sectorized territory" do
       before do
         allow_any_instance_of(Territory).to receive(:sectorized?).and_return(true) # rubocop:disable RSpec/AnyInstance

@@ -78,6 +78,24 @@ class Domain
       allow_self_onboarding: true,
       secretariat_email: "secretariat-auto@rdv-service-public.fr"
     ),
+
+    RDV_SERVICE_PUBLIC_ETAT = new(
+      id: "RDV_SERVICE_PUBLIC_ETAT",
+      logo_path: "logos/logo_rdv_service_public.svg",
+      public_logo_path: "/logo_rdv_service_public.png",
+      dark_logo_path: "logos/logo_sombre_rdv_service_public.svg",
+      name: "RDV Service Public",
+      presentation_for_agents_template_name: "nouvel_espace_rdv_service_public",
+      address_selection_template_name: nil,
+      search_banner_template_name: "search/banners/rdv_service_public",
+      online_reservation_with_public_link: true,
+      sms_sender_name: "RDV S.P.",
+      france_connect_enabled: true,
+      support_email: "support@rdv-service-public.fr",
+      verticale: :rdv_mairie,
+      allow_self_onboarding: true,
+      secretariat_email: "secretariat-auto@rdv-service-public.fr"
+    ),
   ].freeze
 
   # Dans le cadre de l’instance RDV Service Public, nous ne proposons pas de sélection d’adresse à l’usager, et nous avons des adresses de lieux
@@ -100,6 +118,7 @@ class Domain
       RDV_SOLIDARITES => ENV["PRO_CONNECT_RDVS_CLIENT_ID"],
       RDV_AIDE_NUMERIQUE => ENV["PRO_CONNECT_RDVAN_CLIENT_ID"],
       RDV_SERVICE_PUBLIC => ENV["PRO_CONNECT_RDVSP_CLIENT_ID"],
+      RDV_SERVICE_PUBLIC_ETAT => ENV["PRO_CONNECT_RDVSP_ETAT_CLIENT_ID"],
     }.fetch(self)
   end
 
@@ -108,6 +127,7 @@ class Domain
       RDV_SOLIDARITES => ENV["PRO_CONNECT_RDVS_CLIENT_SECRET"],
       RDV_AIDE_NUMERIQUE => ENV["PRO_CONNECT_RDVAN_CLIENT_SECRET"],
       RDV_SERVICE_PUBLIC => ENV["PRO_CONNECT_RDVSP_CLIENT_SECRET"],
+      RDV_SERVICE_PUBLIC_ETAT => ENV["PRO_CONNECT_RDVSP_ETAT_CLIENT_SECRET"],
     }.fetch(self)
   end
 
@@ -123,18 +143,21 @@ class Domain
           RDV_SOLIDARITES => "staging.rdv-solidarites.fr", # sous-domaine pas configuré
           RDV_AIDE_NUMERIQUE => "staging.rdv-aide-numerique.fr", # sous-domaine pas configuré
           RDV_SERVICE_PUBLIC => "staging.rdv-service-public.fr",
+          RDV_SERVICE_PUBLIC_ETAT => "staging.rdv.numerique.gouv.fr",
         }.fetch(self)
       elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
         {
           RDV_SOLIDARITES => "demo.rdv-solidarites.fr",
           RDV_AIDE_NUMERIQUE => "demo.rdv-aide-numerique.fr",
           RDV_SERVICE_PUBLIC => "demo.rdv.anct.gouv.fr",
+          RDV_SERVICE_PUBLIC_ETAT => "demo.rdv.numerique.gouv.fr",
         }.fetch(self)
       else
         {
           RDV_SOLIDARITES => "www.rdv-solidarites.fr",
           RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique.fr",
           RDV_SERVICE_PUBLIC => "rdv.anct.gouv.fr",
+          RDV_SERVICE_PUBLIC_ETAT => "rdv.numerique.gouv.fr",
         }.fetch(self)
       end
     when :development
@@ -142,12 +165,14 @@ class Domain
         RDV_SOLIDARITES => "www.rdv-solidarites.localhost",
         RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique.localhost",
         RDV_SERVICE_PUBLIC => "www.rdv-mairie.localhost",
+        RDV_SERVICE_PUBLIC_ETAT => "www.rdv-etat.localhost",
       }.fetch(self)
     when :test
       {
         RDV_SOLIDARITES => "www.rdv-solidarites-test.localhost",
         RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique-test.localhost",
         RDV_SERVICE_PUBLIC => "www.rdv-service-public-test.localhost",
+        RDV_SERVICE_PUBLIC_ETAT => "www.rdv-service-public-etat-test.localhost",
       }.fetch(self)
     else
       raise "Rails.env not recognized: #{Rails.env.inspect}"
@@ -162,6 +187,7 @@ class Domain
       elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "STAGING"
         {
           RDV_SERVICE_PUBLIC => "reply.staging.rdv-service-public.fr",
+          RDV_SERVICE_PUBLIC_ETAT => "reply.staging.rdv-service-public.fr",
           # c’est le seul staging réellement ouvert pour l’instant
         }.fetch(self, nil)
       elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
@@ -169,12 +195,14 @@ class Domain
           RDV_SOLIDARITES => "reply.demo.rdv-solidarites.fr",
           RDV_AIDE_NUMERIQUE => "reply.demo.rdv-aide-numerique.fr",
           RDV_SERVICE_PUBLIC => "reply.demo.rdv-service-public.fr",
+          RDV_SERVICE_PUBLIC_ETAT => "reply.demo.rdv-service-public.fr",
         }.fetch(self)
       else
         {
           RDV_SOLIDARITES => "reply.rdv-solidarites.fr",
           RDV_AIDE_NUMERIQUE => "reply.rdv-aide-numerique.fr",
           RDV_SERVICE_PUBLIC => "reply.rdv-service-public.fr", # TODO: remplacer par anct.gouv.fr une fois les DNS déployés
+          RDV_SERVICE_PUBLIC_ETAT => "reply.rdv-service-public.fr",
         }.fetch(self)
       end
     when :development
@@ -182,6 +210,7 @@ class Domain
         RDV_SOLIDARITES => "reply.rdv-solidarites.localhost",
         RDV_AIDE_NUMERIQUE => "reply.rdv-aide-numerique.localhost",
         RDV_SERVICE_PUBLIC => "reply.rdv-mairie.localhost",
+        RDV_SERVICE_PUBLIC_ETAT => "reply.rdv-etat.localhost",
       }.fetch(self)
     when :test
       {
