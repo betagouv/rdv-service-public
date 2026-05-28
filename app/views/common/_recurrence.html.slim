@@ -65,4 +65,4 @@
         span.js-recurrence-monthly Tous les X du mois
 
       .until-select
-        = date_input(n, :until, required: false, label: "Finir la répétition le (si aucune laisser vide)", input_html: { id: "recurrence-until", class: "js-recurrence-until js-recurrence-input" } )
+        = date_input(n, :until, required: false, label: "Date de fin", hint: "Facultatif", input_html: { id: "recurrence-until", class: "js-recurrence-until js-recurrence-input" } )
