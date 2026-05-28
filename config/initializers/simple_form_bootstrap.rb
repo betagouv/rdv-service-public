@@ -40,9 +40,9 @@ SimpleForm.setup do |config|
     b.optional :min_max
     b.optional :readonly
     b.use :label, class: "form-control-label"
+    b.use :hint, wrap_with: { tag: "span", class: "fr-hint-text fr-mb-1w" }
     b.use :input, class: "form-control", error_class: "is-invalid"
     b.use :full_error, wrap_with: { tag: "div", class: "invalid-feedback" }
-    b.use :hint, wrap_with: { tag: "small", class: "form-text text-muted" }
   end
 
   # vertical input for boolean
