@@ -10,7 +10,7 @@ RSpec.describe AgentRemoval, type: :service do
     it "succeeds destroy absences and plages ouvertures, and soft delete, but without sending email change confirmation notifications" do
       service = described_class.new(agent, organisation)
       expect(service).to be_valid
-      expect { service.remove! }.not_to change(enqueued_jobs, :count)
+      expect { service.remove! }.not_to have_enqueued_mail
       agent.reload
       expect(agent.organisations).to be_empty
       expect(agent.absences).to be_empty
