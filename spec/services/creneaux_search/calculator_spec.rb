@@ -95,6 +95,15 @@ RSpec.describe CreneauxSearch::Calculator do
     end
   end
 
+  context "when using minutes_after_rdvs" do
+    let(:motif) { create(:motif, default_duration_in_min: 60, organisation: organisation) }
+    let(:plage_ouverture) { create(:plage_ouverture, lieu:, motifs: [motif], first_day:, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11, 50), minutes_after_rdvs: 15) }
+
+    it "adds an interval between creneaux" do
+      expect(available_slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "10:15"])
+    end
+  end
+
   context "when asking for slots that may start right now" do
     let(:motif) do
       create(:motif, default_duration_in_min: 60, organisation: organisation, min_public_booking_delay: 45 * 60)
