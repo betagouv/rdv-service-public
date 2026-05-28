@@ -180,7 +180,14 @@ class Agent < ApplicationRecord
         email: deleted_email,
         uid: deleted_email
       )
+      # On ne veut pas envoyer de notification Devise pour le changement d'adresse email.
       skip_reconfirmation!
+
+      # C'est pas évident de représenter un soft_delete via notre système actuel de webhooks,
+      # et si on envoyait un évènement, ça nécessiterait des développements supplémentaires pour RDV Insertion,
+      # qui est le seul service qui consomme des webhooks sur les agents
+      self.skip_webhooks = true
+
       save(validate: false)
     end
   end
