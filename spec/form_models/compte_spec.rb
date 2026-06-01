@@ -68,4 +68,25 @@ RSpec.describe Compte do
       end
     end
   end
+
+  describe ".upsert_france_service_motifs!" do
+    it "creates all motifs from templates" do
+      organisation = create(:organisation)
+      expect { described_class.upsert_france_service_motifs!(organisation) }.to change(Motif, :count).by(29)
+      expect(Motif.distinct(:default_duration_in_min).pluck(:default_duration_in_min)).to contain_exactly(30, 45, 60)
+    end
+
+    context "when some motifs already exist" do
+      it "does not create them (upsert)" do
+        organisation = create(:organisation)
+        service = create(:service, name: "Allocations familiales (CAF)", short_name: "Allocations familiales (CAF)")
+        create(:motif, organisation:, service:, name: "Déclarer un changement de situation", location_type: :public_office)
+        create(:motif, organisation:, service:, name: "Réaliser une déclaration trimestrielle ou annuelle des ressources", location_type: :public_office)
+        expect { described_class.upsert_france_service_motifs!(organisation) }.to change(Motif, :count).by(27)
+
+        # si on relance l'upsert, on constate qu'il est idempotent
+        expect { described_class.upsert_france_service_motifs!(organisation) }.to change(Motif, :count).by(0)
+      end
+    end
+  end
 end
