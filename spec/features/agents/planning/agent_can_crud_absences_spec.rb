@@ -131,7 +131,8 @@ RSpec.describe "Agent can CRUD absences" do
       find("label", text: "Mardi").click
       click_on "Enregistrer"
 
-      expect(page).to have_content "asdf"
+      expect(page).to have_content "L'indisponibilité a été modifiée."
+      expect(absence.reload.recurrence).to be_present
     end
   end
 end

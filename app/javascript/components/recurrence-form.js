@@ -106,10 +106,10 @@ class RecurrenceForm {
 
     if (this.endDay) {
       if (model.every) {
-        this.endDay.disable
+        this.endDay.disabled = true
         this.endDayWithLabel.classList.add("hidden")
       } else {
-        this.endDay.enable
+        this.endDay.disabled = false
         this.endDayWithLabel.classList.remove("hidden")
       }
     }
