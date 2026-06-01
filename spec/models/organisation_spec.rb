@@ -39,7 +39,7 @@ RSpec.describe Organisation, type: :model do
     it "invalid phone" do
       organisation = build(:organisation, phone_number: "12345")
       expect(organisation).to be_invalid
-      expect(organisation.errors.full_messages.to_sentence).to eq "Le numero de téléphone est invalide. S'il s'agit d'un numéro étranger, saisissez l'indicatif du pays (ex : +32 pour la Belgique)."
+      expect(organisation.errors.full_messages.to_sentence).to eq "Le numéro de téléphone est invalide. S'il s'agit d'un numéro étranger, saisissez l'indicatif du pays (ex : +32 pour la Belgique)."
     end
 
     it "blank phone is valid" do

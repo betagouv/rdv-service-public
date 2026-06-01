@@ -56,7 +56,7 @@ RSpec.describe PhoneNumberValidation do
 
           expect(object.errors).to include(:phone_number)
 
-          expect(object.errors.full_messages.to_sentence).to eq "Le numero de téléphone est invalide. S'il s'agit d'un numéro étranger, saisissez l'indicatif du pays (ex : +32 pour la Belgique)."
+          expect(object.errors.full_messages.to_sentence).to eq "Le numéro de téléphone est invalide. S'il s'agit d'un numéro étranger, saisissez l'indicatif du pays (ex : +32 pour la Belgique)."
         end
 
         it "is valid when number is good" do

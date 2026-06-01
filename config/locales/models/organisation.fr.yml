@@ -14,5 +14,5 @@ fr:
         organisation:
           attributes:
             phone_number:
-              invalid: "Le numero de téléphone est invalide. S'il s'agit d'un numéro étranger, saisissez l'indicatif du pays (ex : +32 pour la Belgique)."
+              invalid: "Le numéro de téléphone est invalide. S'il s'agit d'un numéro étranger, saisissez l'indicatif du pays (ex : +32 pour la Belgique)."
               format: "%{message}"
