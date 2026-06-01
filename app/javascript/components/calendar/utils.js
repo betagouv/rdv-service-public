@@ -1,6 +1,10 @@
-import frLocale from '@fullcalendar/core/locales/fr';
+import frLocale from 'fullcalendar/locales/fr';
 import { getConsumer, destroyConsumer } from "../../cable/consumer";
-import { JsonRequestError } from "@fullcalendar/core";
+import { JsonRequestError } from "fullcalendar";
+import classicTheme from 'fullcalendar/themes/classic';
+import 'fullcalendar/skeleton.css';
+import 'fullcalendar/themes/classic/theme.css';
+import 'fullcalendar/themes/classic/palette.css';
 
 export const headerToolbarLayout = { left: "today,prev,next,title", center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek", right: "preferencesModalToggle" };
 
@@ -55,28 +59,25 @@ export const hiddenDays = ({ displaySaturdays, displaySundays }) => {
   return hiddenDays;
 };
 
-const buttonHints = {
-  prev: (navUnit) => {
-    const labels = {
-      Jour: "Jour précédent",
-      Semaine: "Semaine précédente",
-      Mois: "Mois précédent",
-    };
-    return labels[navUnit] || "Précédent";
+// En v7, buttonHints est remplacé par hint dans ButtonInput (option buttons)
+// Le 2e argument est l'unité en anglais normalisé ("day", "week", "month")
+const buttonHintsButtons = {
+  prev: {
+    hint: (_, unit) => {
+      const labels = { day: "Jour précédent", week: "Semaine précédente", month: "Mois précédent" };
+      return labels[unit] || "Précédent";
+    },
   },
-  next: (navUnit) => {
-    const labels = {
-      Jour: "Jour suivant",
-      Semaine: "Semaine suivante",
-      Mois: "Mois suivant",
-    };
-    return labels[navUnit] || "Suivant";
+  next: {
+    hint: (_, unit) => {
+      const labels = { day: "Jour suivant", week: "Semaine suivante", month: "Mois suivant" };
+      return labels[unit] || "Suivant";
+    },
   },
 };
 
 const defaultFullCalendarConfig = () => ({
   locale: frLocale,
-  buttonHints,
   allDaySlot: false,
   height: "auto",
   selectable: true,
@@ -88,7 +89,7 @@ const defaultFullCalendarConfig = () => ({
       endTime: '20:00',
   },
   selectAllow: canSelectOnlyOneDay,
-  eventClassNames: eventClassNames,
+  eventClass: eventClassNames,
   eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
 
   // Avec la valeur par défaut (15), les RDVs de 10 minutes sont affichés côte-à-côte, car :
@@ -143,7 +144,7 @@ function eventClassNames(info) {
     customCssClasses.push("rdv-fc-event-waiting");
   }
 
-  return customCssClasses;
+  return customCssClasses.join(' ');
 }
 
 function eventRenderer(selectedEventId) {
@@ -290,4 +291,4 @@ export const calendarTimeRange = ({ displayExtendedHours }) => {
   return { slotMinTime: '07:00:00', slotMaxTime: '20:00:00' };
 };
 
-export { defaultFullCalendarConfig, eventRenderer, setupRealtimeRefresh, handleAjaxError }
+export { classicTheme, buttonHintsButtons, defaultFullCalendarConfig, eventRenderer, setupRealtimeRefresh, handleAjaxError }

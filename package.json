@@ -8,13 +8,6 @@
     "node": "24.14.1"
   },
   "dependencies": {
-    "@fullcalendar/core": "^6.1.15",
-    "@fullcalendar/daygrid": "^6.1.15",
-    "@fullcalendar/interaction": "^6.1.15",
-    "@fullcalendar/list": "^6.1.15",
-    "@fullcalendar/resource": "^6.1.15",
-    "@fullcalendar/resource-timegrid": "^6.1.15",
-    "@fullcalendar/timegrid": "^6.1.15",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.21",
     "@rails/actioncable": ">=7.0",
@@ -28,6 +21,8 @@
     "chartkick": "^5.0.1",
     "custom-event-polyfill": "^1.0.7",
     "date-fns": "^4.1.0",
+    "fullcalendar": "7.0.0-rc.3",
+    "fullcalendar-scheduler": "7.0.0-rc.3",
     "jquery": "^3.4.0",
     "jquery-datetimepicker": "^2.5.21",
     "kind-of": ">=6.0.3",
@@ -35,6 +30,7 @@
     "popper.js": "^1.15.0",
     "select2": "^4.0.8",
     "select2-bootstrap4-theme": "^1.0.0",
+    "temporal-polyfill": "^0.3.2",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
