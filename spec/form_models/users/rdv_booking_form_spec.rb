@@ -300,7 +300,7 @@ RSpec.describe Users::RdvBookingForm do
         it "affiche un message d'erreur complet incluant le nom du champ" do
           form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
           form.save
-          expect(form.errors.full_messages).to include("Le numéro de téléphone est invalide")
+          expect(form.errors.full_messages).to include("Le numéro de téléphone est invalide. S'il s'agit d'un numéro étranger, saisissez l'indicatif du pays (ex : +32 pour la Belgique).")
         end
       end
 
