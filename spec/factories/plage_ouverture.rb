@@ -7,11 +7,11 @@ FactoryBot.define do
     sequence(:title) { |n| random_value_in(["Plage #{n}", nil]) }
     sequence(:first_day) do |n|
       day = Time.zone.today.next_week(:monday)
-      day += 1.day if OffDays::JOURS_FERIES.include?(day) || day.saturday? || day.sunday?
+      day += 1.day if OffDays::DATES.include?(day) || day.saturday? || day.sunday?
       # cet algo empêche de renvoyer un jour férié et évite de renvoyer le même jour pour 2 `n` consécutifs
       (0...n).each do
         day += 1.day
-        day += 1.day if OffDays::JOURS_FERIES.include?(day) || day.saturday? || day.sunday?
+        day += 1.day if OffDays::DATES.include?(day) || day.saturday? || day.sunday?
       end
       day
     end

@@ -4,7 +4,7 @@ class FranceConnectV2Controller < ApplicationController
 
   def auth
     auth_client = FranceConnectV2OpenIdClient::Auth.new(
-      client_id: ENV["FRANCECONNECT_V2_CLIENT_ID"]
+      client_id: current_domain.france_connect_v2_client_id
     )
     session[STATE_SESSION_KEY] = auth_client.state
     session[NONCE_SESSION_KEY] = auth_client.nonce
@@ -26,8 +26,8 @@ class FranceConnectV2Controller < ApplicationController
       params_state: params[:state],
       callback_url: franceconnect_v2_callback_url,
       nonce: nonce,
-      client_id: ENV["FRANCECONNECT_V2_CLIENT_ID"],
-      client_secret: ENV["FRANCECONNECT_V2_CLIENT_SECRET"]
+      client_id: current_domain.france_connect_v2_client_id,
+      client_secret: current_domain.france_connect_v2_client_secret
     )
 
     unless callback_client.fetch_user_info_from_code!(params[:code])

@@ -48,6 +48,6 @@ class Admin::Territories::AgentRolesController < Admin::Territories::BaseControl
   private
 
   def agent_role_params
-    params.require(:agent_role).permit(:access_level, :organisation_id, :agent_id)
+    params.require(:agent_role).permit(:access_level, :agent_accueil, :organisation_id, :agent_id)
   end
 end

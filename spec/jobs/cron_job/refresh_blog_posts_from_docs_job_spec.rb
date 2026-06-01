@@ -8,15 +8,15 @@ RSpec.describe CronJob::RefreshBlogPostsFromDocsJob do
       stub_request(:get, children_url)
         .to_return(status: 200, body: file_fixture("docs_numerique_changelog_children.json").read, headers: { "Content-Type" => "application/json" })
 
-      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/3cc750d1-9bcf-4b3d-82bd-d9d232cc9de7/content/")
+      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/3cc750d1-9bcf-4b3d-82bd-d9d232cc9de7/formatted-content/")
         .with(query: { content_format: "html" })
         .to_return(status: 200, body: file_fixture("docs_numerique_changelog_content_3cc750d1.json").read, headers: { "Content-Type" => "application/json" })
 
-      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/c4853a77-99ff-4393-b68e-00b4b3429b03/content/")
+      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/c4853a77-99ff-4393-b68e-00b4b3429b03/formatted-content/")
         .with(query: { content_format: "html" })
         .to_return(status: 200, body: file_fixture("docs_numerique_changelog_content_c4853a77.json").read, headers: { "Content-Type" => "application/json" })
 
-      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/3127498c-de81-41a1-b38e-3b9f0ae03083/content/")
+      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/3127498c-de81-41a1-b38e-3b9f0ae03083/formatted-content/")
         .with(query: { content_format: "html" })
         .to_return(status: 200, body: file_fixture("docs_numerique_changelog_content_3127498c.json").read, headers: { "Content-Type" => "application/json" })
     end

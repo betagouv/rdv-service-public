@@ -43,7 +43,7 @@ class Organisation < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :territory }
   validates :external_id, uniqueness: { scope: :territory, allow_nil: true }
   validate :validate_organisation_phone_number
-  validate :validate_at_least_one_user_type
+  validate :validate_at_least_one_user_authentication_type
   validates :time_zone,
             presence: true,
             inclusion: {
@@ -106,7 +106,7 @@ class Organisation < ApplicationRecord
 
   def phone_number_is_valid?
     # Blank, Valid Phone, 4 digits phone (organisations only)
-    phone_number.blank? || Phonelib.parse(phone_number).valid? || phone_number.match(/^\d{4}$/)
+    phone_number.blank? || PhoneNumberValidation.parsed_number(phone_number).present? || phone_number.match(/^\d{4}$/)
   end
 
   def humanized_phone_number
@@ -118,17 +118,14 @@ class Organisation < ApplicationRecord
   end
 
   def online_booking_only_proconnect?
-    # Pour l’espace de RDV Service Public, on veut obliger les usagers à s'authentifier avec ProConnect
-    # pour éviter que des usagers prennent RDV alors que c’est un service réservé aux agents publics.
-    # Dans le futur, on permettra peut-être à d’autres organisations ou espaces de faire de même
-    domain == Domain::RDV_SERVICE_PUBLIC && territory_id == 2
+    online_booking_for_professionnels && !online_booking_for_particuliers && !online_booking_with_email
   end
 
   private
 
-  def validate_at_least_one_user_type
-    return if online_booking_for_particuliers || online_booking_for_professionnels
+  def validate_at_least_one_user_authentication_type
+    return if online_booking_with_email || online_booking_for_particuliers || online_booking_for_professionnels
 
-    errors.add(:base, "Vous devez choisir au moins un type d'usager entre particulier et professionnels.")
+    errors.add(:base, "Vous devez autoriser au moins un mode d'authentification.")
   end
 end

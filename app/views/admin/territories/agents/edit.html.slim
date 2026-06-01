@@ -11,7 +11,7 @@ h1
     = simple_form_for @agent, url: update_services_admin_territory_agent_path(current_territory, @agent) do |f|
       .card-body
         = f.input :service_ids,
-              collection: (current_territory.services + @agent.services).uniq,
+              collection: (current_territory.services + @agent.services).uniq.reject(&:secretariat?),
               label: t(".services"),
               label_method: lambda { |service| [service.name, (current_territory.services.include?(service) ? nil : "(désactivé dans l'espace courant)") ].compact.join(" ") },
               input_html: { \
@@ -101,6 +101,8 @@ h1
                   = f.input :organisation_id, as: :hidden, input_html: { value: organisation.id }
                   = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
                   = f.input :access_level, as: :radio_buttons, collection: AgentRole::ACCESS_LEVELS, label_method: -> { AgentRole.human_attribute_value(:access_level, _1) }, checked: role&.access_level || "none"
+                  - if organisation.territory.services.any? || role&.agent_accueil?
+                    = f.input :agent_accueil, as: :boolean, label: "Agent d'accueil", hint: "Peut consulter et modifier les agendas de tous les agents de l'organisation"
                 .card-footer
                   .row
                     .col.text-left

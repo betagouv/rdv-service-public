@@ -39,6 +39,7 @@ RSpec.describe Organisation, type: :model do
     it "invalid phone" do
       organisation = build(:organisation, phone_number: "12345")
       expect(organisation).to be_invalid
+      expect(organisation.errors.full_messages.to_sentence).to eq "Le numéro de téléphone est invalide. S'il s'agit d'un numéro étranger, saisissez l'indicatif du pays (ex : +32 pour la Belgique)."
     end
 
     it "blank phone is valid" do
@@ -50,34 +51,36 @@ RSpec.describe Organisation, type: :model do
       organisation = build(:organisation, phone_number: "3949")
       expect(organisation).to be_valid
     end
+
+    it "autorise les numéros de téléphone des DROM" do
+      organisation = build(:organisation, phone_number: "0262 94 07 07")
+      expect(organisation).to be_valid
+    end
+
+    it "autorise le numéro de téléphone de l'ambassade de France en Allemagne" do
+      organisation = build(:organisation, phone_number: "+49(30)590039000")
+      expect(organisation).to be_valid
+    end
   end
 
-  describe "#online_booking_only_sso?" do
+  describe "#online_booking_only_proconnect?" do
     subject { organisation.online_booking_only_proconnect? }
 
-    let(:territory) { build(:territory, id: territory_id) }
-    let(:organisation) { build(:organisation, territory:, verticale:) }
-    let(:motif) { build(:motif, organisation:) }
+    context "when other connexion types are allowed" do
+      let(:organisation) { build(:organisation, online_booking_for_particuliers: true) }
 
-    context "when on RDV_SERVICE_PUBLIC domain with territory_id 2" do
-      let(:territory_id) { 2 }
-      let(:verticale) { :rdv_mairie }
+      it { is_expected.to be false }
+    end
+
+    context "when only proconnect is allowed" do
+      let(:organisation) do
+        build(:organisation,
+              online_booking_for_professionnels: true,
+              online_booking_for_particuliers: false,
+              online_booking_with_email: false)
+      end
 
       it { is_expected.to be true }
-    end
-
-    context "when on RDV_SERVICE_PUBLIC domain with a different territory_id" do
-      let(:territory_id) { 123 }
-      let(:verticale) { :rdv_mairie }
-
-      it { is_expected.to be false }
-    end
-
-    context "when on RDV_SOLIDARITES domain with territory_id 2" do
-      let(:territory_id) { 2 }
-      let(:verticale) { :rdv_solidarites }
-
-      it { is_expected.to be false }
     end
   end
 end

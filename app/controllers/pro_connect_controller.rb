@@ -169,7 +169,6 @@ class ProConnectController < ApplicationController
     end
 
     agent = agent_by_sub || agent_by_email
-    was_new_agent = agent.nil?
 
     if agent.nil?
       if current_domain.allow_self_onboarding
@@ -183,8 +182,15 @@ class ProConnectController < ApplicationController
         ERROR
         redirect_to new_agent_session_path and return
       end
-    elsif agent.sensitive_account? && !callback_client.went_through_2fa? && IDP_PRO_CONNECT_FORCE_2FA_ENABLED.include?(callback_client.user_idp_id)
-      require_2fa_for_sensitive_agent(callback_client) and return
+    elsif agent.sensitive_account? && !callback_client.went_through_2fa?
+      if IDP_PRO_CONNECT_FORCE_2FA_ENABLED.include?(callback_client.user_idp_id)
+        require_2fa_for_sensitive_agent(callback_client) and return
+      else
+        session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = agent.id
+        session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY] = callback_client.id_token_for_logout
+        Agents::LoginCodeSender.perform(email: agent.email, domain_id: current_domain.id)
+        redirect_to new_agents_sessions_by_code_path and return
+      end
     end
 
     if agent.email != callback_client.user_email
@@ -210,11 +216,7 @@ class ProConnectController < ApplicationController
     bypass_sign_in agent, scope: :agent
     session[:pro_connect_id_token] = callback_client.id_token_for_logout
 
-    if was_new_agent && current_domain.allow_self_onboarding
-      redirect_after_first_proconnect_login(agent)
-    else
-      redirect_to after_sign_in_path_for(agent)
-    end
+    redirect_to after_sign_in_path_for(agent)
   end
   # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
@@ -230,21 +232,6 @@ class ProConnectController < ApplicationController
       connection_for: "agent",
     }
     redirect_to auth_client.redirect_url(pro_connect_callback_url, force_2fa: true), allow_other_host: true
-  end
-
-  def redirect_after_first_proconnect_login(agent)
-    result = ProConnectOnboardingRouter.new(agent, current_domain).call
-
-    case result.action
-    when :contact_admin
-      flash[:info] = "Votre organisation est rattachée à un espace RDV Service Public, mais vous n'avez pas les droits " \
-                     "d'administrateur. Rapprochez-vous de votre administrateur pour qu'il vous accorde les accès sur votre espace."
-      redirect_to after_sign_in_path_for(agent)
-    when :signup_via_operator
-      redirect_to agents_inscription_via_operateur_path(operator_name: result.operator_name, signup_url: result.signup_url)
-    else # :attached_as_admin, :classic
-      redirect_to after_sign_in_path_for(agent)
-    end
   end
 
   def generic_error_message

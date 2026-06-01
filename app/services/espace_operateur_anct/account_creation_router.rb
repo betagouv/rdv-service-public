@@ -1,4 +1,4 @@
-class ProConnectOnboardingRouter
+class EspaceOperateurANCT::AccountCreationRouter
   ANCT_TYPE_TO_CATEGORY = {
     "commune" => "Commune",
     "epci" => "Intercommunalité",
@@ -13,67 +13,52 @@ class ProConnectOnboardingRouter
     @domain = domain
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def call
-    return Result.new(action: :classic) if VerifiedServicePublicDomainNames.verified?(@agent.email)
     return Result.new(action: :classic) if @agent.proconnect_siret.blank?
 
-    anct_client = build_anct_client
-    return Result.new(action: :classic) if anct_client.nil?
-
-    begin
-      operator_data = anct_client.operator
-      potential_operators_data = anct_client.potential_operators
-    rescue StandardError => e
-      Sentry.capture_exception(e)
-      return Result.new(action: :classic)
-    end
-
-    if operator_data.present?
-      operator = Operator.find_by(siret: operator_data["siret"])
-      return handle_operator_case(anct_client, operator) if operator
-    end
-
-    if potential_operators_data.present?
-      matches = potential_operators_data.select { |po| Operator.exists?(siret: po["siret"]) }
-      if matches.any?
-        if matches.size > 1
-          Sentry.capture_message(
-            "ProConnectOnboardingRouter: plusieurs potentialOperators matchent notre DB",
-            extra: { agent_id: @agent.id, sirets: matches.pluck("siret") }
-          )
-        end
-        return Result.new(action: :signup_via_operator, signup_url: matches.first["signupUrl"], operator_name: matches.first["name"])
+    if matching_operator
+      if anct_client.admin?
+        attach_or_create_territory
+        return Result.new(action: :attached_as_admin)
+      elsif anct_client.can_access?
+        return Result.new(action: :contact_admin)
       end
+    elsif matching_potential_operator
+      return Result.new(action: :signup_via_operator, signup_url: matching_potential_operator["signupUrl"], operator_name: matching_potential_operator["name"])
     end
 
     Result.new(action: :classic)
+  rescue StandardError => e
+    Sentry.capture_exception(e)
+    Result.new(action: :classic)
   end
-  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
 
   private
 
-  def build_anct_client
-    EspaceOperateurANCT.new(@agent.proconnect_siret, @agent.email)
-  rescue StandardError => e
-    Sentry.capture_exception(e)
-    nil
+  def matching_operator
+    return @matching_operator if defined?(@matching_operator)
+
+    @matching_operator = nil
+    return if anct_client.operator.nil?
+
+    @matching_operator = Operator.find_by(siret: anct_client.operator["siret"])
   end
 
-  def handle_operator_case(anct_client, operator)
-    if anct_client.admin?
-      attach_or_create_territory(operator, anct_client)
-      Result.new(action: :attached_as_admin)
-    elsif anct_client.can_access?
-      Result.new(action: :contact_admin)
-    else
-      Result.new(action: :classic)
-    end
+  def matching_potential_operator
+    return @matching_potential_operator if defined?(@matching_potential_operator)
+
+    @matching_potential_operator = anct_client.potential_operators.find { |po| Operator.exists?(siret: po["siret"]) }
   end
 
-  def attach_or_create_territory(operator, anct_client)
+  def anct_client
+    @anct_client ||= EspaceOperateurANCT::ApiClient.new(@agent.proconnect_siret, @agent.email)
+  end
+
+  def attach_or_create_territory
     ActiveRecord::Base.transaction do
-      existing_territories = Territory.where(operator: operator, siret: @agent.proconnect_siret)
+      existing_territories = Territory.where(operator: matching_operator, siret: @agent.proconnect_siret)
 
       if existing_territories.many?
         raise "ProConnectOnboardingRouter: plusieurs territoires avec le même SIRET et opérateur (#{existing_territories.pluck(:id).join(', ')})"
@@ -82,7 +67,7 @@ class ProConnectOnboardingRouter
       existing_territory = existing_territories.first
 
       territory = existing_territory || Territory.create!(
-        operator: operator,
+        operator: matching_operator,
         category: ANCT_TYPE_TO_CATEGORY.fetch(anct_client.organization&.fetch("type", nil), "Inconnu"),
         siret: @agent.proconnect_siret
       )
@@ -94,7 +79,7 @@ class ProConnectOnboardingRouter
         verticale: @domain.verticale
       )
 
-      capture_attach_sentry_message(operator, territory, organisation, new_account: existing_territory.nil? || existing_organisation.nil?)
+      capture_attach_sentry_message(matching_operator, territory, organisation, new_account: existing_territory.nil? || existing_organisation.nil?)
 
       AgentRole.create!(agent: @agent, organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
       AgentTerritorialRole.create!(agent: @agent, territory: territory)

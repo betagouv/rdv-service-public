@@ -8,6 +8,7 @@ RSpec.describe "Secteur d'identification France Connect V2" do
       http://www.rdv-solidarites-test.localhost/franceconnect_v2/callback
       http://www.rdv-aide-numerique-test.localhost/franceconnect_v2/callback
       http://www.rdv-service-public-test.localhost/franceconnect_v2/callback
+      http://www.rdv-service-public-etat-test.localhost/franceconnect_v2/callback
     ]
 
     expect(response.headers["content-type"]).to eq "application/json"

@@ -147,7 +147,6 @@ RSpec.describe ProConnectController do
         end
 
         it "crée l'agent si le domaine le permet, et redirige vers la page de retour quand l'ANCT ne retourne rien" do
-          allow(Domain::RDV_SERVICE_PUBLIC).to receive(:allow_self_onboarding).and_return(true)
           # Sans token ANCT configuré, le handler renvoie :classic
           expect do
             get :callback, params: { state:, code: }
@@ -165,65 +164,6 @@ RSpec.describe ProConnectController do
           expect(current_agent_id).to eq(agent.id)
           expect(session["pro_connect_id_token"]).to be_present
           expect(response).to redirect_to("/agents/edit") # stored location via after_sign_in_path_for
-        end
-
-        context "avec token ANCT : opérateur admin qui matche notre DB" do
-          stub_env_with(ESPACE_OPERATEUR_ANCT_AUTH_TOKEN: "Bearer fake-token")
-
-          # La cassette entitlements_admin est enregistrée avec email=test-admin@example.com et siret=21550050500015
-          let(:user_info) { super().merge("email" => "test-admin@example.com", "siret" => "21550050500015") }
-          let!(:operator) { create(:operator, siret: "13002603200016") }
-
-          before { ProConnectStubs.stub_callback_requests(code, user_info) }
-          around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_admin") { ex.run } }
-
-          it "crée l'agent, son espace et son orga puis le redirige normalement" do
-            allow(Domain::RDV_SERVICE_PUBLIC).to receive(:allow_self_onboarding).and_return(true)
-            expect do
-              get :callback, params: { state:, code: }
-            end.to change(Agent, :count).by(1)
-              .and change(Territory, :count).by(1)
-              .and change(Organisation, :count).by(1)
-              .and change(AgentRole, :count).by(1)
-
-            expect(current_agent_id).to be_present
-            expect(response).to redirect_to("/agents/edit") # stored location
-          end
-        end
-
-        context "avec token ANCT : opérateur non-admin qui matche notre DB" do
-          stub_env_with(ESPACE_OPERATEUR_ANCT_AUTH_TOKEN: "Bearer fake-token")
-
-          # La cassette entitlements_success est enregistrée avec email=contact@mairie-nantes.fr et siret=21550050500015
-          let(:user_info) { super().merge("email" => "contact@mairie-nantes.fr", "siret" => "21550050500015") }
-          let!(:operator) { create(:operator, siret: "13002603200016") }
-
-          before { ProConnectStubs.stub_callback_requests(code, user_info) }
-          around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_success") { ex.run } }
-
-          it "crée l'agent avec un flash info et redirige normalement" do
-            allow(Domain::RDV_SERVICE_PUBLIC).to receive(:allow_self_onboarding).and_return(true)
-            get :callback, params: { state:, code: }
-            expect(flash[:info]).to include("Rapprochez-vous de votre administrateur")
-            expect(response).to redirect_to("/agents/edit") # stored location via after_sign_in_path_for
-          end
-        end
-
-        context "avec token ANCT : potentialOperators dont un matche notre DB" do
-          stub_env_with(ESPACE_OPERATEUR_ANCT_AUTH_TOKEN: "Bearer fake-token")
-
-          # La cassette entitlements_with_potential_operators est enregistrée avec email=contact@mairie-nantes.fr et siret=20005671100019
-          let(:user_info) { super().merge("email" => "contact@mairie-nantes.fr", "siret" => "20005671100019") }
-          let!(:operator) { create(:operator, siret: "13002603200016") } # premier potentialOperator de la cassette
-
-          before { ProConnectStubs.stub_callback_requests(code, user_info) }
-          around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_with_potential_operators") { ex.run } }
-
-          it "crée l'agent et redirige vers la page inscription_via_operateur" do
-            allow(Domain::RDV_SERVICE_PUBLIC).to receive(:allow_self_onboarding).and_return(true)
-            get :callback, params: { state:, code: }
-            expect(response).to redirect_to(agents_inscription_via_operateur_path(signup_url: "https://suiteterritoriale.anct.gouv.fr/deep-link-signup/", operator_name: "ANCT"))
-          end
         end
       end
 
@@ -372,15 +312,50 @@ RSpec.describe ProConnectController do
         end
       end
 
-      context "quand l’agent utilise un fournisseur d’identité non compatible avec le 2FA" do
+      context "quand l’id du founrisseur d’identité de l’agent n’est pas dans la liste des id double authentifiable" do
         before do
           stub_const("ProConnectController::IDP_PRO_CONNECT_FORCE_2FA_ENABLED", ["autre-idp"])
         end
 
-        it "connecte l’agent normalement" do
+        it "connecte l’agent normalement sans exiger le 2FA" do
           agent = create(:agent, email: user_info["email"])
           get :callback, params: { state:, code: }
           expect_agent_to_be_updated_and_logged_in(agent.reload)
+        end
+
+        context "quand l’agent a un compte sensible" do
+          it "ne connecte pas l'agent" do
+            create(:agent, email: user_info["email"], sensitive_account: true)
+            get :callback, params: { state:, code: }
+            expect(current_agent_id).to be_nil
+          end
+
+          it "stocke l’id de l’agent dans la session comme connexion en attente" do
+            agent = create(:agent, email: user_info["email"], sensitive_account: true)
+            get :callback, params: { state:, code: }
+            expect(session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY]).to eq(agent.id)
+          end
+
+          it "stocke le token ProConnect comme pending et non comme token actif" do
+            create(:agent, email: user_info["email"], sensitive_account: true)
+            get :callback, params: { state:, code: }
+            expect(session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY]).to be_present
+            expect(session[:pro_connect_id_token]).to be_nil
+          end
+
+          it "redirige vers le formulaire de vérification par code" do
+            create(:agent, email: user_info["email"], sensitive_account: true)
+            get :callback, params: { state:, code: }
+            expect(response).to redirect_to(new_agents_sessions_by_code_path)
+          end
+
+          it "crée et envoie un code de connexion par email" do
+            agent = create(:agent, email: user_info["email"], sensitive_account: true)
+            expect { get :callback, params: { state:, code: } }
+              .to change(LoginCode, :count).by(1)
+              .and have_enqueued_mail(Agents::LoginCodeMailer, :login_code)
+            expect(LoginCode.last.email).to eq(agent.email)
+          end
         end
       end
     end

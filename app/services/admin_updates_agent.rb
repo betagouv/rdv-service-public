@@ -1,9 +1,10 @@
 # La phrase du nom de la classe indique le contexte et l'action métier réalisés par ce service object en PORO
 class AdminUpdatesAgent
-  def initialize(agent:, organisation:, new_access_level:, agent_params:, inviting_agent:)
+  def initialize(agent:, organisation:, new_access_level:, agent_params:, inviting_agent:, new_agent_accueil: nil)
     @agent = agent
     @organisation = organisation
     @new_access_level = new_access_level.to_s
+    @new_agent_accueil = new_agent_accueil
     @agent_params = agent_params
     @inviting_agent = inviting_agent
   end
@@ -14,7 +15,7 @@ class AdminUpdatesAgent
     elsif change_role_to_intervenant?
       turn_agent_with_account_into_intervenant
     else
-      agent_role.update(access_level: @new_access_level)
+      agent_role.update(access_level: @new_access_level, **agent_accueil_update)
     end
   end
 
@@ -101,5 +102,9 @@ class AdminUpdatesAgent
 
   def agent_role
     @agent_role ||= @agent.roles.find_by(organisation: @organisation)
+  end
+
+  def agent_accueil_update
+    @new_agent_accueil.nil? ? {} : { agent_accueil: @new_agent_accueil }
   end
 end

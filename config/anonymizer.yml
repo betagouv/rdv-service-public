@@ -106,6 +106,7 @@ tables:
       - caldav_agenda_url
       - caldav_username
       - caldav_password
+      - caldav_include_sensitive_data
       - caldav_sync_token
       - sensitive_account
     non_anonymized_column_names:
@@ -217,6 +218,7 @@ tables:
       - disabled_at
       - online_booking_for_particuliers
       - online_booking_for_professionnels
+      - online_booking_with_email
 
   - table_name: absences
     anonymized_column_names:
@@ -333,6 +335,7 @@ tables:
   - table_name: agent_roles
     non_anonymized_column_names:
       - access_level
+      - agent_accueil
   - table_name: agents_rdvs
     anonymized_column_names:
       - caldav_url

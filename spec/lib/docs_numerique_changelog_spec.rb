@@ -16,7 +16,7 @@ RSpec.describe DocsNumeriqueChangelog do
         headers: { "Content-Type" => "application/json" }
       )
 
-      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/doc-1/content/")
+      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/doc-1/formatted-content/")
         .with(query: { content_format: "html" })
         .to_return(
           status: 200,
@@ -24,7 +24,7 @@ RSpec.describe DocsNumeriqueChangelog do
           headers: { "Content-Type" => "application/json" }
         )
 
-      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/doc-2/content/")
+      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/doc-2/formatted-content/")
         .with(query: { content_format: "html" })
         .to_return(
           status: 200,
@@ -32,7 +32,7 @@ RSpec.describe DocsNumeriqueChangelog do
           headers: { "Content-Type" => "application/json" }
         )
 
-      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/doc-3/content/")
+      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/doc-3/formatted-content/")
         .with(query: { content_format: "html" })
         .to_return(
           status: 200,
