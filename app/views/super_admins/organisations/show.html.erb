@@ -35,7 +35,9 @@
       </dt>
 
       <dd class="attribute-data attribute-data--<%=attribute.html_class%>">
+        <%= render_field attribute, page: page %>
         <% if attribute.name == "motifs" %>
+          <br>
           <%= link_to(
                 "Créer les motifs France Service",
                 create_france_connect_motifs_super_admins_organisation_path(id: page.resource.id),
@@ -44,7 +46,6 @@
                 data: { confirm: t("administrate.actions.confirm") }
               ) if accessible_action?(page.resource, :destroy) %>
         <% end %>
-        <%= render_field attribute, page: page %>
       </dd>
     <% end %>
   </dl>
