@@ -41,8 +41,8 @@ module TextSearch
         where("\"#{table_name}\".\"email\" LIKE ?", "#{search_query}%")
       elsif self == User && looks_like_phone_number(search_query)
         search_by_phone_number(search_query)
-      # Certains départements cherchent les usagers via l'ID indiqué dans leur logiciel de gestion
       elsif self == User && looks_like_an_id(search_query)
+        # Certains départements cherchent les usagers via l'ID RDV-S stocké dans leur logiciel de gestion
         where(id: search_query)
       else
         full_text_search(I18n.transliterate(search_query))
