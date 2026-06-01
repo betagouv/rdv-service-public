@@ -9,10 +9,11 @@ Pour tester ProConnect en local, il y a 2 possibilités :
 
 ### 1. utiliser les credentials de test de l’app de dev partagée
 
-- Récupérer les clés secrètes de l’appli ProConnect de dev depuis Vaultwarden. L’entrée Vaultwarden s’appelle : « Fichier .env de développement local »
-- Rappatrier les variables d’env dans votre .env local : `PRO_CONNECT_RDVSP_CLIENT_SECRET` et autres.
 - Assurez vous d’avoir les variables d’env `PRO_CONNECT_BASE_URL` et `PRO_CONNECT_RDVSP_CLIENT_ID` (etc…) dans votre `.env` local. Si ce n’est pas le cas, recopiez les depuis `.env.sample`.
-- Connectez vous depuis l’URL http://www.rdv-solidarites.localhost:3000/agents/sign_in
+- Récupérer les clés secrètes de l’appli ProConnect de dev depuis Vaultwarden.
+  L’entrée Vaultwarden s’appelle : « Fichier .env de développement local » :
+  Définissez les dans votre .env local : `PRO_CONNECT_RDVSP_CLIENT_SECRET` et autres.
+- Connectez vous depuis l’URL http://www.rdv-solidarites.localhost:3000/agents/sign_in (⚠️ le port est important)
 
 
 ### 2. créer une nouvelle app de dev
