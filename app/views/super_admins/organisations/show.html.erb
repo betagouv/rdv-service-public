@@ -1,0 +1,52 @@
+<%# Copied from app/views/super_admins/application/show.html.erb %>
+
+<% content_for(:title) { t("administrate.actions.show_resource", name: page.page_title) } %>
+
+<header class="main-content__header">
+  <h1 class="main-content__page-title">
+    <%= content_for(:title) %>
+  </h1>
+
+  <div>
+    <%= link_to(
+      t("administrate.actions.edit_resource", name: page.page_title),
+      [:edit, namespace, page.resource],
+      class: "button",
+    ) if accessible_action?(page.resource, :edit) %>
+
+    <%= link_to(
+      t("administrate.actions.destroy"),
+      [namespace, page.resource],
+      class: "button button--danger",
+      method: :delete,
+      data: { confirm: t("administrate.actions.confirm") }
+    ) if accessible_action?(page.resource, :destroy) %>
+  </div>
+</header>
+
+<section class="main-content__body">
+  <dl>
+    <% page.attributes.each do |attribute| %>
+      <dt class="attribute-label" id="<%= attribute.name %>">
+      <%= t(
+        "helpers.label.#{resource_name}.#{attribute.name}",
+        default: page.resource.class.human_attribute_name(attribute.name),
+      ) %>
+      </dt>
+
+      <dd class="attribute-data attribute-data--<%=attribute.html_class%>">
+        <% if attribute.name == "motifs" %>
+          <%= link_to(
+                "Créer les motifs France Service",
+                create_france_connect_motifs_super_admins_organisation_path(id: page.resource.id),
+                class: "button button--danger",
+                method: :post,
+                data: { confirm: t("administrate.actions.confirm") }
+              ) if accessible_action?(page.resource, :destroy) %>
+        <% end %>
+        <%= render_field attribute, page: page %>
+      </dd>
+    <% end %>
+  </dl>
+  <%= render partial: 'super_admins/history', locals: {resource: page.resource} %>
+</section>
