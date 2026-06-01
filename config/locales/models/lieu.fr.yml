@@ -24,3 +24,6 @@ fr:
               format: "%{message}"
             address:
               must_be_valid: doit être valide
+            phone_number:
+              invalid: "Le numéro de téléphone est invalide. S'il s'agit d'un numéro étranger, saisissez l'indicatif du pays (ex : +32 pour la Belgique)."
+              format: "%{message}"
