@@ -11,7 +11,6 @@ Domain = Struct.new(
   :search_banner_template_name,
   :sms_sender_name,
   :online_reservation_with_public_link,
-  :france_connect_enabled,
   :support_email,
   :secretariat_email,
   :verticale,
@@ -32,7 +31,6 @@ class Domain
       search_banner_template_name: "search/banners/rdv_solidarites",
       online_reservation_with_public_link: false,
       sms_sender_name: "RdvSoli",
-      france_connect_enabled: true,
       support_email: "support@rdv-solidarites.fr",
       verticale: :rdv_solidarites,
       allow_self_onboarding: false,
@@ -54,7 +52,6 @@ class Domain
       search_banner_template_name: "search/banners/rdv_aide_numerique",
       online_reservation_with_public_link: true,
       sms_sender_name: "RdvAideNum",
-      france_connect_enabled: false,
       support_email: "support@rdv-service-public.fr",
       verticale: :rdv_aide_numerique,
       allow_self_onboarding: false,
@@ -72,7 +69,6 @@ class Domain
       search_banner_template_name: "search/banners/rdv_service_public",
       online_reservation_with_public_link: true,
       sms_sender_name: "RDV S.P.",
-      france_connect_enabled: true,
       support_email: "support@rdv-service-public.fr",
       verticale: :rdv_mairie,
       allow_self_onboarding: true,
@@ -90,7 +86,6 @@ class Domain
       search_banner_template_name: "search/banners/rdv_service_public",
       online_reservation_with_public_link: true,
       sms_sender_name: "RDV S.P.",
-      france_connect_enabled: true,
       support_email: "support@rdv-service-public.fr",
       verticale: :rdv_mairie,
       allow_self_onboarding: true,
@@ -128,6 +123,24 @@ class Domain
       RDV_AIDE_NUMERIQUE => ENV["PRO_CONNECT_RDVAN_CLIENT_SECRET"],
       RDV_SERVICE_PUBLIC => ENV["PRO_CONNECT_RDVSP_CLIENT_SECRET"],
       RDV_SERVICE_PUBLIC_ETAT => ENV["PRO_CONNECT_RDVSP_ETAT_CLIENT_SECRET"],
+    }.fetch(self)
+  end
+
+  def france_connect_v2_client_id
+    {
+      RDV_SOLIDARITES => ENV["FRANCECONNECT_V2_RDVS_CLIENT_ID"],
+      RDV_AIDE_NUMERIQUE => ENV["FRANCECONNECT_V2_RDVAN_CLIENT_ID"],
+      RDV_SERVICE_PUBLIC => ENV["FRANCECONNECT_V2_RDVSP_CLIENT_ID"],
+      RDV_SERVICE_PUBLIC_ETAT => ENV["FRANCECONNECT_V2_RDVSP_ETAT_CLIENT_ID"],
+    }.fetch(self)
+  end
+
+  def france_connect_v2_client_secret
+    {
+      RDV_SOLIDARITES => ENV["FRANCECONNECT_V2_RDVS_CLIENT_SECRET"],
+      RDV_AIDE_NUMERIQUE => ENV["FRANCECONNECT_V2_RDVAN_CLIENT_SECRET"],
+      RDV_SERVICE_PUBLIC => ENV["FRANCECONNECT_V2_RDVSP_CLIENT_SECRET"],
+      RDV_SERVICE_PUBLIC_ETAT => ENV["FRANCECONNECT_V2_RDVSP_ETAT_CLIENT_SECRET"],
     }.fetch(self)
   end
 
