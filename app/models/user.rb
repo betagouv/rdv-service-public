@@ -168,10 +168,6 @@ class User < ApplicationRecord
     rdv.participations.to_a.find { |participation| participation.user_id.in?(self_and_relatives_and_responsible.map(&:id)) }
   end
 
-  def deleted_email
-    "user_#{id}@deleted.rdv-solidarites.fr"
-  end
-
   def upcoming_rdvs_for_self_or_relatives
     Rdv.not_cancelled.future.joins(:users).where(users: self_and_relatives)
   end

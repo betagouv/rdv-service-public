@@ -11,7 +11,9 @@ module PhoneNumberValidation
   # Mayotte    | YT | +262 | 0692XXXXXX, 0693XXXXXX
   # Cf: Plan national de numérotation téléphonique,
   # https://www.arcep.fr/uploads/tx_gsavis/05-1085.pdf  “Numéros mobiles à 10 chiffres”, page 6
-  COUNTRY_CODES = %i[FR GP GF MQ RE YT].freeze
+  #
+  # On ajoute aussi NC pour la Nouvelle Calédonie et PF pour la Polynésie Française
+  COUNTRY_CODES = %i[FR GP GF MQ RE YT NC PF].freeze
 
   def self.parsed_number(phone_number)
     return if phone_number.blank?

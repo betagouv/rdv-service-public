@@ -106,7 +106,7 @@ class Organisation < ApplicationRecord
 
   def phone_number_is_valid?
     # Blank, Valid Phone, 4 digits phone (organisations only)
-    phone_number.blank? || Phonelib.parse(phone_number).valid? || phone_number.match(/^\d{4}$/)
+    phone_number.blank? || PhoneNumberValidation.parsed_number(phone_number).present? || phone_number.match(/^\d{4}$/)
   end
 
   def humanized_phone_number
