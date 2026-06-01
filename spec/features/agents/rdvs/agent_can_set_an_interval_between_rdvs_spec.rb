@@ -1,4 +1,6 @@
 RSpec.describe "un agent peut définir un intervalle entre chaque RDV" do
+  before { travel_to(Time.zone.parse("2026-05-29 08:00")) }
+
   describe "configuration de l'intervalle" do
     let!(:agent) { create(:agent, basic_role_in_organisations: [motif.organisation]) }
     let!(:motif) { create(:motif, :by_phone, default_duration_in_min: 30) }
