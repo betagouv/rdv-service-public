@@ -23,14 +23,17 @@ RSpec.describe Agents::PagesController, type: :controller do
         end
 
         context "avec des organisations doublons possibles" do
+          render_views
+
           before do
             other_agent = create(:agent, email: "other@example.gouv.fr")
             create(:organisation, agents: [other_agent])
           end
 
-          it "redirige vers la demande d’ouverture de compte" do
+          it "rend la page d’accueil, qui permet à l’agent de demander une ouverture de compte" do
             get :home
-            expect(response).to redirect_to(new_agents_territory_creation_request_path)
+            expect(response).to render_template("home")
+            expect(response.body).to include("Ouvrir un espace")
           end
         end
       end

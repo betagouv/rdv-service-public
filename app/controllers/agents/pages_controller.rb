@@ -23,8 +23,6 @@ class Agents::PagesController < AgentAuthController
     if Agent::TerritoryPolicy.new(current_agent, Territory.new).new?
       if current_agent.possible_duplicate_organisations.empty?
         redirect_to new_agents_territory_path
-      else
-        redirect_to new_agents_territory_creation_request_path
       end
     else
       redirect_via_anct_router
