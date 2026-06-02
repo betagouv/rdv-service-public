@@ -24,10 +24,11 @@
 
   .row
     .col
-      = date_input(f, :first_day, input_html: { id: "recurrence-source", class: "js-recurrence-first-day js-recurrence-input"} )
+      / La marge et le padding permettent d'être aligné avec le champs "Termine à" (pour les absences), et d'ajouter un peu de whitespace par rapport au composant au-dessus (pour tous les cas)
+      = date_input(f, :first_day, input_html: { id: "recurrence-source", class: "js-recurrence-first-day js-recurrence-input"}, label_html: { class: "fr-mt-2w fr-pt-1v" } )
     - if defined?(model.end_day)
       .col
-        = date_input(f, :end_day, input_html: { class: "js-recurrence-end-day"}, wrapper_html: { class: "js-recurrence-end-day-with-label"})
+        = date_input(f, :end_day, input_html: { class: "js-recurrence-end-day"}, wrapper_html: { class: "js-recurrence-end-day-with-label"}, hint: "Facultatif")
 
   .row
     .col = f.input :start_time, as: :time, ignore_date: true, minute_step: 5

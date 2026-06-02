@@ -40,7 +40,7 @@ SimpleForm.setup do |config|
     b.optional :min_max
     b.optional :readonly
     b.use :label, class: "form-control-label"
-    b.use :hint, wrap_with: { tag: "span", class: "fr-hint-text fr-mb-1w" }
+    b.use :hint, wrap_with: { tag: "span", class: "fr-hint-text fr-mb-1w", html: { style: "margin-top: -8px" } } # La margin négative permet d'avoir le même rendu que celui du DSFR.
     b.use :input, class: "form-control", error_class: "is-invalid"
     b.use :full_error, wrap_with: { tag: "div", class: "invalid-feedback" }
   end
