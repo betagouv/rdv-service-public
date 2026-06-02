@@ -135,4 +135,19 @@ RSpec.describe "Agent can CRUD absences" do
       expect(absence.reload.recurrence).to be_present
     end
   end
+
+  describe "switching from a single day weekly absence to a multi-day non-recurring absence using the dynamic form" do
+    let!(:absence) { create(:absence, :weekly_on_monday, agent: agent, first_day: Time.zone.today) }
+
+    it "correctly disables the right field when editing the recurrence type", js: true do
+      visit edit_admin_organisation_planning_absence_path(organisation.id, absence.id)
+      find("label", text: "Ponctuelle").click
+      fill_in "absence[end_day]", with: Time.zone.today + 2
+
+      click_on "Enregistrer"
+
+      expect(page).to have_content "L'indisponibilité a été modifiée."
+      expect(absence.reload.recurrence).to be_blank
+    end
+  end
 end
