@@ -18,10 +18,13 @@ p Veuillez sélectionner ci-dessous l'agenda que vous souhaitez synchroniser ave
     legend.fr-fieldset__legend.fr-fieldset__legend--regular
       | Sélectionnez l'agenda à synchroniser
     - calendars.each do |calendar|
+      - writable = calendar.current_user_privilege_set&.include?("write")
       .fr-fieldset__element
-        .fr-radio-group
-          input type="radio" name="caldav_agenda_url" id="calendar_#{calendar.url.parameterize}" value=calendar.url required=true checked=(calendar.url.chomp("/") == preselected_url)
+        .fr-radio-group[class=("fr-radio-group--disabled" unless writable)]
+          input type="radio" name="caldav_agenda_url" id="calendar_#{calendar.url.parameterize}" value=calendar.url required=true checked=(calendar.url.chomp("/") == preselected_url) disabled=(!writable || nil)
           label.fr-label for="calendar_#{calendar.url.parameterize}"
             = calendar.display_name
+            - unless writable
+              span.fr-hint-text Vous n’avez pas les droits d’écriture sur cet agenda.
 
   = submit_tag "Valider", class: "fr-btn fr-mt-2w"

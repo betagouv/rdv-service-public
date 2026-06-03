@@ -167,7 +167,7 @@ GEM
     bullet (8.0.0)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
-    calendav (0.5.1)
+    calendav (0.6.0)
       http
       icalendar
       nokogiri
@@ -793,7 +793,7 @@ DEPENDENCIES
   bootsnap
   brakeman
   bullet
-  calendav (~> 0.5)
+  calendav (~> 0.6)
   capybara
   capybara-email
   capybara-playwright-driver
@@ -922,7 +922,7 @@ CHECKSUMS
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
   bullet (8.0.0) sha256=77f02fde19a1dfef028db42535e581b2b7b49906be5aa934494f1365a478de4d
   bundler (4.0.12) sha256=7f8b757d28dfb636e7b24fba2344ac6dd13b5b24f4b46d62573d483f211825ac
-  calendav (0.5.1) sha256=c685eef12b6d70f3fb66a044c7156138cfd39c05acb4668415f79b2da2fbd7b9
+  calendav (0.6.0) sha256=4cd1bb8d19ca60f4c76b9a64b2a8c81f0fe6d2062b2235cf155acd960a7cf926
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   capybara-email (3.0.2) sha256=ab65dd9b15c096b1ebe24308d18d790eb08814f916883ebccbc1cf46f760696f
   capybara-playwright-driver (0.5.7) sha256=875a1928077d56be8b484f84674901a2374752d7842d93de2045bbede1aad242
