@@ -36,18 +36,9 @@
 
       <dd class="attribute-data attribute-data--<%=attribute.html_class%>">
         <%= render_field attribute, page: page %>
-        <% if attribute.name == "motifs" %>
-          <br>
-          <%= link_to(
-                "Créer les motifs France Service",
-                create_france_connect_motifs_super_admins_organisation_path(id: page.resource.id),
-                class: "button button--danger",
-                method: :post,
-                data: { confirm: t("administrate.actions.confirm") }
-              ) if accessible_action?(page.resource, :destroy) %>
-        <% end %>
       </dd>
     <% end %>
   </dl>
-  <%= render partial: 'super_admins/history', locals: {resource: page.resource} %>
+  <%= render partial: "super_admins/organisations/motifs_templates", locals: { organisation: page.resource } %>
+  <%= render partial: 'super_admins/history', locals: { resource: page.resource } %>
 </section>
