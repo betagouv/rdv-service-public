@@ -1,11 +1,7 @@
-def date_and_time(date, time)
-  Tod::TimeOfDay.parse(time).on(date)
+def today_at(hour, min = 0)
+  Time.zone.now.change(hour:, min:)
 end
 
-def today_at(time)
-  Tod::TimeOfDay.parse(time).on(Time.zone.today)
-end
-
-def tomorrow_at(time)
-  Tod::TimeOfDay.parse(time).on(Time.zone.tomorrow)
+def tomorrow_at(hour)
+  Time.zone.tomorrow.to_time.change(hour:)
 end

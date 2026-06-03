@@ -8,8 +8,8 @@ RSpec.describe Admin::Api::Agenda::ExternalCalendarEventsController, type: :cont
     event_within_time_range = ExternalCalendarEvent.create!(
       agent:,
       url: "1234",
-      starts_at: today_at("10:30"),
-      ends_at: today_at("12:00")
+      starts_at: today_at(10, 30),
+      ends_at: today_at(12)
     )
 
     # Event out of time range, should not be in response
