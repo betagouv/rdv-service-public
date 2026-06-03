@@ -1,7 +1,7 @@
 RSpec.describe "Un super admin peut chercher un utilisateur", js: true do
   let(:super_admin) { create(:super_admin) }
-  let!(:user) { create(:user) }
-  let!(:another_user) { create(:user) } # On crée un autre utilisateur pour s’assurer que la recherche fonctionne correctement
+  let!(:user) { create(:user, first_name: "Katia", last_name: "Garcia") }
+  let!(:another_user) { create(:user, first_name: "Tanguy", last_name: "Laverdure") } # On crée un autre utilisateur pour s’assurer que la recherche fonctionne correctement
 
   it "par email" do
     login_as(super_admin, scope: :super_admin)
