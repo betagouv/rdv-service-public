@@ -117,4 +117,24 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
       expect(page).to have_content("L'intitulé est trop long et sera abrégé ainsi dans les notifications SMS : Organiser ses fichiers et ses dossiers sur son ord...")
     end
   end
+
+  describe "changing a participation's status" do
+    before { stub_netsize_ok }
+
+    it "works", js: true do
+      rdv_collectif = create(:rdv, organisation:, motif:, agents: [agent], users: [user1])
+      visit admin_organisation_rdv_path(organisation_id: organisation.id, id: rdv_collectif.id)
+
+      # on vérifie qu'un clic sur "Annuler" dans la boite de confirmation annuler bien l'action
+      all("td .dropdown-toggle").first.click
+      dismiss_confirm do
+        expect { all("a.dropdown-item").first.click and sleep 0.5 }.not_to change { rdv_collectif.participations.sole.reload.status }
+      end
+
+      all("td .dropdown-toggle").first.click
+      accept_confirm do
+        expect { all("a.dropdown-item").first.click and sleep 0.5 }.to change { rdv_collectif.participations.sole.reload.status }
+      end
+    end
+  end
 end
