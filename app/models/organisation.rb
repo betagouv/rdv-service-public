@@ -10,6 +10,7 @@ class Organisation < ApplicationRecord
     rdv_solidarites: "rdv_solidarites",
     rdv_aide_numerique: "rdv_aide_numerique",
     rdv_mairie: "rdv_mairie",
+    rdv_etat: "rdv_etat",
   }
 
   # Relations
@@ -87,6 +88,8 @@ class Organisation < ApplicationRecord
     case verticale.to_sym
     when :rdv_aide_numerique
       Domain::RDV_AIDE_NUMERIQUE
+    when :rdv_etat
+      Domain::RDV_SERVICE_PUBLIC_ETAT
     when :rdv_mairie
       Domain::RDV_SERVICE_PUBLIC
     else
