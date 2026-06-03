@@ -76,23 +76,6 @@ class Compte
     "compte"
   end
 
-  def self.upsert_france_service_motifs!(organisation)
-    Motif.transaction do
-      YAML.load_file(Rails.root.join("lib/assets/motifs_france_service.yaml").to_s).map(&:symbolize_keys).each do |template_attrs|
-        service_name = template_attrs[:service_name]
-        service = Service.find_by(name: service_name) || Service.create!(name: service_name, short_name: service_name)
-
-        motif_attrs = template_attrs
-          .slice(:name, :location_type, :default_duration_in_min, :restriction_for_rdv, :instruction_for_rdv)
-          .merge(organisation_id: organisation.id, service_id: service.id, color: "#99CC99")
-
-        next if Motif.exists?(motif_attrs.slice(:name, :location_type, :organisation_id, :service_id))
-
-        Motif.create!(motif_attrs)
-      end
-    end
-  end
-
   private
 
   def find_or_invite_agent(organisation)
