@@ -18,7 +18,7 @@ class Agents::CaldavSyncController < AgentAuthController
 
     begin
       calendars = client.calendars.list
-      preselected_url = calendars.any? { |c| c.url.chomp("/") == params[:caldav_agenda_url].to_s.chomp("/") }
+      preselected_url = params[:caldav_agenda_url].to_s.chomp("/")
       render locals: { calendars: calendars, preselected_url: preselected_url }
     rescue StandardError => e
       flash[:alert] = "L'authentification a échoué. Veuillez vérifier votre identifiant et votre mot de passe. #{e.message}"
