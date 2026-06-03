@@ -22,7 +22,7 @@ module Users::UserFormConcern
   end
 
   def show_birth_name_field?
-    !signed_in_with_invitation_token? && domain != Domain::RDV_SERVICE_PUBLIC && !pro_connect_openid_sub
+    !signed_in_with_invitation_token? && !domain.rdv_service_public? && !pro_connect_openid_sub
   end
 
   def birth_name_frozen? = connected_with_sso?
