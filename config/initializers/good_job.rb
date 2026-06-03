@@ -1,7 +1,9 @@
 Rails.application.configure do
   config.active_job.default_priority = 0
 
+  # La durée de conservation (2 semaines par défaut) est configurable via GOOD_JOB_CLEANUP_PRESERVED_JOBS_BEFORE_SECONDS_AGO
   config.good_job.preserve_job_records = true
+
   config.good_job.on_thread_error = ->(exception) { Sentry.capture_exception(exception) } # this is never called !
   config.good_job.execution_mode = :external
   config.good_job.queues = "latency_30s:1; latency_5m,latency_30s:2; *:2"
