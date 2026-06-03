@@ -2,8 +2,8 @@ FactoryBot.define do
   factory :external_calendar_event do
     agent { association(:agent) }
     url { "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/#{SecureRandom.uuid}.ics" }
-    starts_at { Time.zone.today.at(Tod::TimeOfDay.parse("09:00")) }
-    ends_at { Time.zone.today.at(Tod::TimeOfDay.parse("11:00")) }
+    starts_at { today_at("09:00") }
+    ends_at { today_at("11:00") }
   end
 
   trait :recurring_on_weekdays do

@@ -7,7 +7,7 @@ RSpec.describe "Un agent peut retirer des usagers d’un RDV Collectif", js: tru
   let!(:agent_bouba) { create(:agent, first_name: "Bouba", email: "bouba@service.fr", service:, basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, :collectif, service:, organisation:, name: "Atelier Collectif") }
   let!(:lieu) { create(:lieu, organisation:) }
-  let(:starts_at) { now.to_date.next_occurring(:wednesday).at(Tod::TimeOfDay.parse("09:00")) }
+  let(:starts_at) { Tod::TimeOfDay.parse("09:00").on(now.to_date.next_occurring(:wednesday)) }
   let!(:user_amine) { create(:user, first_name: "Amine", last_name: "BENCHEIK", email: "amine@bencheik.com", organisations: [organisation]) }
   let!(:user_lea) { create(:user, first_name: "Léa", last_name: "O", organisations: [organisation]) }
   let!(:rdv) { create(:rdv, users: [user_amine, user_lea], motif:, organisation:, agents: [agent_bouba], lieu:, starts_at:) }
