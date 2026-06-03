@@ -17,7 +17,8 @@ class Agents::CaldavSyncController < AgentAuthController
     )
 
     begin
-      calendars = client.calendars.list
+      # CalDAV peut retourner des calendriers (VEVENT) et des listes de tâches (VTODO), on ne veut que les calendriers.
+      calendars = client.calendars.list.select { |c| c.components.include?("VEVENT") }
       preselected_url = params[:caldav_agenda_url].to_s.chomp("/")
       render locals: { calendars: calendars, preselected_url: preselected_url }
     rescue StandardError => e
