@@ -25,6 +25,7 @@
 </header>
 
 <section class="main-content__body">
+
   <dl>
     <% page.attributes.each do |attribute| %>
       <dt class="attribute-label" id="<%= attribute.name %>">
@@ -39,6 +40,11 @@
       </dd>
     <% end %>
   </dl>
-  <%= render partial: "super_admins/organisations/motifs_templates", locals: { organisation: page.resource } %>
+
+  <% if accessible_action?(page.resource, :create_france_connect_motifs) %>
+    <%= render partial: "super_admins/organisations/motifs_templates", locals: { organisation: page.resource } %>
+  <% end %>
+
   <%= render partial: 'super_admins/history', locals: { resource: page.resource } %>
+
 </section>
