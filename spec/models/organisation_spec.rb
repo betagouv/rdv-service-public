@@ -83,4 +83,14 @@ RSpec.describe Organisation, type: :model do
       it { is_expected.to be true }
     end
   end
+
+  describe "#domain" do
+    subject { organisation.domain }
+
+    context "when the verticale is set to état" do
+      let(:organisation) { build(:organisation, verticale: "rdv_etat") }
+
+      it { is_expected.to eq(Domain::RDV_SERVICE_PUBLIC_ETAT) }
+    end
+  end
 end

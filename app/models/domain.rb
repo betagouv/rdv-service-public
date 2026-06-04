@@ -274,4 +274,8 @@ class Domain
   def to_s
     name
   end
+
+  def rdv_service_public?
+    in?([RDV_SERVICE_PUBLIC, RDV_SERVICE_PUBLIC_ETAT])
+  end
 end
