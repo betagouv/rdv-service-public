@@ -24,7 +24,11 @@
         .card
           .card-body
             h2.dsfr-card-title.mb-3 Options avancées
-            = f.input :minutes_after_rdvs, label: "Temps de pause après chaque rendez-vous", hint: "Chaque rendez-vous sera automatiquement suivi d'une pause de la durée de votre choix, par exemple pour finir de traiter un dossier ou préparer le rendez-vous suivant.", collection: [["0", "Pas de pause"], ["5", "5 min."], ["10", "10 min."], ["15", "15 min."], ["20", "20 min."], ["30", "30 min."]], value_method: :first, label_method: :second, include_blank: false
+
+            - collection = [["0", "Pas de pause"], ["5", "5 min."], ["10", "10 min."], ["15", "15 min."], ["20", "20 min."], ["30", "30 min."]]
+            - hint = "Chaque rendez-vous sera automatiquement suivi d'une pause de la durée de votre choix, par exemple pour finir de traiter un dossier ou préparer le rendez-vous suivant."
+            = f.input :minutes_after_rdvs, label: "Temps de pause après chaque rendez-vous", collection:, hint:, value_method: :first, label_method: :second, include_blank: false
+
             = f.input :title, label: "Libellé (facultatif)", placeholder: "ex: Permanence hebdo", hint: "Ce libellé sera affiché aux agents mais jamais aux usagers"
             = f.input :hex_color, as: :color, label: "Couleur", hint: "Cette couleur peut vous aider à distinguer vos plages sur votre agenda."
 
