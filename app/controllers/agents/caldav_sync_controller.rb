@@ -68,8 +68,8 @@ class Agents::CaldavSyncController < AgentAuthController
     cal.prodid = "RDV Service Public"
     cal.event do |event|
       event.uid = "rdvsp-connection-test-#{SecureRandom.uuid}"
-      event.dtstart = Icalendar::Values::DateTime.new(Time.now.change(hour: 0, min: 0, sec: 0).utc)
-      event.dtend = Icalendar::Values::DateTime.new(Time.now.change(hour: 1, min: 0, sec: 0).utc)
+      event.dtstart = Icalendar::Values::DateTime.new(Time.now.change(hour: 0).utc)
+      event.dtend = Icalendar::Values::DateTime.new(Time.now.change(hour: 1).utc)
       event.summary = "Test de connexion RDV Service Public"
     end
     cal.to_ical
