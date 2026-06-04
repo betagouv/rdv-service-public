@@ -10,7 +10,7 @@ header.header.bg-white
     #navbarSupportedContent.collapse.navbar-collapse
       ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
         li.list-inline-item
-          - if current_domain == Domain::RDV_SERVICE_PUBLIC
+          - if current_domain.rdv_service_public?
             = link_to "Donnez votre avis", "https://tally.so/r/obBope", class: "btn text-primary-blue link-dsfr", target: "_blank"
           - elsif current_domain == Domain::RDV_SOLIDARITES
             = link_to "Donnez votre avis", "https://tally.so/r/5BkP56", class: "btn text-primary-blue link-dsfr", target: "_blank"
@@ -39,7 +39,7 @@ header.header.bg-white
             li = link_to destroy_agent_session_path, method: :delete, class: "dropdown-item-dsfr dropdown-item" do
               span.fr-icon--sm.fr-mr-2v.fr-icon-logout-box-r-line[aria-hidden="true"]
               | Se déconnecter
-        - if current_domain == Domain::RDV_SERVICE_PUBLIC && current_agent.lagaufre_access?
+        - if current_domain.rdv_service_public? && current_agent.lagaufre_access?
           li.list-inline-item.fr-mr-6v.fr-mt-n1v
             = render "layouts/lagaufre_button"
 

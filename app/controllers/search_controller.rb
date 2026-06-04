@@ -15,7 +15,7 @@ class SearchController < ApplicationController
       return
     end
 
-    if [Domain::RDV_SERVICE_PUBLIC, Domain::RDV_SERVICE_PUBLIC_ETAT].include?(current_domain)
+    if current_domain.rdv_service_public?
       @site_vitrine_page = true
       render "dsfr/rdv_mairie/homepage"
     else
