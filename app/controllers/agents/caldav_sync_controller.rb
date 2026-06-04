@@ -5,6 +5,39 @@ class Agents::CaldavSyncController < AgentAuthController
     skip_authorization
   end
 
+  def calendar_selection
+    skip_authorization
+    client = Calendav::Client.new(
+      Calendav::Credentials::Standard.new(
+        host: params[:caldav_agenda_url],
+        username: params[:caldav_username],
+        password: params[:caldav_password],
+        authentication: :basic_auth
+      )
+    )
+
+    begin
+      # CalDAV peut retourner des calendriers (VEVENT) et des listes de tâches (VTODO), on ne veut que les calendriers.
+      calendars = client.calendars.list.select { |c| c.components.include?("VEVENT") }
+      preselected_url = params[:caldav_agenda_url].to_s.chomp("/")
+      render locals: { calendars: calendars, preselected_url: preselected_url }
+    rescue Calendav::RequestError => e
+      flash[:alert] = case e.response.status
+                      when 401, 403
+                        "L'authentification a échoué : #{e.message}. Veuillez vérifier votre identifiant et votre mot de passe."
+                      when 404
+                        "L'authentification a échoué : #{e.message}. Veuillez vérifier l'URL du serveur ou de l'agenda CalDAV."
+                      else
+                        "L'authentification a échoué : #{e.message}. Si l'erreur persiste veuillez contacter le support."
+                      end
+      redirect_to agents_calendar_sync_caldav_sync_path
+    rescue StandardError => e
+      Sentry.capture_exception(e)
+      flash[:alert] = "Une erreur inattendue a été rencontrée, l'équipe de développement a été prévenue. Si l'erreur persiste veuillez contacter le support."
+      redirect_to agents_calendar_sync_caldav_sync_path
+    end
+  end
+
   def update
     skip_authorization
     current_agent.assign_attributes(permitted_params)
