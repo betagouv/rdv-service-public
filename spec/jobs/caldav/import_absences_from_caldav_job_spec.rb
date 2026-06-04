@@ -82,8 +82,8 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
       ExternalCalendarEvent.create(
         agent:,
         url: "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/c766aa62-c76e-48eb-a6a1-c5a496ec740b.ics",
-        starts_at: Time.zone.tomorrow.change(hour: 9, min: 0),
-        ends_at: Time.zone.tomorrow.change(hour: 10, min: 0)
+        starts_at: Time.zone.tomorrow.change(hour: 9),
+        ends_at: Time.zone.tomorrow.change(hour: 10)
       )
 
       VCR.use_cassette("caldav/transparent_event") do
@@ -106,8 +106,8 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
         ExternalCalendarEvent.create(
           agent:,
           url: "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/event_signaled_as_deleted.ics",
-          starts_at: Time.zone.tomorrow.change(hour: 9, min: 0),
-          ends_at: Time.zone.tomorrow.change(hour: 10, min: 0)
+          starts_at: Time.zone.tomorrow.change(hour: 9),
+          ends_at: Time.zone.tomorrow.change(hour: 10)
         )
 
         VCR.use_cassette("caldav/sync_with_empty_calendar_data") do

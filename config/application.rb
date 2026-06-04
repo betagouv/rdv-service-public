@@ -10,7 +10,6 @@ require "action_mailer/railtie"
 require "active_job/railtie"
 require "action_cable/engine"
 
-require "tod/core_extensions"
 require "dsfr/assets"
 require "dsfr/components"
 

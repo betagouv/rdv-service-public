@@ -60,7 +60,16 @@ class Admin::Planning::AbsencesController < AgentAuthController
 
   def update
     authorize(@absence, policy_class: Agent::AbsencePolicy)
-    if @absence.update(absence_params)
+
+    @absence.assign_attributes(absence_params)
+
+    if @absence.recurrence && @absence.end_day
+      @absence.end_day = nil
+    end
+
+    authorize(@absence, policy_class: Agent::AbsencePolicy)
+
+    if @absence.save
       Notifiers::AbsenceUpdated.new(@absence).perform
       flash[:success] = t(".absence_updated")
       redirect_to admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent_id)
