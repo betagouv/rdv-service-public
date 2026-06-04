@@ -32,7 +32,7 @@ RSpec.describe Caldav::ExportRdvToCaldavJob do
     before { allow(caldav_events).to receive(:create).and_return(created_event) }
 
     it "crée l'événement sur le serveur caldav" do
-      expect(caldav_events).to receive(:create).with(agent.caldav_agenda_url, "agents_rdv-#{agents_rdv.id}.ics", "BEGIN:VCALENDAR...")
+      expect(caldav_events).to receive(:create).with(agent.caldav_agenda_url, "#{agents_rdv.rdv.uuid}.ics", "BEGIN:VCALENDAR...")
       described_class.new.perform(agents_rdv.id, agent.id)
     end
 
