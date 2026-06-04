@@ -86,8 +86,9 @@ class Agents::CaldavSyncController < AgentAuthController
     end
 
     begin
-      identifier = "rdvsp-connection-test-#{SecureRandom.uuid}.ics"
-      test_event = client.events.create(agenda_url, identifier, test_event_ics)
+      uuid = SecureRandom.uuid
+      identifier = "rdvsp-connection-test-#{uuid}.ics"
+      test_event = client.events.create(agenda_url, identifier, test_event_ics(uuid))
       client.events.delete(test_event.url) # On nettoie l’événement de test qu’on vient de créer
     rescue StandardError
       return "L’accès en écriture au calendrier a échoué. Veuillez vérifier vos droits d’accès à l’agenda."
@@ -96,11 +97,11 @@ class Agents::CaldavSyncController < AgentAuthController
     nil
   end
 
-  def test_event_ics
+  def test_event_ics(uuid)
     cal = Icalendar::Calendar.new
     cal.prodid = "RDV Service Public"
     cal.event do |event|
-      event.uid = "rdvsp-connection-test-#{SecureRandom.uuid}"
+      event.uid = "rdvsp-connection-test-#{uuid}"
       event.dtstart = Icalendar::Values::DateTime.new(Time.now.change(hour: 0).utc)
       event.dtend = Icalendar::Values::DateTime.new(Time.now.change(hour: 1).utc)
       event.summary = "Test de connexion RDV Service Public"
