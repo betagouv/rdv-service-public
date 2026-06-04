@@ -25,17 +25,18 @@
           .card-body
             h2.dsfr-card-title.mb-3 Options avancées
 
-            p.fr-badge.fr-badge--pink-tuile[aria-describedby="tooltip-minutes-after-rdvs-beta"] Beta
-            span#tooltip-minutes-after-rdvs-beta.fr-tooltip.fr-placement[role="tooltip"]
-              | Cette nouvelle fonctionnalité est expérimentale.
-              br
-              | N'hésitez pas à nous faire part de vos questions et remarques via
-              =< link_to("le formulaire de contact", new_aide_demande_support_path(role: "agent", sujet: "Pause après chaque rendez-vous"), target: :_blank)
-              | .
-
             - collection = [["0", "Pas de pause"], ["5", "5 min."], ["10", "10 min."], ["15", "15 min."], ["20", "20 min."], ["30", "30 min."]]
             - hint = "Chaque rendez-vous sera automatiquement suivi d'une pause de la durée de votre choix, par exemple pour finir de traiter un dossier ou préparer le rendez-vous suivant."
-            = f.input :minutes_after_rdvs, label: "Temps de pause après chaque rendez-vous", collection:, hint:, value_method: :first, label_method: :second, include_blank: false
+            - label_content = capture do
+              span.fr-mr-1w Temps de pause après chaque rendez-vous
+              p.fr-badge.fr-badge--pink-tuile[aria-describedby="tooltip-minutes-after-rdvs-beta"] Beta
+              span#tooltip-minutes-after-rdvs-beta.fr-tooltip.fr-placement[role="tooltip"]
+                | Cette nouvelle fonctionnalité est expérimentale.
+                br
+                | N'hésitez pas à nous faire part de vos questions et remarques via
+                =< link_to("le formulaire de contact", new_aide_demande_support_path(role: "agent", sujet: "Pause après chaque rendez-vous"), target: :_blank)
+                | .
+            = f.input :minutes_after_rdvs, label: label_content, collection:, hint:, value_method: :first, label_method: :second, include_blank: false
 
             = f.input :title, label: "Libellé (facultatif)", placeholder: "ex: Permanence hebdo", hint: "Ce libellé sera affiché aux agents mais jamais aux usagers"
             = f.input :hex_color, as: :color, label: "Couleur", hint: "Cette couleur peut vous aider à distinguer vos plages sur votre agenda."
