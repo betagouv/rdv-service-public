@@ -39,6 +39,7 @@ RSpec.describe Organisation, type: :model do
     it "invalid phone" do
       organisation = build(:organisation, phone_number: "12345")
       expect(organisation).to be_invalid
+      expect(organisation.errors.full_messages.to_sentence).to eq "Le numéro de téléphone est invalide. S'il s'agit d'un numéro étranger, saisissez l'indicatif du pays (ex : +32 pour la Belgique)."
     end
 
     it "blank phone is valid" do
@@ -80,6 +81,16 @@ RSpec.describe Organisation, type: :model do
       end
 
       it { is_expected.to be true }
+    end
+  end
+
+  describe "#domain" do
+    subject { organisation.domain }
+
+    context "when the verticale is set to état" do
+      let(:organisation) { build(:organisation, verticale: "rdv_etat") }
+
+      it { is_expected.to eq(Domain::RDV_SERVICE_PUBLIC_ETAT) }
     end
   end
 end

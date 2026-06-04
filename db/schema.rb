@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_18_132616) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_03_152307) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -36,7 +36,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_18_132616) do
   create_enum "sms_provider", ["netsize", "send_in_blue", "contact_experience", "sfr_mail2sms", "clever_technologies", "orange_contact_everyone"]
   create_enum "user_created_through", ["unknown", "agent_creation", "user_sign_up", "franceconnect_sign_up", "user_relative_creation", "agent_creation_api", "prescripteur", "auto_through_login"]
   create_enum "user_invited_through", ["devise_email", "external"]
-  create_enum "verticale", ["rdv_insertion", "rdv_solidarites", "rdv_aide_numerique", "rdv_mairie"]
+  create_enum "verticale", ["rdv_insertion", "rdv_solidarites", "rdv_aide_numerique", "rdv_mairie", "rdv_etat"]
 
   create_table "absences", force: :cascade do |t|
     t.bigint "agent_id", null: false

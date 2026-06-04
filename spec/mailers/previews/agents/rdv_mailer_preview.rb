@@ -42,7 +42,7 @@ class Agents::RdvMailerPreview < ActionMailer::Preview
         organisation:,
         users: [user],
         agents: [Agent.new(first_name: "Karim", last_name: "FERN", email: "karim@demo.rdv-solidarites.fr").tap(&:readonly!)],
-        starts_at: Time.zone.today.next_occurring(:wednesday).at(Tod::TimeOfDay.parse("10:30")),
+        starts_at: Tod::TimeOfDay.parse("10:30").on(Time.zone.today.next_occurring(:wednesday)),
         duration_in_min: 30,
         motif: Motif.new(organisation:, name: "Atelier éducation canine", collectif: true).tap(&:readonly!),
         lieu: Lieu.new(organisation:, name: "Parc des bruyères, 13005 Marseille").tap(&:readonly!)

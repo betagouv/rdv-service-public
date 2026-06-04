@@ -2,15 +2,13 @@ RSpec.describe "Agent can CRUD absences" do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
-  before do
-    login_as(agent, scope: :agent)
-    visit authenticated_agent_root_path
-  end
+  before { login_as(agent, scope: :agent) }
 
   context "for an agent" do
     let!(:absence) { create(:absence, agent: agent) }
 
     it "can crud a absence" do
+      visit authenticated_agent_root_path
       click_link "Indisponibilités"
 
       expect(page).to have_link("Créer une indisponibilité") # vue liste
@@ -95,6 +93,7 @@ RSpec.describe "Agent can CRUD absences" do
     let!(:past_absence) { create(:absence, first_day: Date.new(2019, 7, 4), agent: agent) }
 
     it do
+      visit authenticated_agent_root_path
       click_link "Indisponibilités"
       expect(page).to have_link("Créer une indisponibilité") # vue liste
 
@@ -112,7 +111,7 @@ RSpec.describe "Agent can CRUD absences" do
     let!(:absence) { create(:absence, agent: agent, start_time: Tod::TimeOfDay.new(8, 30), end_time: Tod::TimeOfDay.new(9, 30)) }
 
     it "works" do
-      click_link "Indisponibilités"
+      visit admin_organisation_planning_absences_path(organisation.id)
       expect { click_link("Supprimer") }.to change(enqueued_jobs, :size).by(1)
       expect { perform_enqueued_jobs }.to change { emails_sent_to(absence.agent.email).size }.by(1)
       open_email(absence.agent.email)
@@ -120,6 +119,35 @@ RSpec.describe "Agent can CRUD absences" do
       expect(current_email.body).to include(absence.title)
       expect(current_email.body).to include(absence.agent.full_name)
       expect(current_email.body).to include("de 08:30 à 09:30") # on s'assure que les heures sont bien sérialisées et dé-sérialisées (objets Tod::TimeOfDay)
+    end
+  end
+
+  describe "switching from a multi-day non-recurring absence to a single day weekly absence using the dynamic form" do
+    let!(:absence) { create(:absence, :no_recurrence, agent: agent, first_day: Time.zone.today, end_day: 3.days.from_now) }
+
+    it "correctly disables the right field when editing the recurrence type", js: true do
+      visit edit_admin_organisation_planning_absence_path(organisation.id, absence.id)
+      find("label", text: "Récurrente").click
+      find("label", text: "Mardi").click
+      click_on "Enregistrer"
+
+      expect(page).to have_content "L'indisponibilité a été modifiée."
+      expect(absence.reload.recurrence).to be_present
+    end
+  end
+
+  describe "switching from a single day weekly absence to a multi-day non-recurring absence using the dynamic form" do
+    let!(:absence) { create(:absence, :weekly_on_monday, agent: agent, first_day: Time.zone.today) }
+
+    it "correctly disables the right field when editing the recurrence type", js: true do
+      visit edit_admin_organisation_planning_absence_path(organisation.id, absence.id)
+      find("label", text: "Ponctuelle").click
+      fill_in "absence[end_day]", with: Time.zone.today + 2
+
+      click_on "Enregistrer"
+
+      expect(page).to have_content "L'indisponibilité a été modifiée."
+      expect(absence.reload.recurrence).to be_blank
     end
   end
 end
