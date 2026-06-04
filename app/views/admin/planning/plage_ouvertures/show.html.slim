@@ -42,9 +42,9 @@
               li= motif_name_with_location_type_and_badges(motif)
         div.mt-2.d-flex
           - if @plage_ouverture.minutes_after_rdvs == 0
-            = "Pas d'intervalle entre les rendez-vous"
+            = "Pas de pause après chaque rendez-vous"
           - else
-            = "#{@plage_ouverture.minutes_after_rdvs} minutes d'intervalle entre les rendez-vous"
+            = "#{@plage_ouverture.minutes_after_rdvs} minutes de pause après chaque rendez-vous"
 
         div.mt-3.text-muted.text-right
           | modifiée le #{l(@plage_ouverture.updated_at, format: :short)}
