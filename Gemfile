@@ -5,8 +5,8 @@ ruby "3.4.9"
 
 # Full-stack web application framework.
 gem "rails", "8.0.5"
-# Rack-based asset packaging system
-gem "sprockets-rails"
+# Deliver assets for Rails
+gem "propshaft"
 # Puma is a simple, fast, threaded, and highly parallel HTTP 1.1 server for Ruby/Rack applications
 gem "puma"
 # Bundle and transpile JavaScript in Rails with esbuild, rollup.js, or Webpack.
