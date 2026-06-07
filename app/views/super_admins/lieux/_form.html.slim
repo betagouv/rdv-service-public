@@ -7,7 +7,7 @@
       ul
         - page.resource.errors.full_messages.each do |message|
           li.flash-error= message
-  - page.attributes.each do |title, attributes|
+  - page.attributes.each_value do |attributes|
     - attributes.each do |attribute|
       - next if !current_domain.accept_lieu_address_without_geocoding? && attribute.name == "address_without_geocoding"
       div class=("field-unit field-unit--#{attribute.html_class} field-unit--#{requireness(attribute)}")
