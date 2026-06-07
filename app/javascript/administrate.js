@@ -1,5 +1,4 @@
 require("@rails/ujs").start()
-import "@hotwired/turbo-rails"
 
 // Nous ne souhaitons pas utiliser Turbo Drive (voir #4790 et #5917)
 Turbo.session.drive = false
@@ -10,7 +9,6 @@ import { PlacesInputs } from './components/places-inputs.js';
 
 document.addEventListener("DOMContentLoaded", function() {
   new PlacesInputs();
-  // debugger;
   $(".field-unit--has-many select").select2()
 });
 
