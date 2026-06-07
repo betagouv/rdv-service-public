@@ -87,10 +87,10 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
     select("Commune", from: "Catégorie de l'espace")
 
     # Sélectionner les tags via select2
-    find(".field-unit--has-many .select2-selection").click
-    find(".select2-results__option", text: "France Services").click
-    find(".field-unit--has-many .select2-selection").click
-    find(".select2-results__option", text: "France Titres").click
+    find(".field-unit--has-many .selectize-input").click
+    find(".selectize-dropdown-content .option", text: "France Services").click
+    find(".field-unit--has-many .selectize-input").click
+    find(".selectize-dropdown-content .option", text: "France Titres").click
 
     fill_in("Nom de la première organisation", with: "France Services de Romainville")
     fill_in("Adresse du premier lieu", with: "Place de la mairie, Romainville, 93230")
