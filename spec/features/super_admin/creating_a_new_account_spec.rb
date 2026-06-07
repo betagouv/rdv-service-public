@@ -86,7 +86,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
     fill_in("Nom de l'espace", with: "Mairie de Romainville")
     select("Commune", from: "Catégorie de l'espace")
 
-    # Sélectionner les tags via select2
+    # Sélectionner les 2 tags via selectize
     find(".field-unit--has-many .selectize-input").click
     find(".selectize-dropdown-content .option", text: "France Services").click
     find(".field-unit--has-many .selectize-input").click
