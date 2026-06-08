@@ -7,9 +7,10 @@ class Agents::CaldavSyncController < AgentAuthController
 
   def calendar_selection
     skip_authorization
+    caldav_agenda_url = params.require(:caldav_agenda_url).strip
     client = Calendav::Client.new(
       Calendav::Credentials::Standard.new(
-        host: params[:caldav_agenda_url],
+        host: caldav_agenda_url,
         username: params[:caldav_username],
         password: params[:caldav_password],
         authentication: :basic_auth
@@ -19,7 +20,7 @@ class Agents::CaldavSyncController < AgentAuthController
     begin
       # CalDAV peut retourner des calendriers (VEVENT) et des listes de tâches (VTODO), on ne veut que les calendriers.
       calendars = client.calendars.list.select { |c| c.components.include?("VEVENT") }
-      preselected_url = params[:caldav_agenda_url].to_s.chomp("/")
+      preselected_url = caldav_agenda_url.chomp("/")
       render locals: { calendars: calendars, preselected_url: preselected_url }
     rescue Calendav::RequestError => e
       flash[:alert] = case e.response.status
