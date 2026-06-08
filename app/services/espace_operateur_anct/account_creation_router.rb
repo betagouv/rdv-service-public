@@ -13,7 +13,6 @@ class EspaceOperateurANCT::AccountCreationRouter
     @domain = domain
   end
 
-  # rubocop:disable Metrics/PerceivedComplexity
   def call
     return Result.new(action: :classic) if @agent.proconnect_siret.blank?
 
@@ -33,7 +32,6 @@ class EspaceOperateurANCT::AccountCreationRouter
     Sentry.capture_exception(e)
     Result.new(action: :classic)
   end
-  # rubocop:enable Metrics/PerceivedComplexity
 
   private
 
