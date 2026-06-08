@@ -47,16 +47,16 @@ p
         | Identifiant de l’agenda CalDAV
         span.fr-hint-text
           = external_link_to "voir la documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#synchronisation-avec-la-suite-numerique-caldav"
-      input#caldav_username.fr-input type="text" name="caldav_username"
+      input#caldav_username.fr-input type="text" name="caldav_username" required="required"
     .fr-input-group
       label.fr-label for="caldav_password"
         | Mot de passe de l’agenda CalDAV
         span.fr-hint-text
           = external_link_to "voir la documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#synchronisation-avec-la-suite-numerique-caldav"
-      input#caldav_password.fr-input type="password" name="caldav_password"
+      input#caldav_password.fr-input type="password" name="caldav_password" required="required"
     .fr-input-group
       label.fr-label for="caldav_agenda_url" URL du serveur ou de l’agenda CalDAV
-      input#caldav_agenda_url.fr-input type="text" name="caldav_agenda_url"
+      input#caldav_agenda_url.fr-input type="text" name="caldav_agenda_url" required="required"
     fieldset.fr-fieldset
       legend.fr-fieldset__legend--regular.fr-fieldset__legend
         | Données personnelles dans l'agenda externe
