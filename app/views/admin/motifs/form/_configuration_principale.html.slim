@@ -3,7 +3,7 @@
 - if motif.duplicated_from_motif && motif.new_record? && organisations_i_can_manage.count > 1
   .card
     .card-body
-      = f.dsfr_select :organisation_id, organisations_i_can_manage.sort.collect { |organisation| [organisation.name, organisation.id] }, label: "Créer le motif dans cette organisation", required: true
+      = f.dsfr_select :organisation_id, organisations_i_can_manage.sort.collect { |organisation| [organisation.name, organisation.id] }, label: "Créer le motif dans cette organisation"
 
 .card
   .card-body
@@ -18,7 +18,7 @@
       - available_services = (current_territory.services.reject(&:secretariat?) + [motif.service].compact).sort.uniq
       - if available_services.any? || motif.service_id.present?
         .fr-col-md-12
-          = f.dsfr_select :service_id, available_services.collect { |service| [service.name, service.id] }, label: "Service associé", include_blank: "Aucun", hint: "Optionnel"
+          = f.dsfr_select :service_id, available_services.collect { |service| [service.name, service.id] }, { include_blank: "Aucun" }, label: "Service associé", hint: "Optionnel"
       .fr-col-md-6= f.dsfr_number_field :default_duration_in_min, label: "Durée du RDV (en minutes)"
       // Le DSFR ne propose pas d’input color, on utilise donc le champ classique avec le style DSFR pour lequel on fixe la hauteur.
       .fr-col-md-6= f.dsfr_input_field :color, :color_field, label: "Couleur associée", style: "height: 2.5rem"
