@@ -6,6 +6,13 @@ class Agents::PagesController < AgentAuthController
   def home
     skip_authorization
 
+    if current_domain == Domain::RDV_SERVICE_PUBLIC &&
+       current_agent.organisations.exists? &&
+       current_agent.organisations.all?(&:rdv_etat?)
+      redirect_to authenticated_agent_root_url(host: Domain::RDV_SERVICE_PUBLIC_ETAT.host_name), allow_other_host: true
+      return
+    end
+
     accessible_organisations = policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope)
 
     if accessible_organisations.one?
