@@ -18,13 +18,12 @@ RSpec.describe Agents::SessionsController do
     end
 
     it "affiche un message flash à l'arrivée sur le domaine ÉTAT" do
-      sign_in agent
-      get authenticated_agent_root_url(host: Domain::RDV_SERVICE_PUBLIC_ETAT.host_name, automatic_redirection_from_rdvsp_anct: "1")
+      get unauthenticated_explicit_agent_root_url(host: Domain::RDV_SERVICE_PUBLIC_ETAT.host_name, automatic_redirection_from_rdvsp_anct: "1")
       expect(flash[:success]).to include("automatiquement redirigé")
     end
   end
 
-  context "quand l'agent se connecte sur le domaine ANCT et a un panaché d'organisations de verticales ANCT et ÉTAT" do
+  context "quand l'agent se connecte sur le domaine ANCT et a des organisations de verticales ANCT et ÉTAT" do
     let(:organisation_etat) { create(:organisation, verticale: :rdv_etat) }
     let(:organisation_mairie) { create(:organisation, verticale: :rdv_mairie) }
     let(:agent) { create(:agent, basic_role_in_organisations: [organisation_etat, organisation_mairie]) }

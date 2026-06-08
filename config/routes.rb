@@ -374,6 +374,7 @@ Rails.application.routes.draw do
   authenticated :agent do
     root to: "agents/pages#home", as: :authenticated_agent_root
   end
+  # cette route est pour les agents redirigés automatiquement après connexion sur un autre domaine
   get "admin/accueil", to: "agents/pages#home", as: :unauthenticated_explicit_agent_root
 
   get "agents/agenda", to: "agents/agendas#show"
