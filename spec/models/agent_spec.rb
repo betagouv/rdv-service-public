@@ -198,6 +198,13 @@ RSpec.describe Agent, type: :model do
         it { is_expected.to eq(Domain::RDV_SERVICE_PUBLIC) }
       end
     end
+
+    context "when the agent is in an organisation using the état domain name" do
+      let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+      let(:organisation) { create(:organisation, verticale: "rdv_etat") }
+
+      it { is_expected.to eq(Domain::RDV_SERVICE_PUBLIC_ETAT) }
+    end
   end
 
   describe "#proconnect_siret" do

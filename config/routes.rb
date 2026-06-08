@@ -136,9 +136,14 @@ Rails.application.routes.draw do
     put "agents/mot_de_passe" => "agents/mot_de_passes#update", as: "agent_mot_de_passes"
 
     namespace :agents do
+      resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code" do
+        post :resend, on: :collection
+      end
       resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
-        resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync
+        resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync do
+          post :calendar_selection
+        end
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end

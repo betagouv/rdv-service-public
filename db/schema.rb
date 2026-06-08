@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_01_000001) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_03_152307) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -36,7 +36,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_01_000001) do
   create_enum "sms_provider", ["netsize", "send_in_blue", "contact_experience", "sfr_mail2sms", "clever_technologies", "orange_contact_everyone"]
   create_enum "user_created_through", ["unknown", "agent_creation", "user_sign_up", "franceconnect_sign_up", "user_relative_creation", "agent_creation_api", "prescripteur", "auto_through_login"]
   create_enum "user_invited_through", ["devise_email", "external"]
-  create_enum "verticale", ["rdv_insertion", "rdv_solidarites", "rdv_aide_numerique", "rdv_mairie"]
+  create_enum "verticale", ["rdv_insertion", "rdv_solidarites", "rdv_aide_numerique", "rdv_mairie", "rdv_etat"]
 
   create_table "absences", force: :cascade do |t|
     t.bigint "agent_id", null: false
@@ -157,6 +157,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_01_000001) do
     t.boolean "sensitive_account", default: false, null: false
     t.datetime "caldav_disconnect_started_at"
     t.boolean "display_extended_hours", default: false, null: false
+    t.boolean "caldav_include_sensitive_data", default: false, null: false
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -543,6 +544,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_01_000001) do
     t.string "time_zone", default: "Europe/Paris", null: false
     t.datetime "disabled_at", comment: "Date de fermeture de l'organisation"
     t.string "public_link_id", null: false
+    t.boolean "online_booking_with_email", default: true, null: false, comment: "Indique si on autorise ou non les usagers à se connecter via leur adresse email lors de la prise de rendez-vous en ligne."
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["public_link_id"], name: "index_organisations_on_public_link_id", unique: true

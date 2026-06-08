@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Pull requests reminder
-        uses: betagouv/pr-reviews-reminder-action@master
+        uses: betagouv/pr-reviews-reminder-action@fb8f561286f429438f50092f8f0101150c085759 # master
         env:
           GITHUB_TOKEN: ${{ secrets.PR_REMINDER_GH_TOKEN }}
         with:

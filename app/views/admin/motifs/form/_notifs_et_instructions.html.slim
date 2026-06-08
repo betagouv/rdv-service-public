@@ -9,7 +9,7 @@
           hint: Motif.human_attribute_value(:visibility_type, value, context: rdvi_mode ? :hint_rdv_insertion : :hint),
         }
       end
-    = f.dsfr_radio_buttons :visibility_type, visibility_types
+    = f.dsfr_radio_buttons :visibility_type, visibility_types, hint: "Si ce motif est sensible (par exemple s'il lié à des services médicaux ou sociaux), vous pouvez désactiver les notifications pour protéger la confidentialité de vos usagers."
 
 .card
   .card-body

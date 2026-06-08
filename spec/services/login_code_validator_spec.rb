@@ -1,4 +1,4 @@
-RSpec.describe Users::LoginCodeValidator, type: :service do
+RSpec.describe LoginCodeValidator, type: :service do
   context "code valide et utilisable" do
     let!(:login_code) { create(:login_code, email: "test@example.com", code: "123456") }
     let(:service) { described_class.new(email: "test@example.com", code: "123456") }

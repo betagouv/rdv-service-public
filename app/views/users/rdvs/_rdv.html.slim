@@ -20,7 +20,7 @@ ul.list-group.list-group-flush.fr-mb-3w.fr-mt-0
     li.list-group-item.fr-pl-0.fr-py-2w
       span.fr-icon-building-fill.fr-mr-1w[aria-hidden="true"]
       = human_location(rdv)
-      - if rdv.lieu&.phone_number
+      - if rdv.lieu&.phone_number.present?
         br
         span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
         = link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"

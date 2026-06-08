@@ -1,5 +1,6 @@
 class Agents::RdvMailer < ApplicationMailer
   include DateHelper
+
   helper DateHelper
 
   before_action do
@@ -12,7 +13,7 @@ class Agents::RdvMailer < ApplicationMailer
   default to: -> { @agent.email }
 
   def rdv_created
-    self.ics_payload = @rdv.payload(:create, @agent)
+    self.ics_payload = @rdv.payload(action: :create, recipient: @agent)
     subject = "Nouveau RDV ajouté pour #{relative_date(@rdv.starts_at)} sur votre agenda #{domain.name}"
     mail(subject: subject)
   end
@@ -21,14 +22,14 @@ class Agents::RdvMailer < ApplicationMailer
     @participation = params[:participation]
     @user = @participation.user
     @rdv = @participation.rdv
-    self.ics_payload = @rdv.payload(:create, @agent)
+    self.ics_payload = @rdv.payload(action: :create, recipient: @agent)
     subject = "Nouvelle participation au RDV collectif #{relative_date_with_preposition(@rdv.starts_at)} sur votre agenda #{domain.name}"
     mail(subject: subject)
   end
 
   def rdv_cancelled(old_starts_at: nil)
     date = old_starts_at || @rdv.starts_at
-    self.ics_payload = @rdv.payload(:destroy, @agent)
+    self.ics_payload = @rdv.payload(action: :destroy, recipient: @agent)
     subject = "RDV #{relative_date_with_preposition(date)} annulé"
     mail(subject: subject)
   end
@@ -37,7 +38,7 @@ class Agents::RdvMailer < ApplicationMailer
     @participation = params[:participation]
     @user = @participation.user
     @rdv = @participation.rdv
-    self.ics_payload = @rdv.payload(:create, @agent)
+    self.ics_payload = @rdv.payload(action: :create, recipient: @agent)
     subject = "Participation au RDV collectif #{relative_date_with_preposition(@rdv.starts_at)} annulée sur votre agenda #{domain.name}"
     mail(subject: subject)
   end
@@ -45,7 +46,7 @@ class Agents::RdvMailer < ApplicationMailer
   def rdv_updated(old_starts_at:, lieu_id:)
     @old_starts_at = old_starts_at
     @address_name = Lieu.find(lieu_id).full_name if lieu_id
-    self.ics_payload = @rdv.payload(:update, @agent)
+    self.ics_payload = @rdv.payload(action: :update, recipient: @agent)
     subject = "RDV #{relative_date_with_preposition(@old_starts_at)} modifié"
     mail(subject: subject)
   end

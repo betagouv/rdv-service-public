@@ -65,7 +65,7 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
   end
 
   describe "#create?" do
-    subject { described_class.new(agent, territory) }
+    subject { described_class.new(agent, territory).create? }
 
     let(:territory) { Territory.new }
     let(:agent) { create(:agent) }
@@ -75,33 +75,49 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
 
       let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application:) }
 
-      it "authorizes the creation" do
-        expect(subject.create?).to be_truthy
-      end
+      it { is_expected.to be_truthy }
 
       context "when the agent already has a territory" do
         let(:agent) { create(:agent, :with_territory_access_rights, basic_role_in_organisations: [create(:organisation)]) }
 
-        it "doesn't authorize the creation" do
-          expect(subject.create?).to be_falsey
+        it { is_expected.to be_falsey }
+      end
+    end
+
+    context "when the agent's email is not recognized" do
+      it "doesn't authorize the creation" do
+        expect(described_class.new(create(:agent, email: "bob@gmail.com"), territory).create?).to be_falsey
+        expect(described_class.new(create(:agent, email: "bob@fakegouv.fr"), territory).create?).to be_falsey
+        expect(described_class.new(create(:agent, email: "bob@bac-grenoble.fr"), territory).create?).to be_falsey
+      end
+
+      describe "based on ProConnect identity provider (idp)" do
+        context "quand le fournisseur d'identité ProConnect est lié à un service de l'Etat" do
+          let(:ministere_culture_idp_id) { "bcb4b83a-5ee6-4f67-a721-52521b81d910" }
+          let(:agent) { create(:agent, pro_connect_idp_id: ministere_culture_idp_id, email: "agent@exemple.fr") }
+
+          it { is_expected.to be_truthy }
+        end
+
+        context "quand le fournisseur d'identité ProConnect est lié à une collectivité" do
+          let(:megalis_idp_id) { "0b366363-0715-4126-b7ae-55aa81c95fe1" }
+          let(:agent) { create(:agent, pro_connect_idp_id: megalis_idp_id, email: "agent@exemple.fr") }
+
+          it { is_expected.to be_falsey }
+        end
+
+        context "when the agent doesn't have a ProConnect idp" do
+          let(:agent) { create(:agent, pro_connect_idp_id: nil, email: "agent@exemple.fr") }
+
+          it { is_expected.to be_falsey }
         end
       end
     end
 
-    context "when the agent only logged in from the homepage with ProConnect" do
-      context "when the agent's email is not recognized" do
-        it "doesn't authorize the creation" do
-          expect(described_class.new(create(:agent, email: "bob@gmail.com"), territory).create?).to be_falsey
-          expect(described_class.new(create(:agent, email: "bob@fakegouv.fr"), territory).create?).to be_falsey
-          expect(described_class.new(create(:agent, email: "bob@bac-grenoble.fr"), territory).create?).to be_falsey
-        end
-      end
-
-      context "when the agent's email is verified as a public service email" do
-        it "authorizes the creation" do
-          expect(described_class.new(create(:agent, email: "bob@beta.gouv.fr"), territory).create?).to be_truthy
-          expect(described_class.new(create(:agent, email: "bob@ac-grenoble.fr"), territory).create?).to be_truthy
-        end
+    context "when the agent's email is verified as a public service email" do
+      it "authorizes the creation" do
+        expect(described_class.new(create(:agent, email: "bob@beta.gouv.fr"), territory).create?).to be_truthy
+        expect(described_class.new(create(:agent, email: "bob@ac-grenoble.fr"), territory).create?).to be_truthy
       end
     end
   end

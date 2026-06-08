@@ -1,5 +1,7 @@
 # Les domaines dans ce fichier viennent principalement de ce grist fourni par l'équipe ProConnect :
 # https://grist.numerique.gouv.fr/o/docs/3kQ829mp7bTy/ProConnect-Configuration-des-FI-et-FS/p/1
+#
+# Il a ensuite été complété manuellement.
 class VerifiedServicePublicDomainNames
   def self.verified?(email)
     DOMAINS.any? do |domain|
@@ -10,6 +12,7 @@ class VerifiedServicePublicDomainNames
   DOMAINS = %w[
     .gouv.fr
 
+    @ac-aix-marseille.fr
     @ac-amiens.fr
     @ac-besancon.fr
     @ac-bordeaux.fr
@@ -76,5 +79,26 @@ class VerifiedServicePublicDomainNames
     @cerema.fr
 
     .senat.fr
+    @senat.fr
+
+    @anr.fr
+    @anfr.fr
+    .sante.fr
+    @angdm.fr
+    .msa.fr
+    @caf.fr
+    .caf.fr
+    .cnrs.fr
+    @cnmss.fr
+    @cnc.fr
+    @defenseurdesdroits.fr
+    @justice.fr
+    .justice.fr
+    @ina.fr
+    @asp-public.fr
+    @vnf.fr
+    @arcep.fr
+    @anses.fr
+
   ].freeze
 end

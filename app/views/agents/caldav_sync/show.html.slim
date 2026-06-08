@@ -41,7 +41,7 @@ p
         = form_tag agents_calendar_sync_caldav_sync_path, method: :delete do
           = submit_tag "Supprimer la configuration CalDAV", class: "fr-btn fr-btn--tertiary", data: { confirm: "Êtes-vous sûr de vouloir supprimer vos identifiants CalDAV ?" }
 - else
-  = form_tag agents_calendar_sync_caldav_sync_path, method: :put do
+  = form_tag calendar_selection_agents_calendar_sync_caldav_sync_path, method: :post do
     .fr-input-group
       label.fr-label for="caldav_username"
         | Identifiant de l’agenda CalDAV
@@ -55,6 +55,23 @@ p
           = external_link_to "voir la documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#synchronisation-avec-la-suite-numerique-caldav"
       input#caldav_password.fr-input type="password" name="caldav_password"
     .fr-input-group
-      label.fr-label for="caldav_agenda_url" URL de l’agenda CalDAV
+      label.fr-label for="caldav_agenda_url" URL du serveur ou de l’agenda CalDAV
       input#caldav_agenda_url.fr-input type="text" name="caldav_agenda_url"
+    fieldset.fr-fieldset
+      legend.fr-fieldset__legend--regular.fr-fieldset__legend
+        | Données personnelles dans l'agenda externe
+      .fr-fieldset__element
+        .fr-radio-group
+          input#caldav_include_sensitive_data_false type="radio" name="caldav_include_sensitive_data" value="false" checked="checked"
+          label.fr-label for="caldav_include_sensitive_data_false"
+            | Anonymiser les informations du rendez-vous
+            span.fr-hint-text
+              | Cette option vous permet de ne pas transmettre de données personnelles liées aux rendez-vous à votre agenda externe.
+      .fr-fieldset__element
+        .fr-radio-group
+          input#caldav_include_sensitive_data_true type="radio" name="caldav_include_sensitive_data" value="true"
+          label.fr-label for="caldav_include_sensitive_data_true"
+            | Inclure les données personnelles liées au rendez-vous dans mon agenda externe
+            span.fr-hint-text
+              | Cette option est plus pratique, mais les autres personnes qui ont accès à votre agenda externe auront accès aux données personnelles liées au rendez-vous.
     = submit_tag "Enregistrer", class: "fr-btn"

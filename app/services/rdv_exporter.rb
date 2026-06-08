@@ -62,8 +62,6 @@ module RdvExporter
     end
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
   def self.row_array_from(rdv)
     [
       rdv.created_at.year,
