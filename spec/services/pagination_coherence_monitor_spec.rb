@@ -1,3 +1,5 @@
+# TODO: supprimer après le 28/06/2026
+
 RSpec.describe PaginationCoherenceMonitor do
   subject(:call) { described_class.new(**params).call }
 

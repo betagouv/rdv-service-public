@@ -32,6 +32,7 @@ class Admin::RdvsController < AgentAuthController
       ]
     ).load # chargement anticipé pour que PaginationCoherenceMonitor.size n'émette pas de requête COUNT supplémentaire
 
+    # TODO: supprimer après le 28/06/2026
     PaginationCoherenceMonitor.from_paginated_arel(@rdvs, current_page_arel: @rdvs_in_page).call
 
     @form = Admin::RdvSearchForm.new(parsed_params.merge(pundit_user:))

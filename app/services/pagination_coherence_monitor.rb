@@ -1,3 +1,5 @@
+# TODO: supprimer après le 28/06/2026
+
 class PaginationCoherenceMonitor
   class Error < StandardError; end
 
