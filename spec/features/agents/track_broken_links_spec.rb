@@ -19,6 +19,8 @@ RSpec.describe "Broken links in the application are visible in Sentry" do
     end
 
     context "and they are not logged in" do
+      stub_env_with(PRO_CONNECT_DISABLED: "true")
+
       it "doesn't send anything to Sentry" do
         expect_any_instance_of(Sentry::Client).to receive(:log_debug).with("Discarded event because before_send didn't return a Sentry::ErrorEvent object but an instance of NilClass\n") # rubocop:disable RSpec/AnyInstance
         visit path_to_unknown_user_id

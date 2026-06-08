@@ -104,13 +104,6 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
                        text: "On m'explique l'étape suivante. Je clique sur le bouton de connexion",
                        wait_for: "Pour commencer")
 
-    # On triche un peu pour simuler la connexion à RDV SP
-    visit "http://#{Domain::RDV_SERVICE_PUBLIC.host_name}/agents/sign_in"
-
-    doc.add_screenshot(page,
-                       text: "Je me connecte sur RDV Service Public",
-                       wait_for: "Connexion agent à RDV Service Public")
-
     # Et on triche à nouveau pour faire le callback d'oauth
     # en imitant le code de Admin::InstanceExportsController#oauth_callback
 
@@ -127,7 +120,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     visit "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/instance_exports/#{instance_export.id}"
 
     doc.add_screenshot(page,
-                       text: "Je suis redirigé vers RDV Aide Numérique, je clique sur Copier les données",
+                       text: "Je suis Proconnecté automatiquement et redirigé vers RDV Aide Numérique, je clique sur Copier les données",
                        wait_for: "Ces données vont être copiées")
 
     click_on "Copier les données"

@@ -1,10 +1,15 @@
 RSpec.describe "Route vers l'agenda" do
   context "when the agent is not signed in" do
+    stub_env_with(PRO_CONNECT_BASE_URL: "http://proconnect.localhost")
     it "redirects to the sign in page" do
-      visit "/agents/agenda"
+      begin
+        visit "/agents/agenda"
+      rescue ActionController::RoutingError
+        # Capybara essaye de suivre une redirection vers "https://fca.integ01.dev-agentconnect.fr/api/v2/authorize
+        # ce qui n'est pas possible dans l'env de test (il ignore le host et il cherche /api/v2/authorize dans nos routes).
+      end
 
-      expect(page).to have_content "Vous devez vous connecter pour continuer"
-      expect(page).to have_current_path("/agents/sign_in")
+      expect(page.current_url).to start_with("http://proconnect.localhost/authorize")
     end
   end
 
