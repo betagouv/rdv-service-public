@@ -49,7 +49,6 @@ module Outlook
     # payload (hash): a JSON hash representing the API call's payload. Only used
     #                 for POST or PATCH.
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     def call_events_api(method, path, event_payload = {})
       headers = {
         "Authorization" => "Bearer #{@agent.microsoft_graph_token}",

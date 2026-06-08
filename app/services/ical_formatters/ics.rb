@@ -36,7 +36,6 @@ module IcalFormatters
       cal
     end
 
-    # rubocop:disable Metrics/PerceivedComplexity
     def self.populate_event(event, payload, tzid)
       event.uid = payload[:ical_uid]
       event.status = if payload[:action].present? && payload[:action] == :destroy

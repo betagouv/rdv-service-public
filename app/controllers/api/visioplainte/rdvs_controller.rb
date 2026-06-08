@@ -1,7 +1,7 @@
 # cf docs/interconnexions/visioplainte.md
 
 class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
-  def index # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
+  def index
     if params[:ids].blank? && (params[:date_debut].blank? || params[:date_fin].blank?)
       errors = ["Vous devez préciser le paramètre ids ou les paramètres date_debut et date_fin"]
       render(json: { errors: errors }, status: :bad_request) and return
