@@ -9,7 +9,7 @@ class Agents::PagesController < AgentAuthController
     if current_domain == Domain::RDV_SERVICE_PUBLIC &&
        current_agent.organisations.exists? &&
        current_agent.organisations.all?(&:rdv_etat?)
-      redirect_to authenticated_agent_root_url(host: Domain::RDV_SERVICE_PUBLIC_ETAT.host_name), allow_other_host: true
+      redirect_to authenticated_agent_root_url(host: Domain::RDV_SERVICE_PUBLIC_ETAT.host_name, automatic_redirection_from_rdvsp_anct: "1"), allow_other_host: true
       return
     end
 
