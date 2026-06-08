@@ -54,7 +54,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         documents_number: 2
       )
 
-      time = Time.zone.now.change(hour: 9, min: 0o0)
+      time = Time.zone.now.change(hour: 9)
 
       expect(json_response).to eq(
         {
@@ -168,7 +168,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
 
     it "permet de réserver sans avertissement", js: true do
-      time = Time.zone.now.change(hour: 9, min: 0)
+      time = Time.zone.now.change(hour: 9)
       visit creneaux_url(
         starts_at: time.strftime("%Y-%m-%d %H:%M"),
         lieu_id: lieu.id,
@@ -235,7 +235,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
 
     it "permet de réserver avec un avertissement contournable", js: true do
-      time = Time.zone.now.change(hour: 9, min: 0)
+      time = Time.zone.now.change(hour: 9)
       visit creneaux_url(
         starts_at: time.strftime("%Y-%m-%d %H:%M"),
         lieu_id: lieu.id,
@@ -275,7 +275,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
   context "when using a pre-demande number with invalid format (too short)" do
     it "detects wrong format without calling ANTS API an warns user" do
-      time = Time.zone.now.change(hour: 9, min: 0)
+      time = Time.zone.now.change(hour: 9)
       visit creneaux_url(
         starts_at: time.strftime("%Y-%m-%d %H:%M"),
         lieu_id: lieu.id,
@@ -296,7 +296,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       let!(:call_to_status_with_upcased_number) { stub_ants_status_ok("ABCD1234EF", meeting_point_id: lieu.id, appointments: []) }
 
       it "considers it as uppercase when calling ANTS API and saving it in user" do
-        time = Time.zone.now.change(hour: 9, min: 0)
+        time = Time.zone.now.change(hour: 9)
         visit creneaux_url(
           starts_at: time.strftime("%Y-%m-%d %H:%M"),
           lieu_id: lieu.id,
@@ -318,7 +318,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
     context "when trying to bypass the front-end validation" do
       it "performs back-end validation and displays error" do
-        time = Time.zone.now.change(hour: 9, min: 0)
+        time = Time.zone.now.change(hour: 9)
         visit creneaux_url(
           starts_at: time.strftime("%Y-%m-%d %H:%M"),
           lieu_id: lieu.id,
@@ -342,7 +342,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       end
 
       it "detects wrong format without calling ANTS API an warns user" do
-        time = Time.zone.now.change(hour: 9, min: 0)
+        time = Time.zone.now.change(hour: 9)
         visit creneaux_url(
           starts_at: time.strftime("%Y-%m-%d %H:%M"),
           lieu_id: lieu.id,
@@ -364,7 +364,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
   describe "Displaying the input field for ANTS PREDEMANDE NUMBER" do
     context "when the motif requires ants_predemande_number" do
       it "shows input for ants_predemande_number" do
-        time = Time.zone.now.change(hour: 9, min: 0)
+        time = Time.zone.now.change(hour: 9)
         visit creneaux_url(
           starts_at: time.strftime("%Y-%m-%d %H:%M"),
           lieu_id: lieu.id,
@@ -390,7 +390,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       end
 
       it "does not show input for ants_predemande_number" do
-        time = Time.zone.now.change(hour: 15, min: 0)
+        time = Time.zone.now.change(hour: 15)
         visit creneaux_url(
           starts_at: time.strftime("%Y-%m-%d %H:%M"),
           lieu_id: lieu.id,
@@ -412,7 +412,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         end
 
         it "does not show input for ants_predemande_number" do
-          time = Time.zone.now.change(hour: 15, min: 0)
+          time = Time.zone.now.change(hour: 15)
           visit creneaux_url(
             starts_at: time.strftime("%Y-%m-%d %H:%M"),
             lieu_id: lieu.id,

@@ -7,15 +7,25 @@ RSpec.describe AgentRemoval, type: :service do
     let!(:plage_ouvertures) { create_list(:plage_ouverture, 2, agent: agent, organisation: organisation) }
     let!(:absences) { create_list(:absence, 2, agent: agent) }
 
-    it "succeeds destroy absences and plages ouvertures, and soft delete" do
+    before { create(:webhook_endpoint, organisation:, subscriptions: [:agent]) }
+
+    it "succeeds destroy absences and plages ouvertures, and soft delete, but without sending email change confirmation notifications" do
       service = described_class.new(agent, organisation)
       expect(service).to be_valid
+
       service.remove!
+
+      expect(enqueued_jobs).to be_empty # On n'envoie pas de mails ni de webhooks
       agent.reload
       expect(agent.organisations).to be_empty
       expect(agent.absences).to be_empty
       expect(agent.plage_ouvertures).to be_empty
       expect(agent.deleted_at).not_to be_nil
+
+      # On a une version PaperTrail qui permet de tracer la suppression
+      expect(agent.versions.last.event).to eq "update"
+
+      expect(agent.versions.last.object_changes.keys).to eq %w[email deleted_at]
     end
   end
 

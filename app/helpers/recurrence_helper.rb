@@ -11,7 +11,7 @@ module RecurrenceHelper
     [every_part, time_part, range_part]
   end
 
-  def display_every(recurrent_record) # rubocop:disable Metrics/PerceivedComplexity
+  def display_every(recurrent_record)
     recurrence_hash = recurrent_record.recurrence.to_hash
 
     interval = "#{recurrence_hash[:interval]} " if recurrence_hash[:interval]&.>(1)

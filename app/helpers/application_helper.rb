@@ -133,7 +133,7 @@ module ApplicationHelper
   end
 
   def display_france_connect_v2_button?
-    return false unless current_domain.france_connect_enabled
+    return false unless current_domain.france_connect_v2_client_id
 
     return true if params[:force_france_connect_v2].present? # Permet de tester manuellement France Connect avant de désactiver la variable d'env FRANCE_CONNECT_V2_DISABLED
 

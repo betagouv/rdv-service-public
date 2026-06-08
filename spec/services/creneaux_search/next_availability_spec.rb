@@ -177,11 +177,11 @@ RSpec.describe CreneauxSearch::NextAvailability, type: :service do
 
       specify do
         next_available_default = described_class.find(motif, lieu, [], from: today)
-        expect(next_available_default.starts_at).to eq((today + 8.days).at(Tod::TimeOfDay.parse("09:30")))
+        expect(next_available_default.starts_at).to eq(Tod::TimeOfDay.parse("09:30").on(today + 8.days))
         next_available_30min = described_class.find(motif, lieu, [], from: today, duration_in_min: 30)
-        expect(next_available_30min.starts_at).to eq((today + 8.days).at(Tod::TimeOfDay.parse("09:30")))
+        expect(next_available_30min.starts_at).to eq(Tod::TimeOfDay.parse("09:30").on(today + 8.days))
         next_available_1h00 = described_class.find(motif, lieu, [], from: today, duration_in_min: 60)
-        expect(next_available_1h00.starts_at).to eq((today + 16.days).at(Tod::TimeOfDay.parse("08:30")))
+        expect(next_available_1h00.starts_at).to eq(Tod::TimeOfDay.parse("08:30").on(today + 16.days))
       end
     end
   end

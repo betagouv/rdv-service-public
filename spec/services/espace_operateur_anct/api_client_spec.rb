@@ -20,7 +20,7 @@ RSpec.describe EspaceOperateurANCT::ApiClient do
     end
 
     it "n’a pas d’opérateurs potentiels" do
-      expect(service.potential_operators).to be_nil
+      expect(service.potential_operators).to be_empty
     end
 
     it "retourne les entitlements" do

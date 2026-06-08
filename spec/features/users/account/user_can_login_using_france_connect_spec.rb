@@ -1,8 +1,10 @@
 RSpec.describe "User can login using FranceConnect" do
   stub_env_with(
     FRANCECONNECT_V2_BASE_URL: "https://fcp-low.sbx.dev-franceconnect.fr/api/v2",
-    FRANCECONNECT_V2_CLIENT_ID: "fake_france_connect_v2_client_id",
-    FRANCECONNECT_V2_CLIENT_SECRET: "fake_france_connect_v2_client_secret"
+    # on stubbe les vars d'env pour RDV Solidarités
+    FRANCECONNECT_V2_RDVS_CLIENT_ID: "fake_france_connect_v2_client_id",
+    FRANCECONNECT_V2_RDVS_CLIENT_SECRET: "fake_france_connect_v2_client_secret"
+    # mais pas pour RDV Aide Numérique où FranceConnect est désactivé
   )
 
   context "visiting rdv-solidarites domain" do

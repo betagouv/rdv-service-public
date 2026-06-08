@@ -154,6 +154,12 @@ class Territory < ApplicationRecord
     DEPARTEMENTS_NAMES[departement_number]
   end
 
+  def add_ants_motif_categories
+    MotifCategory.ants_categories.each do |category|
+      motif_categories << category unless motif_categories.include?(category)
+    end
+  end
+
   private
 
   def fill_name_for_departements

@@ -42,10 +42,7 @@ RSpec.describe "User can search rdv on rdv service public" do
   end
 
   describe "quand l’organisation n’accepte que les prises de RDV par ProConnect" do
-    # Pour le moment on n’accepte que ProConnect pour le territoire qui a l’id 2 sur RDV Service Public
-    # (le territoire qui nous permet de faire les rendez-vous de démo et les webinaires).
-    let!(:territory) { create(:territory, id: 2) }
-    let!(:organisation) { create(:organisation, territory:, verticale: :rdv_mairie) }
+    let!(:organisation) { create(:organisation, online_booking_for_professionnels: true, online_booking_for_particuliers: false, online_booking_with_email: false) }
     let!(:motif) { create(:motif, :by_phone, organisation:) }
     let!(:lieu) { create(:lieu, organisation:) }
     let!(:plage_ouverture) do
