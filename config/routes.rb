@@ -374,6 +374,8 @@ Rails.application.routes.draw do
   authenticated :agent do
     root to: "agents/pages#home", as: :authenticated_agent_root
   end
+  get "admin/accueil", to: "agents/pages#home", as: :unauthenticated_explicit_agent_root
+
   get "agents/agenda", to: "agents/agendas#show"
 
   scope path: "prescripteur", as: "prescripteur", controller: "prescripteur_rdv_wizard" do

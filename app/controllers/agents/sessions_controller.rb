@@ -44,6 +44,14 @@ class Agents::SessionsController < Devise::SessionsController
       return
     end
 
+    if current_domain == Domain::RDV_SERVICE_PUBLIC &&
+       resource.organisations.exists? &&
+       resource.organisations.all?(&:rdv_etat?)
+      sign_in(resource_name, resource)
+      redirect_to unauthenticated_explicit_agent_root_url(host: Domain::RDV_SERVICE_PUBLIC_ETAT.host_name, automatic_redirection_from_rdvsp_anct: "1"), allow_other_host: true
+      return
+    end
+
     super
     # super will repeat warden.authenticate! which will not repeat everything but fetch from the session
     # cf https://github.com/wardencommunity/warden/blob/master/lib/warden/proxy.rb#L332-L334

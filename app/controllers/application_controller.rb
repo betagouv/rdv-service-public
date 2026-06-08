@@ -7,7 +7,6 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :store_user_location!, if: :storable_location?
   before_action :set_sentry_context
-  before_action :flash_automatic_redirection_from_rdvsp_anct
 
   def after_sign_in_path_for(resource)
     home_page_when_logged = resource.is_a?(Agent) ? authenticated_agent_root_path : users_rdvs_path
@@ -84,11 +83,5 @@ class ApplicationController < ActionController::Base
 
   def page_number
     params[:page].presence&.to_i || 1
-  end
-
-  def flash_automatic_redirection_from_rdvsp_anct
-    return if params[:automatic_redirection_from_rdvsp_anct] != "1"
-
-    flash.now[:notice] = "Vous avez été automatiquement redirigé·e vers le domaine RDV Service Public pour les agents de l’État."
   end
 end
