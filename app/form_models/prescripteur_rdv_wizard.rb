@@ -39,7 +39,8 @@ class PrescripteurRdvWizard
       lieu: rdv_builder.lieu,
       organisation: motif.organisation,
       agents: [creneau.agent],
-      participations: [participation]
+      participations: [participation],
+      minutes_after_rdv: creneau.minutes_after_rdv
     )
     rdv.save!
 
