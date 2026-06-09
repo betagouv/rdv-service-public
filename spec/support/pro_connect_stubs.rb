@@ -7,7 +7,7 @@ module ProConnectStubs
     load Rails.root.join("config/initializers/pro_connect.rb").to_s
   end
 
-  def self.stub_callback_requests(code, user_info, with_2fa: false, host: "test.host")
+  def self.stub_callback_requests(code, user_info, with_2fa: false, host: "http://test.host")
     stub_and_run_discover_request
 
     if with_2fa

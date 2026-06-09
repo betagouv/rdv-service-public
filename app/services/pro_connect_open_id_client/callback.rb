@@ -21,9 +21,9 @@ module ProConnectOpenIdClient
       token = fetch_token(code, @callback_url)
 
       @user_info = fetch_user_info(token)
-    rescue StandardError => e
-      Sentry.capture_exception(e)
-      nil
+      # rescue StandardError => e
+      #   Sentry.capture_exception(e)
+      #   nil
     end
 
     def user_email
