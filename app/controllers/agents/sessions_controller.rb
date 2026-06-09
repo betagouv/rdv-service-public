@@ -109,7 +109,7 @@ class Agents::SessionsController < Devise::SessionsController
         automatic_redirection_from_rdvsp_anct: "1"
       )
     else
-      # on veut renvoyer vers l'URL post-connexion pour les agents par défaut (authenticated_agent_root_url)
+      # On veut renvoyer vers l'URL post-connexion pour les agents par défaut (authenticated_agent_root_url)
       # Comme elle a été définie à '/' on a du en redéfinir une explicite qui ne peut pas être confondue avec
       # une route non-authentifiée
       unauthenticated_explicit_agent_root_url(
