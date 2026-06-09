@@ -30,7 +30,7 @@ module Caldav
     def create_event
       payload = agents_rdv.rdv.payload(action: :create, recipient: agents_rdv.agent, sensitive_data: agent.caldav_include_sensitive_data)
       ics = IcalFormatters::Ics.from_payload(payload).to_ical
-      identifier = "agents_rdv-#{agents_rdv.id}.ics"
+      identifier = "#{agents_rdv.rdv.uuid}.ics"
       event = agent.caldav_client.events.create(agent.caldav_agenda_url, identifier, ics)
       # Le provider Caldav n’utilise pas forcément l’identifiant qu’on lui donne pour créer l’event
       # on stocke donc l’url complète de l’event créé pour être sûr de pouvoir le retrouver.

@@ -5,6 +5,40 @@ class Agents::CaldavSyncController < AgentAuthController
     skip_authorization
   end
 
+  def calendar_selection
+    skip_authorization
+    client = Calendav::Client.new(
+      Calendav::Credentials::Standard.new(
+        host: params[:caldav_agenda_url],
+        username: params[:caldav_username],
+        password: params[:caldav_password],
+        authentication: :basic_auth
+      )
+    )
+
+    begin
+      # CalDAV peut retourner des calendriers (VEVENT) et des listes de tâches (VTODO), on ne veut que les calendriers.
+      calendars = client.calendars.list.select { |c| c.components.include?("VEVENT") }
+      preselected_url = params[:caldav_agenda_url].to_s.chomp("/")
+      render locals: { calendars: calendars, preselected_url: preselected_url }
+    rescue Calendav::RequestError => e
+      Sentry.capture_exception(e)
+      flash[:alert] = case e.response.status
+                      when 401, 403
+                        "L'authentification a échoué : #{e.message}. Veuillez vérifier votre identifiant et votre mot de passe."
+                      when 404
+                        "L'authentification a échoué : #{e.message}. Veuillez vérifier l'URL du serveur ou de l'agenda CalDAV."
+                      else
+                        "L'authentification a échoué : #{e.message}. Si l'erreur persiste veuillez contacter le support."
+                      end
+      redirect_to agents_calendar_sync_caldav_sync_path
+    rescue StandardError => e
+      Sentry.capture_exception(e)
+      flash[:alert] = "Une erreur inattendue a été rencontrée, l'équipe de développement a été prévenue. Si l'erreur persiste veuillez contacter le support."
+      redirect_to agents_calendar_sync_caldav_sync_path
+    end
+  end
+
   def update
     skip_authorization
     current_agent.assign_attributes(permitted_params)
@@ -53,8 +87,9 @@ class Agents::CaldavSyncController < AgentAuthController
     end
 
     begin
-      identifier = "rdvsp-connection-test-#{SecureRandom.uuid}.ics"
-      test_event = client.events.create(agenda_url, identifier, test_event_ics)
+      uuid = SecureRandom.uuid
+      identifier = "rdvsp-connection-test-#{uuid}.ics"
+      test_event = client.events.create(agenda_url, identifier, test_event_ics(uuid))
       client.events.delete(test_event.url) # On nettoie l’événement de test qu’on vient de créer
     rescue StandardError
       return "L’accès en écriture au calendrier a échoué. Veuillez vérifier vos droits d’accès à l’agenda."
@@ -63,11 +98,11 @@ class Agents::CaldavSyncController < AgentAuthController
     nil
   end
 
-  def test_event_ics
+  def test_event_ics(uuid)
     cal = Icalendar::Calendar.new
     cal.prodid = "RDV Service Public"
     cal.event do |event|
-      event.uid = "rdvsp-connection-test-#{SecureRandom.uuid}"
+      event.uid = "rdvsp-connection-test-#{uuid}"
       event.dtstart = Icalendar::Values::DateTime.new(Time.now.change(hour: 0).utc)
       event.dtend = Icalendar::Values::DateTime.new(Time.now.change(hour: 1).utc)
       event.summary = "Test de connexion RDV Service Public"

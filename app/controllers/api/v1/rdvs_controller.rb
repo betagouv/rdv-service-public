@@ -1,7 +1,7 @@
 class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
   before_action :normalize_array_params, only: %i[index]
 
-  def index # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+  def index
     rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).where(params.permit(:organisation_id))
 
     rdvs = rdvs.starts_after(Time.zone.parse(params[:starts_after])) if params[:starts_after].present?

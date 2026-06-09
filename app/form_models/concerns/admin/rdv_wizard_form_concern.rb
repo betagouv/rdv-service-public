@@ -43,7 +43,7 @@ module Admin::RdvWizardFormConcern
       .maximum(:minutes_after_rdvs) || 0
   end
 
-  def to_query # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def to_query
     hash = {
       motif_id: rdv.motif&.id,
       duration_in_min: rdv.duration_in_min,

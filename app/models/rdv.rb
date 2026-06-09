@@ -282,8 +282,6 @@ class Rdv < ApplicationRecord
     ""
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
   def self.search_for(organisations, options)
     rdvs = joins(:organisation).where(organisation: organisations)
     options = options.with_indifferent_access.select { |_, value| Array(value).compact_blank.present? }

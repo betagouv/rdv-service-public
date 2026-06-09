@@ -129,7 +129,7 @@ gem "rails_autolink"
 gem "active_link_to"
 gem "dsfr-assets", "~> 1.14.2"
 gem "dsfr-view-components", "~> 5.0.0"
-gem "dsfr-form_builder", "= 0.0.7" # On fixe la version tant qu’on est pas en 1.0
+gem "dsfr-form_builder", "= 0.0.14" # On fixe la version tant qu’on est pas en 1.0
 
 # Easily create styled HTML emails in Rails.
 gem "premailer-rails" # Mail formatting
@@ -153,7 +153,7 @@ gem "icalendar-recurrence"
 # Ruby Date Recurrence Library - Allows easy creation of recurrence rules and fast querying
 gem "ice_cube", git: "https://github.com/ice-cube-ruby/ice_cube.git", ref: "32ff145"
 # Caldav client library
-gem "calendav", "~> 0.5"
+gem "calendav", "~> 0.6"
 # Base de données des fuseaux horaires
 # Au lieu d’utiliser la base de données système qui peut différer entre les environnements (local, CI, production)
 # on utilise cette gem pour avoir la même partout.
