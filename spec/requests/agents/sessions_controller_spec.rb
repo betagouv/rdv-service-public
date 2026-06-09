@@ -21,6 +21,15 @@ RSpec.describe Agents::SessionsController do
       get unauthenticated_explicit_agent_root_url(host: Domain::RDV_SERVICE_PUBLIC_ETAT.host_name, automatic_redirection_from_rdvsp_anct: "1")
       expect(flash[:success]).to include("automatiquement redirigé")
     end
+
+    context "quand l'agent avait tenté d'accéder à une page protégée avant la connexion" do
+      it "redirige vers ce chemin sur le domaine ÉTAT" do
+        get admin_organisations_url(host: Domain::RDV_SERVICE_PUBLIC.host_name)
+        post_login(agent, host: Domain::RDV_SERVICE_PUBLIC.host_name)
+        expect(URI(response.location).host).to eq(Domain::RDV_SERVICE_PUBLIC_ETAT.host_name)
+        expect(URI(response.location).path).to eq(admin_organisations_path)
+      end
+    end
   end
 
   context "quand l'agent se connecte sur le domaine ANCT et a des organisations de verticales ANCT et ÉTAT" do
