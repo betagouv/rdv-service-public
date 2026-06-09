@@ -6,8 +6,6 @@ RSpec.describe "Informations de contact d'une structure lors de la réservation 
     doc = Autodoc.start_scenario("Informations de contact lors de la réservation en ligne", self, category: "3) Produit")
 
     doc.start_section("Réservation en ligne quand il n'y a pas de disponibilités")
-    visit admin_organisation_online_booking_path(motif.organisation)
-
     visit public_link_to_motif_path(public_link_id: motif.public_link_id, motif_slug: motif.slug)
 
     expect(page).to have_content(organisation.humanized_phone_number)
