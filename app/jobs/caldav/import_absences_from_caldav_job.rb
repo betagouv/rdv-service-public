@@ -91,7 +91,7 @@ module Caldav
     end
 
     def recurring?(event)
-      event.send(:inner_event).rrule&.first&.valid?
+      event.calendar_data.include?("RRULE:")
     end
 
     # Voici comment est définit l'attribut TRANSP dans la spec iCal :
@@ -102,7 +102,7 @@ module Caldav
         # mais avoir des occurrences exceptionnellement OPAQUE
         event.calendar_data.include?("TRANSP:OPAQUE")
       else
-        event.transp != "TRANSPARENT"
+        !event.calendar_data.include?("TRANSPARENT")
       end
     end
   end
