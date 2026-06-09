@@ -26,9 +26,9 @@
             h2.dsfr-card-title.mb-3 Options avancées
 
             - collection = [["0", "Pas de pause"], ["5", "5 min."], ["10", "10 min."], ["15", "15 min."], ["20", "20 min."], ["30", "30 min."]]
-            - hint = "Chaque rendez-vous sera automatiquement suivi d'une pause de la durée de votre choix, par exemple pour finir de traiter un dossier ou préparer le rendez-vous suivant."
+            - hint = "Cette durée est automatiquement ajoutée après chaque rendez-vous pris sur plage d'ouverture, y compris pour le dernier rendez-vous."
             - label_content = capture do
-              span.fr-mr-1w Temps de pause après chaque rendez-vous
+              span.fr-mr-1w Temps de battement après chaque rendez-vous
               p.fr-badge.fr-badge--pink-tuile[aria-describedby="tooltip-minutes-after-rdvs-beta"] Beta
               span#tooltip-minutes-after-rdvs-beta.fr-tooltip.fr-placement[role="tooltip"]
                 | Cette nouvelle fonctionnalité est expérimentale.
