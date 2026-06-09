@@ -193,7 +193,7 @@ class ProConnectController < ApplicationController
     end
 
     if agent.email != callback_client.user_email
-      flash[:info] = "Note : votre adresse e-mail a été mise à jour depuis ProConnect. Ancienne adresse : #{agent.email}, nouvelle adresse : #{callback_client.user_email}"
+      flash[:notice] = "Note : votre adresse e-mail a été mise à jour depuis ProConnect. Ancienne adresse : #{agent.email}, nouvelle adresse : #{callback_client.user_email}"
     end
 
     agent.assign_attributes(
