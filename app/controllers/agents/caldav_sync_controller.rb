@@ -1,5 +1,6 @@
 class Agents::CaldavSyncController < AgentAuthController
   layout "application_agent_config"
+  before_action { @active_agent_preferences_menu_item = :synchronisation }
 
   def show
     skip_authorization
