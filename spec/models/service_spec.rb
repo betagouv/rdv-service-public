@@ -1,5 +1,16 @@
 RSpec.describe Service, type: :model do
   describe "validations" do
+    it "ensures the name's uniqueness" do
+      create(:service, name: "Service Social", short_name: "Serv. Soc.")
+      expect(build(:service, name: "Service Social")).to be_invalid
+      expect(build(:service, name: "Autre")).to be_valid
+    end
+
+    it "allow for duplicate short names" do
+      create(:service, name: "Protection Maternelle et Infantile", short_name: "PMI")
+      create(:service, name: "Philip Morris International", short_name: "PMI")
+    end
+
     it "limits the length of #name to 2-60 characters" do
       expect(described_class.new(short_name: "Valide", name: nil)).to be_invalid
       expect(described_class.new(short_name: "Valide", name: "")).to be_invalid

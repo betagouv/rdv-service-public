@@ -19,7 +19,7 @@ class Service < ApplicationRecord
   has_many :territories, through: :territory_services
 
   # Validations
-  validates :name, :short_name, uniqueness: { case_sensitive: false }
+  validates :name, uniqueness: { case_sensitive: false }
   validate :validate_name_length
   validate :validate_short_name_length
 
