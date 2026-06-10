@@ -13,6 +13,16 @@ RSpec.describe "Agent is automatically logged in with pro connect" do
     }
   end
 
+  def visit_and_expect_redirect_to_proconnect(url)
+    begin
+      visit url
+    rescue ActionController::RoutingError
+      # Capybara essaye de suivre une redirection vers "https://fca.integ01.dev-agentconnect.fr/api/v2/authorize
+      # ce qui n'est pas possible dans l'env de test (il ignore le host et il cherche /api/v2/authorize dans nos routes).
+    end
+    expect(page.current_url).to start_with("https://fca.integ01.dev-agentconnect.fr/api/v2/authorize")
+  end
+
   stub_env_for_proconnect
 
   around do |example|
@@ -29,12 +39,7 @@ RSpec.describe "Agent is automatically logged in with pro connect" do
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation], email: "francis.factice@exemple.gouv.fr") }
 
     it "logs in the agent automatically if they are signed in to ProConnect" do
-      begin
-        visit admin_organisation_rdvs_path(organisation)
-      rescue ActionController::RoutingError
-        # Capybara essaye de suivre une redirection vers "https://fca.integ01.dev-agentconnect.fr/api/v2/authorize
-        # ce qui n'est pas possible dans l'env de test (il ignore le host et il cherche /api/v2/authorize dans nos routes).
-      end
+      visit_and_expect_redirect_to_proconnect(admin_organisation_rdvs_path(organisation))
 
       expect(page.current_url).to start_with("https://fca.integ01.dev-agentconnect.fr/api/v2/authorize")
       redirect_url_query_params = Rack::Utils.parse_query(URI.parse(page.current_url).query)
@@ -90,11 +95,7 @@ RSpec.describe "Agent is automatically logged in with pro connect" do
     end
 
     it "redirects to the login page when the agent is not logged in to ProConnect" do
-      begin
-        visit admin_organisation_rdvs_path(organisation)
-      rescue ActionController::RoutingError
-        # A cause de Capybara qui ignore le domain name
-      end
+      visit_and_expect_redirect_to_proconnect(admin_organisation_rdvs_path(organisation))
 
       redirect_url_query_params = Rack::Utils.parse_query(URI.parse(page.current_url).query)
       state = redirect_url_query_params["state"]
@@ -114,11 +115,7 @@ RSpec.describe "Agent is automatically logged in with pro connect" do
 
     context "when it's their first proconnect login for the other account" do
       it "doesn't log them in and redirects to the login screen instead, to avoid blocking agents using email/password login" do
-        begin
-          visit admin_organisation_rdvs_path(organisation)
-        rescue ActionController::RoutingError
-          # A cause de Capybara qui ignore le domain name
-        end
+        visit_and_expect_redirect_to_proconnect(admin_organisation_rdvs_path(organisation))
 
         redirect_url_query_params = Rack::Utils.parse_query(URI.parse(page.current_url).query)
 
@@ -137,16 +134,13 @@ RSpec.describe "Agent is automatically logged in with pro connect" do
     end
 
     it "also allows silently logging in even if the agent doesn't already exist" do
-      begin
-        visit oauth_authorization_path(
+      visit_and_expect_redirect_to_proconnect(
+        oauth_authorization_path(
           client_id: oauth_application.uid,
           redirect_uri: oauth_application.redirect_uri.split("\n").first,
           response_type: :code, scope: :write, state: "fakestate"
         )
-      rescue ActionController::RoutingError
-        # Capybara essaye de suivre une redirection vers "https://fca.integ01.dev-agentconnect.fr/api/v2/authorize
-        # ce qui n'est pas possible dans l'env de test (il ignore le host et il cherche /api/v2/authorize dans nos routes).
-      end
+      )
 
       expect(page.current_url).to start_with("https://fca.integ01.dev-agentconnect.fr/api/v2/authorize")
       redirect_url_query_params = Rack::Utils.parse_query(URI.parse(page.current_url).query)
