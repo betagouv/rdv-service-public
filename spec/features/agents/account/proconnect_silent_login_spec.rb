@@ -40,7 +40,7 @@ RSpec.describe "Agent is automatically logged in with pro connect" do
       redirect_url_query_params = Rack::Utils.parse_query(URI.parse(page.current_url).query)
 
       expect(redirect_url_query_params.symbolize_keys).to match(
-        client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
+        client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa", # Le client id utilisé par stub_env_for_proconnect
         redirect_uri: "#{Capybara.app_host}/agent_connect/callback",
         response_type: "code",
         prompt: "none",
