@@ -41,10 +41,6 @@ class ApplicationController < ActionController::Base
     @current_prescripteur ||= Prescripteur.new(session[:autocomplete_prescripteur_attributes])
   end
 
-  def authenticate_inviter!
-    authenticate_agent!(force: true)
-  end
-
   def configure_permitted_parameters
     if resource_class == Agent
       devise_parameter_sanitizer.permit(:accept_invitation, keys: %i[first_name last_name])
