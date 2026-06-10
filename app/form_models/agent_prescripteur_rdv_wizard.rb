@@ -65,6 +65,10 @@ class AgentPrescripteurRdvWizard
     users.first
   end
 
+  def lieu
+    @lieu ||= Lieu.find_by(id: query_params[:lieu_id])
+  end
+
   def ants_pre_demandes_count = nil
 
   private
@@ -85,10 +89,6 @@ class AgentPrescripteurRdvWizard
 
   def create_participation!
     participation.create_and_notify!(@agent_prescripteur)
-  end
-
-  def lieu
-    @lieu ||= Lieu.find_by(id: query_params[:lieu_id])
   end
 
   def geo_search

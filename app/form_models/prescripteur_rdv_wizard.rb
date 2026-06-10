@@ -2,7 +2,7 @@ class PrescripteurRdvWizard
   attr_reader :rdv_builder
   attr_accessor :prescripteur
 
-  delegate :motif, :starts_at, :service, :rdv, :creneau, :to_query, :lieu_id, :ants_pre_demandes_count, to: :rdv_builder
+  delegate :motif, :starts_at, :service, :rdv, :creneau, :to_query, :lieu, :lieu_id, :ants_pre_demandes_count, to: :rdv_builder
 
   def initialize(attributes, domain)
     attributes = attributes.deep_symbolize_keys
