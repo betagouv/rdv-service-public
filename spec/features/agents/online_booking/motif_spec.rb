@@ -24,11 +24,19 @@ RSpec.describe "Réservation en ligne pour un motif en particulier" do
 
     select "2 jours", from: "Délai maximum avant le RDV"
 
+    fill_in :motif_restriction_for_rdv, with: "Rendez-vous réservé aux usagers élibibles"
+
+    fill_in :motif_instruction_for_rdv, with: "Pensez à prendre un justificatif de domicile"
+
     click_on "Enregistrer"
 
     expect(page).to have_content("Les options de réservation en ligne ont été mises à jour.")
 
     expect(page).to have_content("Les rendez-vous seront pris au moins 1 jour à l'avance.")
+
+    expect(page).to have_content "Rendez-vous réservé aux usagers élibibles"
+
+    expect(page).to have_content "Pensez à prendre un justificatif de domicile"
   end
 
   context "quand il n'y a pas de disponibilités" do
