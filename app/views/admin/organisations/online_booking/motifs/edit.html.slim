@@ -22,23 +22,6 @@
           h2.fr-h6.fr-mt-6w Déplacement des rendez-vous par les usagers
           = f.dsfr_check_box :rdvs_editable_by_user, label: "Autoriser les usagers à déplacer les rendez-vous jusqu'à 48 heures avant leur début"
 
-          h2.fr-h6.fr-mt-6w Consignes pour les usagers
-
-          span.fr-hint-text Vous pouvez paramétrer des messages par défaut, qui s’afficheront avant la prise de rendez-vous et/ou après la confirmation du rendez-vous
-
-          .fr-fieldset__element.fr-mt-2w.fr-px-0
-            = f.dsfr_text_area :restriction_for_rdv,
-                    label: sanitize("Instructions à accepter <strong>avant</strong> la prise du RDV"),
-                    placeholder: "Laissez vide si vous ne souhaitez pas donner d’instruction.",
-                    rows: 5,
-                    hint: link_to("Voir un exemple", image_path("motif_form/restriction_for_rdv.png"), target: "_blank")
-          .fr-fieldset__element.fr-mt-4w.fr-px-0
-            = f.dsfr_text_area :instruction_for_rdv,
-                    label: sanitize("Instructions affichées <strong>après</strong> la prise du RDV"),
-                    placeholder: "Laissez vide si vous ne souhaitez pas donner d’instruction.",
-                    rows: 5,
-                    hint: link_to("Voir un exemple", image_path("motif_form/instruction_for_rdv.png"), target: "_blank")
-
           .d-flex.rdv-justify-content-space-between
             = link_to("Annuler", admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--tertiary-no-outline")
             = f.submit "Enregistrer", class: "fr-btn"

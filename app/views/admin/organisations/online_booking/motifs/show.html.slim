@@ -53,7 +53,11 @@
             - else
               li.fr-my-2w Les usagers ne sont pas autorisés à déplacer le rendez-vous.
 
-          h2.fr-h6.fr-mt-6w Instructions pour les usagers
+      .card
+        .card-body
+          .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+            h2.fr-h4 Consignes pour les usagers
+            = link_to "Modifier", edit_instructions_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
           - if @motif.restriction_for_rdv.blank?
             p
               i Pas d'instructions à accepter avant la prise de rendez-vous

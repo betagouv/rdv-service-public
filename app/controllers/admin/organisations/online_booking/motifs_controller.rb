@@ -7,7 +7,7 @@ class Admin::Organisations::OnlineBooking::MotifsController < AgentAuthControlle
   def edit; end
 
   def update
-    @motif.assign_attributes(params.require(:motif).permit(:min_public_booking_delay, :max_public_booking_delay, :rdvs_editable_by_user, :restriction_for_rdv, :instruction_for_rdv))
+    @motif.assign_attributes(params.require(:motif).permit(:min_public_booking_delay, :max_public_booking_delay, :rdvs_editable_by_user))
 
     # On fait un deuxième authorize pour s'assurer que les permissions sont encore valides sur la nouvelle version du motif.
     # C'est pas strictement nécessaire ici vu qu'on ne change pas d'association, mais on le met quand même au cas où des changements de permissions soient ajoutés plus tard.
@@ -18,6 +18,19 @@ class Admin::Organisations::OnlineBooking::MotifsController < AgentAuthControlle
       redirect_to admin_organisation_online_booking_motif_path(current_organisation, motif_id: @motif.id)
     else
       render :edit
+    end
+  end
+
+  def edit_instructions; end
+
+  def update_instructions
+    @motif.assign_attributes(params.require(:motif).permit(:restriction_for_rdv, :instruction_for_rdv))
+
+    if @motif.save
+      flash[:success] = "Les consignes pour les usagers ont été mises à jour."
+      redirect_to admin_organisation_online_booking_motif_path(current_organisation, motif_id: @motif.id)
+    else
+      render :edit_instructions
     end
   end
 
