@@ -28,6 +28,7 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv = @rdv_builder.rdv
     @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys, **proche_params)
     return if redirect_to_prendre_rdv_path_if_creneau_unavailable
+    return if render_new_if_toggling_proches_without_js
 
     if @rdv_booking_form.collectif?
       authorize(@rdv_booking_form.new_participation, policy_class: User::ParticipationPolicy)
@@ -112,5 +113,16 @@ class Users::RdvWizardStepsController < UserAuthController
       redirect_to prendre_rdv_path(@rdv_builder.to_query_for_search_redirection)
       true
     end
+  end
+
+  def render_new_if_toggling_proches_without_js
+    # la versions sans JS affiche deux boutons submit supplémentaires avec des name différents
+    # lorsque l'usager clique dessus, on toggle le form et on re-render le #new
+    # cela permet de conserver ce qu'il avait déjà renseigné dans les champs du formulaire
+    return if params[:enable_proche_section].blank? && params[:disable_proche_section].blank?
+
+    @rdv_booking_form.booking_for_proche = params[:enable_proche_section].present?
+    authorize(@rdv_booking_form.rdv, :new?, policy_class: User::RdvPolicy)
+    render(:new)
   end
 end

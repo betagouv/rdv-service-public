@@ -48,3 +48,7 @@ window.Stimulus = Application.start()
 // Utilisé sur le formulaire de file d'attente proposé à l'usager
 import FormController from './controllers/form_controller'
 Stimulus.register('form', FormController)
+
+// Utilisé dans la prise de RDV usager
+import ProcheToggleController from "./controllers/proche_toggle_controller"
+Stimulus.register("proche-toggle", ProcheToggleController)
