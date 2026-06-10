@@ -105,8 +105,9 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       motif = create(:motif, organisation: organisation, name: "Atelier collectif")
       francis = create(:user, first_name: "Francis", last_name: "Factice")
 
-      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
-      sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
+      wait_for_action_cable_subscription_to("AgendaChannel") do
+        visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+      end
 
       rdv = create(:rdv, agents: [agent], motif:, organisation:, users: [francis], starts_at:)
       expect(page).to have_selector(".fc-event", text: "14:00 - 14:45\nFrancis FACTICE")
@@ -134,9 +135,9 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
 
     it "refreshes plages", js: true do
-      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
-      sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
-
+      wait_for_action_cable_subscription_to("AgendaChannel") do
+        visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+      end
       plage = create(:plage_ouverture, organisation:, agent:, title: "Ma plage", first_day: Time.zone.now.beginning_of_week.to_date)
       expect(page).to have_selector(".fc-event.fc-bg-event", text: "Ma plage")
 
@@ -148,8 +149,9 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
 
     it "refreshes absence", js: true do
-      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
-      sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
+      wait_for_action_cable_subscription_to("AgendaChannel") do
+        visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+      end
 
       absence = create(:absence, agent:, title: "Mon indispo", first_day: Time.zone.now.beginning_of_week.to_date)
       expect(page).to have_selector(".fc-event", text: "Mon indispo")
@@ -168,10 +170,12 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       click_on "Statistiques"
       expect(page).to have_content("Statistiques de")
 
-      click_on "Planning"
+      wait_for_action_cable_subscription_to("AgendaChannel") do
+        click_on "Planning"
+      end
       expect(page).to have_content("Planning de")
-      sleep 0.5 # on attend que la connexion Websocket se fasse
 
+      expect(page).not_to have_selector(".fc-event", text: "Mon indispo")
       create(:absence, agent:, title: "Mon indispo", first_day: Time.zone.now.beginning_of_week.to_date)
       expect(page).to have_selector(".fc-event", text: "Mon indispo")
     end
