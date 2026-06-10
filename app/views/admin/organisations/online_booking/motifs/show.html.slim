@@ -53,22 +53,22 @@
             - else
               li.fr-my-2w Les usagers ne sont pas autorisés à déplacer le rendez-vous.
 
-          h2.fr-h6 Instructions pour les usagers
+          h2.fr-h6.fr-mt-6w Instructions pour les usagers
           - if @motif.restriction_for_rdv.blank?
             p
               i Pas d'instructions à accepter avant la prise de rendez-vous
           - else
             p Instructions à accepter avant la prise de rendez-vous :
-            .fr-highlight
-              = restriction_for_rdv_to_html(@motif)
+            .fr-highlight.fr-mb-2w
+              i= restriction_for_rdv_to_html(@motif)
 
           - if @motif.instruction_for_rdv.blank?
-            p
+            p.fr-mt-4w
               i Pas d'instructions à afficher après la prise de rendez-vous
           - else
-            p Instructions à afficher après la prise de rendez-vous :
-            .fr-highlight
-              = instruction_for_rdv_to_html(@motif)
+            p.fr-mt-4w Instructions à afficher après la prise de rendez-vous :
+            .fr-highlight.fr-mb-2w
+              i= instruction_for_rdv_to_html(@motif)
 
     - if @motif.bookable_by_everyone?
       .card
