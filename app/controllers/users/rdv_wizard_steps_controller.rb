@@ -60,9 +60,9 @@ class Users::RdvWizardStepsController < UserAuthController
 
   protected
 
-  # L'étape 2 propose de prendre rendez-vous pour un proche
-  # Dans le cas d'une invitation, c'est l'usager qui est invité, donc on saute cette étape
-  # Si l'usager est un professionnel connecté via ProConnect, on ne lui propose pas non plus de prendre rendez-vous pour un proche
+  # On ne propose pas de prendre RDV pour un proche si :
+  # - l'usager est invité (c'est lui qui est concerné)
+  # - l'usager est connecté via ProConnect (professionnel)
   def set_skip_proches_step
     @skip_proches_step = current_user.signed_in_with_invitation_token? || current_user.pro_connect_openid_sub
   end
