@@ -20,6 +20,8 @@ class Service < ApplicationRecord
 
   # Validations
   validates :name, :short_name, presence: true, uniqueness: { case_sensitive: false }
+  validates :name, length: { in: 2..60 }
+  validates :short_name, length: { in: 2..40 }
 
   # Scopes
   default_scope { order(Arel.sql("unaccent(LOWER(services.name))")) }
