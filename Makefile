@@ -2,10 +2,10 @@ install: ## Setup development environment
 	bin/setup
 
 run: ## Start the application (web, jobs et webpack)
-	OVERMIND_SKIP_ENV=true overmind start -f Procfile.dev
+	overmind start -f Procfile.dev
 
 run_single_instance: ## Run only the RDV Service Public instance
-	OVERMIND_SKIP_ENV=true overmind start -f Procfile.dev -l "web,jobs,js"
+	overmind start -f Procfile.dev -l "web,jobs,js"
 
 lint: lint_rubocop lint_slim lint_brakeman ## Run all linters
 
