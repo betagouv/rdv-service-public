@@ -19,12 +19,10 @@
   .fr-col-12
     .card.mt-2
       .card-body
-        = motif_attribute_row(Motif.human_attribute_name(:name), @motif.name)
         - if current_territory.services.any? || @motif.service
-          = motif_attribute_row(Motif.human_attribute_name(:service)) do
-            = @motif.service_name
-            - if @motif.service.blank?
-              span.text-muted= I18n.t("admin.motifs.motif_without_service_explanation")
+          = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service_name, margin: false)
+          - if @motif.service.blank?
+            span.text-muted= I18n.t("admin.motifs.motif_without_service_explanation")
         - if @motif.motif_category.present?
           = motif_attribute_row(MotifCategory.model_name.human, @motif.motif_category.name)
         = motif_attribute_row \
@@ -33,13 +31,12 @@
         = motif_attribute_row(Motif.human_attribute_name(:color)) do
           span.motif-color-badge>[style="background-color: #{@motif.color};"]
           span.text-muted= @motif.color
-        hr
 
-        = motif_attribute_row("Type de RDV") do
-          div
-            = "#{@motif.human_attribute_value(:collectif)} #{@motif.human_attribute_value(:location_type).downcase}"
-          div.text-muted
-            = sanitize(@motif.human_attribute_value(:location_type, context: :hint), scrubber: :prune)
+        .fr-mt-4w
+          = location_type_icon(@motif.location_type, class: "fr-mr-1w fr-icon--sm")
+          = "#{@motif.human_attribute_value(:collectif)} #{@motif.human_attribute_value(:location_type).downcase}"
+        div.text-muted
+          = sanitize(@motif.human_attribute_value(:location_type, context: :hint), scrubber: :prune)
 
     .card.mt-2
       .card-body
@@ -75,39 +72,42 @@
 
     .card.mt-2
       .card-body
-        h2.fr-h4 Options avancées
-        = motif_attribute_row \
-          Motif.human_attribute_name(:follow_up_short), \
-          motif_option_activated(@motif, :follow_up), \
-          hint: Motif.human_attribute_name(:follow_up_hint)
-        = motif_attribute_row \
-          Motif.human_attribute_name(:for_secretariat_short), \
-          motif_option_activated(@motif, :for_secretariat), \
-          hint: Motif.human_attribute_name(:for_secretariat_hint)
-        hr
+        details
+          summary.rdv-summary
+            h2.fr-h5.rdv-color-text-action-high-blue-france[style="display: inline"] Options avancées
+          div
+            = motif_attribute_row \
+              Motif.human_attribute_name(:follow_up_short), \
+              motif_option_activated(@motif, :follow_up), \
+              hint: Motif.human_attribute_name(:follow_up_hint)
+            = motif_attribute_row \
+              Motif.human_attribute_name(:for_secretariat_short), \
+              motif_option_activated(@motif, :for_secretariat), \
+              hint: Motif.human_attribute_name(:for_secretariat_hint)
+            hr
 
-        = motif_attribute_row(Motif.human_attribute_name(:visibility_type)) do
-          div= sanitize(@motif.human_attribute_value(:visibility_type, context: :html))
+            = motif_attribute_row(Motif.human_attribute_name(:visibility_type)) do
+              div= sanitize(@motif.human_attribute_value(:visibility_type, context: :html))
 
-          div.text-muted
-            = @motif.human_attribute_value(:visibility_type, context: :hint)
-            - if current_organisation.rdv_insertion?
-              br
-              span= @motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
-        hr
+              div.text-muted
+                = @motif.human_attribute_value(:visibility_type, context: :hint)
+                - if current_organisation.rdv_insertion?
+                  br
+                  span= @motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
+            hr
 
-        = motif_attribute_row \
-          Motif.human_attribute_name(:restriction_for_rdv_short), \
-          restriction_for_rdv_to_html(@motif), \
-          hint: Motif.human_attribute_name(:restriction_for_rdv_hint)
-        = motif_attribute_row \
-          Motif.human_attribute_name(:instruction_for_rdv_short), \
-          instruction_for_rdv_to_html(@motif), \
-          hint: Motif.human_attribute_name(:instruction_for_rdv_hint)
-        = motif_attribute_row \
-          Motif.human_attribute_name(:custom_cancel_warning_message), \
-          @motif.custom_cancel_warning_message, \
-          hint: Motif.human_attribute_name(:custom_cancel_warning_message_hint)
+            = motif_attribute_row \
+              Motif.human_attribute_name(:restriction_for_rdv_short), \
+              restriction_for_rdv_to_html(@motif), \
+              hint: Motif.human_attribute_name(:restriction_for_rdv_hint)
+            = motif_attribute_row \
+              Motif.human_attribute_name(:instruction_for_rdv_short), \
+              instruction_for_rdv_to_html(@motif), \
+              hint: Motif.human_attribute_name(:instruction_for_rdv_hint)
+            = motif_attribute_row \
+              Motif.human_attribute_name(:custom_cancel_warning_message), \
+              @motif.custom_cancel_warning_message, \
+              hint: Motif.human_attribute_name(:custom_cancel_warning_message_hint)
 
     - if @motif_policy.edit? || @motif_policy.destroy?
       .card.mt-2
