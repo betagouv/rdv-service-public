@@ -725,6 +725,14 @@
           "service_id": {
             "type": "integer",
             "nullable": true
+          },
+          "min_public_booking_delay": {
+            "type": "integer",
+            "description": "Les premiers créneaux proposés aux usagers et aux prescripteurs ne commenceront pas avant ce délai minimum (en secondes)."
+          },
+          "max_public_booking_delay": {
+            "type": "integer",
+            "description": "Les derniers créneaux proposés aux usagers et aux prescripteurs n'iront pas au delà de ce délai maximum (en secondes)."
           }
         },
         "required": [
@@ -735,7 +743,9 @@
           "organisation_id",
           "bookable_publicly",
           "bookable_by",
-          "service_id"
+          "service_id",
+          "min_public_booking_delay",
+          "max_public_booking_delay"
         ]
       },
       "motif_categories": {
@@ -2339,6 +2349,8 @@
                           "follow_up": false,
                           "instruction_for_rdv": null,
                           "location_type": "public_office",
+                          "max_public_booking_delay": 15778476,
+                          "min_public_booking_delay": 1800,
                           "motif_category": {
                             "id": 7,
                             "name": "Catégorie de motif n°1",
@@ -2358,6 +2370,8 @@
                           "follow_up": false,
                           "instruction_for_rdv": null,
                           "location_type": "public_office",
+                          "max_public_booking_delay": 15778476,
+                          "min_public_booking_delay": 1800,
                           "motif_category": {
                             "id": 8,
                             "name": "Catégorie de motif n°2",
@@ -3155,6 +3169,8 @@
                             "follow_up": false,
                             "instruction_for_rdv": null,
                             "location_type": "public_office",
+                            "max_public_booking_delay": 15778476,
+                            "min_public_booking_delay": 1800,
                             "motif_category": {
                               "id": 50,
                               "name": "Catégorie de motif n°1",
@@ -3395,6 +3411,8 @@
                             "follow_up": false,
                             "instruction_for_rdv": null,
                             "location_type": "public_office",
+                            "max_public_booking_delay": 15778476,
+                            "min_public_booking_delay": 1800,
                             "motif_category": {
                               "id": 56,
                               "name": "Catégorie de motif n°1",
@@ -3512,6 +3530,8 @@
                             "follow_up": false,
                             "instruction_for_rdv": null,
                             "location_type": "public_office",
+                            "max_public_booking_delay": 15778476,
+                            "min_public_booking_delay": 1800,
                             "motif_category": {
                               "id": 60,
                               "name": "Catégorie de motif n°5",
