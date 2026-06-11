@@ -210,16 +210,3 @@
   border-radius: 8px;
   box-shadow: 0 12px 30px 0 rgba(221, 221, 221, 0.4);
 }
-
-
-summary.rdv-summary {
-  h2 { display: inline }
-  color: var(--text-action-high-blue-france);
-
-  &::marker {
-    margin-bottom: 4px;
-    margin-right: 4px;
-
-
-  }
-}
