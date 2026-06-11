@@ -2,7 +2,7 @@
   .rdv-accordion-card.fr-accordion
     h2.fr-accordion__title
       button.fr-accordion__btn aria-expanded="false" aria-controls="receipts"
-        => icon("fr-icon-message-2-line", class: "fr-mr-2w")
+        => icon("fr-icon-message-2-line", class: "fr-mr-1w")
         = Receipt.model_name.human(count: 2)
     .fr-collapse id="receipts"
       = render "admin/receipts/receipts_table", receipts: rdv.receipts.most_recent_first
