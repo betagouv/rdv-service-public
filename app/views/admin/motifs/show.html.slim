@@ -19,6 +19,7 @@
   .fr-col-12
     .card.mt-2
       .card-body
+        h2.fr-h4 Informations générales
         - if current_territory.services.any? || @motif.service
           = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service_name, margin: false)
           - if @motif.service.blank?
