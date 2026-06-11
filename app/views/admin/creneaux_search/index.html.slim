@@ -84,7 +84,7 @@
           .col-md-4
             = f.input :lieu_ids, collection: @lieux, label: "Lieu(x)", input_html: { multiple: true, class: "select2-input" }
         .text-right
-          = f.submit "Afficher les créneaux", class: "fr-btn", data: { disable_with: "Récupération des créneaux…"}
+          = f.submit "Afficher les créneaux", class: "fr-btn #{'fr-btn--secondary' if params[:commit]}", data: { disable_with: "Récupération des créneaux…"}
 
     #creneaux
       - if @next_availabilities&.any?
