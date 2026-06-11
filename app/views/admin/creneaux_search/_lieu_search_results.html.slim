@@ -1,16 +1,15 @@
-.card.mb-3.card-hoverable
+.card.fr-enlarge-link
   .card-body
-    .row
-      .col-md
-        h4.card-title.mb-3.mt-0.text-success.font-weight-bold= next_availability.lieu.name
-        p.card-subtitle.text-black-50= next_availability.lieu.address
-      .col-md.align-self-center.pt-3.pt-md-0.position-static
-        = link_to admin_organisation_creneaux_search_selection_creneaux_path(current_organisation,creneaux_search_params(@form).merge(lieu_ids: [next_availability.lieu.id])),
-                class: "d-block stretched-link" do
-          .row
-            .col
+    = link_to admin_organisation_creneaux_search_selection_creneaux_path(current_organisation,creneaux_search_params(@form).merge(lieu_ids: [next_availability.lieu.id])), class: "d-block stretched-link" do
+      .fr-grid-row
+        .fr-col
+          h3.fr-h4.rdv-color-text-action-high-blue-france
+              = next_availability.lieu.name
+          p.fr-mb-0= next_availability.lieu.address
+        .fr-col
+          .d-flex.rdv-justify-content-space-between
+            div
               | Prochain créneau le
               br
               strong= l(next_availability.starts_at, format: :human)
-            .col-auto.align-self-center
-              = icon("fr-icon-arrow-right-s-line")
+            = icon("fr-icon-arrow-right-line", class: "fr-mt-7w")
