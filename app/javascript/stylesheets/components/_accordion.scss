@@ -1,13 +1,14 @@
 // Une customisation de l'accordéon du DSFR
 .rdv-accordion-card {
+  &.fr-accordion::before {
+    display: none; // Pour effacer la bordure en haut et en bas de l'accordéon
+  }
+
   .fr-accordion__btn {
     padding: 24px;
   }
-  .fr-collapse {
-    margin: 0 12px;
-  }
-}
-.rdv-accordion-card.fr-accordion::before {
-  display: none; // Pour effacer la bordure en haut et en bas de l'accordéon
 
+  .fr-collapse {
+    margin: 0 8px;
+  }
 }
