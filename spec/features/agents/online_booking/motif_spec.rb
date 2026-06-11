@@ -13,7 +13,7 @@ RSpec.describe "Réservation en ligne pour un motif en particulier" do
 
     expect(page).to have_content("Ce motif est ouvert à la réservation en ligne")
 
-    click_on "Modifier"
+    click_on "Modifier", match: :first
 
     select "1 jour", from: "Délai minimum avant le RDV"
     select "6 heures", from: "Délai maximum avant le RDV"
@@ -29,6 +29,24 @@ RSpec.describe "Réservation en ligne pour un motif en particulier" do
     expect(page).to have_content("Les options de réservation en ligne ont été mises à jour.")
 
     expect(page).to have_content("Les rendez-vous seront pris au moins 1 jour à l'avance.")
+  end
+
+  it "permet de modifier les consignes pour les usagers" do
+    visit admin_organisation_online_booking_motif_path(organisation, motif)
+
+    expect(page).to have_content "Pas d'instructions à accepter avant la prise de rendez-vous"
+    expect(page).to have_content "Pas d'instructions à afficher après la prise de rendez-vous"
+
+    visit edit_instructions_admin_organisation_online_booking_motif_path(organisation, motif)
+    fill_in :motif_restriction_for_rdv, with: "Rendez-vous réservé aux usagers élibibles"
+    fill_in :motif_instruction_for_rdv, with: "Pensez à prendre un justificatif de domicile"
+
+    click_on "Enregistrer"
+    expect(page).to have_content("Les consignes pour les usagers ont été mises à jour.")
+
+    expect(page).to have_content "Rendez-vous réservé aux usagers élibibles"
+
+    expect(page).to have_content "Pensez à prendre un justificatif de domicile"
   end
 
   context "quand il n'y a pas de disponibilités" do
