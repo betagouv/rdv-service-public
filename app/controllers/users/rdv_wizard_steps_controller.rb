@@ -15,38 +15,22 @@ class Users::RdvWizardStepsController < UserAuthController
 
   def new
     @rdv_builder = Users::RdvBuilder.new(current_user, query_params)
-    @rdv_wizard = @rdv_builder # pour les vues qui utilisent encore ce nom de variable
     @rdv = @rdv_builder.rdv
     return if redirect_to_prendre_rdv_path_if_creneau_unavailable
     return if prevent_if_proconnect_restriction_not_respected
 
-    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain) if step1?
+    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain, booking_for_proche: params[:booking_for_proche] == "1")
     authorize(@rdv, policy_class: User::RdvPolicy)
-    if @rdv_builder.creneau.present?
-      render current_step[:name], locals: { current_step:, max_step: steps.size, next_step: }
-    else
-      flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
-      redirect_to(prendre_rdv_path(@rdv_builder.to_query))
-    end
   end
 
   def create
     @rdv_builder = Users::RdvBuilder.new(current_user, rdv_params)
-    @rdv_wizard = @rdv_builder
     @rdv = @rdv_builder.rdv
-    return if redirect_to_prendre_rdv_path_if_creneau_unavailable
+    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys, **proche_params)
+    nil if redirect_to_prendre_rdv_path_if_creneau_unavailable
 
-    if step1?
-      @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys)
-      if @rdv_booking_form.save
-        redirect_to new_users_rdv_wizard_step_path(@rdv_builder.to_query.merge(step: next_step[:number]))
-      else
-        render "step1", locals: { current_step:, max_step: steps.size, next_step: }
-      end
-    else
-      # dans les faits, uniquement pour la step 2 car la step3 pointe vers rdvs#create
-      redirect_to new_users_rdv_wizard_step_path(@rdv_builder.to_query.merge(step: next_step[:number]))
-    end
+    # TODO : authorize
+    # TODO : create RDV
   end
 
   private
@@ -68,50 +52,6 @@ class Users::RdvWizardStepsController < UserAuthController
   def set_skip_proches_step
     @skip_proches_step = current_user.signed_in_with_invitation_token? || current_user.pro_connect_openid_sub
   end
-
-  def steps
-    steps = {
-      step1: {
-        name: "step1",
-        number: 1,
-        title: "Vos informations",
-        next_step: @skip_proches_step ? :step3 : :step2,
-        stepper_index: 1,
-      },
-      step2: {
-        name: "step2",
-        number: 2,
-        title: "Choix de l’usager",
-        next_step: :step3,
-        stepper_index: 2,
-      },
-      step3: {
-        name: "step3",
-        number: 3,
-        title: "Confirmation",
-        stepper_index: @skip_proches_step ? 2 : 3,
-      },
-    }
-
-    steps.delete(:step2) if @skip_proches_step
-
-    steps
-  end
-
-  def current_step
-    return steps[:step1] if params[:step].blank?
-
-    step = "step#{params[:step]}"
-    raise "Invalid step: #{step.inspect}" unless steps.key?(step.to_sym)
-
-    steps[step.to_sym]
-  end
-
-  def next_step
-    steps[current_step[:next_step]]
-  end
-
-  def step1? = current_step[:name] == "step1"
 
   def rdv_params
     params.require(:rdv).permit(*RDV_PERMITTED_PARAMS).merge(params.permit(*EXTRA_PERMITTED_PARAMS))
