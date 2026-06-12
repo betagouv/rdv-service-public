@@ -26,9 +26,6 @@ class Users::RdvsController < UserAuthController
   end
 
   def create
-    # TODO: reste à migrer
-    #
-    # authorize(@rdv, policy_class: User::RdvPolicy)
   end
 
   def edit; end
