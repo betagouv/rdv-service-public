@@ -44,7 +44,6 @@ class Users::RdvsController < UserAuthController
         @save_succeeded = @rdv.save
       end
     end
-    skip_authorization if @creneau.nil?
     if @save_succeeded
       notifier = Notifiers::RdvCreated.new(@rdv, current_user)
       notifier.perform
@@ -52,15 +51,7 @@ class Users::RdvsController < UserAuthController
       flash[:success] = t(".rdv_confirmed")
       redirect_to users_rdv_path(@rdv, invitation_token: notifier.participations_tokens_by_user_id[current_user.id])
     else
-      # TODO: cette liste de paramètres devrait ressembler a SearchController#search_params, mais sans certains paramètres de choix du wizard de créneaux
-      query = {
-        address: new_rdv_extra_params[:address] || new_rdv_extra_params[:where],
-        city_code: new_rdv_extra_params[:city_code], street_ban_id: new_rdv_extra_params[:street_ban_id],
-        service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type,
-        departement: new_rdv_extra_params[:departement], organisation_ids: new_rdv_extra_params[:organisation_ids],
-        ants_pre_demandes_count: new_rdv_extra_params[:ants_pre_demandes_count],
-      }
-      redirect_to prendre_rdv_path(query), flash: { error: t(".creneau_unavailable") }
+      # migrated
     end
   end
 

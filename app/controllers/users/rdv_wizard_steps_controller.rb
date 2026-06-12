@@ -17,6 +17,7 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv_builder = Users::RdvBuilder.new(current_user, query_params)
     @rdv_wizard = @rdv_builder # pour les vues qui utilisent encore ce nom de variable
     @rdv = @rdv_builder.rdv
+    return if redirect_to_prendre_rdv_path_if_creneau_unavailable
     return if prevent_if_proconnect_restriction_not_respected
 
     @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain) if step1?
@@ -30,10 +31,11 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def create
-    skip_authorization
     @rdv_builder = Users::RdvBuilder.new(current_user, rdv_params)
     @rdv_wizard = @rdv_builder
     @rdv = @rdv_builder.rdv
+    return if redirect_to_prendre_rdv_path_if_creneau_unavailable
+
     if step1?
       @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys)
       if @rdv_booking_form.save
@@ -145,5 +147,14 @@ class Users::RdvWizardStepsController < UserAuthController
 
   def user_params
     params.permit(user: user_params_permitted_keys)
+  end
+
+  def redirect_to_prendre_rdv_path_if_creneau_unavailable
+    if !@rdv_builder.creneau || !@rdv_builder.rdv.remaining_seats?
+      flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
+      skip_authorization
+      redirect_to prendre_rdv_path(@rdv_builder.to_query_for_search_redirection)
+      true
+    end
   end
 end
