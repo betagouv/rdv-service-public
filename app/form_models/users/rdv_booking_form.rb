@@ -1,7 +1,7 @@
 class Users::RdvBookingForm
   include Users::UserFormConcern
 
-  attr_reader :rdv_builder
+  attr_reader :rdv_builder, :invitation_token, :rdv
 
   delegate :to_query, :motif, :service, to: :rdv_builder
   delegate :add_benign_error, :ignore_benign_errors, to: :user

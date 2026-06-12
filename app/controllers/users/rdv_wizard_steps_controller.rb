@@ -27,10 +27,18 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv_builder = Users::RdvBuilder.new(current_user, rdv_params)
     @rdv = @rdv_builder.rdv
     @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys, **proche_params)
-    nil if redirect_to_prendre_rdv_path_if_creneau_unavailable
+    return if redirect_to_prendre_rdv_path_if_creneau_unavailable
 
     # TODO : authorize
-    # TODO : create RDV
+
+    if @rdv_booking_form.save
+      flash[:success] = (@rdv_booking_form.collectif? ? "Participation confirmée" : t("users.rdvs.create.rdv_confirmed"))
+      set_user_name_initials_verified
+      redirect_to users_rdv_path(@rdv_booking_form.rdv, invitation_token: @rdv_booking_form.invitation_token)
+    else
+      flash[:error] = "Une erreur a empêché la confirmation de votre RDV"
+      render :new
+    end
   end
 
   private
