@@ -29,7 +29,11 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys, **proche_params)
     return if redirect_to_prendre_rdv_path_if_creneau_unavailable
 
-    # TODO : authorize
+    if @rdv_booking_form.collectif?
+      authorize(@rdv_booking_form.new_participation, policy_class: User::ParticipationPolicy)
+    else
+      authorize(@rdv_booking_form.rdv, policy_class: User::RdvPolicy)
+    end
 
     if @rdv_booking_form.save
       flash[:success] = (@rdv_booking_form.collectif? ? "Participation confirmée" : t("users.rdvs.create.rdv_confirmed"))
