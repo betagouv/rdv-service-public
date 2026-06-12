@@ -75,4 +75,8 @@ class Users::RdvBookingForm
     new_participation.create_and_notify!(@user)
     @invitation_token = new_participation.restricted_auth_token
   end
+
+  def users_for_rdv
+    [@user]
+  end
 end
