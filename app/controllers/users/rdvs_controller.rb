@@ -25,9 +25,6 @@ class Users::RdvsController < UserAuthController
                 end
   end
 
-  def create
-  end
-
   def edit; end
 
   def show; end
