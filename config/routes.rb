@@ -200,183 +200,184 @@ Rails.application.routes.draw do
 
   get "/calendrier/:id", controller: :ics_calendar, action: :show, as: :ics_calendar
 
-  authenticate :agent do
-    namespace "admin" do
-      namespace :api, defaults: { format: :json } do
-        namespace :agenda do
-          resources :plage_ouvertures, only: [:index]
-          resources :rdvs, only: [:index]
-          resources :absences, only: [:index]
-          resources :external_calendar_events, only: [:index]
-        end
+  namespace "admin" do
+    namespace :api, defaults: { format: :json } do
+      namespace :agenda do
+        resources :plage_ouvertures, only: [:index]
+        resources :rdvs, only: [:index]
+        resources :absences, only: [:index]
+        resources :external_calendar_events, only: [:index]
       end
-      resources :territories, only: %i[edit update show] do
-        scope module: "territories" do
-          resources :agent_roles, only: %i[update create destroy]
-          resources :agent_territorial_access_rights, only: %i[update]
-          resources :agent_territorial_roles, only: %i[] do
-            collection do
-              put :create_or_destroy
-            end
+    end
+    resources :territories, only: %i[edit update show] do
+      scope module: "territories" do
+        resources :agent_roles, only: %i[update create destroy]
+        resources :agent_territorial_access_rights, only: %i[update]
+        resources :agent_territorial_roles, only: %i[] do
+          collection do
+            put :create_or_destroy
           end
-          resources :webhook_endpoints, except: %i[show]
-          resources :organisations, only: %i[new create index] do
-            member do
-              patch :close
-              get :confirm_reopen
-              post :reopen
-            end
-          end
-          resources :agents, only: %i[index new create edit] do
-            member do
-              put :territory_admin
-              patch :update_services
-              patch :update_teams
-            end
-          end
-          resources :teams, except: :show
-          resources :motifs, only: %i[index new create destroy] do
-            collection do
-              get :batch_edit
-              post :batch_update
-            end
-            member do
-              post :archive
-              post :unarchive
-            end
-          end
-          resource :user_fields, only: %i[edit update]
-          resource :rdv_fields, only: %i[edit update]
-          resource :motif_fields, only: %i[edit update]
-          resource :motif_categories, only: %i[update]
-          resources :zone_imports, only: %i[new create]
-          resources :zones, only: [:index] # exports only
-          resource :services, only: %i[edit update]
-          resource :sectorization, only: [:show]
-          resources :sectors do
-            resources :zones
-            resources :sector_attributions, only: %i[new create destroy], as: :attributions
-            delete "/zones" => "zones#destroy_multiple"
-          end
-          get "sectorisation_test" => "sectorisation_tests#search"
         end
-      end
-
-      resources :organisations do
-        collection do
-          get "configuration", to: "organisations/configurations#index"
-        end
-        get "creneaux_search" => "creneaux_search#index"
-        get "creneaux_search/selection_creneaux" => "creneaux_search#selection_creneaux"
-        # Lien très utilisé pour la duplication de RDV
-        # il permet de reprendre un RDV, éventuellement pour un autre motif
-        # https://zammad10.ethibox.fr/#ticket/zoom/3044
-        # On le garde pour la rétrocompatibilité après le renommage de la route.
-        get "agent_searches", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search")
-        get "slots", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search/selection_creneaux")
-
-        resources :instance_exports, only: %i[index new update show] do
+        resources :webhook_endpoints, except: %i[show]
+        resources :organisations, only: %i[new create index] do
           member do
-            patch :archive_motifs
-          end
-        end
-        resources :lieux, except: :show do
-          member do
-            post :close
+            patch :close
+            get :confirm_reopen
             post :reopen
           end
         end
-
-        resources :motifs do
+        resources :agents, only: %i[index new create edit] do
+          member do
+            put :territory_admin
+            patch :update_services
+            patch :update_teams
+          end
+        end
+        resources :teams, except: :show
+        resources :motifs, only: %i[index new create destroy] do
+          collection do
+            get :batch_edit
+            post :batch_update
+          end
           member do
             post :archive
             post :unarchive
           end
         end
-        resources :rdvs_collectifs, only: %i[index new create edit update] do
-          collection do
-            resources :motifs, only: [:index], as: :rdvs_collectif_motifs, controller: "rdvs_collectifs/motifs"
-          end
+        resource :user_fields, only: %i[edit update]
+        resource :rdv_fields, only: %i[edit update]
+        resource :motif_fields, only: %i[edit update]
+        resource :motif_categories, only: %i[update]
+        resources :zone_imports, only: %i[new create]
+        resources :zones, only: [:index] # exports only
+        resource :services, only: %i[edit update]
+        resource :sectorization, only: [:show]
+        resources :sectors do
+          resources :zones
+          resources :sector_attributions, only: %i[new create destroy], as: :attributions
+          delete "/zones" => "zones#destroy_multiple"
         end
-        resources :rdvs, except: [:new] do
-          resources :participations, only: %i[update destroy]
-          resource :user_in_waiting_room, only: [:create]
+        get "sectorisation_test" => "sectorisation_tests#search"
+      end
+    end
+
+    resources :organisations do
+      collection do
+        get "configuration", to: "organisations/configurations#index"
+      end
+      get "creneaux_search" => "creneaux_search#index"
+      get "creneaux_search/selection_creneaux" => "creneaux_search#selection_creneaux"
+      # Lien très utilisé pour la duplication de RDV
+      # il permet de reprendre un RDV, éventuellement pour un autre motif
+      # https://zammad10.ethibox.fr/#ticket/zoom/3044
+      # On le garde pour la rétrocompatibilité après le renommage de la route.
+      get "agent_searches", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search")
+      get "slots", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search/selection_creneaux")
+
+      resources :instance_exports, only: %i[index new update show] do
+        member do
+          patch :archive_motifs
+        end
+      end
+      resources :lieux, except: :show do
+        member do
+          post :close
+          post :reopen
+        end
+      end
+
+      resources :motifs do
+        member do
+          post :archive
+          post :unarchive
+        end
+      end
+      resources :rdvs_collectifs, only: %i[index new create edit update] do
+        collection do
+          resources :motifs, only: [:index], as: :rdvs_collectif_motifs, controller: "rdvs_collectifs/motifs"
+        end
+      end
+      resources :rdvs, except: [:new] do
+        resources :participations, only: %i[update destroy]
+        resource :user_in_waiting_room, only: [:create]
+        member do
+          get :download_participants
+          post :send_reminder_manually
+        end
+        collection do
+          post :participations_export
+          post :export
+          get :a_renseigner
+        end
+      end
+      scope module: "organisations" do
+        resource :online_booking, only: %i[show edit update] do
           member do
-            get :download_participants
-            post :send_reminder_manually
-          end
-          collection do
-            post :participations_export
-            post :export
-            get :a_renseigner
+            get :edit_user_type
+            patch :update_user_type
           end
         end
-        scope module: "organisations" do
-          resource :online_booking, only: %i[show edit update] do
+
+        namespace :online_booking do
+          resources :motifs, only: %i[show edit update] do
             member do
+              post :open
+              post :close
               get :edit_user_type
               patch :update_user_type
-            end
-          end
-
-          namespace :online_booking do
-            resources :motifs, only: %i[show edit update] do
-              member do
-                post :open
-                post :close
-                get :edit_instructions
-                patch :update_instructions
-              end
-            end
-          end
-
-          resource :configuration, only: [:show]
-          resources :stats, only: :index do
-            collection do
-              get :rdvs
+              get :edit_instructions
+              patch :update_instructions
             end
           end
         end
-        resources :users do
-          member do
-            get :link_to_organisation
-          end
+
+        resource :configuration, only: [:show]
+        resources :stats, only: :index do
           collection do
-            get :search
+            get :rdvs
           end
-          resources :referent_assignations, only: %i[index create destroy]
         end
-        resources :agent_intervenants, only: %i[update]
-        resources :agents, except: %i[show]
-        namespace :planning do
-          get :agenda, to: "agendas#show"
-          put :toggle_displays, to: "agendas#toggle_displays"
+      end
+      resources :users do
+        member do
+          get :link_to_organisation
+        end
+        collection do
+          get :search
+        end
+        resources :referent_assignations, only: %i[index create destroy]
+      end
+      resources :agent_intervenants, only: %i[update]
+      resources :agents, except: %i[show]
+      namespace :planning do
+        get :agenda, to: "agendas#show"
+        put :toggle_displays, to: "agendas#toggle_displays"
 
-          resources :absences
-          resources :plage_ouvertures do
-            collection do
-              get :calendar
-            end
+        resources :absences
+        resources :plage_ouvertures do
+          collection do
+            get :calendar
           end
         end
-        resources :invitations, only: [:index] do
-          post :reinvite, on: :member
-        end
-        resource :merge_users, only: %i[new create]
-        resource :rdv_wizard_step, only: [:new] do
-          get :create
-        end
-        get "support", to: "static_pages#support"
-        resource :prescription, only: [], controller: "prescription" do
-          get "search_creneau"
-          get "user_selection"
-          get "recapitulatif"
-          post "create_rdv"
-          get "confirmation"
-        end
+      end
+      resources :invitations, only: [:index] do
+        post :reinvite, on: :member
+      end
+      resource :merge_users, only: %i[new create]
+      resource :rdv_wizard_step, only: [:new] do
+        get :create
+      end
+      get "support", to: "static_pages#support"
+      resource :prescription, only: [], controller: "prescription" do
+        get "search_creneau"
+        get "user_selection"
+        get "recapitulatif"
+        post "create_rdv"
+        get "confirmation"
       end
     end
   end
+
   authenticated :agent do
     root to: "agents/pages#home", as: :authenticated_agent_root
   end
