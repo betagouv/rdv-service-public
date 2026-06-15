@@ -1,0 +1,36 @@
+/# locals: (organisation:)
+
+- template_motifs = MotifTemplates::FranceService.motifs_templates
+
+header.main-content__header style="width: 100%;"
+  h2.main-content__page-title
+    | Modèles de motifs France Service
+
+section.main-content__body
+  details
+    summary.mb-2  Voir les #{template_motifs.size} modèles de motif France Service
+    table.table.table-striped
+      thead
+        tr
+          th Service
+          th Nom
+          th Durée en minutes
+          th Location Type
+          th Instructions avant
+          th Instructions après
+      tbody
+        - template_motifs.each do |template_motif|
+          tr
+            td= template_motif.service.name
+            td= template_motif.name
+            td= template_motif.default_duration_in_min
+            td= template_motif.location_type
+            td= simple_format template_motif.restriction_for_rdv
+            td= simple_format template_motif.instruction_for_rdv
+
+  = link_to("Créer les motifs France Service",
+      create_france_connect_motifs_super_admins_organisation_path(id: organisation.id),
+      style: "margin-top: 1em",
+      class: "button button--danger",
+      method: :post,
+      data: { confirm: t("administrate.actions.confirm") } )

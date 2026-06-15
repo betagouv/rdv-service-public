@@ -40,7 +40,11 @@ Rails.application.routes.draw do
     resources :agent_services, only: %i[show destroy]
     resources :user_profiles, only: %i[destroy]
     resources :super_admins, only: %i[index destroy]
-    resources :organisations
+    resources :organisations do
+      member do
+        post :create_france_connect_motifs
+      end
+    end
     resources :operators
     resources :operator_managers
     resources :services
