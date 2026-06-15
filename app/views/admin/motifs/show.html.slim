@@ -6,16 +6,22 @@
 
 = render "admin/motifs/fil_ariane", current_page_title: content_for(:title)
 
-.row.justify-content-center
-  .col-md-12.col-lg-8
+- content_for :right_of_page_title do
+  .fr-btns-group.fr-btns-group--inline
+    - if !@motif.archived? && @motif_policy.edit?
+      = link_to t("admin.motifs.actions.edit"), edit_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn"
+    - if @motif_policy.duplicate?
+      = link_to t("admin.motifs.actions.duplicate"), new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: @motif.id), class: "fr-btn fr-btn--secondary"
+
+.fr-grid-row
+  .fr-col-12
     .card.mt-2
       .card-body
-        = motif_attribute_row(Motif.human_attribute_name(:name), @motif.name)
+        h2.fr-h4 Informations générales
         - if current_territory.services.any? || @motif.service
-          = motif_attribute_row(Motif.human_attribute_name(:service)) do
-            = @motif.service_name
-            - if @motif.service.blank?
-              span.text-muted= I18n.t("admin.motifs.motif_without_service_explanation")
+          = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service_name, margin: false)
+          - if @motif.service.blank?
+            span.text-muted= I18n.t("admin.motifs.motif_without_service_explanation")
         - if @motif.motif_category.present?
           = motif_attribute_row(MotifCategory.model_name.human, @motif.motif_category.name)
         = motif_attribute_row \
@@ -24,31 +30,26 @@
         = motif_attribute_row(Motif.human_attribute_name(:color)) do
           span.motif-color-badge>[style="background-color: #{@motif.color};"]
           span.text-muted= @motif.color
-        hr
 
-        = motif_attribute_row("Type de RDV") do
-          div
-            = "#{@motif.human_attribute_value(:collectif)} #{@motif.human_attribute_value(:location_type).downcase}"
-          div.text-muted
-            = sanitize(@motif.human_attribute_value(:location_type, context: :hint), scrubber: :prune)
-        hr
+        .fr-mt-4w
+          = location_type_icon(@motif.location_type, class: "fr-mr-1w fr-icon--sm")
+          = "#{@motif.human_attribute_value(:collectif)} #{@motif.human_attribute_value(:location_type).downcase}"
+        div.text-muted
+          = sanitize(@motif.human_attribute_value(:location_type, context: :hint), scrubber: :prune)
 
-        = motif_attribute_row \
-          Motif.human_attribute_name(:follow_up_short), \
-          motif_option_activated(@motif, :follow_up), \
-          hint: Motif.human_attribute_name(:follow_up_hint)
-        = motif_attribute_row \
-          Motif.human_attribute_name(:for_secretariat_short), \
-          motif_option_activated(@motif, :for_secretariat), \
-          hint: Motif.human_attribute_name(:for_secretariat_hint)
-        hr
+    .card.mt-2
+      .card-body
+        h2.fr-h4 Réservation en ligne
 
+        - if !@motif.bookable_outside_of_organisation?
+          p La réservation en ligne n'est pas activée pour ce motif.
+        - else
           .mb-2= motif_attribute_row \
-          Motif.human_attribute_name(:bookable_by), \
-          I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.#{@motif.bookable_by}", \
-          organisation_name: @motif.organisation.name \
-          )
-        - if @motif.bookable_outside_of_organisation?
+            Motif.human_attribute_name(:bookable_by), \
+            I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.#{@motif.bookable_by}", \
+            organisation_name: @motif.organisation.name \
+            )
+
           = motif_attribute_row \
             Motif.human_attribute_name(:min_public_booking_delay_short), \
             @motif.bookable_outside_of_organisation? && min_max_delay_int_to_human(@motif.min_public_booking_delay), \
@@ -70,50 +71,70 @@
                 div.text-muted= @motif.human_attribute_value(:sectorisation_level, context: :hint)
               - else
                 span.text-muted N/A
-        hr
 
-        = motif_attribute_row(Motif.human_attribute_name(:visibility_type)) do
-          div= sanitize(@motif.human_attribute_value(:visibility_type, context: :html))
+    .card.mt-2
+      .rdv-accordion-card.fr-accordion
+        h2.fr-accordion__title
+          button.fr-h5.fr-accordion__btn aria-expanded="false" aria-controls="options-avancees"
+            | Options avancées
+        .fr-collapse id="options-avancees"
+          = motif_attribute_row \
+            Motif.human_attribute_name(:follow_up_short), \
+            motif_option_activated(@motif, :follow_up), \
+            hint: Motif.human_attribute_name(:follow_up_hint), margin: false
+          = motif_attribute_row \
+            Motif.human_attribute_name(:for_secretariat_short), \
+            motif_option_activated(@motif, :for_secretariat), \
+            hint: Motif.human_attribute_name(:for_secretariat_hint)
+          hr
 
-          div.text-muted
-            = @motif.human_attribute_value(:visibility_type, context: :hint)
-            - if current_organisation.rdv_insertion?
-              br
-              span= @motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
-        hr
+          = motif_attribute_row(Motif.human_attribute_name(:visibility_type), margin: false) do
+            div= sanitize(@motif.human_attribute_value(:visibility_type, context: :html))
 
-        = motif_attribute_row \
-          Motif.human_attribute_name(:restriction_for_rdv_short), \
-          restriction_for_rdv_to_html(@motif), \
-          hint: Motif.human_attribute_name(:restriction_for_rdv_hint)
-        = motif_attribute_row \
-          Motif.human_attribute_name(:instruction_for_rdv_short), \
-          instruction_for_rdv_to_html(@motif), \
-          hint: Motif.human_attribute_name(:instruction_for_rdv_hint)
-        = motif_attribute_row \
-          Motif.human_attribute_name(:custom_cancel_warning_message), \
-          @motif.custom_cancel_warning_message, \
-          hint: Motif.human_attribute_name(:custom_cancel_warning_message_hint)
+            div.text-muted
+              = @motif.human_attribute_value(:visibility_type, context: :hint)
+              - if current_organisation.rdv_insertion?
+                br
+                span= @motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
+          hr
 
-      - if @motif_policy.edit? || @motif_policy.destroy?
-        .card-footer
-          .d-flex.justify-content-end.flex-gap-1em
-            - if @motif.archived?
+          = motif_attribute_row \
+            Motif.human_attribute_name(:restriction_for_rdv_short), \
+            restriction_for_rdv_to_html(@motif), \
+            hint: Motif.human_attribute_name(:restriction_for_rdv_hint)
+          = motif_attribute_row \
+            Motif.human_attribute_name(:instruction_for_rdv_short), \
+            instruction_for_rdv_to_html(@motif), \
+            hint: Motif.human_attribute_name(:instruction_for_rdv_hint)
+          = motif_attribute_row \
+            Motif.human_attribute_name(:custom_cancel_warning_message), \
+            @motif.custom_cancel_warning_message, \
+            hint: Motif.human_attribute_name(:custom_cancel_warning_message_hint)
+
+    - if @motif_policy.edit? || @motif_policy.destroy?
+      .card.mt-2
+        .card-body
+          - if @motif.archived?
+            h2.fr-h4 Ce motif est archivé
+
+            p Il n'est pas possible de prendre de nouveaux rendez-vous pour ce motif.
+            .fr-btns-group.fr-btns-group--inline
               - if @motif_policy.unarchive?
-                div= link_to t("admin.motifs.actions.unarchive"), unarchive_admin_organisation_motif_path(current_organisation, @motif), method: :post, class: "btn btn-light w-100"
-            - else
+                = link_to t("admin.motifs.actions.unarchive"), unarchive_admin_organisation_motif_path(current_organisation, @motif), method: :post, class: "fr-btn"
+              - if @motif_policy.destroy?
+                = link_to t("admin.motifs.actions.destroy"), admin_organisation_motif_path(current_organisation, @motif), method: :delete, data: { confirm: t("admin.motifs.actions.destroy_confirm") }, class: "fr-btn fr-btn--tertiary"
+
+          - else
+            h2.fr-h4 Ce motif est actif
+
+            p Vous pouvez archiver ce motif si vous ne souhaitez pas que de nouveau rendez-vous soit pris.
+
+            .fr-btns-group.fr-btns-group--inline
               - if @motif_policy.archive?
-                div= link_to t("admin.motifs.actions.archive"), archive_admin_organisation_motif_path(current_organisation, @motif), method: :post, data: { confirm: t("admin.motifs.actions.archive_confirm") }, class: "btn btn-light w-100"
+                = link_to t("admin.motifs.actions.archive"), archive_admin_organisation_motif_path(current_organisation, @motif), method: :post, data: { confirm: t("admin.motifs.actions.archive_confirm") }, class: "fr-btn fr-btn--secondary"
+              - if @motif_policy.destroy?
+                = link_to t("admin.motifs.actions.destroy"), admin_organisation_motif_path(current_organisation, @motif), method: :delete, data: { confirm: t("admin.motifs.actions.destroy_confirm") }, class: "fr-btn fr-btn--tertiary"
 
-            - if @motif_policy.destroy?
-              div= link_to t("admin.motifs.actions.destroy"), admin_organisation_motif_path(current_organisation, @motif), method: :delete, data: { confirm: t("admin.motifs.actions.destroy_confirm") }, class: "btn btn-danger w-100"
-
-            - unless @motif.archived?
-              - if @motif_policy.duplicate?
-                div= link_to t("admin.motifs.actions.duplicate"), new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: @motif.id), class: "btn btn-primary w-100"
-              - if @motif_policy.edit?
-                div= link_to t("admin.motifs.actions.edit"), edit_admin_organisation_motif_path(current_organisation, @motif), class: "btn btn-primary w-100"
-
-.row.justify-content-center
-  .col-md-12.col-lg-8
+.fr-grid-row
+  .fr-col-12
     = render "admin/versions/resource_versions_row", resource_policy: @motif_policy, resource: @motif

@@ -1,16 +1,13 @@
 .card
-  .card-header
-    button.btn.btn-link data-toggle="collapse" data-target="#receipts-collapse"
-      h5.header
-        => icon("fr-icon-message-2-line")
+  .rdv-accordion-card.fr-accordion
+    h2.fr-accordion__title
+      button.fr-accordion__btn aria-expanded="false" aria-controls="receipts"
+        => icon("fr-icon-message-2-line", class: "fr-mr-1w")
         = Receipt.model_name.human(count: 2)
-  .collapse.hide#receipts-collapse
-    .card-body
+    .fr-collapse id="receipts"
       = render "admin/receipts/receipts_table", receipts: rdv.receipts.most_recent_first
-    .card-footer
       - if rdv.starts_at > Time.zone.now
-        = link_to t("admin.receipts.send_reminder_manually"), send_reminder_manually_admin_organisation_rdv_path(current_organisation, @rdv), method: :post, class: "btn btn-outline-primary", data: { disable_with: "Veuillez patienter…"}
+        = link_to t("admin.receipts.send_reminder_manually"), send_reminder_manually_admin_organisation_rdv_path(current_organisation, @rdv), method: :post, class: "fr-btn fr-btn--secondary", data: { disable_with: "Veuillez patienter…"}
       - else
-        = link_to t("admin.receipts.send_reminder_manually"), nil, class: "btn btn-light", disabled: true
-        .mt-2
+        .fr-mt-2w
           span.text-muted.font-14= t("admin.receipts.cant_send_reminder_manually")

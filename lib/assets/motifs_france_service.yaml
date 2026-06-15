@@ -1,0 +1,748 @@
+- service_name: Allocations familiales (CAF)
+  name: Déclarer un changement de situation
+  default_duration_in_min: 30
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: |-
+    Merci de venir avec les documents suivants :
+    - Identifiant et Mots de passe du compte
+    - 2 derniers avis d'imposition
+    - Avoir accès à la boite email ou avoir le mot de passe qui lui est associé
+    - Téléphone portable
+    - Le contrat de location ou le bail
+    - Dernière quittance de loyer
+- service_name: Allocations familiales (CAF)
+  name: Réaliser une déclaration trimestrielle ou annuelle des ressources
+  default_duration_in_min: 30
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Merci de venir avec les documents suivants :
+
+    - Identifiant et Mots de passe du compte
+
+    - 2 derniers avis d'imposition
+
+    - RIB (Relevé d'identité bancaire)
+
+    - Avoir accès à la boite email ou avoir le mot de passe qui lui est associé
+
+    - Téléphone portable
+
+    - l'ensemble des ressources du foyer des 3 mois précédents ma demande de
+    Prime d'activité (bulletins de salaires, aide de paiement Pôle Emploi, Avis
+    de paiement CPAM...)
+
+    - Un avis d'imposition de l'année N - 2 pour les revenus de travailleurs
+    indépendants ou en cas de perception de revenus mobiliers ou immobiliers
+- service_name: Allocations familiales (CAF)
+  name: Réaliser une demande ou une simulation d'aide au logement
+  default_duration_in_min: 45
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Merci de venir avec les documents suivants : 
+
+    - Identifiant et Mots de passe du compte
+
+    - 2 derniers avis d'imposition
+
+    - RIB (Relevé d'identité bancaire)
+
+    - Avoir accès à la boite email ou avoir le mot de passe qui lui est associé
+
+    - Téléphone portable
+
+    - Le contrat de location ou le bail
+
+    - Le numéro de dossier de mes parents et leur Caf d’appartenance, s’ils sont
+    allocataires
+
+    - Dernière quittance de loyer
+
+    - Quittance de loyer de Juillet de l'année -1
+
+    - Les revenus du patrimoine (revenus de placement imposables, revenus
+    immobiliers…)
+- service_name: Allocations familiales (CAF)
+  name: Réaliser une demande d'allocation familiale ou de soutien familial
+  default_duration_in_min: 45
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: |-
+    Merci de venir avec les documents suivants : 
+    - Identifiant et Mots de passe du compte
+    - 2 derniers avis d'imposition
+    - RIB (Relevé d'identité bancaire)
+    - Avoir accès à la boite email ou avoir le mot de passe qui lui est associé
+    - Téléphone portable
+    - Votre pièce d’identité
+    - Votre livret de famille
+    - Un justificatif de domicile récent
+    - Un justificatif de votre situation familiale (expl: jugement de divorce)
+    - L’attestation de non-paiement de pension alimentaire
+- service_name: Allocations familiales (CAF)
+  name: Réaliser une demande de prime d'activité
+  default_duration_in_min: 45
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Merci de venir avec les documents suivants : 
+
+    - Identifiant et Mots de passe du compte
+
+    - 2 derniers avis d'imposition
+
+    - RIB (Relevé d'identité bancaire)
+
+    - Avoir accès à la boite email ou avoir le mot de passe qui lui est associé
+
+    - Téléphone portable
+
+    - Pièce d'identité (carte d’identité, passeport ou titre de séjour)
+
+    - RIB (Relevé d'Identité Bancaire)
+
+    - l'ensemble des ressources du foyer des 3 mois précédents ma demande de
+    Prime d'activité (bulletins de salaires, aide de paiement Pôle Emploi, Avis
+    de paiement CPAM...)
+
+    - Un avis d'imposition de l'année N - 2 pour les revenus de travailleurs
+    indépendants ou en cas de perception de revenus mobiliers ou immobiliers
+- service_name: Allocations familiales (CAF)
+  name: Réaliser une demande de RSA
+  default_duration_in_min: 45
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Merci de venir avec les documents suivants :
+
+    - Identifiant et Mots de passe du compte
+
+    - 2 derniers avis d'imposition
+
+    - RIB (Relevé d'identité bancaire)
+
+    - Avoir accès à la boite email ou avoir le mot de passe qui lui est associé
+
+    - Téléphone portable
+
+    - Pièce d'identité (carte d’identité, passeport ou titre de séjour)
+
+    - Carte Vitale (ou une attestation de droit)
+
+    - L'ensemble des revenus de votre foyer des 3 derniers mois accompagné des
+    justificatifs (bulletins de salaires, attestations de paiement Pôle Emploi,
+    pension alimentaire, indemnités versées par la CPAM ou un autre organisme,
+    pension invalidité, retraite...)
+
+    - RIB (Relevé d'Identité Bancaire) Pour les travailleur indépendant :
+
+    - la copie de l’inscription à un registre professionnel (registre du
+    commerce, des métiers, à la Maison des artistes, URSSAF...) ou pour les
+    artistes - auteurs tout document qui atteste de la affiliation au régime
+    social des artistes auteurs (dont le certificat administratif remis par
+    l’Urssaf du Limousin) ;
+
+    - le bilan comptable et compte de résultat OU le livre de caisse (recettes
+    et dépenses)
+- service_name: Assurance maladie (CPAM)
+  name: Déposer une demande d'Aide Médicale d'Etat (primo-demande uniquement)
+  default_duration_in_min: 30
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: Néant
+- service_name: Assurance maladie (CPAM)
+  name: Créer un compte AMELI
+  default_duration_in_min: 30
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: |-
+    Merci de venir avec les documents suivants : 
+    - Carte Vitale
+    - RIB (Relevé d'identité bancaire)
+    - Avoir accès à la boite email ou avoir le mot de passe qui lui est associé
+    - Téléphone portable
+- service_name: Assurance maladie (CPAM)
+  name: Demander une carte vitale, une carte européenne ou une attestation de droit
+  default_duration_in_min: 30
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: |-
+    Merci de venir avec les documents suivants :
+    - Identifiant de connexion
+    - Carte d'identité
+    - RIB
+- service_name: Assurance maladie (CPAM)
+  name: Demander une complémentaire santé solidaire (CSS)
+  default_duration_in_min: 30
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: |-
+    Merci de venir avec les éléments suivants :
+    - Carte Vitale
+    - RIB (Relevé d'identité bancaire)
+    - votre téléphone portable
+    - vos codes France Connect (Ameli, Impôts, identité numérique, ...)
+    - Votre dernier avis d'imposition 
+    Avoir accès à votre adresse email:
+    - installée sur votre téléphone portable
+    - Ou connaitre son mot de passe
+- service_name: Assurance maladie (CPAM)
+  name: Demander une pension d’invalidité
+  default_duration_in_min: 30
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Merci de venir avec les éléments suivants :
+
+    - Identifiants de connexion et téléphone portable 
+
+    - Dernier avis d'impôts sur les revenus (ou avis de situation déclarative)
+
+    - Carte d'identité ou passeport (ou toute autre pièce justificative d'état
+    civil et de nationalité) + titre de séjour si vous êtes étranger
+
+    - Notification de rente si vous avez une rente pour accident du
+    travail/maladie professionnelle
+
+    - Notification de pension si vous avez une pension d'invalidité versée par
+    un autre régime que le régime général
+
+    - Notification de pension + décision de la commission de réforme si vous
+    avez une pension militaire pour maladie, blessure de guerre ou au titre de
+    victime civile de la guerre
+- service_name: Assurance retraite (CARSAT)
+  name: Compléter et/ou déposer un dossier de demande de retraite
+  default_duration_in_min: 60
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle) Un dossier de demande de retraite se
+    commence 6 mois avant la date de départ que vous avez choisi.
+
+    Exemple : pour un départ au 01/07/20XX, la demande de retraite peut être
+    commencée à partir du 01/01/20XX.
+  instruction_for_rdv: >-
+    Munissez vous des éléments suivant :
+
+    - votre téléphone portable
+
+    - vos codes France Connect (Ameli, Impôts, identité numérique, ...)
+
+    - un RIB (Relevé d'Identité Bancaire)
+
+    - votre numéro de sécurité sociale et celui de votre conjoint
+
+    - Vos livrets de familles (ou acte de mariage et actes de naissances des
+    enfants)
+
+    - vos 2 derniers avis d'imposition 
+
+    Avoir accès à votre adresse email:
+
+    - installée sur votre téléphone portable
+
+    - connaitre son mot de passe 
+
+    Venir avec les documents selon votre situation personnelle actuelle:
+
+    - 12 dernières fiches de paies
+
+    - Attestations France Travail : périodes d'inscription et montants perçus
+
+    - Dossier MDPH : dernière notification d'attribution
+
+    - Dossier invalidité CPAM : notification et montants
+- service_name: Assurance retraite (CARSAT)
+  name: Compléter et/ou déposer un dossier de demande de réversion
+  default_duration_in_min: 45
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Munissez vous des éléments suivant :
+
+    - votre téléphone portable
+
+    - vos codes France Connect (Ameli, Impôts, identité numérique, ...)
+
+    - un RIB (Relevé d'Identité Bancaire)
+
+    - votre numéro de sécurité sociale et celui de votre conjoint
+
+    - Vos livrets de familles (ou acte de mariage et actes de naissances des
+    enfants)
+
+    - vos 2 derniers avis d'imposition 
+
+    Avoir accès à votre adresse email:
+
+    - installée sur votre téléphone portable
+
+    - connaitre son mot de passe 
+
+    Venir avec les documents selon votre situation personnelle actuelle:
+
+    - 12 dernières fiches de paies
+
+    - Montants des paiements retraites
+
+    - Attestations France Travail : périodes d'inscription et montants perçus
+
+    - Dossier MDPH : dernière notification d'attribution
+
+    - Dossier invalidité CPAM : notification et montants
+- service_name: Assurance retraite (CARSAT)
+  name: >-
+    Compléter et/ou déposer un dossier de demande d'allocation de solidarité aux
+    personnes âgées (ASPA)
+  default_duration_in_min: 45
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Plus d'information et formulaire de demande sur le site suivant:
+
+    - https://www.service-public.gouv.fr/particuliers/vosdroits/F16871 
+
+    Venir avec les documents suivant:
+
+    - justificatif d'identité (CNI, passeport, titre de séjour, ...)
+
+    - Dernier avis d'imposition
+
+    - Justificatif de domicile
+
+    - justificatifs de ressources du couple perçues sur les 4 derniers mois
+    (retraites, salaires, chômage, revenus d'autoentrepreneur, ...)
+- service_name: Assurance retraite (CARSAT)
+  name: Demander et/ou télécharger ou mettre à jour un relevé de carrière
+  default_duration_in_min: 45
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: |-
+    Merci de venir avec les éléments suivants :
+    - Identifiant de connexion et téléphone portable
+    - Votre prénom, nom, adresse, lieu et date de naissance
+    - Votre numéro de sécurité sociale
+- service_name: Assurance retraite (CARSAT)
+  name: >-
+    Faire une estimation de l'âge et du montant de la retraite (sur mon âge de
+    départ ou m@rel)
+  default_duration_in_min: 45
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: |-
+    Merci de venir avec les éléments suivants : 
+    - Identifiant de connexion et téléphone portable
+- service_name: Chèque énergie
+  name: Accompagner à l'utilisation ou simulateur d'éligibilité au chèque énergie
+  default_duration_in_min: 30
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: |-
+    Merci de venir avec les documents suivants : 
+    - Identifiant et Mots de passe du compte
+    - Derniers avis d'imposition
+    - RIB (Relevé d'identité bancaire)
+    - Avoir accès à la boite email ou avoir le mot de passe qui lui est associé
+    - Téléphone portable
+    - Dernière facture du fournisseur d'énergie (gaz, électricité, eau, ...)
+- service_name: Finances publiques (DDFiP)
+  name: Compléter une déclaration de revenus
+  default_duration_in_min: 45
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Munissez vous des éléments suivant :
+
+    - votre téléphone portable
+
+    - vos codes du compte Impôts ou France Connect (Ameli, identité numérique,
+    ...)
+
+    - RIB (Relevé d'Identité Bancaire)
+
+    - Bulletins de salaires de tous les membres de la famille de moins de 25 ans
+    de l'année précédente (expl: pour l'année 2026 prendre les documents de
+    l'année 2025)
+
+    - Justificatifs des dons versés
+
+    - Justificatifs des sommes versés pour l'emplois de personnes à domicile
+    (expl: jardinage ou ménage à domicile)
+
+    - Toutes attestations fiscales permettant de justifiés des sommes perçues
+    l'année N-1 (expl: attestation fiscal des paiements retraite ou réversion) 
+
+    Avoir accès à votre adresse email:
+
+    - installée sur votre téléphone portable
+
+    - ou connaitre son mot de passe
+- service_name: Finances publiques (DDFiP)
+  name: Déclarer dans "Gérer mes biens immobiliers"
+  default_duration_in_min: 30
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Munissez vous des éléments suivant :
+
+    - votre téléphone portable
+
+    - vos codes du compte Impôts ou France Connect (Ameli, identité numérique,
+    ...)
+
+    Avoir toutes les informations des personnes vivant au même domicile:
+
+    - Nom de naissance
+
+    - Prénoms
+
+    - Date et lieux de naissance
+
+    - Date d'entrée dans le logement 
+
+    Avoir accès à votre adresse email:
+
+    - installée sur votre téléphone portable
+
+    - ou connaitre son mot de passe
+- service_name: France Rénov'
+  name: Appuyer au dépôt de dossier Ma Prime Rénov'
+  default_duration_in_min: 30
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Merci de vous munir des éléments suivants : 
+
+    - Identifiant de connexion et téléphone portable
+
+
+    Avant la réalisation des travaux, vous devez fournir votre pièce d'identité,
+    avis d'imposition, devis RGE, RIB, quote-part si en copropriété. 
+
+    Et une fois les travaux finalisés, vous devez fournir la facture finale et
+    parfois les photos et justificatifs complémentaires.
+- service_name: France Travail
+  name: Réaliser une demande d'inscription demandeur d'emploi
+  default_duration_in_min: 30
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Munissez vous des éléments suivant :
+
+    - votre téléphone portable
+
+    - vos codes du compte France Travail ou France Connect (Ameli, Impôts,
+    identité numérique, ...)
+
+    - Attestation employeur pour France Travail 
+
+    Avoir accès à votre adresse email:
+
+    - installée sur votre téléphone portable
+
+    - ou connaitre son mot de passe
+- service_name: France Titres
+  name: Demander le certificat d'immatriculation
+  default_duration_in_min: 45
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Munissez vous des éléments suivant :
+
+    - votre téléphone portable
+
+    - vos codes du compte ANTS.fr ou France Connect (Ameli, Impôts, identité
+    numérique, ...)
+
+    - Justificatif de domicile (de moins de 6 mois)
+
+    - Photo d'identité (si possible avec code e-photo)
+
+    - Carte d'identité / passeport / titre de séjour en cours de validité 
+
+    Avoir accès à votre adresse email:
+
+    - installée sur votre téléphone portable
+
+    - ou connaitre son mot de passe
+- service_name: France Titres
+  name: Modifier une carte grise
+  default_duration_in_min: 45
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Munissez vous des éléments suivant :
+
+    - votre téléphone portable
+
+    - vos codes du compte ANTS.fr ou France Connect (Ameli, Impôts, identité
+    numérique, ...)
+
+    - Justificatif de domicile
+
+    - Carte d'identité / passeport / titre de séjour en cours de validité 
+
+    Avoir accès à votre adresse email:
+
+    - installée sur votre téléphone portable
+
+    - connaitre son mot de passe
+- service_name: France Titres
+  name: Réaliser une demande de permis de conduire
+  default_duration_in_min: 45
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Munissez vous des éléments suivant :
+
+    - votre téléphone portable
+
+    - vos codes du compte ANTS.fr ou France Connect (Ameli, Impôts, identité
+    numérique, ...) 
+
+    Avoir les informations concernant vos parents:
+
+    - Nom
+
+    - Prénoms
+
+    - Date et lieu de naissance 
+
+    Avoir accès à votre adresse email:
+
+    - installée sur votre téléphone portable
+
+    - ou connaitre son mot de passe
+- service_name: France Titres
+  name: Réaliser une pré-demande de CNI et/ou de passeport
+  default_duration_in_min: 45
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Munissez vous des éléments suivant :
+
+    - votre téléphone portable
+
+    - vos codes du compte ANTS.fr ou France Connect (Ameli, Impôts, identité
+    numérique, ...) 
+
+    Avoir les informations concernant vos parents:
+
+    - Nom
+
+    - Prénoms
+
+    - Date et lieu de naissance 
+
+    Avoir accès à votre adresse email:
+
+    - installée sur votre téléphone portable
+
+    - ou connaitre son mot de passe
+- service_name: Mutualité sociale agricole
+  name: Compléter et/ou déposer un dossier de demande de réversion
+  default_duration_in_min: 45
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Merci de venir avec les documents suivants :
+
+    - Identifiant et Mots de passe et téléphone portable -Copie intégrale de
+    votre acte de naissance avec mention marginale reflétant la situation
+    actuelle
+
+    - Relevé d’identité bancaire (RIB ou RICE) à votre nom sous format IBAN
+
+    - Les deux derniers avis d’impôt sur le revenu
+
+    - Copie intégrale de votre livret de famille (situation familiale actuelle)
+
+    - Copie intégrale de l’acte de naissance (datant de moins de 3 mois) de la
+    personne décédée avec mention marginale reflétant la situation actuelle
+
+    - Certificat/bulletin de décès ou extrait de l’acte de décès.
+- service_name: Mutualité sociale agricole
+  name: Compléter et/ou déposer un dossier de retraite
+  default_duration_in_min: 45
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Merci de venir avec les documents suivants :
+
+    - Identifiant et Mots de passe du compte et téléphone portable
+
+    - Votre carte d’identité ou passeport ou toute autre pièce justificative
+    d’état civil et de nationalité
+
+    - Votre livret de famille tenu à jour ou un extrait d’acte de naissance des
+    enfants
+
+    - Pour les exploitants agricoles : tout document attestant de votre
+    cessation d’activité (résiliation
+
+    de bail… )
+
+    - Vos bulletins de salaire de la dernière année
+
+    - Les décomptes d’indemnités journalières (ou une attestation) délivrés par
+    votre caisse primaire
+
+    d’assurance maladie pour les 2 dernières années
+
+    - Les attestations de Pôle Emploi ou toute autre pièce justificative de la
+    dernière année ustificative de la dernière année
+- service_name: Mutualité sociale agricole
+  name: >-
+    Compléter et/ou déposer un dossier de demande d'allocation de solidarité au
+    personnes âgées
+  default_duration_in_min: 30
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Merci de venir avec les documents suivants :
+
+    - Identifiant et Mots de passe du compte et téléphone portable
+
+    - Pièce d'identité
+
+    - Votre dernier avis d’impôt sur le revenu ou avis de situation déclarative
+    à l’impôt sur le revenu et celui de votre conjoint, concubin ou partenaire
+    pacsé même si celui-ci ne demande pas l’Aspa Justificatif de résidence en
+    France ou dans un département d’Outre-mer à votre nom et/ou au nom de votre
+    conjoint, concubin ou partenaire pacsé, incluant le mois où vous faites la
+    demande d’Aspa ou le mois juste avant (par exemple pour une demande faite au
+    mois de mars, joignez un document justifiant de votre domicile au mois de
+    mars ou février de l’année en cours)
+- service_name: Urssaf
+  name: Ouvrir un compte CESU salarié
+  default_duration_in_min: 30
+  location_type: public_office
+  restriction_for_rdv: >-
+    1 rendez-vous = 1 personne = 1 démarche
+
+    La personne concernée par la démarche doit être présente lors du rendez-vous
+    (hors cas de tutelle ou curatelle)
+  instruction_for_rdv: >-
+    Merci de venir avec les documents suivants : 
+
+    - Identifiant et Mots de passe du compte et téléphone portable 
+
+    - Futur employeur : munissez-vous d’un relevé d‘identité bancaire (RIB), des
+    coordonnées de votre salarié ainsi que de son numéro de Sécurité sociale ou
+    à défaut, sa date et ville de naissance
+
+    - Déjà employeur : munissez-vous de votre numéro Cesu
+
+    - Salarié : munissez-vous de votre bulletin de salaire
