@@ -6,10 +6,9 @@
 .row.justify-content-md-center
   .col-md-12.col-lg-8
     .card
-      .card-header
-        h3.rdv-text-align-center Choisissez un motif
-
       .card-body
+        h2.fr-h4 Choisissez un motif
+
         - if @motifs.empty?
           - if Agent::MotifPolicy.new(current_agent, Motif.new(organisation_id: current_organisation.id)).new?
             div Il n'existe aucun motif de RDV collectif. Veuillez en créer un pour continuer.
@@ -19,8 +18,15 @@
             div Il n'existe aucun motif de RDV collectif et vous ne pouvez pas en créer un. Demandez à un administrateur ou une administratrice.
         - else
           - @motifs.each do |motif|
-            = link_to new_admin_organisation_rdvs_collectif_path(current_organisation, { motif_id: motif.id }) do
-              .mb-3
-                = motif.name
-                br
-                = "#{motif.default_duration_in_min} minutes"
+            .card.fr-enlarge-link.fr-card--shadow
+              .card-body
+                .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+                  h3.fr-h5 = link_to motif.name, new_admin_organisation_rdvs_collectif_path(current_organisation, { motif_id: motif.id })
+                .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+                  p.fr-mb-0
+                    = location_type_icon(motif.location_type, class: "fr-mr-1w")
+                    = motif.human_attribute_value(:location_type)
+                    = " · "
+                    = "#{motif.default_duration_in_min} mn"
+
+                  = icon("fr-icon-arrow-right-line", class: "rdv-color-text-action-high-blue-france")
