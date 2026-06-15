@@ -49,7 +49,7 @@ RSpec.describe "un prescripteur peut prendre rendez-vous pour un usager" do
     fill_in "Prénom", with: "Patricia"
     fill_in "Nom", with: "Duroy"
     click_on "Confirmer le rendez-vous"
-    expect(page).to have_content("Sans numéro de téléphone, aucune notification ne sera envoyée au bénéficiaire")
+    expect(page).to have_content("Sans numéro de téléphone ni adresse email, aucune notification ne sera envoyée au bénéficiaire")
     click_on "Annuler et modifier"
     fill_in "Téléphone", with: "0123456789"
 
