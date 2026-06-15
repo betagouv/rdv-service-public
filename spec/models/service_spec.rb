@@ -11,10 +11,10 @@ RSpec.describe Service, type: :model do
     end
 
     it "limits the length of #short_name to 2-40 characters" do
-      expect(build(:service, name: "")).to be_invalid
-      expect(build(:service, name: "a")).to be_invalid
-      expect(build(:service, name: "aa")).to be_valid
-      expect(build(:service, name: "aaa")).to be_valid
+      expect(build(:service, short_name: "")).to be_invalid
+      expect(build(:service, short_name: "a")).to be_invalid
+      expect(build(:service, short_name: "aa")).to be_valid
+      expect(build(:service, short_name: "aaa")).to be_valid
       expect(build(:service, short_name: "a" * 39)).to be_valid
       expect(build(:service, short_name: "a" * 40)).to be_valid
       expect(build(:service, short_name: "a" * 41)).to be_invalid
