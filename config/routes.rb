@@ -325,28 +325,10 @@ Rails.application.routes.draw do
               post :close
               get :edit_user_type
               patch :update_user_type
+              get :edit_instructions
+              patch :update_instructions
             end
           end
-
-          namespace :online_booking do
-            resources :motifs, only: %i[show edit update] do
-              member do
-                post :open
-                post :close
-                get :edit_instructions
-                patch :update_instructions
-              end
-            end
-          end
-
-          resource :configuration, only: [:show]
-          resources :stats, only: :index do
-            collection do
-              get :rdvs
->>>>>>> production
-            end
-          end
-        end
 
         resource :configuration, only: [:show]
         resources :stats, only: :index do
