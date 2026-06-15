@@ -34,7 +34,7 @@ class Admin::RdvSearchForm
     false
   end
 
-  def applied_filters # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def applied_filters
     @applied_filters ||= begin
       filters = []
       filters << :agent if agent.present?

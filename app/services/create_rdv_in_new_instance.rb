@@ -20,7 +20,7 @@ class CreateRdvInNewInstance
 
   private
 
-  def build_rdv # rubocop:disable Metrics/PerceivedComplexity
+  def build_rdv
     # On crée le rendez-vous via ActiveRecord sans lancer les Notifiers, ce qui évite de déclencher des callbacks de notifications pour les agents et les usager
     rdv = Rdv.new(
       params.permit(%w[starts_at status cancelled_at context ends_at name max_participants_count])

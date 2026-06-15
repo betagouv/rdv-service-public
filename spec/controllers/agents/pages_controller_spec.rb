@@ -11,6 +11,32 @@ RSpec.describe Agents::PagesController, type: :controller do
         get :home
         expect(response).to render_template("home")
       end
+
+      context "et que l’agent peut créer un territory (email vérifié)" do
+        let(:agent) { create(:agent, email: "agent@example.gouv.fr") }
+
+        context "sans organisations doublons possibles" do
+          it "redirige vers la création d’un territory" do
+            get :home
+            expect(response).to redirect_to(new_agents_territory_path)
+          end
+        end
+
+        context "avec des organisations doublons possibles" do
+          render_views
+
+          before do
+            other_agent = create(:agent, email: "other@example.gouv.fr")
+            create(:organisation, agents: [other_agent])
+          end
+
+          it "rend la page d’accueil, qui permet à l’agent de demander une ouverture de compte" do
+            get :home
+            expect(response).to render_template("home")
+            expect(response.body).to include("Ouvrir un espace")
+          end
+        end
+      end
     end
 
     context "quand l’agent a une seule organisation accessible" do

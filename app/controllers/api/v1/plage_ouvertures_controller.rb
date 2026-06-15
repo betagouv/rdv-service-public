@@ -1,5 +1,5 @@
 class Api::V1::PlageOuverturesController < Api::V1::AgentAuthBaseController
-  def create # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+  def create
     plage_ouverture = PlageOuverture.new(create_params)
 
     # On ne documente pas encore la possibilité d'utiliser le param recurrence, puisqu'on s'en sert uniquement

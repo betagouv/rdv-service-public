@@ -184,7 +184,7 @@ RSpec.describe ProConnectController do
             get :callback, params: { state:, code: }
           end.to change { agent.reload.email }.from("autre@exemple.fr").to(user_info["email"])
           expect_agent_to_be_updated_and_logged_in(agent)
-          expect(flash[:info]).to include("Note : votre adresse e-mail a été mise à jour depuis ProConnect. Ancienne adresse : autre@exemple.fr, nouvelle adresse : #{user_info['email']}")
+          expect(flash[:notice]).to include("Note : votre adresse e-mail a été mise à jour depuis ProConnect. Ancienne adresse : autre@exemple.fr, nouvelle adresse : #{user_info['email']}")
         end
       end
 

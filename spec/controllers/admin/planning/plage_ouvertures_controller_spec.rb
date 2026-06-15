@@ -114,6 +114,7 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
               first_day: "17/11/2020",
               start_time: "09:00",
               end_time: "12:00",
+              minutes_after_rdvs: 15,
             },
           }
         end
@@ -122,6 +123,22 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
           expect { post(:create, params: valid_params) }.to change { agent.plage_ouvertures.count }.by(1)
           created_plage = PlageOuverture.last
           expect(response).to redirect_to(admin_organisation_planning_plage_ouvertures_path(organisation_id: created_plage.organisation, agent_id: created_plage.agent_id))
+        end
+
+        it "uses the provided params" do
+          expect { post(:create, params: valid_params) }.to change { agent.plage_ouvertures.count }.by(1)
+          expected_attrs = {
+            title: "Permanence ecole",
+            motif_ids: [motif.id],
+            lieu_id: lieu1.id,
+            organisation_id: organisation.id,
+            agent_id: agent.id,
+            first_day: Date.new(2020, 11, 17),
+            start_time: Tod::TimeOfDay.new(9),
+            end_time: Tod::TimeOfDay.new(12),
+            minutes_after_rdvs: 15,
+          }
+          expect(PlageOuverture.last).to have_attributes(expected_attrs)
         end
 
         it "send notification after create" do

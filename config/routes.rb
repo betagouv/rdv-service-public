@@ -145,7 +145,9 @@ Rails.application.routes.draw do
       end
       resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
-        resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync
+        resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync do
+          post :calendar_selection
+        end
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end
@@ -322,6 +324,8 @@ Rails.application.routes.draw do
               member do
                 post :open
                 post :close
+                get :edit_instructions
+                patch :update_instructions
               end
             end
           end

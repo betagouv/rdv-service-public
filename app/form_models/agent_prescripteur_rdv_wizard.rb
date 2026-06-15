@@ -74,7 +74,8 @@ class AgentPrescripteurRdvWizard
       created_by: @agent_prescripteur,
       organisation: motif.organisation,
       agents: [creneau.agent],
-      duration_in_min: motif&.default_duration_in_min
+      duration_in_min: motif&.default_duration_in_min,
+      minutes_after_rdv: creneau.minutes_after_rdv
     )
     rdv.participations = [participation]
 

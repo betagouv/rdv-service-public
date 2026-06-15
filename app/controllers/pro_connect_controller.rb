@@ -25,7 +25,6 @@ class ProConnectController < ApplicationController
     redirect_to auth_client.redirect_url(pro_connect_callback_url, force_2fa:), allow_other_host: true
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def callback
     if params[:error] == "server_error"
       flash[:error] = "L'authentification a échoué en raison d'une erreur côté ProConnect. Nous vous invitons à contacter leur support."
@@ -194,7 +193,7 @@ class ProConnectController < ApplicationController
     end
 
     if agent.email != callback_client.user_email
-      flash[:info] = "Note : votre adresse e-mail a été mise à jour depuis ProConnect. Ancienne adresse : #{agent.email}, nouvelle adresse : #{callback_client.user_email}"
+      flash[:notice] = "Note : votre adresse e-mail a été mise à jour depuis ProConnect. Ancienne adresse : #{agent.email}, nouvelle adresse : #{callback_client.user_email}"
     end
 
     agent.assign_attributes(
