@@ -5,3 +5,11 @@ fr:
     attributes:
       service:
         short_name: Nom raccourci (SMS)
+    errors:
+      models:
+        service:
+          attributes:
+            name:
+              format: "Le nom du service %{message}"
+            short_name:
+              format: "Le nom raccourci pour les SMS %{message}"
