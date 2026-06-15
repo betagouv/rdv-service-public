@@ -9,9 +9,8 @@
 
 - content_for :right_of_page_title do
   .fr-btns-group.fr-btns-group--inline
-    - unless @motif.archived?
-      - if @motif_policy.edit?
-        = link_to t("admin.motifs.actions.edit"), edit_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn"
+  - if !@motif.archived? && @motif_policy.edit?
+      = link_to t("admin.motifs.actions.edit"), edit_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn"
     - if @motif_policy.duplicate?
       = link_to t("admin.motifs.actions.duplicate"), new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: @motif.id), class: "fr-btn fr-btn--secondary"
 
