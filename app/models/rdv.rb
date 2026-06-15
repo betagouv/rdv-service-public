@@ -296,8 +296,6 @@ class Rdv < ApplicationRecord
 
     rdvs
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/PerceivedComplexity
 
   def reschedule_max_date
     Time.zone.now + motif.max_public_booking_delay

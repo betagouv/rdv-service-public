@@ -31,5 +31,4 @@ class AddVariousNotNullConstraints < ActiveRecord::Migration[7.0]
       change_column_null :users, :created_through, false
     end
   end
-  # rubocop:enable Metrics/MethodLength
 end
