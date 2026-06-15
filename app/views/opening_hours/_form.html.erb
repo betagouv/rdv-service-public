@@ -1,0 +1,7 @@
+<%= form_for [:admin, @opening_hours] do |form| %>
+  <%= form.label :lieu %>
+  <%= form.text_field :lieu, required: true %>
+  <span class='hint'>
+    <%= t('admin.opening_hours.lieu_hint_html') %>
+  </span>
+<% end %>
