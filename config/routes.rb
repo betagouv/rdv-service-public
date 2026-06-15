@@ -329,6 +329,7 @@ Rails.application.routes.draw do
               patch :update_instructions
             end
           end
+        end
 
         resource :configuration, only: [:show]
         resources :stats, only: :index do
