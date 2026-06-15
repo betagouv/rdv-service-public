@@ -21,7 +21,8 @@ RSpec.describe "OAuth provider", js: true do
   stub_env_with(
     RDV_SERVICE_PUBLIC_OAUTH_BASE_URL: "http://localhost:#{Capybara.server_port}",
     RDV_SERVICE_PUBLIC_OAUTH_APP_ID: "fake_app_id",
-    RDV_SERVICE_PUBLIC_OAUTH_APP_SECRET: "fake_app_secret"
+    RDV_SERVICE_PUBLIC_OAUTH_APP_SECRET: "fake_app_secret",
+    PRO_CONNECT_DISABLED: "true" # Pour simplifier la connexion dans les tests, on fait une connexion par email/mot de passe
   )
 
   let!(:agent) do

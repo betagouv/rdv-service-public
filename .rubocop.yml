@@ -134,6 +134,10 @@ Rails/ThreeStateBooleanColumn:
 Rails/WhereRange:
   Enabled: false
 
+# Produit de faux positifs
+Rails/UniqBeforePluck:
+  Enabled: false
+
 Rails/I18nLocaleTexts:
   Enabled: false
 

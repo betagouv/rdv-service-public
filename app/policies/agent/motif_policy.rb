@@ -30,6 +30,8 @@ class Agent::MotifPolicy < ApplicationPolicy
   alias create? agent_can_manage_motif?
   alias edit? agent_can_manage_motif?
   alias update? agent_can_manage_motif?
+  alias edit_instructions? agent_can_manage_motif?
+  alias update_instructions? agent_can_manage_motif?
   alias archive? agent_can_manage_motif?
   alias unarchive? agent_can_manage_motif?
   alias destroy? agent_can_manage_motif?

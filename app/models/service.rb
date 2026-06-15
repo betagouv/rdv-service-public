@@ -19,7 +19,9 @@ class Service < ApplicationRecord
   has_many :territories, through: :territory_services
 
   # Validations
-  validates :name, :short_name, presence: true, uniqueness: { case_sensitive: false }
+  validates :name, uniqueness: { case_sensitive: false }
+  validate :validate_name_length
+  validate :validate_short_name_length
 
   # Scopes
   default_scope { order(Arel.sql("unaccent(LOWER(services.name))")) }
@@ -52,5 +54,27 @@ class Service < ApplicationRecord
 
   def related_to_social?
     service_social? || name.parameterize.include?("social")
+  end
+
+  private
+
+  def validate_name_length
+    if name.to_s.length > 60
+      errors.add(:name, "ne doit pas dépasser 60 caractères.")
+    end
+
+    if name.to_s.length < 2
+      errors.add(:name, "doit contenir au moins 2 caractères.")
+    end
+  end
+
+  def validate_short_name_length
+    if short_name.to_s.length > 40
+      errors.add(:short_name, "ne doit pas dépasser 40 caractères.")
+    end
+
+    if short_name.to_s.length < 2
+      errors.add(:short_name, "doit contenir au moins 2 caractères.")
+    end
   end
 end

@@ -5,7 +5,7 @@ module Admin::AuthenticatedControllerConcern
     rescue_from Pundit::NotAuthorizedError, with: :agent_not_authorized
 
     before_action :set_flash_automatic_redirection_from_rdvsp_anct
-    before_action :authenticate_agent!
+    before_action :authenticate_agent_with_silent_proconnect_login!
     before_action :set_paper_trail_whodunnit
   end
 

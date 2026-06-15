@@ -1,5 +1,6 @@
 class Agents::CaldavSyncController < AgentAuthController
   layout "application_agent_config"
+  before_action { @active_agent_preferences_menu_item = :synchronisation }
 
   def show
     skip_authorization
@@ -22,6 +23,7 @@ class Agents::CaldavSyncController < AgentAuthController
       preselected_url = params[:caldav_agenda_url].to_s.chomp("/")
       render locals: { calendars: calendars, preselected_url: preselected_url }
     rescue Calendav::RequestError => e
+      Sentry.capture_exception(e)
       flash[:alert] = case e.response.status
                       when 401, 403
                         "L'authentification a échoué : #{e.message}. Veuillez vérifier votre identifiant et votre mot de passe."
