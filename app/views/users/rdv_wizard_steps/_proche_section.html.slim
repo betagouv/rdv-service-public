@@ -1,0 +1,51 @@
+/! Section "je prends RDV pour un proche" (cas normal non-ANTS)
+ruby:
+  relatives = current_user.relatives.order(:first_name)
+  booking_for_proche = @rdv_booking_form.booking_for_proche?
+  enable_url = new_users_rdv_wizard_step_path(**@rdv_booking_form.to_query, booking_for_proche: "1")
+  disable_url = new_users_rdv_wizard_step_path(**@rdv_booking_form.to_query)
+
+.fr-mt-3w data-controller="proche-toggle" data-proche-toggle-enable-url-value=enable_url data-proche-toggle-disable-url-value=disable_url
+  / on ajoute un submit caché en premier dans le DOM : c'est celui qui sera appelé lors d'un clic sur Enter
+  = f.submit "Confirmer mon RDV en cliquant sur Entrée", class: "hidden"
+
+  /! Boutons sans JS (masqués par Stimulus au chargement)
+  div data-proche-toggle-target="noJsToggle"
+    - if booking_for_proche
+      = f.submit "Je prends rendez-vous pour moi-même", name: "disable_proche_section", class: "fr-link"
+    - else
+      = f.submit "Je prends rendez-vous pour un·e proche", name: "enable_proche_section", class: "fr-link"
+
+  /! Checkbox JS uniquement (masquée par défaut, révélée par Stimulus)
+  div data-proche-toggle-target="jsToggle" style="display: none;"
+    = f.dsfr_check_box :booking_for_proche, label: "Je prends rendez-vous pour un·e proche", data: { action: "change->proche-toggle#toggle" }
+
+  /! Champs du proche (visibles seulement si booking_for_proche)
+  - if booking_for_proche
+    fieldset.fr-fieldset.fr-mt-2w
+      - if relatives.any?
+        legend.fr-fieldset__legend--regular.fr-fieldset__legend
+          | Pour qui prenez-vous rendez-vous ?
+
+        - relatives.each do |relative|
+          .fr-fieldset__element.fr-p-2w.fr-mb-1w style="border: 1px solid var(--border-default-grey); border-radius: 4px;"
+            .fr-radio-group
+              = radio_button_tag "user[selected_proche]", relative.id.to_s, @rdv_booking_form.instance_variable_get(:@selected_proche) == relative.id.to_s
+              = label_tag "user_selected_proche_#{relative.id}", relative.full_name
+
+      /! Option "Nouveau proche"
+      .fr-fieldset__element.fr-p-2w style="border: 1px solid var(--border-default-grey); border-radius: 4px;"
+        - if relatives.any?
+          .fr-radio-group
+            = radio_button_tag "user[selected_proche]", "new", @rdv_booking_form.instance_variable_get(:@selected_proche) == "new" || relatives.empty?
+            = label_tag "user_selected_proche_new", "Nouveau proche"
+        - else
+          = hidden_field_tag "user[selected_proche]", "new"
+          .fr-text--bold.fr-mb-1w Informations du proche
+        - if @rdv_booking_form.new_proche.present?
+          = f.fields_for :relatives, [@rdv_booking_form.new_proche] do |rf|
+            .fr-grid-row.fr-grid-row--gutters.fr-mt-1w
+              .fr-col-md-6= rf.dsfr_text_field :first_name, label: "Prénom"
+              .fr-col-md-6= rf.dsfr_text_field :last_name, label: "Nom"
+              - if @rdv_booking_form.show_birth_date_field?
+                .fr-col-md-6= rf.dsfr_text_field :birth_date, type: "date", label: "Date de naissance"

@@ -93,7 +93,15 @@ class Users::RdvWizardStepsController < UserAuthController
                     :ants_pre_demande_number,
                     :ignore_benign_errors,
                     { user_profiles_attributes: %i[logement id organisation_id] },
+                    { relatives_attributes: %i[id first_name last_name birth_date] },
                   ])
+  end
+
+  def proche_params
+    {
+      booking_for_proche: params.dig(:user, :booking_for_proche) == "1",
+      selected_proche: params.dig(:user, :selected_proche),
+    }
   end
 
   def redirect_to_prendre_rdv_path_if_creneau_unavailable
