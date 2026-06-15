@@ -21,39 +21,6 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  # On implémente cette méthode ici pour pouvoir l'utiliser depuis Admin::AuthenticatedControllerConcern et Doorkeeper::AuthorizationsController
-  def authenticate_agent_with_silent_proconnect_login!(authorize_first_account_creation: false)
-    # On fallback sur le fonctionnement devise classique si on désactive ProConnect (utile si ProConnect est down)
-    return authenticate_agent! if ENV["PRO_CONNECT_DISABLED"] || current_domain.pro_connect_client_id.blank?
-
-    return current_agent if current_agent
-
-    unless request.format.symbol.in?(["*/*", :html, :turbo_stream])
-      render(
-        status: :unauthorized,
-        json: { errors: [I18n.t("devise.failure.unauthenticated")] }
-      ) and return
-    end
-
-    store_location_for(:agent, request.fullpath) # Cette méthode est fournie par Devise
-
-    auth_client = ProConnectOpenIdClient::Auth.new(
-      client_id: current_domain.pro_connect_client_id,
-      client_secret: current_domain.pro_connect_client_secret,
-      prompt: :none
-    )
-
-    session[:pro_connect] = {
-      state: auth_client.state,
-      nonce: auth_client.nonce,
-      connection_for: :agent,
-      silent_login: true,
-      authorize_first_account_creation:,
-    }
-
-    redirect_to(auth_client.redirect_url(pro_connect_callback_url), allow_other_host: true) and return
-  end
-
   def set_sentry_context
     Sentry.set_user(sentry_user)
   end

@@ -7,13 +7,13 @@ module ProConnectStubs
     load Rails.root.join("config/initializers/pro_connect.rb").to_s
   end
 
-  def self.stub_callback_requests(code, user_info, with_2fa: false, host: "http://test.host")
+  def self.stub_callback_requests(code, user_info, with_2fa: false)
     stub_and_run_discover_request
 
     if with_2fa
-      stub_token_request(code, acr: "https://proconnect.gouv.fr/assurance/self-asserted-2fa", host:)
+      stub_token_request(code, acr: "https://proconnect.gouv.fr/assurance/self-asserted-2fa")
     else
-      stub_token_request(code, host:)
+      stub_token_request(code)
     end
 
     userinfo_encoded_response_body = "fake_userinfo_encoded_response_body"
@@ -34,14 +34,14 @@ module ProConnectStubs
     ).and_return([user_info])
   end
 
-  def self.stub_token_request(code, acr: "eidas1", host: "http://test.host")
+  def self.stub_token_request(code, acr: "eidas1")
     WebMock.stub_request(:post, "https://fca.integ01.dev-agentconnect.fr/api/v2/token").with(
       body: {
         "client_id" => "ec41582-1d60-4f11-a63b-d8abaece16aa",
         "client_secret" => "un faux secret de test",
         "code" => code,
         "grant_type" => "authorization_code",
-        "redirect_uri" => "#{host}/agent_connect/callback",
+        "redirect_uri" => "http://test.host/agent_connect/callback",
       },
       headers: {
         "Content-Type" => "application/x-www-form-urlencoded",

@@ -31,11 +31,6 @@ class ProConnectController < ApplicationController
       redirect_to root_path and return
     end
 
-    if params[:error] == "login_required"
-      flash[:alert] = I18n.t("devise.failure.unauthenticated")
-      redirect_to(new_agent_session_path) and return
-    end
-
     pro_connect_session = session.delete(:pro_connect)
     unless pro_connect_session
       flash[:error] = generic_error_message
@@ -73,7 +68,7 @@ class ProConnectController < ApplicationController
           redirect_to operators_root_path
         end
       when "agent"
-        connect_agent(callback_client, pro_connect_session)
+        connect_agent(callback_client)
       else
         Sentry.capture_message("Unknown connection_for: #{pro_connect_session[:connection_for].inspect}", extra: { session: session.to_h, pro_connect_session: })
         flash[:error] = generic_error_message
@@ -149,7 +144,7 @@ class ProConnectController < ApplicationController
   end
 
   # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
-  def connect_agent(callback_client, pro_connect_session)
+  def connect_agent(callback_client)
     sub = callback_client.openid_sub
     agent_by_sub = Agent.active.find_by(pro_connect_openid_sub: sub)
     agent_by_email = Agent.active.find_by(email: callback_client.user_email)
@@ -175,10 +170,7 @@ class ProConnectController < ApplicationController
     agent = agent_by_sub || agent_by_email
 
     if agent.nil?
-      if pro_connect_session[:silent_login] && !pro_connect_session[:authorize_first_account_creation]
-        # Si l'agent ne s'était jamais connecté et qu'on l'a connecté automatiquement, c'était sans doute une erreur, donc on lui propose le login classique.
-        redirect_to new_agent_session_path and return
-      elsif current_domain.allow_self_onboarding
+      if current_domain.allow_self_onboarding
         agent ||= Agent.new(email: callback_client.user_email, password: SecureRandom.base64(32))
       else
         # On pourrait améliorer le cas d'erreur décrit dans https://github.com/betagouv/rdv-service-public/issues/4360
@@ -222,10 +214,6 @@ class ProConnectController < ApplicationController
 
     bypass_sign_in agent, scope: :agent
     session[:pro_connect_id_token] = callback_client.id_token_for_logout
-
-    if pro_connect_session[:silent_login]
-      flash[:notice] = "Vous avez été connecté automatiquement par ProConnect avec l'adresse email #{agent.email}."
-    end
 
     redirect_to after_sign_in_path_for(agent)
   end
