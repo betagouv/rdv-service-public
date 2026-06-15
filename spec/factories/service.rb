@@ -5,7 +5,7 @@ FactoryBot.define do
     name { generate(:service_name) }
 
     after(:build) do |service|
-      service.short_name ||= service.name.truncate(40)
+      service.short_name ||= service.name&.truncate(40)
     end
 
     trait :social do
