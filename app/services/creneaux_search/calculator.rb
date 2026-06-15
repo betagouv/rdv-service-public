@@ -1,11 +1,6 @@
 class CreneauxSearch::Calculator
-  def self.available_slots(date_range:, motif:, lieu: nil, agents: [], duration_in_min: nil, old_calculator: nil)
-    old_calculator = ENV["USE_OLD_CRENEAUX_SEARCH_CALCULATOR"] if old_calculator.nil?
-    if old_calculator
-      CreneauxSearch::OldCalculator.available_slots(motif:, lieu:, date_range:, agents:, duration_in_min:)
-    else
-      new(motif:, lieu:, date_range:, agents:, duration_in_min:).available_slots
-    end
+  def self.available_slots(date_range:, motif:, lieu: nil, agents: [], duration_in_min: nil)
+    new(motif:, lieu:, date_range:, agents:, duration_in_min:).available_slots
   end
 
   def initialize(motif:, lieu:, date_range:, agents:, duration_in_min:)
@@ -13,7 +8,7 @@ class CreneauxSearch::Calculator
     @lieu = lieu
     @date_range = date_range
     @agents = agents
-    @duration_in_min = duration_in_min
+    @duration_in_min = duration_in_min || motif.default_duration_in_min
   end
 
   def available_slots
@@ -39,7 +34,13 @@ class CreneauxSearch::Calculator
         work_on_off_days:
       ).perform
 
-      SplitFreeTimeRangesIntoCreneaux.new(free_times, @motif, plage_ouverture, duration_in_min: @duration_in_min).perform(@datetime_range)
+      minutes_after_rdvs = plage_ouverture.minutes_after_rdvs
+      creneaux = SplitFreeTimeRangesIntoCreneaux.new(free_times, duration_in_min: @duration_in_min, minutes_after_rdvs:).perform(@datetime_range)
+      creneaux.each do |creneau|
+        creneau.motif = @motif
+        creneau.agent = plage_ouverture.agent
+        creneau.lieu_id = plage_ouverture.lieu_id
+      end
     end.flatten
   end
 

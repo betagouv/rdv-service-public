@@ -1,22 +1,16 @@
 class Admin::Planning::PlageOuverturesController < AgentAuthController
-  include Admin::Planning::SetAgentsConcern
+  include Admin::Planning::PlanningConcern
   respond_to :html, :json
 
   before_action :set_plage_ouverture, only: %i[show edit update destroy]
   before_action :build_plage_ouverture, only: [:create]
   before_action :set_agents
-  before_action { @planning_layout = true }
 
   def show
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
   end
 
   def index
-    # TODO: retirer ce code 2 semaines après la mise en prod, il affiche une pastille sur les nouveaux onglets.
-    unless current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
-      current_agent.update_columns(feature_flags: current_agent.feature_flags.merge("new_planning" => true)) # rubocop:disable Rails/SkipsModelValidations
-    end
-
     @multiple_agents_makes_sense = true
     render :multi_agents_index and return if @agents.size > 1
 
@@ -46,7 +40,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   def new
     if params[:duplicate_plage_ouverture_id].present?
       original_po = PlageOuverture.find(params[:duplicate_plage_ouverture_id])
-      defaults = original_po.slice(:title, :lieu_id, :motif_ids, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :recurrence)
+      defaults = original_po.slice(:title, :lieu_id, :motif_ids, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :recurrence, :minutes_after_rdvs)
     else
       defaults = {
         first_day: Time.zone.now,
@@ -139,7 +133,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
   def plage_ouverture_params
     params.require(:plage_ouverture).permit(
-      :title, :agent_id, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :lieu_id, :hex_color, :recurrence, :ignore_benign_errors, motif_ids: []
+      :title, :agent_id, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :lieu_id, :hex_color, :recurrence, :minutes_after_rdvs, :ignore_benign_errors, motif_ids: []
     )
   end
 

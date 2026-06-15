@@ -1,18 +1,12 @@
 class Admin::Planning::AbsencesController < AgentAuthController
-  include Admin::Planning::SetAgentsConcern
+  include Admin::Planning::PlanningConcern
   respond_to :html, :json
 
   before_action :set_absence, only: %i[edit update destroy]
   before_action :build_absence, only: [:create]
   before_action :set_agents
-  before_action { @planning_layout = true }
 
   def index
-    # TODO: retirer ce code 2 semaines après la mise en prod, il affiche une pastille sur les nouveaux onglets.
-    unless current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
-      current_agent.update_columns(feature_flags: current_agent.feature_flags.merge("new_planning" => true)) # rubocop:disable Rails/SkipsModelValidations
-    end
-
     @multiple_agents_makes_sense = true
     render :multi_agents_index and return if @agents.size > 1
 
@@ -66,7 +60,16 @@ class Admin::Planning::AbsencesController < AgentAuthController
 
   def update
     authorize(@absence, policy_class: Agent::AbsencePolicy)
-    if @absence.update(absence_params)
+
+    @absence.assign_attributes(absence_params)
+
+    if @absence.recurrence && @absence.end_day
+      @absence.end_day = nil
+    end
+
+    authorize(@absence, policy_class: Agent::AbsencePolicy)
+
+    if @absence.save
       Notifiers::AbsenceUpdated.new(@absence).perform
       flash[:success] = t(".absence_updated")
       redirect_to admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent_id)

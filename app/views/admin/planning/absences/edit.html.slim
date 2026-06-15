@@ -1,5 +1,3 @@
-- content_for(:menu_item) { "menu-absences" }
-
 - content_for :title do
   - if @absence.agent == current_agent
     = "Modifier votre indisponibilité"
@@ -28,12 +26,10 @@
         span.fr-notice__desc
         | Cette indisponibilité correspond à un rendez-vous pris sur RDV Aide Numérique avant la migration sur RDV Service Public.
 
-.row.justify-content-center
-  .col-md-6
-    .card
-      .card-body
-        = render "form", absence: @absence, agent: @agent
+.fr-grid-row.justify-content-center
+  .fr-col-12.fr-col-lg-8
+    = render "form", absence: @absence, agent: @agent
 
-.row.justify-content-center
-  .col-md-12.col-lg-8
+.fr-grid-row.justify-content-center.fr-pt-2w
+  .fr-col-md-12.fr-col-lg-8
     = render "admin/versions/resource_versions_row", resource_policy: policy(@absence, policy_class: Agent::AbsencePolicy), resource: @absence

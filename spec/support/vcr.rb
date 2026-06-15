@@ -11,6 +11,19 @@ VCR.configure do |config|
   config.before_record do |interaction|
     interaction.request.headers["Authorization"] = "[Filtered in vcr.rb -> before_record]"
     interaction.response.headers["Set-Cookie"] = "[Filtered in vcr.rb -> before_record]"
+    interaction.request.headers["X-Service-Auth"] = "[Filtered in vcr.rb -> before_record]"
+    interaction.response.headers["X-Service-Auth"] = "[Filtered in vcr.rb -> before_record]"
+  end
+
+  # Ce block formate les réponses JSON afin d'améliorer la lisibilité de la cassette
+  config.before_record do |interaction|
+    content_type = interaction.response.headers["Content-Type"]&.first
+    next unless content_type&.include?("json")
+
+    body = interaction.response.body.dup.force_encoding("UTF-8")
+    interaction.response.body = JSON.pretty_generate(JSON.parse(body))
+  rescue JSON::ParserError
+    # If JSON is malformed, leave it untouched
   end
 
   # Ce block formate les réponses XML afin d'améliorer la lisibilité de la cassette

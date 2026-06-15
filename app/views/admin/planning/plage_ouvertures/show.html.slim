@@ -1,5 +1,3 @@
-- content_for(:menu_item) { "menu-plages-ouvertures" }
-
 - content_for :title do
   = truncate(@plage_ouverture.title_with_default, length: 40)
 
@@ -9,35 +7,45 @@
   - else
     = render "common/fil_ariane", titles_and_paths: [["Plages d’ouverture de #{@plage_ouverture.agent.full_name_or_email}", admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)]], current_page_title: yield(:title)
 
-.row.justify-content-center
-  .col-md-6.mb-3
+.fr-grid-row
+  .fr-col-12.fr-col-md-10.mb-3
     .card
       .card-body
+        .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+          h1.fr-h2=@plage_ouverture.title_with_default
+          .fr-btns-group.fr-btns-group--inline-md
+            = link_to("Dupliquer",
+                new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: @plage_ouverture.agent.id, duplicate_plage_ouverture_id: @plage_ouverture.id),
+                class: "fr-btn fr-btn--secondary")
+            = link_to("Modifier",
+                edit_admin_organisation_planning_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture),
+                class: "fr-btn")
+
         div.mt-2.d-flex
           .flex-shrink-0.mr-1.font-weight-bold Agent&nbsp;:
           span= @plage_ouverture.agent.full_name
-        div.mt-2.d-flex
-          .flex-shrink-0.mr-1.font-weight-bold Motifs&nbsp;:
-          ul.pl-3.mb-0
-            - @plage_ouverture.motifs.each do |motif|
-              li= motif_name_with_location_type_and_badges(motif)
-        - if @plage_ouverture.lieu
-          div.mt-2.d-flex
-            .flex-shrink-0.mr-1.font-weight-bold Lieu&nbsp;:
-            = lieu_tag(@plage_ouverture.lieu)
-        - if @plage_ouverture.title.present?
-          div.mt-2.d-flex
-            .flex-shrink-0.mr-1.font-weight-bold Libellé&nbsp;:
-            span= @plage_ouverture.title
-        div.mt-2.d-flex
-          .flex-shrink-0.mr-1.font-weight-bold Répétition&nbsp;:
-          span= @plage_ouverture.recurring? ? "Récurrente" : exceptionnelle_tag(@plage_ouverture)
         div.mt-2.d-flex
           .flex-shrink-0.mr-1.font-weight-bold Dates&nbsp;:
           - if @plage_ouverture.recurring?
             = sanitize(display_recurrence(@plage_ouverture).join(" "))
           - else
             | Le #{l(@plage_ouverture.first_day, format: :human)} #{display_time_range(@plage_ouverture)}
+          = ponctuelle_tag(@plage_ouverture)
+        - if @plage_ouverture.lieu
+          div.mt-2.d-flex
+            .flex-shrink-0.mr-1.font-weight-bold Lieu&nbsp;:
+            = lieu_tag(@plage_ouverture.lieu)
+        div.mt-2.d-flex
+          .flex-shrink-0.mr-1.font-weight-bold Motifs&nbsp;:
+          ul.pl-3.mb-0
+            - @plage_ouverture.motifs.each do |motif|
+              li= motif_name_with_location_type_and_badges(motif)
+        div.mt-2.d-flex
+          - if @plage_ouverture.minutes_after_rdvs == 0
+            = "Pas de battement après chaque rendez-vous"
+          - else
+            = "#{@plage_ouverture.minutes_after_rdvs} minutes de battement après chaque rendez-vous"
+
         div.mt-3.text-muted.text-right
           | modifiée le #{l(@plage_ouverture.updated_at, format: :short)}
         - if @plage_ouverture.overlapping_plages_ouvertures?
@@ -64,22 +72,6 @@
             data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}, \
             class: "btn btn-danger" \
           )
-        div
-          = link_to( \
-            "Dupliquer", \
-             new_admin_organisation_planning_plage_ouverture_path( \
-              current_organisation, \
-              agent_id: @plage_ouverture.agent.id, \
-              duplicate_plage_ouverture_id: @plage_ouverture.id \
-            ), \
-            class: "btn btn-link" \
-          )
-          = link_to( \
-            "Modifier", \
-             edit_admin_organisation_planning_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture), \
-            class: "btn btn-primary" \
-          )
-
-.row.justify-content-center
-  .col-md-12.col-lg-8
+.fr-grid-row
+  .fr-col-12.fr-col-md-10.mb-3
     = render "admin/versions/resource_versions_row", resource_policy: policy(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy), resource: @plage_ouverture

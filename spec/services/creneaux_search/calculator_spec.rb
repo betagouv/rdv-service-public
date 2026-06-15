@@ -15,13 +15,24 @@ RSpec.describe CreneauxSearch::Calculator do
   end
 
   context "with a plage d'ouverture lasting 2 hours" do
-    before do
+    let!(:plage_ouverture) do
       create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
     end
 
     it "returns 2 slots" do
       expect(available_slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "10:00"])
       expect(available_slots.first.class.to_s).to eq("Creneau")
+    end
+
+    it "builds a Creneau with full details (motif, agent, plage)" do
+      expected_attrs = {
+        starts_at: Time.zone.parse("2021-05-03 09:00:00"),
+        duration_in_min: plage_ouverture.motifs.sole.default_duration_in_min,
+        lieu_id: plage_ouverture.lieu_id,
+        agent: plage_ouverture.agent,
+        motif: plage_ouverture.motifs.sole,
+      }
+      expect(available_slots.first).to have_attributes(expected_attrs)
     end
 
     context "when passing a duration_in_min" do
@@ -81,6 +92,15 @@ RSpec.describe CreneauxSearch::Calculator do
         # No slot is returned since all slots are in the past
         expect(slots).to be_empty
       end
+    end
+  end
+
+  context "when using minutes_after_rdvs" do
+    let!(:motif) { create(:motif, default_duration_in_min: 60, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, lieu:, motifs: [motif], first_day:, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11, 50), minutes_after_rdvs: 15) }
+
+    it "adds an interval between creneaux" do
+      expect(available_slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "10:15"])
     end
   end
 

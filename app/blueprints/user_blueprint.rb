@@ -2,7 +2,8 @@ class UserBlueprint < Blueprinter::Base
   identifier :id
 
   fields  :first_name, :birth_name, :last_name, :email, :address, :phone_number, :phone_number_formatted, :birth_date,
-          :responsible_id, :affiliation_number, :notify_by_sms, :notify_by_email, :created_at, :address_details
+          :responsible_id, :affiliation_number, :notify_by_sms, :notify_by_email, :created_at, :address_details,
+          :city_code, :post_code, :city_name
 
   association :responsible, blueprint: UserBlueprint
 

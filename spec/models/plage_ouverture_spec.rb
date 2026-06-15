@@ -1,5 +1,22 @@
 RSpec.describe PlageOuverture, type: :model do
-  let!(:organisation) { create(:organisation) }
+  let(:organisation) { create(:organisation) }
+
+  describe "#title_with_default" do
+    it "displays the title if present" do
+      expect(described_class.new(title: "Permanence").title_with_default).to eq("Permanence")
+    end
+
+    it "displays the times if title is blank" do
+      plage = described_class.new
+      expect(described_class.new.title_with_default).to eq("Plage d'ouverture")
+
+      plage.assign_attributes(start_time: "08:15", end_time: "11:30")
+      expect(plage.title_with_default).to eq("Plage de 8h15-11h30")
+
+      plage.assign_attributes(secondary_start_time: "14:00", secondary_end_time: "17:45")
+      expect(plage.title_with_default).to eq("Plage de 8h15-11h30 et 14h-17h45")
+    end
+  end
 
   describe "time validation" do
     it "validates that end_time is strictly greater than start_time" do
@@ -59,7 +76,7 @@ RSpec.describe PlageOuverture, type: :model do
   describe "#expired?" do
     subject { plage_ouverture.expired? }
 
-    context "with exceptionnelles plages" do
+    context "with ponctuelles plages" do
       describe "when first_day is in past" do
         let(:plage_ouverture) { create(:plage_ouverture, :no_recurrence, first_day: Date.parse("2020-07-30"), organisation: organisation) }
 
@@ -116,8 +133,8 @@ RSpec.describe PlageOuverture, type: :model do
 
     let(:plage_ouverture) { build(:plage_ouverture, agent: agent, organisation: organisation, motifs: [motif]) }
 
-    describe "for secretaire" do
-      let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
+    describe "for agent d'accueil" do
+      let(:agent) { create(:agent, agent_accueil_role_in_organisations: [organisation]) }
 
       it { is_expected.to contain_exactly(motif3, motif_sans_service) }
     end
@@ -216,7 +233,7 @@ RSpec.describe PlageOuverture, type: :model do
       end
     end
 
-    describe "exceptionnelle" do
+    describe "ponctuelle" do
       let(:plage_ouverture) do
         build(
           :plage_ouverture,

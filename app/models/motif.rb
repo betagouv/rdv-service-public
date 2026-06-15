@@ -102,7 +102,7 @@ class Motif < ApplicationRecord
                          where(service: (agent.services + [nil]))
                        end
 
-    if agent.secretaire?
+    if agent.agent_accueil_in_organisation?(organisation)
       available_motifs = available_motifs.or(for_secretariat)
     end
     available_motifs.where(organisation_id: organisation.id).active.ordered_by_name

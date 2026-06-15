@@ -43,6 +43,16 @@ RSpec.configure do |config|
           ```
           curl -X POST --url "https://staging.rdv-service-public.fr/api/visioplainte/reset" --header "X-VISIOPLAINTE-API-KEY: LA_CLE_D_API"
           ```
+
+          ## Codes et messages d'erreur
+
+          En cas de requête invalide (paramètre manquant), l'api renverra un statut 400 avec un body avec un message d'erreur de ce type :
+          ```
+          { "errors": ["Pas de créneau disponible à la date demandée"] }
+
+          ```
+
+          Tous les endpoints qui prennent un id en paramètre renverront une erreur 404 s'il n'y a pas d'objet correspondant à cet id.
         MARKDOWN
       },
     },
@@ -173,6 +183,8 @@ RSpec.configure do |config|
               birth_date: { type: "string", format: "date", nullable: true },
               birth_name: { type: "string", nullable: true },
               caisse_affiliation: { type: "string", enum: %w[aucun caf msa], nullable: true },
+              city_code: { type: "string", nullable: true },
+              city_name: { type: "string", nullable: true },
               created_at: { type: "string" },
               email: { type: "string", nullable: true },
               first_name: { type: "string" },
@@ -181,6 +193,7 @@ RSpec.configure do |config|
               notify_by_sms: { type: "boolean" },
               phone_number: { type: "string", nullable: true },
               phone_number_formatted: { type: "string", nullable: true },
+              post_code: { type: "string", nullable: true },
               responsible: { type: "object", nullable: true },
               responsible_id: { type: "integer", nullable: true },
               user_profiles: {
@@ -189,8 +202,8 @@ RSpec.configure do |config|
                 items: { "$ref" => "#/components/schemas/user_profile" },
               },
             },
-            required: %w[id address address_details affiliation_number birth_date birth_name created_at first_name
-                         last_name notify_by_email notify_by_sms phone_number phone_number_formatted responsible responsible_id user_profiles],
+            required: %w[id address address_details affiliation_number birth_date birth_name city_code city_name created_at first_name
+                         last_name notify_by_email notify_by_sms phone_number phone_number_formatted post_code responsible responsible_id user_profiles],
           },
           user_profile_with_root: {
             type: "object",
@@ -372,8 +385,10 @@ RSpec.configure do |config|
               bookable_publicly: { type: "boolean" },
               bookable_by: { type: "string", enum: %w[agents agents_and_prescripteurs agents_and_prescripteurs_and_invited_users everyone] },
               service_id: { type: "integer", nullable: true },
+              min_public_booking_delay: { type: "integer", description: "Les premiers créneaux proposés aux usagers et aux prescripteurs ne commenceront pas avant ce délai minimum (en secondes)." },
+              max_public_booking_delay: { type: "integer", description: "Les derniers créneaux proposés aux usagers et aux prescripteurs n'iront pas au delà de ce délai maximum (en secondes)." },
             },
-            required: %w[id deleted_at location_type name organisation_id bookable_publicly bookable_by service_id],
+            required: %w[id deleted_at location_type name organisation_id bookable_publicly bookable_by service_id min_public_booking_delay max_public_booking_delay],
           },
           motif_categories: {
             type: "object",

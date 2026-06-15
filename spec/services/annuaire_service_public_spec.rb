@@ -41,6 +41,26 @@ RSpec.describe AnnuaireServicePublic do
     end
   end
 
+  describe "#code_insee" do
+    subject { described_class.new(siret).code_insee }
+
+    context "pour une mairie" do
+      let(:siret) { "21600660100019" }
+
+      before { AnnuaireServicePublicStubs.stub_siret_as_mairie(siret, self) }
+
+      it { is_expected.to eq "60669" }
+    end
+
+    context "pour une autre structure" do
+      let(:siret) { "13002603200016" }
+
+      before { AnnuaireServicePublicStubs.stub_siret_as_anct(siret, self) }
+
+      it { is_expected.to be_nil }
+    end
+  end
+
   context "si l'api ne répond pas" do
     before do
       allow(Faraday).to receive(:get).and_raise(Faraday::TimeoutError)

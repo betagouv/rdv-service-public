@@ -114,7 +114,7 @@ RSpec.describe "Agent can CRUD motifs" do
     it "unchecks for_secretariat when checking followup", js: true do
       visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
       find("#tab_notifs_et_instructions").click
-      check "Autoriser les agents du service Secrétariat à assurer ces RDV", allow_label_click: true
+      check "Autoriser les agents d’accueil à assurer ces RDV", allow_label_click: true
       click_on "Enregistrer"
       expect(page).to have_content "Le motif #{motif.name} a été modifié."
       motif.reload

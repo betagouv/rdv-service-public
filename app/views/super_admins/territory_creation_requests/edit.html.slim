@@ -31,6 +31,9 @@ section.main-content__body
         p= link_title = annuaire_client.nom
         - if annuaire_client.mairie?
           p ✅ Cette structure est une mairie
+          - population = GeoApiGouv.new(annuaire_client.code_insee).population
+          - if population
+            p Population : #{number_with_delimiter(population)} habitants
 
     - if @territory_creation_request.service_name.present?
       dt.attribute-label.attribute-label--normal-case Service
@@ -65,7 +68,7 @@ section.main-content__body
 
       p Pour éviter de créer des doublons, vérifiez qu'il n'y a pas d'espace déjà existant avec un nom similaire
 
-      p Si vous refusez la demande, merci de contacter l'agent pour lui expliquer votre décision.
+      p En cas de refus, un email sera automatiquement envoyé à l'agent pour l'informer de votre décision.
 
       div[style="display: flex; padding-top: 12px"]
         = simple_form_for([namespace, @territory_creation_request], html: { class: "form", style: "padding-right: 20px" }) do |f|

@@ -1,8 +1,8 @@
 RSpec.describe FranceConnectV2Controller do
   stub_env_with(
     FRANCECONNECT_V2_BASE_URL: "https://fcp-low.sbx.dev-franceconnect.fr/api/v2",
-    FRANCECONNECT_V2_CLIENT_ID: "fake_france_connect_v2_client_id",
-    FRANCECONNECT_V2_CLIENT_SECRET: "fake_france_connect_v2_client_secret"
+    FRANCECONNECT_V2_RDVSP_CLIENT_ID: "fake_france_connect_v2_client_id",
+    FRANCECONNECT_V2_RDVSP_CLIENT_SECRET: "fake_france_connect_v2_client_secret"
   )
 
   describe "#auth" do

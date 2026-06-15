@@ -1,0 +1,31 @@
+p = t("mailers.common.hello")
+
+p
+  | Nous avons bien reçu votre demande d'ouverture d'un espace
+  b = " #{@agent.territory_creation_request.organisation_name}"
+  |> . Après examen, nous ne sommes pas en mesure de donner suite à cette demande.
+  | En effet, seules les organisations suivantes peuvent prétendre à l’ouverture d’un espace sur #{domain.name} :
+  ul
+    li Les administrations de l’État
+    li Les opérateurs publics
+    li
+      | Les collectivités territoriales :
+      ul
+        li communes de moins de 3500 habitants avec un dispositif de recueil
+        li CCAS utilisant Mon Suivi Social
+        li France Services
+        li Conseils départementaux
+    li Les associations mandatées dans le cadre d’une mission de service public
+
+  |> Il est aussi possible que votre demande ait été refusée, car votre organisation possède déjà un espace sur #{domain.name}.
+  |> Dans ce cas, notre équipe est rentrée en contact avec vous et/ou votre administrateur d’espace pour vous accompagner
+  | dans la gestion de votre espace existant.
+
+br
+br
+
+p
+  |> Si vous pensez qu'il s'agit d'une erreur ou si vous souhaitez plus d'informations, n'hésitez pas à nous le faire savoir par retour de mail.
+  b> Si vous êtes une association ou une entreprise, merci de nous indiquer dans votre réponse, la mission de service public que votre organisation remplit.
+
+= t("mailers.common.farewell_html", domain_name: domain.name)

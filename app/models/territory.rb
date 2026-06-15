@@ -48,6 +48,7 @@ class Territory < ApplicationRecord
 
   # Validations
   validates :departement_number, length: { maximum: 3 }, if: -> { departement_number.present? }
+  validates :siret, format: { with: /\A\d{14}\z/, message: "doit contenir exactement 14 chiffres" }, allow_blank: true
 
   validate do
     if name_changed? && name_was.in?(SPECIAL_NAMES)
@@ -151,6 +152,12 @@ class Territory < ApplicationRecord
 
   def department_name
     DEPARTEMENTS_NAMES[departement_number]
+  end
+
+  def add_ants_motif_categories
+    MotifCategory.ants_categories.each do |category|
+      motif_categories << category unless motif_categories.include?(category)
+    end
   end
 
   private

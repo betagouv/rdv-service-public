@@ -1,7 +1,7 @@
 RSpec.describe OffDays, type: :service do
   it "is up to date" do
     # Il faut ajouter de nouveaux jours fériés si cette spec échoue
-    expect(described_class::JOURS_FERIES.max).to be > 3.months.from_now
+    expect(described_class::DATES.max).to be > 3.months.from_now
   end
 
   describe ".all_in_date_range" do
@@ -43,6 +43,13 @@ RSpec.describe OffDays, type: :service do
       array = described_class.to_full_calendar_array
       expect(array[0].keys).to match_array(%i[title start end backgroundColor textColor])
       expect(array[0][:backgroundColor]).to eq "rgba(52, 57, 58, 0.7)"
+    end
+
+    context "when passing agent_ids" do
+      it "sets resourceIds so that we can use it with the multi-agent calendar" do
+        array = described_class.to_full_calendar_array([1, 2, 3])
+        expect(array[0][:resourceIds]).to eq [1, 2, 3]
+      end
     end
   end
 end

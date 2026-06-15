@@ -30,7 +30,13 @@ class InstanceExport < ApplicationRecord
   end
 
   def api_client
-    @api_client ||= RdvServicePublicApiClient.new(api_token)
+    @api_client ||= RdvServicePublicApiClient.new(
+      api_token,
+      refresh_token,
+      on_token_refresh: lambda do |new_api_token, new_refresh_token|
+        update(api_token: new_api_token, refresh_token: new_refresh_token)
+      end
+    )
   end
 
   def copy_to_new_instance!(current_domain)

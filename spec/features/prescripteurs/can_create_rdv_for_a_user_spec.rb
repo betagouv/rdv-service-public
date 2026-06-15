@@ -11,7 +11,7 @@ RSpec.describe "un prescripteur peut prendre rendez-vous pour un usager" do
     create(:motif, organisation: organisation, service: agent.services.first, bookable_by: bookable_by, instruction_for_rdv: "Instructions après confirmation", name: "Formation emails")
   end
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Bureau") }
-  let!(:plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu) }
+  let!(:plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu, minutes_after_rdvs: 10) }
 
   it "works" do
     visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
@@ -69,6 +69,7 @@ RSpec.describe "un prescripteur peut prendre rendez-vous pour un usager" do
     expect(created_rdv.agents).to eq([agent])
 
     expect(created_rdv.participations.size).to eq(1)
+    expect(created_rdv.minutes_after_rdv).to eq(10)
 
     created_participation = created_rdv.participations.first
     created_user = created_participation.user
@@ -268,6 +269,24 @@ RSpec.describe "un prescripteur peut prendre rendez-vous pour un usager" do
       organisation.motifs.destroy_all
       visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
       expect(page).not_to have_content("Nouvelle fonctionnalité :\nla prescription dans l'espace agent")
+    end
+
+    context "when the agent is not part of the territory" do
+      let!(:organisation2) { create(:organisation, territory: create(:territory)) }
+
+      before do
+        # On crée ce motif pour entrer dans la condition d'affichage de la bannière
+        create(:motif, bookable_by: "everyone", organisation: organisation2)
+      end
+
+      it "doesn't display internal prescription incitation" do
+        visit public_link_to_motif_url(public_link_id: motif.public_link_id, motif_slug: motif.slug)
+
+        click_on lieu.name
+        click_on "08:00"
+        click_on "Je suis un prescripteur"
+        expect(page).not_to have_content("Nouvelle fonctionnalité :\nla prescription dans l'espace agent")
+      end
     end
 
     context "when the agent belongs to a sectorized territory" do

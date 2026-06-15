@@ -25,7 +25,7 @@ class TransferEmailReplyJob < ApplicationJob
     email_address.match(UUID_EXTRACTOR)&.captures&.first
   end
 
-  def perform(sendinblue_hash) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def perform(sendinblue_hash)
     @sendinblue_hash = sendinblue_hash.with_indifferent_access
 
     if rdv&.agents&.pluck(:email)&.compact&.any?

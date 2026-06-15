@@ -1,4 +1,4 @@
-RSpec.describe EspaceOperateurANCT do
+RSpec.describe EspaceOperateurANCT::ApiClient do
   let(:siret) { "21550050500015" }
   let(:account_email) { "contact@mairie-nantes.fr" }
 
@@ -19,6 +19,10 @@ RSpec.describe EspaceOperateurANCT do
       expect(service.operator).to be_present
     end
 
+    it "n’a pas d’opérateurs potentiels" do
+      expect(service.potential_operators).to be_empty
+    end
+
     it "retourne les entitlements" do
       expect(service.entitlements).to be_present
     end
@@ -28,6 +32,22 @@ RSpec.describe EspaceOperateurANCT do
       service.operator
       service.entitlements
       expect(WebMock).to have_requested(:get, /entitlements/).once
+    end
+
+    context "quand l’organisation a des opérateurs potentiels" do
+      let(:siret) { "20005671100019" }
+
+      around do |example|
+        VCR.use_cassette("espace_operateur_anct/entitlements_with_potential_operators") { example.run }
+      end
+
+      it "a un opérateur null" do
+        expect(service.operator).to be_nil
+      end
+
+      it "retourne les opérateurs potentiels" do
+        expect(service.potential_operators).to be_present
+      end
     end
   end
 
@@ -45,15 +65,19 @@ RSpec.describe EspaceOperateurANCT do
 
       around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_no_access") { ex.run } }
 
-      it { is_expected.to be false }
+      it { is_expected.to be_falsey }
     end
 
     context "quand l'API retourne une erreur" do
-      subject { described_class.new(siret, account_email, "aienrustesr").can_access? }
+      subject { described_class.new(siret, account_email).can_access? }
+
+      before do
+        stub_const("EspaceOperateurANCT::ApiClient::ACCOUNT_TYPE", "aienrustesr")
+      end
 
       around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_api_error") { ex.run } }
 
-      it { is_expected.to be false }
+      it { is_expected.to be_falsey }
     end
   end
 
@@ -71,7 +95,20 @@ RSpec.describe EspaceOperateurANCT do
     context "quand l'utilisateur n'est pas admin" do
       around { |ex| VCR.use_cassette("espace_operateur_anct/entitlements_success") { ex.run } }
 
-      it { is_expected.to be false }
+      it { is_expected.to be_falsey }
+    end
+  end
+
+  describe "caching" do
+    around do |example|
+      VCR.use_cassette("espace_operateur_anct/entitlements_success") { example.run }
+    end
+
+    it "only sends one requests even if we use two objects, to avoid allowing us to spam the api" do
+      described_class.new(siret, account_email).operator
+      described_class.new(siret, account_email).operator
+
+      expect(WebMock).to have_requested(:get, /entitlements/).once
     end
   end
 

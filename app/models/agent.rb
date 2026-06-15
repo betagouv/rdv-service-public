@@ -174,12 +174,21 @@ class Agent < ApplicationRecord
       referent_assignations.destroy_all
       sector_attributions.destroy_all
 
-      update_columns(
+      assign_attributes(
         deleted_at: Time.zone.now,
         email_original: email,
         email: deleted_email,
         uid: deleted_email
       )
+      # On ne veut pas envoyer de notification Devise pour le changement d'adresse email.
+      skip_reconfirmation!
+
+      # C'est pas évident de représenter un soft_delete via notre système actuel de webhooks,
+      # et si on envoyait un évènement, ça nécessiterait des développements supplémentaires pour RDV Insertion,
+      # qui est le seul service qui consomme des webhooks sur les agents
+      self.skip_webhooks = true
+
+      save(validate: false)
     end
   end
 
@@ -219,6 +228,10 @@ class Agent < ApplicationRecord
     organisations.merge(roles.where(access_level: AgentRole::ACCESS_LEVEL_ADMIN))
   end
 
+  def agent_accueil_orgs
+    organisations.merge(roles.where(agent_accueil: true))
+  end
+
   def basic_orgs
     organisations.merge(roles.where(access_level: AgentRole::ACCESS_LEVEL_BASIC))
   end
@@ -229,6 +242,10 @@ class Agent < ApplicationRecord
 
   def admin_in_organisation?(organisation)
     access_level_in(organisation) == AgentRole::ACCESS_LEVEL_ADMIN
+  end
+
+  def agent_accueil_in_organisation?(organisation)
+    role_in_organisation(organisation)&.agent_accueil?
   end
 
   def access_level_in(organisation_or_id)
@@ -288,10 +305,6 @@ class Agent < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
-  def secretaire?
-    services.any?(&:secretariat?)
-  end
-
   # This is the main toggle to enable or disable features for Conseillers Numériques (cnfs)
   # TODO: As the usage of this toggle grows, we might need to rethink it, and see if these changes
   # should be done via configuration, or something else
@@ -302,6 +315,8 @@ class Agent < ApplicationRecord
   def domain
     @domain ||= if organisations.where(verticale: :rdv_aide_numerique).any?
                   Domain::RDV_AIDE_NUMERIQUE
+                elsif organisations.where(verticale: :rdv_etat).any?
+                  Domain::RDV_SERVICE_PUBLIC_ETAT
                 elsif organisations.where(verticale: :rdv_mairie).any?
                   Domain::RDV_SERVICE_PUBLIC
                 else

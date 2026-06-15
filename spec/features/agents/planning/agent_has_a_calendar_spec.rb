@@ -105,8 +105,9 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       motif = create(:motif, organisation: organisation, name: "Atelier collectif")
       francis = create(:user, first_name: "Francis", last_name: "Factice")
 
-      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
-      sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
+      wait_for_action_cable_subscription_to("AgendaChannel") do
+        visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+      end
 
       rdv = create(:rdv, agents: [agent], motif:, organisation:, users: [francis], starts_at:)
       expect(page).to have_selector(".fc-event", text: "14:00 - 14:45\nFrancis FACTICE")
@@ -134,9 +135,9 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
 
     it "refreshes plages", js: true do
-      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
-      sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
-
+      wait_for_action_cable_subscription_to("AgendaChannel") do
+        visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+      end
       plage = create(:plage_ouverture, organisation:, agent:, title: "Ma plage", first_day: Time.zone.now.beginning_of_week.to_date)
       expect(page).to have_selector(".fc-event.fc-bg-event", text: "Ma plage")
 
@@ -148,8 +149,9 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
 
     it "refreshes absence", js: true do
-      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
-      sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
+      wait_for_action_cable_subscription_to("AgendaChannel") do
+        visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+      end
 
       absence = create(:absence, agent:, title: "Mon indispo", first_day: Time.zone.now.beginning_of_week.to_date)
       expect(page).to have_selector(".fc-event", text: "Mon indispo")
@@ -168,10 +170,12 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       click_on "Statistiques"
       expect(page).to have_content("Statistiques de")
 
-      click_on "Planning"
+      wait_for_action_cable_subscription_to("AgendaChannel") do
+        click_on "Planning"
+      end
       expect(page).to have_content("Planning de")
-      sleep 0.5 # on attend que la connexion Websocket se fasse
 
+      expect(page).not_to have_selector(".fc-event", text: "Mon indispo")
       create(:absence, agent:, title: "Mon indispo", first_day: Time.zone.now.beginning_of_week.to_date)
       expect(page).to have_selector(".fc-event", text: "Mon indispo")
     end
@@ -186,11 +190,11 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
 
     it "fonctionne depuis la vue mensuelle", js: true do
+      page.driver.with_playwright_page { _1.clock.pause_at(Time.zone.parse("2026-04-14 08:00")) }
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
       click_button "Mois"
-      monday = Time.zone.now.beginning_of_week.to_date
-      find(%(.fc-daygrid-day[data-date="#{monday}"])).click
-      expect(page).to have_content("Nouveau RDV pour le #{I18n.l(monday, format: '%-d/%m/%Y')} à 00:00")
+      find(%(.fc-daygrid-day[data-date="2026-04-13"])).click
+      expect(page).to have_content("Nouveau RDV pour le 13/04/2026 à 00:00")
     end
 
     it "fonctionne depuis la vue semaine", js: true do
@@ -203,16 +207,11 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
 
     it "fonctionne depuis la vue jour", js: true do
-      # On navigue vers la prochaine journée non-fériée pour éviter que l'événement
-      # "Jour férié" ne bloque le clic sur le créneau horaire
-      target_date = (Time.zone.today + 1.day..).lazy.find { |d| OffDays::JOURS_FERIES.exclude?(d) }
-      days_forward = (target_date - Time.zone.today).to_i
-
+      page.driver.with_playwright_page { _1.clock.pause_at(Time.zone.parse("2026-04-02 08:00")) }
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
       click_button "Journée"
-      days_forward.times { find(".fc-next-button").click }
       find('.fc-timegrid-slot-lane[data-time="08:30:00"]').click
-      expect(page).to have_content("Nouveau RDV pour le #{I18n.l(target_date, format: '%-d/%m/%Y')} à 08:30")
+      expect(page).to have_content("Nouveau RDV pour le 2/04/2026 à 08:30")
     end
   end
 

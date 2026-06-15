@@ -278,6 +278,14 @@
             ],
             "nullable": true
           },
+          "city_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "city_name": {
+            "type": "string",
+            "nullable": true
+          },
           "created_at": {
             "type": "string"
           },
@@ -305,6 +313,10 @@
             "type": "string",
             "nullable": true
           },
+          "post_code": {
+            "type": "string",
+            "nullable": true
+          },
           "responsible": {
             "type": "object",
             "nullable": true
@@ -328,6 +340,8 @@
           "affiliation_number",
           "birth_date",
           "birth_name",
+          "city_code",
+          "city_name",
           "created_at",
           "first_name",
           "last_name",
@@ -335,6 +349,7 @@
           "notify_by_sms",
           "phone_number",
           "phone_number_formatted",
+          "post_code",
           "responsible",
           "responsible_id",
           "user_profiles"
@@ -710,6 +725,14 @@
           "service_id": {
             "type": "integer",
             "nullable": true
+          },
+          "min_public_booking_delay": {
+            "type": "integer",
+            "description": "Les premiers créneaux proposés aux usagers et aux prescripteurs ne commenceront pas avant ce délai minimum (en secondes)."
+          },
+          "max_public_booking_delay": {
+            "type": "integer",
+            "description": "Les derniers créneaux proposés aux usagers et aux prescripteurs n'iront pas au delà de ce délai maximum (en secondes)."
           }
         },
         "required": [
@@ -720,7 +743,9 @@
           "organisation_id",
           "bookable_publicly",
           "bookable_by",
-          "service_id"
+          "service_id",
+          "min_public_booking_delay",
+          "max_public_booking_delay"
         ]
       },
       "motif_categories": {
@@ -2324,6 +2349,8 @@
                           "follow_up": false,
                           "instruction_for_rdv": null,
                           "location_type": "public_office",
+                          "max_public_booking_delay": 15778476,
+                          "min_public_booking_delay": 1800,
                           "motif_category": {
                             "id": 7,
                             "name": "Catégorie de motif n°1",
@@ -2343,6 +2370,8 @@
                           "follow_up": false,
                           "instruction_for_rdv": null,
                           "location_type": "public_office",
+                          "max_public_booking_delay": 15778476,
+                          "min_public_booking_delay": 1800,
                           "motif_category": {
                             "id": 8,
                             "name": "Catégorie de motif n°2",
@@ -3140,6 +3169,8 @@
                             "follow_up": false,
                             "instruction_for_rdv": null,
                             "location_type": "public_office",
+                            "max_public_booking_delay": 15778476,
+                            "min_public_booking_delay": 1800,
                             "motif_category": {
                               "id": 50,
                               "name": "Catégorie de motif n°1",
@@ -3380,6 +3411,8 @@
                             "follow_up": false,
                             "instruction_for_rdv": null,
                             "location_type": "public_office",
+                            "max_public_booking_delay": 15778476,
+                            "min_public_booking_delay": 1800,
                             "motif_category": {
                               "id": 56,
                               "name": "Catégorie de motif n°1",
@@ -3497,6 +3530,8 @@
                             "follow_up": false,
                             "instruction_for_rdv": null,
                             "location_type": "public_office",
+                            "max_public_booking_delay": 15778476,
+                            "min_public_booking_delay": 1800,
                             "motif_category": {
                               "id": 60,
                               "name": "Catégorie de motif n°5",
@@ -4717,6 +4752,36 @@
             }
           },
           {
+            "name": "city_code",
+            "in": "query",
+            "description": "Code INSEE de la commune",
+            "example": "75116",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "post_code",
+            "in": "query",
+            "description": "Code postal",
+            "example": "75016",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "city_name",
+            "in": "query",
+            "description": "Nom de la commune",
+            "example": "Paris",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "caisse_affiliation",
             "in": "query",
             "description": "Caisse d'affiliation",
@@ -5276,6 +5341,36 @@
             "in": "query",
             "description": "Adresse",
             "example": "10 rue du Havre, Paris, 75016",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "city_code",
+            "in": "query",
+            "description": "Code INSEE de la commune",
+            "example": "75116",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "post_code",
+            "in": "query",
+            "description": "Code postal",
+            "example": "75016",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "city_name",
+            "in": "query",
+            "description": "Nom de la commune",
+            "example": "Paris",
             "required": false,
             "schema": {
               "type": "string"

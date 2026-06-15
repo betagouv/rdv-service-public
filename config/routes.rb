@@ -40,7 +40,11 @@ Rails.application.routes.draw do
     resources :agent_services, only: %i[show destroy]
     resources :user_profiles, only: %i[destroy]
     resources :super_admins, only: %i[index destroy]
-    resources :organisations
+    resources :organisations do
+      member do
+        post :create_france_connect_motifs
+      end
+    end
     resources :operators
     resources :operator_managers
     resources :services
@@ -136,9 +140,14 @@ Rails.application.routes.draw do
     put "agents/mot_de_passe" => "agents/mot_de_passes#update", as: "agent_mot_de_passes"
 
     namespace :agents do
+      resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code" do
+        post :resend, on: :collection
+      end
       resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
-        resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync
+        resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync do
+          post :calendar_selection
+        end
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end
@@ -176,6 +185,7 @@ Rails.application.routes.draw do
 
       resources :territories, only: %i[new create]
       resources :territory_creation_requests, only: %i[new create]
+      get "inscription_via_operateur", to: "inscription_via_operateur#show", as: :inscription_via_operateur
       resources :instance_exports, only: %i[index]
       resources :exports, only: %i[index] do
         get :download
@@ -314,6 +324,8 @@ Rails.application.routes.draw do
               member do
                 post :open
                 post :close
+                get :edit_instructions
+                patch :update_instructions
               end
             end
           end

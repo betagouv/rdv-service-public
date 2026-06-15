@@ -46,29 +46,40 @@ Lint/AssignmentInCondition:
   Exclude:
     - 'db/migrate/20211215182150_add_service_name_to_active_storage_blobs.active_storage.rb'
 
+# disable all Metrics Length cops. They don’t provide an explicit way to improve code.
+# cf https://docs.rubocop.org/rubocop/latest/cops.html#department-metrics
+
 Metrics/AbcSize:
   Enabled: false
 
-Metrics/CyclomaticComplexity:
-  Max: 8 # default is 7
-
-
-# disable all Metrics Length cops. They don’t provide an explicit way to improve code.
-
 Metrics/BlockLength:
+  Enabled: false
+
+Metrics/BlockNesting:
   Enabled: false
 
 Metrics/ClassLength:
   Enabled: false
 
-Metrics/ModuleLength:
+Metrics/CollectionLiteralLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
   Enabled: false
 
 Metrics/MethodLength:
   Enabled: false
 
+Metrics/ModuleLength:
+  Enabled: false
+
 Metrics/ParameterLists:
   Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+# Rails cops
 
 Rails/ApplicationController:
   Exclude:
@@ -121,6 +132,10 @@ Rails/ThreeStateBooleanColumn:
   Enabled: false
 
 Rails/WhereRange:
+  Enabled: false
+
+# Produit de faux positifs
+Rails/UniqBeforePluck:
   Enabled: false
 
 Rails/I18nLocaleTexts:

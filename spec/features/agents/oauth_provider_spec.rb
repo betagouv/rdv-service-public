@@ -18,6 +18,12 @@ RSpec.describe "OAuth provider", js: true do
     Process.wait(pid) # pour éviter d'avoir un process zombie
   end
 
+  stub_env_with(
+    RDV_SERVICE_PUBLIC_OAUTH_BASE_URL: "http://localhost:#{Capybara.server_port}",
+    RDV_SERVICE_PUBLIC_OAUTH_APP_ID: "fake_app_id",
+    RDV_SERVICE_PUBLIC_OAUTH_APP_SECRET: "fake_app_secret"
+  )
+
   let!(:agent) do
     create(:agent, email: "francis@factice.org", password: "RdvServicePublicTest1!")
   end
@@ -71,6 +77,22 @@ RSpec.describe "OAuth provider", js: true do
     click_button "Se connecter avec RDV Service Public"
 
     expect(page).to have_content("Votre email est francis@factice.org")
+    api_token = /votre token est (\S+),/.match(page.text)[1]
+    refresh_token = /votre refresh_token est (\S+)/.match(page.text)[1]
+
+    updated_token = nil
+    updated_refresh_token = nil
+    # On peut utiliser un client d'api avec ces tokens
+    client = RdvServicePublicApiClient.new(
+      api_token,
+      refresh_token,
+      on_token_refresh: lambda do |new_token, new_refresh_token|
+        updated_token = new_token
+        updated_refresh_token = new_refresh_token
+      end
+    )
+    response = client.get("agents/me")
+    expect(response.dig("agent", "email")).to eq "francis@factice.org"
 
     visit "http://localhost:4567/logout"
 
@@ -86,5 +108,12 @@ RSpec.describe "OAuth provider", js: true do
     click_on "Se connecter"
 
     expect(page).to have_content("Votre email est francis@factice.org")
+
+    # Le client est capable de refresh son token
+    response = client.get("agents/me")
+    expect(response.dig("agent", "email")).to eq "francis@factice.org"
+
+    expect(updated_token).not_to be_nil
+    expect(updated_refresh_token).not_to be_nil
   end
 end

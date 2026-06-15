@@ -6,7 +6,7 @@ RSpec.describe "Un agent peut ajouter des usagers à un RDV Collectif", js: true
   let!(:agent_noe) { create(:agent, first_name: "Noé", email: "noe@service.fr", service:, admin_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, :collectif, service:, organisation:, name: "Atelier Collectif") }
   let!(:lieu) { create(:lieu, organisation:) }
-  let(:starts_at) { Time.zone.today.next_occurring(:wednesday).at(Tod::TimeOfDay.parse("09:00")) }
+  let(:starts_at) { Tod::TimeOfDay.parse("09:00").on(Time.zone.today.next_occurring(:wednesday)) }
   let!(:rdv) { create(:rdv, :without_users, motif:, organisation:, agents: [agent_noe], lieu:, starts_at:) }
 
   describe "ajout d’un usager de l’orga courante" do

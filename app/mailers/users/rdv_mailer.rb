@@ -1,5 +1,6 @@
 class Users::RdvMailer < ApplicationMailer
   include DateHelper
+
   helper UsersHelper
   helper RdvsHelper
   helper DateHelper
@@ -14,7 +15,7 @@ class Users::RdvMailer < ApplicationMailer
   default to: -> { @user.email }
 
   def rdv_created
-    self.ics_payload = @rdv.payload(:create, @user)
+    self.ics_payload = @rdv.payload(action: :create, recipient: @user)
     subject = t("users.rdv_mailer.rdv_created.title", date: l(@rdv.starts_at, format: :human))
     mail(subject: subject)
     save_receipt(subject)
@@ -24,21 +25,21 @@ class Users::RdvMailer < ApplicationMailer
     @old_starts_at = old_starts_at
     @address_name = Lieu.find(lieu_id).full_name if lieu_id
 
-    self.ics_payload = @rdv.payload(:update, @user)
+    self.ics_payload = @rdv.payload(action: :update, recipient: @user)
     subject = t("users.rdv_mailer.rdv_updated.title", date: l(@old_starts_at, format: :human))
     mail(subject: subject)
     save_receipt(subject)
   end
 
   def rdv_upcoming_reminder
-    self.ics_payload = @rdv.payload(nil, @user)
+    self.ics_payload = @rdv.payload(recipient: @user)
     subject = t("users.rdv_mailer.rdv_upcoming_reminder.title", date: l(@rdv.starts_at, format: :human))
     mail(subject: subject)
     save_receipt(subject)
   end
 
   def rdv_cancelled
-    self.ics_payload = @rdv.payload(:destroy, @user)
+    self.ics_payload = @rdv.payload(action: :destroy, recipient: @user)
     subject = t("users.rdv_mailer.rdv_cancelled.title", date: l(@rdv.starts_at, format: :human), organisation: @rdv.organisation.name)
     mail(subject: subject)
     save_receipt(subject)

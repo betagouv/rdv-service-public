@@ -1,20 +1,22 @@
 # ProConnect
 
+## Setup local
+
 Pour tester ProConnect en local, il y a 2 possibilités :
 
 1. utiliser les credentials de test de l’app de dev partagée
 2. créer une nouvelle app de dev
 
+### 1. utiliser les credentials de test de l’app de dev partagée
 
-## 1. utiliser les credentials de test de l’app de dev partagée
-
-- Récupérer les clés secrètes de l’appli ProConnect de dev depuis Vaultwarden. L’entrée Vaultwarden s’appelle : « Fichier .env de développement local »
-- Rappatrier les variables d’env dans votre .env local : `PRO_CONNECT_RDVSP_CLIENT_SECRET` et autres.
 - Assurez vous d’avoir les variables d’env `PRO_CONNECT_BASE_URL` et `PRO_CONNECT_RDVSP_CLIENT_ID` (etc…) dans votre `.env` local. Si ce n’est pas le cas, recopiez les depuis `.env.sample`.
-- Connectez vous depuis l’URL http://www.rdv-solidarites.localhost:3000/agents/sign_in
+- Récupérer les clés secrètes de l’appli ProConnect de dev depuis Vaultwarden.
+  L’entrée Vaultwarden s’appelle : « Fichier .env de développement local » :
+  Définissez les dans votre .env local : `PRO_CONNECT_RDVSP_CLIENT_SECRET` et autres.
+- Connectez vous depuis l’URL http://www.rdv-solidarites.localhost:3000/agents/sign_in (⚠️ le port est important)
 
 
-## 2. créer une nouvelle app de dev
+### 2. créer une nouvelle app de dev
 
 Créer un compte avec votre mail beta sur https://partenaires.proconnect.gouv.fr
 
@@ -38,6 +40,41 @@ Définissez les variables d’environnement en local :
 - `PRO_CONNECT_BASE_URL="https://fca.integ01.dev-agentconnect.fr/api/v2"`
 - `PRO_CONNECT_RDVSP_CLIENT_ID` et AN et S
 - `PRO_CONNECT_RDVSP_CLIENT_SECRET` et AN et S
+
+## Setup review app
+
+- créer une app FS ProConnect depuis https://partenaires.proconnect.gouv.fr/apps
+- URL de redirection : https://rdv-service-public-review-app-prXXXX.osc-secnum-fr1.scalingo.io/agent_connect/callback
+- URL de déconnexion : https://rdv-service-public-review-app-prXXXX.osc-secnum-fr1.scalingo.io/
+- Algorithmes : ES256
+
+puis
+
+```sh
+scalingo --app rdv-service-public-review-app-prXXXX env-set \
+  REVIEW_APP_DOMAIN=RDV_SERVICE_PUBLIC_ETAT \
+  PRO_CONNECT_BASE_URL=https://fca.integ01.dev-agentconnect.fr/api/v2 \
+  PRO_CONNECT_RDVSP_ETAT_CLIENT_ID=987654321 \
+  PRO_CONNECT_RDVSP_ETAT_CLIENT_SECRET=123456789 && \
+scalingo --app rdv-service-public-review-app-prXXXX restart
+```
+
+## Configuration des FS utilisés par nos services
+
+### Identité des `sub` entre FS
+
+ProConnect ne supporte pour l'instant que l'identifier type `public`.
+Les `sub` renvoyés ne dépendent donc pas du FS.
+
+### Liste des FS
+
+Les client ID sont publics, on peut les voir dans l'URL vers laquelle on est redirigés lorsqu'on clique sur le bouton ProConnect.
+
+Petit script pour récupérer le client ID du FS ProConnect d'un de nos domaines :
+
+```sh
+DOMAIN=demo.rdv-solidarites.fr bundle exec rails runner "puts URI.decode_www_form(URI(Faraday.get(\"https://#{ENV['DOMAIN']}/agent_connect/auth\").headers['location']).query).to_h['client_id']"
+```
 
 # FAQ
 

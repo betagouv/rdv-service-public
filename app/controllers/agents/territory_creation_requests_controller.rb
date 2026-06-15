@@ -1,5 +1,7 @@
 class Agents::TerritoryCreationRequestsController < AgentAuthController
   layout "application"
+  before_action :redirect_if_opsn_restricted
+
   def new
     authorize(TerritoryCreationRequest.new, policy_class: Agent::TerritoryCreationRequestPolicy)
     @territory_creation_request = TerritoryCreationRequest.new
@@ -18,6 +20,16 @@ class Agents::TerritoryCreationRequestsController < AgentAuthController
   end
 
   private
+
+  def redirect_if_opsn_restricted
+    return unless current_domain.allow_self_onboarding
+    return unless current_agent.agent_territorial_access_rights.none?
+
+    result = EspaceOperateurANCT::AccountCreationRouter.new(current_agent, current_domain).call
+    if result.action != :classic
+      redirect_to authenticated_agent_root_path
+    end
+  end
 
   def permitted_params
     params.require(:territory_creation_request).permit(:territory_name, :organisation_name, :service_name)

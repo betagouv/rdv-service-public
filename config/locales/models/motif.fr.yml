@@ -21,10 +21,10 @@ fr:
         sectorisation_level_title: Sectorisation géographique
         sectorisation_level_hint: Seules les recherches des usagers sont concernées par ces règles de sectorisation. Elles n'ont donc pas d'effet si le motif n'est pas réservable en ligne.
         location_type: Type de RDV
-        for_secretariat: Motif accessible au secrétariat
-        for_secretariat_label: Autoriser les agents du service Secrétariat à assurer ces RDV
-        for_secretariat_short: RDV Secrétariat
-        for_secretariat_hint: En plus du service sélectionné pour ce motif, les agents du service « Secrétariat » peuvent partager leurs disponibilités et assurer les rendez-vous de ce motif.
+        for_secretariat: Motif accessible aux agents d’accueil (ex-secrétariat)
+        for_secretariat_label: Autoriser les agents d’accueil à assurer ces RDV
+        for_secretariat_short: Ouverture aux agents d’accueil
+        for_secretariat_hint: En plus du service sélectionné pour ce motif, les agents d’accueil (anciennement du service « Secrétariat ») peuvent partager leurs disponibilités et assurer les rendez-vous de ce motif.
         follow_up: Autoriser ces rendez-vous seulement aux usagers bénéficiant d'un suivi par un référent
         follow_up_short: RDV de suivi
         follow_up_warning: Les rendez-vous de suivi sont réservés aux usagers ayant un agent référent associé sur la fiche usager. Ces rendez-vous de suivi ne sont pas visibles lors de la réservation en ligne pour les usagers sans compte et sans référent. Seuls les usagers avec un référent pourront prendre rendez-vous depuis leur espace personnel.

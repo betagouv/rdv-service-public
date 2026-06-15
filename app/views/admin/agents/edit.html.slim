@@ -2,16 +2,15 @@
   | Modifier le niveau de permission de l'agent #{@agent.full_name_or_email}
 
 = render "admin/agents/fil_ariane", current_page_title: @agent.full_name_or_email
-- content_for(:menu_item) { "menu-settings" }
 
 - if @agent.is_an_intervenant?
   = render "admin/agent_intervenants/name_form", agent_intervenant: @agent
 
-.row.justify-content-center
-  .col-md-12.col-lg-8
+.fr-grid-row.fr-grid-row--gutters
+  .fr-col-md-12.fr-col-lg-8
     .card
       .card-body.js_agent_role_form
-        = simple_form_for [:admin, current_organisation, @agent] do |f|
+        = form_for [:admin, current_organisation, @agent], builder: Dsfr::FormBuilder do |f|
           = render "model_errors", model: @agent
 
           - if current_territory.services.any? || @agent.agent_services.any?
@@ -31,44 +30,55 @@
               = link_to "Ajouter ou retirer des services", edit_admin_territory_agent_path(territory_id: current_territory.id, agent_id: @agent.id), class: "fr-link fr-icon-pencil-line fr-link--icon-left"
             - else
               .fr-mb-0.fr-text--sm.text-muted
-                | Le changement ou l’ajout de service est réservé aux admins d'espace avec ce droit d’accès
+                | Le changement ou l'ajout de service est réservé aux admins d'espace avec ce droit d'accès
 
             hr
 
-          = f.simple_fields_for @agent_role do |ff|
-            = ff.input :access_level,
-              collection: @roles,
-              label_method: -> { render("admin/agents/role_labels/#{_1}", { services: @agent.services }) },
+          = f.fields_for @agent_role do |ff|
+            ruby:
+              role_choices = @roles.map do |role|
+                {
+                  value: role,
+                  label: render("admin/agents/role_labels/#{role}"),
+                  hint: render("admin/agents/role_hints/#{role}", services: @agent.services),
+                  checked: ff.object.access_level == role,
+                }
+              end
+            = ff.dsfr_radio_buttons :access_level, role_choices,
+              legend: "Niveau de permissions",
               hint: ("Les agents peuvent avoir des permissions différentes sur chaque organisation." if current_agent.organisations_count > 1),
-              as: :radio_buttons
+              rich: true
+            - if current_territory.services.any? || ff.object.agent_accueil?
+              fieldset.fr-fieldset.js_agent_role_form__agent_with_account_fields
+                legend.fr-fieldset__legend--regular.fr-fieldset__legend
+                  | Permissions supplémentaires
+                .fr-fieldset__element
+                  = ff.dsfr_check_box :agent_accueil, label: "Agent d'accueil", hint: "Peut consulter et modifier les agendas de tous les agents de l'organisation"
 
           / allow turning an intervenant into an agent with an account
           - if AgentRole.find(@agent_role.id).access_level == "intervenant"
             .js_agent_role_form__agent_with_account_fields[style="display:none;"]
-              = f.input :email, label: "Email d'invitation de l'agent", required: true, disabled: true
-              .row
-                .col-md-6
-                  = f.input :first_name, required: true, disabled: true
-                .col-md-6
-                  = f.input :last_name, required: true, input_html: { value: "" }, disabled: true
+              = f.dsfr_email_field :email, label: "Email d'invitation de l'agent", required: true, disabled: true
+              .fr-grid-row.fr-grid-row--gutters
+                .fr-col-md-6
+                  = f.dsfr_text_field :first_name, label: Agent.human_attribute_name(:first_name), required: true, disabled: true
+                .fr-col-md-6
+                  = f.dsfr_text_field :last_name, label: Agent.human_attribute_name(:last_name), required: true, value: "", disabled: true
 
-          .row
+          .fr-btns-group
             - if policy(@agent, policy_class: Agent::AgentPolicy).destroy?
-              .col.text-left
-                = link_to @agent_removal_presenter.button_value, \
-                  admin_organisation_agent_path(current_organisation, @agent), \
-                  data: { confirm: @agent_removal_presenter.confirm_message }, \
-                  method: :delete, \
-                  class: "btn btn-outline-danger"
-            .col.text-right
-              - if AgentRole.find(@agent_role.id).access_level == "intervenant"
-                = f.button :submit
-              - else
-                .js_agent_role_form__agent_with_account_fields
-                  = f.button :submit
-                .js_agent_role_form__intervenant_fields[style="display:none;"]
-                  = f.button :submit, data: { confirm: "Cet agent ne pourra plus se connecter à son compter. Êtes vous sûr de vouloir continuer ?" }
+              = link_to @agent_removal_presenter.button_value, \
+                admin_organisation_agent_path(current_organisation, @agent), \
+                data: { confirm: @agent_removal_presenter.confirm_message }, \
+                method: :delete, \
+                class: "fr-btn fr-btn--tertiary"
+            - if AgentRole.find(@agent_role.id).access_level == "intervenant"
+              = f.submit class: "fr-btn"
+            - else
+              .js_agent_role_form__agent_with_account_fields
+                = f.submit class: "fr-btn"
+              .js_agent_role_form__intervenant_fields[style="display:none;"]
+                = f.submit data: { confirm: "Cet agent ne pourra plus se connecter à son compter. Êtes vous sûr de vouloir continuer ?" }, class: "fr-btn"
 
-.row.justify-content-center
-  .col-md-12.col-lg-8
+  .fr-col-md-12.fr-col-lg-8
     = render "admin/versions/resource_versions_row", resource_policy: policy(@agent, policy_class: Agent::AgentPolicy), resource: @agent

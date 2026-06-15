@@ -11,7 +11,7 @@ module RecurrenceHelper
     [every_part, time_part, range_part]
   end
 
-  def display_every(recurrent_record) # rubocop:disable Metrics/PerceivedComplexity
+  def display_every(recurrent_record)
     recurrence_hash = recurrent_record.recurrence.to_hash
 
     interval = "#{recurrence_hash[:interval]} " if recurrence_hash[:interval]&.>(1)
@@ -78,8 +78,8 @@ module RecurrenceHelper
     weekdays[weekday]
   end
 
-  def exceptionnelle_tag(recurrent_record)
-    tag.span("Exceptionnelle", class: "fr-badge fr-badge--sm fr-badge--green-archipel") if recurrent_record.exceptionnelle?
+  def ponctuelle_tag(recurrent_record)
+    tag.span("Ponctuelle", class: "fr-badge fr-badge--sm fr-badge--green-archipel") if recurrent_record.ponctuelle?
   end
 
   def filter_plage_ouvertures_in_departement_scope(plage_ouvertures)

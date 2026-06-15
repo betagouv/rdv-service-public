@@ -79,13 +79,12 @@ class PlageOuverture < ApplicationRecord
   end
 
   def title_with_default
-    if title.present?
-      title
-    elsif starts_at && ends_at
-      "Plage de #{human_time_range}"
-    else
-      "Plage d'ouverture"
-    end
+    return title if title.present?
+    return "Plage d'ouverture" unless start_time && end_time # Probablement jamais exécuté, mais ça évite un crash au cas où.
+
+    default_title = "Plage de #{self.class.human_time_range(start_time, end_time)}"
+    default_title += " et #{self.class.human_time_range(secondary_start_time, secondary_end_time)}" if secondary_start_time && secondary_end_time
+    default_title
   end
 
   def ical_uid
@@ -140,12 +139,12 @@ class PlageOuverture < ApplicationRecord
       .not_expired
       .where.not(id: id)
 
-    if exceptionnelle?
+    if ponctuelle?
       candidate_pos.regulieres.where(first_day: ..first_day)
-        .or(candidate_pos.exceptionnelles.where(first_day: first_day))
+        .or(candidate_pos.ponctuelles.where(first_day: first_day))
     else
       candidate_pos.regulieres
-        .or(candidate_pos.exceptionnelles.where(first_day: first_day..))
+        .or(candidate_pos.ponctuelles.where(first_day: first_day..))
     end
   end
 

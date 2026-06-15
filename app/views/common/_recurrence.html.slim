@@ -1,10 +1,34 @@
+/# locals: (model:, f:, legend:)
+
 .recurrence-select.recurrence-select--weekly.js-recurrence-container
   .row
     .col
-      = date_input(f, :first_day, input_html: { id: "recurrence-source", class: "js-recurrence-first-day js-recurrence-input"} )
+      fieldset.fr-fieldset[aria-labelledby="recurrence-legend recurrence-messages"]
+        legend#recurrence-legend.fr-fieldset__legend--regular.fr-fieldset__legend
+          = legend
+        .fr-fieldset__element
+          .fr-radio-group.fr-radio-rich
+            input#radio_non_recurring.js-recurrence-input.js-radio-non-recurring[type="radio" name="recurrence_radio" value="false" checked=model.recurring?]
+            label.fr-label.fr-mb-0[for="radio_non_recurring"]
+              | Ponctuelle
+            .fr-radio-rich__pictogram
+              = dsfr_svg "artwork/pictograms/digital/calendar"
+        .fr-fieldset__element
+          .fr-radio-group.fr-radio-rich
+            input#radio_recurring.js-recurrence-input.js-radio-recurring[type="radio" name="recurrence_radio" value="true" checked=!model.recurring?]
+            label.fr-label.fr-mb-0[for="radio_recurring"]
+              | Récurrente
+            .fr-radio-rich__pictogram
+              = dsfr_svg "artwork/pictograms/leisure/catalog"
+        #recurrence-messages.fr-messages-group[aria-live="polite"]
+
+  .row
+    .col
+      / La marge et le padding permettent d'être aligné avec le champs "Termine à" (pour les absences), et d'ajouter un peu de whitespace par rapport au composant au-dessus (pour tous les cas)
+      = date_input(f, :first_day, input_html: { id: "recurrence-source", class: "js-recurrence-first-day js-recurrence-input"}, label_html: { class: "fr-mt-2w fr-pt-1v" } )
     - if defined?(model.end_day)
       .col
-        = date_input(f, :end_day)
+        = date_input(f, :end_day, input_html: { class: "js-recurrence-end-day"}, wrapper_html: { class: "js-recurrence-end-day-with-label"}, hint: "Facultatif")
 
   .row
     .col = f.input :start_time, as: :time, ignore_date: true, minute_step: 5
@@ -26,8 +50,6 @@
   = f.input :recurrence, as: :hidden, input_html: { value: model.recurrence ? model.recurrence.as_json.to_json : "", class: "js-recurrence-computed" }
 
   = simple_fields_for :recurrence do |n|
-    = n.input :has_recurrence, as: :boolean, label: "Répéter…", input_html: { class: "js-recurrence-toggle js-recurrence-input" }
-
     .all-select
       .form-group
         .form-inline
@@ -43,5 +65,6 @@
       .monthly-select.form-group
         span.js-recurrence-monthly Tous les X du mois
 
-      .until-select
-        = date_input(n, :until, required: false, label: "Finir la répétition le (si aucune laisser vide)", input_html: { id: "recurrence-until", class: "js-recurrence-until js-recurrence-input" } )
+      .fr-grid-row
+        .fr-col-6.until-select
+          = date_input(n, :until, required: false, label: "Date de fin de la récurrence", hint: "Facultatif", input_html: { id: "recurrence-until", class: "js-recurrence-until js-recurrence-input" } )

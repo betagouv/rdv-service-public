@@ -24,12 +24,14 @@ class CronJob < ApplicationJob
   end
 
   class FileAttenteJob < CronJob
-    queue_as :latency_30s
-
     include MonitorConcern
 
+    queue_as :latency_30s
+
     def perform
-      FileAttente.send_notifications
+      FileAttente.with_upcoming_rdvs.with_remaining_notifications.pluck(:id).each do |fa_id|
+        SingleFileAttenteJob.perform_later(fa_id)
+      end
     end
   end
 
@@ -133,9 +135,9 @@ class CronJob < ApplicationJob
 
   class DestroyOldPlageOuvertureJob < CronJob
     def perform
-      po_exceptionnelle_closed_since_1_year = PlageOuverture.where(recurrence: nil).where(first_day: ..1.year.ago)
+      po_ponctuelle_closed_since_1_year = PlageOuverture.where(recurrence: nil).where(first_day: ..1.year.ago)
       po_recurrent_closed_since_1_year = PlageOuverture.where(recurrence_ends_at: ..1.year.ago)
-      po_exceptionnelle_closed_since_1_year.or(po_recurrent_closed_since_1_year).each do |po|
+      po_ponctuelle_closed_since_1_year.or(po_recurrent_closed_since_1_year).each do |po|
         po.webhook_reason = "rgpd"
         po.destroy
       end

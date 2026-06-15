@@ -9,6 +9,7 @@ class Users::RdvsController < UserAuthController
   layout "application_base", only: %i[index]
 
   include TokenInvitable
+
   prepend_before_action :store_invitation_in_session_and_redirect, only: %i[show creneaux]
 
   def index
@@ -91,7 +92,7 @@ class Users::RdvsController < UserAuthController
   end
 
   def ics
-    payload = @rdv.payload(nil, current_user)
+    payload = @rdv.payload(recipient: current_user)
     cal = IcalFormatters::Ics.from_payload(payload)
     send_data cal.to_ical,
               filename: payload[:attachement_filename],

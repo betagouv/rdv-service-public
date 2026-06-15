@@ -57,8 +57,8 @@ RSpec.describe Agent::MotifPolicy do
     end
   end
 
-  context "for a secretaire" do
-    let(:agent) { create(:agent, basic_role_in_organisations: [motif.organisation], service: create(:service, :secretariat)) }
+  context "for an agent d'accueil" do
+    let(:agent) { create(:agent, agent_accueil_role_in_organisations: [motif.organisation]) }
 
     it "allows seeing but not modifying the motif" do
       policy = described_class.new(agent, motif)

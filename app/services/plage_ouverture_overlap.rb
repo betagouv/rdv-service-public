@@ -6,11 +6,11 @@ class PlageOuvertureOverlap
     @po2 = po2
   end
 
-  def exists? # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def exists?
     return false if po1.agent != po2.agent
 
-    if po1.exceptionnelle? && po2.exceptionnelle?
-      both_exceptionnelles_overlap?
+    if po1.ponctuelle? && po2.ponctuelle?
+      both_ponctuelles_overlap?
     else
       !po1_ends_before_po2? &&
         !po2_ends_before_po1? &&
@@ -23,7 +23,7 @@ class PlageOuvertureOverlap
 
   private
 
-  def both_exceptionnelles_overlap?
+  def both_ponctuelles_overlap?
     po1.starts_at < po2.ends_at && po1.ends_at > po2.starts_at
   end
 
@@ -49,7 +49,7 @@ class PlageOuvertureOverlap
     !options1.day.intersect?(options2.day)
   end
 
-  def both_monthly_but_different_days? # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def both_monthly_but_different_days?
     return false unless po1.recurring? && po2.recurring?
 
     # both PO are monthly
@@ -83,9 +83,9 @@ class PlageOuvertureOverlap
   end
 
   def occurrences_date_range
-    @occurrences_date_range ||= if po1.exceptionnelle?
+    @occurrences_date_range ||= if po1.ponctuelle?
                                   po1.first_day.past? ? nil : (po1.first_day..po1.first_day)
-                                elsif po2.exceptionnelle?
+                                elsif po2.ponctuelle?
                                   po2.first_day.past? ? nil : (po2.first_day..po2.first_day)
                                 else
                                   min = [[po1.first_day, po2.first_day].min, Time.zone.today].max

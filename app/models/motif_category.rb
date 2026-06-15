@@ -9,7 +9,8 @@ class MotifCategory < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :short_name, presence: true, uniqueness: true
 
-  scope :requires_ants_predemande_number, -> { where(name: Api::Ants::EditorController::ANTS_MOTIF_CATEGORY_NAMES) }
+  scope :ants_categories, -> { where(name: Api::Ants::EditorController::ANTS_MOTIF_CATEGORY_NAMES) }
+  scope :requires_ants_predemande_number, -> { ants_categories }
 
   def requires_ants_predemande_number?
     name.in?(Api::Ants::EditorController::ANTS_MOTIF_CATEGORY_NAMES)

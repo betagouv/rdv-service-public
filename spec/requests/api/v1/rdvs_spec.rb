@@ -111,6 +111,7 @@ RSpec.describe "RDV API" do
           get "/api/v1/rdvs", headers: headers, params: { user_id: user.id, agent_id: agent.id }, as: :json
           expect(parsed_response_body["rdvs"].first["starts_at"]).to eq rdv_with_user_and_agent.starts_at.to_s
           expect(parsed_response_body["rdvs"].first["ends_at"]).to eq rdv_with_user_and_agent.ends_at.to_s
+          expect(parsed_response_body["rdvs"].first["time_zone"]).to eq "Europe/Paris"
         end
       end
 
@@ -125,6 +126,7 @@ RSpec.describe "RDV API" do
           get "/api/v1/rdvs", headers: headers, params: { user_id: user.id, agent_id: agent.id }, as: :json
           expect(parsed_response_body["rdvs"].first["starts_at"]).to eq "2025-01-15 10:00:00 -0400"
           expect(parsed_response_body["rdvs"].first["ends_at"]).to eq "2025-01-15 10:45:00 -0400"
+          expect(parsed_response_body["rdvs"].first["time_zone"]).to eq "America/Guadeloupe"
         end
       end
     end

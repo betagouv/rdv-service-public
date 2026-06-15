@@ -22,11 +22,7 @@ RSpec.describe Users::SessionsController do
     end
 
     context "quand l'usager s'est connecté avec FranceConnect V2" do
-      stub_env_with(
-        FRANCECONNECT_V2_BASE_URL: "https://fcp-low.sbx.dev-franceconnect.fr/api/v2",
-        FRANCECONNECT_V2_CLIENT_ID: "fake_france_connect_v2_client_id",
-        FRANCECONNECT_V2_CLIENT_SECRET: "fake_france_connect_v2_client_secret"
-      )
+      stub_env_with(FRANCECONNECT_V2_BASE_URL: "https://fcp-low.sbx.dev-franceconnect.fr/api/v2")
 
       before do
         FranceConnectV2Stubs.stub_and_run_discover_request

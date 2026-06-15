@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.4.9"
 
 # Full-stack web application framework.
-gem "rails", "8.0.4.1"
+gem "rails", "8.0.5"
 # Rack-based asset packaging system
 gem "sprockets-rails"
 # Puma is a simple, fast, threaded, and highly parallel HTTP 1.1 server for Ruby/Rack applications
@@ -55,13 +55,13 @@ gem "connection_pool"
 
 # Devise / auth
 # Flexible authentication solution for Rails with Warden
-gem "devise", git: "https://github.com/victormours/devise", ref: "0c502c8ab7f11e03ece9d9552cdf5d96e22c40c6"
+gem "devise", "5.0.4"
 # An invitation strategy for Devise
 gem "devise_invitable"
 # Deliver Devise's emails in the background using ActiveJob.
 gem "devise-async"
 # omniauth provider for Microsoft Graph
-gem "omniauth-microsoft_graph"
+gem "omniauth-microsoft_graph", git: "https://github.com/betagouv/omniauth-microsoft_graph", ref: "8bcbaa37883454338a79606bdfd8e19d27e26673"
 # omniauth provider for inter-instance migrations
 gem "omniauth-rdv-service-public", path: "lib/omniauth-rdv-service-public"
 
@@ -76,7 +76,8 @@ gem "omniauth-rails_csrf_protection"
 # OO authorization for Rails
 gem "pundit"
 # Token based authentication for rails. Uses Devise + OmniAuth.
-gem "devise_token_auth", "1.2.5"
+# until this is released on rubygems: https://github.com/lynndylanhurley/devise_token_auth/pull/1675
+gem "devise_token_auth", git: "https://github.com/lynndylanhurley/devise_token_auth", ref: "bcdc3a5"
 # List of frequently used passwords
 gem "common_french_passwords"
 
@@ -127,8 +128,8 @@ gem "rails_autolink"
 # ActionView helper to render currently active links
 gem "active_link_to"
 gem "dsfr-assets", "~> 1.14.2"
-gem "dsfr-view-components", "~> 4.1"
-gem "dsfr-form_builder", "= 0.0.7" # On fixe la version tant qu’on est pas en 1.0
+gem "dsfr-view-components", "~> 5.0.0"
+gem "dsfr-form_builder", "= 0.0.14" # On fixe la version tant qu’on est pas en 1.0
 
 # Easily create styled HTML emails in Rails.
 gem "premailer-rails" # Mail formatting
@@ -152,7 +153,7 @@ gem "icalendar-recurrence"
 # Ruby Date Recurrence Library - Allows easy creation of recurrence rules and fast querying
 gem "ice_cube", git: "https://github.com/ice-cube-ruby/ice_cube.git", ref: "32ff145"
 # Caldav client library
-gem "calendav", "~> 0.5"
+gem "calendav", "~> 0.6"
 # Base de données des fuseaux horaires
 # Au lieu d’utiliser la base de données système qui peut différer entre les environnements (local, CI, production)
 # on utilise cette gem pour avoir la même partout.
