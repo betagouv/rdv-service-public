@@ -2,7 +2,7 @@
 
 ## Prérequis
 
-- [Mise](https://mise.jdx.dev/getting-started.html) : manages and installs ruby, node & yarn
+- [Mise](https://mise.jdx.dev/getting-started.html) : gère l'installation et les MàJ de ruby, node & yarn
 - PostgreSQL 16, l’utilisateur doit avoir les droits `superuser`. C'est nécessaire pour pouvoir activer les extensions utilisés.
 - [graphviz](https://voormedia.github.io/rails-erd/install.html) (pour [rails-erd](https://github.com/voormedia/rails-erd)).
 - [redis](https://redis.io/docs/getting-started/installation/)
