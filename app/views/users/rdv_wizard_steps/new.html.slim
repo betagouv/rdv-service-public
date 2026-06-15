@@ -13,8 +13,11 @@
 
           /! Section proches
           - unless @skip_proches_step
-            = turbo_frame_tag "proche-section" do
-              = render "proche_section", f: f
+            - if !@rdv.requires_ants_predemande_number?
+              = turbo_frame_tag "proche-section" do
+                = render "proche_section", f: f
+            - elsif @rdv_builder.ants_pre_demandes_count.to_i >= 2
+              = render "ants_proche_slot", f: f
 
           /! Hidden fields pour les params du wizard
           - @rdv_booking_form.to_query.each do |wizard_key, wizard_value|

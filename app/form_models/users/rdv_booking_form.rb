@@ -2,24 +2,27 @@ class Users::RdvBookingForm
   include Users::UserFormConcern
 
   attr_accessor :booking_for_proche
-  attr_reader :rdv_builder, :invitation_token, :rdv
+  attr_reader :rdv_builder, :invitation_token, :rdv, :ants_selected_relative_ids
 
-  delegate :to_query, :motif, :service, to: :rdv_builder
+  delegate :to_query, :motif, :service, :ants_pre_demandes_count, to: :rdv_builder
   delegate :add_benign_error, :ignore_benign_errors, :relatives_attributes=, to: :user
   delegate :collectif?, :requires_ants_predemande_number?, to: :rdv
 
   validates :ants_pre_demande_number, presence: true, if: :requires_ants_predemande_number?
   validates_with AntsPreDemandeNumberStatusValidation, if: :requires_ants_predemande_number?
+  validate :validate_ants_pre_demandes_count, if: :requires_ants_predemande_number?
+  validate :validate_ants_proches_numbers, if: :ants_with_proches?
 
   validate :validate_phone_number_present_for_motif_by_phone
 
-  def initialize(user:, rdv_builder:, domain:, user_attributes: {}, booking_for_proche: false, selected_proche: nil)
+  def initialize(user:, rdv_builder:, domain:, user_attributes: {}, booking_for_proche: false, selected_proche: nil, ants_selected_relative_ids: [])
     @user = user
     @rdv_builder = rdv_builder
     @rdv = rdv_builder.rdv
     @domain = domain
     @booking_for_proche = booking_for_proche
     @selected_proche = selected_proche
+    @ants_selected_relative_ids = ants_selected_relative_ids.map(&:to_s)
     @user.singleton_class.accepts_nested_attributes_for :relatives
     enrich_relatives_attributes!(user_attributes)
     @user.assign_attributes(user_attributes)
@@ -73,19 +76,52 @@ class Users::RdvBookingForm
       @user.relatives.build
   end
 
+  def new_ants_proches
+    return [] unless ants_with_proches?
+
+    count = ants_pre_demandes_count.to_i - 1
+    built = (@user.relatives.target || []).select(&:new_record?)
+    extras_count = [count - built.size, 0].max
+    built + extras_count.times.map { User.new }
+  end
+
   private
 
-  def should_process_proches? = booking_for_proche?
+  def ants_with_proches?
+    rdv.requires_ants_predemande_number? && ants_pre_demandes_count.to_i > 1
+  end
 
   def enrich_relatives_attributes!(attrs)
     return unless attrs[:relatives_attributes]
 
     attrs[:relatives_attributes] = attrs[:relatives_attributes].values.map(&:symbolize_keys).filter_map do |rel_attrs|
       if rel_attrs[:id].present?
-        nil
-      elsif @selected_proche == "new"
+        # dans le cas ANTS on peut vouloir mettre à jour les proches avec le numéro de pré-demande
+        rel_attrs if ants_with_proches? && @ants_selected_relative_ids.include?(rel_attrs[:id].to_s)
+      elsif ants_with_proches? || @selected_proche == "new"
+        # pour les nouveaux proches on s'assure de les créer avec le bon flag
         rel_attrs.merge(created_through: "user_relative_creation")
       end
+    end
+  end
+
+  def validate_ants_proches_numbers
+    return unless ants_with_proches?
+
+    (@user.relatives.target || []).each_with_index do |relative, index|
+      prefix = "Proche #{index + 1}"
+      number = relative.ants_pre_demande_number
+      if number.blank?
+        errors.add(:base, "#{prefix} : le numéro de pré-demande ANTS doit être renseigné")
+      elsif !number.upcase.match?(AntsPreDemandeNumberFormatValidator::REGEX)
+        errors.add(:base, "#{prefix} : le numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
+      end
+    end
+  end
+
+  def validate_ants_pre_demandes_count
+    unless AntsPreDemandesCountValidator.count_valid?(ants_pre_demandes_count)
+      errors.add(:base, "Veuillez choisir un nombre de pré-demandes entre 1 et 6")
     end
   end
 
@@ -112,7 +148,9 @@ class Users::RdvBookingForm
   end
 
   def users_for_rdv
-    if booking_for_new_proche?
+    if ants_with_proches?
+      [@user] + (@user.relatives.target || []).compact
+    elsif booking_for_new_proche?
       [@newly_created_proche]
     elsif booking_for_existing_proche?
       [@user.relatives.find(@selected_proche)]
