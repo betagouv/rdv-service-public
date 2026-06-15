@@ -119,19 +119,22 @@
             h2.fr-h4 Ce motif est archivé
 
             p Il n'est pas possible de prendre de nouveaux rendez-vous pour ce motif.
-            - if @motif_policy.unarchive?
-              = link_to t("admin.motifs.actions.unarchive"), unarchive_admin_organisation_motif_path(current_organisation, @motif), method: :post, class: "fr-btn"
+            .fr-btns-group.fr-btns-group--inline
+              - if @motif_policy.unarchive?
+                = link_to t("admin.motifs.actions.unarchive"), unarchive_admin_organisation_motif_path(current_organisation, @motif), method: :post, class: "fr-btn"
+              - if @motif_policy.destroy?
+                = link_to t("admin.motifs.actions.destroy"), admin_organisation_motif_path(current_organisation, @motif), method: :delete, data: { confirm: t("admin.motifs.actions.destroy_confirm") }, class: "fr-btn fr-btn--tertiary"
 
           - else
             h2.fr-h4 Ce motif est actif
 
             p Vous pouvez archiver ce motif si vous ne souhaitez pas que de nouveau rendez-vous soit pris.
 
-            - if @motif_policy.archive?
-              = link_to t("admin.motifs.actions.archive"), archive_admin_organisation_motif_path(current_organisation, @motif), method: :post, data: { confirm: t("admin.motifs.actions.archive_confirm") }, class: "fr-btn fr-btn--secondary"
-
-          - if @motif_policy.destroy?
-            = link_to t("admin.motifs.actions.destroy"), admin_organisation_motif_path(current_organisation, @motif), method: :delete, data: { confirm: t("admin.motifs.actions.destroy_confirm") }, class: "fr-btn fr-btn--secondary fr-ml-2w"
+            .fr-btns-group.fr-btns-group--inline
+              - if @motif_policy.archive?
+                = link_to t("admin.motifs.actions.archive"), archive_admin_organisation_motif_path(current_organisation, @motif), method: :post, data: { confirm: t("admin.motifs.actions.archive_confirm") }, class: "fr-btn fr-btn--secondary"
+              - if @motif_policy.destroy?
+                = link_to t("admin.motifs.actions.destroy"), admin_organisation_motif_path(current_organisation, @motif), method: :delete, data: { confirm: t("admin.motifs.actions.destroy_confirm") }, class: "fr-btn fr-btn--tertiary"
 
 .fr-grid-row
   .fr-col-12
