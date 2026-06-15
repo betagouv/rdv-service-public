@@ -3,7 +3,7 @@ module AgentsHelper
     if defined?(current_territory)
       # Si un opérateur est rattaché au territoire et qu’il assure le support, c’est lui qui se charge de l’accompagnement
       # de ses adhérents.
-      return false if current_territory.operator&.support_link
+      return false if current_territory.operator
 
       Rdv.joins(:organisation).where(organisation: { territory_id: current_territory.id }).limit(5).count < 5
     end

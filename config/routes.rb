@@ -40,7 +40,11 @@ Rails.application.routes.draw do
     resources :agent_services, only: %i[show destroy]
     resources :user_profiles, only: %i[destroy]
     resources :super_admins, only: %i[index destroy]
-    resources :organisations
+    resources :organisations do
+      member do
+        post :create_france_connect_motifs
+      end
+    end
     resources :operators
     resources :operator_managers
     resources :services
@@ -319,6 +323,27 @@ Rails.application.routes.draw do
             member do
               post :open
               post :close
+              get :edit_user_type
+              patch :update_user_type
+            end
+          end
+
+          namespace :online_booking do
+            resources :motifs, only: %i[show edit update] do
+              member do
+                post :open
+                post :close
+                get :edit_instructions
+                patch :update_instructions
+              end
+            end
+          end
+
+          resource :configuration, only: [:show]
+          resources :stats, only: :index do
+            collection do
+              get :rdvs
+>>>>>>> production
             end
           end
         end
