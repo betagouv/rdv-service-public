@@ -11,5 +11,5 @@
             div
               | Prochain créneau le
               br
-              strong= l(next_availability.starts_at, format: :human)
-            = icon("fr-icon-arrow-right-line", class: "fr-mt-7w")
+              strong= human_date_format(next_availability.starts_at)
+            = icon("fr-icon-arrow-right-line", class: "fr-mt-7w rdv-color-text-action-high-blue-france")
