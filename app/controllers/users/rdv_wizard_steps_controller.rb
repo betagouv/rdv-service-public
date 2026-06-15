@@ -93,13 +93,14 @@ class Users::RdvWizardStepsController < UserAuthController
                     :ants_pre_demande_number,
                     :ignore_benign_errors,
                     { user_profiles_attributes: %i[logement id organisation_id] },
-                    { relatives_attributes: %i[id first_name last_name birth_date] },
+                    { relatives_attributes: %i[id first_name last_name birth_date ants_pre_demande_number] },
                   ])
   end
 
   def proche_params
     {
       selected_proche: params.dig(:user, :selected_proche).presence,
+      ants_selected_relative_ids: params.dig(:user, :ants_selected_relative_ids) || [],
     }
   end
 
