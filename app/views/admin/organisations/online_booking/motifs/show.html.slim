@@ -6,7 +6,7 @@
 - count = @motif.upcoming_availabilities.count
 
 - content_for :title do
-  | #{@motif.name}
+  |> #{@motif.name}
   = render "availability_badge", motif: @motif, availabilities_count: count
 
 .fr-grid-row

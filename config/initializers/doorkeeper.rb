@@ -2,7 +2,9 @@ Doorkeeper.configure do
   orm :active_record
 
   # This block will be called to check whether the resource owner is authenticated or not.
-  resource_owner_authenticator { authenticate_agent! }
+  resource_owner_authenticator do
+    authenticate_agent_with_silent_proconnect_login!(authorize_first_account_creation: true)
+  end
 
   # If you didn't skip applications controller from Doorkeeper routes in your application routes.rb
   # file then you need to declare this block in order to restrict access to the web interface for

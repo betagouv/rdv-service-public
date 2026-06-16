@@ -4,7 +4,8 @@ module Admin::AuthenticatedControllerConcern
   included do
     rescue_from Pundit::NotAuthorizedError, with: :agent_not_authorized
 
-    before_action :authenticate_agent!
+    before_action :set_flash_automatic_redirection_from_rdvsp_anct
+    before_action :authenticate_agent_with_silent_proconnect_login!
     before_action :set_paper_trail_whodunnit
   end
 
@@ -29,5 +30,12 @@ module Admin::AuthenticatedControllerConcern
     else
       redirect_to authenticated_agent_root_url
     end
+  end
+
+  def set_flash_automatic_redirection_from_rdvsp_anct
+    return if params[:automatic_redirection_from_rdvsp_anct] != "1"
+
+    # on utilise success plutôt que notice pour éviter d’être overridé par « Vous devez vous connecter pour continuer »
+    flash[:success] = "Vous avez été automatiquement redirigé·e vers le domaine RDV Service Public pour les agents de l'État."
   end
 end
