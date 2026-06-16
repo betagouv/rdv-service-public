@@ -6,10 +6,10 @@
 <% end %>
 
 <!-- Sections spéciales à la fin du tableau principal -->
-<% content_for(:end_of_main) do %>
+<% content_for(:after_main) do %>
   <%= render partial: "super_admins/history", locals: {resource: page.resource} %>
   <%= render partial: "super_admins/agents/agent_features", locals: { agent: page.resource } %>
 <% end %>
 
 <!-- Render du template standard -->
-<%= render template: "super_admins/application/show", locals: local_assigns %>
+<%= render template: "administrate/application/show", locals: local_assigns %>
