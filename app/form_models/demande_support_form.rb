@@ -9,7 +9,8 @@ class DemandeSupportForm
 
   def initialize(current_domain:, role: nil, sujet: nil, first_name: nil, last_name: nil, phone_number: nil, email: nil, message: nil, user_id: nil, agent_id: nil)
     @current_domain = current_domain
-    @role = role&.to_sym
+    role = role.presence&.to_sym
+    @role = role.in?(%i[usager agent]) ? role : nil
     @sujet = sujet
     @first_name = first_name
     @last_name = last_name
