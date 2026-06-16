@@ -59,7 +59,7 @@ RSpec.describe "Tout le monde peut nous contacter" do
 
   context "quand un robot essaye d'injecter un `role` invalide" do
     it "à l'affichage : ignore la valeur injectée" do
-      visit "/aide/demande_support/new?role=#{ERB::Util.url_encode("usager; DELETE * FROM users;")}"
+      visit "/aide/demande_support/new?role=#{ERB::Util.url_encode('usager; DELETE * FROM users;')}"
       expect(page).to have_content("Formulaire de contact")
       expect(page).to have_select("Vous êtes…", selected: nil) # aucune valeur sélectionnée
     end
