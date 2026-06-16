@@ -1,7 +1,7 @@
 RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
   include_context "enable rack-attack" # en l’activant ici on teste que le cas normal fonctionne aussi
 
-  before { create(:user, email: "marco@lolmail.fr", first_name: "Marco") }
+  let!(:user) { create(:user, email: "marco@lolmail.fr", first_name: "Marco") }
 
   specify do
     visit new_user_session_path
@@ -48,7 +48,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       click_on "Valider"
       click_on territory_1.name
       expect(page).to have_content("Connexion réussie")
-      click_on user.full_name
+      click_on user_1.full_name
       expect(page).to have_field("user_first_name", with: user_1.first_name)
     end
 
@@ -59,7 +59,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       click_on "Valider"
       click_on territory_2.name
       expect(page).to have_content("Connexion réussie")
-      click_on user.full_name
+      click_on user_2.full_name
       expect(page).to have_field("user_first_name", with: user_2.first_name)
     end
   end
