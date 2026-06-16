@@ -1,7 +1,4 @@
-import "@hotwired/turbo-rails";
-
-// Nous ne souhaitons pas utiliser Turbo Drive (voir #4790 et #5917)
-Turbo.session.drive = false
+document.documentElement.addEventListener("turbo:load", () => window.Turbo.session.drive = false)
 
 import { PlacesInputs } from './components/places-inputs.js';
 
