@@ -1,0 +1,20 @@
+.rdv-proche-selection {
+  .fr-radio-group.rdv-selected-proche-new {
+    z-index: 100;
+    background: white;
+    padding: 0 1rem 0.5rem 0;
+  }
+  .rdv-new-proche-fields {
+    width: 100%;
+    z-index: 10;
+    padding: 1.5rem 1rem;
+    margin-left: 1.2rem;
+    margin-top: -2.2rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+
+  &:has(#user_selected_proche_new:not(:checked)) .rdv-new-proche-fields {
+    opacity: 0.5;
+  }
+}

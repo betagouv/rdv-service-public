@@ -11,6 +11,10 @@
 
           = render "users/users/form_fields", f: f
 
+          /! Section proches
+          - unless @skip_proches_step
+            = render "proche_section", f: f
+
           /! Hidden fields pour les params du wizard
           - @rdv_booking_form.to_query.each do |wizard_key, wizard_value|
             = hidden_field_tag "rdv[#{wizard_key}]", wizard_value
