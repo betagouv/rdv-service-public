@@ -1,0 +1,15 @@
+<!-- Boutons d'action custom avant les boutons standard -->
+<% content_for(:header_middle) do %>
+  <div style="margin-right: 4px">
+    <%= render partial: "super_admins/agents/action_buttons_on_show", locals: { agent: page.resource } %>
+  </div>
+<% end %>
+
+<!-- Sections spéciales à la fin du tableau principal -->
+<% content_for(:end_of_main) do %>
+  <%= render partial: "super_admins/history", locals: {resource: page.resource} %>
+  <%= render partial: "super_admins/agents/agent_features", locals: { agent: page.resource } %>
+<% end %>
+
+<!-- Render du template standard -->
+<%= render template: "super_admins/application/show", locals: local_assigns %>

@@ -1,0 +1,17 @@
+<!-- Boutons d'action custom avant les boutons standard -->
+<% content_for(:header_middle) do %>
+  <%- same_email_count = page.resource.email.present? ? User.where.not(id: page.resource.id).where(email: page.resource.email).count : 0 %>
+  <% if same_email_count > 0 %>
+    <div style="margin-right: 4px">
+      <%= link_to "Voir les fiches avec le même email (#{same_email_count})", super_admins_users_path(search: page.resource.email), class: "button" %>
+    </div>
+  <% end %>
+<% end %>
+
+<!-- Sections spéciales à la fin du tableau principal -->
+<% content_for(:end_of_main) do %>
+  <%= render partial: "super_admins/history", locals: {resource: page.resource} %>
+<% end %>
+
+<!-- Render du template standard -->
+<%= render template: "super_admins/application/show", locals: local_assigns %>
