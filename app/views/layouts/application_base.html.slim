@@ -36,8 +36,8 @@ html lang="fr"
         header.with_operator_image title: "", src: asset_path(current_domain.dark_logo_path), alt: "Accueil - #{current_domain.name}", href: home_path
         if current_user.present? && !current_user.signed_in_with_invitation_token?
           header.with_tool_link title: "Vos rendez-vous", path: users_rdvs_path, html_attributes: { class: "fr-icon-calendar-fill" }
-          header.with_tool_link title: "Vos informations", path: users_informations_path
           header.with_tool_link title: "Votre compte", path: edit_user_registration_path
+          header.with_tool_link title: current_user.full_name, path: users_informations_path
           header.with_tool_link title: "Déconnexion", path: destroy_user_session_path, html_attributes: { "data-method": "delete", class: "fr-icon-lock-fill" }
         elsif current_agent
           header.with_tool_link title: "Espace Agent", path: root_path
