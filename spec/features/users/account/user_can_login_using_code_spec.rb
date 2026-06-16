@@ -19,7 +19,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
 
     expect(page).to have_content("Connexion réussie")
     expect(page).to have_current_path("/users/rdvs")
-    click_on "Vos informations"
+    click_on user.full_name
     expect(page).to have_field("user_first_name", with: "Marco")
   end
 
@@ -48,7 +48,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       click_on "Valider"
       click_on territory_1.name
       expect(page).to have_content("Connexion réussie")
-      click_on "Vos informations"
+      click_on user.full_name
       expect(page).to have_field("user_first_name", with: user_1.first_name)
     end
 
@@ -59,7 +59,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       click_on "Valider"
       click_on territory_2.name
       expect(page).to have_content("Connexion réussie")
-      click_on "Vos informations"
+      click_on user.full_name
       expect(page).to have_field("user_first_name", with: user_2.first_name)
     end
   end
