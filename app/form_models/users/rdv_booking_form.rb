@@ -5,8 +5,10 @@ class Users::RdvBookingForm
 
   delegate :to_query, :motif, :service, :rdv, to: :rdv_builder
   delegate :add_benign_error, :ignore_benign_errors, to: :user
-  validates :ants_pre_demande_number, presence: true, if: -> { rdv.requires_ants_predemande_number? }
-  validates_with AntsPreDemandeNumberStatusValidation, if: -> { rdv.requires_ants_predemande_number? }
+  delegate :requires_ants_predemande_number?, to: :rdv
+
+  validates :ants_pre_demande_number, presence: true, if: :requires_ants_predemande_number?
+  validates_with AntsPreDemandeNumberStatusValidation, if: :requires_ants_predemande_number?
 
   validate :validate_phone_number_present_for_motif_by_phone
 
@@ -23,7 +25,7 @@ class Users::RdvBookingForm
 
   def show_birth_date_field? = !signed_in_with_invitation_token? && rdv.territory&.enable_birth_date_field?
 
-  def show_ants_pre_demande_number_field? = rdv.requires_ants_predemande_number?
+  def show_ants_pre_demande_number_field? = requires_ants_predemande_number?
 
   def show_logement_field? = rdv.territory.enable_logement_field
 
