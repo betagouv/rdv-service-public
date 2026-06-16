@@ -1,6 +1,6 @@
 = territory_navigation(t(".title"))
 
-.row.justify-content-center
+.fr-grid-row.justify-content-center
   - if Agent::SectorPolicy.allowed_to_manage_sectors_in?(current_territory, current_agent)
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_sectors_path(current_territory) do

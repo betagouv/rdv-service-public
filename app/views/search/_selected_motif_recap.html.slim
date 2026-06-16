@@ -1,7 +1,7 @@
 .card
   ul.list-group.list-group-flush.fr-mt-0
     li.list-group-item
-      .row
+      .fr-grid-row
         .col
           span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
           | Motif :&nbsp;
@@ -24,7 +24,7 @@
     - when Motif.location_types[:public_office]
       - if context.ants_pre_demandes_count.present?
         li.list-group-item
-          .row
+          .fr-grid-row
             .col
               span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
               | Nombre de pré-demandes ANTS à déposer :&nbsp;
@@ -33,7 +33,7 @@
               = dsfr_link_to "Modifier", path_to_ants_pre_demandes_count_selection(params), title: "Modifier le nombre de pré-demandes ANTS"
       - if context.lieu
         li.list-group-item
-          .row
+          .fr-grid-row
             .col
               span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
               | Lieu :&nbsp;

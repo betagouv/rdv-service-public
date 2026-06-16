@@ -3,7 +3,7 @@
 - content_for :fil_ariane do
   = render "common/fil_ariane", titles_and_paths: [["RDV collectifs", admin_organisation_rdvs_collectifs_path(current_organisation)], [@rdv.motif_name, admin_organisation_rdv_path(current_organisation, @rdv)]], current_page_title: "Ajouter un participant"
 
-.row.justify-content-md-center
+.fr-grid-row.justify-content-md-center
   .col-md-12.col-lg-8
     = form_for(@rdv, url: admin_organisation_rdvs_collectif_path(current_organisation), method: :put, builder: Dsfr::FormBuilder) do |f|
       .card
@@ -11,7 +11,7 @@
           h3 = rdv_title_for_agent(@rdv)
           = I18n.l(@rdv.starts_at, format: "%A %-d %B à %H:%M").capitalize
         .card-body.px-3
-          .row.mt-3
+          .fr-grid-row.mt-3
             .col-md-6
               .d-flex.card-text.mb-2
                 = icon("fr-icon-team-fill", class: "fr-mr-1w")

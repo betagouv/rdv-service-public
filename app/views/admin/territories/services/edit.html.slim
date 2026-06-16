@@ -24,7 +24,7 @@
           = dsfr_callout do
             .fr-text--sm Le service secrétariat a été remplacé par une nouvelle permission « Agent d’accueil » que vous pouvez activer pour chaque agent dans les paramètres de l’organisation.
 
-          .row.align-items-center.mt-3
+          .fr-grid-row.align-items-center.mt-3
             - if params[:redirect_to_organisation_id]
               .col.text-left
                 = link_to("Annuler", new_admin_organisation_agent_path(params[:redirect_to_organisation_id]))

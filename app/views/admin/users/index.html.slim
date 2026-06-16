@@ -9,7 +9,7 @@
 .card[class="#{"fr-mt-6w" if @search_needed}"]
   .card-body
     = form_with url: admin_organisation_users_path(current_organisation), method: :get  do |f|
-      .row
+      .fr-grid-row
         .col-md-8
           .form-group.string.optional._search
             = label_tag :search, "Recherche", {class: "form-control-label string optional"}

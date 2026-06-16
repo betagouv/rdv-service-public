@@ -1,5 +1,5 @@
 div id="creneaux-lieu-#{lieu&.id}"
-  .row
+  .fr-grid-row
     - previous_from_date = date_range.begin - 7.days
     - if date_range.begin > Time.zone.today
       .col-12.col-md-auto.mb-2.mb-md-0.d-flex.align-items-center.justify-content-center
@@ -7,7 +7,7 @@ div id="creneaux-lieu-#{lieu&.id}"
         = link_to "sem. précédente", prendre_rdv_path(query_params.merge(date: previous_from_date, autofocus: "last")), class: "fr-btn fr-btn--icon-left fr-icon-arrow-left-s-line fr-hidden-md", aria: { label: "Semaine précédente" }
 
     .col
-      .row
+      .fr-grid-row
         ruby:
           creneaux_by_date = creneaux.group_by { |c| c.starts_at.to_date }
 

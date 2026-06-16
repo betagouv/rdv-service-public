@@ -9,7 +9,7 @@
       div
         = link_to "Supprimer", admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: nil), method: :delete, data: { confirm: "Confirmez-vous la suppression de ce rendez-vous collectif ?"}, class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-delete-bin-line"
   .card-body
-    .row
+    .fr-grid-row
       .col-md-6
         .d-flex.card-text.mb-2
           - if rdv.public_office?

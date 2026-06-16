@@ -16,12 +16,12 @@ ruby:
 
   = link_to "Trouver un RDV pour l’usager", admin_organisation_creneaux_search_path(current_organisation, user_ids: [@user.id]), class: "fr-btn fr-btn--secondary", title: "Trouver un RDV pour l’usager #{@user.full_name}"
 
-.row
+.fr-grid-row
   .col-md-6
     .card#spec-primary-user-card
       .card-body
         - if @user.logged_once_with_franceconnect?
-          .row.bg-info.text-white.p-2.mb-3 Cet usager s'est déjà connecté via FranceConnect.
+          .fr-grid-row.bg-info.text-white.p-2.mb-3 Cet usager s'est déjà connecté via FranceConnect.
 
         - if @user.responsible?
           h2.card-title.mb-3 Informations générales
@@ -116,7 +116,7 @@ ruby:
           - if @user.rdvs.count > 0
             = link_to "Voir tous les RDV de l’usager", admin_organisation_rdvs_path(current_organisation, user_id: @user.id), class: "fr-btn fr-btn--tertiary fr-btn--sm", title: "Voir tous les RDV de l’usager #{@user.full_name}"
       .card-body
-        .row
+        .fr-grid-row
           .col-lg-6
             - %i[seen excused revoked noshow].each do |temporal_status|
               = render "stats/rdv_counter_with_link", \
@@ -134,6 +134,6 @@ ruby:
         = dsfr_alert type: :info, size: :sm
           | Les RDV sont supprimés au bout de 2 ans.
 
-.row.justify-content-center
+.fr-grid-row.justify-content-center
   .col-md-12.col-lg-8
     = render "admin/versions/resource_versions_row", resource_policy: policy(@user, policy_class: Agent::UserPolicy), resource: @user

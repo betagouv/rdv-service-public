@@ -20,7 +20,7 @@ h1.fr-h2.rdv-text-align-center.mt-0.font-weight-bold.mb-4 Validation de permissi
       / Quand on affinera les scopes, il faudra ajouter des textes d'explication pour les permissions données ici
       /= t(scope, scope: [:doorkeeper, :scopes])
 
-    .row.rdv-text-align-right
+    .fr-grid-row.rdv-text-align-right
       .col-md-6
         = form_tag oauth_authorization_path, method: :delete do
           = hidden_field_tag :client_id, @pre_auth.client.uid, id: nil

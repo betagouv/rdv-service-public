@@ -12,7 +12,7 @@
       - legend = "Déclarer une indisponibilité sur un seul jour ou récurrente sur plusieurs jours, semaines, mois ?"
       = render partial: "common/recurrence", locals: { f: f, model: absence, legend: }
 
-  .row
+  .fr-grid-row
     - if absence.persisted?
       .col.text-left
         = link_to "Supprimer", admin_organisation_planning_absence_path(current_organisation, absence), method: :delete, class: "btn btn-outline-danger", data: { confirm: t(".confirm_delete_absence")}

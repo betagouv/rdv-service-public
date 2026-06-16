@@ -23,7 +23,7 @@
           next_availability: @search_result.next_availability
 
   - if  @form.motif.collectif?
-    .row.justify-content-center.pb-3
+    .fr-grid-row.justify-content-center.pb-3
       .col-md-12.col-lg-8
         - @search_result.creneaux.each do |search_result|
           = render "admin/rdvs_collectifs/rdv", rdv: search_result, selected_users: @form.users

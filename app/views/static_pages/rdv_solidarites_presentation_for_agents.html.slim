@@ -2,14 +2,14 @@
 
 section.py-5.rdv-background-color-flat-blue-ecume
   .fr-container
-    .row
+    .fr-grid-row
       .col-md-9.m-auto
         h1.rdv-color-white.mb-3
           span> Gérez les rendez-vous de votre département
         .mt-5= link_to "Se connecter en tant qu'agent", new_agent_session_path, class: "btn text-white btn-outline-white"
 section.py-5.rdv-background-color-alt-green-menthe
   .fr-container
-    .row
+    .fr-grid-row
       .col-md-9.m-auto
         h2.pb-0 Notre mission
         .fr-text--xl.mb-5
@@ -17,21 +17,21 @@ section.py-5.rdv-background-color-alt-green-menthe
           | dans les services sociaux départementaux
         .divider
 
-        .row
+        .fr-grid-row
           .col-4.mb-4
-            .row.d-flex.align-items-stretch
+            .fr-grid-row.d-flex.align-items-stretch
               .col-md-3.p-2.px-3.p-md-0
                 = image_tag "welcome/illu-4x.svg", alt: "quatre fois"
               .col-md-9.d-flex.align-items-center
                 .fr-text--xl.m-0 moins de lapins
           .col-4.mb-4
-            .row.d-flex.align-items-stretch
+            .fr-grid-row.d-flex.align-items-stretch
               .col-md-3.p-2.px-3.p-md-0
                 = image_tag "welcome/illu-3x.svg", alt: "trois fois"
               .col-md-9.d-flex.align-items-center
                 .fr-text--xl.m-0 plus rapide pour prendre RDV
           .col-4.mb-4
-            .row.d-flex.align-items-stretch
+            .fr-grid-row.d-flex.align-items-stretch
               .col-md-3.p-2.px-3.p-md-0
                 = image_tag "welcome/illu-2x.svg", alt: "deux fois"
               .col-md-9.d-flex.align-items-center
@@ -47,7 +47,7 @@ section.py-5
     .rdv-text-align-center.w-75.m-auto
       h2.mb-5 Comment ça marche ?
     .divider
-    .row
+    .fr-grid-row
       .col-md-4
         .w-50.p-3.m-auto
           = image_tag "welcome/illu-prise-rdv.svg", alt: ""
@@ -74,7 +74,7 @@ section.rdv-background-color-alt-green-menthe.py-5
     .rdv-text-align-center.w-75.m-auto
       h2.mb-4 Quelles fonctionnalités ?
     .divider
-    .row
+    .fr-grid-row
       .col-md-6
         .p-6.m-auto
           h3.mb-3 Toutes les typologies de RDV
@@ -93,7 +93,7 @@ section.rdv-background-color-alt-green-menthe.py-5
             li Sectorisation
             li Notifications vers des systèmes d'informations externes
 
-    .row
+    .fr-grid-row
       .col-md-12.rdv-text-align-center.mt-5
         p Vous y pensez pour votre Maison des Solidarités ?
         .p-2.px-3.p-md-0

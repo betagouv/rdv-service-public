@@ -3,6 +3,6 @@
 .container-fluid.bg-white.rounded.m-2.p-2
   = render "form", team: @team, url: admin_territory_team_path(current_territory, @team)
 
-.row.justify-content-center
+.fr-grid-row.justify-content-center
   .col-md-8
     = render "admin/versions/resource_versions_row", resource_policy: policy(@team, policy_class: Agent::TeamPolicy), resource: @team

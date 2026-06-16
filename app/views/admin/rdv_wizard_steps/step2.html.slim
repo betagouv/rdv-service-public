@@ -58,10 +58,10 @@ ruby:
 
           = render "admin/users/create_user_cta", path: new_admin_organisation_user_path(current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service))
       - else
-        .row.d-flex.justify-content-center
+        .fr-grid-row.d-flex.justify-content-center
           p
             | Vous n'avez pas d'usager pour le moment, vous pouvez en créer un dès a présent&nbsp;:
-        .row.d-flex.justify-content-center
+        .fr-grid-row.d-flex.justify-content-center
           = link_to \
             "Ajouter un usager", \
               new_admin_organisation_user_path( \
@@ -72,7 +72,7 @@ ruby:
     - if current_organisation.territory.enable_context_field
       .mt-3= f.input :context, as: :text, label: Rdv.human_attribute_name(:context), input_html: { rows: 4 }
 
-    .row.align-items-center.mt-3
+    .fr-grid-row.align-items-center.mt-3
       .col.text-left
         = link_to("Revenir en arrière", @rdv_wizard.previous_step_path, dsfr_return_btn_options)
       - if (@rdv_wizard.validate || @rdv_wizard.errors[:users].empty?)

@@ -1,13 +1,13 @@
 - search_params = lieu.present? ? creneaux_search_params(form).merge(lieu_ids: [lieu.id]) : creneaux_search_params(form)
 
 div id="creneaux-lieu-#{lieu&.id}"
-  .row.position-relative[style="min-height: 200px"]
+  .fr-grid-row.position-relative[style="min-height: 200px"]
     - if form.date_range.begin > Time.zone.today
       - previous_from_date = form.date_range.begin - 7.days
       .col-auto.d-flex.align-items-center
         = link_to "Créneaux précédents", admin_organisation_creneaux_search_selection_creneaux_path(search_params.merge(from_date: previous_from_date)), class: "fr-btn fr-icon-arrow-left-s-line"
     .col
-      .row.no-gutters.creneaux-row.lieu-creneaux-card
+      .fr-grid-row.no-gutters.creneaux-row.lieu-creneaux-card
         - form.date_range.each do |date|
           .col.position-relative
             p.rdv-text-align-center.sticky-top.bg-white

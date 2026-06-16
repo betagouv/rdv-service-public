@@ -1,6 +1,6 @@
 = territory_navigation(t(".title"), [["Sectorisation", admin_territory_sectorization_path(current_territory)]])
 
-.row.justify-content-center
+.fr-grid-row.justify-content-center
   .col-md-10
     = simple_form_for "", url: admin_territory_sectors_path(current_territory), html: { method: :get, class: "card" } do |f|
       .p-2.d-grid.grid-three-columns.grid-first-column-empty.grid-align-center

@@ -3,7 +3,7 @@
 
 = render "admin/lieux/fil_ariane", current_page_title: content_for(:title)
 
-.row.justify-content-center
+.fr-grid-row.justify-content-center
   .col-md-12.col-lg-8
     .card
       .card-body
@@ -15,7 +15,7 @@
             = link_to t("helpers.cancel"), admin_organisation_lieux_path(@lieu.organisation), class: "fr-btn fr-btn--tertiary-no-outline fr-mr-1w"
             = f.submit "Enregistrer", class: "fr-btn"
 
-.row.justify-content-center
+.fr-grid-row.justify-content-center
   .col-md-12.col-lg-8
     .card
       .card-body
@@ -33,12 +33,12 @@
           = link_to "Réouvrir ce lieu", reopen_admin_organisation_lieu_path(current_organisation, @lieu), method: :post, class: "fr-btn fr-btn--secondary"
 
 - if @lieu.disabled?
-  .row.justify-content-center
+  .fr-grid-row.justify-content-center
     .col-md-12.col-lg-8
       .card
         .card-body
           - lieu_is_referenced = @lieu.plage_ouvertures.any? || @lieu.rdvs.any?
-          .row
+          .fr-grid-row
             .col
               - if lieu_is_referenced
                 .alert.alert-info
@@ -55,6 +55,6 @@
             p Vous pouvez supprimer ce lieu
             = link_to t("helpers.delete"), admin_organisation_lieu_path(@lieu.organisation, @lieu), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce lieu ?" }
 
-.row.justify-content-center
+.fr-grid-row.justify-content-center
   .col-md-12.col-lg-8
     = render "admin/versions/resource_versions_row", resource_policy: @lieu_policy, resource: @lieu

@@ -20,7 +20,7 @@ h1
               },
               disabled: !can_edit_services
       .card-footer
-        .row
+        .fr-grid-row
           .col.text-right
             - if can_edit_services
               = f.submit class: "fr-btn", value: "Enregistrer les services"
@@ -38,7 +38,7 @@ h1
         = f.input :allow_to_manage_access_rights, as: :boolean, hint: "Modifier les droits d'accès et les services de tous les agents de #{current_territory.name_for_agent}", disabled: !can_edit_access_rights
         = f.input :allow_to_invite_agents, as: :boolean, hint: "Inviter d'autre personne sur l'espace, les affecter ou retirer de chacune des organisations de #{current_territory.name_for_agent}", disabled: !can_edit_access_rights
       .card-footer
-        .row
+        .fr-grid-row
           .col.text-right
             - if can_edit_access_rights
               = f.submit class: "fr-btn", value: "Enregistrer les droits d'accès"
@@ -60,7 +60,7 @@ h1
             | Ce status d'agent ouvre un large accès à la création d'organisation, la gestion de la sectorisation, la gestion des webhook, la configuration de ce qui est visible dans une fiche usager, une fiche RDV, la visiblité des catégories de motif, …
 
         .card-footer
-          .row
+          .fr-grid-row
             .col.text-right
               = f.submit class: "fr-btn"
 
@@ -78,7 +78,7 @@ h1
                   class: "select2-input",\
                 }
         .card-footer
-          .row
+          .fr-grid-row
             .col.text-right
               = f.submit class: "fr-btn"
 
@@ -104,7 +104,7 @@ h1
                   - if organisation.territory.services.any? || role&.agent_accueil?
                     = f.input :agent_accueil, as: :boolean, label: "Agent d'accueil", hint: "Peut consulter et modifier les agendas de tous les agents de l'organisation"
                 .card-footer
-                  .row
+                  .fr-grid-row
                     .col.text-left
                       = link_to t(".delete_agent_role"), admin_territory_agent_role_path(current_territory, role), class: "fr-btn fr-btn--tertiary", data: { confirm: "Vous confirmez retirer l'agent #{@agent.full_name_or_email} de l'organisation #{role.organisation.name} ?", method: :delete }
                     .col.text-right

@@ -1,7 +1,7 @@
 - content_for :title, t(".my_informations")
 
 .fr-container.fr-pt-3w
-  .row.justify-content-md-center
+  .fr-grid-row.justify-content-md-center
     .col-md-6
       .card
         .card-body
@@ -20,7 +20,7 @@
                 em = t(".no_relatives")
             - @user.relatives.order(:birth_date).each do |relative|
               li.list-group-item
-                .row
+                .fr-grid-row
                   .col
                     => relative.full_name
                     = "(#{age(relative)})" if relative.birth_date

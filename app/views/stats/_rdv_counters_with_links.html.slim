@@ -1,6 +1,6 @@
 - path_params = { agent_id: local_assigns[:agent_id], breadcrumb_page: local_assigns[:breadcrumb_page] }.compact
 
-.row
+.fr-grid-row
   .col-xl-4.col-lg-6
     - %i[seen excused revoked noshow].each do |temporal_status|
       = render "stats/rdv_counter_with_link", \
@@ -8,7 +8,7 @@
         count: rdvs.status(temporal_status).count,
         path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, **path_params)
   .col-xl-8.col-lg-6
-    .row
+    .fr-grid-row
       .col-xl-6
         = render "stats/rdv_counter_with_link", \
           temporal_status: :unknown_past, \
@@ -22,7 +22,7 @@
 
 hr
 
-.row
+.fr-grid-row
   .col-xl-4.col-lg-6
     = render "stats/rdv_counter_with_link", \
       label: "Tous", \

@@ -9,7 +9,7 @@ ul#motif_tabs.nav.nav-tabs.mt-3[role="tablist"]
     button#tab_notifs_et_instructions.nav-link[data-toggle="tab" data-target="#notifs_et_instructions" type="button" role="tab" aria-controls="notifs_et_instructions" aria-selected="false"]
       | Options avancées
 
-.row.justify-content-center
+.fr-grid-row.justify-content-center
   .col-md-12.col-lg-8
     .tab-content.mt-4
       #configuration_principale.tab-pane.fade.show.active[role="tabpanel" aria-labelledby="tab_configuration_principale"]
@@ -19,7 +19,7 @@ ul#motif_tabs.nav.nav-tabs.mt-3[role="tablist"]
       #notifs_et_instructions.tab-pane.fade[role="tabpanel" aria-labelledby="tab_notifs_et_instructions"]
         = render "admin/motifs/form/advanced_options", f: f, motif: motif, rdvi_mode: rdvi_mode
 
-    .row.mb-5
+    .fr-grid-row.mb-5
       - if motif.persisted?
         .col.text-left
           = link_to t("admin.motifs.actions.destroy"), admin_organisation_motif_path(motif.organisation, motif), method: :delete, class: "fr-btn fr-btn--tertiary", data: { confirm: t("admin.motifs.actions.destroy_confirm") }

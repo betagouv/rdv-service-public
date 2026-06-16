@@ -7,7 +7,7 @@
 
 = render "admin/motifs/fil_ariane", current_page_title: content_for(:title)
 
-.row
+.fr-grid-row
   .col-md-12
     = form_for @motif, url: admin_organisation_motif_path, builder: Dsfr::FormBuilder, html: { "data-controller": "motif-form" } do |f|
       = render "model_errors", model: @motif, f: f

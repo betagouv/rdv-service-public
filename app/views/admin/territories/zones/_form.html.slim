@@ -39,14 +39,14 @@
         data: { "address-type": "street", "address-autocomplete": "on" }, \
         dir: "ltr", \
       }
-  .row
+  .fr-grid-row
     .col-6
       = f.input :city_name, input_html: { readonly: true }, required: true
     .col-6
       = f.input :city_code, input_html: { readonly: true }, required: true, hint: sanitize("code postal ≠ <a href='https://fr.wikipedia.org/wiki/Code_officiel_g%C3%A9ographique#Code_commune' target='_blank'>code commune INSEE</a>", attributes: %w[href target])
 
   - if zone.level_street?
-    .row
+    .fr-grid-row
       .col-6= f.input :street_name, input_html: { readonly: true }, required: true
       .col-6= f.input :street_ban_id, input_html: { readonly: true }, required: true
 

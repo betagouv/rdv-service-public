@@ -43,7 +43,7 @@
       .form-group
         button.btn.btn-primary[type="submit"] Filtrer
 
-.row
+.fr-grid-row
   .col-12
 
     .float-right
@@ -68,7 +68,7 @@
             = label
             span.badge.badge-light.badge-pill.ml-1 = count
 
-.row
+.fr-grid-row
   .col-12
     - if @motifs_page.any?
       = paginate @motifs_page, theme: "dsfr"

@@ -2,7 +2,7 @@
   | Nouveau RDV par prescription
 
 main.container
-  .row.justify-content-center.mt-4
+  .fr-grid-row.justify-content-center.mt-4
     .col-lg-7.col-md-10.col-sm-11
       .card
         .card-body
@@ -12,7 +12,7 @@ main.container
 
           ul.list-group.list-group-flush[style="border-top: 1px solid #e3eaef;"]
             li.list-group-item
-              .row
+              .fr-grid-row
                 .col
                   = icon("fr-icon-check-line", class: "fr-mr-1w rdv-color-text-default-success")
                   | Usager :&nbsp;
@@ -21,7 +21,7 @@ main.container
                   = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.query_params), title: "Modifier l'usager"
             - if current_territory.enable_context_field
               li.list-group-item
-                .row
+                .fr-grid-row
                   .col
                     = icon("fr-icon-check-line", class: "fr-mr-1w rdv-color-text-default-success")
                     |> Contexte :
@@ -29,6 +29,6 @@ main.container
                   .col-auto
                     = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.query_params), title: "Modifier le contexte"
 
-          .row.mt-2
+          .fr-grid-row.mt-2
             .col.text-right
               = button_to("Confirmer le rdv", create_rdv_admin_organisation_prescription_path(@rdv_wizard.query_params), method: :post, class: "fr-btn", data: { disable_with: "Veuillez patienter…"})

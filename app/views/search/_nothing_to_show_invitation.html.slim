@@ -5,7 +5,7 @@
     p Vous pouvez contacter l'organisation pour demander l'ouverture de créneaux.
   - else
     p Vous pouvez contacter les organisations suivantes pour leur demander d'ouvrir des créneaux.
-  .row
+  .fr-grid-row
     - contactable_organisations.organisations.each do |organisation|
       = render "nothing_to_show_contactable_organisation", organisation: organisation
 
