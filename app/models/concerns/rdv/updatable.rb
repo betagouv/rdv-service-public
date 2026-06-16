@@ -31,7 +31,6 @@ module Rdv::Updatable
       end
     end
   end
-  # rubocop:enable Metrics/PerceivedComplexity
 
   def participation_token(user_id)
     # For user invited with tokens, nil default for not invited users
