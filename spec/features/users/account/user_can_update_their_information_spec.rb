@@ -13,7 +13,7 @@ RSpec.describe "User can update their information" do
 
     before do
       visit root_path
-      click_link "Vos informations"
+      click_link user.full_name
     end
 
     it "shows the user information" do
