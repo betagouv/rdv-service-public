@@ -11,14 +11,14 @@
       .fr-grid-row
         - previous_from_date = @date_range.begin - 7.days
         - if @date_range.begin > Time.zone.today
-          .col-12.col-md-auto.mb-2.mb-md-0.d-flex.align-items-center.justify-content-center
+          .fr-col-12.fr-col-md-auto.mb-2.mb-md-0.d-flex.align-items-center.justify-content-center
             = link_to "", creneaux_users_rdv_path(@rdv, date: previous_from_date), class: "fr-btn fr-icon-arrow-left-s-line fr-hidden fr-unhidden-md", aria: { label: "Semaine précédente" }
             = link_to "sem. précédente", creneaux_users_rdv_path(@rdv, date: previous_from_date), class: "fr-btn fr-btn--icon-left fr-icon-arrow-left-s-line fr-hidden-md", aria: { label: "Semaine précédente" }
 
-        .col
+        .fr-col
           .fr-grid-row
             - @date_range.each do |date|
-              .col-6.col-md-3.col-lg
+              .fr-col-6.fr-col-md-3.fr-col-lg
                 p.rdv-text-align-center
                   strong= l(date, format: "%A")
                   br
@@ -35,10 +35,10 @@
                       | Pas de créneau disponible
 
         - if @date_range.end < @all_creneaux.last.starts_at.to_date
-          .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
+          .fr-col-12.fr-col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
             = link_to "", creneaux_users_rdv_path(@rdv, date: @date_range.end + 1.day), class: "fr-btn fr-icon-arrow-right-s-line fr-hidden fr-unhidden-md", aria: { label: "semaine suivante"}
             = link_to "sem. prochaine", creneaux_users_rdv_path(@rdv, date: @date_range.end + 1.day), class: "fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line fr-hidden-md", aria: { label: "semaine suivante"}
 
       .fr-grid-row
-        .col.pt-4
+        .fr-col.pt-4
           = link_to "Retour au RDV", users_rdv_path(@rdv)

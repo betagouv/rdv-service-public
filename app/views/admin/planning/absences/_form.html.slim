@@ -14,7 +14,7 @@
 
   .fr-grid-row
     - if absence.persisted?
-      .col.text-left
+      .fr-col.text-left
         = link_to "Supprimer", admin_organisation_planning_absence_path(current_organisation, absence), method: :delete, class: "btn btn-outline-danger", data: { confirm: t(".confirm_delete_absence")}
-    .col.text-right
+    .fr-col.text-right
       = f.submit class: "fr-btn"

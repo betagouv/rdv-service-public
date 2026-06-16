@@ -3,7 +3,7 @@
 
 main.container
   .fr-grid-row.justify-content-center.mt-4
-    .col-lg-7.col-md-10.col-sm-11
+    .fr-col-lg-7.fr-col-md-10.fr-col-sm-11
       .card
         .card-body
           h2.fr-h3 Récapitulatif
@@ -13,22 +13,22 @@ main.container
           ul.list-group.list-group-flush[style="border-top: 1px solid #e3eaef;"]
             li.list-group-item
               .fr-grid-row
-                .col
+                .fr-col
                   = icon("fr-icon-check-line", class: "fr-mr-1w rdv-color-text-default-success")
                   | Usager :&nbsp;
                   = UsersHelper.reverse_full_name_and_notification_coordinates(@rdv_wizard.participation.user)
-                .col-auto
+                .fr-col-auto
                   = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.query_params), title: "Modifier l'usager"
             - if current_territory.enable_context_field
               li.list-group-item
                 .fr-grid-row
-                  .col
+                  .fr-col
                     = icon("fr-icon-check-line", class: "fr-mr-1w rdv-color-text-default-success")
                     |> Contexte :
                     = @rdv_wizard.context&.strip&.truncate_words(6)&.presence || "N/A"
-                  .col-auto
+                  .fr-col-auto
                     = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.query_params), title: "Modifier le contexte"
 
           .fr-grid-row.mt-2
-            .col.text-right
+            .fr-col.text-right
               = button_to("Confirmer le rdv", create_rdv_admin_organisation_prescription_path(@rdv_wizard.query_params), method: :post, class: "fr-btn", data: { disable_with: "Veuillez patienter…"})

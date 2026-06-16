@@ -2,11 +2,11 @@
   ul.list-group.list-group-flush.fr-mt-0
     li.list-group-item
       .fr-grid-row
-        .col
+        .fr-col
           span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
           | Motif :&nbsp;
           = context.first_matching_motif.name
-        .col-auto
+        .fr-col-auto
           = dsfr_link_to "Modifier", path_to_service_selection(params), title: "Modifier le motif"
     - case context.first_matching_motif.location_type
     - when Motif.location_types[:phone]
@@ -25,20 +25,20 @@
       - if context.ants_pre_demandes_count.present?
         li.list-group-item
           .fr-grid-row
-            .col
+            .fr-col
               span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
               | Nombre de pré-demandes ANTS à déposer :&nbsp;
               = context.ants_pre_demandes_count
-            .col-auto
+            .fr-col-auto
               = dsfr_link_to "Modifier", path_to_ants_pre_demandes_count_selection(params), title: "Modifier le nombre de pré-demandes ANTS"
       - if context.lieu
         li.list-group-item
           .fr-grid-row
-            .col
+            .fr-col
               span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
               | Lieu :&nbsp;
               = context.lieu.full_name
-            .col-auto
+            .fr-col-auto
               = dsfr_link_to "Modifier", path_to_organisation_selection(params), title: "Modifier le lieu"
     - else
       = raise "unrecognized location_type: #{rdv_wizard.motif.location_type.inspect}"

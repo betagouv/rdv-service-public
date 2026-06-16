@@ -2,7 +2,7 @@
   | Nouveau RDV par prescription
 main.container
   .fr-grid-row.justify-content-center.mt-4
-    .col-lg-7.col-md-10.col-sm-11
+    .fr-col-lg-7.fr-col-md-10.fr-col-sm-11
       .card
         .card-body
           h2.fr-h3
@@ -34,9 +34,9 @@ main.container
 
             li.list-group-item
               .fr-grid-row
-                .col-auto.pr-0
+                .fr-col-auto.pr-0
                   = motif_icon(class: "fr-mr-1w")
-                .col-auto.pl-1
+                .fr-col-auto.pl-1
                   = rdv.motif.name
                   - if current_territory.enable_context_field && @rdv.context.present?
                     div.rdv-white-space-pre.pt-3= @rdv.context

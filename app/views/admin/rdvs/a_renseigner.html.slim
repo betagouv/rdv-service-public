@@ -8,7 +8,7 @@ p Merci d'indiquer si ces rendez-vous se sont bien passés comme prévu.
 
 - if @rdvs.total_count > 0
   .fr-grid-row.justify-content-center.pb-3
-    .col-md-12
+    .fr-col-md-12
       - @rdvs.group_by { |r| r.starts_at.to_date }.each do |date, rdvs|
         h2.h3 = "Le #{l(date, format: :human)}"
         - rdvs.sort_by(&:starts_at).each do |rdv|
@@ -17,11 +17,11 @@ p Merci d'indiquer si ces rendez-vous se sont bien passés comme prévu.
       .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
 - else
   .fr-grid-row.justify-content-center.pb-3
-    .col-md-12
+    .fr-col-md-12
       .card
         .card-body
           .fr-grid-row.justify-content-md-center
-            .col-md-6.rdv-text-align-center.my-5
+            .fr-col-md-6.rdv-text-align-center.my-5
               p.mb-2
                 = icon("fr-icon-success-line", class: "fr-mr-1w")
                 | Vous êtes à jour ! Tous vos rendez-vous sont renseignés

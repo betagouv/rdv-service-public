@@ -1,11 +1,11 @@
 - if plage_ouverture.available_motifs.any?
   = simple_form_for [:admin, plage_ouverture.organisation, :planning, plage_ouverture], html: { class: "plage-ouverture-form" } do |f|
     .fr-grid-row.justify-content-center
-      .col-md-6
+      .fr-col-md-6
         = render("model_errors", model: plage_ouverture, f: f)
 
     .fr-grid-row.justify-content-center
-      .col-md-6
+      .fr-col-md-6
         .card
           .card-body
             h2.dsfr-card-title Dates et horaires
@@ -13,14 +13,14 @@
             = render partial: "common/recurrence", locals: { f:, model: plage_ouverture, legend: }
 
     .fr-grid-row.justify-content-center
-      .col-md-6
+      .fr-col-md-6
         .card
           .card-body
             h2.dsfr-card-title Motifs
             = render partial: "admin/planning/plage_ouvertures/choix_motifs", locals: { plage_ouverture:, f: }
 
     .fr-grid-row.justify-content-center
-      .col-md-6
+      .fr-col-md-6
         .card
           .card-body
             h2.dsfr-card-title.mb-3 Options avancées
@@ -42,21 +42,21 @@
             = f.input :hex_color, as: :color, label: "Couleur", hint: "Cette couleur peut vous aider à distinguer vos plages sur votre agenda."
 
     .fr-grid-row.justify-content-center
-      .col-md-6
+      .fr-col-md-6
         .fr-grid-row.mb-5
           - if plage_ouverture.persisted?
-            .col.text-left
+            .fr-col.text-left
               = link_to "Annuler", \
                 admin_organisation_planning_plage_ouverture_path(current_organisation, plage_ouverture), \
                 class: "btn btn-link"
-            .col.text-right
+            .fr-col.text-right
               = f.button :submit, "Enregistrer"
           -else
-            .col.text-left
+            .fr-col.text-left
               = link_to "Annuler", \
                 admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: current_agent), \
                 class: "fr-btn fr-btn--tertiary-no-outline"
-            .col.text-right
+            .fr-col.text-right
               = f.submit "Créer la plage d'ouverture", class: "fr-btn"
 - else
   .card

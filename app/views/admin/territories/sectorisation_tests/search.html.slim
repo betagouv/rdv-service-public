@@ -16,12 +16,12 @@ do |f|
         placeholder: "ex : 21 rue Anatole France, Calais", \
         input_html: { data: { "address-autocomplete": "on" }, dir: "ltr" }
       .fr-grid-row.align-items-center.bg-light.py-2.mb-2
-        .col-lg-2 Infos de la Base Adresse
-        .col-lg-2= f.input :departement, readonly: true, label: "Département"
-        .col-lg-2= f.input :city_code, readonly: true, label: "Code commune"
-        .col-lg-2= f.input :street_ban_id, readonly: true, label: "Code rue BAN"
-        .col-lg-2= f.input :latitude, readonly: true, label: "Latitude"
-        .col-lg-2= f.input :longitude, readonly: true, label: "Longitude"
+        .fr-col-lg-2 Infos de la Base Adresse
+        .fr-col-lg-2= f.input :departement, readonly: true, label: "Département"
+        .fr-col-lg-2= f.input :city_code, readonly: true, label: "Code commune"
+        .fr-col-lg-2= f.input :street_ban_id, readonly: true, label: "Code rue BAN"
+        .fr-col-lg-2= f.input :latitude, readonly: true, label: "Latitude"
+        .fr-col-lg-2= f.input :longitude, readonly: true, label: "Longitude"
       = f.submit class: "fr-btn", value: "Tester la sectorisation de cette adresse"
 
   - if @sectorisation_test_form.valid?

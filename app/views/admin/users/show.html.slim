@@ -17,7 +17,7 @@ ruby:
   = link_to "Trouver un RDV pour l’usager", admin_organisation_creneaux_search_path(current_organisation, user_ids: [@user.id]), class: "fr-btn fr-btn--secondary", title: "Trouver un RDV pour l’usager #{@user.full_name}"
 
 .fr-grid-row
-  .col-md-6
+  .fr-col-md-6
     .card#spec-primary-user-card
       .card-body
         - if @user.logged_once_with_franceconnect?
@@ -94,7 +94,7 @@ ruby:
           .text-right
             = link_to "Ajouter un proche", new_admin_organisation_user_path(current_organisation, responsible_id: @user.id), class: "fr-btn fr-btn--secondary fr-icon-add-line fr-btn--icon-left"
 
-  .col-md-6
+  .fr-col-md-6
 
     - ongoing_rdvs = policy_scope(@user.ongoing_rdvs(current_organisation), policy_scope_class: Agent::RdvPolicy::Scope).order(starts_at: :asc)
     - if ongoing_rdvs.load.any?
@@ -117,13 +117,13 @@ ruby:
             = link_to "Voir tous les RDV de l’usager", admin_organisation_rdvs_path(current_organisation, user_id: @user.id), class: "fr-btn fr-btn--tertiary fr-btn--sm", title: "Voir tous les RDV de l’usager #{@user.full_name}"
       .card-body
         .fr-grid-row
-          .col-lg-6
+          .fr-col-lg-6
             - %i[seen excused revoked noshow].each do |temporal_status|
               = render "stats/rdv_counter_with_link", \
                 temporal_status: temporal_status, \
                 count: @participations.status(temporal_status).count,
                 path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, user_id: @user.id, breadcrumb_page: "user")
-          .col-lg-6
+          .fr-col-lg-6
             - %i[unknown_future unknown_past].each do |temporal_status|
               = render "stats/rdv_counter_with_link", \
                 temporal_status: temporal_status, \
@@ -135,5 +135,5 @@ ruby:
           | Les RDV sont supprimés au bout de 2 ans.
 
 .fr-grid-row.justify-content-center
-  .col-md-12.col-lg-8
+  .fr-col-md-12.fr-col-lg-8
     = render "admin/versions/resource_versions_row", resource_policy: policy(@user, policy_class: Agent::UserPolicy), resource: @user

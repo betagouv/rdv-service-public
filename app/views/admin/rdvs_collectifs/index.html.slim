@@ -12,9 +12,9 @@
     .card-header
       = simple_form_for(@form, as: "", url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :get) do |f|
         .fr-grid-row
-          .col-md-4
+          .fr-col-md-4
             = date_input(f, :from_date, label = "À partir du", value: @form.from_date)
-          .col-md-4
+          .fr-col-md-4
             = f.input :motif_id, \
               include_blank: true, \
               collection: @motifs, \
@@ -24,9 +24,9 @@
                 data: { placeholder: "Sélectionnez un motif", "allow-clear": true }, \
                 class: "select2-input", \
               }
-          .col-md-3.mt-4
+          .fr-col-md-3.mt-4
             = f.input :with_remaining_seats, as: :boolean, label: "Avec des places disponibles"
-          .col-md-1.d-flex-justify-content-end.mt-3
+          .fr-col-md-1.d-flex-justify-content-end.mt-3
             = f.submit "Filtrer", class: "fr-btn fr-btn--secondary"
 
   .card-body
@@ -46,6 +46,6 @@
         = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer un RDV collectif, vous devez d'abord créer un motif de rendez-vous collectif."
       - else
         .fr-grid-row.justify-content-md-center
-          .col-md-6.rdv-text-align-center.my-5
+          .fr-col-md-6.rdv-text-align-center.my-5
             p.mb-2.lead
               | Aucun RDV collectif

@@ -21,7 +21,7 @@ h1
               disabled: !can_edit_services
       .card-footer
         .fr-grid-row
-          .col.text-right
+          .fr-col.text-right
             - if can_edit_services
               = f.submit class: "fr-btn", value: "Enregistrer les services"
             - else
@@ -39,7 +39,7 @@ h1
         = f.input :allow_to_invite_agents, as: :boolean, hint: "Inviter d'autre personne sur l'espace, les affecter ou retirer de chacune des organisations de #{current_territory.name_for_agent}", disabled: !can_edit_access_rights
       .card-footer
         .fr-grid-row
-          .col.text-right
+          .fr-col.text-right
             - if can_edit_access_rights
               = f.submit class: "fr-btn", value: "Enregistrer les droits d'accès"
             - else
@@ -61,7 +61,7 @@ h1
 
         .card-footer
           .fr-grid-row
-            .col.text-right
+            .fr-col.text-right
               = f.submit class: "fr-btn"
 
   - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_teams?
@@ -79,7 +79,7 @@ h1
                 }
         .card-footer
           .fr-grid-row
-            .col.text-right
+            .fr-col.text-right
               = f.submit class: "fr-btn"
 
   .card.m-2.rounded
@@ -105,9 +105,9 @@ h1
                     = f.input :agent_accueil, as: :boolean, label: "Agent d'accueil", hint: "Peut consulter et modifier les agendas de tous les agents de l'organisation"
                 .card-footer
                   .fr-grid-row
-                    .col.text-left
+                    .fr-col.text-left
                       = link_to t(".delete_agent_role"), admin_territory_agent_role_path(current_territory, role), class: "fr-btn fr-btn--tertiary", data: { confirm: "Vous confirmez retirer l'agent #{@agent.full_name_or_email} de l'organisation #{role.organisation.name} ?", method: :delete }
-                    .col.text-right
+                    .fr-col.text-right
                       = f.button :submit, t(".submit")
 
     .card-footer

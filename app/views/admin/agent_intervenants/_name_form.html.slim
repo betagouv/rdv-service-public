@@ -1,5 +1,5 @@
 .fr-grid-row
-  .col-md-12.col-lg-8
+  .fr-col-md-12.fr-col-lg-8
     .card
       .card-body
         = form_for [:admin, current_organisation, agent_intervenant], url: admin_organisation_agent_intervenant_path(current_organisation, agent_intervenant), html: { method: :put }, builder: Dsfr::FormBuilder do |f|

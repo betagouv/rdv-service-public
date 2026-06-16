@@ -14,7 +14,7 @@
   | Modifier le RDV
 
 .fr-grid-row.justify-content-center
-  .col-md-12.col-lg-8
+  .fr-col-md-12.fr-col-lg-8
     .card
       .card-body
         = form_for(@rdv, url: admin_organisation_rdv_path(current_organisation, @rdv, contextual_agent_ids: @contextual_agents.map(&:id)), builder: Dsfr::FormBuilder) do |f|

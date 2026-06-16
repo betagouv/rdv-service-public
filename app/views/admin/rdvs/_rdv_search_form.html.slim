@@ -1,7 +1,7 @@
 = simple_form_for(form, method: "GET", url: url_for({}), as: "", data: { controller: "form" }) do |f|
   - if current_agent.multiple_organisations_access?
     .fr-grid-row
-      .col-md-6
+      .fr-col-md-6
         = f.input :scoped_organisation_ids, collection: current_agent.organisations.map {[_1.name, _1.id]}.unshift(["Toutes", 0]), \
                 selected: @selected_organisations_ids, \
                 label: "Organisation", \
@@ -15,7 +15,7 @@
                 wrapper: "horizontal_form"
     hr
   .fr-grid-row
-    .col-md-6
+    .fr-col-md-6
       = f.input :agent_id, collection: [form.agent].compact, \
               label: "Agent", \
               label_method: :reverse_full_name, \
@@ -58,7 +58,7 @@
               label_method: :name,
               input_html: { class: "select2-input", multiple: true },
               wrapper: "horizontal_form"
-    .col-md-6
+    .fr-col-md-6
       = f.input :motif_ids,
             label: "Motifs",
             collection: @motifs.includes(:service).to_a.group_by(&:service_name), \

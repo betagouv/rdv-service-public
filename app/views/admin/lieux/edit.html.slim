@@ -4,19 +4,19 @@
 = render "admin/lieux/fil_ariane", current_page_title: content_for(:title)
 
 .fr-grid-row.justify-content-center
-  .col-md-12.col-lg-8
+  .fr-col-md-12.fr-col-lg-8
     .card
       .card-body
         = form_for [:admin, @lieu.organisation, @lieu], builder: Dsfr::FormBuilder, display_required_tags: false do |f|
           = render "model_errors", model: @lieu, f: f
           p.fr-hint-text Sauf mention contraire, tous les champs sont obligatoires.
           = render "lieu_fields", f: f
-          .col.text-right.fr-p-0
+          .fr-col.text-right.fr-p-0
             = link_to t("helpers.cancel"), admin_organisation_lieux_path(@lieu.organisation), class: "fr-btn fr-btn--tertiary-no-outline fr-mr-1w"
             = f.submit "Enregistrer", class: "fr-btn"
 
 .fr-grid-row.justify-content-center
-  .col-md-12.col-lg-8
+  .fr-col-md-12.fr-col-lg-8
     .card
       .card-body
         - if @lieu.enabled?
@@ -34,12 +34,12 @@
 
 - if @lieu.disabled?
   .fr-grid-row.justify-content-center
-    .col-md-12.col-lg-8
+    .fr-col-md-12.fr-col-lg-8
       .card
         .card-body
           - lieu_is_referenced = @lieu.plage_ouvertures.any? || @lieu.rdvs.any?
           .fr-grid-row
-            .col
+            .fr-col
               - if lieu_is_referenced
                 .alert.alert-info
                   h5.alert-heading Ce lieu ne peut pas être supprimé.
@@ -56,5 +56,5 @@
             = link_to t("helpers.delete"), admin_organisation_lieu_path(@lieu.organisation, @lieu), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce lieu ?" }
 
 .fr-grid-row.justify-content-center
-  .col-md-12.col-lg-8
+  .fr-col-md-12.fr-col-lg-8
     = render "admin/versions/resource_versions_row", resource_policy: @lieu_policy, resource: @lieu

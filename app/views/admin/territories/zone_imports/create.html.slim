@@ -1,12 +1,12 @@
 = territory_navigation(t(".title", territory: @current_territory), [["Sectorisation", admin_territory_sectorization_path(current_territory)]])
 
 .fr-grid-row.justify-content-center
-  .col-md-6
+  .fr-col-md-6
     .card
       .card-header Import de communes et de rues
       .card-body
         = render "form", form: @form
-  .col-md-6
+  .fr-col-md-6
     .card
       .card-header
         | Résultat de #{@form.dry_run ? "la simulation" : "de l'import"}
@@ -61,7 +61,7 @@
                   span>= message
 
   - if @res[:imported_zones].any?
-    .col-md-12
+    .fr-col-md-12
       .card
         .card-header Communes et rues #{@form.dry_run ? "qui auraient été importées" : "importées"}
         table.table

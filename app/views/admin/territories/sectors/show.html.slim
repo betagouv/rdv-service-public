@@ -7,7 +7,7 @@
 = territory_navigation(t(".title", name: @sector.name), [["Sectorisation", admin_territory_sectorization_path(current_territory)], ["Secteurs", admin_territory_sectors_path(current_territory)]])
 
 .fr-grid-row.justify-content-center
-  .col-md-6
+  .fr-col-md-6
     .card
       .card-body.d-flex.justify-content-between
         ul.list-unstyled
@@ -75,7 +75,7 @@
           = link_to admin_territory_sector_zones_path(current_territory, @sector, format: "xls"), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-download-line" do
             | Télécharger un export XLS des communes et rues
 
-  .col-md-6
+  .fr-col-md-6
     .card
       .card-header
         .card-title

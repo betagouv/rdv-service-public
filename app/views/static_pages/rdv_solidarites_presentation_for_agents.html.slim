@@ -3,14 +3,14 @@
 section.py-5.rdv-background-color-flat-blue-ecume
   .fr-container
     .fr-grid-row
-      .col-md-9.m-auto
+      .fr-col-md-9.m-auto
         h1.rdv-color-white.mb-3
           span> Gérez les rendez-vous de votre département
         .mt-5= link_to "Se connecter en tant qu'agent", new_agent_session_path, class: "btn text-white btn-outline-white"
 section.py-5.rdv-background-color-alt-green-menthe
   .fr-container
     .fr-grid-row
-      .col-md-9.m-auto
+      .fr-col-md-9.m-auto
         h2.pb-0 Notre mission
         .fr-text--xl.mb-5
           |> Réduire le nombre de rendez-vous manqués
@@ -18,23 +18,23 @@ section.py-5.rdv-background-color-alt-green-menthe
         .divider
 
         .fr-grid-row
-          .col-4.mb-4
+          .fr-col-4.mb-4
             .fr-grid-row.d-flex.align-items-stretch
-              .col-md-3.p-2.px-3.p-md-0
+              .fr-col-md-3.p-2.px-3.p-md-0
                 = image_tag "welcome/illu-4x.svg", alt: "quatre fois"
-              .col-md-9.d-flex.align-items-center
+              .fr-col-md-9.d-flex.align-items-center
                 .fr-text--xl.m-0 moins de lapins
-          .col-4.mb-4
+          .fr-col-4.mb-4
             .fr-grid-row.d-flex.align-items-stretch
-              .col-md-3.p-2.px-3.p-md-0
+              .fr-col-md-3.p-2.px-3.p-md-0
                 = image_tag "welcome/illu-3x.svg", alt: "trois fois"
-              .col-md-9.d-flex.align-items-center
+              .fr-col-md-9.d-flex.align-items-center
                 .fr-text--xl.m-0 plus rapide pour prendre RDV
-          .col-4.mb-4
+          .fr-col-4.mb-4
             .fr-grid-row.d-flex.align-items-stretch
-              .col-md-3.p-2.px-3.p-md-0
+              .fr-col-md-3.p-2.px-3.p-md-0
                 = image_tag "welcome/illu-2x.svg", alt: "deux fois"
-              .col-md-9.d-flex.align-items-center
+              .fr-col-md-9.d-flex.align-items-center
                 .fr-text--xl.m-0 moins d'attente pour l'usager
 
         .rdv-text-align-center.mt-5
@@ -48,21 +48,21 @@ section.py-5
       h2.mb-5 Comment ça marche ?
     .divider
     .fr-grid-row
-      .col-md-4
+      .fr-col-md-4
         .w-50.p-3.m-auto
           = image_tag "welcome/illu-prise-rdv.svg", alt: ""
         .fr-text--xl Prise de RDV en ligne
         p
           | Vous choisissez quels motifs de RDV sont ouverts à la prise de RDV en ligne. Les agents peuvent garder la main sur les motifs de RDV de leur choix.
 
-      .col-md-4
+      .fr-col-md-4
         .w-50.p-3.m-auto
           = image_tag "welcome/illu-rappel-rdv.svg", alt: ""
         .fr-text--xl Rappels de RDV
         p
           | Vos usagers sont notifiés lors de la prise de RDV et à l'échéance du RDV par SMS et par email. Ils peuvent le cas échéant modifier ou annuler le RDV directement en ligne.
 
-      .col-md-4
+      .fr-col-md-4
         .w-50.p-3.m-auto
           = image_tag "welcome/illu-gestion.svg", alt: ""
         .fr-text--xl Gestion des files d'attente
@@ -75,7 +75,7 @@ section.rdv-background-color-alt-green-menthe.py-5
       h2.mb-4 Quelles fonctionnalités ?
     .divider
     .fr-grid-row
-      .col-md-6
+      .fr-col-md-6
         .p-6.m-auto
           h3.mb-3 Toutes les typologies de RDV
           ul
@@ -84,7 +84,7 @@ section.rdv-background-color-alt-green-menthe.py-5
             li Visite à domicile
             li Suivi avec des référents
             li RDV collectif
-      .col-md-6
+      .fr-col-md-6
         .p-6.m-auto
           h3.mb-3 Adapté à vos contraintes opérationnelles
           ul
@@ -94,7 +94,7 @@ section.rdv-background-color-alt-green-menthe.py-5
             li Notifications vers des systèmes d'informations externes
 
     .fr-grid-row
-      .col-md-12.rdv-text-align-center.mt-5
+      .fr-col-md-12.rdv-text-align-center.mt-5
         p Vous y pensez pour votre Maison des Solidarités ?
         .p-2.px-3.p-md-0
           = link_to "Contactez-nous", generic_team_meeting_url, class: "btn btn-primary"

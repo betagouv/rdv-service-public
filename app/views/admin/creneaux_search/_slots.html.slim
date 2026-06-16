@@ -4,12 +4,12 @@ div id="creneaux-lieu-#{lieu&.id}"
   .fr-grid-row.position-relative[style="min-height: 200px"]
     - if form.date_range.begin > Time.zone.today
       - previous_from_date = form.date_range.begin - 7.days
-      .col-auto.d-flex.align-items-center
+      .fr-col-auto.d-flex.align-items-center
         = link_to "Créneaux précédents", admin_organisation_creneaux_search_selection_creneaux_path(search_params.merge(from_date: previous_from_date)), class: "fr-btn fr-icon-arrow-left-s-line"
-    .col
+    .fr-col
       .fr-grid-row.no-gutters.creneaux-row.lieu-creneaux-card
         - form.date_range.each do |date|
-          .col.position-relative
+          .fr-col.position-relative
             p.rdv-text-align-center.sticky-top.bg-white
               strong= l(date, format: "%A")
               br
@@ -43,5 +43,5 @@ div id="creneaux-lieu-#{lieu&.id}"
               .ml-2
                 = icon("fr-icon-arrow-right-s-line")
 
-      .col-auto.d-flex.align-items-center
+      .fr-col-auto.d-flex.align-items-center
         = link_to "Créneaux suivants", admin_organisation_creneaux_search_selection_creneaux_path(search_params.merge(from_date: form.date_range.end + 1.day)), class: "fr-btn fr-icon-arrow-right-s-line"

@@ -2,7 +2,7 @@
 
 .fr-container.fr-pt-3w
   .fr-grid-row.justify-content-md-center
-    .col-md-6
+    .fr-col-md-6
       .card
         .card-body
           h1.card-title = t(".my_informations")
@@ -10,7 +10,7 @@
             = render "form_fields", f: f
             .rdv-text-align-right
               = f.submit "Enregistrer", class: "fr-btn"
-    .col-md-6
+    .fr-col-md-6
       .card
         .card-body
           h2.card-title = t(".my_relatives")
@@ -21,10 +21,10 @@
             - @user.relatives.order(:birth_date).each do |relative|
               li.list-group-item
                 .fr-grid-row
-                  .col
+                  .fr-col
                     => relative.full_name
                     = "(#{age(relative)})" if relative.birth_date
-                  .col-auto.rdv-text-align-right
+                  .fr-col-auto.rdv-text-align-right
                     = link_to t("admin.rdvs.show.update"), edit_relative_path(relative)
           .rdv-text-align-right
             = link_to t(".add_relative"), new_relative_path, class: "fr-btn fr-btn--secondary", data: { modal: true }

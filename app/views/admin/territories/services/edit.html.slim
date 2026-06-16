@@ -26,7 +26,7 @@
 
           .fr-grid-row.align-items-center.mt-3
             - if params[:redirect_to_organisation_id]
-              .col.text-left
+              .fr-col.text-left
                 = link_to("Annuler", new_admin_organisation_agent_path(params[:redirect_to_organisation_id]))
-            .col.text-right
+            .fr-col.text-right
               = f.submit class: "fr-btn"

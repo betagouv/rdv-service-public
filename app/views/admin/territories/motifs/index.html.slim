@@ -6,33 +6,33 @@
     = form.hidden_field :current_tab, value: @current_tab
 
     .form-row
-      .form-group.col-md-4
+      .form-group.fr-col-md-4
         label for="search"
           | Nom
         input[id="search" name="search" type="text" class="form-control" placeholder="Nom" value=params[:search]]
-      .form-group.col-md-4
+      .form-group.fr-col-md-4
         label for="organisation_ids"
           | Organisation(s)
         select.select2-input[id="organisation_ids" name="organisation_ids[]" multiple data-select2-config={ placeholder: "-" }.to_json style="width: 100%"]
           = options_for_select(@organisations.pluck(:name, :id), params[:organisation_ids])
-      .form-group.col-md-4
+      .form-group.fr-col-md-4
         label for="organisation_ids"
           | Service(s)
         select.select2-input[id="service_ids" name="service_ids[]" multiple data-select2-config={ placeholder: "-" }.to_json style="width: 100%"]
           = options_for_select(@services.pluck(:name, :id), params[:service_ids])
     .form-row
-      .form-group.col-md-4
+      .form-group.fr-col-md-4
         label for="location_type"
           | Type
         select.select2-input[id="location_type" name="location_type"  style="width: 100%"]
           - options = Motif.location_types.map{ |l| [Motif.human_attribute_value(:location_type, l[0]), l[1]] }
           = options_for_select(options_for_select([["-", ""]] + options, params[:location_type]))
-      .form-group.col-md-4
+      .form-group.fr-col-md-4
         label for="collectif"
           | Nombre de participants
         select.select2-input[id="collectif" name="collectif" style="width: 100%"]
           = options_for_select([["-", ""], ["collectif", "true"], ["Individuel", "false"]], params[:collectif])
-      .form-group.col-md-4
+      .form-group.fr-col-md-4
         label for="bookable_by"
           | Réservable par
         select.select2-input[id="bookable_by" name="bookable_by" style="width: 100%"]
@@ -44,7 +44,7 @@
         button.btn.btn-primary[type="submit"] Filtrer
 
 .fr-grid-row
-  .col-12
+  .fr-col-12
 
     .float-right
       .d-flex.flex-gap-1em
@@ -69,7 +69,7 @@
             span.badge.badge-light.badge-pill.ml-1 = count
 
 .fr-grid-row
-  .col-12
+  .fr-col-12
     - if @motifs_page.any?
       = paginate @motifs_page, theme: "dsfr"
       = render partial: "admin/territories/motifs/motifs_table", locals: { motifs: @motifs_page, display_actions: true, display_checkboxes: @current_tab != :archived }

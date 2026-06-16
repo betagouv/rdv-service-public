@@ -21,7 +21,7 @@ h1.fr-h2.rdv-text-align-center.mt-0.font-weight-bold.mb-4 Validation de permissi
       /= t(scope, scope: [:doorkeeper, :scopes])
 
     .fr-grid-row.rdv-text-align-right
-      .col-md-6
+      .fr-col-md-6
         = form_tag oauth_authorization_path, method: :delete do
           = hidden_field_tag :client_id, @pre_auth.client.uid, id: nil
           = hidden_field_tag :redirect_uri, @pre_auth.redirect_uri, id: nil
@@ -33,7 +33,7 @@ h1.fr-h2.rdv-text-align-center.mt-0.font-weight-bold.mb-4 Validation de permissi
           = hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method, id: nil
           = submit_tag "Annuler", class: "fr-btn fr-btn--secondary"
 
-      .col-md-1
+      .fr-col-md-1
         = form_tag oauth_authorization_path, method: :post do
           = hidden_field_tag :client_id, @pre_auth.client.uid, id: nil
           = hidden_field_tag :redirect_uri, @pre_auth.redirect_uri, id: nil

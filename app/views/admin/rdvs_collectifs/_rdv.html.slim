@@ -10,7 +10,7 @@
         = link_to "Supprimer", admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: nil), method: :delete, data: { confirm: "Confirmez-vous la suppression de ce rendez-vous collectif ?"}, class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-delete-bin-line"
   .card-body
     .fr-grid-row
-      .col-md-6
+      .fr-col-md-6
         .d-flex.card-text.mb-2
           - if rdv.public_office?
             = lieu_icon(class: "fr-mr-1w")
@@ -28,7 +28,7 @@
           = icon("fr-icon-time-fill", class: "fr-mr-1w")
           = "#{rdv.duration_in_min} minutes"
 
-      .col-md-6
+      .fr-col-md-6
         = render "admin/rdvs_collectifs/participants_info", rdv: rdv, selected_users:
         - if rdv.remaining_seats? && rdv.not_cancelled?
           - if selected_users.any?

@@ -4,7 +4,7 @@
   = render "common/fil_ariane", titles_and_paths: [["RDV collectifs", admin_organisation_rdvs_collectifs_path(current_organisation)], [@rdv.motif_name, admin_organisation_rdv_path(current_organisation, @rdv)]], current_page_title: "Ajouter un participant"
 
 .fr-grid-row.justify-content-md-center
-  .col-md-12.col-lg-8
+  .fr-col-md-12.fr-col-lg-8
     = form_for(@rdv, url: admin_organisation_rdvs_collectif_path(current_organisation), method: :put, builder: Dsfr::FormBuilder) do |f|
       .card
         .card-header
@@ -12,7 +12,7 @@
           = I18n.l(@rdv.starts_at, format: "%A %-d %B à %H:%M").capitalize
         .card-body.px-3
           .fr-grid-row.mt-3
-            .col-md-6
+            .fr-col-md-6
               .d-flex.card-text.mb-2
                 = icon("fr-icon-team-fill", class: "fr-mr-1w")
                 div
@@ -29,7 +29,7 @@
                     - @rdv.users.each do |user|
                       li= user.full_name
 
-            .col-md-6
+            .fr-col-md-6
               .d-flex.card-text.mb-2
               - if @rdv.public_office?
                 = lieu_icon(class: "fr-mr-1w")

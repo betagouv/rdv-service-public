@@ -36,8 +36,8 @@
 
     div *div_opts[:relative]
       .form-row
-        .col-md-6= f.input :first_name, **input_opts[:relative]
-        .col-md-6= f.input :last_name, **input_opts[:relative]
+        .fr-col-md-6= f.input :first_name, **input_opts[:relative]
+        .fr-col-md-6= f.input :last_name, **input_opts[:relative]
       - if current_territory.enable_birth_date_field?
         = date_input(f, :birth_date, **input_opts[:relative])
       - if current_territory.enable_notes_field?
@@ -45,7 +45,7 @@
 
     - if user.new_record?
       .form-row.mb-2 *div_opts[:relative]
-        .col-md-12.border.p-2.bg-light
+        .fr-col-md-12.border.p-2.bg-light
           h5.mb-3 Usager Responsable
           ul.nav.nav-pills.mb-3 role="tablist"
             li.nav-item
@@ -96,7 +96,7 @@
 
     - elsif user.persisted? && user.relative?
       .form-row.mb-2
-        .col-md-12.border.p-2.bg-light
+        .fr-col-md-12.border.p-2.bg-light
           h5.mb-3 Usager Responsable
           a.nav-link.js-relative-tab-link.active.d-none[data-relative-type="existing"]
           / ^ for JS

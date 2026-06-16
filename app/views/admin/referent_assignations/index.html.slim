@@ -4,7 +4,7 @@
     = render "common/fil_ariane", titles_and_paths: [["Usagers", admin_organisation_users_path(current_organisation)], [@user.full_name, admin_organisation_user_path(current_organisation, @user)]], current_page_title: yield(:title)
 
 - if @referents.any?
-  .container-fluid.bg-white.rounded.col-lg-10.mb-3
+  .container-fluid.bg-white.rounded.fr-col-lg-10.mb-3
     table.table
       thead
         tr
@@ -15,7 +15,7 @@
         - @referents.order(:last_name).each do |agent|
           = render partial: "admin/referent_assignations/referent_assignation_row", locals: { agent: agent, action: :remove }
 
-.container-fluid.bg-white.rounded.col-lg-10
+.container-fluid.bg-white.rounded.fr-col-lg-10
   .d-flex.justify-content-between
     h2 Agents de l'organisation
     = simple_form_for "", url: admin_organisation_user_referent_assignations_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
