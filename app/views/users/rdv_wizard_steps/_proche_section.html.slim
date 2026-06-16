@@ -1,6 +1,6 @@
 - relatives = current_user.relatives.order(:first_name)
 
-fieldset.fr-fieldset.rdv-proche-selection.fr-mt-3w
+fieldset.fr-fieldset.rdv-proche-selection.fr-mt-3w data-controller="proche-selection" data-action="change->proche-selection#toggle"
   legend.fr-fieldset__legend--regular.fr-fieldset__legend Pour qui prenez-vous rendez-vous ?
 
   .fr-fieldset__element
@@ -16,13 +16,13 @@ fieldset.fr-fieldset.rdv-proche-selection.fr-mt-3w
 
   .fr-fieldset__element
     .fr-radio-group.rdv-selected-proche-new
-      = radio_button_tag "user[selected_proche]", "new", @rdv_booking_form.selected_proche == "new", id: "user_selected_proche_new"
+      = radio_button_tag "user[selected_proche]", "new", @rdv_booking_form.selected_proche == "new", id: "user_selected_proche_new", data: { proche_selection_target: "newRelativeRadioButton" }
       = label_tag "user_selected_proche_new", "Une autre personne"
 
   .rdv-new-proche-fields
     = f.fields_for :relatives, [@rdv_booking_form.new_proche] do |rf|
       .fr-grid-row.fr-grid-row--gutters
-        .fr-col-12.fr-col-md-6= rf.dsfr_text_field :first_name, label: "Prénom"
-        .fr-col-12.fr-col-md-6= rf.dsfr_text_field :last_name, label: "Nom"
+        .fr-col-12.fr-col-md-6= rf.dsfr_text_field :first_name, label: "Prénom", data: { proche_selection_target: "newRelativeField" }
+        .fr-col-12.fr-col-md-6= rf.dsfr_text_field :last_name, label: "Nom", data: { proche_selection_target: "newRelativeField" }
         - if @rdv_booking_form.show_birth_date_field?
-          .fr-col-12.fr-col-md-6.fr-mt-4w= rf.dsfr_text_field :birth_date, type: "date", label: "Date de naissance"
+          .fr-col-12.fr-col-md-6.fr-mt-4w= rf.dsfr_text_field :birth_date, type: "date", label: "Date de naissance", data: { proche_selection_target: "newRelativeField" }

@@ -48,3 +48,6 @@ window.Stimulus = Application.start()
 // Utilisé sur le formulaire de file d'attente proposé à l'usager
 import FormController from './controllers/form_controller'
 Stimulus.register('form', FormController)
+
+import ProcheSelectionController from './controllers/proche_selection_controller'
+Stimulus.register('proche-selection', ProcheSelectionController)
