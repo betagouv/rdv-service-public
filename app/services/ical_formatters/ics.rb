@@ -68,6 +68,5 @@ module IcalFormatters
       event.organizer = "mailto:#{payload[:domain].secretariat_email}"
       event.categories = ["RDV Service Public"] # Cette catégorie permet de filtrer tous les événements que nous créons.
     end
-    # rubocop:enable Metrics/PerceivedComplexity
   end
 end

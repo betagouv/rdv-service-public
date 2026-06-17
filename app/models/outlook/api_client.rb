@@ -81,7 +81,6 @@ module Outlook
       end
       response.response_code == 204 ? "" : body_response
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     def refresh_outlook_token!
       refresh_token_query =
