@@ -1,4 +1,5 @@
-tr
+// Le fr-enlarge-link permet de rendre toute la ligne hoverable et cliquable, ce qui est plus pratique pour l'agent
+tr.fr-enlarge-link
   td
     = link_to reverse_full_name_and_birthdate(user), admin_organisation_user_path(current_organisation, user)
     span>= relative_tag(user)
