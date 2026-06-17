@@ -2,7 +2,7 @@
 
 .fr-grid-row.fr-grid-row--center
   .fr-col-12.fr-col-lg-8
-    .fr-card.py-4.px-2
+    .fr-card.py-4.fr-px-2w
       .fr-card__body
         h1.dsfr-card-title.mb-3 Ajouter un nouveau service
         = form_with(model: @service, url: admin_territory_services_path(territory_id: current_territory.id), builder: Dsfr::FormBuilder) do |f|
