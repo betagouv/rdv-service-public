@@ -62,7 +62,12 @@ class Users::ParticipationsController < UserAuthController
   def change_participation_status(status)
     if status == "unknown" && !@rdv.remaining_seats?
       flash[:alert] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
-      return redirect_to prendre_rdv_path(motif_name_with_location_type: @rdv.motif.name_with_location_type, lieu_id: @rdv.lieu.id, departement: @rdv.organisation.territory.departement_number)
+      return redirect_to prendre_rdv_path(
+        motif_name_with_location_type: @rdv.motif.name_with_location_type,
+        lieu_id: @rdv.lieu.id,
+        departement: @rdv.organisation.territory.departement_number,
+        public_link_organisation_id: @rdv.organisation_id
+      )
     end
     existing_participation.change_status_and_notify(current_user, status)
     set_user_name_initials_verified
@@ -78,7 +83,8 @@ class Users::ParticipationsController < UserAuthController
 
     unless @rdv.remaining_seats?
       flash[:alert] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
-      return redirect_to prendre_rdv_path(motif_name_with_location_type: @rdv.motif.name_with_location_type, lieu_id: @rdv.lieu.id, departement: @rdv.organisation.territory.departement_number)
+      return redirect_to prendre_rdv_path(motif_name_with_location_type: @rdv.motif.name_with_location_type, lieu_id: @rdv.lieu.id, departement: @rdv.organisation.territory.departement_number,
+                                          public_link_organisation_id: @rdv.organisation_id)
     end
     new_participation.create_and_notify!(current_user)
     set_user_name_initials_verified
