@@ -73,7 +73,7 @@ RSpec.describe "territory admin can manage services", type: :feature do
         fill_in "Intitulé du nouveau service", with: "Protection maternelle et infantile"
         fill_in "Intitulé court du nouveau service", with: "PMI"
         click_on("Ajouter le nouveau service")
-        expect(page).to have_content("Le nom du service est déjà présent dans la liste de services existants")
+        expect(page).to have_content("Le nom du service existe déjà, sélectionnez-le dans la liste ou renseignez un autre intitulé")
       end
     end
   end
