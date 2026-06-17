@@ -20,11 +20,14 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
 
   def edit
     authorize(current_territory, :manage_services?, policy_class: Agent::TerritoryPolicy)
+    @filter = params[:filter].presence
+    activated_service_ids = current_territory.services.ids.to_set
+    displayed_services = @filter ? Service.filter_by_name(@filter) : Service.all
 
-    activated_services = format_for_checkboxes(current_territory.services.reject(&:secretariat?))
-    other_services = format_for_checkboxes(Service.where.not(id: current_territory.service_ids).reject(&:secretariat?))
+    # Display activated services first
+    displayed_services = displayed_services.sort_by { |service| [service.id.in?(activated_service_ids) ? -1 : 1, service.name] }
 
-    @services = activated_services + other_services
+    @displayed_services = displayed_services.reject(&:secretariat?)
   end
 
   def update
@@ -45,6 +48,7 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
     params.require(:territory).permit(service_ids: [])
   end
 
+  helper_method :format_for_checkboxes
   def format_for_checkboxes(services)
     services.map do |service|
       label = service.name
