@@ -2,7 +2,7 @@ class CronJob::RefreshAgentsSensitiveAccountJob < CronJob
   SENSITIVE_TERRITORY_RDV_THRESHOLD = 5_000
 
   def perform
-    sensitive_ids = (sensitive_territory_admin_ids + rdv_insertion_agent_ids).uniq
+    sensitive_ids = (sensitive_territory_admin_ids + rdv_insertion_admin_agent_ids).uniq
 
     # rubocop:disable Rails/SkipsModelValidations
     Agent.where(id: sensitive_ids).in_batches.update_all(sensitive_account: true)
@@ -27,8 +27,9 @@ class CronJob::RefreshAgentsSensitiveAccountJob < CronJob
       .pluck(:id)
   end
 
-  def rdv_insertion_agent_ids
-    AgentRole.joins(:organisation)
+  def rdv_insertion_admin_agent_ids
+    AgentRole.access_level_admin
+      .joins(:organisation)
       .where(organisations: { verticale: :rdv_insertion })
       .distinct.pluck(:agent_id)
   end

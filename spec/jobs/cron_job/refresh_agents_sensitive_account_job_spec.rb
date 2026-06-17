@@ -35,21 +35,30 @@ RSpec.describe CronJob::RefreshAgentsSensitiveAccountJob, type: :job do
       expect(agent_without_sensitive.reload.sensitive_account).to be false
     end
 
-    it "met sensitive_account à true pour un agent membre d'une organisation rdv_insertion, quel que soit le nombre de RDVs" do
+    it "met sensitive_account à true pour un agent admin d'une organisation rdv_insertion, quel que soit le nombre de RDVs" do
       organisation = create(:organisation, verticale: :rdv_insertion)
-      agent = create(:agent, basic_role_in_organisations: [organisation], sensitive_account: false)
+      agent = create(:agent, admin_role_in_organisations: [organisation], sensitive_account: false)
 
       described_class.perform_now
 
       expect(agent.reload.sensitive_account).to be true
     end
 
-    it "cumule les critères : un admin de territoire avec peu de RDVs reste sensible s'il est aussi dans une organisation rdv_insertion" do
+    it "ne marque pas comme sensible un agent avec un rôle basic dans une organisation rdv_insertion" do
+      organisation = create(:organisation, verticale: :rdv_insertion)
+      agent = create(:agent, basic_role_in_organisations: [organisation], sensitive_account: false)
+
+      described_class.perform_now
+
+      expect(agent.reload.sensitive_account).to be false
+    end
+
+    it "cumule les critères : un admin de territoire avec peu de RDVs reste sensible s'il est aussi admin d'une organisation rdv_insertion" do
       territory = create(:territory)
       organisation_rdv_insertion = create(:organisation, verticale: :rdv_insertion)
       agent = create(:agent,
                      role_in_territories: [territory],
-                     basic_role_in_organisations: [organisation_rdv_insertion],
+                     admin_role_in_organisations: [organisation_rdv_insertion],
                      sensitive_account: false)
 
       described_class.perform_now
