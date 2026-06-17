@@ -146,6 +146,9 @@ class SearchController < ApplicationController
     # interdit d'accéder à la sélection d'adresse sur RDVSP
     return false if @current_step == :address_selection
 
+    # le flux d'invitation scope toujours par organisation_ids : pas de recherche non-scopée possible
+    return true if @context.is_a?(WebInvitationSearchContext)
+
     # interdit de chercher des créneaux sans passer de public_link_organisation_id
     params[:public_link_organisation_id].present?
   end
