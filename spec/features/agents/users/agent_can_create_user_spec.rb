@@ -66,8 +66,8 @@ RSpec.describe "Agent can create user" do
     uncheck "Accepte les notifications par email"
     uncheck "Accepte les notifications par SMS"
     click_on "Enregistrer"
-    expect(find("span", text: /Accepte les notifications par email/).ancestor("li")).to have_content("Désactivées")
-    expect(find("span", text: /Accepte les notifications par SMS/).ancestor("li")).to have_content("Désactivées")
+    expect(page).to have_content("N'accepte pas les notifications par email")
+    expect(page).to have_content("N'accepte pas les notifications par SMS")
   end
 
   context "champ complément d’adresse activé sur le territoire", js: true do
