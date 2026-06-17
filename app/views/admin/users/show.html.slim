@@ -131,6 +131,6 @@ ruby:
         = dsfr_alert type: :info, size: :sm
           | Les RDV sont supprimés au bout de 2 ans.
 
-.row.justify-content-center
-  .col-md-12.col-lg-8
+.row
+  .col
     = render "admin/versions/resource_versions_row", resource_policy: policy(@user, policy_class: Agent::UserPolicy), resource: @user

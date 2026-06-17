@@ -82,26 +82,8 @@ module UsersHelper
     ""
   end
 
-  def notify_by_email_description(user)
-    if user.responsible_notify_by_email?
-      "🟢 Activées"
-    else
-      "🔴 Désactivées"
-    end
-  end
-
   def clickable_user_email(user)
     user.responsible_email.present? ? mail_to(user.responsible_email) : nil
-  end
-
-  def notify_by_sms_description(user)
-    if !user.responsible_phone_number_mobile?
-      "🔴 le numéro de téléphone renseigné n'est pas un mobile"
-    elsif user.responsible_notify_by_sms?
-      "🟢 Activées"
-    else
-      "🔴 Désactivées"
-    end
   end
 
   def clickable_user_phone_number(user)

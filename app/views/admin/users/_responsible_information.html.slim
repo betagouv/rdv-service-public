@@ -10,7 +10,14 @@ ul.list-unstyled.fr-mb-2w
     li.mb-2= object_attribute_tag(user, :address)
   li.mb-2= object_attribute_tag(user, :email, clickable_user_email(user))
   - if user.email.present?
-    li.mb-2= object_attribute_tag(user, :notify_by_email, notify_by_email_description(user))
+    li.mb-2
+      - if user.responsible_notify_by_email?
+        = icon("fr-icon-check-line", class: "fr-mr-1w rdv-color-text-default-success")
+        | Accepte les notifications par email
+      - else
+        = icon("fr-icon-error-line", class: "fr-mr-1w fr-icon--sm")
+        | N'accepte pas les notifications par email
+
   li.mb-2
     = object_attribute_tag(user, :phone_number, clickable_user_phone_number(user))
     - if user.phone_number.present? && DuplicateUsersFinderService.find_duplicate_based_on_phone_number(user, current_organisation.users).present?
@@ -19,7 +26,16 @@ ul.list-unstyled.fr-mb-2w
         = link_to "voir la liste", admin_organisation_users_path(current_organisation, "search": user.humanized_phone_number), class: "fr-link"
 
     - if user.phone_number.present?
-      li.mb-2= object_attribute_tag(user, :notify_by_sms, notify_by_sms_description(user))
+      li.mb-2
+        - if !user.responsible_phone_number_mobile?
+          = icon("fr-icon-error-line", class: "fr-mr-1w fr-icon--sm")
+          = "Le numéro de téléphone renseigné n'est pas un mobile."
+        - elsif user.responsible_notify_by_sms?
+          = icon("fr-icon-check-line", class: "fr-mr-1w rdv-color-text-default-success")
+          | Accepte les notifications par SMS
+        - else
+          = icon("fr-icon-error-line", class: "fr-mr-1w fr-icon--sm")
+          | N'accepte pas les notifications par SMS
 
   - if user.logged_once_with_franceconnect?
     li.mb-2 Cet usager s'est déjà connecté via FranceConnect.
