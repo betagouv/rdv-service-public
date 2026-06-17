@@ -11,5 +11,6 @@ fr:
           attributes:
             name:
               format: "Le nom du service %{message}"
+              taken: est déjà présent dans la liste de services existants
             short_name:
               format: "Le nom raccourci pour les SMS %{message}"
