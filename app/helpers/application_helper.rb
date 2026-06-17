@@ -101,11 +101,6 @@ module ApplicationHelper
     end
   end
 
-  def boolean_attribute_tag(object, attribute_name)
-    value = object.send(attribute_name)
-    boolean_tag(value) { object.class.human_attribute_value(attribute_name, value) }
-  end
-
   def object_attribute_tag(object, attribute_name, value = :delegate_to_object)
     name = object.class.human_attribute_name(attribute_name)
 
