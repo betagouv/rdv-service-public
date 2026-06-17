@@ -119,7 +119,7 @@ module ApplicationHelper
                   tag.i("Non renseigné", class: "rdv-color-text-mention-grey")
                 end
 
-    tag.span("#{name} : ", class: "rdv-color-text-mention-grey") + value_tag
+    tag.span(sanitize("#{name}&nbsp: "), class: "rdv-color-text-mention-grey") + value_tag
   end
 
   def self_anchor(identifier, &block)
