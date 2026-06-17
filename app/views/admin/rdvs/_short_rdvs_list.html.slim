@@ -1,6 +1,6 @@
 - if rdvs.empty?
   .card-body
-    .text-muted aucun RDV
+    i.text-muted Pas de rendez-vous à venir
 - else
   ul.list-unstyled.horizontal-border-between-items
     = render partial: "admin/rdvs/short_rdv", collection: rdvs.includes(:motif)
