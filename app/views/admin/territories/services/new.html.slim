@@ -1,0 +1,12 @@
+.fr-grid-row.fr-grid-row--center
+  .fr-col-12.fr-col-lg-8
+    .fr-card.py-4.px-2
+      .fr-card__body
+        h1.dsfr-card-title.mb-3 Ajouter un nouveau service
+        = form_with(model: @service, url: admin_territory_services_path(territory_id: current_territory.id), builder: Dsfr::FormBuilder) do |f|
+          = f.dsfr_text_field :name, label: "Intitulé du nouveau service", hint: "60 caractères max", minlength: 2, maxlength: 60
+          = f.dsfr_text_field :short_name, label: "Intitulé court du nouveau service", hint: "40 caractères max", minlength: 2, maxlength: 40
+          p.fr-message.fr-message--info[style="margin-top: -8px"] L’intitulé court est l’intitulé qui sera affiché dans les notifications SMS
+          .float-right.mt-3
+            = link_to("Annuler", edit_admin_territory_services_path(territory_id: current_territory.id), class: "fr-btn fr-btn--tertiary mr-2")
+            = f.submit "Ajouter le nouveau service", class: "fr-btn fr-btn-primary"
