@@ -11,7 +11,7 @@ module ParticipationsHelper
             class: "dropdown-item",
             data: { turbo_method: :delete, confirm: t("admin.participations.delete.confirm") } do
       tag.div(t("admin.participations.delete.title"), class: "text-danger") +
-        tag.div(t("admin.participations.delete.details"), class: "text-wrap text-muted")
+        tag.div(t("admin.participations.delete.details"), class: "text-wrap fr-text-mention--grey")
     end
   end
 end

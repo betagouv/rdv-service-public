@@ -111,10 +111,10 @@ module ApplicationHelper
     value_tag = if value.present?
                   tag.span(value)
                 else
-                  tag.i("Non renseigné", class: "rdv-color-text-mention-grey")
+                  tag.i("Non renseigné", class: "fr-text-mention--grey")
                 end
 
-    tag.span(sanitize("#{name}&nbsp: "), class: "rdv-color-text-mention-grey") + value_tag
+    tag.span(sanitize("#{name}&nbsp: "), class: "fr-text-mention--grey") + value_tag
   end
 
   def self_anchor(identifier, &block)

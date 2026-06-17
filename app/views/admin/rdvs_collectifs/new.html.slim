@@ -21,7 +21,7 @@
           = f.dsfr_text_field :name, label: Rdv.human_attribute_name(:name), class: "fr-mb-1w"
           p
             span.font-14.font-weight-bold= "Avertissement : "
-            span.text-muted.font-14= I18n.t("activerecord.attributes.rdv/name.hint")
+            span.fr-text-mention--grey.font-14= I18n.t("activerecord.attributes.rdv/name.hint")
           = f.dsfr_text_area :context, label: Rdv.human_attribute_name(:context)
           = f.hidden_field :motif_id, value: @rdv.motif_id
 
@@ -38,13 +38,13 @@
               fieldset
                 - lieux = Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name
                 = f.select :lieu_id, lieux.collect { |l| [l.full_name, l.id] }, { include_blank: true }, class: "select2-input fr-select", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: "", "auto-select-sole-option": true }
-                small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
+                small.form-text.fr-text-mention--grey data={"rdv-lieu-target": "new_lieu_link"}
                   = t(".single_use_lieu_hint_html")
               fieldset data={ "rdv-lieu-target": "new_lieu_fieldset" }
                 .border.p-2.bg-light
                   = f.fields_for :lieu, (new_lieu_record ? @rdv.lieu : Lieu.new) do |f2|
                     = render "admin/lieux/lieu_fields", f: f2
-                small.form-text.text-muted data={"rdv-lieu-target": "select_lieu_link"}
+                small.form-text.fr-text-mention--grey data={"rdv-lieu-target": "select_lieu_link"}
                   = t(".existing_lieu_hint_html")
 
           = f.dsfr_number_field :max_participants_count, label: Rdv.human_attribute_name(:max_participants_count), min: 1

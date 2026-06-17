@@ -81,4 +81,4 @@
             = render "admin/motifs/creation_needed_callout", motivation_text: "Aucun motif individuel n'est accessible à cet agent. Les motifs existants sont liés à des services auxquels il n'appartient pas.", non_admin_text: "Vous n'avez accès à aucun motif individuel pour cette organisation. Les motifs existants sont liés à des services auxquels vous n'appartenez pas. Vous devez demander à un administrateur de votre organisation d'en créer un accessible à votre service."
 
   - if params[:current_tab] == "expired"
-    .rdv-text-align-center.text-muted = t(".hint_delete_old")
+    .rdv-text-align-center.fr-text-mention--grey = t(".hint_delete_old")

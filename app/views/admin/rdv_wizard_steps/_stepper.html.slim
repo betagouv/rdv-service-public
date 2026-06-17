@@ -6,10 +6,10 @@ ul.list-group.list-group-flush
           .d-flex.align-items-center
             = icon("fr-icon-success-line", class: "fr-icon--sm fr-mr-1w")
             div.flex-shrink-0.mr-1= t("admin.rdv_wizard_steps.step#{step[:step]}.step_title")
-            div.text-muted.text-truncate= step[:value]
+            div.fr-text-mention--grey.text-truncate= step[:value]
     - else
       li.list-group-item.px-3
         .d-flex.align-items-center
           = icon("fr-icon-success-line", class: "fr-icon--sm fr-mr-1w")
           div.flex-shrink-0.mr-1= t("admin.rdv_wizard_steps.step#{step[:step]}.step_title")
-          div.text-muted.text-truncate= step[:value]
+          div.fr-text-mention--grey.text-truncate= step[:value]

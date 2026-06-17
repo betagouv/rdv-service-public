@@ -8,8 +8,8 @@
           = render "model_errors", model: current_territory
 
           h1.card-title= t(".card_title")
-          p.text-muted.font-14= t(".hint_1")
-          p.text-muted.font-14= t(".hint_2")
+          p.fr-text-mention--grey.font-14= t(".hint_1")
+          p.fr-text-mention--grey.font-14= t(".hint_2")
 
           - Territory::OPTIONAL_RDV_FIELD_TOGGLES.each do |toggle, field_name|
             = f.dsfr_check_box toggle, label: Rdv.human_attribute_name(field_name)
@@ -22,7 +22,7 @@
           = render "model_errors", model: current_territory
 
           h1.card-title= t(".waiting_room_title")
-          p.text-muted.font-14= t(".waiting_room_config_hint")
+          p.fr-text-mention--grey.font-14= t(".waiting_room_config_hint")
 
           - Territory::OPTIONAL_RDV_WAITING_ROOM_FIELD_TOGGLES.each do |toggle, field_name|
             = f.dsfr_check_box toggle, label: Rdv.human_attribute_name(field_name)
