@@ -113,8 +113,13 @@ module ApplicationHelper
       value = object.human_attribute_value(attribute_name)
     end
 
-    tag.strong(tag.span(name) + tag.span(" : ")) +
-      tag.span(value.presence || "Non renseigné", class: class_names("text-muted": value.blank?))
+    value_tag = if value.present?
+                  tag.span(value)
+                else
+                  tag.i("Non renseigné", class: "rdv-color-text-mention-grey")
+                end
+
+    tag.span("#{name} : ", class: "rdv-color-text-mention-grey") + value_tag
   end
 
   def self_anchor(identifier, &block)

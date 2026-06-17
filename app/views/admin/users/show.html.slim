@@ -20,11 +20,8 @@ ruby:
   .col-md-6
     .card#spec-primary-user-card
       .card-body
-        - if @user.logged_once_with_franceconnect?
-          .row.bg-info.text-white.p-2.mb-3 Cet usager s'est déjà connecté via FranceConnect.
-
         - if @user.responsible?
-          h2.card-title.mb-3 Informations générales
+          h2.fr-h4 Informations générales
           = render "responsible_information", user: @user
 
         - else
