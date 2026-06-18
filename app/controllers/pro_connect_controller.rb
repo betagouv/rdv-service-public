@@ -84,7 +84,6 @@ class ProConnectController < ApplicationController
       redirect_to(new_agent_session_path)
     end
   end
-  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   private
 
@@ -148,7 +147,6 @@ class ProConnectController < ApplicationController
     redirect_to after_sign_in_path_for(user)
   end
 
-  # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
   def connect_agent(callback_client, pro_connect_session)
     sub = callback_client.openid_sub
     agent_by_sub = Agent.active.find_by(pro_connect_openid_sub: sub)
@@ -229,7 +227,6 @@ class ProConnectController < ApplicationController
 
     redirect_to after_sign_in_path_for(agent)
   end
-  # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
   def require_2fa_for_sensitive_agent(callback_client)
     auth_client = ProConnectOpenIdClient::Auth.new(

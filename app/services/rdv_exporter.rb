@@ -88,8 +88,6 @@ module RdvExporter
       rdv.motif.collectif ? "oui" : "non",
     ]
   end
-  # rubocop:enable Metrics/PerceivedComplexity
-  # rubocop:enable Metrics/CyclomaticComplexity
 
   def self.commune_premier_responsable(rdv)
     rdv.users.map(&:user_to_notify).pluck(:city_name).compact.first

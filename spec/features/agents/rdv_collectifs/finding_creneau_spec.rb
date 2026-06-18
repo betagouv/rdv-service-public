@@ -43,7 +43,7 @@ RSpec.describe "Agent can find a creneau for a rdv collectif" do
       click_button "Afficher les créneaux"
 
       expect(page).to have_content("2 lieux proposent des créneaux")
-      click_link("Prochain créneau", match: :first)
+      click_link(lieu.name, match: :first)
 
       expect(page).to have_content("Créneaux disponibles pour Atelier participatif")
     end
