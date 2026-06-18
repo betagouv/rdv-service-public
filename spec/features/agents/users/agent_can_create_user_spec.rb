@@ -32,7 +32,7 @@ RSpec.describe "Agent can create user" do
       create(:user, first_name: "Cee-Lo", last_name: "GREEN", email: "ceelo@green.com", organisations: [create(:organisation, territory:)])
     end
 
-    it "allows using existing user" do
+    it "allows using existing user", js: true do
       fill_in :user_first_name, with: "Cee-Lo"
       fill_in :user_last_name, with: "Green"
       fill_in :user_email, with: "ceelo@green.com"

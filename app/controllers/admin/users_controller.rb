@@ -127,10 +127,13 @@ class Admin::UsersController < AgentAuthController
 
     flash[:success] = "L'usager a été associé à votre organisation." if @user.add_organisation(current_organisation)
 
-    if from_modal?
-      redirect_to add_query_string_params_to_url(modal_return_location, "user_ids[]": @user.id)
-    else
-      redirect_to admin_organisation_user_path(current_organisation, @user), flash: { success: "L'usager a été créé." }
+    respond_to do |format|
+      format.html do
+        redirect_to admin_organisation_user_path(current_organisation, @user), flash: { success: "L'usager a été créé." }
+      end
+      format.turbo_stream do
+        redirect_to add_query_string_params_to_url(modal_return_location, "user_ids[]": @user.id, redirect_from_turbo_frame: true)
+      end
     end
   end
 
