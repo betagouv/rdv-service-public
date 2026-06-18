@@ -7,8 +7,9 @@
   html: { class: "js-agent-user-form" }, data: { modal: from_modal? } \
 ) do |f|
 
-  - if from_modal?
+  - if from_modal? || request.format == "turbo_stream"
     = hidden_field "", :return_location, value: params[:return_location]
+  - if from_modal?
     = hidden_field "", :modal, value: true
   = render "model_errors", model: user_form, f: f
 
