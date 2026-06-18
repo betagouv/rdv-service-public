@@ -90,6 +90,18 @@
               h2.fr-tile__title
                 = link_to("Migration vers RDV Service Public", admin_organisation_instance_exports_path(current_organisation))
 
+    - if current_agent.territorial_admin_in?(current_territory)
+      .fr-col-12.fr-col-md-4.fr-mb-2w
+        .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
+          .fr-tile__body
+            .fr-tile__content
+              h2.fr-tile__title
+                = link_to(edit_admin_territory_services_path(current_territory)) do
+                  = settings_icon(class: "fr-mr-1w")
+                  | Services
+              p.fr-tile__desc
+                = current_territory.services.pluck(:name).join(", ").truncate(80)
+
   / Un bricolage pour éviter que le footer déborde sur les tuiles
   br.fr-my-2w
   br.fr-my-2w
