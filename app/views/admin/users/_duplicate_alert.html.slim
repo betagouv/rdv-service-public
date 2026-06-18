@@ -1,7 +1,6 @@
 ruby:
   existing_attributes = attributes.map { User.human_attribute_name(_1) }.map(&:downcase).join(", ")
   return_location ||= admin_organisation_user_path(current_organisation, user)
-  from_modal ||= false
   duplicate_is_within_current_org = user.organisations.load.include?(current_organisation)
 
 div
@@ -44,7 +43,7 @@ div
 
   div.fr-my-2w
     - if duplicate_is_within_current_org
-      - if from_modal || in_turbo_stream
+      - if in_turbo_stream
         = link_to "Choisir cet usager", add_query_string_params_to_url(return_location, "user_ids[]": user.id), class: "fr-btn fr-btn--secondary", data: { turbo_frame: "_top" }
       - else
         = link_to "Modifier cet usager", edit_admin_organisation_user_path(current_organisation, user), class: "fr-btn fr-btn--secondary"
@@ -56,4 +55,4 @@ div
         Redis.with_connection do |redis|
           redis.set(redis_key, user.id.to_s, ex: 30.seconds)
         end
-      = link_to "Importer cette fiche dans #{current_organisation.name}", link_to_organisation_admin_organisation_user_path(current_organisation, user, return_location: return_location, modal: from_modal, secure_key:), class: "fr-btn fr-btn--secondary"
+      = link_to "Importer cette fiche dans #{current_organisation.name}", link_to_organisation_admin_organisation_user_path(current_organisation, user, return_location: return_location, secure_key:), class: "fr-btn fr-btn--secondary"

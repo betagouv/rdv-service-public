@@ -56,23 +56,18 @@ class Admin::UsersController < AgentAuthController
     authorize(@user, policy_class: Agent::UserPolicy)
     user_persisted = @user_form.save(annotation_content: params.dig(:user, :annotation_content), current_territory:)
 
-    prepare_new unless user_persisted
-
-    respond_to do |format|
-      format.turbo_stream do
-        if user_persisted
-          redirect_to add_query_string_params_to_url(modal_return_location, "user_ids[]": @user.id, redirect_from_turbo_frame: true)
-        else
-          render :new
-        end
-      end
-      format.html do
-        if user_persisted
+    if user_persisted
+      respond_to do |format|
+        format.html do
           redirect_to admin_organisation_user_path(@organisation, @user), flash: { success: "L'usager a été créé." }
-        else
-          render :new
+        end
+        format.turbo_stream do
+          redirect_to add_query_string_params_to_url(modal_return_location, "user_ids[]": @user.id, redirect_from_turbo_frame: true)
         end
       end
+    else
+      prepare_new
+      render :new
     end
   end
 
