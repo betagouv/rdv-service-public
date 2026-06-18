@@ -12,11 +12,8 @@
 - content_for :fil_ariane do
   = render "common/fil_ariane", titles_and_paths:, current_page_title: yield(:title)
 
-- if from_modal?
-  = render "form", user: @user, user_form: @user_form
-- else
-  .row.justify-content-center
-    .col-md-12.col-lg-8
-      .card
-        .card-body
-          = render "form", user: @user, user_form: @user_form
+.row.justify-content-center
+  .col-md-12.col-lg-8
+    .card
+      .card-body
+        = render "form", user: @user, user_form: @user_form

@@ -15,8 +15,8 @@ ruby:
     - @rdv.users.each do |user|
       / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
       = f.hidden_field "user_ids][", value: user.id
-      .my-1
-        .d-flex
+      .fr-my-1w
+        .d-flex.rdv-align-items-baseline
           div
             = user_icon(class: "fr-icon--sm")
             | &nbsp;
@@ -26,17 +26,14 @@ ruby:
             remove_path_params = @rdv_wizard.to_query.deep_dup.merge(step: 2)
             remove_path_params[:user_ids].delete(user.id)
             remove_user_path = new_admin_organisation_rdv_wizard_step_path(remove_path_params)
-          div.ml-2= link_to remove_user_path, title: t("helpers.remove")
+          = link_to remove_user_path, title: t("helpers.remove"), class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-m-0"
             = icon("fr-icon-delete-line", class: "fr-icon--sm")
           / la ligne suivante gère le cas d’un usager qui ne fait pas partie de l’orga courante mais d’une autre orga dans laquelle l’agent courant a les droits suffisants pour l’éditer
           - organisation_where_editable = current_agent.organisations.to_a.prepend(current_organisation).uniq.find { |org| Agent::UserPolicy.new(AgentOrganisationContext.new(current_agent, org), user).edit? }
           - if organisation_where_editable
-            div.ml-2
-              = link_to edit_admin_organisation_user_path( \
-                 organisation_where_editable, user, modal: true, return_location: modals_return_location, role: default_service_selection_from(user) \
-                ), \
-                data: { modal: "true" }, title: t("helpers.edit") do
-                = icon("fr-icon-edit-line", class: "fr-icon--sm")
+            - path = edit_admin_organisation_user_path( \
+                organisation_where_editable, user, format: "turbo_stream", return_location: modals_return_location, role: default_service_selection_from(user))
+            = render("admin/users/edit_user_modal", path:, user:)
 
     - show_add_user = @rdv.users.empty?
     .collapse.collapse-add-user-selection.no-transition class=(show_add_user ? "" : "show")

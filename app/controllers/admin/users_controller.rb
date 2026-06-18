@@ -85,7 +85,14 @@ class Admin::UsersController < AgentAuthController
     @user_form = user_form_object
     user_updated = @user_form.save(annotation_content: params.dig(:user, :annotation_content), current_territory:)
     if user_updated
-      redirect_to admin_organisation_user_path(current_organisation, @user), flash: { success: "L'usager a été modifié" }
+      respond_to do |format|
+        format.html do
+          redirect_to admin_organisation_user_path(current_organisation, @user), flash: { success: "L'usager a été modifié" }
+        end
+        format.turbo_stream do
+          redirect_to add_query_string_params_to_url(modal_return_location, redirect_from_turbo_frame: true)
+        end
+      end
     else
       render :edit
     end
