@@ -55,4 +55,4 @@ div
         Redis.with_connection do |redis|
           redis.set(redis_key, user.id.to_s, ex: 30.seconds)
         end
-      = link_to "Importer cette fiche dans #{current_organisation.name}", link_to_organisation_admin_organisation_user_path(current_organisation, user, return_location: return_location, secure_key:), class: "fr-btn fr-btn--secondary"
+      = link_to "Importer cette fiche dans #{current_organisation.name}", link_to_organisation_admin_organisation_user_path(current_organisation, user, return_location:, secure_key:), class: "fr-btn fr-btn--secondary"
