@@ -49,7 +49,15 @@ class Admin::UsersController < AgentAuthController
     prepare_new
     authorize(@user, policy_class: Agent::UserPolicy)
     @user_form = user_form_object
-    respond_modal_with @user_form
+
+    respond_to do |format|
+      format.turbo_stream do
+        render :new
+      end
+      format.html do
+        respond_modal_with @user_form
+      end
+    end
   end
 
   def create
@@ -59,12 +67,23 @@ class Admin::UsersController < AgentAuthController
 
     prepare_new unless user_persisted
 
-    if from_modal?
-      respond_modal_with @user_form, location: add_query_string_params_to_url(modal_return_location, "user_ids[]": @user.id, modal: true)
-    elsif user_persisted
-      redirect_to admin_organisation_user_path(@organisation, @user), flash: { success: "L'usager a été créé." }
-    else
-      render :new
+    respond_to do |format|
+      format.turbo_stream do
+        if user_persisted
+          redirect_to add_query_string_params_to_url(modal_return_location, "user_ids[]": @user.id, modal: true)
+        else
+          render :new
+        end
+      end
+      format.html do
+        if from_modal?
+          respond_modal_with @user_form, location: add_query_string_params_to_url(modal_return_location, "user_ids[]": @user.id, modal: true)
+        elsif user_persisted
+          redirect_to admin_organisation_user_path(@organisation, @user), flash: { success: "L'usager a été créé." }
+        else
+          render :new
+        end
+      end
     end
   end
 

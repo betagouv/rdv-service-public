@@ -3,7 +3,7 @@
 - initial_relative_type_tab = user.responsible&.persisted? || user.responsible&.new_and_blank? ? :existing : :new
 
 = simple_form_for( \
-  user, url: agent_user_form_url(user), remote: from_modal?, \
+  user, url: agent_user_form_url(user, format:), remote: from_modal?, \
   html: { class: "js-agent-user-form" }, data: { modal: from_modal? } \
 ) do |f|
 
