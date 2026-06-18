@@ -70,7 +70,7 @@ class Admin::UsersController < AgentAuthController
     respond_to do |format|
       format.turbo_stream do
         if user_persisted
-          redirect_to add_query_string_params_to_url(modal_return_location, "user_ids[]": @user.id, modal: true)
+          redirect_to add_query_string_params_to_url(modal_return_location, "user_ids[]": @user.id, redirect_from_turbo_frame: true)
         else
           render :new
         end
