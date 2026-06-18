@@ -49,9 +49,9 @@ RSpec.describe "territory admin can manage services", type: :feature do
   describe "creating a new service" do
     it "works" do
       visit new_admin_territory_services_path(territory_id: territory.id)
-      fill_in "Intitulé du nouveau service", with: "Protection maternelle et infantile"
-      fill_in "Intitulé court du nouveau service", with: "PMI"
-      expect { click_on("Ajouter le nouveau service") }.to change(Service, :count).by(1).and(change { territory.services.reload.size }.by(1))
+      fill_in "Nom du service", with: "Protection maternelle et infantile"
+      fill_in "Nom court du service", with: "PMI"
+      expect { click_on("Créer le service") }.to change(Service, :count).by(1).and(change { territory.services.reload.size }.by(1))
       expect(Service.last).to have_attributes(name: "Protection maternelle et infantile", short_name: "PMI")
       expect(page).to have_content(%(Le service "Protection maternelle et infantile (PMI)" vient d'être créé et activé dans votre espace.))
     end
@@ -70,10 +70,10 @@ RSpec.describe "territory admin can manage services", type: :feature do
       it "displays error message if the name already exists" do
         create(:service, name: "Protection maternelle et infantile")
         visit new_admin_territory_services_path(territory_id: territory.id)
-        fill_in "Intitulé du nouveau service", with: "Protection maternelle et infantile"
-        fill_in "Intitulé court du nouveau service", with: "PMI"
-        click_on("Ajouter le nouveau service")
-        expect(page).to have_content("Le nom du service existe déjà, sélectionnez-le dans la liste ou renseignez un autre intitulé")
+        fill_in "Nom du service", with: "Protection maternelle et infantile"
+        fill_in "Nom court du service", with: "PMI"
+        click_on("Créer le service")
+        expect(page).to have_content("Le nom du service existe déjà, sélectionnez-le dans la liste ou renseignez un autre nom")
       end
     end
   end
