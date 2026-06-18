@@ -1,7 +1,6 @@
 /# locals: (path:)
 span.small.text-muted
   | Vous ne trouvez pas l'usager ?&nbsp;
-  /= link_to("Ajouter un usager", path, data: { modal: true }, class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline")
   button[data-fr-opened="false" aria-controls="new-user-modal" type="button" class="fr-btn  fr-btn--sm fr-btn--tertiary-no-outline"] Ajouter un usager
   dialog#new-user-modal.fr-modal[aria-labelledby="modal-title" aria-modal="true"]
     .fr-container.fr-container--fluid.fr-container-md
@@ -12,5 +11,3 @@ span.small.text-muted
               button[aria-controls="new-user-modal" title="Fermer" type="button" class="fr-btn--close fr-btn"] Fermer
             .fr-modal__content
               turbo-frame#new-user-form[src=path]
-              // Le contenu de la modale
-
