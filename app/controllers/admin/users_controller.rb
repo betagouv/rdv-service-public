@@ -49,15 +49,6 @@ class Admin::UsersController < AgentAuthController
     prepare_new
     authorize(@user, policy_class: Agent::UserPolicy)
     @user_form = user_form_object
-
-    respond_to do |format|
-      format.turbo_stream do
-        render :new
-      end
-      format.html do
-        respond_modal_with @user_form
-      end
-    end
   end
 
   def create
@@ -76,9 +67,7 @@ class Admin::UsersController < AgentAuthController
         end
       end
       format.html do
-        if from_modal?
-          respond_modal_with @user_form, location: add_query_string_params_to_url(modal_return_location, "user_ids[]": @user.id, modal: true)
-        elsif user_persisted
+        if user_persisted
           redirect_to admin_organisation_user_path(@organisation, @user), flash: { success: "L'usager a été créé." }
         else
           render :new
@@ -90,21 +79,17 @@ class Admin::UsersController < AgentAuthController
   def show
     @participations = @user.participations.where(rdv: policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).merge(@user.rdvs))
     @referent_agents = policy_scope(@user.referent_agents, policy_scope_class: Agent::AgentPolicy::Scope).includes(:services)
-    respond_modal_with @user if from_modal?
   end
 
   def edit
     @user_form = user_form_object
-    respond_modal_with @user_form if from_modal?
   end
 
   def update
     @user.assign_attributes(user_params)
     @user_form = user_form_object
     user_updated = @user_form.save(annotation_content: params.dig(:user, :annotation_content), current_territory:)
-    if from_modal?
-      respond_modal_with @user_form, location: modal_return_location
-    elsif user_updated
+    if user_updated
       redirect_to admin_organisation_user_path(current_organisation, @user), flash: { success: "L'usager a été modifié" }
     else
       render :edit
