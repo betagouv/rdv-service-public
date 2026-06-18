@@ -44,8 +44,8 @@ div
 
   div.fr-my-2w
     - if duplicate_is_within_current_org
-      - if from_modal
-        = link_to "Choisir cet usager", add_query_string_params_to_url(return_location, "user_ids[]": user.id), class: "fr-btn fr-btn--secondary"
+      - if from_modal || in_turbo_stream
+        = link_to "Choisir cet usager", add_query_string_params_to_url(return_location, "user_ids[]": user.id), class: "fr-btn fr-btn--secondary", data: { turbo_frame: "_top" }
       - else
         = link_to "Modifier cet usager", edit_admin_organisation_user_path(current_organisation, user), class: "fr-btn fr-btn--secondary"
     - else

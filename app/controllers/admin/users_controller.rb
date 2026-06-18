@@ -183,6 +183,7 @@ class Admin::UsersController < AgentAuthController
       ignore_benign_errors: params.dig(:user, :ignore_benign_errors),
       view_locals: {
         from_modal: from_modal?,
+        in_turbo_stream: request.format == "turbo_stream",
         return_location: params[:return_location],
       }
     )
