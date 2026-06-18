@@ -1,26 +1,26 @@
 - if plage_ouverture.available_motifs.any?
   = simple_form_for [:admin, plage_ouverture.organisation, :planning, plage_ouverture], html: { class: "plage-ouverture-form" } do |f|
-    .row.justify-content-center
-      .col-md-6
+    .fr-grid-row.justify-content-center
+      .fr-col-lg-6
         = render("model_errors", model: plage_ouverture, f: f)
 
-    .row.justify-content-center
-      .col-md-6
+    .fr-grid-row.justify-content-center
+      .fr-col-lg-6
         .card
           .card-body
             h2.dsfr-card-title Dates et horaires
             - legend = "Déclarer une disponibilité sur un seul jour ou récurrente sur plusieurs jours, semaines, mois ?"
             = render partial: "common/recurrence", locals: { f:, model: plage_ouverture, legend: }
 
-    .row.justify-content-center
-      .col-md-6
+    .fr-grid-row.justify-content-center
+      .fr-col-lg-6
         .card
           .card-body
             h2.dsfr-card-title Motifs
             = render partial: "admin/planning/plage_ouvertures/choix_motifs", locals: { plage_ouverture:, f: }
 
-    .row.justify-content-center
-      .col-md-6
+    .fr-grid-row.justify-content-center
+      .fr-col-lg-6
         .card
           .card-body
             h2.dsfr-card-title.mb-3 Options avancées
@@ -41,9 +41,9 @@
             = f.input :title, label: "Libellé (facultatif)", placeholder: "ex: Permanence hebdo", hint: "Ce libellé sera affiché aux agents mais jamais aux usagers"
             = f.input :hex_color, as: :color, label: "Couleur", hint: "Cette couleur peut vous aider à distinguer vos plages sur votre agenda."
 
-    .row.justify-content-center
-      .col-md-6
-        .row.mb-5
+    .fr-grid-row.justify-content-center
+      .fr-col-lg-6
+        .fr-grid-row.mb-5
           - if plage_ouverture.persisted?
             .col.text-left
               = link_to "Annuler", \
