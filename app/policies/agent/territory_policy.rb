@@ -9,6 +9,7 @@ class Agent::TerritoryPolicy
     @current_agent.territorial_roles.exists?(territory_id: @territory.id)
   end
 
+  alias manage_services? territorial_admin?
   alias update? territorial_admin?
   alias edit? territorial_admin?
 
