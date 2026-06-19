@@ -9,8 +9,11 @@
   |> #{@motif.name}
   = render "availability_badge", motif: @motif, availabilities_count: count
 
-.fr-grid-row
-  .fr-col-12.fr-col-lg-10
+- content_for :right_of_page_title do
+  = dsfr_link_to "Voir les détails du motif", admin_organisation_motif_path(current_organisation, @motif), class: "fr-icon-arrow-right-line fr-link--icon-right fr-mr-2w"
+
+.fr-grid-row.fr-mr-2w
+  .fr-col-12
     - if @motif.bookable_by_everyone? && count == 0
       .fr-callout.fr-pb-2w
         - if @motif.individuel?
