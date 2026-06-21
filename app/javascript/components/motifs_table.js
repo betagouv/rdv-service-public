@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
 function refreshButtonState() {
   const disabled = Array.from(batchEditCheckboxes()).filter(c => c.checked).length < 2;
   batchEditButton().disabled = disabled;
-  batchEditButton().classList.toggle("btn-outline-primary", !disabled)
 }
 
 function batchEditCheckboxes() {

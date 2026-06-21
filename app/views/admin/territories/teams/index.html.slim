@@ -5,7 +5,7 @@
   .container-fluid.bg-white.rounded.m-2.p-4
 
     .float-left
-      = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class:"btn btn-outline-primary"
+      = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class:"fr-btn fr-btn--secondary"
     .d-flex.justify-content-end
       - term = params[:term].blank? ? "d-none" : ""
       div= link_to "Réinitialiser", admin_territory_teams_path(current_territory), class: "btn btn-link #{term}"
@@ -37,4 +37,4 @@
       = paginate @teams, theme: "dsfr"
 
     .text-right
-      = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class: "btn btn-outline-primary"
+      = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class: "fr-btn fr-btn--secondary"
