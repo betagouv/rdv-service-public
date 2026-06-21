@@ -1,16 +1,15 @@
 = territory_navigation(t(".territory_agents_title"))
 
-- if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_invite_agents?
-  = link_to "Inviter un agent", new_admin_territory_agent_path(current_territory), class:"fr-btn fr-btn--secondary"
-
-= simple_form_for "", url: admin_territory_agents_path(current_territory), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
-
-  .container-fluid.bg-white.rounded.m-2.p-2
-    .m-3.d-flex.justify-content-end
-      - search = params[:q].blank? ? "d-none" : ""
-      div= link_to t(".reset"), admin_territory_agents_path(current_territory), class: "fr-btn fr-btn--tertiary-no-outline #{search}"
-      = f.input :q, placeholder: t(".search_placeholder"), label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:q] }, required: false
-      = f.button :submit, t(".search")
+.card
+  .card-body
+    .d-flex.justify-content-between.fr-mb-2w
+      - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_invite_agents?
+        = link_to "Inviter un agent", new_admin_territory_agent_path(current_territory), class:"fr-btn fr-btn--secondary"
+      = simple_form_for "", url: admin_territory_agents_path(current_territory), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
+        - search = params[:q].blank? ? "d-none" : ""
+        div= link_to t(".reset"), admin_territory_agents_path(current_territory), class: "fr-btn fr-btn--tertiary-no-outline #{search}"
+        = f.input :q, placeholder: t(".search_placeholder"), label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:q] }, required: false
+        = f.button :submit, t(".search")
 
     table.table
       thead

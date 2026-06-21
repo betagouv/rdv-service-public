@@ -1,40 +1,37 @@
 = territory_navigation("Équipes")
 
-= simple_form_for "", url: admin_territory_teams_path(current_territory), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
-
-  .container-fluid.bg-white.rounded.m-2.p-4
-
-    .float-left
-      = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class:"fr-btn fr-btn--secondary"
-    .d-flex.justify-content-end
+.card.card-body
+  .d-flex.justify-content-between
+    = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class:"fr-btn fr-btn--secondary"
+    = simple_form_for "", url: admin_territory_teams_path(current_territory), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
       - term = params[:term].blank? ? "d-none" : ""
       div= link_to "Réinitialiser", admin_territory_teams_path(current_territory), class: "fr-btn fr-btn--tertiary-no-outline #{term}"
       = f.input :term, placeholder: "ex. Puericultrice", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:term] }, required: false
       = f.button :submit, "Rechercher"
 
-    table.table
-      thead
-        tr
-          th Nom
-          th Nb équipier
-          th Actions
-      tbody
-        - @teams.each do |team|
-          tr id="team_#{team.id}"
-            td = link_to team.name, edit_admin_territory_team_path(current_territory, team)
-            td = team.agents.count
-            td
-              .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline
-                = link_to "", edit_admin_territory_team_path(current_territory, team),
-                        title: "Modifier",
-                        class: "fr-btn fr-btn--tertiary fr-icon-edit-fill"
-                = link_to "", admin_territory_team_path(current_territory, team),
-                        method: :delete,
-                        title: t("helpers.delete"),
-                        data: { confirm: "Confirmez-vous la suppression de cette équipe ?"},
-                        class: "fr-btn fr-btn--tertiary fr-icon-delete-fill"
-    .d-flex.justify-content-center
-      = paginate @teams, theme: "dsfr"
+  table.table
+    thead
+      tr
+        th Nom
+        th Nb équipier
+        th Actions
+    tbody
+      - @teams.each do |team|
+        tr id="team_#{team.id}"
+          td = link_to team.name, edit_admin_territory_team_path(current_territory, team)
+          td = team.agents.count
+          td
+            .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline
+              = link_to "", edit_admin_territory_team_path(current_territory, team),
+                      title: "Modifier",
+                      class: "fr-btn fr-btn--tertiary fr-icon-edit-fill"
+              = link_to "", admin_territory_team_path(current_territory, team),
+                      method: :delete,
+                      title: t("helpers.delete"),
+                      data: { confirm: "Confirmez-vous la suppression de cette équipe ?"},
+                      class: "fr-btn fr-btn--tertiary fr-icon-delete-fill"
+  .d-flex.justify-content-center
+    = paginate @teams, theme: "dsfr"
 
-    .text-right
-      = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class: "fr-btn fr-btn--secondary"
+  .text-right
+    = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class: "fr-btn fr-btn--secondary"

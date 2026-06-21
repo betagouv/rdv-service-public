@@ -6,14 +6,15 @@
   - content_for :right_of_page_title do
     = link_to t("agents.create_cta"), new_admin_organisation_agent_path(current_organisation), class:"fr-btn fr-btn--secondary"
 
-= simple_form_for "", url: admin_organisation_agents_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
-  .container-fluid.bg-white.rounded
+.card
+  .card-body
     - if needs_agent_search?
-      .fr-my-2w.d-flex.justify-content-end
+      .fr-mb-2w.d-flex.justify-content-end
         - search = params[:term].blank? && "d-none"
         div= link_to t("helpers.reset"), admin_organisation_agents_path(current_organisation), class: "fr-btn fr-btn--tertiary-no-outline #{search}"
-        = f.input :term, placeholder: "Prénom, Nom, Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:term] }, required: false
-        = f.submit t("helpers.search"), class: "fr-btn"
+        = simple_form_for "", url: admin_organisation_agents_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
+          = f.input :term, placeholder: "Prénom, Nom, Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:term] }, required: false
+          = f.submit t("helpers.search"), class: "fr-btn"
     table.table
       thead
         tr

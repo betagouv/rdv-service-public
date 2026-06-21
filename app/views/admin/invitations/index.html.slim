@@ -5,13 +5,14 @@
   - if current_agent_can_create_agent_in?(current_organisation)
     = link_to "Inviter un agent", new_admin_organisation_agent_path(current_organisation), class:"fr-btn fr-btn--secondary"
 
-= simple_form_for "", url: admin_organisation_invitations_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
-  .container-fluid.bg-white.rounded
-    .m-3.d-flex.justify-content-end
+.card
+  .card-body
+    .d-flex.justify-content-end
       - search = params[:search].blank? ? "d-none" : ""
       div= link_to t("helpers.reset"), admin_organisation_invitations_path(current_organisation), class: "fr-btn fr-btn--tertiary-no-outline #{search}"
-      = f.input :search, placeholder: "Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
-      = f.button :submit, t("helpers.search")
+      = simple_form_for "", url: admin_organisation_invitations_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
+        = f.input :search, placeholder: "Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
+        = f.button :submit, t("helpers.search")
     table.table
       thead
         tr
