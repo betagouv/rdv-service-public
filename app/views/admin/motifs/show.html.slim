@@ -41,7 +41,8 @@
       .card-body
         .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
           h2.fr-h4 Réservation en ligne
-          = dsfr_link_to "Voir les détails de réservation en ligne", admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-icon-arrow-right-line fr-link--icon-right"
+          - if current_agent.admin_in_organisation?(current_organisation)
+            = dsfr_link_to "Voir les détails de réservation en ligne", admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-icon-arrow-right-line fr-link--icon-right"
 
         - if !@motif.bookable_outside_of_organisation?
           p La réservation en ligne n'est pas activée pour ce motif.
