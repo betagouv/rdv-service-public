@@ -8,7 +8,7 @@
       = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class:"fr-btn fr-btn--secondary"
     .d-flex.justify-content-end
       - term = params[:term].blank? ? "d-none" : ""
-      div= link_to "Réinitialiser", admin_territory_teams_path(current_territory), class: "btn btn-link #{term}"
+      div= link_to "Réinitialiser", admin_territory_teams_path(current_territory), class: "fr-btn fr-btn--tertiary-no-outline #{term}"
       = f.input :term, placeholder: "ex. Puericultrice", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:term] }, required: false
       = f.button :submit, "Rechercher"
 

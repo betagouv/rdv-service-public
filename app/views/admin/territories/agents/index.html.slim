@@ -8,7 +8,7 @@
   .container-fluid.bg-white.rounded.m-2.p-2
     .m-3.d-flex.justify-content-end
       - search = params[:q].blank? ? "d-none" : ""
-      div= link_to t(".reset"), admin_territory_agents_path(current_territory), class: "btn btn-link #{search}"
+      div= link_to t(".reset"), admin_territory_agents_path(current_territory), class: "fr-btn fr-btn--tertiary-no-outline #{search}"
       = f.input :q, placeholder: t(".search_placeholder"), label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:q] }, required: false
       = f.button :submit, t(".search")
 
