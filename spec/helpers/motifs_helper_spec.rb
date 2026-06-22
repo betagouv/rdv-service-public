@@ -3,45 +3,45 @@ RSpec.describe MotifsHelper do
     it "affiche le badge Secrétariat pour un motif `secretariat`" do
       motif = build(:motif, bookable_by: :agents, for_secretariat: true)
       badges = motif_badges(motif)
-      expect(badges).to eq(%(<span class="badge badge-motif-for_secretariat">Secrétariat</span>))
+      expect(badges).to eq "<span class=\"fr-ml-1v fr-badge fr-badge--sm fr-badge--info  fr-badge--no-icon\">Secrétariat</span>"
     end
 
     it "affiche le badge Suivi pour un motif `follow_up`" do
       motif = build(:motif, bookable_by: :agents, follow_up: true)
       badges = motif_badges(motif)
-      expect(badges).to eq(%(<span class="badge badge-motif-follow_up">Suivi</span>))
+      expect(badges).to eq("<span class=\"fr-ml-1v fr-badge fr-badge--sm fr-badge--info  fr-badge--no-icon\">Suivi</span>")
     end
 
     it "affiche le badge Collectif pour un motif `collectif`" do
       motif = build(:motif, bookable_by: :agents, collectif: true)
       badges = motif_badges(motif)
-      expect(badges).to eq(%(<span class="badge badge-motif-collectif">Collectif</span>))
+      expect(badges).to eq(%(<span class="fr-ml-1v fr-badge fr-badge--sm fr-badge--purple-glycine fr-icon-team-fill fr-badge--icon-left">Collectif</span>))
     end
 
     it "affiche le badge En ligne pour un motif bookable_by: :everyone" do
       motif = build(:motif, bookable_by: :everyone)
       badges = motif_badges(motif)
-      expect(badges).to eq(%(<span class="badge badge-motif-bookable_by_everyone">En ligne</span>))
+      expect(badges).to eq("<span class=\"fr-ml-1v fr-badge fr-badge--sm fr-badge--success fr-badge--no-icon\">En ligne</span>")
     end
 
     it "affiche le badge Prescripteur pour un motif bookable_by: :agents_and_prescripteurs" do
       motif = build(:motif, bookable_by: :agents_and_prescripteurs)
       badges = motif_badges(motif)
-      expect(badges).to eq(%(<span class="badge badge-motif-bookable_by_agents_and_prescripteurs">Prescripteur</span>))
+      expect(badges).to eq("<span class=\"fr-ml-1v fr-badge fr-badge--sm fr-badge--success fr-badge--no-icon\">Prescripteur</span>")
     end
 
     it "affiche le badge secretariat ET followup pour un motif `for_secretariat` et `follow_up`" do
       motif = build(:motif, bookable_by: :agents, follow_up: true, for_secretariat: true)
       badges = motif_badges(motif)
-      expect(badges).to include(%(<span class="badge badge-motif-for_secretariat">Secrétariat</span>))
-      expect(badges).to include(%(<span class="badge badge-motif-follow_up">Suivi</span>))
+      expect(badges).to include("<span class=\"fr-ml-1v fr-badge fr-badge--sm fr-badge--info  fr-badge--no-icon\">Secrétariat</span>")
+      expect(badges).to include("<span class=\"fr-ml-1v fr-badge fr-badge--sm fr-badge--info  fr-badge--no-icon\">Suivi</span>")
     end
 
     it "affiche le badge collectif ET followup pour un motif `collectif` et `follow_up`" do
       motif = build(:motif, bookable_by: :agents, follow_up: true, collectif: true)
       badges = motif_badges(motif)
-      expect(badges).to include(%(<span class="badge badge-motif-collectif">Collectif</span>))
-      expect(badges).to include(%(<span class="badge badge-motif-follow_up">Suivi</span>))
+      expect(badges).to include(%(<span class="fr-ml-1v fr-badge fr-badge--sm fr-badge--purple-glycine fr-icon-team-fill fr-badge--icon-left">Collectif</span>))
+      expect(badges).to include("<span class=\"fr-ml-1v fr-badge fr-badge--sm fr-badge--info  fr-badge--no-icon\">Suivi</span>")
     end
   end
 
