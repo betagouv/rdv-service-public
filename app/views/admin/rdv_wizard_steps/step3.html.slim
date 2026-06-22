@@ -31,8 +31,6 @@ ruby:
               = t(".existing_lieu_hint_html")
       - elsif @rdv.home?
         = f.dsfr_text_field :address, label: "Lieu (RDV à domicile)", disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}", data: { "address-autocomplete": "on" }, dir: "ltr"
-      - elsif @rdv.phone?
-        = f.dsfr_text_field :address, label: "Lieu (RDV téléphonique)", disabled: true, hint: "Il n'y a pas d'adresse car le RDV est téléphonique", data: { "address-autocomplete": "on" }, dir: "ltr"
       .fr-input-group
         = f.label :agents, class: "fr-label"
         = f.select :agent_ids, @rdv.motif.authorized_agents.collect { |a| [a.reverse_full_name_and_service, a.id] }, {}, multiple: true, class: "select2-input fr-select", data: { "auto-select-sole-option": true }
