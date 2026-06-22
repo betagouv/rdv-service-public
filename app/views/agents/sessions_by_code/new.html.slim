@@ -11,13 +11,13 @@
         b> #{@existing_login_code.email}
         | à #{l(@existing_login_code.created_at, format: :time_only)}
 
-      - if Rails.env.development?
+      - if ENV["DISPLAY_LOGIN_CODES"] == "true" && (Rails.env.development? || ENV["IS_REVIEW_APP"] == "true")
         .fr-mb-4w
           = button_tag class: "fr-btn fr-btn--tertiary fr-btn--sm fr-mr-1w js-copy-to-clipboard", data: { "clipboard-content": @existing_login_code.code }
             = icon("fr-icon-survey-line fr-icon--sm", class: "fr-mr-1w")
             | copier le code #{@existing_login_code.code}
           span.fr-text--sm
-            | (visible uniquement en env de dev)
+            | (visible uniquement en dev ou en review app avec DISPLAY_LOGIN_CODES=true)
 
     .rdv-legible-code-form
       = form_for LoginCode.new(email: @email), url: agents_sessions_by_code_path, method: :post, builder: Dsfr::FormBuilder do |form|
