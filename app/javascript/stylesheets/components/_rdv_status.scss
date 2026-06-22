@@ -10,10 +10,10 @@ $status_colors: (
   "unknown_future": var(--grey-950-100),
   "unknown_today": var(--yellow-moutarde-850-200),
   "unknown_past": var(--yellow-moutarde-850-200),
-  "seen": var(--success-425-625),
+  "seen": #27a658, // La couleur success-625 du dsfr
   "revoked": var(--green-archipel-850-200),
   "excused": var(--blue-ecume-925-125),
-  "noshow": var(--red-marianne-main-472),
+  "noshow": #f95c5e, // La couleur red-marianne-625 du dsfr
 );
 
 @each $status, $color in $status_colors {
