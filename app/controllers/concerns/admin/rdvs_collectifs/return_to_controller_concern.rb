@@ -27,11 +27,15 @@ module Admin::RdvsCollectifs::ReturnToControllerConcern
 
     @return_to_form_id = SecureRandom.hex(8)
     Redis.with_connection { _1.setex(redis_key, 1.hour.to_i, request.referer) }
+  rescue Redis::BaseError, ConnectionPool::TimeoutError => e
+    Sentry.capture_exception(e)
   end
 
   def fetch_return_to
     @return_to_form_id = params[:return_to_form_id]
     @return_to = @return_to_form_id && Redis.with_connection { _1.get(redis_key) }
+  rescue Redis::BaseError, ConnectionPool::TimeoutError => e
+    Sentry.capture_exception(e)
   end
 
   def referer_is_creneaux_search_with_user?(url)

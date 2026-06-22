@@ -67,6 +67,32 @@ RSpec.describe "Admin::RdvCollectifs", type: :request do
       end
     end
 
+    context "quand Redis est indisponible" do
+      it "redirige vers la page d'édition avec le flash standard sans lever d'erreur" do
+        organisation = create(:organisation)
+        motif = create(:motif, :collectif, organisation:)
+        lieu = create(:lieu, organisation:)
+        agent = create(:agent, admin_role_in_organisations: [organisation])
+        user = create(:user, organisations: [organisation])
+        rdv = create(:rdv, motif:, organisation:, agents: [agent], users: [user], lieu:)
+        creneaux_search_url = admin_organisation_creneaux_search_selection_creneaux_url(organisation, user_ids: [user.id], motif_id: motif.id, lieu_ids: [lieu.id])
+        sign_in agent
+        redis_double = instance_double(Redis::Namespace).as_null_object
+        allow(redis_double).to receive(:setex).and_raise(Redis::CannotConnectError)
+        allow(redis_double).to receive(:get).and_raise(Redis::CannotConnectError)
+        allow(Redis).to receive(:with_connection).and_yield(redis_double)
+
+        get edit_admin_organisation_rdvs_collectif_path(organisation, rdv),
+            headers: { "HTTP_REFERER" => creneaux_search_url }
+        put admin_organisation_rdvs_collectif_path(organisation, rdv),
+            params: { rdv: { user_ids: [user.id] }, return_to_form_id: "anyid" }
+
+        expect(response).to redirect_to(edit_admin_organisation_rdvs_collectif_path(organisation, rdv))
+        follow_redirect!
+        expect(response.body).to include("Participants mis à jour")
+      end
+    end
+
     context "sans visite préalable de la page d'édition" do
       it "redirige vers la page d'édition" do
         organisation = create(:organisation)
