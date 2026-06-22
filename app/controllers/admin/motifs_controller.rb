@@ -41,7 +41,7 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def new
-    @motif = Motif.new(organisation: current_organisation)
+    @motif = Motif.new(organisation: current_organisation, color: random_color)
 
     source_motif = Agent::MotifPolicy::Scope.new(current_agent, Motif).resolve.find_by(id: params[:duplicated_from_motif_id] || params.dig(:motif, :duplicated_from_motif_id))
     if source_motif
@@ -163,5 +163,12 @@ class Admin::MotifsController < AgentAuthController
 
   def enough_motifs_to_need_search?(motif_scope)
     motif_scope.limit(10).count == 10
+  end
+
+  def random_color
+    # Liste des couleurs d'illustration du DSFR (thème clair)
+    ["#B7A73F", "#68A532", "#00A95F", "#009081", "#009099", "#465F9D", "#417DC4", "#A558A0",
+     "#E18B76", "#CE614A", "#C8AA39", "#C3992A", "#E4794A", "#D1B781", "#C08C65", "#BD987A",
+     "#AEA397",].sample
   end
 end

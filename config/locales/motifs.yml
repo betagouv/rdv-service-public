@@ -16,7 +16,7 @@ fr:
     follow_up_need_signed_user: "Le RDV '%{motif_name}' est disponible uniquement pour les personnes déjà suivies. Veuillez vous connecter pour prendre ce type de RDV."
     form:
       title:
-        new: Créer un motif
+        new: Nouveau motif de rendez-vous
       sectorisation_level:
         sectors_attributed_to_orga:
           zero: "Aucun secteur n'est attribué à l'organisation %{organisation}, ce motif n'apparaîtra donc dans aucune recherche usager"

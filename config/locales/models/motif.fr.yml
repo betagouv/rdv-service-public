@@ -20,7 +20,7 @@ fr:
         sectorisation_level: Sectorisation
         sectorisation_level_title: Sectorisation géographique
         sectorisation_level_hint: Seules les recherches des usagers sont concernées par ces règles de sectorisation. Elles n'ont donc pas d'effet si le motif n'est pas réservable en ligne.
-        location_type: Type de RDV
+        location_type: Type de rendez-vous
         for_secretariat: Motif accessible aux agents d’accueil (ex-secrétariat)
         for_secretariat_label: Autoriser les agents d’accueil à assurer ces RDV
         for_secretariat_short: Ouverture aux agents d’accueil

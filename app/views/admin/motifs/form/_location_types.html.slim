@@ -1,4 +1,4 @@
-.d-flex.flex-column
+div[style="margin-bottom: -40px"]
   ruby:
     location_types = Motif.location_types.each_key.map do |value|
       {
@@ -8,7 +8,7 @@
               hint: sanitize(Motif.human_attribute_value(:location_type, value, context: :hint), scrubber: :prune),
       }
     end
-  = f.dsfr_radio_buttons :location_type, location_types, disabled:, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "locationTypeRadios", hint: "Choisissez le type du rendez-vous", rich: true
+  = f.dsfr_radio_buttons :location_type, location_types, disabled:, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "locationTypeRadios", rich: true
   - motif = f.object
   - if motif.persisted?
     p.fr-text-mention--grey.font-14
