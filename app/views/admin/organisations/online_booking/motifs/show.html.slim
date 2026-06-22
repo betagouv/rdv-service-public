@@ -29,7 +29,13 @@
       .card
         .card-body
           - if @motif.bookable_by_agents_and_prescripteurs?
-            p Ce motif est ouvert aux prescripteurs, mais pas à la réservation en ligne par les usagers.
+            p
+              | Ce motif est ouvert aux prescripteurs, mais pas à la réservation en ligne par les usagers.
+              = icon("fr-icon-information-line", "aria-describedby" => "prescription-info-tooltip", class: "fr-icon--sm fr-ml-1w")
+            span.fr-tooltip.fr-placement#prescription-info-tooltip role="tooltip"
+              = "Plus d'informations dans "
+              = link_to "la documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#la-prescription", target: "_blank"
+
           - else
             p Ce motif n'est pas ouvert à la réservation en ligne.
           = button_to "Ouvrir à la réservation en ligne", open_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn", method: :post
