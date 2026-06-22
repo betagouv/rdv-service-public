@@ -327,6 +327,8 @@ Rails.application.routes.draw do
               patch :update_user_type
               get :edit_instructions
               patch :update_instructions
+              get :edit_sectorisation
+              patch :update_sectorisation
             end
           end
         end

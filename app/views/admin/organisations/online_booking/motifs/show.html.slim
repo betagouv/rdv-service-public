@@ -92,6 +92,18 @@
             .fr-highlight.fr-mb-2w
               i= instruction_for_rdv_to_html(@motif)
 
+    - if current_territory.sectors.any? && @motif.bookable_by_everyone_or_bookable_by_invited_users?
+      .card.card-body
+        .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+          h2.fr-h4 Sectorisation
+          .fr-btns-group.fr-btns-group--inline
+            - if current_agent.territorial_admin_in?(current_territory)
+              = link_to "Configuration des secteurs", admin_territory_sectors_path(current_territory), class: "fr-btn fr-btn--tertiary"
+            = link_to "Modifier", edit_sectorisation_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
+
+        div= @motif.human_attribute_value(:sectorisation_level)
+        div.fr-text-mention--grey= @motif.human_attribute_value(:sectorisation_level, context: :hint)
+
     - if @motif.bookable_by_everyone?
       .card
         .card-body
