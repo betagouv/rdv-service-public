@@ -11,7 +11,7 @@ module ProConnectStubs
     stub_and_run_discover_request
 
     if with_2fa
-      stub_token_request(code, acr: "https://proconnect.gouv.fr/assurance/self-asserted-2fa", host:)
+      stub_token_request(code, acr: "eidas0-mfa", host:)
     else
       stub_token_request(code, host:)
     end
