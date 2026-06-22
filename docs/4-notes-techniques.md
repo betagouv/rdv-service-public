@@ -110,29 +110,15 @@ Il faut donc les mettre à jour simultanément. Un script permet de faire ça : 
 ## Review apps
 
 Les review apps ne sont pas créées automatiquement pour chaque PR pour économiser des ressources.
-
-La commande pour créer une review app pour la PR #4242 est
-
-```bash
-scalingo --region osc-secnum-fr1 --app rdv-service-public-review-app integration-link-manual-review-app 4242
-```
-
-Un raccourci existe pour retrouver le numéro de la PR correspondant à la branche courante automatiquement : `make review_app`
-
-Par défaut, seul un worker web est activé, si vous souhaitez que les jobs s’exécutent il faut activer un worker jobs depuis le dashboard ou avec cette commande :
-
-```sh
-scalingo --region osc-secnum-fr1 --app rdv-service-public-review-app-pr4242 scale jobs:1
-```
-
 Le fichier `scalingo.json` décrit la configuration initiale et les variables d’environnement des review apps.
 Les review apps sont détruites automatiquement à la fermeture de la PR ou après 48h sans déploiement.
 On ne peut pas empêcher une PR spécifique d’être automatiquement détruite après ces 48h.
 En revanche, on peut en recréer une nouvelle sans problème.
 
-L’envoi d’email est désactivé par défaut sur les review apps.
-Pour l’activer vous pouvez utiliser cette commande : `make enable_emails_on_review_app`
-
+- La commande pour créer une review app pour la PR ouverte pour la branche courante est `make review_app`.
+- Par défaut, seul un worker web est activé, si vous souhaitez que les jobs s’exécutent : `scalingo --region osc-secnum-fr1 --app rdv-service-public-review-app-pr4242 scale jobs:1`
+- L’envoi d’email est désactivé par défaut sur les review apps. Pour l’activer : `make enable_emails_on_review_app` (active aussi un worker jobs)
+- L'affichage des codes de login est désactivé par défaut. Pour l'activer : `make display_login_codes_on_review_app`
 
 ## Search Contexts
 
