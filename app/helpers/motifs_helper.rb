@@ -1,3 +1,559 @@
+^^^
+app/helpers/motifs_helper.rb:4:4: F: Lint/Syntax: unexpected token ===
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+=======
+   ^^^
+app/helpers/motifs_helper.rb:4:7: F: Lint/Syntax: unexpected token =
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+=======
+      ^
+app/helpers/motifs_helper.rb:5:4: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+   ^^^
+   ^
+app/helpers/motifs_helper.rb:5:5: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+   ^^^
+    ^
+app/helpers/motifs_helper.rb:5:6: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+   ^^^
+     ^
+app/helpers/motifs_helper.rb:6:29: F: Lint/Syntax: unexpected symbol literal, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:128:7: F: Lint/Syntax: unexpected token =
+                            ^
+app/helpers/motifs_helper.rb:6:30: F: Lint/Syntax: invalid symbol
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:128:7: F: Lint/Syntax: unexpected token =
+                             
+app/helpers/motifs_helper.rb:6:30: F: Lint/Syntax: unexpected integer, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:128:7: F: Lint/Syntax: unexpected token =
+                             ^^^
+app/helpers/motifs_helper.rb:6:33: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:128:7: F: Lint/Syntax: unexpected token =
+                                ^
+app/helpers/motifs_helper.rb:6:35: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:128:7: F: Lint/Syntax: unexpected token =
+                                  ^
+app/helpers/motifs_helper.rb:6:38: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:128:7: F: Lint/Syntax: unexpected token =
+                                     ^
+app/helpers/motifs_helper.rb:6:51: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:128:7: F: Lint/Syntax: unexpected token =
+                                                  ^
+app/helpers/motifs_helper.rb:7:17: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+                ^^^^^^
+app/helpers/motifs_helper.rb:7:76: F: Lint/Syntax: unexpected constant, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+                                                                           ^^^^^^^
+app/helpers/motifs_helper.rb:8:1: F: Lint/Syntax: unexpected token ===
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+=======
+^^^
+app/helpers/motifs_helper.rb:8:4: F: Lint/Syntax: unexpected token ===
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+=======
+   ^^^
+app/helpers/motifs_helper.rb:8:7: F: Lint/Syntax: unexpected token =
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+=======
+      ^
+app/helpers/motifs_helper.rb:9:7: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+      ^
+      ^
+app/helpers/motifs_helper.rb:10:29: F: Lint/Syntax: unexpected symbol literal, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:1: F: Lint/Syntax: unexpected token >>
+                            ^
+app/helpers/motifs_helper.rb:10:30: F: Lint/Syntax: invalid symbol
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:1: F: Lint/Syntax: unexpected token >>
+                             
+app/helpers/motifs_helper.rb:10:30: F: Lint/Syntax: unexpected integer, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:1: F: Lint/Syntax: unexpected token >>
+                             ^^^
+app/helpers/motifs_helper.rb:10:33: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:1: F: Lint/Syntax: unexpected token >>
+                                ^
+app/helpers/motifs_helper.rb:10:35: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:1: F: Lint/Syntax: unexpected token >>
+                                  ^
+app/helpers/motifs_helper.rb:10:38: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:1: F: Lint/Syntax: unexpected token >>
+                                     ^
+app/helpers/motifs_helper.rb:10:51: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:1: F: Lint/Syntax: unexpected token >>
+                                                  ^
+app/helpers/motifs_helper.rb:11:17: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+                ^^^^^^
+app/helpers/motifs_helper.rb:11:76: F: Lint/Syntax: unexpected constant, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+                                                                           ^^^^^^^
+app/helpers/motifs_helper.rb:12:1: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+^^
+app/helpers/motifs_helper.rb:12:3: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+  ^^
+app/helpers/motifs_helper.rb:12:5: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+    ^^
+app/helpers/motifs_helper.rb:12:7: F: Lint/Syntax: unexpected token >
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+      ^
+app/helpers/motifs_helper.rb:12:10: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+         ^^^^^^^^
+app/helpers/motifs_helper.rb:13:1: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+^^
+^
+app/helpers/motifs_helper.rb:13:2: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+^^
+ ^
+app/helpers/motifs_helper.rb:14:29: F: Lint/Syntax: unexpected symbol literal, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:3: F: Lint/Syntax: unexpected token >>
+                            ^
+app/helpers/motifs_helper.rb:14:30: F: Lint/Syntax: invalid symbol
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:3: F: Lint/Syntax: unexpected token >>
+                             
+app/helpers/motifs_helper.rb:14:30: F: Lint/Syntax: unexpected integer, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:3: F: Lint/Syntax: unexpected token >>
+                             ^^^
+app/helpers/motifs_helper.rb:14:33: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:3: F: Lint/Syntax: unexpected token >>
+                                ^
+app/helpers/motifs_helper.rb:14:35: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:3: F: Lint/Syntax: unexpected token >>
+                                  ^
+app/helpers/motifs_helper.rb:14:38: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:3: F: Lint/Syntax: unexpected token >>
+                                     ^
+app/helpers/motifs_helper.rb:14:51: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:3: F: Lint/Syntax: unexpected token >>
+                                                  ^
+app/helpers/motifs_helper.rb:15:17: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+                ^^^^^^
+app/helpers/motifs_helper.rb:15:76: F: Lint/Syntax: unexpected constant, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+                                                                           ^^^^^^^
+app/helpers/motifs_helper.rb:16:1: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+^^
+app/helpers/motifs_helper.rb:16:3: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+  ^^
+app/helpers/motifs_helper.rb:16:5: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+    ^^
+app/helpers/motifs_helper.rb:16:7: F: Lint/Syntax: unexpected token >
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+      ^
+app/helpers/motifs_helper.rb:16:10: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+         ^^^^^^^^
+app/helpers/motifs_helper.rb:17:3: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+  ^^
+  ^
+app/helpers/motifs_helper.rb:17:4: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+  ^^
+   ^
+app/helpers/motifs_helper.rb:18:29: F: Lint/Syntax: unexpected symbol literal, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:5: F: Lint/Syntax: unexpected token >>
+                            ^
+app/helpers/motifs_helper.rb:18:30: F: Lint/Syntax: invalid symbol
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:5: F: Lint/Syntax: unexpected token >>
+                             
+app/helpers/motifs_helper.rb:18:30: F: Lint/Syntax: unexpected integer, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:5: F: Lint/Syntax: unexpected token >>
+                             ^^^
+app/helpers/motifs_helper.rb:18:33: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:5: F: Lint/Syntax: unexpected token >>
+                                ^
+app/helpers/motifs_helper.rb:18:35: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:5: F: Lint/Syntax: unexpected token >>
+                                  ^
+app/helpers/motifs_helper.rb:18:38: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:5: F: Lint/Syntax: unexpected token >>
+                                     ^
+app/helpers/motifs_helper.rb:18:51: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:5: F: Lint/Syntax: unexpected token >>
+                                                  ^
+app/helpers/motifs_helper.rb:19:17: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+                ^^^^^^
+app/helpers/motifs_helper.rb:19:76: F: Lint/Syntax: unexpected constant, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+                                                                           ^^^^^^^
+app/helpers/motifs_helper.rb:20:1: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+^^
+app/helpers/motifs_helper.rb:20:3: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+  ^^
+app/helpers/motifs_helper.rb:20:5: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+    ^^
+app/helpers/motifs_helper.rb:20:7: F: Lint/Syntax: unexpected token >
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+      ^
+app/helpers/motifs_helper.rb:20:10: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+         ^^^^^^^^
+app/helpers/motifs_helper.rb:21:5: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+    ^^
+    ^
+app/helpers/motifs_helper.rb:21:6: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+    ^^
+     ^
+app/helpers/motifs_helper.rb:22:29: F: Lint/Syntax: unexpected symbol literal, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:7: F: Lint/Syntax: unexpected token >
+                            ^
+app/helpers/motifs_helper.rb:22:30: F: Lint/Syntax: invalid symbol
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:7: F: Lint/Syntax: unexpected token >
+                             
+app/helpers/motifs_helper.rb:22:30: F: Lint/Syntax: unexpected integer, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:7: F: Lint/Syntax: unexpected token >
+                             ^^^
+app/helpers/motifs_helper.rb:22:33: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:7: F: Lint/Syntax: unexpected token >
+                                ^
+app/helpers/motifs_helper.rb:22:35: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:7: F: Lint/Syntax: unexpected token >
+                                  ^
+app/helpers/motifs_helper.rb:22:38: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:7: F: Lint/Syntax: unexpected token >
+                                     ^
+app/helpers/motifs_helper.rb:22:51: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:7: F: Lint/Syntax: unexpected token >
+                                                  ^
+app/helpers/motifs_helper.rb:23:17: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+                ^^^^^^
+app/helpers/motifs_helper.rb:23:76: F: Lint/Syntax: unexpected constant, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+                                                                           ^^^^^^^
+app/helpers/motifs_helper.rb:24:1: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+^^
+app/helpers/motifs_helper.rb:24:3: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+  ^^
+app/helpers/motifs_helper.rb:24:5: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+    ^^
+app/helpers/motifs_helper.rb:24:7: F: Lint/Syntax: unexpected token >
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+      ^
+app/helpers/motifs_helper.rb:24:10: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+         ^^^^^^^^
+app/helpers/motifs_helper.rb:25:7: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+      ^
+      ^
+app/helpers/motifs_helper.rb:26:29: F: Lint/Syntax: unexpected symbol literal, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:10: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+                            ^
+app/helpers/motifs_helper.rb:26:30: F: Lint/Syntax: invalid symbol
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:10: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+                             
+app/helpers/motifs_helper.rb:26:30: F: Lint/Syntax: unexpected integer, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:10: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+                             ^^^
+app/helpers/motifs_helper.rb:26:33: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:10: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+                                ^
+app/helpers/motifs_helper.rb:26:36: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:10: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+                                   ^
+app/helpers/motifs_helper.rb:26:39: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:10: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+                                      ^
+app/helpers/motifs_helper.rb:26:52: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:10: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+                                                   ^
+app/helpers/motifs_helper.rb:26:89: F: Lint/Syntax: unexpected ',', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:10: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+                                                                                        ^
+app/helpers/motifs_helper.rb:26:101: F: Lint/Syntax: unexpected 'end', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:10: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+                                                                                                    ^^^
+app/helpers/motifs_helper.rb:26:104: F: Lint/Syntax: unexpected token -
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:131:10: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+                                                                                                       ^
+app/helpers/motifs_helper.rb:27:17: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+                ^^^^^^
+app/helpers/motifs_helper.rb:27:76: F: Lint/Syntax: unexpected constant, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+                                                                           ^^^^^^^
+app/helpers/motifs_helper.rb:28:1: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+^^
+app/helpers/motifs_helper.rb:28:3: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+  ^^
+app/helpers/motifs_helper.rb:28:5: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+    ^^
+app/helpers/motifs_helper.rb:28:7: F: Lint/Syntax: unexpected token >
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+      ^
+app/helpers/motifs_helper.rb:28:10: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+         ^^^^^^^^
+app/helpers/motifs_helper.rb:29:10: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+         ^^^^^^^^
+         ^
+app/helpers/motifs_helper.rb:29:11: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+         ^^^^^^^^
+          ^
+app/helpers/motifs_helper.rb:29:12: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+         ^^^^^^^^
+           ^
+app/helpers/motifs_helper.rb:29:13: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+         ^^^^^^^^
+            ^
+app/helpers/motifs_helper.rb:29:14: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+         ^^^^^^^^
+             ^
+app/helpers/motifs_helper.rb:29:15: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+         ^^^^^^^^
+              ^
+app/helpers/motifs_helper.rb:29:16: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+         ^^^^^^^^
+               ^
+app/helpers/motifs_helper.rb:29:17: F: Lint/Syntax: unexpected token ^
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+         ^^^^^^^^
+                ^
+app/helpers/motifs_helper.rb:30:29: F: Lint/Syntax: unexpected symbol literal, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:155:4: F: Lint/Syntax: unexpected end-of-input, assuming it is closing the parent top level context
+                            ^
+app/helpers/motifs_helper.rb:30:30: F: Lint/Syntax: invalid symbol
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:155:4: F: Lint/Syntax: unexpected end-of-input, assuming it is closing the parent top level context
+                             
+app/helpers/motifs_helper.rb:30:30: F: Lint/Syntax: unexpected integer, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:155:4: F: Lint/Syntax: unexpected end-of-input, assuming it is closing the parent top level context
+                             ^^^
+app/helpers/motifs_helper.rb:30:33: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:155:4: F: Lint/Syntax: unexpected end-of-input, assuming it is closing the parent top level context
+                                ^
+app/helpers/motifs_helper.rb:30:35: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:155:4: F: Lint/Syntax: unexpected end-of-input, assuming it is closing the parent top level context
+                                  ^
+app/helpers/motifs_helper.rb:30:38: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:155:4: F: Lint/Syntax: unexpected end-of-input, assuming it is closing the parent top level context
+                                     ^
+app/helpers/motifs_helper.rb:30:51: F: Lint/Syntax: unexpected ':', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:155:4: F: Lint/Syntax: unexpected end-of-input, assuming it is closing the parent top level context
+                                                  ^
+app/helpers/motifs_helper.rb:30:64: F: Lint/Syntax: unexpected 'end', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:155:4: F: Lint/Syntax: unexpected end-of-input, assuming it is closing the parent top level context
+                                                               ^^^
+app/helpers/motifs_helper.rb:30:67: F: Lint/Syntax: unexpected token -
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:155:4: F: Lint/Syntax: unexpected end-of-input, assuming it is closing the parent top level context
+                                                                  ^
+app/helpers/motifs_helper.rb:30:76: F: Lint/Syntax: unexpected ',', expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+app/helpers/motifs_helper.rb:155:4: F: Lint/Syntax: unexpected end-of-input, assuming it is closing the parent top level context
+                                                                           ^
+app/helpers/motifs_helper.rb:31:17: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+                ^^^^^^
+app/helpers/motifs_helper.rb:31:76: F: Lint/Syntax: unexpected constant, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+                                                                           ^^^^^^^
+app/helpers/motifs_helper.rb:32:1: F: Lint/Syntax: unexpected token end
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+end ...
+^^^
+app/helpers/motifs_helper.rb:32:5: F: Lint/Syntax: unexpected token ...
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+end ...
+    ^^^
+app/helpers/motifs_helper.rb:35:3: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+1 file inspected, 14 offenses detected
+  ^^^^
+app/helpers/motifs_helper.rb:35:22: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+1 file inspected, 14 offenses detected
+                     ^^^^^^^^
+app/helpers/motifs_helper.rb:36:1: F: Lint/Syntax: unexpected token ===
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+====================
+^^^
+app/helpers/motifs_helper.rb:36:4: F: Lint/Syntax: unexpected token ===
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+====================
+   ^^^
+app/helpers/motifs_helper.rb:36:7: F: Lint/Syntax: unexpected token ===
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+====================
+      ^^^
+app/helpers/motifs_helper.rb:36:10: F: Lint/Syntax: unexpected token ===
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+====================
+         ^^^
+app/helpers/motifs_helper.rb:36:13: F: Lint/Syntax: unexpected token ===
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+====================
+            ^^^
+app/helpers/motifs_helper.rb:36:16: F: Lint/Syntax: unexpected token ===
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+====================
+               ^^^
+app/helpers/motifs_helper.rb:36:19: F: Lint/Syntax: unexpected token ==
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+====================
+                  ^^
+
+1 file inspected, 142 offenses detected
+====================
+^^^
+app/helpers/motifs_helper.rb:128:4: F: Lint/Syntax: unexpected token ===
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+=======
+   ^^^
+app/helpers/motifs_helper.rb:128:7: F: Lint/Syntax: unexpected token =
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+=======
+      ^
+app/helpers/motifs_helper.rb:131:1: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+^^
+app/helpers/motifs_helper.rb:131:3: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+  ^^
+app/helpers/motifs_helper.rb:131:5: F: Lint/Syntax: unexpected token >>
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+    ^^
+app/helpers/motifs_helper.rb:131:7: F: Lint/Syntax: unexpected token >
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+      ^
+app/helpers/motifs_helper.rb:131:10: F: Lint/Syntax: unexpected local variable or method, expecting end-of-input
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+>>>>>>> 3bc6bcfec (Fix display of disabled options)
+         ^^^^^^^^
+app/helpers/motifs_helper.rb:155:4: F: Lint/Syntax: unexpected end-of-input, assuming it is closing the parent top level context
+(Using Ruby 3.4 parser; configure using TargetRubyVersion parameter, under AllCops)
+end ...
+
+
+1 file inspected, 14 offenses detected
+====================
 module MotifsHelper
   def sort_motifs_by_service(motifs_by_service)
     motifs_by_service.sort_by do |service_and_motifs|
@@ -109,14 +665,6 @@ module MotifsHelper
     CSS_COLOR_NAMES[color] || "#FFFFFF"
   end
 
-  def motif_option_value(motif, option_name)
-    if motif.send("#{option_name}?")
-      tag.span("☑️ ") + tag.span(Motif.human_attribute_name("#{option_name}_hint"))
-    else
-      tag.span("désactivée", class: "fr-text-mention--grey")
-    end
-  end
-
   def motif_option_activated(motif, option_name)
     if motif.send("#{option_name}?")
       tag.span("Oui")
@@ -130,7 +678,7 @@ module MotifsHelper
 
     inner_tags = tag.span("#{legend} : ") + tag.span(value, class: "text-bold")
 
-    if hint.present?
+    if hint.present? && !arg_value&.include?("désactivée")
       inner_tags += tag.div(hint, class: "fr-text-mention--grey")
     end
 
