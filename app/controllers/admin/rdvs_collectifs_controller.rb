@@ -1,5 +1,6 @@
 class Admin::RdvsCollectifsController < AgentAuthController
   include RdvsHelper
+  include Admin::RdvsCollectifs::ReturnToControllerConcern
 
   def index
     @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif).available_motifs_for_organisation_and_agent(current_organisation, current_agent).collectif
@@ -46,8 +47,6 @@ class Admin::RdvsCollectifsController < AgentAuthController
     @add_user_ids = params[:add_user].to_a + params[:user_ids].to_a
     set_participations_to_add
     authorize(@rdv, policy_class: Agent::RdvPolicy)
-    # Clé unique (pas par RDV) pour éviter le cookie overflow ; deux onglets simultanés peuvent interférer.
-    session[:rdv_collectif_referer] = request.referer if referer_is_creneaux_search_with_user?(request.referer)
   end
 
   def update
@@ -59,10 +58,9 @@ class Admin::RdvsCollectifsController < AgentAuthController
     end
 
     if success
-      return_to = session.delete(:rdv_collectif_referer)
-      if return_to
+      if @return_to # cf Admin::RdvsCollectifs::ReturnToControllerConcern
         flash[:success] = "Participants mis à jour - #{@rdv.motif_name} du #{I18n.l(@rdv.starts_at, format: :human)}"
-        redirect_to return_to
+        redirect_to @return_to
       else
         flash[:success] = "Participants mis à jour"
         redirect_to edit_admin_organisation_rdvs_collectif_path(current_organisation, @rdv)
@@ -101,16 +99,5 @@ class Admin::RdvsCollectifsController < AgentAuthController
   def set_participations_to_add
     users_to_add = Agent::UserPolicy::TerritoryScope.new(pundit_user, User.where(id: @add_user_ids)).resolve.distinct
     @participations_to_add = users_to_add.ids.map { @rdv.participations.build(user_id: _1, created_by: current_agent) }
-  end
-
-  def referer_is_creneaux_search_with_user?(url)
-    return false if url.blank?
-
-    uri = URI.parse(url)
-    return false unless uri.path == admin_organisation_creneaux_search_selection_creneaux_path(current_organisation)
-
-    Rack::Utils.parse_nested_query(uri.query)["user_ids"].present?
-  rescue URI::InvalidURIError
-    false
   end
 end

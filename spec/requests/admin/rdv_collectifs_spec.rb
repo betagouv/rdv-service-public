@@ -18,8 +18,9 @@ RSpec.describe "Admin::RdvCollectifs", type: :request do
 
         get edit_admin_organisation_rdvs_collectif_path(organisation, rdv),
             headers: { "HTTP_REFERER" => creneaux_search_url }
+        form_id = Nokogiri::HTML(response.body).at_css("input[name='return_to_form_id']")&.[]("value")
         put admin_organisation_rdvs_collectif_path(organisation, rdv),
-            params: { rdv: { user_ids: [user.id] } }
+            params: { rdv: { user_ids: [user.id] }, return_to_form_id: form_id }
 
         expect(response).to redirect_to(creneaux_search_url)
         follow_redirect!
