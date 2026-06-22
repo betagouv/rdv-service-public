@@ -261,7 +261,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :organisations do
+    resources :organisations, only: %i[index show edit update] do
       collection do
         get "configuration", to: "organisations/configurations#index"
       end
