@@ -15,7 +15,7 @@ RSpec.describe Users::SessionsByCodeController, type: :controller do
 
       it "informe l'usager que le créneau n'est plus disponible et le redirige vers la sélection de créneau" do
         post :create, params: { login_code: { email:, code: "123456" } }
-        expect(flash[:error]).to eq("Ce créneau n'est plus disponible. Veuillez en sélectionner un autre.")
+        expect(flash[:error]).to eq("Ce créneau n'est plus disponible. Veuillez en sélectionner un autre ou refaire votre recherche ultérieurement.")
         expect(response).to redirect_to(prendre_rdv_path)
       end
     end

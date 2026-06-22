@@ -18,6 +18,7 @@ module CanHaveRdvWizardContext
     return if rdv_wizard.motif&.follow_up?
 
     if rdv_wizard.creneau.blank?
+      @stale_rdv_wizard = rdv_wizard
       session.delete(:user_return_to)
       return
     end
