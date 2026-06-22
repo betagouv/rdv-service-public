@@ -17,7 +17,10 @@
     - if @motif.bookable_outside_of_organisation? && count == 0
       .fr-callout.fr-pb-2w
         - if @motif.individuel?
-          p Attention, ce motif est ouvert à la réservation en ligne, mais il n’est pas encore accessible à vos usagers.
+          - if @motif.bookable_by_agents_and_prescripteurs?
+            p Attention, ce motif est ouvert aux prescripteurs, mais il n'y a aucun créneau disponible.
+          - else
+            p Attention, ce motif est ouvert à la réservation en ligne, mais il n’est pas encore accessible à vos usagers.
           p Vous devez renseigner des disponibilités associées à ce motif pour le rendre réservable.
           = link_to "Ouvrir une plage d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn"
         - else
@@ -35,10 +38,11 @@
             span.fr-tooltip.fr-placement#prescription-info-tooltip role="tooltip"
               = "Plus d'informations dans "
               = link_to "la documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#la-prescription", target: "_blank"
+            = button_to "Ouvrir à la réservation en ligne", open_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary", method: :post
 
           - else
             p Ce motif n'est pas ouvert à la réservation en ligne.
-          = button_to "Ouvrir à la réservation en ligne", open_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn", method: :post
+            = button_to "Ouvrir à la réservation en ligne", open_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn", method: :post
 
     - unless current_organisation.sectorized?
       - if @motif.bookable_by_everyone?
