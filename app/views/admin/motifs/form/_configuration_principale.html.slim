@@ -19,9 +19,9 @@
       - if available_services.any? || motif.service_id.present?
         .fr-col-md-12
           = f.dsfr_select :service_id, available_services.collect { |service| [service.name, service.id] }, { include_blank: "Aucun" }, label: "Service associé", hint: "Optionnel"
-      .fr-col-md-6= f.dsfr_number_field :default_duration_in_min, label: "Durée du rendez-vous (en minutes)"
+      .fr-col-md-4= f.dsfr_number_field :default_duration_in_min, label: "Durée des rendez-vous", hint: "En minutes"
       // Le DSFR ne propose pas d’input color, on utilise donc le champ classique avec le style DSFR pour lequel on fixe la hauteur.
-      .fr-col-md-6= f.dsfr_input_field :color, :color_field, label: "Couleur associée", style: "height: 2.5rem"
+      .fr-col-md-6.fr-col-offset-2= f.dsfr_input_field :color, :color_field, label: "Couleur", style: "height: 2.5rem", hint: "Permet de distinguer les rendez-vous dans l'agenda"
 
 .card
   .card-body
