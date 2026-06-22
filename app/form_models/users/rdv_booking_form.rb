@@ -104,16 +104,26 @@ class Users::RdvBookingForm
   end
 
   def validate_ants_proches_numbers
-    return unless ants_with_proches?
-
-    (@user.relatives.target || []).each_with_index do |relative, index|
-      prefix = "Proche #{index + 1}"
-      number = relative.ants_pre_demande_number
-      if number.blank?
-        errors.add(:base, "#{prefix} : le numéro de pré-demande ANTS doit être renseigné")
-      elsif !number.upcase.match?(AntsPreDemandeNumberFormatValidator::REGEX)
-        errors.add(:base, "#{prefix} : le numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
+    ants_relatives.each_with_index do |relative, index|
+      relative.ignore_benign_errors = @user.ignore_benign_errors
+      meeting_point_id = rdv_builder.lieu_id
+      relative.define_singleton_method(:ants_meeting_point_id) { meeting_point_id }
+      relative.singleton_class.tap do |sc|
+        sc.validates :ants_pre_demande_number, presence: true
+        sc.validates_with AntsPreDemandeNumberStatusValidation
       end
+
+      relative.valid?
+
+      relative.benign_errors.each do |msg|
+        add_benign_error("Proche #{index + 1} : #{msg}")
+      end
+    end
+  end
+
+  def ants_relatives
+    (@user.relatives.target || []).select do |r|
+      r.new_record? || @ants_selected_relative_ids.include?(r.id.to_s)
     end
   end
 

@@ -249,6 +249,7 @@ RSpec.describe Users::RdvBookingForm do
     before do
       allow(rdv_builder).to receive(:creneau).and_return(creneau)
       stub_ants_status_ok("VALID12345", status: "validated", meeting_point_id: lieu.id, appointments: [])
+      stub_ants_status_ok("PROCHE6789", status: "validated", meeting_point_id: lieu.id, appointments: [])
     end
 
     it "crée le RDV pour l'usager et le proche" do
@@ -258,6 +259,50 @@ RSpec.describe Users::RdvBookingForm do
       expect(form.rdv.users).to contain_exactly(user, proche)
       expect(proche.ants_pre_demande_number).to eq("PROCHE6789")
       expect(proche.created_through).to eq("user_relative_creation")
+    end
+
+    context "avec un numéro de proche manquant" do
+      let(:user_attributes) do
+        super().merge(
+          relatives_attributes: { "0" => { first_name: "Marc", last_name: "Durant", ants_pre_demande_number: "" } },
+        )
+      end
+
+      it "retourne une erreur de présence pour le proche" do
+        form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
+        expect(form.save).to be(false)
+        expect(form.errors[:base]).to include("Proche 1 : doit être renseigné")
+      end
+    end
+
+    context "avec un numéro de proche au mauvais format" do
+      let(:user_attributes) do
+        super().merge(
+          relatives_attributes: { "0" => { first_name: "Marc", last_name: "Durant", ants_pre_demande_number: "TROP_COURT" } },
+        )
+      end
+
+      it "retourne une erreur de format pour le proche" do
+        form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
+        expect(form.save).to be(false)
+        expect(form.errors[:base]).to include("Proche 1 : doit comporter 10 chiffres et lettres")
+      end
+    end
+
+    context "avec un numéro de proche au statut consommé" do
+      let(:user_attributes) do
+        super().merge(
+          relatives_attributes: { "0" => { first_name: "Marc", last_name: "Durant", ants_pre_demande_number: "CONSOMME99" } },
+        )
+      end
+
+      before { stub_ants_status_ok("CONSOMME99", status: "consumed", meeting_point_id: lieu.id, appointments: []) }
+
+      it "retourne une erreur de statut pour le proche" do
+        form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
+        expect(form.save).to be(false)
+        expect(form.errors[:base]).to include("Proche 1 : correspond à un dossier déjà instruit")
+      end
     end
   end
 
@@ -292,6 +337,7 @@ RSpec.describe Users::RdvBookingForm do
     before do
       allow(rdv_builder).to receive(:creneau).and_return(creneau)
       stub_ants_status_ok("VALID12345", status: "validated", meeting_point_id: lieu.id, appointments: [])
+      stub_ants_status_ok("PROCHE6789", status: "validated", meeting_point_id: lieu.id, appointments: [])
     end
 
     it "crée le RDV pour l'usager et le proche sélectionné uniquement" do
@@ -334,6 +380,10 @@ RSpec.describe Users::RdvBookingForm do
     before do
       allow(rdv_builder).to receive(:creneau).and_return(creneau)
       stub_ants_status_ok("VALID12345", status: "validated", meeting_point_id: lieu.id, appointments: [])
+      stub_ants_status_ok("PROCHE1000", status: "validated", meeting_point_id: lieu.id, appointments: [])
+      stub_ants_status_ok("PROCHE2000", status: "validated", meeting_point_id: lieu.id, appointments: [])
+      stub_ants_status_ok("NOUVEAU001", status: "validated", meeting_point_id: lieu.id, appointments: [])
+      stub_ants_status_ok("NOUVEAU002", status: "validated", meeting_point_id: lieu.id, appointments: [])
     end
 
     it "crée le RDV pour l'usager, les 2 proches sélectionnés et les 2 nouveaux proches" do
