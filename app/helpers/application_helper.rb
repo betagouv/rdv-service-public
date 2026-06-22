@@ -90,7 +90,7 @@ module ApplicationHelper
   end
 
   def human_id(sector)
-    tag.span(sector.human_id, class: "badge badge-light text-monospace")
+    tag.span(sector.human_id, class: "fr-badge fr-badge--sm")
   end
 
   def boolean_tag(value, &block)

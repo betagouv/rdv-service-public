@@ -50,11 +50,11 @@
               tr
                 td
                   = zone.city_name
-                  .badge.badge-light.text-monospace= zone.city_code
+                  .fr-badge.fr-badge--sm.fr-ml-1v= zone.city_code
                 - if zone.level_street?
                   td
                     = zone.street_name
-                    .badge.badge-light.text-monospace= zone.street_ban_id
+                    .fr-badge.fr-badge--sm.fr-ml-1v= zone.street_ban_id
                 - else
                   td.text-muted Commune entière
                 td

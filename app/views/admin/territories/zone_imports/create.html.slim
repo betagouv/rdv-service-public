@@ -10,18 +10,17 @@
     .card
       .card-header
         | Résultat de #{@form.dry_run ? "la simulation" : "de l'import"}
-        - if @res[:valid]
-          span.badge.badge-success Succès
-        - else
-          span.badge.badge-danger Échec
 
       .card-body
         - if @res[:valid] && @form.dry_run
-          p #{@res[:counts][:imported].values.sum} communes ou rues auraient été importées
+          .fr-alert.fr-alert--success
+            p #{@res[:counts][:imported].values.sum} communes ou rues auraient été importées
         - elsif @res[:valid]
-          p #{@res[:counts][:imported].values.sum} communes ou rues importées avec succès
+          .fr-alert.fr-alert--success
+            p #{@res[:counts][:imported].values.sum} communes ou rues importées avec succès
         - else
-          p Un ou plusieurs problèmes de validation sont survenus et votre fichier n'a donc pas été importé. Veuillez corriger les problèmes dans le fichier et le réimporter.
+          .fr-alert.fr-alert--error
+            p Un ou plusieurs problèmes de validation sont survenus et votre fichier n'a donc pas été importé. Veuillez corriger les problèmes dans le fichier et le réimporter.
 
         - if @res[:errors].any?
           h5 #{@res[:errors].count} erreurs globales
@@ -78,10 +77,10 @@
                   span>= human_id(zone.sector)
                 td
                   = zone.city_name
-                  .badge.badge-light.text-monospace= zone.city_code
+                  .fr-badge.fr-badge--sm.fr-ml-1v= zone.city_code
                 - if zone.level_street?
                   td
                     = zone.street_name
-                    .badge.badge-light.text-monospace= zone.street_ban_id
+                    .fr-badge.fr-badge--sm.fr-ml-1v= zone.street_ban_id
                 - else
                   td.text-muted Commune entière
