@@ -18,8 +18,11 @@ module CanHaveRdvWizardContext
     return if rdv_wizard.motif&.follow_up?
 
     if rdv_wizard.creneau.blank?
-      @stale_rdv_wizard = rdv_wizard
       session.delete(:user_return_to)
+      redirect_to(
+        prendre_rdv_path(rdv_wizard.to_query),
+        flash: { error: "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre ou refaire votre recherche ultérieurement." }
+      )
       return
     end
 

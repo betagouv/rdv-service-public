@@ -60,10 +60,6 @@ class Users::SessionsByCodeController < ApplicationController
     else
       # Aucune fiche existante sur ce territoire : création d'une nouvelle fiche (wizard uniquement).
       # En login spontané, LoginCodeRequestForm bloque l'envoi du code si aucun compte n'existe.
-      if @stale_rdv_wizard
-        error = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre ou refaire votre recherche ultérieurement."
-        return redirect_to prendre_rdv_path(@stale_rdv_wizard.to_query), flash: { error: }
-      end
       return redirect_to new_user_session_path, flash: { error: "Échec de la connexion" } unless @rdv_wizard
 
       login_user(User.create_from_login_code!(email:, login_code: valid_login_code))
