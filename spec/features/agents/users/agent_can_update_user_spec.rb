@@ -104,8 +104,8 @@ RSpec.describe "Agent can update user" do
       uncheck "Accepte les notifications par email"
       uncheck "Accepte les notifications par SMS"
       click_button "Enregistrer"
-      expect(page).to have_content("N'accepte pas les notifications par email")
-      expect(page).to have_content("N'accepte pas les notifications par SMS")
+      expect(page).to have_content("N’accepte pas les notifications par email")
+      expect(page).to have_content("N’accepte pas les notifications par SMS")
       within("#spec-primary-user-card") { click_link "Modifier" }
       expect(page).to have_unchecked_field("Accepte les notifications par email")
       expect(page).to have_unchecked_field("Accepte les notifications par SMS")
