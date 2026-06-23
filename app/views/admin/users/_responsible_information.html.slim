@@ -16,7 +16,7 @@ ul.list-unstyled.fr-mb-2w
         | Accepte les notifications par email
       - else
         = icon("fr-icon-error-line", class: "fr-mr-1w fr-icon--sm")
-        | N'accepte pas les notifications par email
+        | N’accepte pas les notifications par email
 
   li.mb-2
     = object_attribute_tag(user, :phone_number, clickable_user_phone_number(user))
@@ -35,7 +35,7 @@ ul.list-unstyled.fr-mb-2w
           | Accepte les notifications par SMS
         - else
           = icon("fr-icon-error-line", class: "fr-mr-1w fr-icon--sm")
-          | N'accepte pas les notifications par SMS
+          | N’accepte pas les notifications par SMS
 
   - if user.logged_once_with_franceconnect?
     li.mb-2 Cet usager s'est déjà connecté via FranceConnect.
