@@ -19,6 +19,8 @@
         - if @motif.individuel?
           - if @motif.bookable_by_agents_and_prescripteurs?
             p Attention, ce motif est ouvert aux prescripteurs, mais il n'y a aucun créneau disponible.
+          - elsif @motif.bookable_by_invited_users?
+            p Attention, ce motif est ouvert aux usagers invités, mais il n'y a aucun créneau disponible.
           - else
             p Attention, ce motif est ouvert à la réservation en ligne, mais il n’est pas encore accessible à vos usagers.
           p Vous devez renseigner des disponibilités associées à ce motif pour le rendre réservable.
@@ -39,6 +41,10 @@
               = "Plus d'informations dans "
               = link_to "la documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#la-prescription", target: "_blank"
             = button_to "Ouvrir à la réservation en ligne", open_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary", method: :post
+          - elsif @motif.bookable_by_invited_users?
+            p
+              | Ce motif est ouvert uniquement aux usagers invités à prendre rendez-vous.
+            = button_to "Ouvrir à tous les usagers", open_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn", method: :post
 
           - else
             p Ce motif n'est pas ouvert à la réservation en ligne.
