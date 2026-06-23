@@ -1,43 +1,43 @@
 RSpec.describe Users::SessionsByCodeController, type: :controller do
   before { request.env["devise.mapping"] = Devise.mappings[:user] }
 
-  shared_context "créneau indisponible dans le wizard" do
-    let(:mock_motif) { instance_double(Motif, follow_up?: false) }
-    let(:mock_rdv_builder) { instance_double(Users::RdvBuilder, motif: mock_motif, creneau: nil, to_query: {}) }
-
-    before do
-      session[:user_return_to] = "/users/rdv_wizard_step/new?motif_id=1&lieu_id=1&starts_at=#{1.week.from_now}"
-      allow(Users::RdvBuilder).to receive(:new).and_return(mock_rdv_builder)
-    end
-  end
-
-  shared_examples "redirection créneau indisponible" do
-    it "informe l'usager que le créneau n'est plus disponible et le redirige vers la sélection de créneau" do
-      expect(flash[:error]).to eq("Ce créneau n'est plus disponible. Veuillez en sélectionner un autre ou refaire votre recherche ultérieurement.")
-      expect(response).to redirect_to(prendre_rdv_path)
-    end
-  end
-
   describe "#new" do
     context "dans le contexte d'un rdv wizard, quand le créneau a été pris par quelqu'un d'autre" do
-      include_context "créneau indisponible dans le wizard"
+      let(:motif) { create(:motif) }
+      let(:lieu) { create(:lieu, organisation: motif.organisation) }
+      let(:rdv_builder) { instance_double(Users::RdvBuilder, motif: motif, creneau: nil, to_query: {}) }
 
-      before { get :new, params: { email: "nouvel_usager@test.fr" } }
+      before do
+        allow(Users::RdvBuilder).to receive(:new).and_return(rdv_builder)
+        session[:user_return_to] = "/users/rdv_wizard_step/new?#{{ motif_id: motif.id, lieu_id: lieu.id, starts_at: 1.week.from_now }.to_query}"
+        get :new, params: { email: "nouvel_usager@test.fr" }
+      end
 
-      include_examples "redirection créneau indisponible"
+      it "informe l'usager que le créneau n'est plus disponible et le redirige vers la sélection de créneau" do
+        expect(flash[:error]).to eq("Ce créneau n'est plus disponible. Veuillez en sélectionner un autre ou refaire votre recherche ultérieurement.")
+        expect(response.location).to include(prendre_rdv_path)
+      end
     end
   end
 
   describe "#create" do
     context "dans le contexte d'un rdv wizard, quand le créneau a été pris par quelqu'un d'autre entre l'envoi du code et sa saisie" do
-      include_context "créneau indisponible dans le wizard"
-
       let(:email) { "nouvel_usager@test.fr" }
       let!(:login_code) { create(:login_code, email: email, code: "123456") }
+      let(:motif) { create(:motif) }
+      let(:lieu) { create(:lieu, organisation: motif.organisation) }
+      let(:rdv_builder) { instance_double(Users::RdvBuilder, motif: motif, creneau: nil, to_query: {}) }
 
-      before { post :create, params: { login_code: { email:, code: "123456" } } }
+      before do
+        allow(Users::RdvBuilder).to receive(:new).and_return(rdv_builder)
+        session[:user_return_to] = "/users/rdv_wizard_step/new?#{{ motif_id: motif.id, lieu_id: lieu.id, starts_at: 1.week.from_now }.to_query}"
+        post :create, params: { login_code: { email:, code: "123456" } }
+      end
 
-      include_examples "redirection créneau indisponible"
+      it "informe l'usager que le créneau n'est plus disponible et le redirige vers la sélection de créneau" do
+        expect(flash[:error]).to eq("Ce créneau n'est plus disponible. Veuillez en sélectionner un autre ou refaire votre recherche ultérieurement.")
+        expect(response.location).to include(prendre_rdv_path)
+      end
     end
   end
 

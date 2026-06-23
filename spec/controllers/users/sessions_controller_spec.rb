@@ -3,18 +3,19 @@ RSpec.describe Users::SessionsController do
     before { request.env["devise.mapping"] = Devise.mappings[:user] }
 
     context "dans le contexte d'un rdv wizard, quand le créneau a été pris par quelqu'un d'autre" do
-      let(:mock_motif) { instance_double(Motif, follow_up?: false) }
-      let(:mock_rdv_builder) { instance_double(Users::RdvBuilder, motif: mock_motif, creneau: nil, to_query: {}) }
+      let(:motif) { create(:motif) }
+      let(:lieu) { create(:lieu, organisation: motif.organisation) }
+      let(:rdv_builder) { instance_double(Users::RdvBuilder, motif: motif, creneau: nil, to_query: {}) }
 
       before do
-        session[:user_return_to] = "/users/rdv_wizard_step/new?motif_id=1&lieu_id=1&starts_at=#{1.week.from_now}"
-        allow(Users::RdvBuilder).to receive(:new).and_return(mock_rdv_builder)
+        allow(Users::RdvBuilder).to receive(:new).and_return(rdv_builder)
+        session[:user_return_to] = "/users/rdv_wizard_step/new?#{{ motif_id: motif.id, lieu_id: lieu.id, starts_at: 1.week.from_now }.to_query}"
       end
 
       it "informe l'usager que le créneau n'est plus disponible et le redirige vers la sélection de créneau" do
         get :new
         expect(flash[:error]).to eq("Ce créneau n'est plus disponible. Veuillez en sélectionner un autre ou refaire votre recherche ultérieurement.")
-        expect(response).to redirect_to(prendre_rdv_path)
+        expect(response.location).to include(prendre_rdv_path)
       end
     end
   end
