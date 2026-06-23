@@ -71,14 +71,15 @@
             h3.fr-h4 Options de réservation
             = link_to "Modifier", edit_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
 
-          ul
-            li.fr-my-2w Les rendez-vous seront pris au moins #{ min_max_delay_int_to_human(@motif.min_public_booking_delay) } à l'avance.
-            li.fr-my-2w Ils seront pris au maximum #{ min_max_delay_int_to_human(@motif.max_public_booking_delay) } à l'avance.
+          p.fr-my-2w Les rendez-vous seront pris au moins #{ min_max_delay_int_to_human(@motif.min_public_booking_delay) } à l'avance.
+          p.fr-my-2w Ils seront pris au maximum #{ min_max_delay_int_to_human(@motif.max_public_booking_delay) } à l'avance.
+          p.fr-my-2w Par exemple, s'il y avait des disponibilités en continu, un usager pourrait actuellement prendre rendez-vous au plus tôt #{human_date_format(Time.zone.now + @motif.min_public_booking_delay)}, et au plus tard #{human_date_format(Time.zone.now + @motif.max_public_booking_delay)}.
 
+          p.fr-my-2w
             - if @motif.rdvs_editable_by_user
-              li.fr-my-2w Les usagers sont autorisés à déplacer le rendez-vous jusqu'à 48 heures avant celui-ci.
+              | Les usagers sont autorisés à déplacer le rendez-vous jusqu'à 48 heures avant celui-ci.
             - else
-              li.fr-my-2w Les usagers ne sont pas autorisés à déplacer le rendez-vous.
+              | Les usagers ne sont pas autorisés à déplacer le rendez-vous.
 
       .card
         .card-body
