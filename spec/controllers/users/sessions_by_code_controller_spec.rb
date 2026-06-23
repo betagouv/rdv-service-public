@@ -2,14 +2,14 @@ RSpec.describe Users::SessionsByCodeController, type: :controller do
   before { request.env["devise.mapping"] = Devise.mappings[:user] }
 
   describe "#new" do
-    context "dans le contexte d'un rdv wizard, quand le créneau a été pris par quelqu'un d'autre" do
+    context "dans le contexte d'un rdv wizard, quand le créneau n'est plus disponible" do
       let(:motif) { create(:motif) }
-      let(:lieu) { create(:lieu, organisation: motif.organisation) }
       let(:rdv_builder) { instance_double(Users::RdvBuilder, motif: motif, creneau: nil, to_query: {}) }
 
       before do
+        travel_to(Time.zone.parse("2026-01-15 10:00:00"))
         allow(Users::RdvBuilder).to receive(:new).and_return(rdv_builder)
-        session[:user_return_to] = "/users/rdv_wizard_step/new?#{{ motif_id: motif.id, lieu_id: lieu.id, starts_at: 1.week.from_now }.to_query}"
+        session[:user_return_to] = "/users/rdv_wizard_step/new?motif_id=#{motif.id}"
         get :new, params: { email: "nouvel_usager@test.fr" }
       end
 
@@ -21,16 +21,16 @@ RSpec.describe Users::SessionsByCodeController, type: :controller do
   end
 
   describe "#create" do
-    context "dans le contexte d'un rdv wizard, quand le créneau a été pris par quelqu'un d'autre entre l'envoi du code et sa saisie" do
+    context "dans le contexte d'un rdv wizard, quand le créneau n'est plus disponible" do
       let(:email) { "nouvel_usager@test.fr" }
       let!(:login_code) { create(:login_code, email: email, code: "123456") }
       let(:motif) { create(:motif) }
-      let(:lieu) { create(:lieu, organisation: motif.organisation) }
       let(:rdv_builder) { instance_double(Users::RdvBuilder, motif: motif, creneau: nil, to_query: {}) }
 
       before do
+        travel_to(Time.zone.parse("2026-01-15 10:00:00"))
         allow(Users::RdvBuilder).to receive(:new).and_return(rdv_builder)
-        session[:user_return_to] = "/users/rdv_wizard_step/new?#{{ motif_id: motif.id, lieu_id: lieu.id, starts_at: 1.week.from_now }.to_query}"
+        session[:user_return_to] = "/users/rdv_wizard_step/new?motif_id=#{motif.id}"
         post :create, params: { login_code: { email:, code: "123456" } }
       end
 
