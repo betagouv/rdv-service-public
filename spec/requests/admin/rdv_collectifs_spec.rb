@@ -24,7 +24,7 @@ RSpec.describe "Admin::RdvCollectifs", type: :request do
 
         expect(response).to redirect_to(creneaux_search_url)
         follow_redirect!
-        expect(response.body).to include("Participants mis à jour - Atelier Collectif du")
+        expect(response.body).to include("Participants mis à jour pour le rendez-vous Atelier Collectif du")
       end
     end
 

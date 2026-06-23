@@ -65,7 +65,7 @@ RSpec.describe "Agent can find a creneau for a rdv collectif" do
       current_params = Rack::Utils.parse_nested_query(current_uri.query)
       expect(current_uri.path).to eq(admin_organisation_creneaux_search_selection_creneaux_path(organisation))
       expect(current_params["user_ids"]).to eq([user_jorja.id.to_s])
-      expect(page).to have_content("Participants mis à jour - Atelier participatif du")
+      expect(page).to have_content("Participants mis à jour pour le rendez-vous Atelier participatif du")
       expect(rdv.reload.users).to include(user_jorja)
     end
   end
