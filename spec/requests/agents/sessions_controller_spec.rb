@@ -5,7 +5,7 @@ RSpec.describe Agents::SessionsController do
 
   context "quand l'agent se connecte sur le domaine ANCT mais que toutes ses orgas ont la verticale ÉTAT" do
     let(:organisation_etat) { create(:organisation, verticale: :rdv_etat) }
-    let(:agent) { create(:agent, basic_role_in_organisations: [organisation_etat]) }
+    let(:agent) { create(:agent, basic_role_in_organisations: [organisation_etat], pro_connect_openid_sub: "pro") }
 
     it "redirige vers le domaine ÉTAT" do
       post_login(agent, host: Domain::RDV_SERVICE_PUBLIC.host_name)

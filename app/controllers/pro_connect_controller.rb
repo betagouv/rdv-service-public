@@ -227,6 +227,7 @@ class ProConnectController < ApplicationController
     end
 
     if should_redirect_to_domain_etat?(current_domain, agent)
+      sign_out(agent)
       redirect_to redirect_target_url_in_domain_etat, allow_other_host: true
       return
     end

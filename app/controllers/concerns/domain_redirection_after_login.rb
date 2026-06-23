@@ -9,6 +9,13 @@ module DomainRedirectionAfterLogin
       organisations.all?(&:rdv_etat?)
   end
 
+  def should_redirect_to_domain_anct?(current_domain, agent)
+    organisations = agent.organisations
+    current_domain == Domain::RDV_SERVICE_PUBLIC_ETAT &&
+      organisations.all?(&:rdv_mairie?)
+    # TODO: vérifier qu'il y a un opérateur
+  end
+
   def redirect_target_url_in_domain_etat
     stored_path = stored_location_for(:agent)
     if stored_path
