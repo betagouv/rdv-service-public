@@ -53,7 +53,7 @@ RSpec.describe "Agent can find a creneau for a rdv collectif" do
     let!(:rdv) { create(:rdv, motif:, organisation:, agents: [agent], max_participants_count: 5, lieu:) }
     let!(:user_jorja) { create(:user, first_name: "Jorja", last_name: "SMITH", organisations: [organisation]) }
 
-    it "retient l’usager sélectionné" do
+    it "retient l’usager sélectionné, puis redirige vers la liste de créneaux avec un flash décrivant le RDV" do
       visit admin_organisation_user_path(organisation, user_jorja)
       click_on "Trouver un RDV pour l’usager"
       select "Atelier participatif", from: "Motif"
@@ -61,7 +61,11 @@ RSpec.describe "Agent can find a creneau for a rdv collectif" do
       click_on("Ajouter Jorja SMITH")
       expect(page).to have_content("Jorja SMITH")
       click_on "Enregistrer"
-      expect(page).to have_content("Participants mis à jour")
+      current_uri = URI.parse(page.current_url)
+      current_params = Rack::Utils.parse_nested_query(current_uri.query)
+      expect(current_uri.path).to eq(admin_organisation_creneaux_search_selection_creneaux_path(organisation))
+      expect(current_params["user_ids"]).to eq([user_jorja.id.to_s])
+      expect(page).to have_content("Participants mis à jour pour le rendez-vous Atelier participatif du")
       expect(rdv.reload.users).to include(user_jorja)
     end
   end
