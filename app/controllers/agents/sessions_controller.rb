@@ -45,7 +45,7 @@ class Agents::SessionsController < Devise::SessionsController
       return
     end
 
-    if should_redirect_to_domain_etat?(current_domain, resource.organisations)
+    if should_redirect_to_domain_etat?(current_domain, resource)
       redirect_to redirect_target_url_in_domain_etat, allow_other_host: true
       return
     end

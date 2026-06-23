@@ -226,7 +226,7 @@ class ProConnectController < ApplicationController
       flash[:notice] = "Vous avez été connecté automatiquement par ProConnect avec l'adresse email #{agent.email}."
     end
 
-    if should_redirect_to_domain_etat?(current_domain, agent.organisations)
+    if should_redirect_to_domain_etat?(current_domain, agent)
       redirect_to redirect_target_url_in_domain_etat, allow_other_host: true
       return
     end

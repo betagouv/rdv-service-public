@@ -35,7 +35,6 @@ module Admin::AuthenticatedControllerConcern
   def set_flash_automatic_redirection_from_rdvsp_anct
     return if params[:automatic_redirection_from_rdvsp_anct] != "1"
 
-    # on utilise success plutôt que notice pour éviter d’être overridé par « Vous devez vous connecter pour continuer »
-    flash[:success] = "Vous avez été automatiquement redirigé·e vers le domaine RDV Service Public pour les agents de l'État."
+    flash[:info] = "Vous avez été automatiquement redirigé·e vers le domaine RDV Service Public pour les agents de l'État."
   end
 end

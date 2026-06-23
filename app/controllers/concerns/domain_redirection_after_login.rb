@@ -1,10 +1,12 @@
 module DomainRedirectionAfterLogin
   protected
 
-  def should_redirect_to_domain_etat?(current_domain, agent_organisations)
+  def should_redirect_to_domain_etat?(current_domain, agent)
+    organisations = agent.organisations
     current_domain == Domain::RDV_SERVICE_PUBLIC &&
-      agent_organisations.exists? &&
-      agent_organisations.all?(&:rdv_etat?)
+      agent.pro_connect_openid_sub.present? &&
+      organisations.exists? &&
+      organisations.all?(&:rdv_etat?)
   end
 
   def redirect_target_url_in_domain_etat
