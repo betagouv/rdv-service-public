@@ -59,7 +59,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
 
     if success
       if @return_to # cf Admin::RdvsCollectifs::ReturnToControllerConcern
-        flash[:success] = "Participants mis à jour - #{@rdv.motif_name} du #{I18n.l(@rdv.starts_at, format: :human)}"
+        flash[:success] = "Participants mis à jour pour le rendez-vous #{@rdv.motif_name} du #{I18n.l(@rdv.starts_at, format: :human)}"
         redirect_to @return_to
       else
         flash[:success] = "Participants mis à jour"
