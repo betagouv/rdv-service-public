@@ -1,0 +1,16 @@
+/# locals: (motif:)
+- if motif.bookable_by_agents_and_prescripteurs?
+  p
+    | Ce motif est ouvert aux prescripteurs, mais pas à la réservation en ligne par les usagers.
+    = icon("fr-icon-information-line", "aria-describedby" => "prescription-info-tooltip", class: "fr-icon--sm fr-ml-1w")
+  span.fr-tooltip.fr-placement#prescription-info-tooltip role="tooltip"
+    = "Plus d'informations dans "
+    = link_to "la documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#la-prescription", target: "_blank"
+- elsif motif.bookable_by_invited_users?
+  p
+    | Ce motif est ouvert uniquement aux usagers invités à prendre rendez-vous.
+
+- else
+  p Ce motif n'est pas ouvert à la réservation en ligne.
+
+
