@@ -26,7 +26,7 @@ RSpec.describe "Agent can update a RDV", js: true do
 
     expect(page).to have_content("Café de la gare")
     expect(page).to have_content("3 Place de la Gare, Strasbourg, 67000")
-    expect(page).to have_selector(".badge-info", text: /Ponctuel/)
+    expect(page).to have_selector(".fr-badge", text: /PONCTUEL/)
     perform_enqueued_jobs
     open_email "shiraz@angouleme.fr"
     expect(current_email).not_to be_nil

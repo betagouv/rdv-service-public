@@ -1,8 +1,8 @@
 - organisation = plage_ouverture.organisation
 
 tr
-  td.pr-0
-    span.badge.badge-pill style="background: #{plage_ouverture.hex_color};" &nbsp;
+  td.fr-pr-0.fr-pt-5v
+    span.fr-icon-circle-fill[style="color: #{plage_ouverture.hex_color}"] &nbsp;
   td
     = link_to plage_ouverture.title_with_default, admin_organisation_planning_plage_ouverture_path(organisation, plage_ouverture), class: "fr-link"
     span.ml-1

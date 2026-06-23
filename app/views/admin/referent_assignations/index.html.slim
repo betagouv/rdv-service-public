@@ -3,44 +3,48 @@
 - content_for :fil_ariane do
     = render "common/fil_ariane", titles_and_paths: [["Usagers", admin_organisation_users_path(current_organisation)], [@user.full_name, admin_organisation_user_path(current_organisation, @user)]], current_page_title: yield(:title)
 
-- if @referents.any?
-  .container-fluid.bg-white.rounded.col-lg-10.mb-3
-    table.table
-      thead
-        tr
-          th Nom
-          th Service
-          th
-      tbody
-        - @referents.order(:last_name).each do |agent|
-          = render partial: "admin/referent_assignations/referent_assignation_row", locals: { agent: agent, action: :remove }
+.fr-grid-row.justify-content-center
+  .fr-col-lg-10
+    - if @referents.any?
+      .card.card-body
+          table.table
+            thead
+              tr
+                th Nom
+                th Service
+                th
+            tbody
+              - @referents.order(:last_name).each do |agent|
+                = render partial: "admin/referent_assignations/referent_assignation_row", locals: { agent: agent, action: :remove }
 
-.container-fluid.bg-white.rounded.col-lg-10
-  .d-flex.justify-content-between
-    h2 Agents de l'organisation
-    = simple_form_for "", url: admin_organisation_user_referent_assignations_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
-      .m-3.d-flex.justify-content-end
-        - search = params[:search].blank? && "d-none"
-        div= link_to t("helpers.reset"), admin_organisation_agents_path(current_organisation), class: "btn btn-link #{search}"
-        = f.input :search, placeholder: "Prénom, Nom, Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
-        = f.button :submit, t("helpers.search")
+.fr-grid-row.justify-content-center
+  .fr-col-lg-10
+    .card.card-body
+      .d-flex.justify-content-between
+        h2.fr-h4 Agents de l'organisation
+        = simple_form_for "", url: admin_organisation_user_referent_assignations_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
+          .d-flex.justify-content-end
+            - search = params[:search].blank? && "d-none"
+            div= link_to t("helpers.reset"), admin_organisation_agents_path(current_organisation), class: "fr-btn fr-btn--tertiary-no-outline #{search}"
+            = f.input :search, placeholder: "Prénom, Nom, Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
+            = f.button :submit, t("helpers.search")
 
-  table.table
-    thead
-      tr
-        th Nom
-        th Service
-        th
-    tbody
-      - @agents.order(:last_name).each do |agent|
-        - next if @referents.include?(agent)
-        = render partial: "admin/referent_assignations/referent_assignation_row", locals: { agent: agent, action: :add }
+      table.table
+        thead
+          tr
+            th Nom
+            th Service
+            th
+        tbody
+          - @agents.order(:last_name).each do |agent|
+            - next if @referents.include?(agent)
+            = render partial: "admin/referent_assignations/referent_assignation_row", locals: { agent: agent, action: :add }
 
-  - if @agents.total_pages > 1
-    .m-3
-      .d-flex.justify-content-center
-        = paginate @agents, theme: "dsfr"
-      .rdv-text-align-center= page_entries_info @agents
+      - if @agents.total_pages > 1
+        .m-3
+          .d-flex.justify-content-center
+            = paginate @agents, theme: "dsfr"
+          .rdv-text-align-center= page_entries_info @agents
 
-  .m-3
-    = link_to "Fiche #{@user.full_name}", admin_organisation_user_path(current_organisation, @user, anchor: "agents-referents"), class: "btn btn-outline-primary"
+      .m-3
+        = link_to "Fiche #{@user.full_name}", admin_organisation_user_path(current_organisation, @user, anchor: "agents-referents"), class: "fr-btn fr-btn--secondary"
