@@ -1,20 +1,21 @@
-.rdv-proche-selection {
-  .fr-radio-group.rdv-selected-proche-new {
+.rdv-nested-fields-wrapper {
+  .fr-radio-group,
+  .fr-checkbox-group {
     z-index: 100;
     background: white;
     padding: 0 1rem 0.5rem 0;
   }
-  .rdv-new-proche-fields {
+  .rdv-nested-fields {
     width: 100%;
     z-index: 10;
     padding: 1.5rem 1rem;
-    margin-left: 1.2rem;
-    margin-top: -2.2rem;
+    margin-left: 0.75rem;
+    margin-top: -1.3rem;
     border: 1px solid #ccc;
     border-radius: 3px;
   }
 
-  &:has(#user_selected_proche_new:not(:checked)) .rdv-new-proche-fields {
+  &:has(input[type="radio"]:not(:checked)) .rdv-nested-fields {
     opacity: 0.5;
   }
 }

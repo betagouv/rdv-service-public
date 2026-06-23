@@ -88,7 +88,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         click_link("Revenir en arrière")
         click_link("S'inscrire")
         choose("Une autre personne", allow_label_click: true)
-        within(".rdv-new-proche-fields") do
+        within(".fr-fieldset__element", text: "Une autre personne") do
           fill_in "Prénom", with: "Francis"
           fill_in "Nom", with: "Factice"
         end

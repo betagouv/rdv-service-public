@@ -13,10 +13,10 @@
 
           /! Section proches
           - unless @skip_proches_step
-            - if !@rdv.requires_ants_predemande_number?
+            - if @rdv.requires_ants_predemande_number? && @rdv_builder.ants_pre_demandes_count.to_i >= 2
+              = render "ants_multi_section", f: f
+            - else
               = render "proche_section", f: f
-            - elsif @rdv_builder.ants_pre_demandes_count.to_i >= 2
-              = render "ants_proche_slot", f: f
 
           h2.fr-h4.fr-mt-4w Notifications
 

@@ -100,8 +100,8 @@ class Users::RdvWizardStepsController < UserAuthController
   def proche_params
     {
       selected_proche: params.dig(:user, :selected_proche).presence,
-      ants_selected_relative_ids: params.dig(:user, :ants_selected_relative_ids) || [],
-    }
+      selected_users: params.permit(selected_users: [])[:selected_users],
+    }.compact
   end
 
   def redirect_to_prendre_rdv_path_if_creneau_unavailable

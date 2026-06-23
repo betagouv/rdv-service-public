@@ -1,14 +1,17 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["newRelativeField", "newRelativeRadioButton"]
+  static targets = ["option"]
 
-  connect() {
-    this.toggle()
-  }
+  connect() { this.update() }
 
-  toggle() {
-    const isChecked = this.newRelativeRadioButtonTarget.checked
-    this.newRelativeFieldTargets.forEach(el => { el.disabled = !isChecked})
+  update() {
+    this.optionTargets.forEach(option => {
+      const toggle = option.querySelector("input[type=\"radio\"], input[type=\"checkbox\"]")
+      if (!toggle) return
+      const isChecked = toggle.checked
+      const fields = option.querySelectorAll("input:not([type=\"radio\"]):not([type=\"checkbox\"]), select, textarea")
+      fields.forEach(field => { field.disabled = !isChecked })
+    })
   }
 }

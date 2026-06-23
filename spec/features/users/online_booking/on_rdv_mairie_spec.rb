@@ -120,7 +120,8 @@ RSpec.describe "User can search rdv on rdv mairie" do
       fill_in("user_ants_pre_demande_number", with: "1122334455")
 
       # Remplir le slot ANTS pour le proche (ants_pre_demandes_count=2 → 1 slot)
-      within(".fr-p-2w", text: "Nouveau proche 1") do
+      check("Nouveau proche 1", allow_label_click: true)
+      within(".fr-fieldset__element", text: "Nouveau proche 1") do
         fill_in("Prénom", with: "Alain")
         fill_in("Nom", with: "Mairie")
         fill_in("Numéro de pré-demande ANTS", with: "5544332211")
@@ -129,13 +130,14 @@ RSpec.describe "User can search rdv on rdv mairie" do
       click_button("Confirmer mon RDV")
 
       # Avertissement bénin : le numéro du user principal a déjà un RDV
+      expect(page).not_to have_content("Votre rendez vous a été confirmé")
       expect(page).to have_content(
         "Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois. Veuillez annuler ce RDV avant d'en prendre un nouveau"
       )
 
       # Re-remplir les champs (le formulaire est ré-affiché après erreur)
       fill_in("user_ants_pre_demande_number", with: "1122334455")
-      within(".fr-p-2w", text: "Nouveau proche 1") do
+      within(".fr-fieldset__element", text: "Nouveau proche 1") do
         fill_in("Prénom", with: "Alain")
         fill_in("Nom", with: "Mairie")
         fill_in("Numéro de pré-demande ANTS", with: "5544332211")
@@ -197,26 +199,31 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
       fill_in "user_ants_pre_demande_number", with: "1122334455"
 
+      # Activer le slot du proche via la checkbox
+      check "Nouveau proche 1", allow_label_click: true
+
       # Remplir le slot du proche sans numéro ANTS
-      within(".fr-p-2w", text: "Nouveau proche 1") do
+      within(".fr-fieldset__element", text: "Nouveau proche 1") do
         fill_in("Prénom", with: "Alain")
         fill_in("Nom", with: "Mairie")
       end
       click_button "Confirmer mon RDV"
-      expect(page).to have_content("le numéro de pré-demande ANTS doit être renseigné")
+      expect(page).to have_content("Numéro de pré-demande ANTS doit être renseigné")
 
       # Avec un numéro invalide
-      within(".fr-p-2w", text: "Nouveau proche 1") do
+      check "Nouveau proche 1", allow_label_click: true
+      within(".fr-fieldset__element", text: "Nouveau proche 1") do
         fill_in("Prénom", with: "Alain")
         fill_in("Nom", with: "Mairie")
         fill_in("Numéro de pré-demande ANTS", with: "inva lide")
       end
       fill_in "user_ants_pre_demande_number", with: "1122334455"
       click_button "Confirmer mon RDV"
-      expect(page).to have_content("le numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
+      expect(page).to have_content("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
 
       # Avec un numéro valide
-      within(".fr-p-2w", text: "Nouveau proche 1") do
+      check "Nouveau proche 1", allow_label_click: true
+      within(".fr-fieldset__element", text: "Nouveau proche 1") do
         fill_in("Prénom", with: "Alain")
         fill_in("Nom", with: "Mairie")
         fill_in("Numéro de pré-demande ANTS", with: "5544332211")
@@ -435,7 +442,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       expect(page).to have_content("(50 minutes)")
       fill_in "Numéro de pré-demande ANTS", with: "TESTRDV001", match: :first
       # Remplir le slot du proche (ants_pre_demandes_count=2 → 1 slot)
-      within(".fr-p-2w", text: "Nouveau proche 1") do
+      within(".fr-fieldset__element", text: "Nouveau proche 1") do
         fill_in "Prénom", with: "Jean"
         fill_in "Nom", with: "Vanna"
         fill_in "Numéro de pré-demande ANTS", with: "TESTRDV001"

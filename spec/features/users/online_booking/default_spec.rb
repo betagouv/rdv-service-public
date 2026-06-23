@@ -584,7 +584,7 @@ RSpec.describe "User can search for rdvs" do
 
     # Section proche : sélectionner "Une autre personne" et remplir les champs
     choose("Une autre personne", allow_label_click: true)
-    within(".rdv-new-proche-fields") do
+    within(".fr-fieldset__element", text: "Une autre personne") do
       fill_in("Prénom", with: "Mathieu")
       fill_in("Nom", with: "Lapin")
       fill_in("Date de naissance", with: Date.yesterday) if birth_date

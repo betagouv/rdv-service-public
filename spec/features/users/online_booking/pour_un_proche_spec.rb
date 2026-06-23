@@ -29,7 +29,7 @@ RSpec.describe "Prise de RDV pour un proche" do
     it "crée le RDV avec le nouveau proche" do
       visit wizard_path
       choose("Une autre personne", allow_label_click: true)
-      within(".rdv-new-proche-fields") do
+      within(".fr-fieldset__element", text: "Une autre personne") do
         fill_in("Prénom", with: "Mathieu")
         fill_in("Nom", with: "Lapin")
       end
@@ -45,7 +45,7 @@ RSpec.describe "Prise de RDV pour un proche" do
     it "crée le RDV avec le nouveau proche" do
       visit wizard_path
       choose("Une autre personne", allow_label_click: true)
-      within(".rdv-new-proche-fields") do
+      within(".fr-fieldset__element", text: "Une autre personne") do
         fill_in("Prénom", with: "Mathieu")
         fill_in("Nom", with: "Lapin")
       end
@@ -72,7 +72,7 @@ RSpec.describe "Prise de RDV pour un proche" do
       visit "http://www.rdv-service-public-test.localhost#{wizard_path}"
       expect(page).not_to have_field("Nom de naissance")
       choose("Une autre personne", allow_label_click: true)
-      within(".rdv-new-proche-fields") do
+      within(".fr-fieldset__element", text: "Une autre personne") do
         fill_in("Prénom", with: "Mathieu")
         fill_in("Nom", with: "Lapin")
       end
