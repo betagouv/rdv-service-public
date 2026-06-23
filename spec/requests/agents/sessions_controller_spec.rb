@@ -14,11 +14,11 @@ RSpec.describe Agents::SessionsController do
 
     it "inclut le paramètre de redirection automatique" do
       post_login(agent, host: Domain::RDV_SERVICE_PUBLIC.host_name)
-      expect(URI(response.location).query).to include("automatic_redirection_from_rdvsp_anct=1")
+      expect(URI(response.location).query).to include("automatic_redirection_from_other_domain=1")
     end
 
     it "affiche un message flash à l'arrivée sur le domaine ÉTAT" do
-      get unauthenticated_explicit_agent_root_url(host: Domain::RDV_SERVICE_PUBLIC_ETAT.host_name, automatic_redirection_from_rdvsp_anct: "1")
+      get unauthenticated_explicit_agent_root_url(host: Domain::RDV_SERVICE_PUBLIC_ETAT.host_name, automatic_redirection_from_other_domain: "1")
       expect(flash[:success]).to include("automatiquement redirigé")
     end
 
