@@ -423,6 +423,11 @@ Rails.application.routes.draw do
   # tkn est obligatoire pour s'assurer qu'il est possible de se connecter
   get "r/:tkn" => "redirect#rdv_short_from_token", as: "rdv_short_from_token"
 
+  get "r/:id/cr", to: (redirect do |path_params, req|
+    query_params = format_redirect_params(req.params)
+    "users/rdvs/#{path_params[:id]}/creneaux#{query_params}"
+  end), as: "creneaux_users_rdv_short"
+
   # << REMOVE AFTER 01/01/2027
   # On préserve la route courte avec id pour la rétrocompatibilité des anciens SMS
   get "r/:id/:tkn" => "redirect#rdv_short", as: "rdv_short"
@@ -432,11 +437,6 @@ Rails.application.routes.draw do
     query_params = format_redirect_params(req.params)
     "prendre_rdv#{query_params}"
   end), as: "prendre_rdv_short"
-
-  get "r/:id/cr", to: (redirect do |path_params, req|
-    query_params = format_redirect_params(req.params)
-    "users/rdvs/#{path_params[:id]}/creneaux#{query_params}"
-  end), as: "creneaux_users_rdv_short"
 
   def format_redirect_params(params)
     # we rename the short parameter tkn
