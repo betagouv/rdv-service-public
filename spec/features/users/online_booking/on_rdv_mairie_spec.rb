@@ -20,6 +20,8 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
   def json_response
     JSON.parse(page.html)
+  rescue JSON::ParserError
+    JSON.parse(page.find("body").text)
   end
 
   before do
