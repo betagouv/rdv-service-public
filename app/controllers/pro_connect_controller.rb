@@ -1,6 +1,8 @@
 # Le guide pour configurer ProConnect en local : docs/interconnexions/proconnect.md
 
 class ProConnectController < ApplicationController
+  include DomainRedirectionAfterLogin
+
   # IDP ProConnect nécessitant une double authentification pour les agents qui ont des comptes sensibles.
   # Configurable via la variable d'environnement IDP_PRO_CONNECT_FORCE_2FA_ENABLED (liste séparée par des virgules).
   IDP_PRO_CONNECT_FORCE_2FA_ENABLED = ENV.fetch("IDP_PRO_CONNECT_FORCE_2FA_ENABLED", "").split(",").map(&:strip).freeze
@@ -54,7 +56,6 @@ class ProConnectController < ApplicationController
     )
 
     if callback_client.fetch_user_info_from_code!(params[:code])
-
       case pro_connect_session[:connection_for]
       when "user"
         connect_user(callback_client)
@@ -223,6 +224,11 @@ class ProConnectController < ApplicationController
 
     if pro_connect_session[:silent_login]
       flash[:notice] = "Vous avez été connecté automatiquement par ProConnect avec l'adresse email #{agent.email}."
+    end
+
+    if should_redirect_to_domain_etat?(current_domain, agent.organisations)
+      redirect_to redirect_target_url_in_domain_etat, allow_other_host: true
+      return
     end
 
     redirect_to after_sign_in_path_for(agent)
