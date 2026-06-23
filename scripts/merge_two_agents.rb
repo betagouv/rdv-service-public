@@ -49,16 +49,25 @@ Agent.transaction do
   source.agent_teams.reload.destroy_all
 
   puts "---Merging Agent Rdvs---"
-  source.agents_rdvs.update!(agent_id: dest.id)
+  rdv_ids_already_with_dest = dest.agents_rdvs.pluck(:rdv_id)
+  source.agents_rdvs.where(rdv_id: rdv_ids_already_with_dest).destroy_all
+  source.agents_rdvs.reload.update!(agent_id: dest.id)
 
   puts "---Merging Plage Ouvertures---"
-  source.plage_ouvertures.update!(agent_id: dest.id)
+  source.plage_ouvertures.each do |po|
+    po.ignore_benign_errors = true
+    po.update!(agent_id: dest.id)
+  end
 
   puts "---Merging Referent Assignations---"
   source.referent_assignations.update!(agent_id: dest.id)
 
   puts "---Merging Sector Attributions---"
   source.sector_attributions.update!(agent_id: dest.id)
+
+  puts "---Merging Territorial Roles---"
+  source.territorial_roles.where.not(territory_id: dest.territorial_roles.pluck(:territory_id)).update!(agent_id: dest.id)
+  source.territorial_roles.reload.destroy_all
 
   puts "---Deleting Source Agent---"
 
