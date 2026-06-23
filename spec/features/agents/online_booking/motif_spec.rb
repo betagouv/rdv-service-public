@@ -71,6 +71,35 @@ RSpec.describe "Réservation en ligne pour un motif en particulier" do
     end
   end
 
+  describe "sectorisation" do
+    context "pour un espace qui n'utilise pas de sectorisation" do
+      it "n'affiche pas les informations de sectorisation pour éviter de surcharger inutilement la page" do
+        visit admin_organisation_online_booking_motif_path(organisation, motif)
+        expect(page).not_to have_content("Sectorisation")
+      end
+    end
+
+    context "pour un espace qui utilise la sectorisation" do
+      before { create(:sector, territory: organisation.territory) }
+
+      it "permet de modifier les options de sectorisation" do
+        visit admin_organisation_online_booking_motif_path(organisation, motif)
+        expect(page).to have_content("Sectorisation")
+        expect(page).to have_content("Réservable par les usagers dans l'ensemble du département")
+        expect(motif.reload.sectorisation_level).to eq("departement")
+
+        visit edit_sectorisation_admin_organisation_online_booking_motif_path(organisation, motif)
+
+        find("label", text: "Réservable par les usagers uniquement dans les secteurs attribués à l'organisation").click
+        click_on "Enregistrer"
+
+        expect(page).to have_content("Le niveau de sectorisation a été mis à jour.")
+
+        expect(motif.reload.sectorisation_level).to eq("organisation")
+      end
+    end
+  end
+
   it "permet d'ouvrir ou fermer la réservation en ligne pour ce motif" do
     # La réservation par les prescripteurs sera gérée dans un menu à part, pas depuis la réservation en ligne.
     visit admin_organisation_online_booking_motif_path(organisation, motif)
