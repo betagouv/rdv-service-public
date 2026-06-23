@@ -27,7 +27,6 @@ territory_gironde.services << service_cdad
 # Motifs
 motif1_cdad1 = Motif.create!(
   name: "RDV Avocat",
-  color: "#00ffff",
   default_duration_in_min: 60,
   organisation: org_cdad1,
   bookable_by: "agents",

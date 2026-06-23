@@ -84,7 +84,6 @@ territory75.services << [service_pmi, service_social, service_secretariat]
 
 motif_org_paris_nord_pmi_rappel = Motif.create!(
   name: "Être rappelé par la PMI",
-  color: "#FF7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   bookable_by: :everyone,
@@ -92,7 +91,6 @@ motif_org_paris_nord_pmi_rappel = Motif.create!(
 )
 motif_org_paris_nord_pmi_gyneco = Motif.create!(
   name: "Consultation gynécologie / contraception",
-  color: "#FF7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   bookable_by: :agents,
@@ -100,7 +98,6 @@ motif_org_paris_nord_pmi_gyneco = Motif.create!(
 )
 motif_org_paris_nord_pmi_prenatale = Motif.create!(
   name: "Consultation prénatale",
-  color: "#CC7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   bookable_by: :everyone,
@@ -108,7 +105,6 @@ motif_org_paris_nord_pmi_prenatale = Motif.create!(
 )
 motif_org_paris_nord_pmi_prenatale_phone = Motif.create!(
   name: "Consultation prénatale",
-  color: "#CC7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   bookable_by: :everyone,
@@ -116,7 +112,6 @@ motif_org_paris_nord_pmi_prenatale_phone = Motif.create!(
 )
 motif_org_paris_nord_pmi_suivi = Motif.create!(
   name: "Suivi après naissance",
-  color: "#00FC60",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   bookable_by: :everyone,
@@ -125,7 +120,6 @@ motif_org_paris_nord_pmi_suivi = Motif.create!(
 )
 motif_org_paris_nord_pmi_securite = Motif.create!(
   name: "Sécurité du domicile",
-  color: "#1010FF",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   bookable_by: :everyone,
@@ -133,7 +127,6 @@ motif_org_paris_nord_pmi_securite = Motif.create!(
 )
 motif_org_paris_nord_pmi_collectif = Motif.create!(
   name: "Atelier Collectif",
-  color: "#1049F3",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   collectif: true,
@@ -143,7 +136,6 @@ motif_org_paris_nord_pmi_collectif = Motif.create!(
 )
 motif_org_paris_nord_social_rappel = Motif.create!(
   name: "Être rappelé par la MDS",
-  color: "#FF7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
   bookable_by: :everyone,
@@ -151,7 +143,6 @@ motif_org_paris_nord_social_rappel = Motif.create!(
 )
 motif_org_paris_nord_social_suivi = Motif.create!(
   name: "Suivi RSA",
-  color: "#CC7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
   bookable_by: :everyone,
@@ -160,7 +151,6 @@ motif_org_paris_nord_social_suivi = Motif.create!(
 )
 _motif_org_paris_nord_social_droits = Motif.create!(
   name: "Droits sociaux",
-  color: "#00FC60",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
   bookable_by: :everyone,
@@ -168,7 +158,6 @@ _motif_org_paris_nord_social_droits = Motif.create!(
 )
 _motif_org_paris_nord_social_collectif = Motif.create!(
   name: "Forum",
-  color: "#113C65",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
   collectif: true,
@@ -184,7 +173,6 @@ Organisation.where(territory: territory62).each do |org|
   motifs[org] ||= {}
   motifs[org][:pmi_rappel] = Motif.create!(
     name: "Être rappelé par la PMI",
-    color: "#10FF10",
     organisation_id: org.id,
     service_id: service_pmi.id,
     bookable_by: :everyone,
@@ -193,7 +181,6 @@ Organisation.where(territory: territory62).each do |org|
   )
   motifs[org][:pmi_prenatale] = Motif.create!(
     name: "Consultation prénatale",
-    color: "#FF1010",
     organisation_id: org.id,
     service_id: service_pmi.id,
     bookable_by: :everyone,
@@ -208,7 +195,7 @@ motifs_attributes = 1000.times.map do |i|
     created_at: now,
     updated_at: now,
     name: "motif_#{i}",
-    color: "#000000",
+    color: Motif.new.send(:random_color),
     organisation_id: org_arques.id,
     service_id: service_pmi.id,
     bookable_by: :everyone,

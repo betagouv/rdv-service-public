@@ -74,6 +74,7 @@ class Motif < ApplicationRecord
   # Hooks
 
   after_initialize { self.public_link_id ||= SecureRandom.base58(8) }
+  after_initialize { self.color ||= random_color }
 
   # Scopes
   scope :active, lambda { |active = true|
@@ -321,5 +322,12 @@ class Motif < ApplicationRecord
 
       errors.add(:base, :duplicate_detected, message: error_message)
     end
+  end
+
+  def random_color
+    # Liste des couleurs d'illustration du DSFR (thème clair)
+    ["#B7A73F", "#68A532", "#00A95F", "#009081", "#009099", "#465F9D", "#417DC4", "#A558A0",
+     "#E18B76", "#CE614A", "#C8AA39", "#C3992A", "#E4794A", "#D1B781", "#C08C65", "#BD987A",
+     "#AEA397",].sample
   end
 end

@@ -22,7 +22,6 @@ if ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "RDV_SOLIDARITES_DEV"
 
   motif_accompagnement_individuel = Motif.create!(
     name: "Accompagnement individuel",
-    color: "#99CC99",
     default_duration_in_min: 60,
     location_type: :public_office,
     bookable_by: :everyone,
@@ -32,7 +31,6 @@ if ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "RDV_SOLIDARITES_DEV"
 
   motif_atelier_collectif = Motif.create!(
     name: "Atelier collectif",
-    color: "#4A86E8",
     default_duration_in_min: 120,
     location_type: :public_office,
     collectif: true,
