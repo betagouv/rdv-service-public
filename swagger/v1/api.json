@@ -1104,8 +1104,12 @@
       "description": "Serveur de démo"
     },
     {
+      "url": "https://rdv.numerique.gouv.fr",
+      "description": "Serveur de production pour RDV Service Public pour les services de l'état"
+    },
+    {
       "url": "https://rdv.anct.gouv.fr",
-      "description": "Serveur de production pour RDV Service Public"
+      "description": "Serveur de production pour RDV Service Public pour les collectivités"
     },
     {
       "url": "https://www.rdv-solidarites.fr",

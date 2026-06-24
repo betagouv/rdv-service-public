@@ -1,7 +1,7 @@
 class Agents::PagesController < AgentAuthController
   layout "application"
 
-  CONTACT_TEAM_URL = "https://rdv.anct.gouv.fr/motif/KNLKRbg9/presentation-rdv-service-public".freeze
+  CONTACT_TEAM_URL = "https://rdv.numerique.gouv.fr/motif/KNLKRbg9/presentation-rdv-service-public".freeze
 
   def home
     skip_authorization

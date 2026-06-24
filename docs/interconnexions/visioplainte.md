@@ -8,7 +8,7 @@ Finalement, la police a décidé de ne pas utiliser les services de RDVSP.
 Des discussions de spécification ont eu lieu.
 Ils ne souhaitent pas faire passer les usagers par le site de RDVSP mais uniquement utiliser nos services via des API.
 Il a été décidé de développer une API spécifique chez RDVSP pour leurs besoins.
-On s’est mis d’accords sur cette API et le fichier [swagger a été défini](https://rdv.anct.gouv.fr/api-docs/index.html?urls.primaryName=Documentation%20API%20pour%20Visioplainte) puis implémenté peu à peu.
+On s’est mis d’accords sur cette API et le fichier [swagger a été défini](https://rdv.numerique.gouv.fr/api-docs/index.html?urls.primaryName=Documentation%20API%20pour%20Visioplainte) puis implémenté peu à peu.
 
 Le service de Visioplainte fonctionne en décidant d’un nombre de guichets ouverts a priori puis assigne les agents à ces guichets tardivement selon les RDV pris.
 On a décidé de modéliser ça en créant des agents anonymes « Guichet 1 » qui ont des plages d’ouvertures.

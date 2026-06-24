@@ -3,7 +3,7 @@ require "omniauth-oauth2"
 module OmniAuth
   module Strategies
     class RdvServicePublic < OmniAuth::Strategies::OAuth2
-      option :base_url, "https://demo.rdv.anct.gouv.fr" # L'url de base pour les appels
+      option :base_url, "https://demo.rdv.numerique.gouv.fr" # L'url de base pour les appels
 
       def self.sign_out_path(oauth_client_app_id)
         "/agents/sign_out?oauth_client_app_id=#{oauth_client_app_id}"
