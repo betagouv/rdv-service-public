@@ -1,6 +1,5 @@
 class Agents::SessionsController < Devise::SessionsController
   include Admin::WeakPasswordControllerConcern
-  include DomainRedirectionAfterLogin
 
   # Lorsqu'un agent est connecté à une application Oauth via notre application,
   # Il est possible qu'il cherche à se déconnecter alors que sa session a déjà expiré.
@@ -42,18 +41,6 @@ class Agents::SessionsController < Devise::SessionsController
       session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = resource.id
       Agents::LoginCodeSender.perform(email: resource.email, domain_id: current_domain.id)
       redirect_to new_agents_sessions_by_code_path
-      return
-    end
-
-    if should_redirect_to_domain_etat?(current_domain, resource)
-      sign_out(resource)
-      redirect_to redirect_target_url_in_domain(Domain::RDV_SERVICE_PUBLIC_ETAT), allow_other_host: true
-      return
-    end
-
-    if should_redirect_to_domain_anct?(current_domain, resource)
-      sign_out(resource)
-      redirect_to redirect_target_url_in_domain(Domain::RDV_SERVICE_PUBLIC), allow_other_host: true
       return
     end
 
