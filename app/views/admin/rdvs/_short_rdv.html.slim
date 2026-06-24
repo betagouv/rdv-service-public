@@ -7,7 +7,7 @@ li.card-body.py-2
     - if current_organisation.territory.enable_context_field
       div
         - if short_rdv.context.blank?
-          .text-muted Pas de contexte renseigné
+          .fr-text-mention--grey Pas de contexte renseigné
         - else
-          .text-muted Contexte&nbsp;:
+          .fr-text-mention--grey Contexte&nbsp;:
           .border-left.pl-2= simple_format(short_rdv.context)

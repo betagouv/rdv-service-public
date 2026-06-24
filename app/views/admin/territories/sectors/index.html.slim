@@ -48,7 +48,7 @@
                             - attributions.each do |attribution|
                               li= attribution.agent.full_name_and_service
                 - else
-                  .text-muted Aucune attribution
+                  .fr-text-mention--grey Aucune attribution
               td
                 .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline
                   - policy = Agent::SectorPolicy.new(current_agent, sector)

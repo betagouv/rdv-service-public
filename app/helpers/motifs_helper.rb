@@ -113,7 +113,7 @@ module MotifsHelper
     if motif.send("#{option_name}?")
       tag.span("☑️ ") + tag.span(Motif.human_attribute_name("#{option_name}_hint"))
     else
-      tag.span("désactivée", class: "text-muted")
+      tag.span("désactivée", class: "fr-text-mention--grey")
     end
   end
 
@@ -121,7 +121,7 @@ module MotifsHelper
     if motif.send("#{option_name}?")
       tag.span("Oui")
     else
-      tag.span("désactivée", class: "text-muted")
+      tag.span("désactivée", class: "fr-text-mention--grey")
     end
   end
 
@@ -131,7 +131,7 @@ module MotifsHelper
     inner_tags = tag.span("#{legend} : ") + tag.span(value, class: "text-bold")
 
     if hint.present?
-      inner_tags += tag.div(hint, class: "text-muted")
+      inner_tags += tag.div(hint, class: "fr-text-mention--grey")
     end
 
     tag.div(inner_tags, class: ("fr-mt-4w" if margin))

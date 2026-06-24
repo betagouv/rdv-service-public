@@ -11,7 +11,7 @@
   = f.dsfr_radio_buttons :location_type, location_types, disabled:, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "locationTypeRadios", hint: "Choisissez le type du rendez-vous", rich: true
   - motif = f.object
   - if motif.persisted?
-    p.text-muted.font-14
+    p.fr-text-mention--grey.font-14
       = icon("fr-icon-information-fill")
       |> Pour permettre plusieurs types de rendez-vous, vous pouvez
       = link_to("dupliquer ce motif", new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id))

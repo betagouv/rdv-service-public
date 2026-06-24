@@ -6,7 +6,7 @@
     = boolean_tag(motif.visible_and_notified?) do
       = sanitize(motif.human_attribute_value(:visibility_type, context: :html))
       p.mb-0
-        span.text-muted.font-14= motif.human_attribute_value(:visibility_type, context: :hint)
+        span.fr-text-mention--grey.font-14= motif.human_attribute_value(:visibility_type, context: :hint)
         - if current_organisation.rdv_insertion?
           br
-          span.text-muted.font-14= motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
+          span.fr-text-mention--grey.font-14= motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)

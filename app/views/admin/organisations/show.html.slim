@@ -4,31 +4,21 @@
   | Informations de l’organisation #{@organisation.name}
 
 .fr-grid-row
-  .fr-col-10
+  .fr-col.fr-col-lg-10
     .card
       .card-body
-        h2.fr-h4 Informations de contact
+        .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+          h2.fr-h4 Informations de contact
+          = link_to "Modifier", edit_admin_organisation_path(@organisation), class: "fr-btn"
         p
           | Ces informations seront affichées aux usagers qui prennent rendez-vous avec votre organisation.
 
         ul.list-unstyled
-          li.mb-2
-            strong> Nom&nbsp;:
-            | #{@organisation.name}
-
-          li.mb-2
-            strong> Téléphone&nbsp;:
-            | #{display_value_or_na_placeholder(@organisation.phone_number)}
-          li.mb-2
-            strong> Email&nbsp;:
-            | #{display_value_or_na_placeholder(@organisation.email)}
-          li.mb-2
-            strong> Site web&nbsp;:
-            | #{display_value_or_na_placeholder(@organisation.website)}
-          li.mb-2
-            strong> Horaires&nbsp;:
-            | #{display_value_or_na_placeholder(@organisation.horaires)}
-        .text-right= link_to "Modifier", edit_admin_organisation_path(@organisation), class: "fr-btn"
+          li.mb-2 = object_attribute_tag(@organisation, :name)
+          li.mb-2 = object_attribute_tag(@organisation, :phone_number)
+          li.mb-2 = object_attribute_tag(@organisation, :email)
+          li.mb-2 = object_attribute_tag(@organisation, :website)
+          li.mb-2 = object_attribute_tag(@organisation, :horaires)
 
 .fr-grid-row
   .fr-col-10

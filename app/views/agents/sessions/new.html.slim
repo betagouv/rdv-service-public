@@ -13,7 +13,7 @@
 
     p.fr-hr-or ou
 
-  p.text-muted.mb-2 Entrez votre email et votre mot de passe.
+  p.fr-text-mention--grey.mb-2 Entrez votre email et votre mot de passe.
   = form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
     = render "devise/shared/error_messages", resource: resource
     .form-group

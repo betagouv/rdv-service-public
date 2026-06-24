@@ -12,7 +12,7 @@
     label_method: -> { sanitize("&nbsp;&nbsp;") + Zone.human_attribute_value(:level, _1) }, \
     as: :radio_buttons, \
     wrapper: :vertical_collection_inline
-  .d-flex.align-items-center.mb-3.mt-1.text-muted
+  .d-flex.align-items-center.mb-3.mt-1.fr-text-mention--grey
     = icon("fr-icon-information-fill")
     div.pl-2
     - if zone.level_city?

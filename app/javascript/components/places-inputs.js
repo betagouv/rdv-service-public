@@ -94,7 +94,7 @@ class PlacesInput {
       return `
         <div class='d-flex'>
           <div class='fr-ml-1w'><i class="fr-icon-question-fill"></i></div>
-          <div class='fr-ml-1w text-muted'><em>Adresse introuvable ou à l'étranger ?</em></div>
+          <div class='fr-ml-1w fr-text-mention--grey'><em>Adresse introuvable ou à l'étranger ?</em></div>
         </div>
       `
     }
@@ -107,7 +107,7 @@ class PlacesInput {
       street: 'map-pin-2-fill'
     }[type] || "question"
     const details = this.getDetails(suggestion).join(", ")
-    const content = `<b>${name}</b> <span class='text-muted'>${details}</span>`
+    const content = `<b>${name}</b> <span class='fr-text-mention--grey'>${details}</span>`
     return `
       <div class='d-flex'>
         <div class='fr-ml-1w'><i class="fr-icon-${icon}"></i></div>
