@@ -113,7 +113,7 @@ class Users::RdvBookingForm
            (ants_single_with_proche? && rel_attrs[:id].to_s == @selected_proche)
           rel_attrs
         end
-      elsif @selected_proche == "new" || (ants_with_multiple_pre_demandes? && rel_attrs[:first_name].present?)
+      elsif @selected_proche == "new" || ants_with_multiple_pre_demandes?
         rel_attrs.merge(created_through: "user_relative_creation")
       end
     end
