@@ -72,8 +72,8 @@ Agent.transaction do
   source.territorial_roles.reload.destroy_all
 
   puts "---Merging Exports---"
-  Export.where(agent_id: source.id).update_all(agent_id: dest.id)
-  source.instance_exports.update_all(agent_id: dest.id)
+  Export.where(agent_id: source.id).update!(agent_id: dest.id)
+  source.instance_exports.update!(agent_id: dest.id)
 
   puts "---Deleting Source Agent---"
 
