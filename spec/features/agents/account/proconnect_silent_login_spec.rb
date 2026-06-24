@@ -56,7 +56,7 @@ RSpec.describe "Agent is automatically logged in with pro connect" do
           id_token: {
             acr: {
               essential: false,
-              values: %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa],
+              values: %w[eidas0-mfa eidas1-mfa eidas2 eidas3],
             },
           },
         }.to_json
@@ -157,7 +157,7 @@ RSpec.describe "Agent is automatically logged in with pro connect" do
           id_token: {
             acr: {
               essential: false,
-              values: %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa],
+              values: %w[eidas0-mfa eidas1-mfa eidas2 eidas3],
             },
           },
         }.to_json

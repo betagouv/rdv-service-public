@@ -46,7 +46,16 @@ module MotifsHelper
   end
 
   def build_badge_tag_for(badge_name)
-    tag.span(I18n.t("motifs.badges.#{badge_name}"), class: "badge badge-motif-#{badge_name}")
+    classes = {
+      bookable_by_invited_users: "fr-badge--success fr-badge--no-icon",
+      bookable_by_everyone: "fr-badge--success fr-badge--no-icon",
+      bookable_by_agents_and_prescripteurs: "fr-badge--success fr-badge--no-icon",
+      for_secretariat: "fr-badge--info  fr-badge--no-icon",
+      follow_up: "fr-badge--info  fr-badge--no-icon",
+      collectif: "fr-badge--purple-glycine fr-icon-team-fill fr-badge--icon-left",
+      archived: "",
+    }
+    tag.span(I18n.t("motifs.badges.#{badge_name}"), class: "fr-ml-1v fr-badge fr-badge--sm #{classes[badge_name]}")
   end
 
   # L'option "agents_and_prescripteurs_and_invited_users"

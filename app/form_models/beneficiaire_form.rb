@@ -6,6 +6,7 @@ class BeneficiaireForm
     first_name
     last_name
     phone_number
+    email
     ignore_benign_errors
     ants_pre_demande_number
     ants_meeting_point_id
@@ -22,8 +23,8 @@ class BeneficiaireForm
   def warn_no_contact_information
     return if ignore_benign_errors
 
-    if phone_number.blank?
-      add_benign_error("Sans numéro de téléphone, aucune notification ne sera envoyée au bénéficiaire")
+    if phone_number.blank? && email.blank?
+      add_benign_error("Sans numéro de téléphone ni adresse email, aucune notification ne sera envoyée au bénéficiaire")
     end
   end
 

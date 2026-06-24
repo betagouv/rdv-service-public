@@ -39,9 +39,9 @@
           = options_for_select(bookable_by_filter_options(rdvi_mode: @organisations.any?(&:rdv_insertion?)), params[:bookable_by])
     .form-row.justify-content-end.flex-gap-1em
       .form-group
-        a.btn.btn-link[href=admin_territory_motifs_path(current_territory, current_tab: @current_tab)] Réinitialiser
+        a.fr-btn.fr-btn--tertiary-no-outline[href=admin_territory_motifs_path(current_territory, current_tab: @current_tab)] Réinitialiser
       .form-group
-        button.btn.btn-primary[type="submit"] Filtrer
+        button.fr-btn[type="submit"] Filtrer
 
 .row
   .col-12
@@ -50,9 +50,9 @@
       .d-flex.flex-gap-1em
         - if @current_tab != :archived
           form#batch_edit_form[action=batch_edit_admin_territory_motifs_path method="get"]
-            button.btn.mb-2.js-batch-edit-button[role="submit" disabled=true] = t("admin.motifs.actions.batch_edit")
+            button.fr-btn.fr-btn--secondary.mb-2.js-batch-edit-button[role="submit" disabled=true] = t("admin.motifs.actions.batch_edit")
 
-        a.btn.btn-primary.mb-2[href=new_admin_territory_motif_path] = t("admin.motifs.actions.new")
+        a.fr-btn.mb-2[href=new_admin_territory_motif_path] = t("admin.motifs.actions.new")
 
     ul.nav.nav-tabs
       - [[:active, "Actifs", @filtered_motifs.active.count], [:archived, "Archivés", @filtered_motifs.archived.count]].each do |value, label, count|
@@ -66,7 +66,7 @@
             end
           a.nav-link *tab_attrs
             = label
-            span.badge.badge-light.badge-pill.ml-1 = count
+            span.fr-badge.fr-badge--sm.ml-1 = count
 
 .row
   .col-12

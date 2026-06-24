@@ -29,7 +29,7 @@
 
   - if @plage_ouvertures_before_text_search.count > 5
     .m-2.d-flex.justify-content-end
-      div= link_to t("helpers.reset"), admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: @agent.id), class: class_names("btn", "btn-link", "d-none": params[:search].blank?)
+      div= link_to t("helpers.reset"), admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: @agent.id), class: class_names("fr-btn fr-btn--tertiary-no-outline", "d-none": params[:search].blank?)
       = simple_form_for "", url: admin_organisation_planning_plage_ouvertures_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
         = f.input :search, placeholder: t(".search_placeholder"), label: false, input_html: { autocomplete: "off", class: "search-form-control mr-2", value: params[:search] }, required: false
         = f.hidden_field :current_tab, value: params[:current_tab]

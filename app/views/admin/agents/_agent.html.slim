@@ -15,7 +15,7 @@ tr id="agent_#{agent.id}"
             .fr-badge.fr-badge--info.fr-badge--sm Invitation en attente
         - elsif agent.last_sign_in_at.nil? || agent.last_sign_in_at <= 1.month.ago
           / le cas agent.last_sign_in_at.nil? est très rare et correspond probablement à des agents connectés avant qu’on ne commence à stocker le last_sign_in_at
-          .fr-badge.fr-badge--sm.badge Pas connecté·e depuis plus d'un mois
+          .fr-badge.fr-badge--sm Pas connecté·e depuis plus d'un mois
       end
     - else
       span.mr-2= agent.reverse_full_name
@@ -25,7 +25,7 @@ tr id="agent_#{agent.id}"
   - if @display_services
     td
       - agent.services.each do |service|
-        .badge.badge-primary= service.short_name
+        .fr-badge.fr-badge--sm.fr-badge--info.fr-badge--no-icon= service.short_name
   td.text-nowrap
     span>= agent_role.human_attribute_value(:access_level)
     - if agent_role.agent_accueil?

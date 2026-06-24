@@ -32,7 +32,7 @@ module RdvsHelper
   end
 
   def rdv_status_tag(rdv)
-    tag.span(rdv.human_attribute_value(:status), class: "badge badge-info rdv-status rdv-status-#{rdv.status}")
+    tag.span(rdv.human_attribute_value(:status), class: "fr-badge fr-badge--sm rdv-status rdv-status-#{rdv.status}")
   end
 
   def no_rdv_for_users
@@ -42,6 +42,8 @@ module RdvsHelper
   end
 
   def human_location(rdv)
+    return "" if rdv.phone? || rdv.visio?
+
     text = rdv.full_address
     text = safe_join([text, "Adresse non renseignée"], " - ") if rdv.address.blank?
     safe_join([text, unavailability_tag(rdv.lieu)])

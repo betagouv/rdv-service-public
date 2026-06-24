@@ -16,9 +16,9 @@
 
           = f.association :services, collection: @services, label: "", as: :check_boxes, label_method: :first, value_method: :second
 
-          p.fr-text-mention--grey.font-14
-            |> Si vous avez besoin d'un service qui n'apparaît pas dans cette liste,
-            = link_to "contactez-nous via ce formulaire", new_aide_demande_support_path(role: "agent", sujet: "Ajout d’un service")
+          p
+            |> Vous ne trouvez pas votre service dans la liste ?
+            = link_to "Créer un nouveau service", new_admin_territory_services_path(territory_id: current_territory.id)
             | .
 
           = dsfr_callout do

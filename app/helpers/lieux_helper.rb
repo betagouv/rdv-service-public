@@ -5,9 +5,8 @@ module LieuxHelper
     return if lieu.enabled?
 
     tag.span(lieu.human_attribute_value(:availability),
-             class: class_names("badge",
-                                "badge-danger" => lieu.disabled?,
-                                "badge-info" => lieu.single_use?))
+             class: class_names("fr-ml-1w fr-badge fr-badge--sm",
+                                "fr-badge--info fr-badge--no-icon" => lieu.single_use?))
   end
 
   def lieu_tag(lieu)

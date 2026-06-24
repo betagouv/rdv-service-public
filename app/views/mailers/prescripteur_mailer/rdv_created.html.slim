@@ -6,7 +6,7 @@ div
 
   - if @prescripteur.is_a?(Prescripteur)
     .btn-wrapper
-      = link_to "Annuler le rendez-vous", prescripteur_show_url(token: @prescripteur.token), class: "btn btn-primary"
+      = link_to "Annuler le rendez-vous", prescripteur_show_url(token: @prescripteur.token), class: "fr-btn"
 
     p
       |> Besoin de corriger un détail ?

@@ -122,4 +122,4 @@ h1
           = f.submit "Affecter cette organisation", class: "fr-btn fr-btn--secondary"
       - elsif Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
         => t(".no_other_organisation")
-        = link_to t(".create_organisation"), new_admin_organisation_path(territory_id: current_territory.id)
+        = link_to t(".create_organisation"), new_admin_territory_organisation_path(current_territory)
