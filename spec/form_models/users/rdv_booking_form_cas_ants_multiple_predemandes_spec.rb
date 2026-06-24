@@ -298,5 +298,39 @@ RSpec.describe Users::RdvBookingForm do
         expect(julie.ants_pre_demande_number).to eq("VALID00003")
       end
     end
+
+    context "avec un proche dont le numéro de pré-demande est manquant" do
+      it "ne crée pas le RDV" do
+        form = described_class.new(
+          user:, rdv_builder:, domain:,
+          user_attributes: {
+            first_name: "Léa", last_name: "Boubakar", phone_number: "0612345678", ants_pre_demande_number: "VALID00001",
+            relatives_attributes: {
+              "0" => { first_name: "Marc", last_name: "Durant", ants_pre_demande_number: "VALID00002" },
+              "1" => { first_name: "Julie", last_name: "Martin", ants_pre_demande_number: "" },
+            },
+          },
+          selected_users: %w[current_user new_relative_0 new_relative_1]
+        )
+        expect { form.save }.not_to change(Rdv, :count)
+      end
+    end
+
+    context "avec un proche dont le numéro de pré-demande a un mauvais format" do
+      it "ne crée pas le RDV" do
+        form = described_class.new(
+          user:, rdv_builder:, domain:,
+          user_attributes: {
+            first_name: "Léa", last_name: "Boubakar", phone_number: "0612345678", ants_pre_demande_number: "VALID00001",
+            relatives_attributes: {
+              "0" => { first_name: "Marc", last_name: "Durant", ants_pre_demande_number: "VALID00002" },
+              "1" => { first_name: "Julie", last_name: "Martin", ants_pre_demande_number: "TROP_COURT" },
+            },
+          },
+          selected_users: %w[current_user new_relative_0 new_relative_1]
+        )
+        expect { form.save }.not_to change(Rdv, :count)
+      end
+    end
   end
 end

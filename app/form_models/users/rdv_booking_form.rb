@@ -105,16 +105,22 @@ class Users::RdvBookingForm
   def enrich_relatives_attributes!(attrs)
     return unless attrs[:relatives_attributes]
 
-    attrs[:relatives_attributes] = attrs[:relatives_attributes].values.map(&:symbolize_keys).filter_map do |rel_attrs|
-      if rel_attrs[:id].present?
-        # dans le cas ANTS on peut vouloir mettre à jour les proches avec le numéro de pré-demande
-        if requires_ants_predemande_number? && selected_users.include?("existing_relative_#{rel_attrs[:id]}")
-          rel_attrs
-        end
-      elsif selected_user_is_a_new_relative? || ants_with_multiple_pre_demandes?
-        rel_attrs.merge(created_through: "user_relative_creation")
+    new_relative_index = -1
+    attrs[:relatives_attributes] = attrs[:relatives_attributes].values.map(&:symbolize_keys)
+      .map do |rel_attrs|
+        rel_attrs[:id].present? ? rel_attrs : rel_attrs.merge(created_through: "user_relative_creation")
+      end.select do |rel_attrs|
+        key = if rel_attrs[:id].present?
+                "existing_relative_#{rel_attrs[:id]}"
+              else
+                new_relative_index += 1
+                "new_relative_#{new_relative_index}"
+              end
+        selected_users.include?(key)
       end
-    end
+
+    # on ne veut mettre à jour des proches existants que dans le cas ANTS multiple pour l'instant
+    attrs[:relatives_attributes].reject! { _1[:id].present? } unless ants_with_multiple_pre_demandes?
   end
 
   def validate_single_user_selection
