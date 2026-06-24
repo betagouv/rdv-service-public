@@ -626,7 +626,7 @@ RSpec.configure do |config|
           description: "Serveur de démo",
         },
         {
-          url: "https://rdv.anct.gouv.fr",
+          url: "https://rdv.numerique.gouv.fr",
           description: "Serveur de production pour RDV Service Public",
         },
         {
