@@ -1,4 +1,4 @@
-RSpec.describe ProConnectController do
+RSpec.describe ProConnectController do # rubocop:disable RSpec/SpecFilePathFormat
   stub_env_for_proconnect
 
   describe "#callback" do
