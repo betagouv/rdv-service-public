@@ -24,7 +24,7 @@ class Users::RdvBookingForm
     @domain = domain
     @selected_users = selected_users
     @user.singleton_class.accepts_nested_attributes_for :relatives
-    enrich_relatives_attributes!(user_attributes)
+    user_attributes[:relatives_attributes] = filter_and_enrich_relatives_attributes(user_attributes[:relatives_attributes])
     @user.assign_attributes(user_attributes)
   end
 
@@ -55,11 +55,6 @@ class Users::RdvBookingForm
   def address_value = user.address.nil? ? to_query[:where] : user.address
 
   def show_social_fields? = service.nil? || service.user_field_groups.include?(:social)
-
-  def selected_user_is_current_user? = selected_user == "current_user"
-  def selected_user_is_a_relative? = !selected_user_is_current_user?
-  def selected_user_is_a_new_relative? = selected_user.start_with?("new_relative_")
-  def selected_user_is_an_existing_relative? = selected_user.start_with?("existing_relative_")
 
   def ants_and_current_user_selected?
     requires_ants_predemande_number? && selected_users.include?("current_user")
@@ -97,11 +92,11 @@ class Users::RdvBookingForm
     rdv.requires_ants_predemande_number? && ants_pre_demandes_count.to_i > 1
   end
 
-  def enrich_relatives_attributes!(attrs)
-    return unless attrs[:relatives_attributes]
+  def filter_and_enrich_relatives_attributes(attrs)
+    return {} unless attrs
 
     new_relative_index = -1
-    attrs[:relatives_attributes] = attrs[:relatives_attributes].values.map(&:symbolize_keys)
+    attrs.values.map(&:symbolize_keys)
       .map do |rel_attrs|
         rel_attrs[:id].present? ? rel_attrs : rel_attrs.merge(created_through: "user_relative_creation")
       end.select do |rel_attrs|
@@ -112,10 +107,10 @@ class Users::RdvBookingForm
                 "new_relative_#{new_relative_index}"
               end
         selected_users.include?(key)
+      end.select do |rel_attrs|
+        # on ne veut mettre à jour des proches existants que dans le cas ANTS multiple pour l'instant
+        requires_ants_predemande_number? || rel_attrs[:id].blank?
       end
-
-    # on ne veut mettre à jour des proches existants que dans le cas ANTS multiple pour l'instant
-    attrs[:relatives_attributes].reject! { _1[:id].present? } unless requires_ants_predemande_number?
   end
 
   def validate_selected_users_count
@@ -171,13 +166,15 @@ class Users::RdvBookingForm
   end
 
   def users_for_rdv
-    u = []
-    u << @user if selected_users.include?("current_user")
-    selected_users.each do |selected_user|
-      res = selected_user.match(/existing_relative_(\d+)/)
-      u << @user.relatives.find(res[1]) if res
+    selected_users.map do |selected_user|
+      case selected_user
+      when "current_user"
+        @user
+      when /existing_relative_(\d+)/
+        @user.relatives.find(::Regexp.last_match(1))
+      when /new_relative_(\d+)/
+        @user.relatives.target.select(&:previously_new_record?)[::Regexp.last_match(1).to_i]
+      end
     end
-    @user.relatives.target.select(&:previously_new_record?).each { u << _1 }
-    u
   end
 end
