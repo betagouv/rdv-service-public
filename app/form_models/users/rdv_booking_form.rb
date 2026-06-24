@@ -7,13 +7,13 @@ class Users::RdvBookingForm
   delegate :add_benign_error, :ignore_benign_errors, :relatives_attributes=, to: :user
   delegate :collectif?, :requires_ants_predemande_number?, to: :rdv
 
-  validates :ants_pre_demande_number, presence: true, if: :ants_booking_for_self?
   validate :validate_single_user_selection, unless: :ants_with_multiple_pre_demandes?
   validate :validate_ants_pre_demandes_count, if: :requires_ants_predemande_number?
   validate :validate_ants_proches_numbers, if: -> { requires_ants_predemande_number? && ants_relatives.any? }
   # Doit s'exécuter après validate_ants_proches_numbers : cette dernière appelle relative.valid?,
   # qui déclenche @user.valid? (via belongs_to :responsible), effaçant user.errors (= form.errors).
-  validates_with AntsPreDemandeNumberStatusValidation, if: :ants_booking_for_self?
+  validates :ants_pre_demande_number, presence: true, if: :ants_and_current_user_selected?
+  validates_with AntsPreDemandeNumberStatusValidation, if: :ants_and_current_user_selected?
 
   validate :validate_phone_number_present_for_motif_by_phone
 
@@ -33,7 +33,7 @@ class Users::RdvBookingForm
 
     ActiveRecord::Base.transaction do
       @user.save!
-      @newly_created_proche = (@user.relatives.target || []).find(&:persisted?) if booking_for_new_proche?
+      @newly_created_proche = (@user.relatives.target || []).find(&:persisted?) if selected_user_is_a_new_relative?
       rdv.collectif? ? create_participation : create_individual_rdv
     end
     true
@@ -57,17 +57,14 @@ class Users::RdvBookingForm
 
   def show_social_fields? = service.nil? || service.user_field_groups.include?(:social)
 
-  def booking_for_proche? = selected_user != "current_user"
-  def booking_for_new_proche? = selected_user.start_with?("new_relative_")
-  def booking_for_existing_proche? = selected_user.start_with?("existing_relative_")
+  def selected_user_is_current_user? = selected_user == "current_user"
+  def selected_user_is_a_relative? = !selected_user_is_current_user?
+  def selected_user_is_a_new_relative? = selected_user.start_with?("new_relative_")
+  def selected_user_is_an_existing_relative? = selected_user.start_with?("existing_relative_")
 
-  def ants_booking_for_self?
-    return false unless requires_ants_predemande_number?
-
-    ants_with_multiple_pre_demandes? ? ants_self_selected? : !booking_for_proche?
+  def ants_and_current_user_selected?
+    requires_ants_predemande_number? && selected_users.include?("current_user")
   end
-
-  def ants_self_selected? = selected_users.include?("current_user")
 
   def ants_meeting_point_id = rdv_builder.lieu_id
 
@@ -102,7 +99,7 @@ class Users::RdvBookingForm
   end
 
   def ants_single_with_proche?
-    requires_ants_predemande_number? && !ants_with_multiple_pre_demandes? && booking_for_proche?
+    requires_ants_predemande_number? && !ants_with_multiple_pre_demandes? && selected_user_is_a_relative?
   end
 
   def enrich_relatives_attributes!(attrs)
@@ -115,7 +112,7 @@ class Users::RdvBookingForm
            (ants_single_with_proche? && selected_user == "existing_relative_#{rel_attrs[:id]}")
           rel_attrs
         end
-      elsif booking_for_new_proche? || ants_with_multiple_pre_demandes?
+      elsif selected_user_is_a_new_relative? || ants_with_multiple_pre_demandes?
         rel_attrs.merge(created_through: "user_relative_creation")
       end
     end
@@ -183,10 +180,10 @@ class Users::RdvBookingForm
 
   def users_for_rdv
     if ants_with_multiple_pre_demandes?
-      (ants_self_selected? ? [@user] : []) + (@user.relatives.target || []).compact
-    elsif booking_for_new_proche?
+      (selected_users.include?("current_user") ? [@user] : []) + (@user.relatives.target || []).compact
+    elsif selected_user_is_a_new_relative?
       [@newly_created_proche]
-    elsif booking_for_existing_proche?
+    elsif selected_user_is_an_existing_relative?
       [@user.relatives.find(selected_user.delete_prefix("existing_relative_"))]
     else
       [@user]

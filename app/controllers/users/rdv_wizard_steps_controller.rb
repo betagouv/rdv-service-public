@@ -26,7 +26,11 @@ class Users::RdvWizardStepsController < UserAuthController
   def create
     @rdv_builder = Users::RdvBuilder.new(current_user, rdv_params)
     @rdv = @rdv_builder.rdv
-    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys, **proche_params)
+    @rdv_booking_form = Users::RdvBookingForm.new(
+      user: current_user, rdv_builder: @rdv_builder, domain: current_domain,
+      user_attributes: user_params[:user].to_h.symbolize_keys,
+      selected_users: params[:selected_users]
+    )
     return if redirect_to_prendre_rdv_path_if_creneau_unavailable
 
     if @rdv_booking_form.collectif?
@@ -95,10 +99,6 @@ class Users::RdvWizardStepsController < UserAuthController
                     { user_profiles_attributes: %i[logement id organisation_id] },
                     { relatives_attributes: %i[id first_name last_name birth_date ants_pre_demande_number] },
                   ])
-  end
-
-  def proche_params
-    { selected_users: params.permit(selected_users: [])[:selected_users] }.compact
   end
 
   def redirect_to_prendre_rdv_path_if_creneau_unavailable
