@@ -51,7 +51,7 @@ RSpec.describe Users::RdvBookingForm do
     before { allow(rdv_builder).to receive(:creneau).and_return(creneau) }
 
     it do
-      form = described_class.new(user:, rdv_builder:, user_attributes:, domain:, selected_proche: "new")
+      form = described_class.new(user:, rdv_builder:, user_attributes:, domain:, selected_users: ["new_relative_0"])
       expect { form.save }.to change(Rdv, :count).by(1).and change(User, :count).by(1)
       proche = user.reload.relatives.first
       expect(form.rdv.users).to contain_exactly(proche)
@@ -80,7 +80,7 @@ RSpec.describe Users::RdvBookingForm do
     end
 
     it "empêche la création" do
-      form = described_class.new(user:, rdv_builder:, user_attributes:, domain:, selected_proche: "new")
+      form = described_class.new(user:, rdv_builder:, user_attributes:, domain:, selected_users: ["new_relative_0"])
       expect { form.save }.not_to change(Rdv, :count)
       expect(user.reload.relatives).to be_empty
     end
@@ -101,7 +101,7 @@ RSpec.describe Users::RdvBookingForm do
     before { allow(rdv_builder).to receive(:creneau).and_return(creneau) }
 
     it do
-      form = described_class.new(user:, rdv_builder:, user_attributes:, domain:, selected_proche: proche.id.to_s)
+      form = described_class.new(user:, rdv_builder:, user_attributes:, domain:, selected_users: ["existing_relative_#{proche.id}"])
       expect { form.save }.to change(Rdv, :count).by(1)
       expect(form.rdv.users).to contain_exactly(proche)
       expect(proche.organisation_ids).to include(organisation.id)
@@ -250,7 +250,7 @@ RSpec.describe Users::RdvBookingForm do
     end
 
     it "crée la participation pour le proche" do
-      form = described_class.new(user:, rdv_builder:, user_attributes:, domain:, selected_proche: "new")
+      form = described_class.new(user:, rdv_builder:, user_attributes:, domain:, selected_users: ["new_relative_0"])
       expect { form.save }.to change(Participation, :count).by(1).and change(User, :count).by(1)
       proche = user.reload.relatives.first
       expect(form.new_participation.user).to eq(proche)

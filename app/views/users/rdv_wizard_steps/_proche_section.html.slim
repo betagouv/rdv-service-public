@@ -5,7 +5,7 @@ fieldset.fr-fieldset.rdv-proche-selection.fr-mt-3w data-controller="proche-selec
 
   .fr-fieldset__element.rdv-nested-fields-wrapper data-proche-selection-target="option"
     .fr-radio-group
-      = radio_button_tag "user[selected_proche]", "", @rdv_booking_form.selected_proche.blank?, id: "user_selected_proche_myself"
+      = radio_button_tag "selected_users[]", "current_user", @rdv_booking_form.selected_users.include?("current_user"), id: "user_selected_proche_myself"
       = label_tag "user_selected_proche_myself", "Moi-même"
     - if @rdv_booking_form.requires_ants_predemande_number?
       .rdv-nested-fields
@@ -14,7 +14,7 @@ fieldset.fr-fieldset.rdv-proche-selection.fr-mt-3w data-controller="proche-selec
   - relatives.each do |relative|
     .fr-fieldset__element.rdv-nested-fields-wrapper data-proche-selection-target="option"
       .fr-radio-group
-        = radio_button_tag "user[selected_proche]", relative.id.to_s, @rdv_booking_form.selected_proche == relative.id.to_s, id: "user_selected_proche_#{relative.id}"
+        = radio_button_tag "selected_users[]", "existing_relative_#{relative.id}", @rdv_booking_form.selected_users.include?("existing_relative_#{relative.id}"), id: "user_selected_proche_#{relative.id}"
         = label_tag "user_selected_proche_#{relative.id}", relative.full_name
       - if @rdv_booking_form.requires_ants_predemande_number?
         .rdv-nested-fields
@@ -24,7 +24,7 @@ fieldset.fr-fieldset.rdv-proche-selection.fr-mt-3w data-controller="proche-selec
 
   .fr-fieldset__element.rdv-nested-fields-wrapper data-proche-selection-target="option"
     .fr-radio-group
-      = radio_button_tag "user[selected_proche]", "new", @rdv_booking_form.selected_proche == "new", id: "user_selected_proche_new"
+      = radio_button_tag "selected_users[]", "new_relative_0", @rdv_booking_form.selected_users.include?("new_relative_0"), id: "user_selected_proche_new"
       = label_tag "user_selected_proche_new", "Une autre personne"
 
     .rdv-nested-fields
