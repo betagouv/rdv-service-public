@@ -108,8 +108,7 @@ class Users::RdvBookingForm
     attrs[:relatives_attributes] = attrs[:relatives_attributes].values.map(&:symbolize_keys).filter_map do |rel_attrs|
       if rel_attrs[:id].present?
         # dans le cas ANTS on peut vouloir mettre à jour les proches avec le numéro de pré-demande
-        if (ants_with_multiple_pre_demandes? && selected_users.include?("existing_relative_#{rel_attrs[:id]}")) ||
-           (ants_single_with_proche? && selected_user == "existing_relative_#{rel_attrs[:id]}")
+        if requires_ants_predemande_number? && selected_users.include?("existing_relative_#{rel_attrs[:id]}")
           rel_attrs
         end
       elsif selected_user_is_a_new_relative? || ants_with_multiple_pre_demandes?
@@ -141,12 +140,8 @@ class Users::RdvBookingForm
   end
 
   def ants_relatives
-    (@user.relatives.target || []).select do |r|
-      if ants_with_multiple_pre_demandes?
-        r.new_record? || selected_users.include?("existing_relative_#{r.id}")
-      else
-        r.new_record? || selected_user == "existing_relative_#{r.id}"
-      end
+    (@user.relatives.target || []).select do |relative|
+      relative.new_record? || selected_users.include?("existing_relative_#{relative.id}")
     end
   end
 
