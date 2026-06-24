@@ -7,6 +7,8 @@
 # agent_territorial_access_rights
 # agent_territorial_roles
 # agents_rdvs
+# exports
+# instance_exports
 # plage_ouvertures
 # referent_assignations
 # sector_attributions
@@ -68,6 +70,10 @@ Agent.transaction do
   puts "---Merging Territorial Roles---"
   source.territorial_roles.where.not(territory_id: dest.territorial_roles.pluck(:territory_id)).update!(agent_id: dest.id)
   source.territorial_roles.reload.destroy_all
+
+  puts "---Merging Exports---"
+  Export.where(agent_id: source.id).update_all(agent_id: dest.id)
+  source.instance_exports.update_all(agent_id: dest.id)
 
   puts "---Deleting Source Agent---"
 
