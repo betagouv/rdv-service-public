@@ -3,18 +3,11 @@ class Users::RdvBookingForm
 
   attr_reader :rdv_builder, :invitation_token, :rdv, :selected_users
 
-  delegate :to_query, :motif, :service, :ants_pre_demandes_count, to: :rdv_builder
+  delegate :to_query, :motif, :service, to: :rdv_builder
   delegate :add_benign_error, :ignore_benign_errors, :relatives_attributes=, to: :user
-  delegate :collectif?, :requires_ants_predemande_number?, to: :rdv
+  delegate :collectif?, to: :rdv
 
   validate :validate_selected_users_count
-  validate :validate_ants_pre_demandes_count, if: :requires_ants_predemande_number?
-  validate :validate_ants_proches_numbers, if: :requires_ants_predemande_number?
-  # Doit s'exécuter après validate_ants_proches_numbers : cette dernière appelle relative.valid?,
-  # qui déclenche @user.valid? (via belongs_to :responsible), effaçant user.errors (= form.errors).
-  validates :ants_pre_demande_number, presence: true, if: :ants_and_current_user_selected?
-  validates_with AntsPreDemandeNumberStatusValidation, if: :ants_and_current_user_selected?
-
   validate :validate_phone_number_present_for_motif_by_phone
 
   def initialize(user:, rdv_builder:, domain:, user_attributes: {}, selected_users: ["current_user"])
@@ -23,8 +16,9 @@ class Users::RdvBookingForm
     @rdv = rdv_builder.rdv
     @domain = domain
     @selected_users = selected_users
+    singleton_class.include(Users::RdvBookingForm::AntsConcern) if @rdv.requires_ants_predemande_number?
     @user.singleton_class.accepts_nested_attributes_for :relatives
-    user_attributes[:relatives_attributes] = filter_and_enrich_relatives_attributes(user_attributes[:relatives_attributes])
+    user_attributes[:relatives_attributes] = filter_and_enrich_relatives_attributes(user_attributes.fetch(:relatives_attributes, {}).values.map(&:symbolize_keys))
     @user.assign_attributes(user_attributes)
   end
 
@@ -56,12 +50,6 @@ class Users::RdvBookingForm
 
   def show_social_fields? = service.nil? || service.user_field_groups.include?(:social)
 
-  def ants_and_current_user_selected?
-    requires_ants_predemande_number? && selected_users.include?("current_user")
-  end
-
-  def ants_meeting_point_id = rdv_builder.lieu_id
-
   def new_participation
     # user_id: plutôt que user: pour éviter que inverse_of ajoute @new_participation à @user.participations
     # ce qui déclencherait un autosave prématuré lors de @user.save! et ferait échouer create_and_notify!
@@ -75,71 +63,29 @@ class Users::RdvBookingForm
       @user.relatives.build
   end
 
-  def new_ants_proches
-    return [] unless ants_with_multiple_pre_demandes?
-
-    count = ants_pre_demandes_count.to_i - 1
-    built = (@user.relatives.target || []).select(&:new_record?)
-    extras_count = [count - built.size, 0].max
-    built + extras_count.times.map { User.new }
-  end
+  def requires_ants_predemande_number? = false
 
   private
 
+  def ants_with_multiple_pre_demandes? = false
+
   def selected_user = selected_users.first
 
-  def ants_with_multiple_pre_demandes?
-    rdv.requires_ants_predemande_number? && ants_pre_demandes_count.to_i > 1
-  end
-
   def filter_and_enrich_relatives_attributes(attrs)
-    return {} unless attrs
-
     new_relative_index = -1
-    attrs.values.map(&:symbolize_keys)
-      .map do |rel_attrs|
-        rel_attrs[:id].present? ? rel_attrs : rel_attrs.merge(created_through: "user_relative_creation")
-      end.select do |rel_attrs|
-        key = if rel_attrs[:id].present?
-                "existing_relative_#{rel_attrs[:id]}"
-              else
-                new_relative_index += 1
-                "new_relative_#{new_relative_index}"
-              end
-        selected_users.include?(key)
-      end.select do |rel_attrs|
-        # on ne veut mettre à jour des proches existants que dans le cas ANTS multiple pour l'instant
-        requires_ants_predemande_number? || rel_attrs[:id].blank?
+    attrs.select do |rel_attrs|
+      if rel_attrs[:id].blank?
+        new_relative_index += 1
+        selected_users.include?("new_relative_#{new_relative_index}")
       end
+    end.map do |rel_attrs|
+      rel_attrs.merge(created_through: "user_relative_creation")
+    end
   end
 
   def validate_selected_users_count
     if selected_users.size > 1 && !ants_with_multiple_pre_demandes?
       errors.add(:base, "Veuillez sélectionner un·e seul participant·e")
-    end
-  end
-
-  def validate_ants_proches_numbers
-    @user.relatives.target.each_with_index do |relative, index|
-      relative.ignore_benign_errors = @user.ignore_benign_errors
-      meeting_point_id = rdv_builder.lieu_id
-      relative.define_singleton_method(:ants_meeting_point_id) { meeting_point_id }
-      relative.singleton_class.tap do |sc|
-        sc.validates :ants_pre_demande_number, presence: true
-        sc.validates_with AntsPreDemandeNumberStatusValidation
-      end
-
-      relative.valid?
-
-      relative.benign_errors.each do |msg|
-        add_benign_error("Proche #{index + 1} : #{msg}")
-      end
-    end
-  end
-
-  def validate_ants_pre_demandes_count
-    unless AntsPreDemandesCountValidator.count_valid?(ants_pre_demandes_count)
-      errors.add(:base, "Veuillez choisir un nombre de pré-demandes entre 1 et 6")
     end
   end
 
