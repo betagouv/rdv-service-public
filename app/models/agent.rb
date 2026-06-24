@@ -345,5 +345,4 @@ class Agent < ApplicationRecord
 
     Organisation.joins(:agents).where(agents: { proconnect_siret: proconnect_siret }).distinct
   end
-
 end
