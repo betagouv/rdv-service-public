@@ -56,6 +56,7 @@ class ProConnectController < ApplicationController
     )
 
     if callback_client.fetch_user_info_from_code!(params[:code])
+
       case pro_connect_session[:connection_for]
       when "user"
         connect_user(callback_client)

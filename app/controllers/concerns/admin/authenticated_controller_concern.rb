@@ -35,10 +35,10 @@ module Admin::AuthenticatedControllerConcern
   def set_flash_automatic_redirection_from_other_domain
     return if params[:automatic_redirection_from_other_domain] != "1"
 
-    flash[:info] = if current_domain == Domain::RDV_SERVICE_PUBLIC_ETAT
-                     "Vous avez été automatiquement redirigé·e vers le domaine RDV Service Public pour les agents de l'État."
-                   else
-                     "Vous avez été automatiquement redirigé·e vers le domaine RDV Service Public pour les agents des collectivités."
-                   end
+    flash[:notice] = if current_domain == Domain::RDV_SERVICE_PUBLIC_ETAT
+                       "Vous avez été automatiquement redirigé·e vers le domaine RDV Service Public pour les agents de l'État."
+                     else
+                       "Vous avez été automatiquement redirigé·e vers le domaine RDV Service Public pour les agents des collectivités."
+                     end
   end
 end
