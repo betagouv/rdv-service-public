@@ -7,9 +7,9 @@ class Users::RdvBookingForm
   delegate :add_benign_error, :ignore_benign_errors, :relatives_attributes=, to: :user
   delegate :collectif?, :requires_ants_predemande_number?, to: :rdv
 
-  validate :validate_single_user_selection, unless: :ants_with_multiple_pre_demandes?
+  validate :validate_selected_users_count
   validate :validate_ants_pre_demandes_count, if: :requires_ants_predemande_number?
-  validate :validate_ants_proches_numbers, if: -> { requires_ants_predemande_number? && ants_relatives.any? }
+  validate :validate_ants_proches_numbers, if: :requires_ants_predemande_number?
   # Doit s'exécuter après validate_ants_proches_numbers : cette dernière appelle relative.valid?,
   # qui déclenche @user.valid? (via belongs_to :responsible), effaçant user.errors (= form.errors).
   validates :ants_pre_demande_number, presence: true, if: :ants_and_current_user_selected?
@@ -33,7 +33,6 @@ class Users::RdvBookingForm
 
     ActiveRecord::Base.transaction do
       @user.save!
-      @newly_created_proche = (@user.relatives.target || []).find(&:persisted?) if selected_user_is_a_new_relative?
       rdv.collectif? ? create_participation : create_individual_rdv
     end
     true
@@ -98,10 +97,6 @@ class Users::RdvBookingForm
     rdv.requires_ants_predemande_number? && ants_pre_demandes_count.to_i > 1
   end
 
-  def ants_single_with_proche?
-    requires_ants_predemande_number? && !ants_with_multiple_pre_demandes? && selected_user_is_a_relative?
-  end
-
   def enrich_relatives_attributes!(attrs)
     return unless attrs[:relatives_attributes]
 
@@ -120,15 +115,17 @@ class Users::RdvBookingForm
       end
 
     # on ne veut mettre à jour des proches existants que dans le cas ANTS multiple pour l'instant
-    attrs[:relatives_attributes].reject! { _1[:id].present? } unless ants_with_multiple_pre_demandes?
+    attrs[:relatives_attributes].reject! { _1[:id].present? } unless requires_ants_predemande_number?
   end
 
-  def validate_single_user_selection
-    errors.add(:base, "Sélection invalide") unless selected_users.size == 1
+  def validate_selected_users_count
+    if selected_users.size > 1 && !ants_with_multiple_pre_demandes?
+      errors.add(:base, "Veuillez sélectionner un·e seul participant·e")
+    end
   end
 
   def validate_ants_proches_numbers
-    ants_relatives.each_with_index do |relative, index|
+    @user.relatives.target.each_with_index do |relative, index|
       relative.ignore_benign_errors = @user.ignore_benign_errors
       meeting_point_id = rdv_builder.lieu_id
       relative.define_singleton_method(:ants_meeting_point_id) { meeting_point_id }
@@ -142,12 +139,6 @@ class Users::RdvBookingForm
       relative.benign_errors.each do |msg|
         add_benign_error("Proche #{index + 1} : #{msg}")
       end
-    end
-  end
-
-  def ants_relatives
-    (@user.relatives.target || []).select do |relative|
-      relative.new_record? || selected_users.include?("existing_relative_#{relative.id}")
     end
   end
 
@@ -180,14 +171,13 @@ class Users::RdvBookingForm
   end
 
   def users_for_rdv
-    if ants_with_multiple_pre_demandes?
-      (selected_users.include?("current_user") ? [@user] : []) + (@user.relatives.target || []).compact
-    elsif selected_user_is_a_new_relative?
-      [@newly_created_proche]
-    elsif selected_user_is_an_existing_relative?
-      [@user.relatives.find(selected_user.delete_prefix("existing_relative_"))]
-    else
-      [@user]
+    u = []
+    u << @user if selected_users.include?("current_user")
+    selected_users.each do |selected_user|
+      res = selected_user.match(/existing_relative_(\d+)/)
+      u << @user.relatives.find(res[1]) if res
     end
+    @user.relatives.target.select(&:previously_new_record?).each { u << _1 }
+    u
   end
 end
