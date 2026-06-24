@@ -443,6 +443,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       fill_in "Numéro de pré-demande ANTS", with: "TESTRDV001", match: :first
       # Remplir le slot du proche (ants_pre_demandes_count=2 → 1 slot)
       within(".fr-fieldset__element", text: "Nouveau proche 1") do
+        check "Nouveau proche 1"
         fill_in "Prénom", with: "Jean"
         fill_in "Nom", with: "Vanna"
         fill_in "Numéro de pré-demande ANTS", with: "TESTRDV001"

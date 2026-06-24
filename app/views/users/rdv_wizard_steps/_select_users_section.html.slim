@@ -8,18 +8,20 @@ fieldset.fr-fieldset.fr-mt-3w data-controller="proche-selection" data-action="ch
     .fr-checkbox-group
       = check_box_tag "selected_users[]", "current_user", selected_users.include?("current_user"), id: "selected_user_current"
       = label_tag "selected_user_current", "Moi-même"
-    .rdv-nested-fields
-      = f.dsfr_text_field :ants_pre_demande_number, disabled: selected_users.exclude?("current_user")
+    - if @rdv_booking_form.requires_ants_predemande_number?
+      .rdv-nested-fields
+        = f.dsfr_text_field :ants_pre_demande_number, disabled: selected_users.exclude?("current_user")
 
   - relatives.each do |relative|
     .fr-fieldset__element.rdv-nested-fields-wrapper data-proche-selection-target="option"
       .fr-checkbox-group
         = check_box_tag "selected_users[]", "existing_relative_#{relative.id}", selected_users.include?("existing_relative_#{relative.id}"), id: "selected_user_existing_#{relative.id}"
         = label_tag "selected_user_existing_#{relative.id}", relative.full_name
-      .rdv-nested-fields
-        = f.fields_for :relatives, [relative], index: "r#{relative.id}" do |rf|
-          = rf.hidden_field :id
-          = rf.dsfr_text_field :ants_pre_demande_number, disabled: selected_users.exclude?("existing_relative_#{relative.id}")
+      - if @rdv_booking_form.requires_ants_predemande_number?
+        .rdv-nested-fields
+          = f.fields_for :relatives, [relative], index: "r#{relative.id}" do |rf|
+            = rf.hidden_field :id
+            = rf.dsfr_text_field :ants_pre_demande_number, disabled: selected_users.exclude?("existing_relative_#{relative.id}")
 
   - @rdv_booking_form.new_ants_proches.each_with_index do |proche, i|
     .fr-fieldset__element.rdv-nested-fields-wrapper data-proche-selection-target="option"
@@ -33,4 +35,5 @@ fieldset.fr-fieldset.fr-mt-3w data-controller="proche-selection" data-action="ch
             .fr-col-12.fr-col-md-6= rf.dsfr_text_field :last_name, label: "Nom"
             - if @rdv_booking_form.show_birth_date_field?
               .fr-col-12.fr-col-md-6= rf.dsfr_text_field :birth_date, type: "date", label: "Date de naissance"
-            .fr-col-12= rf.dsfr_text_field :ants_pre_demande_number
+            - if @rdv_booking_form.requires_ants_predemande_number?
+              .fr-col-12= rf.dsfr_text_field :ants_pre_demande_number

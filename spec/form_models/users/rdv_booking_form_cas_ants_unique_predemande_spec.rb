@@ -8,7 +8,7 @@ RSpec.describe Users::RdvBookingForm do
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:agent) { create(:agent, organisations: [organisation]) }
   let(:creneau) { build(:creneau, :respects_booking_delays, motif:, agent:, lieu_id: lieu.id) }
-  let(:rdv_builder) { Users::RdvBuilder.new(user, { motif_id: motif.id, lieu_id: lieu.id }) }
+  let(:rdv_builder) { Users::RdvBuilder.new(user, { motif_id: motif.id, lieu_id: lieu.id, ants_pre_demandes_count: 1 }) }
   let(:user_attributes) { { first_name: "Léa", last_name: "Boubakar", phone_number: "0612345678", ants_pre_demande_number: } }
 
   include_context "rdv_mairie_api_authentication"

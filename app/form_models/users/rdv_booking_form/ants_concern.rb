@@ -3,7 +3,6 @@ module Users::RdvBookingForm::AntsConcern
 
   included do
     delegate :ants_pre_demandes_count, to: :rdv_builder
-    delegate :requires_ants_predemande_number?, to: :rdv
 
     validate :validate_ants_pre_demandes_count
     validate :validate_ants_proches_numbers
@@ -15,6 +14,7 @@ module Users::RdvBookingForm::AntsConcern
 
   def ants_and_current_user_selected? = selected_users.include?("current_user")
 
+  # nécessaire pour AntsPreDemandeNumberStatusValidation
   def ants_meeting_point_id = rdv_builder.lieu_id
 
   def new_ants_proches
@@ -24,15 +24,18 @@ module Users::RdvBookingForm::AntsConcern
     built + extras_count.times.map { User.new }
   end
 
+  # method override
+  def selected_users_expected_count = ants_pre_demandes_count
+
   private
 
+  # method override
   def filter_and_enrich_relatives_attributes(attrs)
+    # dans le cas ANTS on peut vouloir mettre à jour des proches existants (leur numéro de pré-demande)
     super + attrs.select do |rel_attrs|
       rel_attrs[:id].present? && selected_users.include?("existing_relative_#{rel_attrs[:id]}")
     end
   end
-
-  def ants_with_multiple_pre_demandes? = ants_pre_demandes_count.to_i > 1
 
   def validate_ants_proches_numbers
     @user.relatives.target.each_with_index do |relative, index|

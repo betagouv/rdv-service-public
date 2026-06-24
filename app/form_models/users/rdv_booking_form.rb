@@ -5,7 +5,7 @@ class Users::RdvBookingForm
 
   delegate :to_query, :motif, :service, to: :rdv_builder
   delegate :add_benign_error, :ignore_benign_errors, :relatives_attributes=, to: :user
-  delegate :collectif?, to: :rdv
+  delegate :collectif?, :requires_ants_predemande_number?, to: :rdv
 
   validate :validate_selected_users_count
   validate :validate_phone_number_present_for_motif_by_phone
@@ -16,7 +16,7 @@ class Users::RdvBookingForm
     @rdv = rdv_builder.rdv
     @domain = domain
     @selected_users = selected_users
-    singleton_class.include(Users::RdvBookingForm::AntsConcern) if @rdv.requires_ants_predemande_number?
+    singleton_class.include(Users::RdvBookingForm::AntsConcern) if requires_ants_predemande_number?
     @user.singleton_class.accepts_nested_attributes_for :relatives
     user_attributes[:relatives_attributes] = filter_and_enrich_relatives_attributes(user_attributes.fetch(:relatives_attributes, {}).values.map(&:symbolize_keys))
     @user.assign_attributes(user_attributes)
@@ -63,29 +63,23 @@ class Users::RdvBookingForm
       @user.relatives.build
   end
 
-  def requires_ants_predemande_number? = false
+  def selected_users_expected_count = 1
 
   private
-
-  def ants_with_multiple_pre_demandes? = false
 
   def selected_user = selected_users.first
 
   def filter_and_enrich_relatives_attributes(attrs)
-    new_relative_index = -1
-    attrs.select do |rel_attrs|
-      if rel_attrs[:id].blank?
-        new_relative_index += 1
-        selected_users.include?("new_relative_#{new_relative_index}")
-      end
-    end.map do |rel_attrs|
-      rel_attrs.merge(created_through: "user_relative_creation")
-    end
+    # on garde uniquement les nested attributes pour les nouveaux proches sélectionnés
+    attrs
+      .select { _1[:id].blank? }
+      .select.with_index { |_r, idx| selected_users.include?("new_relative_#{idx}") }
+      .map { _1.merge(created_through: "user_relative_creation") }
   end
 
   def validate_selected_users_count
-    if selected_users.size > 1 && !ants_with_multiple_pre_demandes?
-      errors.add(:base, "Veuillez sélectionner un·e seul participant·e")
+    if selected_users.size != selected_users_expected_count
+      errors.add(:base, selected_users_expected_count == 1 ? "Veuillez sélectionner un·e seul participant·e" : "Veuillez sélectionner #{selected_users_expected_count} participant·es")
     end
   end
 
