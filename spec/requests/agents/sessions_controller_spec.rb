@@ -18,7 +18,7 @@ RSpec.describe Agents::SessionsController do
       expect(URI(response.location).query).to include("automatic_redirection_from_other_domain=1")
     end
 
-    it "affiche un message flash à l'arrivée sur le domaine ÉTAT" do
+    it "affiche un message flash à l'arrivée sur le domaine ANCT" do
       get unauthenticated_explicit_agent_root_url(host: Domain::RDV_SERVICE_PUBLIC.host_name, automatic_redirection_from_other_domain: "1")
       expect(flash[:notice]).to include("automatiquement redirigé")
     end
