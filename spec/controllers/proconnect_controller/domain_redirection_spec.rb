@@ -39,13 +39,28 @@ RSpec.describe ProConnectController do # rubocop:disable RSpec/SpecFilePathForma
         controller.request.host = Domain::RDV_SERVICE_PUBLIC.host_name
       end
 
-      let(:organisation) { create(:organisation, verticale: :rdv_etat) }
-      let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+      let!(:agent) do
+        create(:agent, admin_role_in_organisations: [organisation], pro_connect_openid_sub: user_info["sub"], email: user_info["email"])
+      end
 
-      it "fait la redirection" do
-        get :callback, params: { state:, code: }
+      context "et qu'il doit être redirigé" do
+        let(:organisation) { create(:organisation, verticale: :rdv_etat) }
 
-        expect(response).to redirect_to("http://www.rdv-service-public-test.localhost/agents/edit")
+        it "fait la redirection" do
+          get :callback, params: { state:, code: }
+
+          expect(response).to redirect_to("http://#{Domain::RDV_SERVICE_PUBLIC_ETAT.host_name}/agents/edit?automatic_redirection_from_other_domain=1")
+        end
+      end
+
+      context "et qu'il n'a pas besoin d'être redirigé" do
+        let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+
+        it "ne redirige pas" do
+          get :callback, params: { state:, code: }
+
+          expect(response).to redirect_to("http://#{Domain::RDV_SERVICE_PUBLIC.host_name}/agents/edit")
+        end
       end
     end
   end
