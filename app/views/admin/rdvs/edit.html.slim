@@ -38,13 +38,13 @@
                 fieldset
                   - lieux = [@rdv.lieu, *Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name].uniq
                   = f.select :lieu_id, lieux.collect { |l| [l.full_name, l.id] }, { include_blank: true }, class: "select2-input fr-select", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: "", "auto-select-sole-option": true }
-                  small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
+                  small.form-text.fr-text-mention--grey data={"rdv-lieu-target": "new_lieu_link"}
                     = t(".single_use_lieu_hint_html")
                 fieldset data={ "rdv-lieu-target": "new_lieu_fieldset" }
                   .border.p-2.bg-light
                     = f.fields_for :lieu, (@rdv.lieu.availability == "enabled" ? Lieu.new : @rdv.lieu ) do |f2|
                       = render "admin/lieux/lieu_fields", f: f2
-                  small.form-text.text-muted data={"rdv-lieu-target": "select_lieu_link"}
+                  small.form-text.fr-text-mention--grey data={"rdv-lieu-target": "select_lieu_link"}
                     = t(".existing_lieu_hint_html")
 
             - elsif @rdv_form.motif.home?
@@ -57,7 +57,7 @@
               = f.dsfr_text_field :name, label: Rdv.human_attribute_name(:name), class: "fr-mb-1w"
               p
                 span.font-14.font-weight-bold= "Avertissement : "
-                span.text-muted.font-14= I18n.t("activerecord.attributes.rdv/name.hint")
+                span.fr-text-mention--grey.font-14= I18n.t("activerecord.attributes.rdv/name.hint")
 
               = render "admin/rdvs_collectifs/form_visio_fields", rdv: @rdv, f: f
 

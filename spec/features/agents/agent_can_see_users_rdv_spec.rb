@@ -8,7 +8,7 @@ RSpec.describe "can see users' RDV" do
       login_as(agent, scope: :agent)
       visit admin_organisation_user_path(organisation, user)
       expect(page).to have_content("À venir\n0 RDV")
-      expect(page).to have_content("aucun RDV")
+      expect(page).to have_content("Pas de rendez-vous à venir")
     end
   end
 

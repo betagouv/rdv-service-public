@@ -18,7 +18,7 @@ h1 Modification en masse de #{@motifs.size} motifs
           - unique_values.sort_by(&:last).reverse.each do |value, nb_of_occurrences|
             li #{value} (#{nb_of_occurrences})
       - else
-        small.form-text.text-muted.mb-2 Ces #{@motifs.size} motifs ont le même nom
+        small.form-text.fr-text-mention--grey.mb-2 Ces #{@motifs.size} motifs ont le même nom
       .input-group
         = f.text_field :name, value: (unique_values.size > 1 ? "" : unique_values.keys.first), class: "form-control", required: true
         .input-group-append
@@ -38,7 +38,7 @@ h1 Modification en masse de #{@motifs.size} motifs
           - unique_values.sort_by(&:last).reverse.each do |value, nb_of_occurrences|
             li #{value&.name || "Pas de service"} (#{nb_of_occurrences})
       - else
-        small.form-text.text-muted.mb-2 Ces #{@motifs.size} motifs sont associés au même service
+        small.form-text.fr-text-mention--grey.mb-2 Ces #{@motifs.size} motifs sont associés au même service
       .input-group
         = f.select :service_id, current_territory.services.reject(&:secretariat?).map { [_1.name, _1.id] } + [["Pas de service", nil]], { selected: (unique_values.size > 1 ? "" : unique_values.keys.first&.id || ""), include_blank: true, required: true }, { class: "custom-select" }
         .input-group-append
@@ -58,7 +58,7 @@ h1 Modification en masse de #{@motifs.size} motifs
           - unique_values.sort_by(&:last).reverse.each do |value, nb_of_occurrences|
             li #{value} (#{nb_of_occurrences})
       - else
-        small.form-text.text-muted.mb-2 Ces #{@motifs.size} motifs ont la même durée par défaut
+        small.form-text.fr-text-mention--grey.mb-2 Ces #{@motifs.size} motifs ont la même durée par défaut
       .input-group
         = f.number_field :default_duration_in_min, value: (unique_values.keys.size > 1 ? nil : unique_values.keys.first), class: "form-control", required: true
         .input-group-append
@@ -101,7 +101,7 @@ h1 Modification en masse de #{@motifs.size} motifs
                   em pas de texte
                 = " (#{nb_of_occurrences})"
         - else
-          small.form-text.text-muted.mb-2 Ces #{@motifs.size} motifs ont le même texte
+          small.form-text.fr-text-mention--grey.mb-2 Ces #{@motifs.size} motifs ont le même texte
         = f.text_area instruction_attr_name, value: (unique_values.size > 1 ? nil : unique_values.keys.first), class: "form-control"
         .mt-1
           = link_to "Voir un exemple", image_path("motif_form/#{instruction_attr_name}.png"), target: "_blank", class: "fr-link"

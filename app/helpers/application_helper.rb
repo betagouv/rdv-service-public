@@ -101,11 +101,6 @@ module ApplicationHelper
     end
   end
 
-  def boolean_attribute_tag(object, attribute_name)
-    value = object.send(attribute_name)
-    boolean_tag(value) { object.class.human_attribute_value(attribute_name, value) }
-  end
-
   def object_attribute_tag(object, attribute_name, value = :delegate_to_object)
     name = object.class.human_attribute_name(attribute_name)
 
@@ -113,8 +108,13 @@ module ApplicationHelper
       value = object.human_attribute_value(attribute_name)
     end
 
-    tag.strong(tag.span(name) + tag.span(" : ")) +
-      tag.span(value.presence || "Non renseigné", class: class_names("text-muted": value.blank?))
+    value_tag = if value.present?
+                  tag.span(value)
+                else
+                  tag.i("Non renseigné", class: "fr-text-mention--grey")
+                end
+
+    tag.span(sanitize("#{name}&nbsp: "), class: "fr-text-mention--grey") + value_tag
   end
 
   def self_anchor(identifier, &block)

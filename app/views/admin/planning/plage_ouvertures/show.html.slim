@@ -46,7 +46,7 @@
           - else
             = "#{@plage_ouverture.minutes_after_rdvs} minutes de battement après chaque rendez-vous"
 
-        div.mt-3.text-muted.text-right
+        div.mt-3.fr-text-mention--grey.text-right
           | modifiée le #{l(@plage_ouverture.updated_at, format: :short)}
         - if @plage_ouverture.overlapping_plages_ouvertures?
           div.mt-3

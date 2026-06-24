@@ -44,7 +44,7 @@
   - else
     | Contexte&nbsp;:
     br
-    .fr-ml-4w.fr-pl-1w.text-muted.border-left= simple_format(rdv.context, {}, wrapper_tag: :span)
+    .fr-ml-4w.fr-pl-1w.fr-text-mention--grey.border-left= simple_format(rdv.context, {}, wrapper_tag: :span)
 
 - if rdv.public_office? && rdv.overlapping_plages_ouvertures?
   div.my-3

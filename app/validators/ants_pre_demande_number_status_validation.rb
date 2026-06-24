@@ -18,6 +18,14 @@ MOCK_RESPONSES = {
   "RDVSPUB010" => { status: "expired", appointments: [] },
   "RDVSPUB011" => { status: "expired", appointments: [] },
   "RDVSPUB012" => { status: "expired", appointments: [] },
+  "RDVSPUB020" => {
+    status: "validated",
+    appointments: [{
+      "management_url" => "https://gerer-rdv.com",
+      "meeting_point" => "Mairie de Sannois",
+      "appointment_date" => "2027-04-03T08:45:00",
+    }],
+  },
 }.freeze
 
 class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator

@@ -113,7 +113,7 @@ module RdvsHelper
             class: "dropdown-item",
             data: { confirm: t("admin.rdvs.delete.confirm") } do
       tag.div(t("helpers.delete"), class: "text-danger") +
-        tag.div(t("admin.rdvs.delete.details"), class: "text-wrap text-muted")
+        tag.div(t("admin.rdvs.delete.details"), class: "text-wrap fr-text-mention--grey")
     end
   end
 
