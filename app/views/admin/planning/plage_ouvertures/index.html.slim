@@ -14,7 +14,7 @@
 
 - if flash[:onboarding] == "online_booking_ready"
   - content_for :onboarding_banner do
-    .fr-callout.fr-pb-2w
+    .fr-callout.fr-m-2w
       h2.fr-h6 Vous avez terminé !
       p La réservation en ligne est maintenant disponible grâce à cette plage d'ouverture !
       = link_to("Voir la réservation en ligne", admin_organisation_online_booking_path(current_organisation), class: "fr-btn")
@@ -52,15 +52,15 @@
       = paginate @plage_ouvertures, theme: "dsfr"
   - else
     .fr-grid-row.justify-content-md-center.p-2.mt-3
-      .fr-col-md-6.mb-2
+      .fr-col-lg-8.mb-2
         - if params[:search].present?
           = t(".no_results_for_your_search")
         - else
           - if current_agent == @agent
-            h2= t(".self.not_yet_created_plage_ouverture")
+            h2.fr-h4= t(".self.not_yet_created_plage_ouverture")
             p = t(".self.explanation_plage_ouverture")
           - else
-            h2= t(".other_agent.not_yet_created_plage_ouverture", full_name: @agent.full_name_or_email)
+            h2.fr-h4= t(".other_agent.not_yet_created_plage_ouverture", full_name: @agent.full_name_or_email)
             p = t(".other_agent.explanation_plage_ouverture")
 
           - if available_motifs_for_agent.any?
