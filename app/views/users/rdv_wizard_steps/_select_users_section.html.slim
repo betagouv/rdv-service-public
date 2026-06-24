@@ -1,4 +1,4 @@
-- relatives = current_user.relatives.order(:first_name)
+- relatives = @rdv_booking_form.selectable_existing_relatives
 - selected_users = @rdv_booking_form.selected_users
 
 fieldset.fr-fieldset.fr-mt-3w data-controller="proche-selection" data-action="change->proche-selection#update"
@@ -19,7 +19,7 @@ fieldset.fr-fieldset.fr-mt-3w data-controller="proche-selection" data-action="ch
         = label_tag "selected_user_existing_#{relative.id}", relative.full_name
       - if @rdv_booking_form.requires_ants_predemande_number?
         .rdv-nested-fields
-          = f.fields_for :relatives, [relative], index: "r#{relative.id}" do |rf|
+          = f.fields_for :relatives, [relative] do |rf|
             = rf.hidden_field :id
             = rf.dsfr_text_field :ants_pre_demande_number, disabled: selected_users.exclude?("existing_relative_#{relative.id}")
 

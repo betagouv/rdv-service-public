@@ -27,6 +27,14 @@ module Users::RdvBookingForm::AntsConcern
   # method override
   def selected_users_expected_count = ants_pre_demandes_count
 
+  # method override
+  def selectable_existing_relatives
+    # on veut afficher les proches déjà chargé et modifiés via les relatives_attributes et tous les autres
+    r = @user.relatives.target.select(&:persisted?)
+    r += User.where(responsible_id: @user.id).where.not(id: r.pluck(:id)).to_a
+    r.sort_by(&:first_name)
+  end
+
   private
 
   # method override

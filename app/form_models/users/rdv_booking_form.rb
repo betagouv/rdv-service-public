@@ -65,6 +65,10 @@ class Users::RdvBookingForm
 
   def selected_users_expected_count = 1
 
+  def selectable_existing_relatives
+    @user.relatives.sort_by(&:first_name)
+  end
+
   private
 
   def selected_user = selected_users.first
