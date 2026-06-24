@@ -15,8 +15,9 @@ html lang="fr"
       main#main.content-page[style="flex-grow: 1;" role="main"]
         .content
           - if @planning_layout
-            = content_for :onboarding_banner
             = render partial: "admin/planning/planning_agents_select"
+            = content_for :onboarding_banner
+            .fr-mx-2w= render "layouts/flash"
             .fr-p-2w
               = content_for(:fil_ariane)
               = yield
@@ -25,8 +26,8 @@ html lang="fr"
             = render "layouts/instance_migration_banner"
             = content_for :fil_ariane
             .container-fluid
-              = render "layouts/flash"
               = content_for :onboarding_banner
+              = render "layouts/flash"
               - if content_for :title
                 .page-title-box
                   h1.fr-h2= yield :title
