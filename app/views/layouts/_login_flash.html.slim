@@ -1,0 +1,4 @@
+- sanitized_flash = sanitize(flash[:login_success], tags: %w[a br strong em], scrubber: :prune).presence
+- if sanitized_flash
+  = dsfr_alert type: alert_dsfr_type_for(:success), size: :sm, close_button: true, html_attributes: { class: "fr-pb-1w fr-my-2w", role: "alert" } do
+    = sanitized_flash

@@ -51,7 +51,9 @@ class Agents::SessionsController < Devise::SessionsController
       return
     end
 
-    super
+    super.tap do
+      flash[:login_success] = flash.delete(:success)
+    end
     # super will repeat warden.authenticate! which will not repeat everything but fetch from the session
     # cf https://github.com/wardencommunity/warden/blob/master/lib/warden/proxy.rb#L332-L334
   end
