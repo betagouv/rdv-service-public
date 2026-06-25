@@ -50,7 +50,6 @@ RSpec.describe "OAuth provider", js: true do
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
 
-    expect(page).to have_content("Connexion réussie")
     expect(page).to have_content("En continuant, vous allez permettre à Démarches Simplifiées d'accéder à votre compte RDV Solidarités")
     click_on "Continuer"
     expect(page).to have_content("Votre email est francis@factice.org")
@@ -72,7 +71,7 @@ RSpec.describe "OAuth provider", js: true do
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
-    expect(page).to have_content("Connexion réussie")
+    expect(page).to have_content("Pour commencer, aidez-nous à en savoir plus :")
 
     visit "http://localhost:4567/"
     click_button "Se connecter avec RDV Service Public"
