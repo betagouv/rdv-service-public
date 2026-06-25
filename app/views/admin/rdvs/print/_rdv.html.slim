@@ -62,18 +62,18 @@
       div
         - case rdv.motif.location_type.to_sym
         - when :visio
-          = visio_icon(class: "text-primary-blue fr-mr-1w")
+          = visio_icon(class: "rdv-color-active-blue fr-mr-1w")
           |> RDV par visioconférence
           span[style="line-break: anywhere;"]
             = rdv.visio_url
         - when :phone
-          = phone_icon(class: "text-primary-blue fr-mr-1w")
+          = phone_icon(class: "rdv-color-active-blue fr-mr-1w")
           |> RDV par téléphone
           - rdv.participations.filter_map { |p| p.user.user_to_notify&.phone_number_formatted }.each do |phone_number|
             |> -
             = phone_number
         - else
-            = icon("fr-icon-map-pin-2-fill", class: "text-primary-blue fr-mr-1w")
+            = icon("fr-icon-map-pin-2-fill", class: "rdv-color-active-blue fr-mr-1w")
             = human_location(rdv)
 
       div

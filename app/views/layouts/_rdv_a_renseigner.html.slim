@@ -5,6 +5,6 @@
   - organisation_id = organisation&.id || current_agent.rdvs.a_renseigner.first&.organisation_id
   - if organisation_id
     li.list-inline-item.fr-mr-2w
-      = link_to a_renseigner_admin_organisation_rdvs_path(organisation_id), class: "btn text-primary-blue link-dsfr" do
+      = link_to a_renseigner_admin_organisation_rdvs_path(organisation_id), class: "btn rdv-color-active-blue link-dsfr" do
         span.fr-icon--sm.fr-mr-1v.fr-icon-warning-fill[aria-hidden="true"]
         = "#{current_agent.unknown_past_rdv_count} RDV à renseigner"
