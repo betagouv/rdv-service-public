@@ -15,7 +15,7 @@ html lang="fr"
       main#main.content-page[style="flex-grow: 1;" role="main"]
         .content
           - if @planning_layout
-            .fr-mx-2w= render "layouts/login_flash"
+            = render "layouts/login_flash"
             = render partial: "admin/planning/planning_agents_select"
             = content_for :onboarding_banner
             .fr-mx-2w= render "layouts/flash"
