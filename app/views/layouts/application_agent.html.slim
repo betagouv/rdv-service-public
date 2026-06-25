@@ -16,9 +16,10 @@ html lang="fr"
         .content
           - if @planning_layout
             = render "layouts/login_flash"
+            = content_for :onboarding_banner_start
             = render partial: "admin/planning/planning_agents_select"
-            = content_for :onboarding_banner
             .fr-mx-2w= render "layouts/flash"
+            = content_for :onboarding_banner
             .fr-p-2w
               = content_for(:fil_ariane)
               = yield
@@ -27,9 +28,10 @@ html lang="fr"
             = render "layouts/instance_migration_banner"
             = content_for :fil_ariane
             .container-fluid
-              = content_for :onboarding_banner
               = render "layouts/login_flash"
               = render "layouts/flash"
+              = content_for :onboarding_banner_start
+              = content_for :onboarding_banner
               - if content_for :title
                 .page-title-box
                   h1.fr-h2= yield :title
