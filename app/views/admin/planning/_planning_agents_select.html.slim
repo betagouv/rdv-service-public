@@ -27,8 +27,7 @@
               }
 
             = form.label :agent_id, "Planning de", class: "fr-label sr-only", for: "agent_id"
-            // Les 228px de min-width permettent d'aligner le bord droit du select d'agent avec le bord droit du bouton "Indisponibilités"
-            = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: ["select2-input rdv-min-width-228px"], data: }
+            = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: ["select2-input rdv-min-width-200"], data: }
 
           .ml-2.d-flex[style="gap: 0 0.5em"]
             - if @agents.size == 1 && @multiple_agents_makes_sense && current_organisation.agents.count > 1
