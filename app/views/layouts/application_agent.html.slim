@@ -16,7 +16,6 @@ html lang="fr"
         .content
           - if @planning_layout
             = render "layouts/login_flash"
-            = content_for :onboarding_banner_start
             = render partial: "admin/planning/planning_agents_select"
             .fr-mx-2w= render "layouts/flash"
             = content_for :onboarding_banner

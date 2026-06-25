@@ -17,7 +17,7 @@
                 | Motifs de rendez-vous
             div.fr-tile__desc
               - if @motif_names.blank?
-                i Aucun motif
+                i.fr-text-mention--grey Aucun motif
                 br
                 p.fr-badge.fr-badge--info.fr-mt-1w À renseigner
               - else
@@ -36,7 +36,7 @@
                 | Lieux
             div.fr-tile__desc
               - if @lieu_names.blank?
-                i Aucun lieu
+                i.fr-text-mention--grey Aucun lieu
                 - if needs_lieu(current_organisation)
                   br
                   p.fr-badge.fr-badge--info.fr-mt-1w À renseigner
@@ -80,7 +80,7 @@
               - if infos.present?
                 = infos.join(" ")
               - else
-                i Pas d'informations de contact
+                i.fr-text-mention--grey Pas d'informations de contact
 
     - if current_domain == Domain::RDV_AIDE_NUMERIQUE
       .fr-col-12.fr-col-md-4.fr-mb-2w

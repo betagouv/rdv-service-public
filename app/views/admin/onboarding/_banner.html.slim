@@ -5,7 +5,7 @@
 
   - if needs_motif && current_organisation.lieux.enabled.none?
     - content_for :onboarding_banner_start do
-      .fr-callout.fr-mb-0
+      .fr-callout.fr-pb-2w.fr-mt-2w
         h2.fr-h6 🌱 Bienvenue sur votre espace #{current_domain.name} !
         p Pour commencer, vous pouvez créer votre premier motif de rendez-vous.
         = link_to("Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "fr-btn")
