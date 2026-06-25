@@ -224,7 +224,7 @@ class ProConnectController < ApplicationController
     session[:pro_connect_id_token] = callback_client.id_token_for_logout
 
     if pro_connect_session[:silent_login]
-      flash[:login_success] = "Vous avez été connecté automatiquement par ProConnect avec l'adresse email #{agent.email}."
+      flash[:notice] = "Vous avez été connecté automatiquement par ProConnect avec l'adresse email #{agent.email}."
     end
 
     if should_redirect_to_domain_etat?(current_domain, agent)
