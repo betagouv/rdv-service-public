@@ -29,7 +29,7 @@ RSpec.describe "Agent can CRUD motifs" do
       click_link("Supprimer")
 
       expect_page_title("Motifs de rendez-vous")
-      expect(page).to have_content("Vous n'avez pas encore créé de motif.")
+      expect(page).to have_content("Vous n'avez pas encore de motif de rendez-vous")
       click_link "Créer un motif", match: :first
 
       expect_page_title("Créer un motif")

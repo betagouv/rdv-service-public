@@ -19,10 +19,10 @@
                 | Pour quels motifs souhaitez-vous ouvrir la prise de rendez-vous en ligne ?
 
               - @motifs.each do |motif|
-                - checked = @motifs.count == 1
+                - checked_option = @motifs.count == 1 ? { checked: true } : {}
                 .fr-fieldset__element
                   .fr-checkbox-group
-                    = f.check_box :motif_ids, { multiple: true, checked: }, motif.id, false
+                    = f.check_box :motif_ids, { multiple: true }.merge(checked_option), motif.id, false
                     = f.label "motif_ids_#{motif.id}", class: "fr-label" do
                       = motif.name
                       span.fr-hint-text
