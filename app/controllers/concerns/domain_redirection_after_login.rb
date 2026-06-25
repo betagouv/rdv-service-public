@@ -10,6 +10,7 @@ module DomainRedirectionAfterLogin
   def should_redirect_to_domain_anct?(current_domain, agent)
     organisations = agent.organisations
     current_domain == Domain::RDV_SERVICE_PUBLIC_ETAT &&
+      organisations.exists? &&
       organisations.all?(&:rdv_mairie?) &&
       agent.territories_through_organisations.all?(&:operator_id)
   end
