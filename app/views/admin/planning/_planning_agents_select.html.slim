@@ -1,4 +1,5 @@
 #planning_agents_select.container-fluid.py-1.px-3[style="background-color: white; border-bottom: 1px solid #EEE;"]
+  = render "layouts/flash", flash_types: %i[login]
   .rdv-display-flex.rdv-gap-05rem.rdv-align-items-center.rdv-flex-wrap-wrap.rdv-justify-content-space-between.fr-my-2w
     div.rdv-display-flex.rdv-gap-05rem.rdv-flex-wrap-wrap
       h1.fr-h2.fr-mb-0
@@ -42,4 +43,3 @@
 
   = content_for :right_of_page_title
 
-.fr-mx-2w= render "layouts/flash"
