@@ -1,6 +1,4 @@
 module DomainRedirectionAfterLogin
-  protected
-
   def should_redirect_to_domain_etat?(current_domain, agent)
     organisations = agent.organisations
     current_domain == Domain::RDV_SERVICE_PUBLIC &&
@@ -12,9 +10,12 @@ module DomainRedirectionAfterLogin
   def should_redirect_to_domain_anct?(current_domain, agent)
     organisations = agent.organisations
     current_domain == Domain::RDV_SERVICE_PUBLIC_ETAT &&
+      organisations.exists? &&
       organisations.all?(&:rdv_mairie?) &&
       agent.territories_through_organisations.all?(&:operator_id)
   end
+
+  protected
 
   def redirect_target_url_in_domain(domain)
     stored_path = stored_location_for(:agent)
