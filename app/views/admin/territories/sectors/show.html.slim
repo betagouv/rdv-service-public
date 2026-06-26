@@ -59,7 +59,7 @@
                   - policy = Agent::ZonePolicy.new(current_agent, zone)
                   - if policy.destroy?
                     = link_to "retirer", admin_territory_sector_zone_path(current_territory, @sector, zone), method: :delete
-        div= paginate @zones
+        div= paginate @zones, theme: "dsfr"
         .mb-2.rdv-text-align-center
           .mb-2= page_entries_info @zones
           - if @zones.count > 5
