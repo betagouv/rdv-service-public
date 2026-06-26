@@ -77,7 +77,7 @@ module Caldav
             agent_id: agent.id,
             url: event.url,
             starts_at: event.dtstart,
-            ends_at: event.dtend,
+            ends_at: event.dtend || event.dtstart,
             raw_ical:,
           }
         end

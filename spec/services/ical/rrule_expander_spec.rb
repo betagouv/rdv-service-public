@@ -21,8 +21,8 @@ RSpec.describe Ical::RruleExpander do
     end
 
     it "return the only occurrence" do
-      from =  Time.zone.parse("2025-12-18 00:00")
-      to =    Time.zone.parse("2025-12-28 23:59")
+      from = Time.zone.parse("2025-12-18 00:00")
+      to = Time.zone.parse("2025-12-28 23:59")
       expected_recurrence = [
         Time.zone.parse("2025-12-18 14:00"),
         Time.zone.parse("2025-12-18 15:00"),
@@ -255,6 +255,52 @@ RSpec.describe Ical::RruleExpander do
       ]
       actual_recurrences = described_class.new(every_day_with_exceptions).compute_occurrences_within(from..to)
       expect(actual_recurrences.sole.to_a).to match(expected_recurrence)
+    end
+  end
+
+  describe "recurring event with an exception that has no DTEND" do
+    # Événement récurrent hebdomadaire dont une exception ne possède pas de DTEND.
+    # Selon la RFC 5545, la durée est de 0 seconde : ends_at == starts_at.
+    let(:weekly_with_exception_without_dtend) do
+      <<~ICALENDAR
+        BEGIN:VCALENDAR
+        VERSION:2.0
+        BEGIN:VEVENT
+        DTSTAMP:20260113T143923Z
+        CLASS:PUBLIC
+        CREATED:20260113T132954Z
+        DTEND;TZID=Europe/Paris:20260113T120000
+        DTSTART;TZID=Europe/Paris:20260113T110000
+        LAST-MODIFIED:20260113T143923Z
+        RRULE:FREQ=WEEKLY;BYDAY=TU
+        SEQUENCE:0
+        SUMMARY:Weekly
+        TRANSP:OPAQUE
+        UID:bb3e11cb-fb43-4e42-b4ed-954ea11ea3fe
+        END:VEVENT
+        BEGIN:VEVENT
+        DTSTAMP:20260113T142328Z
+        CLASS:PUBLIC
+        CREATED:20260113T142328Z
+        DTSTART;TZID=Europe/Paris:20260120T160000
+        LAST-MODIFIED:20260113T142328Z
+        RECURRENCE-ID;TZID=Europe/Paris:20260120T110000
+        SEQUENCE:1
+        SUMMARY:Weekly
+        TRANSP:OPAQUE
+        UID:bb3e11cb-fb43-4e42-b4ed-954ea11ea3fe
+        END:VEVENT
+        END:VCALENDAR
+      ICALENDAR
+    end
+
+    it "ne plante pas et utilise dtstart comme ends_at pour l'exception sans DTEND" do
+      from = Time.zone.parse("2026-01-13 00:00")
+      to = Time.zone.parse("2026-01-27 23:59")
+      actual_recurrences = described_class.new(weekly_with_exception_without_dtend).compute_occurrences_within(from..to)
+      exception_occurrence = actual_recurrences.find { |o| o.starts_at == Time.zone.parse("2026-01-20 16:00") }
+      expect(exception_occurrence).not_to be_nil
+      expect(exception_occurrence.ends_at).to eq(Time.zone.parse("2026-01-20 16:00"))
     end
   end
 

@@ -39,7 +39,7 @@ class Ical::RruleExpander
           next if exception_ical_event.transp == "TRANSPARENT"
           next unless start_time >= time_range.min && start_time < time_range.max
 
-          all_occurrences << Recurrence::Occurrence.new(starts_at: exception_ical_event.dtstart.in_time_zone, ends_at: exception_ical_event.dtend.in_time_zone)
+          all_occurrences << Recurrence::Occurrence.new(starts_at: exception_ical_event.dtstart.in_time_zone, ends_at: (exception_ical_event.dtend || exception_ical_event.dtstart).in_time_zone)
         end
       end
     end
