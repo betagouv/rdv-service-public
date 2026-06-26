@@ -1,5 +1,5 @@
 <% if resource.errors.any? %>
-  <div class="alert alert-danger alert-block devise-bs">
+  <div class="fr-alert fr-alert--error devise-bs">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <ul class="mb-0">
       <% resource.errors.full_messages.uniq.each do |message| %>
