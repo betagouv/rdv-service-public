@@ -1,8 +1,9 @@
 # Exemple:
-# rails runner scripts/move_etat_organisations_to_new_domain.rb
+# Le premier argument est le nombre de territoires à examiner
+# rails runner scripts/move_etat_organisations_to_new_domain.rb 2000
 #
 
-Territory.find_each do |territory|
+Territory.limit(ARGV[0].presence.to_i).find_each do |territory|
   admins = Agent.joins(territorial_roles: :territory).where(territorial_roles: { territory_id: territory.id })
 
   all_admins_from_etat = admins.all? do |agent|
