@@ -16,6 +16,10 @@ class VerifiedServicePublicDomainNames
     end
   end
 
+  def self.anct?(email)
+    email
+  end
+
   DOMAINS = %w[
     .gouv.fr
 
