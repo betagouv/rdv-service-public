@@ -55,14 +55,10 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
       end
     end
 
-    it "stocke starts_at comme ends_at quand l'événement n'a pas de DTEND" do
+    it "ignore les événements sans DTEND (anniversaires, rappels...)" do
       VCR.use_cassette("caldav/event_without_dtend") do
-        expect { described_class.new.perform(agent.id) }.to change(ExternalCalendarEvent, :count).by(1)
+        expect { described_class.new.perform(agent.id) }.not_to change(ExternalCalendarEvent, :count)
       end
-
-      event = ExternalCalendarEvent.sole
-      expect(event.starts_at).to eq(Time.zone.parse("2026-01-28 14:00"))
-      expect(event.ends_at).to eq(event.starts_at)
     end
 
     it "ne crée pas d'événements si l'URL externe correspond à un Rdv local" do

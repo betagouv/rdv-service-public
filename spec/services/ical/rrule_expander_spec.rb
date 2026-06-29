@@ -260,7 +260,8 @@ RSpec.describe Ical::RruleExpander do
 
   describe "recurring event with an exception that has no DTEND" do
     # Événement récurrent hebdomadaire dont une exception ne possède pas de DTEND.
-    # Selon la RFC 5545, la durée est de 0 seconde : ends_at == starts_at.
+    # L'exception sans DTEND est ignorée. Comme elle est dans exception_dates,
+    # l'occurrence du parent pour ce jour est aussi supprimée.
     let(:weekly_with_exception_without_dtend) do
       <<~ICALENDAR
         BEGIN:VCALENDAR
@@ -294,13 +295,14 @@ RSpec.describe Ical::RruleExpander do
       ICALENDAR
     end
 
-    it "ne plante pas et utilise dtstart comme ends_at pour l'exception sans DTEND" do
+    it "ignore l'exception sans DTEND et supprime aussi l'occurrence parente pour ce jour" do
       from = Time.zone.parse("2026-01-13 00:00")
       to = Time.zone.parse("2026-01-27 23:59")
       actual_recurrences = described_class.new(weekly_with_exception_without_dtend).compute_occurrences_within(from..to)
-      exception_occurrence = actual_recurrences.find { |o| o.starts_at == Time.zone.parse("2026-01-20 16:00") }
-      expect(exception_occurrence).not_to be_nil
-      expect(exception_occurrence.ends_at).to eq(Time.zone.parse("2026-01-20 16:00"))
+      expect(actual_recurrences.map { |o| o.starts_at.to_date }).to contain_exactly(
+        Date.parse("2026-01-13"),
+        Date.parse("2026-01-27")
+      )
     end
   end
 
