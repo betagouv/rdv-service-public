@@ -3,7 +3,7 @@ RSpec.describe "Agent is automatically logged in with pro connect" do
   let(:user_info) do
     {
       "sub" => "ab70770d-1285-46e6-b4d0-3601b49698d4",
-      "email" => "francis.factice@exemple.gouv.fr",
+      "email" => "francis.factice@exemple.fr",
       "given_name" => "Francis Factice",
       "usual_name" => "Factice",
       "siret" => "13002526500013",
@@ -36,7 +36,7 @@ RSpec.describe "Agent is automatically logged in with pro connect" do
 
   context "an existing agent tries to connect to a page requiring authentication" do
     let!(:organisation) { create(:organisation) }
-    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation], email: "francis.factice@exemple.gouv.fr") }
+    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation], email: "francis.factice@exemple.fr") }
 
     it "logs in the agent automatically if they are signed in to ProConnect" do
       visit_and_expect_redirect_to_proconnect(admin_organisation_rdvs_path(organisation))
