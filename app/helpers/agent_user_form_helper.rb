@@ -1,9 +1,9 @@
 module AgentUserFormHelper
-  def agent_user_form_url(user, format: :html)
+  def agent_user_form_url(user)
     if user.persisted?
-      admin_organisation_user_path(current_organisation, user, format:)
+      admin_organisation_user_path(current_organisation, user)
     else
-      admin_organisation_users_path(current_organisation, format:)
+      admin_organisation_users_path(current_organisation)
     end
   end
 
