@@ -46,7 +46,16 @@ module MotifsHelper
   end
 
   def build_badge_tag_for(badge_name)
-    tag.span(I18n.t("motifs.badges.#{badge_name}"), class: "badge badge-motif-#{badge_name}")
+    classes = {
+      bookable_by_invited_users: "fr-badge--success fr-badge--no-icon",
+      bookable_by_everyone: "fr-badge--success fr-badge--no-icon",
+      bookable_by_agents_and_prescripteurs: "fr-badge--success fr-badge--no-icon",
+      for_secretariat: "fr-badge--info  fr-badge--no-icon",
+      follow_up: "fr-badge--info  fr-badge--no-icon",
+      collectif: "fr-badge--purple-glycine fr-icon-team-fill fr-badge--icon-left",
+      archived: "",
+    }
+    tag.span(I18n.t("motifs.badges.#{badge_name}"), class: "fr-ml-1v fr-badge fr-badge--sm #{classes[badge_name]}")
   end
 
   # L'option "agents_and_prescripteurs_and_invited_users"
@@ -104,7 +113,7 @@ module MotifsHelper
     if motif.send("#{option_name}?")
       tag.span("☑️ ") + tag.span(Motif.human_attribute_name("#{option_name}_hint"))
     else
-      tag.span("désactivée", class: "text-muted")
+      tag.span("désactivée", class: "fr-text-mention--grey")
     end
   end
 
@@ -112,7 +121,7 @@ module MotifsHelper
     if motif.send("#{option_name}?")
       tag.span("Oui")
     else
-      tag.span("désactivée", class: "text-muted")
+      tag.span("désactivée", class: "fr-text-mention--grey")
     end
   end
 
@@ -122,7 +131,7 @@ module MotifsHelper
     inner_tags = tag.span("#{legend} : ") + tag.span(value, class: "text-bold")
 
     if hint.present?
-      inner_tags += tag.div(hint, class: "text-muted")
+      inner_tags += tag.div(hint, class: "fr-text-mention--grey")
     end
 
     tag.div(inner_tags, class: ("fr-mt-4w" if margin))

@@ -21,7 +21,7 @@
         - if current_territory.services.any? || @motif.service
           = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service_name, margin: false)
           - if @motif.service.blank?
-            span.text-muted= I18n.t("admin.motifs.motif_without_service_explanation")
+            span.fr-text-mention--grey= I18n.t("admin.motifs.motif_without_service_explanation")
         - if @motif.motif_category.present?
           = motif_attribute_row(MotifCategory.model_name.human, @motif.motif_category.name)
         = motif_attribute_row \
@@ -29,12 +29,12 @@
           "#{@motif.default_duration_in_min} minutes"
         = motif_attribute_row(Motif.human_attribute_name(:color)) do
           span.motif-color-badge>[style="background-color: #{@motif.color};"]
-          span.text-muted= @motif.color
+          span.fr-text-mention--grey= @motif.color
 
         .fr-mt-4w
           = location_type_icon(@motif.location_type, class: "fr-mr-1w fr-icon--sm")
           = "#{@motif.human_attribute_value(:collectif)} #{@motif.human_attribute_value(:location_type).downcase}"
-        div.text-muted
+        div.fr-text-mention--grey
           = sanitize(@motif.human_attribute_value(:location_type, context: :hint), scrubber: :prune)
 
     .card.mt-2
@@ -68,9 +68,9 @@
             = motif_attribute_row("Sectorisation") do
               - if @motif.bookable_by_everyone_or_bookable_by_invited_users?
                 div= @motif.human_attribute_value(:sectorisation_level)
-                div.text-muted= @motif.human_attribute_value(:sectorisation_level, context: :hint)
+                div.fr-text-mention--grey= @motif.human_attribute_value(:sectorisation_level, context: :hint)
               - else
-                span.text-muted N/A
+                span.fr-text-mention--grey N/A
 
     .card.mt-2
       .rdv-accordion-card.fr-accordion
@@ -91,7 +91,7 @@
           = motif_attribute_row(Motif.human_attribute_name(:visibility_type), margin: false) do
             div= sanitize(@motif.human_attribute_value(:visibility_type, context: :html))
 
-            div.text-muted
+            div.fr-text-mention--grey
               = @motif.human_attribute_value(:visibility_type, context: :hint)
               - if current_organisation.rdv_insertion?
                 br

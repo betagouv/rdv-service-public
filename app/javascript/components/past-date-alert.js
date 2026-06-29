@@ -45,7 +45,7 @@ class PastDateAlertController {
 
   buildAlertMessage() {
     const message = document.createElement('small')
-    message.classList.add('text-muted')
+    message.classList.add('fr-text-mention--grey')
     message.textContent = '⚠️ Date dans le passé'
     return message
   }

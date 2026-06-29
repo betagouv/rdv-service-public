@@ -8,7 +8,7 @@
       = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard
       .card-body
         h2 Bénéficiaire
-        p Indiquez les coordonnées de la personne qui viendra au rendez-vous
+        p Indiquez les coordonnées de la personne qui viendra au rendez-vous.
 
         = form_for @beneficiaire, url: prescripteur_create_rdv_path, builder: Dsfr::FormBuilder do |f|
           .fr-grid-row.fr-grid-row--gutters.fr-mb-3v
@@ -18,7 +18,11 @@
               = f.hidden_field :ants_meeting_point_id, value: @rdv_wizard.lieu_id
               .fr-col-12= f.dsfr_text_field :ants_pre_demande_number, required: true, input_html: {style: "text-transform: uppercase;"}
 
-            .fr-col-12= f.dsfr_phone_field :phone_number, label: "Téléphone mobile", hint: "Format attendu : 0639980130. Un SMS de confirmation et un SMS de rappel seront envoyés à ce numéro"
+            .fr-col-12= f.dsfr_email_field :email, label: "Adresse email", hint: "Format attendu : nom@exemple.fr"
+            .fr-col-12= f.dsfr_phone_field :phone_number, label: "Téléphone mobile", hint: "Format attendu : 0639980130"
+            .fr-col-12
+              - if @rdv_wizard.motif.visible_and_notified?
+                p.fr-hint-text Des notifications de confirmation et de rappel seront envoyées automatiquement.
 
           = render("model_errors", model: @beneficiaire, f: f)
 

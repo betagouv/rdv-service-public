@@ -5,7 +5,7 @@
   span
     => icon("fr-icon-circle-fill", class: "rdv-status-#{status}")
     = Rdv.human_attribute_value(:status, status, context: :action)
-    .text-wrap.text-muted
+    .text-wrap.fr-text-mention--grey
     = Rdv.human_attribute_value(:status, status, context: :explanation)
     - if status.in?(Rdv::RDV_STATUSES_TO_NOTIFY) && rdv.in_the_future?
       <br />

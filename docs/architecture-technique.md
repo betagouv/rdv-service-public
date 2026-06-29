@@ -132,11 +132,11 @@ La liste des librairies JS utilisée est disponible dans :
 Notre application est accessible sous 3 "marques" différentes via trois noms de domaine différents :
 - https://www.rdv-solidarites.fr/
 - https://www.rdv-aide-numerique.fr/
-- https://rdv.anct.gouv.fr/ (prochainement rdv.numerique.gouv.fr)
+- https://rdv.numerique.gouv.fr/ (aussi accessible  via rdv.anct.gouv.fr)
 
 Nous avons actuellement 3 instances :
 - `production-rdv-solidarites` : serveur de production pour `www.rdv-solidarites.fr` et `www.rdv-aide-numerique.fr`
-- `production-rdv-mairie` : serveur de production pour `rdv.anct.gouv.fr`
+- `production-rdv-mairie` : serveur de production pour `rdv.numerique.gouv.fr` et `rdv.anct.gouv.fr`
 - `demo-rdv-solidarites` : serveur de démo pour `demo.rdv-solidarites.fr`, `demo.rdv-aide-numerique.fr` et `demo.anct.gouv.fr`
 
 ```mermaid
@@ -144,6 +144,7 @@ flowchart TD
     %% Domaines de prod
     www.rdv-solidarites.fr
     www.rdv-aide-numerique.fr
+    rdv.numerique.gouv.fr
     rdv.anct.gouv.fr
 
     %% Domaines de demo
@@ -159,6 +160,7 @@ flowchart TD
     %% Relations domaine -> app
     www.rdv-solidarites.fr --> production-rdv-solidarites
     www.rdv-aide-numerique.fr --> production-rdv-solidarites
+    rdv.numerique.gouv.fr --> production-rdv-mairie
     rdv.anct.gouv.fr --> production-rdv-mairie
     demo.rdv-solidarites.fr --> demo-rdv-solidarites
     demo.rdv-aide-numerique.fr --> demo-rdv-solidarites

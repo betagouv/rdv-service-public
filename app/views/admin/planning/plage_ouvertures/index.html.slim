@@ -29,7 +29,7 @@
 
   - if @plage_ouvertures_before_text_search.count > 5
     .m-2.d-flex.justify-content-end
-      div= link_to t("helpers.reset"), admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: @agent.id), class: class_names("btn", "btn-link", "d-none": params[:search].blank?)
+      div= link_to t("helpers.reset"), admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: @agent.id), class: class_names("fr-btn fr-btn--tertiary-no-outline", "d-none": params[:search].blank?)
       = simple_form_for "", url: admin_organisation_planning_plage_ouvertures_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
         = f.input :search, placeholder: t(".search_placeholder"), label: false, input_html: { autocomplete: "off", class: "search-form-control mr-2", value: params[:search] }, required: false
         = f.hidden_field :current_tab, value: params[:current_tab]
@@ -81,4 +81,4 @@
             = render "admin/motifs/creation_needed_callout", motivation_text: "Aucun motif individuel n'est accessible à cet agent. Les motifs existants sont liés à des services auxquels il n'appartient pas.", non_admin_text: "Vous n'avez accès à aucun motif individuel pour cette organisation. Les motifs existants sont liés à des services auxquels vous n'appartenez pas. Vous devez demander à un administrateur de votre organisation d'en créer un accessible à votre service."
 
   - if params[:current_tab] == "expired"
-    .rdv-text-align-center.text-muted = t(".hint_delete_old")
+    .rdv-text-align-center.fr-text-mention--grey = t(".hint_delete_old")

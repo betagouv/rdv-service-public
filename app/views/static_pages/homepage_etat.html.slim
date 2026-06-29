@@ -1,0 +1,434 @@
+- contact_team_url = Agents::PagesController::CONTACT_TEAM_URL
+
+- content_for :title do
+  | Accueil
+
+.fr-py-3w
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+      .fr-col-12.fr-col-md-8.rdv-text-align-center
+
+        = image_tag "rdv_mairie/homepage_hero.svg", alt: "", class: "fr-responsive-img rdv-object-fit-contain fr-pb-2w", style: "max-width: 416px"
+        h1
+          |> Facilitez la gestion et la prise de rendez‑vous
+          / on utilise un non-breaking hyphen dans rendez-vous pour éviter le retour à la ligne
+          | dans votre administration
+        .fr-text--lg
+          | Évitez les rendez-vous non honorés, gagnez du temps au quotidien et améliorez la relation entre les agents et les usagers
+        .fr-btns-group.fr-btns-group--inline-md.fr-btns-group--center
+          = link_to "Ouvrir mon espace", presentation_agent_path, class: "fr-btn"
+          = link_to "S’inscrire à une démo", onboarding_path, class: "fr-btn fr-btn--secondary"
+
+.fr-py-8w.rdv-background-color-alt-grey
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+      .fr-col-12.fr-col-md-6
+        = image_tag "rdv_mairie/calendrier.png", alt: "", class: "fr-responsive-img rdv-screenshot"
+
+      .fr-col-12.fr-col-md-6
+        h2 Un agenda au cœur du service
+        p.fr-text--lg À chaque agent son agenda dédié à la prise de rendez-vous, pour une meilleure visibilité des disponibilités de chacun·e au sein de votre structure.
+        b
+          ul
+            li Posez des rendez-vous sur votre agenda
+            li Renseignez vos disponibilités, vos absences
+            li Consultez les plannings de vos collègues
+        .fr-btns-group.fr-btns-group--inline-md
+          = link_to "Être accompagné pour la mise en place", onboarding_path, class: "fr-btn fr-btn--secondary fr-mt-3w"
+
+.fr-container.fr-py-8w
+  .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+    .fr-col-12.fr-col-md-8.rdv-text-align-center
+      h2
+        | Une solution interministérielle pour tous les services de l'État
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+      .fr-col-12.fr-col-md-4
+        .fr-card
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title.rdv-color-text-action-high-blue-france
+                | Administrations de l’État
+              p.fr-card__desc
+                | Administrations déconcentrées, agences nationales ou ministères, RDV Service Public est ouvert à l’ensemble des services de l’État.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img.fr-px-md-8w.fr-py-md-4w
+              = dsfr_svg "artwork/pictograms/buildings/city-hall", class: "fr-responsive-img"
+      .fr-col-12.fr-col-md-4
+        .fr-card
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title.rdv-color-text-action-high-blue-france
+                | Opérateurs publics
+              p.fr-card__desc
+                | RDV Service Public est ouvert aux opérateurs publics nationaux
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img.fr-px-md-8w.fr-py-md-4w
+              = dsfr_svg "artwork/pictograms/digital/avatar", class: "fr-responsive-img"
+
+hr[aria-hidden="true"]
+
+.fr-container.fr-pt-4w.fr-pb-12w
+  .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+    .fr-col-12.fr-col-md-10
+      h2.rdv-text-align-center
+        | Simplifier la gestion administrative
+      div
+        .fr-card.fr-card--horizontal.fr-card--horizontal-tier.fr-mt-2w
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                | Centraliser les informations
+              p.fr-card__desc
+                | Les informations des usagers, des disponiblités et des rendez-vous sont centralisées pour simplifier le quotidien des agents et permettre une réponse rapide aux usagers.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img
+              = image_tag "rdv_mairie/ecosystem.svg", alt: "", class: "fr-responsive-img rdv-max-height-12rem rdv-object-fit-contain"
+        .fr-card.fr-card--horizontal.fr-card--horizontal-tier.fr-mt-2w
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                | Éviter les rendez-vous non honorés
+              p.fr-card__desc
+                | Des notifications SMS et emails de création, de modification et de rappel de rendez-vous sont envoyées automatiquement aux usagers limitant le nombre de rendez-vous non honorés.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img
+              = dsfr_svg "artwork/pictograms/digital/application", class: "fr-responsive-img rdv-max-height-12rem"
+
+        .fr-card.fr-card--horizontal.fr-card--horizontal-tier.fr-mt-2w
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                | Activer la prise de rendez-vous en ligne
+              p.fr-card__desc
+                | Votre administration peut rendre ses disponibilités accessibles en ligne. Vos usagers peuvent planifier des rendez-vous en toute autonomie via un lien spécifique à votre administration.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img
+              = dsfr_svg "artwork/pictograms/digital/calendar", class: "fr-responsive-img rdv-max-height-12rem"
+        .fr-card.fr-card--horizontal.fr-card--horizontal-tier.fr-mt-2w
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                | Améliorer l’expérience usager
+              p.fr-card__desc
+                | L’interface ergonomique, aux couleurs de la charte de l’État, offre un parcours simple et rapide permettant aux usagers d’être autonomes quant à la planification et la modification de leur rendez-vous.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img
+              = image_tag "rdv_mairie/self-training.svg", alt: "", class: "fr-responsive-img rdv-max-height-12rem rdv-object-fit-contain"
+        .fr-card.fr-card--horizontal.fr-card--horizontal-tier.fr-mt-2w
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                | Produire des statistiques
+              p.fr-card__desc
+                | Les données des rendez-vous, centralisées sur la plateforme, génèrent des statistiques d’activités. Vous pouvez visualiser ou exporter les données.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img
+              = dsfr_svg "artwork/pictograms/digital/data-visualization", class: "fr-responsive-img rdv-max-height-12rem"
+
+hr[aria-hidden="true"]
+
+.fr-container.fr-py-8w
+  h2.rdv-text-align-center
+    | Vous êtes…
+  .fr-grid-row.fr-grid-row--center
+    .fr-col.fr-col-md-8
+      .fr-accordions-group
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="vous-etes-agent-de-la-justice"
+              | Un agent de la justice
+          .fr-collapse id="vous-etes-agent-de-la-justice"
+            ul.rdv-arrow-list
+              li
+                b> Faciliter la mise en relation
+                span des différents services de la justice (CDAD, tribunal judiciaire…)
+              li
+                b> Gérer les permanences
+                span des intervenants extérieurs (associations, avocats, conciliateurs…)
+              li
+                b> Exporter les statistiques
+                span de rendez-vous de votre organisation
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="vous-etes-agent-de-l-etat"
+              | Un agent de l’État
+          .fr-collapse id="vous-etes-agent-de-l-etat"
+            ul.rdv-arrow-list
+              li
+                b> Proposer une prise de rendez-vous flexible
+                span via différentes modalités (téléphone, visioconférence, sur place, à domicile)
+              li
+                b> Se connecter via le SSO ProConnect
+                span
+              li
+                b> Bénéficier d’une interconnexion
+                span avec les outils interministériels (Démarches Simplifiés, la Suite)
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="vous-etes-agent-d-un-operateur"
+              | Un agent d’un opérateur
+          .fr-collapse id="vous-etes-agent-d-un-operateur"
+            ul.rdv-arrow-list
+              li
+                b> Intégrer la solution
+                span à votre système d’information par API ou webhook
+              li
+                b> Afficher vos disponibilités
+                span sur votre plateforme par API
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="vous-etes-autres"
+              | Autres cas
+          .fr-collapse id="vous-etes-autres"
+            ul.rdv-arrow-list
+              li
+                b> Gérer plus facilement
+                span vos plannings multi-sites et multi-services
+              li
+                b> Créer des parcours d’orientation
+                span avec vos partenaires territoriaux par la prise de rendez-vous par prescription
+              li
+                b> Adapter la solution
+                span aux réalités de votre organisation
+
+.fr-py-8w.rdv-background-color-alt-blue-ecume
+  .fr-container
+    .fr-grid-row.fr-grid-row--center.rdv-flex-wrap-wrap-reverse.fr-grid-row--gutters
+      .fr-col-12.fr-col-md-5
+        h2
+          | Besoin d’une intégration sur mesure ?
+        p
+          |> Notre API puissante et flexible permet d’intégrer facilement notre brique de rendez-vous dans vos applications.
+          | Accédez à un flux de données en temps réel pour une expérience enrichie et personnalisée.
+        .fr-btns-group.fr-btns-group--center.rdv-btns-group--left-md.fr-btns-group--inline-md.fr-mb-0
+          = link_to "Consulter la documentation technique", "https://aide.rdv-service-public.fr/documentation-technique/api", class: "fr-btn fr-btn--secondary"
+      .fr-col-12.fr-col-md-5.rdv-text-align-center
+        = image_tag "rdv_mairie/api.svg", alt: "", class: "rdv-height-md-0 rdv-min-height-md-100"
+
+.fr-container.fr-py-8w
+  .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+    .fr-col-12.fr-col-md-8.rdv-text-align-center
+      h2
+        | Pourquoi choisir RDV Service Public ?
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+      .fr-col-12.fr-col-md-4
+        .fr-card.fr-p-0
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                | Publique
+              p.fr-card__desc
+                | Une solution développée par les services de l’État pour pour les services de l'État. Nous adaptons la solution aux contraintes réglementaires publiques et intégrons l’écosystème numérique public à la solution.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img
+              = dsfr_svg "artwork/pictograms/map/location-overseas-france", class: "fr-responsive-img"
+
+      .fr-col-12.fr-col-md-4
+        .fr-card.fr-p-0
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                | Partagée
+              p.fr-card__desc
+                | Une solution utilisée dans des contextes et pour des enjeux variés. Nous mutualisons les besoins et co-construisons une vision commune pour enrichir une solution unique au bénéfice de toutes les administrations.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img
+              = dsfr_svg "artwork/pictograms/environment/human-cooperation", class: "fr-responsive-img"
+
+      .fr-col-12.fr-col-md-4
+        .fr-card.fr-p-0
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                | Sécurisée
+              p.fr-card__desc
+                | Une solution hébergée en France, conçue dans le respect du RGPD et des exigences de sécurité du numérique public.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img
+              = dsfr_svg "artwork/pictograms/system/padlock", class: "fr-responsive-img"
+
+/ Redis cache store is fault tolerant, it will return nil if unavailable, and we'll simply skip this section
+/ cf https://github.com/rails/rails/blob/main/activesupport/lib/active_support/cache/redis_cache_store.rb#L31-L32
+/ We have a long connect timeout set by default though, which may cause slowness, which is why we add this
+/ emergency manual env var to be set temporarily and skip this section altogether.
+- if ENV["CACHE_STORE_UNAVAILABLE"].blank?
+  - stats_cached_rdvs_count = Rails.cache.fetch("stats.both_instances.1_year.rdvs_count")
+  - if stats_cached_rdvs_count.present?
+    .rdv-background-color-blue-ecume-925-125.rdv-color-blue-ecume-sun-247-moon-675-hover.rdv-text-align-center.rdv-text-align-md-left
+      .fr-container.fr-py-6w
+        .fr-grid-row.fr-grid-row--gutters.rdv-align-items-center
+          .fr-col-12.fr-col-md-6.rdv-text-align-md-right.fr-display--lg.fr-mb-0
+            = number_with_delimiter(stats_cached_rdvs_count, delimiter: " ")
+          .fr-col-12.fr-col-md-6.rdv-text-align-left.rdv-font-size-1-6rem
+            .rdv-font-weight-bold
+              | RENDEZ-VOUS PLANIFIÉS PAR AN
+
+    .fr-container.fr-py-3w.rdv-text-align-center
+      |> Pour plus d’informations,
+      = link_to "consulter nos statistiques ici", stats_path, class: "rdv-white-space-nowrap"
+      | .
+
+.rdv-background-color-alt-grey
+  .fr-container.fr-py-8w
+    h2.rdv-text-align-center
+      | Ils nous font confiance
+    .rdv-logos-partenaires-wrapper
+      .rdv-logo-partenaire
+        = image_tag "rdv_mairie/partenaire-ministere-justice.svg", alt: "Ministère de la Justice"
+      .rdv-logo-partenaire
+        = image_tag "rdv_mairie/partenaire-msa.png", alt: "MSA : Santé Famille Retraite Services"
+      .rdv-logo-partenaire
+        = image_tag "rdv_mairie/partenaire-asp.png", alt: "ASP : Agence de Services et de Paiement"
+      .rdv-logo-partenaire
+        = image_tag "rdv_mairie/partenaire-62.jpg", alt: "Département Pas-de-Calais"
+      .rdv-logo-partenaire
+        = image_tag "rdv_mairie/partenaire-wavignies.jpg", alt: "Ville de Wavignies"
+      .rdv-logo-partenaire
+        = image_tag "rdv_mairie/partenaire-mdph.png", alt: "MDPH : Maison Départementale des Personnes Handicapées"
+
+.fr-container.fr-py-8w
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-12.fr-col-md-8
+      figure.fr-quote.fr-quote--column
+        blockquote
+          | « Nous avons utilisé l'outil pour programmer sur plusieurs semaines les démos d'un service numérique. Pas un rendez-vous manqué ! »
+        figcaption
+          p.fr-quote__author
+            | Agent des Partenariats Européens à la DINUM
+          .fr-quote__image
+            = dsfr_svg "artwork/pictograms/leisure/community", class: "fr-responsive-img"
+
+hr[aria-hidden="true"]
+
+.fr-container.fr-py-8w
+  h2.rdv-text-align-center
+    | Questions fréquentes
+  .fr-grid-row.fr-grid-row--center
+    .fr-col.fr-col-md-8
+      .fr-accordions-group
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="faq-difference-rdv"
+              | RDV Solidarités, RDV Aide Numérique et RDV Service Public, quelles différences ?
+          .fr-collapse id="faq-difference-rdv"
+            p
+              |> Notre solution est déployée sur trois noms de domaine distincts :  
+              = link_to "rdv-solidarites.fr", "https://www.rdv-solidarites.fr", target: "_blank", rel: "noopener"
+              ',
+              = link_to "rdv-aide-numerique.fr", "https://www.rdv-aide-numerique.fr", target: "_blank", rel: "noopener"
+              ',
+              = link_to "rdv.numerique.gouv.fr", "https://www.rdv.numerique.gouv.fr", target: "_blank", rel: "noopener"
+              '.
+              |> Il est important de noter que ces noms de domaine n’affectent en rien les fonctionnalités de la solution.
+            p
+              |> En effet, toutes les fonctionnalités reposent sur une base de code unique, répartie sur deux instances pour renforcer la sécurité informatique.
+              |> L’utilisation de ces différents noms de domaine permet une distribution efficace des comptes en fonction du type d’administration utilisatrice.
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="faq-donnees-protegees"
+              | Comment la solution s’adapte-t-elle à mon organisation ?
+          .fr-collapse id="faq-donnees-protegees"
+            p
+              |> RDV Service Public s’adapte aux réalités variées des administrations publiques.
+              |> La solution offre diverses options pour configurer les spécificités de votre administration, qu’elle soit multi-site ou multi-service, permettant ainsi un déploiement flexible.
+              |> Que vous gériez une petite équipe avec quelques agents ou un service national comptant plusieurs centaines d’agents, RDV Service Public s’ajuste à vos besoins.
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="faq-acces-agenda"
+              | Comment fonctionne la prise de rendez-vous en ligne ?
+          .fr-collapse id="faq-acces-agenda"
+            p
+              |> Votre administration disposera d’une URL de prise de rendez-vous en ligne.
+              |> Cette URL ouvre un parcours usager de prise de rendez-vous en ligne qui pourra être intégrée dans tous vos supports de relation agent-usagers (site internet, email).
+              |> Vous pouvez configurer individuellement les lieux, les services et les motifs que vous souhaitez ouvrir à la prise de rendez-vous en ligne.
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="faq-notifs-sms"
+              | À quelle heure sont envoyées les notifications SMS ?
+          .fr-collapse id="faq-notifs-sms"
+            p
+              | Les notifications SMS sont déclenchées par plusieurs événements :
+            ul
+              li
+                b> Confirmation de rendez-vous
+                | : envoyée immédiatement après la création du rendez-vous
+              li
+                b> Rappel
+                | : envoyée à l’usager 48H avant son rendez-vous (sauf les dimanches et jours fériés)
+              li
+                b> Modification de rendez-vous
+                | : l’usager est notifié immédiatement de tout changement
+              li
+                b> Annulation de rendez-vous
+                | : l’usager est notifié immédiatement. S’il souhaite annuler lui-même, il doit le faire au moins 4 heures avant l’heure prévue
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="faq-mise-en-place"
+              | Comment puis-je mettre en place la solution ?
+          .fr-collapse id="faq-mise-en-place"
+            p
+              |> Pour déployer la solution dans votre administration, nous vous invitons à planifier un rendez-vous avec notre équipe.
+              | Nous consacrerons le temps nécessaire à l’étude de vos besoins et à la configuration de la solution selon votre organisation.
+            p
+              |> À l’issue de ce rendez-vous, vous obtiendrez des accès en production ou en démonstration, selon vos préférences. De plus, vous bénéficierez d’un accompagnement jusqu’à ce que vos équipes atteignent leur pleine autonomie.
+              ' Pour découvrir ou déployer la solution, planifiez un rendez-vous :
+            = link_to "Contacter notre équipe", contact_team_url, class: "fr-link fr-icon-arrow-right-line fr-link--icon-right"
+      .rdv-text-align-center.fr-mt-6w
+        = link_to "Consulter le centre d’aide", "https://aide.rdv-service-public.fr/", class: "fr-btn fr-btn--secondary"
+
+hr[aria-hidden="true"]
+
+section.fr-py-8w.rdv-text-align-center
+  .fr-container
+    .fr-grid-row.fr-grid-row--center
+      .fr-col.fr-col-md-8
+        .rdv-display-flex.rdv-align-items-center.rdv-justify-content-center.rdv-gap-1rem.rdv-flex-wrap-wrap.fr-mb-3w
+          div= image_tag("logos/logo_dinum.svg", alt: "DINUM - Direction Interministérielle du Numérique", style: "height: 5.625rem")
+          div= image_tag("logos/logo_anct.png", alt: "ANCT - Agence Nationale de la Cohésion des Territoires", style: "height: 5.625rem")
+
+        h2.fr-h1.rdv-color-text-action-high-blue-france
+          | Qui sommes nous ?
+        p
+          |> Nous sommes l’équipe RDV Service Public, une solution numérique de l’État portée par
+          => link_to "l’Agence Nationale de la Cohésion des Territoires", "https://agence-cohesion-territoires.gouv.fr/", target: "_blank", rel: "noreferrer", title: "ANCT - Agence Nationale de la Cohésion des Territoires - nouvel onglet"
+          |> et
+          = link_to "la Direction Interministérielle du Numérique", "https://www.numerique.gouv.fr/dinum/", target: "_blank", rel: "noreferrer", title: "DINUM - Direction Interministérielle du Numérique - nouvel onglet"
+          |> .
+
+        p
+          |> Notre mission : permettre à tout agent, service ou administration de gérer simplement ses rendez-vous et de proposer ses disponibilités aux usagers, en présentiel ou à distance.
+
+        p
+          |> Conçu au sein de
+          = link_to "beta.gouv.fr", "https://beta.gouv.fr", target: "_blank", rel: "noreferrer", title: "Beta gouv - nouvel onglet"
+          |> , RDV Service Public incarne un numérique d’intérêt général, souverain, éthique, durable et centré sur les besoins des utilisateurs.
+
+.fr-py-8w.rdv-background-color-alt-blue-ecume
+  .fr-container
+    .rdv-display-md-flex
+      .fr-col-12.fr-col-md-6
+        h3.rdv-color-text-action-high-blue-france
+          | Participez au prochain webinaire
+        p
+          |> Vous souhaitez en savoir plus sur RDV Service Public ?
+          |> Nous organisons régulièrement des présentations de l’outil & des prochaines évolutions.
+        = link_to "S’incrire au prochain webinaire", "https://rdv.anct.gouv.fr/motif/J87KGT9b/webinaire-rdv-service-public", title: "Accéder à l'inscription au prochain webinaire - nouvel onglet", class: "fr-btn fr-btn--responsive-sm", rel: "noreferrer", target: "_blank"
+      .rdv-border-right-1px-solid.rdv-border-color-blue-france.fr-mx-md-10w
+      .rdv-border-bottom-1px-solid.rdv-border-color-blue-france.fr-my-6w.fr-hidden-md
+      div
+        h3.rdv-color-text-action-high-blue-france
+          | Nous contacter
+        p
+          |> En cas de questions, de suggestions, de propositions ou de problème de sécurité détecté, n’hésitez pas à nous contacter :
+        = link_to "Formulaire de contact", aide_aiguillage_role_path, title: "Support - formulaire de contact", class: "fr-link fr-link--icon-left fr-icon-message-2-line"
+
+.fr-py-8w.rdv-text-align-center
+  .fr-container
+    .fr-mb-4w
+      - 3.times do
+        = image_tag "rdv_mairie/carotte.png", alt: ""
+    h2 Plus de RDV, moins de lapins
+    p
+      | Votre agenda vous remerciera.
+    .fr-my-4w= link_to "S’inscrire à une démo", onboarding_path, class: "fr-btn"
+    = link_to "Revenir en haut de la page", "#header", class: "fr-link fr-icon-arrow-up-line fr-link--icon-left"

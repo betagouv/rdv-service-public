@@ -29,7 +29,7 @@
             - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
               = link_to "Ajouter ou retirer des services", edit_admin_territory_agent_path(territory_id: current_territory.id, agent_id: @agent.id), class: "fr-link fr-icon-pencil-line fr-link--icon-left"
             - else
-              .fr-mb-0.fr-text--sm.text-muted
+              .fr-mb-0.fr-text--sm.fr-text-mention--grey
                 | Le changement ou l'ajout de service est réservé aux admins d'espace avec ce droit d'accès
 
             hr

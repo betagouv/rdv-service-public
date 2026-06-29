@@ -1,5 +1,6 @@
 class Agents::SessionsController < Devise::SessionsController
   include Admin::WeakPasswordControllerConcern
+  include DomainRedirectionAfterLogin
 
   # Lorsqu'un agent est connecté à une application Oauth via notre application,
   # Il est possible qu'il cherche à se déconnecter alors que sa session a déjà expiré.
@@ -44,8 +45,9 @@ class Agents::SessionsController < Devise::SessionsController
       return
     end
 
-    if should_redirect_to_domain_etat?(current_domain, resource.organisations)
-      redirect_to redirect_target_url_in_domain_etat, allow_other_host: true
+    if should_redirect_to_domain_anct?(current_domain, resource)
+      sign_out(resource)
+      redirect_to redirect_target_url_in_domain(Domain::RDV_SERVICE_PUBLIC), allow_other_host: true
       return
     end
 
@@ -89,33 +91,6 @@ class Agents::SessionsController < Devise::SessionsController
       redirect_to pro_connect_client.pro_connect_logout_url(root_url), allow_other_host: true
     else
       redirect_to after_sign_out_path_for(:agent)
-    end
-  end
-
-  private
-
-  def should_redirect_to_domain_etat?(current_domain, agent_organisations)
-    current_domain == Domain::RDV_SERVICE_PUBLIC &&
-      agent_organisations.exists? &&
-      agent_organisations.all?(&:rdv_etat?)
-  end
-
-  def redirect_target_url_in_domain_etat
-    stored_path = stored_location_for(:agent)
-    if stored_path
-      # on réécrit manuellement l’URL car on souhaite garder les query params du stored_path
-      add_query_string_params_to_url(
-        "#{request.protocol}#{Domain::RDV_SERVICE_PUBLIC_ETAT.host_name}#{stored_path}",
-        automatic_redirection_from_rdvsp_anct: "1"
-      )
-    else
-      # On veut renvoyer vers l'URL post-connexion pour les agents par défaut (authenticated_agent_root_url)
-      # Comme elle a été définie à '/' on a du en redéfinir une explicite qui ne peut pas être confondue avec
-      # une route non-authentifiée
-      unauthenticated_explicit_agent_root_url(
-        host: Domain::RDV_SERVICE_PUBLIC_ETAT.host_name,
-        automatic_redirection_from_rdvsp_anct: "1"
-      )
     end
   end
 end
