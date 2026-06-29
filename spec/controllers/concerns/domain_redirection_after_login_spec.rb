@@ -60,6 +60,19 @@ RSpec.describe DomainRedirectionAfterLogin do
             expect(controller.should_redirect_to_domain_anct?(domain, agent)).to be_falsey # rubocop:disable RSpec/PredicateMatcher
           end
         end
+
+        context "mais lié à l'ANCT" do
+          let(:agent) do
+            create(:agent,
+                   pro_connect_openid_sub: "faux_sub_proconnect",
+                   email: "francis.factice@ext.anct.gouv.fr")
+          end
+
+          it "n'est pas redirigé" do
+            expect(controller.should_redirect_to_domain_etat?(domain, agent)).to be_falsey # rubocop:disable RSpec/PredicateMatcher
+            expect(controller.should_redirect_to_domain_anct?(domain, agent)).to be_falsey # rubocop:disable RSpec/PredicateMatcher
+          end
+        end
       end
     end
   end

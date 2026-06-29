@@ -13,8 +13,9 @@ module DomainRedirectionAfterLogin
     else
       france_service_email = VerifiedServicePublicDomainNames.france_service?(agent.email)
       etat_email = VerifiedServicePublicDomainNames.verified?(agent.email)
+      anct = agent.email.ends_with?("anct.gouv.fr")
 
-      etat_email && !france_service_email
+      etat_email && !france_service_email && !anct
     end
   end
 
