@@ -1,7 +1,5 @@
 RSpec.describe Admin::UserForm, type: :form do
-  subject do
-    described_class.new(user, current_organisation:, view_locals: { in_turbo_stream: false })
-  end
+  subject { described_class.new(user, current_organisation:) }
 
   let!(:current_territory) { create(:territory) }
   let!(:current_organisation) { create(:organisation, territory: current_territory) }
