@@ -100,7 +100,7 @@ RSpec.describe ProConnectController do
     let(:user_info) do
       {
         "sub" => "ab70770d-1285-46e6-b4d0-3601b49698d4",
-        "email" => "francis.factice@exemple.gouv.fr",
+        "email" => "francis.factice@exemple.fr",
         "given_name" => "Francis Factice",
         "usual_name" => "Factice",
         "siret" => "13002526500013",
