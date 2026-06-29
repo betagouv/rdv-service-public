@@ -22,6 +22,17 @@ RSpec.describe DomainRedirectionAfterLogin do
         expect(controller.should_redirect_to_domain_etat?(domain, agent)).to be_falsey # rubocop:disable RSpec/PredicateMatcher
         expect(controller.should_redirect_to_domain_anct?(domain, agent)).to be_falsey # rubocop:disable RSpec/PredicateMatcher
       end
+
+      context "avec un fournisseur d'identité proconnect lié à l'état" do
+        let(:agent) do
+          create(:agent, pro_connect_idp_id: "9e139e69-de07-4cbe-987f-d12cb38c0368") # Le fournisseur d'identité du ministère de la Justice
+        end
+
+        it "est redirigé vers le domaine de l'état" do
+          expect(controller.should_redirect_to_domain_etat?(domain, agent)).to be_truthy # rubocop:disable RSpec/PredicateMatcher
+          expect(controller.should_redirect_to_domain_anct?(domain, agent)).to be_falsey # rubocop:disable RSpec/PredicateMatcher
+        end
+      end
     end
   end
 end
