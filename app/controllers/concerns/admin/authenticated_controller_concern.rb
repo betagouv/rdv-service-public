@@ -4,7 +4,8 @@ module Admin::AuthenticatedControllerConcern
   included do
     rescue_from Pundit::NotAuthorizedError, with: :agent_not_authorized
 
-    before_action :authenticate_agent!
+    before_action :set_flash_automatic_redirection_from_other_domain
+    before_action :authenticate_agent_with_silent_proconnect_login!
     before_action :set_paper_trail_whodunnit
   end
 
@@ -29,5 +30,15 @@ module Admin::AuthenticatedControllerConcern
     else
       redirect_to authenticated_agent_root_url
     end
+  end
+
+  def set_flash_automatic_redirection_from_other_domain
+    return if params[:automatic_redirection_from_other_domain] != "1"
+
+    flash[:notice] = if current_domain == Domain::RDV_SERVICE_PUBLIC_ETAT
+                       "Vous avez été automatiquement redirigé·e vers le domaine RDV Service Public pour les agents de l'État."
+                     else
+                       "Vous avez été automatiquement redirigé·e vers le domaine RDV Service Public pour les agents des collectivités."
+                     end
   end
 end

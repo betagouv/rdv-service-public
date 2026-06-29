@@ -20,11 +20,8 @@ ruby:
   .col-md-6
     .card#spec-primary-user-card
       .card-body
-        - if @user.logged_once_with_franceconnect?
-          .row.bg-info.text-white.p-2.mb-3 Cet usager s'est déjà connecté via FranceConnect.
-
         - if @user.responsible?
-          h2.card-title.mb-3 Informations générales
+          h2.fr-h4 Informations générales
           = render "responsible_information", user: @user
 
         - else
@@ -41,11 +38,11 @@ ruby:
         ul.fr-btns-group.fr-btns-group--right.fr-btns-group--inline.fr-btns-group--icon-left.fr-mb-0
           li
             - if @user.can_be_soft_deleted_from_organisation?(current_organisation)
-              = link_to "Supprimer", admin_organisation_user_path(current_organisation, @user), method: :delete, class: "fr-btn fr-btn--tertiary fr-icon-delete-fill", data: { confirm: user_soft_delete_confirm_message(@user)}
+              = link_to "Supprimer", admin_organisation_user_path(current_organisation, @user), method: :delete, class: "fr-btn fr-btn--tertiary fr-mb-0 fr-icon-delete-fill", data: { confirm: user_soft_delete_confirm_message(@user)}
             - else
-              = link_to "Supprimer", "#", class: "fr-btn fr-btn--tertiary fr-icon-delete-fill", onclick: "alert(this.dataset.message)", data: { message: I18n.t("users.can_not_delete_because_has_future_rdvs") }
+              = link_to "Supprimer", "#", class: "fr-btn fr-btn--tertiary fr-mb-0 fr-icon-delete-fill", onclick: "alert(this.dataset.message)", data: { message: I18n.t("users.can_not_delete_because_has_future_rdvs") }
           li
-            = link_to "Modifier", edit_admin_organisation_user_path(current_organisation, @user), class: "fr-btn fr-btn--secondary fr-icon-edit-fill"
+            = link_to "Modifier", edit_admin_organisation_user_path(current_organisation, @user), class: "fr-btn fr-btn--secondary fr-mb-0 fr-icon-edit-fill"
 
     - if @user.responsible?
       .card
@@ -55,7 +52,8 @@ ruby:
             - @referent_agents.each do |referent_agent|
               li.mb-2 = referent_agent.full_name_and_service
             - if @referent_agents.empty?
-              li.font-italic Aucun référent
+              li
+                i.fr-text-mention--grey Aucun référent
 
           .text-right
             = link_to "Modifier", admin_organisation_user_referent_assignations_path(current_organisation, @user), class: "fr-btn fr-btn--secondary fr-icon-edit-fill fr-btn--icon-left"
@@ -77,7 +75,7 @@ ruby:
               | #{agent.full_name_and_service}
             - if @user.responsible.referent_agents.empty?
               li.mb-2
-                .font-italic Aucun référent
+                i.fr-text-mention--grey Aucun référent
 
     - if @user.responsible?
       .card
@@ -86,7 +84,7 @@ ruby:
           ul.list-unstyled.mb-2
             - if @user.relatives.merge(current_organisation.users).empty?
               li
-                em Aucun proche
+                i.fr-text-mention--grey Aucun proche
             - @user.relatives.merge(current_organisation.users).order(:birth_date).each do |relative|
               li
                 => link_to relative.full_name, admin_organisation_user_path(current_organisation, relative)
@@ -95,7 +93,6 @@ ruby:
             = link_to "Ajouter un proche", new_admin_organisation_user_path(current_organisation, responsible_id: @user.id), class: "fr-btn fr-btn--secondary fr-icon-add-line fr-btn--icon-left"
 
   .col-md-6
-
     - ongoing_rdvs = policy_scope(@user.ongoing_rdvs(current_organisation), policy_scope_class: Agent::RdvPolicy::Scope).order(starts_at: :asc)
     - if ongoing_rdvs.load.any?
       .card
@@ -112,7 +109,7 @@ ruby:
         .d-flex.justify-content-between
           .mt-1
             | Statuts
-            small.text-muted< sur #{@participations.count} RDV
+            small.fr-text-mention--grey< sur #{@participations.count} RDV
           - if @user.rdvs.count > 0
             = link_to "Voir tous les RDV de l’usager", admin_organisation_rdvs_path(current_organisation, user_id: @user.id), class: "fr-btn fr-btn--tertiary fr-btn--sm", title: "Voir tous les RDV de l’usager #{@user.full_name}"
       .card-body
@@ -134,6 +131,6 @@ ruby:
         = dsfr_alert type: :info, size: :sm
           | Les RDV sont supprimés au bout de 2 ans.
 
-.row.justify-content-center
-  .col-md-12.col-lg-8
+.row
+  .col
     = render "admin/versions/resource_versions_row", resource_policy: policy(@user, policy_class: Agent::UserPolicy), resource: @user

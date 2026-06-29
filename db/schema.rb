@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_03_152307) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_10_142439) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -730,7 +730,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_03_152307) do
     t.datetime "updated_at", null: false
     t.string "short_name", null: false
     t.index "lower((name)::text)", name: "index_services_on_lower_name", unique: true
-    t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name", unique: true
+    t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name"
     t.index ["name"], name: "index_services_on_name"
   end
 

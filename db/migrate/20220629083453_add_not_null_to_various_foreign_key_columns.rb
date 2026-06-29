@@ -28,5 +28,4 @@ class AddNotNullToVariousForeignKeyColumns < ActiveRecord::Migration[6.1]
     change_column_null :user_profiles, :user_id, false
     change_column_null :user_profiles, :organisation_id, false
   end
-  # rubocop:enable Metrics/MethodLength
 end

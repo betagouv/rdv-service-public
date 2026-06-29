@@ -1,5 +1,6 @@
 class Admin::RdvsCollectifsController < AgentAuthController
   include RdvsHelper
+  include Admin::RdvsCollectifs::ReturnToControllerConcern
 
   def index
     @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif).available_motifs_for_organisation_and_agent(current_organisation, current_agent).collectif
@@ -45,7 +46,6 @@ class Admin::RdvsCollectifsController < AgentAuthController
     @rdv = Rdv.find(params[:id])
     @add_user_ids = params[:add_user].to_a + params[:user_ids].to_a
     set_participations_to_add
-
     authorize(@rdv, policy_class: Agent::RdvPolicy)
   end
 
@@ -58,8 +58,13 @@ class Admin::RdvsCollectifsController < AgentAuthController
     end
 
     if success
-      flash[:success] = "Participants mis à jour"
-      redirect_to edit_admin_organisation_rdvs_collectif_path(current_organisation, @rdv)
+      if @return_to # cf Admin::RdvsCollectifs::ReturnToControllerConcern
+        flash[:success] = "Participants mis à jour pour le rendez-vous #{@rdv.motif_name} du #{I18n.l(@rdv.starts_at, format: :human)}"
+        redirect_to @return_to
+      else
+        flash[:success] = "Participants mis à jour"
+        redirect_to edit_admin_organisation_rdvs_collectif_path(current_organisation, @rdv)
+      end
     else
       @add_user_ids = update_users_params[:user_ids]
       set_participations_to_add

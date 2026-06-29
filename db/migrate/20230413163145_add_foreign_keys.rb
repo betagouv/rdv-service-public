@@ -39,5 +39,4 @@ class AddForeignKeys < ActiveRecord::Migration[7.0]
     add_foreign_key :user_profiles, :users
     add_foreign_key :zones, :sectors
   end
-  # rubocop:enable Metrics/MethodLength
 end

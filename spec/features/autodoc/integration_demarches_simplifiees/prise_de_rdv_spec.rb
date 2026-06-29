@@ -49,6 +49,7 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
       </p>
     TEXT
     doc.add_text(sanitize(text))
+    login_as(agent, scope: :agent)
 
     visit oauth_authorization_path(
       client_id: oauth_application.uid,
@@ -56,11 +57,8 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
       response_type: :code, scope: :write, state: "fakestate"
     )
 
-    doc.add_screenshot(page, text: "Je me ProConnecte", wait_for: "S’identifier avec\nProConnect", disable_high_res_zoom: true)
-
-    fill_in "Adresse email", with: agent.email
-    fill_in "Mot de passe", with: agent.password
-    click_on "Se connecter"
+    # Si je ne suis pas connecté, je me fais rediriger vers le /authorize de ProConnect pour le silent login
+    # Pour simplifier cette spec, on s'est connecté au préalable
 
     doc.add_screenshot(page,
                        text: "On me demande de confirmer que j'accepte de connecter les deux applications.",

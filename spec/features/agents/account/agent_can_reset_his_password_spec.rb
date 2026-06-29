@@ -1,15 +1,15 @@
 RSpec.describe "Un agent peut réinitialiser son mot de passe" do
   let!(:agent) { create(:agent) }
 
-  around { |example| perform_enqueued_jobs { example.run } }
-
   it "envoie un email de réinitialisation" do
     visit new_agent_password_path
     expect(page).to have_content("Mot de passe oublié ?")
     expect(page).to have_link("Se connecter")
 
     fill_in "agent_email", with: agent.email
-    expect { click_on "Envoyer" }.to change { emails_sent_to(agent.email).size }.by(1)
+    perform_enqueued_jobs do
+      expect { click_on "Envoyer" }.to change { emails_sent_to(agent.email).size }.by(1)
+    end
 
     open_email(agent.email)
     current_email.click_link("Changer")
@@ -30,7 +30,9 @@ RSpec.describe "Un agent peut réinitialiser son mot de passe" do
     it "n’envoie pas le mail de réinitialisation depuis le formulaire agent" do
       visit new_agent_password_path
       fill_in "agent_email", with: pro_connect_agent.email
-      expect { click_on "Envoyer" }.not_to change { emails_sent_to(pro_connect_agent.email).size }
+      perform_enqueued_jobs do
+        expect { click_on "Envoyer" }.not_to change { emails_sent_to(pro_connect_agent.email).size }
+      end
       expected_message = "Si un compte agent existe pour #{pro_connect_agent.email} et que ce compte n’est pas associé à " \
                          "un compte ProConnect, alors un email de réinitialisation va y être envoyé avec un lien de réinitialisation de mot de passe"
       expect(page).to have_content(expected_message)
@@ -42,7 +44,9 @@ RSpec.describe "Un agent peut réinitialiser son mot de passe" do
       visit new_agent_password_path
       fill_in "agent_email", with: "unknown@example.com"
 
-      expect { click_on "Envoyer" }.not_to change { ActionMailer::Base.deliveries.size }
+      perform_enqueued_jobs do
+        expect { click_on "Envoyer" }.not_to change { ActionMailer::Base.deliveries.size }
+      end
       expected_message = "Si un compte agent existe pour unknown@example.com et que ce compte n’est pas associé à " \
                          "un compte ProConnect, alors un email de réinitialisation va y être envoyé avec un lien de réinitialisation de mot de passe"
       expect(page).to have_content(expected_message)
@@ -56,10 +60,24 @@ RSpec.describe "Un agent peut réinitialiser son mot de passe" do
       visit new_agent_password_path
       fill_in "agent_email", with: agent_not_accepted.email
 
-      expect { click_on "Envoyer" }.to change { emails_sent_to(agent_not_accepted.email).size }.by(1)
+      perform_enqueued_jobs do
+        expect { click_on "Envoyer" }.to change { emails_sent_to(agent_not_accepted.email).size }.by(1)
+      end
       expected_message = "Si un compte agent existe pour #{agent_not_accepted.email} et que ce compte n’est pas associé à " \
                          "un compte ProConnect, alors un email de réinitialisation va y être envoyé avec un lien de réinitialisation de mot de passe"
       expect(page).to have_content(expected_message)
+    end
+  end
+
+  describe "POST /agents/password", type: :request do
+    context "quand le paramètre email est absent" do
+      let!(:intervenant) { create(:agent, :intervenant) }
+
+      it "n'envoie pas de reset_password_instructions à un intervenant sans email" do
+        expect do
+          post agent_password_path, params: { agent: {} }
+        end.not_to have_enqueued_mail(CustomDeviseMailer, :reset_password_instructions)
+      end
     end
   end
 end

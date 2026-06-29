@@ -32,7 +32,7 @@ RSpec.describe "Plage ouvertures API" do
     end
 
     it "creates the plage_ouverture" do
-      expect { post "/api/v1/plage_ouvertures", headers:, params:, as: :json }.to change(PlageOuverture, :count)
+      expect { post "/api/v1/plage_ouvertures", headers:, params:, as: :json }.to change(PlageOuverture, :count).by(1)
 
       expect(response.status).to eq 200
       expect(parsed_response_body["title"]).to eq "Dispo"
@@ -42,6 +42,13 @@ RSpec.describe "Plage ouvertures API" do
         lieu_id: lieu.id,
         motif_ids: [motif.id]
       )
+    end
+
+    context "quand le la plage a une benign_error" do
+      it "les ignore et crée la plage" do
+        _existing_plage_at_the_same_time = create(:plage_ouverture, agent:, **params.slice(:first_day, :start_time, :end_time, :organisation_id))
+        expect { post "/api/v1/plage_ouvertures", headers:, params:, as: :json }.to change(PlageOuverture, :count).by(1)
+      end
     end
 
     context "quand on ne trouve pas le lieu par l'external id" do

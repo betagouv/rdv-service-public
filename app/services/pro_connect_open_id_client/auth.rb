@@ -2,15 +2,15 @@
 module ProConnectOpenIdClient
   class Auth
     SCOPES = "openid email given_name usual_name siret idp_id".freeze
-    ACR_FOR_2FA = %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa].freeze
+    ACR_FOR_2FA = %w[eidas0-mfa eidas1-mfa eidas2 eidas3].freeze
 
-    def initialize(client_id:, client_secret:, login_hint: nil, force_login: false)
+    def initialize(client_id:, client_secret:, login_hint: nil, prompt: nil)
       @login_hint = login_hint
-      @force_login = force_login
       @state = "pro_connect_state_#{SecureRandom.base58(32)}"
       @nonce = "pro_connect_nonce_#{SecureRandom.base58(32)}"
       @client_id = client_id
       @client_secret = client_secret
+      @prompt = prompt
     end
 
     attr_reader :state, :nonce
@@ -24,7 +24,7 @@ module ProConnectOpenIdClient
         state: state,
         nonce: nonce,
         login_hint: @login_hint,
-        prompt: @force_login ? "login" : nil,
+        prompt: @prompt,
         claims: claims(force_2fa:).to_json,
       }.compact_blank
 

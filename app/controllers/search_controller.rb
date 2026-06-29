@@ -15,9 +15,12 @@ class SearchController < ApplicationController
       return
     end
 
-    if current_domain.rdv_service_public?
+    if current_domain == Domain::RDV_SERVICE_PUBLIC
       @site_vitrine_page = true
-      render "dsfr/rdv_mairie/homepage"
+      render "static_pages/homepage_anct"
+    elsif current_domain == Domain::RDV_SERVICE_PUBLIC_ETAT
+      @site_vitrine_page = true
+      render "static_pages/homepage_etat"
     else
       search_rdv
     end

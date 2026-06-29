@@ -3,7 +3,8 @@ class AiguillageUsagerForm
   attr_accessor :raison
 
   def initialize(raison: nil)
-    @raison = raison&.to_sym
+    raison = raison.presence&.to_sym
+    @raison = raison.in?(raisons_options.pluck(:value)) ? raison : nil
   end
 
   def raisons_options

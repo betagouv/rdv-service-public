@@ -1,6 +1,6 @@
 {
-  "name": "RDV-Solidarités",
-  "stack": "scalingo-22",
+  "name": "RDV Service Public",
+  "stack": "scalingo-24",
   "env": {
     "HOST": {
       "description": "HOST",
@@ -41,6 +41,9 @@
     },
     "IS_REVIEW_APP": {
       "value": "true"
+    },
+    "DISPLAY_LOGIN_CODES": {
+      "description": "Mettre à 'true' pour afficher le code de connexion sur la page de saisie du code (review app uniquement, sans effet si IS_REVIEW_APP != true)"
     },
     "SENTRY_CURRENT_ENV": {
       "value": "review_app"

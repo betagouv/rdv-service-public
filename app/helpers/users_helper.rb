@@ -35,18 +35,18 @@ module UsersHelper
   end
 
   def relative_tag(user)
-    user.relative? ? tag.span("Proche", class: "badge badge-info") : nil
+    user.relative? ? tag.span("Proche", class: "fr-ml-1w fr-badge fr-badge--info fr-badge--sm fr-badge--no-icon") : nil
   end
 
   def user_logged_franceconnect_tag(user)
-    user.logged_once_with_franceconnect? ? tag.span("FranceConnect", class: "badge badge-info") : nil
+    user.logged_once_with_franceconnect? ? tag.span("FranceConnect", class: "fr-ml-1w fr-badge fr-badge--info fr-badge--sm fr-badge--no-icon") : nil
   end
 
   def user_soft_deleted_tag(organisation, user)
-    return tag.span("Supprimé", class: "badge badge-danger") if user.deleted_at
+    return tag.span("Supprimé", class: "fr-badge fr-badge--sm") if user.deleted_at
     return if organisation.territory.visible_users_throughout_the_territory?
 
-    tag.span("Supprimé de cette organisation", class: "badge badge-danger") unless user.profile_for(organisation)
+    tag.span("Supprimé de cette organisation", class: "fr-badge fr-badge--sm") unless user.profile_for(organisation)
   end
 
   def full_name_and_birthdate(user)
@@ -82,26 +82,8 @@ module UsersHelper
     ""
   end
 
-  def notify_by_email_description(user)
-    if user.responsible_notify_by_email?
-      "🟢 Activées"
-    else
-      "🔴 Désactivées"
-    end
-  end
-
   def clickable_user_email(user)
     user.responsible_email.present? ? mail_to(user.responsible_email) : nil
-  end
-
-  def notify_by_sms_description(user)
-    if !user.responsible_phone_number_mobile?
-      "🔴 le numéro de téléphone renseigné n'est pas un mobile"
-    elsif user.responsible_notify_by_sms?
-      "🟢 Activées"
-    else
-      "🔴 Désactivées"
-    end
   end
 
   def clickable_user_phone_number(user)
