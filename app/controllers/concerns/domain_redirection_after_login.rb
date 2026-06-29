@@ -1,10 +1,16 @@
 module DomainRedirectionAfterLogin
   def should_redirect_to_domain_etat?(current_domain, agent)
+    # On ne veut pas faire de redirection depuis les noms de domaines historiques (solidarités et aide num)
+    return false if current_domain != Domain::RDV_SERVICE_PUBLIC
+
+    return false if agent.pro_connect_openid_sub.blank?
+
     organisations = agent.organisations
-    current_domain == Domain::RDV_SERVICE_PUBLIC &&
-      agent.pro_connect_openid_sub.present? &&
-      organisations.exists? &&
+    if organisations.exists?
       organisations.all?(&:rdv_etat?)
+    else
+      agent.pro_connect_idp_id.in?(ProconnectIdentityProviders::ETAT)
+    end
   end
 
   def should_redirect_to_domain_anct?(current_domain, agent)

@@ -4,7 +4,7 @@ RSpec.describe DomainRedirectionAfterLogin do
   end
 
   context "quand l'agent n'a pas encore d'organisation" do
-    let(:agent) { create(:agent) }
+    let(:agent) { create(:agent, pro_connect_openid_sub: "faux_sub_proconnect") }
 
     context "et qu'il se connecte sur le domaine de l'état" do
       let(:domain) { Domain::RDV_SERVICE_PUBLIC_ETAT }
@@ -25,7 +25,9 @@ RSpec.describe DomainRedirectionAfterLogin do
 
       context "avec un fournisseur d'identité proconnect lié à l'état" do
         let(:agent) do
-          create(:agent, pro_connect_idp_id: "9e139e69-de07-4cbe-987f-d12cb38c0368") # Le fournisseur d'identité du ministère de la Justice
+          create(:agent,
+                 pro_connect_openid_sub: "faux_sub_proconnect",
+                 pro_connect_idp_id: "9e139e69-de07-4cbe-987f-d12cb38c0368") # Le fournisseur d'identité du ministère de la Justice
         end
 
         it "est redirigé vers le domaine de l'état" do
