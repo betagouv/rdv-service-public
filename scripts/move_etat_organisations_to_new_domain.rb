@@ -16,7 +16,7 @@ Territory.limit(ARGV[0].presence.to_i).find_each do |territory|
 
   if all_admins_from_etat
     territory.organisations.each do |organisation|
-      organisation.update(verticale: :rdv_etat)
+      organisation.update!(verticale: :rdv_etat)
     end
   end
 end
