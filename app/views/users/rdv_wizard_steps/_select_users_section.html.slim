@@ -7,7 +7,7 @@ ruby:
     group_class = "fr-checkbox-group"
   else
     def radio_or_check_box_tag(*,**) = radio_button_tag(*,**)
-    group_class = "fr-radio-group"
+    group_class = "fr-radio-group fr-radio-rich"
   end
 
 fieldset.fr-fieldset.fr-mt-3w data-controller="proche-selection" data-action="change->proche-selection#update"
