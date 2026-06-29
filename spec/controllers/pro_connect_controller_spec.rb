@@ -21,7 +21,7 @@ RSpec.describe ProConnectController do
           id_token: {
             acr: {
               essential: false,
-              values: %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa],
+              values: %w[eidas0-mfa eidas1-mfa eidas2 eidas3],
             },
           },
         }.to_json
@@ -49,7 +49,7 @@ RSpec.describe ProConnectController do
             id_token: {
               acr: {
                 essential: false,
-                values: %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa],
+                values: %w[eidas0-mfa eidas1-mfa eidas2 eidas3],
               },
             },
           }.to_json
@@ -78,7 +78,7 @@ RSpec.describe ProConnectController do
           id_token: {
             acr: {
               essential: true,
-              values: %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa],
+              values: %w[eidas0-mfa eidas1-mfa eidas2 eidas3],
             },
           },
         }.to_json
@@ -277,7 +277,7 @@ RSpec.describe ProConnectController do
                                                                           id_token: {
                                                                             acr: {
                                                                               essential: true,
-                                                                              values: %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa],
+                                                                              values: %w[eidas0-mfa eidas1-mfa eidas2 eidas3],
                                                                             },
                                                                           },
                                                                         }.to_json)

@@ -30,6 +30,7 @@ class Api::V1::PlageOuverturesController < Api::V1::AgentAuthBaseController
 
     authorize(plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     plage_ouverture.transaction do
+      plage_ouverture.ignore_benign_errors = true
       plage_ouverture.save!
 
       if params[:external_reference].present?

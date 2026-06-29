@@ -6,6 +6,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   before_action :authenticate_agent
   before_action :log_api_call_in_database
   before_action :set_paper_trail_whodunnit
+  before_action :set_sentry_context
 
   def pundit_user
     AgentOrganisationContext.new(current_agent, current_organisation)
@@ -126,6 +127,10 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
 
   def user_for_paper_trail
     "#{current_agent.name_for_paper_trail} (via API)"
+  end
+
+  def set_sentry_context
+    Sentry.set_user(id: current_agent.id, email: current_agent.email)
   end
 
   def log_api_call_in_database

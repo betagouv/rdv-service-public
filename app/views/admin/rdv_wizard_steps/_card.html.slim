@@ -4,5 +4,5 @@
     .card
       - if local_assigns[:previous_steps]
         = render "admin/rdv_wizard_steps/stepper", rdv_wizard_form: rdv_wizard_form, steps: previous_steps
-      .card-body.px-3
+      .card-body.fr-p-2w
         = yield

@@ -31,29 +31,6 @@ class Admin::OrganisationsController < AgentAuthController
     end
   end
 
-  def new
-    @organisation = Organisation.new(territory: Territory.find(params[:territory_id]))
-    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
-    @active_agent_preferences_menu_item = :organisations
-    render :new, layout: "application_agent_config"
-  end
-
-  def create
-    @organisation = Organisation.new(
-      agent_roles_attributes: [{ agent: current_agent, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
-      verticale: current_domain.verticale,
-      **new_organisation_params
-    )
-    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
-    if @organisation.save
-      redirect_to admin_organisation_configuration_path(@organisation),
-                  flash: { success: "Organisation enregistrée ! Vous pouvez maintenant lui ajouter des motifs et des lieux de rendez-vous, puis inviter des agents à la rejoindre" }
-    else
-      @active_agent_preferences_menu_item = :organisations
-      render :new, layout: "application_agent_config"
-    end
-  end
-
   private
 
   def current_organisation
@@ -67,10 +44,6 @@ class Admin::OrganisationsController < AgentAuthController
 
   def organisation_params
     params.require(:organisation).permit(:name, :horaires, :phone_number, :website, :email)
-  end
-
-  def new_organisation_params
-    params.require(:organisation).permit(:name, :territory_id)
   end
 
   def pundit_user

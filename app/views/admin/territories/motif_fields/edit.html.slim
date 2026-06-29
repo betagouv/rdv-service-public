@@ -8,10 +8,10 @@
           = render "model_errors", model: current_territory
 
           h1.card-title= t(".card_title")
-          p.text-muted.font-14= t(".hint_1")
+          p.fr-text-mention--grey.font-14= t(".hint_1")
 
           h6= t("admin.territories.motif_categories.edit.title")
-          p.text-muted.font-14= t("admin.territories.motif_categories.edit.hint_1")
+          p.fr-text-mention--grey.font-14= t("admin.territories.motif_categories.edit.hint_1")
 
           - MotifCategory.all.each do |motif_category|
             = f.dsfr_check_box "motif_category_ids_#{motif_category.id}", { label: motif_category.name, checked: current_territory.motif_category_ids.include?(motif_category.id), name: "territory[motif_category_ids][]" }, motif_category.id, nil

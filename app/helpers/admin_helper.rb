@@ -6,7 +6,7 @@ module AdminHelper
   end
 
   def display_value_or_na_placeholder(value)
-    tag.span(value.presence || "N/A", class: value.blank? ? "text-muted" : "")
+    tag.span(value.presence || "N/A", class: value.blank? ? "fr-text-mention--grey" : "")
   end
 
   # Build a dummy model linked the organisation to fetch its policy.

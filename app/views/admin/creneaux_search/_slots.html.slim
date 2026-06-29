@@ -28,7 +28,7 @@ div id="creneaux-lieu-#{lieu&.id}"
                     span.strong.font-weight-bold= l(creneau.starts_at, format: "%H:%M")
                     br
                     = user_icon(class:  "fr-icon--sm fr-mr-1w #{agent_color(agents.index(creneau.agent))}")
-                    small.text-dark= creneau.agent.short_name
+                    small.fr-text-default--grey= creneau.agent.short_name
 
     - if next_availability
       - if form.date_range.end < next_availability.starts_at.to_date && creneaux.empty?

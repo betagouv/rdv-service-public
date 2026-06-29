@@ -1,7 +1,7 @@
 class Agents::PagesController < AgentAuthController
   layout "application"
 
-  CONTACT_TEAM_URL = "https://rdv.anct.gouv.fr/motif/KNLKRbg9/presentation-rdv-service-public".freeze
+  CONTACT_TEAM_URL = "https://rdv.numerique.gouv.fr/motif/KNLKRbg9/presentation-rdv-service-public".freeze
 
   def home
     skip_authorization
@@ -24,7 +24,7 @@ class Agents::PagesController < AgentAuthController
       if current_agent.possible_duplicate_organisations.empty?
         redirect_to new_agents_territory_path
       end
-    else
+    elsif current_domain != Domain::RDV_SERVICE_PUBLIC_ETAT
       redirect_via_anct_router
     end
   end

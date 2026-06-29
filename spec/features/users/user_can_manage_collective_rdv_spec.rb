@@ -331,14 +331,14 @@ RSpec.describe "Adding a user to a collective RDV" do
         rdv.status = "revoked"
         rdv.save
         select_motif
-        expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.")
+        expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé. Veuillez réessayer ultérieurement.")
 
         rdv2.max_participants_count = 2
         create(:participation, rdv: rdv2)
         create(:participation, rdv: rdv2)
         rdv2.save
         visit root_path(params)
-        expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.")
+        expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé. Veuillez réessayer ultérieurement.")
       end
 
       it "correctly display message of participation already existing" do

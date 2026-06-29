@@ -22,6 +22,7 @@ class Agents::TerritoryCreationRequestsController < AgentAuthController
   private
 
   def redirect_if_opsn_restricted
+    return if current_domain == Domain::RDV_SERVICE_PUBLIC_ETAT
     return unless current_domain.allow_self_onboarding
     return unless current_agent.agent_territorial_access_rights.none?
 

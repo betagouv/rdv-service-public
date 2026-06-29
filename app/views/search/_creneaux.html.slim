@@ -40,7 +40,7 @@ div id="creneaux-lieu-#{lieu&.id}"
                       br
                       small= creneau.agent.short_name
             - elsif creneau_selection_service.after_max_public_booking_delay?(date)
-              p.rdv-text-align-center.rdv-color-text-mention-grey
+              p.rdv-text-align-center.fr-text-mention--grey
                 | Date fermée à la reservation
             - elsif creneaux_by_date[date].nil?
               p.rdv-text-align-center.fr-text--sm

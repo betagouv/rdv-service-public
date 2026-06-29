@@ -45,7 +45,7 @@
         = f.dsfr_select :max_public_booking_delay, min_max_delay_options, label: "Délai maximum avant le RDV"
       .fr-fieldset__element.fr-mt-2w
         = f.dsfr_check_box :rdvs_editable_by_user, class: "js-check-on-section-enable js-uncheck-on-section-disable"
-        .text-muted.font-14= Motif.human_attribute_name("rdvs_editable_by_user_hint")
+        .fr-text-mention--grey.font-14= Motif.human_attribute_name("rdvs_editable_by_user_hint")
 
 - unless current_domain.online_reservation_with_public_link
   .card.collapse [data-motif-form-target="sectoSection"]

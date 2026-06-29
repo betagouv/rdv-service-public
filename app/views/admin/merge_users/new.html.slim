@@ -41,7 +41,7 @@
                     - if value1&.present?
                       div= value1
                     - else
-                      i.text-muted N/A
+                      i.fr-text-mention--grey N/A
                     - if @merge_users_form.attribute_comparison(attribute) == :different
                       span.ml-2= f.radio_button attribute, "1", required: true
 
@@ -62,7 +62,7 @@
                     - if value2&.present?
                       div= value2
                     - else
-                      i.text-muted N/A
+                      i.fr-text-mention--grey N/A
       tr
         td= "🔒 RDVs"
         td.text-right= render "user_rdvs", user: @merge_users_form.user1
