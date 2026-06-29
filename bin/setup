@@ -25,7 +25,7 @@ FileUtils.chdir APP_ROOT do
   system! "gem install bundler --conservative"
   system("bundle check") || system!("bundle install")
   system! "yarn install --immutable"
-  system! "yarn run playwright install chromium --with-deps"
+  system! "yarn run playwright install chromium --with-deps" unless ENV["SKIP_PLAYWRIGHT_INSTALL"]
 
   puts "\n== Preparing database for both local instances =="
   system! "bin/rails db:prepare"
