@@ -15,10 +15,7 @@
           - if @skip_proches_step
             = hidden_field_tag "selected_users[]", "current_user"
           - else
-            - if @rdv_booking_form.selected_users_expected_count > 1
-              = render "select_users_section", f: f
-            - else
-              = render "select_user_section", f: f
+            = render "select_users_section", f: f
 
           h2.fr-h4.fr-mt-4w Notifications
 
