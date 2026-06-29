@@ -10,7 +10,6 @@ import 'select2/dist/js/select2'
 import 'select2/dist/js/i18n/fr.js'
 import { Datetimepicker } from './components/datetimepicker'
 import { Menu } from './components/menu'
-import { Modal } from './components/modal'
 import DsfrAlertClose from "./components/dsfr-alert-close";
 import { ServiceFilterForMotifsSelects } from './components/service-filter-for-motifs-selects'
 import { SubmitOnChange } from './components/submit-on-change'
@@ -64,7 +63,6 @@ import './stylesheets/application_agent'
 $.fn.select2.defaults.set("theme", "bootstrap4")
 $.fn.select2.defaults.set("language", "fr")
 
-new Modal()
 initializeSelect2()
 new ServiceFilterForMotifsSelects()
 

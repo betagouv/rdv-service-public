@@ -6,19 +6,15 @@
 
 div id=element_id
   = form.hidden_field :user_id
-  .d-flex.mt-2.mb-1
+  .d-flex.mt-2.mb-1.rdv-align-items-baseline
     div
       = user_icon(class: "fr-icon--sm fr-mr-1w")
       - if user.relative?
         = "#{user} (responsable: #{user.responsible})"
       - else
         = user
-    div.ml-2
-      = link_to edit_admin_organisation_user_path( \
-          current_organisation, user, modal: true, return_location: modals_return_location, role: default_service_selection_from(user) \
-        ), \
-        data: { modal: "true" }, title: t("helpers.edit") do
-        = icon("fr-icon-edit-line", class: "fr-icon--sm")
+    - path = edit_admin_organisation_user_path(current_organisation, user, format: "turbo_stream", return_location: modals_return_location, role: default_service_selection_from(user))
+    = render("admin/users/edit_user_modal", path:, user:)
   .ml-3
     = render "admin/users/notifications_preferences", user: user.user_to_notify
     - if participation.user.user_to_notify.valid_email? || participation.user.user_to_notify.phone_number.present?

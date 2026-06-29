@@ -69,7 +69,7 @@
                   "scroll-to-bottom": @add_user_ids.present?,
                   "select2-config": { ajax: {  url: select2_url, dataType: "json", delay: 250 } }, \
                 }
-            = render "admin/users/create_user_cta", path: new_admin_organisation_user_path(current_organisation, modal: true, return_location: edit_admin_organisation_rdvs_collectif_path(current_organisation, @rdv, add_user: @add_user_ids), role: default_service_selection_from(@rdv.motif.service))
+            = render "admin/users/create_user_modal", path: new_admin_organisation_user_path(current_organisation, format: "turbo_stream", return_location: edit_admin_organisation_rdvs_collectif_path(current_organisation, @rdv, add_user: @add_user_ids), role: default_service_selection_from(@rdv.motif.service))
 
           .fr-grid-row.fr-grid-row--gutters
             .fr-col.rdv-justify-content-space-between.d-flex

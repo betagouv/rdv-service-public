@@ -1,0 +1,13 @@
+/# locals: (path:, user:)
+button[data-fr-opened="false" aria-controls="edit-user-#{user.id}-modal" type="button" class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-btn--sm fr-m-0" title="#{t("helpers.edit")}"]
+  = icon("fr-icon-edit-line", class: "fr-icon--sm")
+
+dialog.fr-modal[id="edit-user-#{user.id}-modal" aria-labelledby="modal-title" aria-modal="true"]
+  .fr-container.fr-container--fluid.fr-container-md
+    .fr-grid-row.fr-grid-row--center
+      .fr-col-12.fr-col-md-8
+        .fr-modal__body
+          .fr-modal__header
+            button[aria-controls="edit-user-#{user.id}-modal" title="Fermer" type="button" class="fr-btn--close fr-btn"] Fermer
+          .fr-modal__content.fr-mb-4w
+            turbo-frame[id="edit-user-#{user.id}-form" src=path]

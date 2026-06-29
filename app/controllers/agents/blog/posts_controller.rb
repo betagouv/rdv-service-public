@@ -1,7 +1,5 @@
 class Agents::Blog::PostsController < AgentAuthController
-  layout "modal"
-
-  respond_to :html
+  respond_to :turbo_stream
 
   def index
     skip_policy_scope

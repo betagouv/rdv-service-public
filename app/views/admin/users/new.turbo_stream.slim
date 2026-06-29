@@ -1,0 +1,8 @@
+= turbo_stream.update "new-user-form" do
+  h2.fr-h4
+    - if @user.relative? && @user.responsible.persisted?
+      | Ajouter un proche
+    - else
+      | Nouvel usager
+
+  = render "form", user: @user, user_form: @user_form, format: :turbo_stream
