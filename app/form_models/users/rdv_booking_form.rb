@@ -57,13 +57,14 @@ class Users::RdvBookingForm
     @new_participation ||= Participation.new(rdv:, user_id: users_for_rdv.first&.id || @user.id, created_by: @user)
   end
 
-  def new_proche
-    @new_proche ||=
-      @user.relatives.target&.find(&:new_record?) || # nécessaire pour afficher les erreurs de validation sur les nouveaux proches
-      @user.relatives.build
+  def new_proches
+    built = (@user.relatives.target || []).select(&:new_record?)
+    extras_count = [new_proches_count - built.size, 0].max
+    built + extras_count.times.map { @user.relatives.build }
   end
 
   def selected_users_expected_count = 1
+  def new_proches_count = 1
 
   def selectable_existing_relatives
     @user.relatives.sort_by(&:first_name)
