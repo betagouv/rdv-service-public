@@ -59,12 +59,11 @@ class Users::RdvBookingForm
 
   def new_proches
     built = (@user.relatives.target || []).select(&:new_record?)
-    extras_count = [new_proches_count - built.size, 0].max
+    extras_count = [selected_users_expected_count - built.size, 0].max
     built + extras_count.times.map { @user.relatives.build }
   end
 
   def selected_users_expected_count = 1
-  def new_proches_count = 1
 
   def selectable_existing_relatives
     @user.relatives.sort_by(&:first_name)

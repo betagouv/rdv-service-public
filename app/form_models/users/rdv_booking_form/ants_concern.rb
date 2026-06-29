@@ -16,7 +16,6 @@ module Users::RdvBookingForm::AntsConcern
 
   # nécessaire pour AntsPreDemandeNumberStatusValidation
   def ants_meeting_point_id = rdv_builder.lieu_id
-  def new_proches_count = ants_pre_demandes_count.to_i - 1
 
   # method override
   def selected_users_expected_count = ants_pre_demandes_count
