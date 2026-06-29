@@ -54,7 +54,7 @@ class Users::RdvBookingForm
     # user_id: plutôt que user: pour éviter que inverse_of ajoute @new_participation à @user.participations
     # ce qui déclencherait un autosave prématuré lors de @user.save! et ferait échouer create_and_notify!
     # Fallback to @user.id when the proche isn't persisted yet (e.g. during the authorization check before save)
-    @new_participation ||= Participation.new(rdv:, user_id: users_for_rdv.first&.id || @user.id, created_by: @user)
+    @new_participation ||= Participation.new(rdv:, user_id: selected_users_records.first&.id || @user.id, created_by: @user)
   end
 
   def new_proches
@@ -93,7 +93,7 @@ class Users::RdvBookingForm
 
   def create_individual_rdv
     @rdv = rdv_builder.creneau.build_rdv # TODO: ce comportement est extrêmement surprenant, à refacto avec le RdvBuilder
-    @rdv.assign_attributes(users: users_for_rdv, created_by: @user)
+    @rdv.assign_attributes(users: selected_users_records, created_by: @user)
     @rdv.save!
     notifier = Notifiers::RdvCreated.new(@rdv, @user)
     notifier.perform
@@ -102,14 +102,14 @@ class Users::RdvBookingForm
 
   def create_participation
     # new_participation may have been built before @user.save! (e.g. during the authorization check),
-    # so users_for_rdv.first was nil and user_id fell back to @user.id. Re-evaluate now that the
+    # so selected_users_records.first was nil and user_id fell back to @user.id. Re-evaluate now that the
     # proche has been persisted and has a real id.
-    new_participation.user_id = users_for_rdv.first&.id
+    new_participation.user_id = selected_users_records.first&.id
     new_participation.create_and_notify!(@user)
     @invitation_token = new_participation.restricted_auth_token
   end
 
-  def users_for_rdv
+  def selected_users_records
     selected_users.map do |selected_user|
       case selected_user
       when "current_user"
