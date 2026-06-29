@@ -35,6 +35,32 @@ RSpec.describe DomainRedirectionAfterLogin do
           expect(controller.should_redirect_to_domain_anct?(domain, agent)).to be_falsey # rubocop:disable RSpec/PredicateMatcher
         end
       end
+
+      context "avec un nom de domaine lié à l'état" do
+        let(:agent) do
+          create(:agent,
+                 pro_connect_openid_sub: "faux_sub_proconnect",
+                 email: "francis.factice@justice.fr")
+        end
+
+        it "est redirigé vers le domaine de l'état" do
+          expect(controller.should_redirect_to_domain_etat?(domain, agent)).to be_truthy # rubocop:disable RSpec/PredicateMatcher
+          expect(controller.should_redirect_to_domain_anct?(domain, agent)).to be_falsey # rubocop:disable RSpec/PredicateMatcher
+        end
+
+        context "mais lié à France Service" do
+          let(:agent) do
+            create(:agent,
+                   pro_connect_openid_sub: "faux_sub_proconnect",
+                   email: "francis.factice@france-service.gouv.fr")
+          end
+
+          it "n'est pas redirigé" do
+            expect(controller.should_redirect_to_domain_etat?(domain, agent)).to be_falsey # rubocop:disable RSpec/PredicateMatcher
+            expect(controller.should_redirect_to_domain_anct?(domain, agent)).to be_falsey # rubocop:disable RSpec/PredicateMatcher
+          end
+        end
+      end
     end
   end
 end

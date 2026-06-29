@@ -9,6 +9,13 @@ class VerifiedServicePublicDomainNames
     end
   end
 
+  def self.france_service?(email)
+    domain_names = ["@france-service.gouv.fr", "france-services.gouv.fr", "franceservices.gouv.fr"] # Oui, les trois existent et sont utilisés pour des comptes sur l'appli
+    domain_names.any? do |domain|
+      email.ends_with?(domain)
+    end
+  end
+
   DOMAINS = %w[
     .gouv.fr
 

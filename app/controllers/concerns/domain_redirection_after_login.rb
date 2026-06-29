@@ -8,8 +8,13 @@ module DomainRedirectionAfterLogin
     organisations = agent.organisations
     if organisations.exists?
       organisations.all?(&:rdv_etat?)
+    elsif agent.pro_connect_idp_id.in?(ProconnectIdentityProviders::ETAT)
+      true
     else
-      agent.pro_connect_idp_id.in?(ProconnectIdentityProviders::ETAT)
+      france_service_email = VerifiedServicePublicDomainNames.france_service?(agent.email)
+      etat_email = VerifiedServicePublicDomainNames.verified?(agent.email)
+
+      etat_email && !france_service_email
     end
   end
 
