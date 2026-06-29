@@ -3,7 +3,9 @@ RSpec.describe "layouts/_flash", type: :view do
     notice = <<~HTML
       <a href="javascript:alert('hi');">Cliquez ici</a>
     HTML
-    render(partial: "layouts/flash", locals: { flash: { notice: notice } })
+    flash[:notice] = notice
+    render(partial: "layouts/flash")
+
     expect(rendered).to include("<a>Cliquez ici</a>")
   end
 
@@ -19,6 +21,7 @@ RSpec.describe "layouts/_flash", type: :view do
       <strong>Very important</strong>
       <em>Less important</em>
     HTML
+    flash[:notice] = notice
 
     expected_output = <<~HTML
       <a href="/legit/path"></a>
@@ -28,7 +31,7 @@ RSpec.describe "layouts/_flash", type: :view do
       <em>Less important</em>
     HTML
 
-    render(partial: "layouts/flash", locals: { flash: { notice: notice } })
+    render(partial: "layouts/flash")
     expect(rendered.squish).to include(expected_output.squish)
   end
 end

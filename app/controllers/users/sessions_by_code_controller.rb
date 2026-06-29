@@ -90,6 +90,6 @@ class Users::SessionsByCodeController < ApplicationController
   def login_user(user)
     user.update!(latest_login_at: Time.zone.now)
     bypass_sign_in(user, scope: :user)
-    redirect_to after_sign_in_path_for(user), flash: { success: "Connexion réussie" }
+    redirect_to after_sign_in_path_for(user)
   end
 end

@@ -26,7 +26,7 @@ class Agents::SessionsByCodeController < ApplicationController
         session[:pro_connect_id_token] = session.delete(SESSION_PRO_CONNECT_ID_TOKEN_KEY)
       end
       sign_in(agent, scope: :agent)
-      redirect_to after_sign_in_path_for(agent), flash: { success: "Connexion réussie" }
+      redirect_to after_sign_in_path_for(agent)
     else
       @email = agent.email
       @existing_login_code = LoginCode.most_recent_usable_for(email: @email)

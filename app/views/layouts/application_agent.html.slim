@@ -16,8 +16,9 @@ html lang="fr"
         .content
           - if @planning_layout
             = render partial: "admin/planning/planning_agents_select"
-            .fr-mx-2w= render "layouts/flash"
-            = content_for :onboarding_banner
+            .fr-mx-2w
+              = render "layouts/flash", flash_types: %i[success notice error alert]
+              = content_for :onboarding_banner
             .fr-p-2w
               = content_for(:fil_ariane)
               = yield

@@ -470,7 +470,6 @@ RSpec.describe "User can search rdv on rdv mairie" do
       click_button "Recevoir un code de connexion"
       fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: "elo@ise.fr").code
       click_on "Valider"
-      expect(page).to have_content("Connexion réussie")
       # Parcours post-connexion
       expect(page).to have_content("Étape 1 sur 3")
       expect(page).to have_content("Vos informations")
