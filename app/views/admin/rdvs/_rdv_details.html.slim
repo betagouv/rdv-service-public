@@ -48,8 +48,7 @@
 
 - if rdv.public_office? && rdv.overlapping_plages_ouvertures?
   div.my-3
-    .alert.alert-warning.mt-1.mb-0
-      | Conflit de lieu avec des plages d'ouvertures
-    .border-left.border-right.border-bottom.rounded.border-warning
-      ul.pl-3.py-2.mb-0
+    .fr-alert.fr-alert--warning.fr-mt-1w.fr-mb-0
+      | Conflit de lieu avec des plages d'ouvertures :
+      ul.fr-mt-2w
         = render "admin/planning/plage_ouvertures/overlapping_plage_ouvertures", model: rdv, display_agents: true

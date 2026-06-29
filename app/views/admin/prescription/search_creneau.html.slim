@@ -5,7 +5,7 @@
   br
 
 - if @context.user
-  h6.card-subtitle.mt-2 = t("admin.creneaux_search.index.search_for_slots_subtitle", users_fullname: @context.user.full_name)
+  h2.fr-h6 = t("admin.creneaux_search.index.search_for_slots_subtitle", users_fullname: @context.user.full_name)
   p
     - if @context.user.address.present?
       => @context.user.address
