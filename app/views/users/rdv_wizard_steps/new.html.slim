@@ -15,7 +15,7 @@
           - if @skip_proches_step
             = hidden_field_tag "selected_users[]", "current_user"
           - else
-            = render "select_users_section", f: f
+            = render "select_users_section", f: f, rdv_booking_form: @rdv_booking_form
 
           h2.fr-h4.fr-mt-4w Notifications
 
