@@ -129,8 +129,8 @@
   max-width: 400px;
 }
 
-.rdv-min-width-200px {
-  min-width: 200px;
+.rdv-min-width-210 {
+  min-width: 210px;
 }
 
 .rdv-max-height-12rem {
@@ -180,7 +180,7 @@
 
 // Une pastille qui reprend la couleur du badge d'info pour guide l'utilisateur vers une page qui comportera ce badge
 .rdv-pastille {
-  background-color: var(--background-contrast-info);
+  background-color: var(--text-default-info);
   border-radius: 4px;
   width: 8px;
   height: 8px;

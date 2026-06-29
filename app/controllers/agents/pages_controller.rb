@@ -24,7 +24,7 @@ class Agents::PagesController < AgentAuthController
       if current_agent.possible_duplicate_organisations.empty?
         redirect_to new_agents_territory_path
       end
-    else
+    elsif current_domain != Domain::RDV_SERVICE_PUBLIC_ETAT
       redirect_via_anct_router
     end
   end
