@@ -19,9 +19,10 @@
                 | Pour quels motifs souhaitez-vous ouvrir la prise de rendez-vous en ligne ?
 
               - @motifs.each do |motif|
+                - checked_option = @motifs.count == 1 ? { checked: true } : {}
                 .fr-fieldset__element
                   .fr-checkbox-group
-                    = f.check_box :motif_ids, { multiple: true }, motif.id, false
+                    = f.check_box :motif_ids, { multiple: true }.merge(checked_option), motif.id, false
                     = f.label "motif_ids_#{motif.id}", class: "fr-label" do
                       = motif.name
                       span.fr-hint-text
@@ -30,7 +31,9 @@
                         = " · "
                         = "#{motif.default_duration_in_min} mn"
 
-            p Vous gardez le contrôle : la prise de rendez-vous ne sera possible que sur les plages d'ouverture et les motifs de votre choix. Vous pouvez changer ces paramètres à tout moment.
+            p.fr-hint-text
+              = icon("fr-icon-info-line", class: "fr-mr-1v fr-icon--sm")
+              | Vous gardez le contrôle : la prise de rendez-vous ne sera possible que sur les plages d'ouverture et les motifs de votre choix. Vous pouvez changer ces paramètres à tout moment.
 
             .d-flex.rdv-justify-content-space-between
               = link_to("Annuler", @cancel_path, class: "fr-btn fr-btn--tertiary-no-outline")
