@@ -201,7 +201,7 @@ class ProConnectController < ApplicationController
     end
 
     if agent.email != callback_client.user_email
-      flash[:notice] = "Note : votre adresse e-mail a été mise à jour depuis ProConnect. Ancienne adresse : #{agent.email}, nouvelle adresse : #{callback_client.user_email}"
+      flash[:login] = "Note : votre adresse e-mail a été mise à jour depuis ProConnect. Ancienne adresse : #{agent.email}, nouvelle adresse : #{callback_client.user_email}"
     end
 
     agent.assign_attributes(
@@ -224,7 +224,7 @@ class ProConnectController < ApplicationController
     session[:pro_connect_id_token] = callback_client.id_token_for_logout
 
     if pro_connect_session[:silent_login]
-      flash[:notice] = "Vous avez été connecté automatiquement par ProConnect avec l'adresse email #{agent.email}."
+      flash[:login] = "Vous avez été connecté automatiquement par ProConnect avec l'adresse email #{agent.email}."
     end
 
     if should_redirect_to_domain_etat?(current_domain, agent)

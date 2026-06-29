@@ -93,8 +93,6 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     doc.add_screenshot(page, text: "Je sélectionne mon motif et je valide", wait_for: "Vous gardez le contrôle")
 
-    find("label", text: "Suivi de dossier").click
-
     click_on "Enregistrer"
 
     doc.add_screenshot(page, text: "Je clique sur Modifier dans la carte de Modes d'authentificiation", wait_for: "Lien de réservation")

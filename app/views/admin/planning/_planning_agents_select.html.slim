@@ -1,5 +1,7 @@
-#planning_agents_select.container-fluid.py-1.px-3[style="background-color: white; border-bottom: 1px solid #EEE;"]
-  .rdv-display-flex.rdv-gap-05rem.rdv-align-items-center.rdv-flex-wrap-wrap.rdv-justify-content-space-between.fr-my-2w
+#planning_agents_select.container-fluid.fr-px-2w[style="background-color: white; border-bottom: 1px solid #EEE;"]
+  = render "layouts/flash", flash_types: %i[login]
+  = content_for :onboarding_banner_start
+  .rdv-display-flex.rdv-gap-05rem.rdv-align-items-center.rdv-flex-wrap-wrap.rdv-justify-content-space-between.fr-py-3w
     div.rdv-display-flex.rdv-gap-05rem.rdv-flex-wrap-wrap
       h1.fr-h2.fr-mb-0
         | Planning de
@@ -26,7 +28,7 @@
               }
 
             = form.label :agent_id, "Planning de", class: "fr-label sr-only", for: "agent_id"
-            = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: ["select2-input rdv-min-width-200px"], data: }
+            = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: ["select2-input rdv-min-width-210"], data: }
 
           .ml-2.d-flex[style="gap: 0 0.5em"]
             - if @agents.size == 1 && @multiple_agents_makes_sense && current_organisation.agents.count > 1
@@ -36,10 +38,8 @@
             #reset_agents[class=(@agents.size > 1 ? "" : "hidden")]
               = link_to "Revenir à mon agenda", admin_organisation_planning_agenda_path(current_organisation, agent_id: current_agent), class: "fr-btn fr-btn--tertiary"
 
-.container-fluid.px-2.d-flex[style="background-color: white; border-bottom: 1px solid #EEE;align-items: center;"]
+.container-fluid.fr-px-2w.d-flex[style="background-color: white; border-bottom: 1px solid #EEE;align-items: center;"]
   .flex-grow-1
     = render partial: "admin/planning/planning_tabs"
 
   = content_for :right_of_page_title
-
-.fr-mx-2w= render "layouts/flash"

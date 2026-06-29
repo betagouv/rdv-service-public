@@ -55,6 +55,12 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
       end
     end
 
+    it "ignore les événements sans DTEND (anniversaires, rappels...)" do
+      VCR.use_cassette("caldav/event_without_dtend") do
+        expect { described_class.new.perform(agent.id) }.not_to change(ExternalCalendarEvent, :count)
+      end
+    end
+
     it "ne crée pas d'événements si l'URL externe correspond à un Rdv local" do
       url_of_local_event = "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/fa75d9fe-2063-465e-a323-dd8ae7589746.ics"
       url_of_legit_event = "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/6a54e0b7-93cf-43e4-a854-afd8e3d3f2c4.ics"

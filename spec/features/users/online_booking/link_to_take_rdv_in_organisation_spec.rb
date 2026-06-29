@@ -94,8 +94,6 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: "davidnchicode@crotonmail.com").code
       click_on "Valider"
 
-      expect(page).to have_content("Connexion réussie")
-
       # Page de formulaire où l'on peut ajouter le nom de naissance, la date de naissance, le téléphone...
       expect(page).to have_content("Étape 1 sur 3")
       fill_in "user_birth_date", with: "02/04/1990"

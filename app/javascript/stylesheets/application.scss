@@ -10,7 +10,7 @@
 //@import "bootstrap/scss/reboot";
 //@import "bootstrap/scss/type";
 @import "bootstrap/scss/images";
-@import "bootstrap/scss/code";
+// @import "bootstrap/scss/code";
 @import "bootstrap/scss/grid";
 @import "bootstrap/scss/tables";
 @import "bootstrap/scss/forms";
@@ -24,10 +24,10 @@
 //@import "bootstrap/scss/navbar";
 @import "bootstrap/scss/card";
 //@import "bootstrap/scss/breadcrumb";
-@import "bootstrap/scss/pagination";
+// @import "bootstrap/scss/pagination";
 // @import "bootstrap/scss/badge";
 //@import "bootstrap/scss/jumbotron";
-@import "bootstrap/scss/alert";
+// @import "bootstrap/scss/alert";
 //@import "bootstrap/scss/progress";
 //@import "bootstrap/scss/media";
 @import "bootstrap/scss/list-group";
@@ -68,7 +68,6 @@
 @import "./components/utilities_dsfr";
 @import "./components/autocomplete";
 @import "./components/rdv_solidarites_instance_name";
-@import "./components/alert";
 @import "./components/button_group_before_card";
 @import "./components/arrow_list";
 @import "./components/logo_partenaire";

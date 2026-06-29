@@ -27,11 +27,9 @@
           .card-title
             h5 Communes ou rues associées
         .card-body
-          .alert.alert-warning.d-flex.align-items-center
-            div.mr-2.h4 ⚠️
-            div
-              .mb-1 Aucune commune ni rue associée
-              div Ce secteur ne peut pas être recherché par les usagers
+          .fr-alert.fr-alert--warning.fr-mb-2w
+            .mb-1 Aucune commune ni rue associée
+            div Ce secteur ne peut pas être recherché par les usagers
           = link_to new_admin_territory_sector_zone_path(current_territory, @sector), class: "fr-btn fr-btn--icon-left fr-icon-add-line" do
             | Ajouter une commune ou une rue
       - else
@@ -61,7 +59,7 @@
                   - policy = Agent::ZonePolicy.new(current_agent, zone)
                   - if policy.destroy?
                     = link_to "retirer", admin_territory_sector_zone_path(current_territory, @sector, zone), method: :delete
-        div= paginate @zones
+        div= paginate @zones, theme: "dsfr"
         .mb-2.rdv-text-align-center
           .mb-2= page_entries_info @zones
           - if @zones.count > 5
@@ -127,11 +125,9 @@
             )
 
         - if @sector.attributions.empty?
-          .alert.alert-warning.d-flex.align-items-center
-            div.mr-2.h4 ⚠️
-            div
-              .mb-1 Aucune organisation ni agent attribués
-              div Ce secteur ne renvoie pas de disponibilités
+          .fr-alert.fr-alert--warning.fr-mb-2w
+            .mb-1 Aucune organisation ni agent attribués
+            div Ce secteur ne renvoie pas de disponibilités
         = link_to new_admin_territory_sector_attribution_path(current_territory, @sector, level: "organisation"), class: "fr-btn fr-btn--icon-left fr-icon-add-line" do
           | Attribuer une organisation ou un agent
       .card-footer

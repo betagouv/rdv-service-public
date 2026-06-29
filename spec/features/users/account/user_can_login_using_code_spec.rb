@@ -17,7 +17,6 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
     fill_in("Code à 6 chiffres", with: code)
     click_on "Valider"
 
-    expect(page).to have_content("Connexion réussie")
     expect(page).to have_current_path("/users/rdvs")
     click_on user.full_name
     expect(page).to have_field("user_first_name", with: "Marco")
@@ -47,7 +46,6 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       fill_in("Code à 6 chiffres", with: "123456")
       click_on "Valider"
       click_on territory_1.name
-      expect(page).to have_content("Connexion réussie")
       click_on user_1.full_name
       expect(page).to have_field("user_first_name", with: user_1.first_name)
     end
@@ -58,7 +56,9 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       fill_in("Code à 6 chiffres", with: "123456")
       click_on "Valider"
       click_on territory_2.name
-      expect(page).to have_content("Connexion réussie")
+
+      expect(page).to have_content("Vous n'avez pas de RDV à venir")
+
       click_on user_2.full_name
       expect(page).to have_field("user_first_name", with: user_2.first_name)
     end
@@ -113,7 +113,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
       fill_in("Code à 6 chiffres", with: "992233")
       click_on "Valider"
-      expect(page).not_to have_content("Connexion réussie")
+      expect(page).not_to have_content("Vous n'avez pas de RDV à venir")
       expect(page).to have_content("Code invalide")
     end
   end
@@ -125,11 +125,11 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
       fill_in("Code à 6 chiffres", with: "999999")
       click_on "Valider"
-      expect(page).not_to have_content("Connexion réussie")
+      expect(page).not_to have_content("Vous n'avez pas de RDV à venir")
       expect(page).to have_content("Veuillez renseigner le dernier code qui vous a été envoyé par email")
       fill_in("Code à 6 chiffres", with: "123456")
       click_on "Valider"
-      expect(page).to have_content("Connexion réussie")
+      expect(page).to have_content("Vous n'avez pas de RDV à venir")
     end
   end
 
@@ -140,7 +140,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
       fill_in("Code à 6 chiffres", with: "123456")
       click_on "Valider"
-      expect(page).not_to have_content("Connexion réussie")
+      expect(page).not_to have_content("Vous n'avez pas de RDV à venir")
       expect(page).to have_content("Code expiré, veuillez en demander un nouveau")
     end
   end
@@ -152,7 +152,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
       fill_in("Code à 6 chiffres", with: "123456")
       click_on "Valider"
-      expect(page).not_to have_content("Connexion réussie")
+      expect(page).not_to have_content("Vous n'avez pas de RDV à venir")
       expect(page).to have_content("Code déjà utilisé")
     end
   end
@@ -167,7 +167,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
       fill_in("Code à 6 chiffres", with: "123456")
       click_on "Valider"
-      expect(page).not_to have_content("Connexion réussie")
+      expect(page).not_to have_content("Vous n'avez pas de RDV à venir")
       expect(page).to have_content("Veuillez renseigner le dernier code qui vous a été envoyé")
     end
   end
@@ -182,7 +182,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
       fill_in("Code à 6 chiffres", with: "123456")
       click_on "Valider"
-      expect(page).not_to have_content("Connexion réussie")
+      expect(page).not_to have_content("Vous n'avez pas de RDV à venir")
       expect(page).to have_content("Veuillez renseigner le dernier code qui vous a été envoyé")
     end
   end
@@ -199,7 +199,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
       fill_in("Code à 6 chiffres", with: "123456")
       click_on "Valider"
-      expect(page).to have_content("Connexion réussie")
+      expect(page).to have_content("Vous n'avez pas de RDV à venir")
     end
   end
 
@@ -215,7 +215,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
       fill_in("Code à 6 chiffres", with: "123456")
       click_on "Valider"
-      expect(page).not_to have_content("Connexion réussie")
+      expect(page).not_to have_content("Vous n'avez pas de RDV à venir")
       expect(page).to have_content("erreur")
       expect(sentry_events.last.level).to eq(:warning)
       expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")

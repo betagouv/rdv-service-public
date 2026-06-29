@@ -69,6 +69,8 @@ module Caldav
       updated_events = updated_events.reject { _1.url.in?(urls_of_rdvs) }
 
       updated_events = updated_events.select { consider_busy?(_1) }
+      # Les événements sans DTEND (anniversaires, rappels...) ne sont pas bloquants et sont ignorés
+      updated_events = updated_events.select { _1.dtend.present? }
 
       ExternalCalendarEvent.transaction do
         hashes_to_upsert = updated_events.map do |event|
