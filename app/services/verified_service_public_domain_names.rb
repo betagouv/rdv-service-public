@@ -5,14 +5,14 @@
 class VerifiedServicePublicDomainNames
   def self.verified?(email)
     DOMAINS.any? do |domain|
-      email.ends_with?(domain)
+      email&.ends_with?(domain)
     end
   end
 
   def self.france_service?(email)
     domain_names = ["france-service.gouv.fr", "france-services.gouv.fr", "franceservices.gouv.fr"] # Oui, les trois existent et sont utilisés pour des comptes sur l'appli
     domain_names.any? do |domain|
-      email.ends_with?(domain)
+      email&.ends_with?(domain)
     end
   end
 
