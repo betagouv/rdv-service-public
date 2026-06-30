@@ -2,14 +2,14 @@
 
 .fr-container.fr-pt-3w
   .fr-col-lg-8.fr-col-offset-lg-2.fr-col-md-10.fr-col-offset-md-1
-    h1.fr-h3 Confirmez votre rendez-vous…
+    h1.fr-h3 Confirmez votre rendez-vous
     .card
       = render "rdv_wizard_summary", rdv_wizard: @rdv_booking_form.rdv_builder
       .card-body
         = form_for @rdv_booking_form, as: :user, url: users_rdv_wizard_step_path(**@rdv_booking_form.to_query), method: "post", builder: Dsfr::FormBuilder do |f|
           h2.fr-h4 Vos informations
 
-          = render "users/users/form_fields", f: f, skip_notifications: true
+          = render "users/users/form_fields", f: f, show_email_field?: true
 
           /! Section proches
           - if @skip_proches_step
@@ -17,22 +17,12 @@
           - else
             = render "select_users_section", f: f, rdv_booking_form: @rdv_booking_form
 
-          h2.fr-h4.fr-mt-4w Notifications
-
-          = f.dsfr_phone_field :phone_number, as: :tel, required: @rdv_booking_form.phone_required?, autocomplete: "tel"
-          - if @rdv_booking_form.show_landline_phone_number_warning?
-            .fr-alert.fr-alert--warning.fr-mb-1w Vous ne recevrez pas de SMS avec ce numéro non-mobile
-          = f.dsfr_check_box :notify_by_sms, label: "J’accepte les notifications par SMS", class: "rdv-margin-left-negative-05rem"
-          - unless @rdv_booking_form.show_email_field?
-            = f.dsfr_email_field :email, disabled: true, required: false, class: "fr-mt-4w"
-          = f.dsfr_check_box :notify_by_email, label: "J’accepte les notifications par email", class: "rdv-margin-left-negative-05rem"
-
           /! Hidden fields pour les params du wizard
           - @rdv_booking_form.to_query.each do |wizard_key, wizard_value|
             = hidden_field_tag "rdv[#{wizard_key}]", wizard_value
 
           ul.fr-btns-group.fr-btns-group--inline-md.fr-btns-group--icon-left.rdv-flex-wrap-wrap-reverse.rdv-justify-content-space-between.fr-mt-6w
-            li= link_to "Revenir en arrière", prendre_rdv_path(@rdv_booking_form.to_query), class: "fr-icon-arrow-left-line fr-btn--icon-left fr-btn fr-btn--tertiary-no-outline"
+            li= link_to "Revenir en arrière", prendre_rdv_path(@rdv_booking_form.to_query), class: "fr-icon-arrow-left-line fr-btn--icon-left fr-btn fr-btn--secondary"
             li
               - if @rdv.collectif?
                 = f.submit "Confirmer ma participation", class: "fr-btn"
