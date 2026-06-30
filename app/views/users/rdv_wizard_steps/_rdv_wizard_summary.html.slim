@@ -2,7 +2,6 @@ ul.list-group.list-group-flush.fr-mt-0
   li.list-group-item
     .row
       .col
-        span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
         | Motif :&nbsp;
         = rdv_wizard.motif.name
       .col-auto
@@ -11,29 +10,24 @@ ul.list-group.list-group-flush.fr-mt-0
   - case rdv_wizard.motif.location_type
   - when Motif.location_types[:phone]
     li.list-group-item
-      span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
       | RDV téléphonique
   - when Motif.location_types[:home]
     li.list-group-item
-      span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
       | RDV à domicile
   - when Motif.location_types[:visio]
     li.list-group-item
-      span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
       | RDV par visioconférence
   - when Motif.location_types[:public_office]
     - if rdv_wizard.ants_pre_demandes_count.present?
       li.list-group-item
         .row
           .col
-            span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
             | Nombre de pré-demandes ANTS à déposer : #{rdv_wizard.ants_pre_demandes_count}
           .col-auto
             = dsfr_link_to "Modifier", path_to_ants_pre_demandes_count_selection(rdv_wizard.params_to_selections), title: "Modifier le nombre de pré-demandes ANTS", class: "fr-btn fr-btn--tertiary-no-outline"
     li.list-group-item
       .row
         .col
-          span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
           | Lieu :&nbsp;
           = rdv_wizard.lieu.full_name
         .col-auto
@@ -44,7 +38,6 @@ ul.list-group.list-group-flush.fr-mt-0
   li.list-group-item
     .row
       .col
-        span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
         | Date du rendez-vous :&nbsp;
         = rdv_starts_at_and_duration(rdv_wizard.rdv, :human)
       .col-auto
@@ -53,7 +46,6 @@ ul.list-group.list-group-flush.fr-mt-0
     li.list-group-item
       .row
         .col
-          span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
           | Prescripteur :&nbsp;
           = @rdv_wizard.prescripteur.full_name
         .col-auto
