@@ -7,8 +7,10 @@
 
     .rdv-nested-fields-content {
       min-height: 0;
-      .fr-grid-row {
-        padding: 0.5rem 1.1rem;
+
+      .fr-grid-row,
+      .fr-input-group {
+        padding: 0.5rem;
       }
     }
   }
