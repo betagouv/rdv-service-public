@@ -11,7 +11,7 @@ RSpec.describe "un prescripteur peut prendre rendez-vous pour un usager" do
     create(:motif, organisation: organisation, service: agent.services.first, bookable_by: bookable_by, instruction_for_rdv: "Instructions après confirmation", name: "Formation emails")
   end
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Bureau") }
-  let!(:plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu) }
+  let!(:plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu, minutes_after_rdvs: 10) }
 
   it "works" do
     visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
@@ -49,9 +49,10 @@ RSpec.describe "un prescripteur peut prendre rendez-vous pour un usager" do
     fill_in "Prénom", with: "Patricia"
     fill_in "Nom", with: "Duroy"
     click_on "Confirmer le rendez-vous"
-    expect(page).to have_content("Sans numéro de téléphone, aucune notification ne sera envoyée au bénéficiaire")
+    expect(page).to have_content("Sans numéro de téléphone ni adresse email, aucune notification ne sera envoyée au bénéficiaire")
     click_on "Annuler et modifier"
     fill_in "Téléphone", with: "0123456789"
+    fill_in "Adresse email", with: "patricia.duroy@exemple.fr"
 
     click_on "Confirmer le rendez-vous"
     expect(page).to have_content("Téléphone doit être un numéro de mobile")
@@ -69,6 +70,7 @@ RSpec.describe "un prescripteur peut prendre rendez-vous pour un usager" do
     expect(created_rdv.agents).to eq([agent])
 
     expect(created_rdv.participations.size).to eq(1)
+    expect(created_rdv.minutes_after_rdv).to eq(10)
 
     created_participation = created_rdv.participations.first
     created_user = created_participation.user
@@ -77,6 +79,7 @@ RSpec.describe "un prescripteur peut prendre rendez-vous pour un usager" do
       full_name: "Patricia DUROY",
       created_through: "prescripteur",
       phone_number: "0611223344",
+      email: "patricia.duroy@exemple.fr",
       organisation_ids: [organisation.id]
     )
     expect(created_participation.created_by).to have_attributes(

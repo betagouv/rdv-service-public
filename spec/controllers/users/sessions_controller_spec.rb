@@ -1,4 +1,25 @@
 RSpec.describe Users::SessionsController do
+  describe "#new" do
+    before { request.env["devise.mapping"] = Devise.mappings[:user] }
+
+    context "dans le contexte d'un rdv wizard, quand le créneau n'est plus disponible" do
+      let(:motif) { create(:motif) }
+      let(:rdv_builder) { instance_double(Users::RdvBuilder, motif: motif, creneau: nil, to_query: {}) }
+
+      before do
+        travel_to(Time.zone.parse("2026-01-15 10:00:00"))
+        allow(Users::RdvBuilder).to receive(:new).and_return(rdv_builder)
+        session[:user_return_to] = "/users/rdv_wizard_step/new?motif_id=#{motif.id}"
+      end
+
+      it "informe l'usager que le créneau n'est plus disponible et le redirige vers la sélection de créneau" do
+        get :new
+        expect(flash[:error]).to eq("Ce créneau n'est plus disponible. Veuillez en sélectionner un autre ou refaire votre recherche ultérieurement.")
+        expect(response.location).to include(prendre_rdv_path)
+      end
+    end
+  end
+
   describe "#create" do
     it "does not allow to login an agent anymore", type: :request do
       existing_agent = create(:agent, password: "CorrectH0rse!")

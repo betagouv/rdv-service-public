@@ -21,7 +21,7 @@ RSpec.describe ProConnectController do
           id_token: {
             acr: {
               essential: false,
-              values: %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa],
+              values: %w[eidas0-mfa eidas1-mfa eidas2 eidas3],
             },
           },
         }.to_json
@@ -49,7 +49,7 @@ RSpec.describe ProConnectController do
             id_token: {
               acr: {
                 essential: false,
-                values: %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa],
+                values: %w[eidas0-mfa eidas1-mfa eidas2 eidas3],
               },
             },
           }.to_json
@@ -78,7 +78,7 @@ RSpec.describe ProConnectController do
           id_token: {
             acr: {
               essential: true,
-              values: %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa],
+              values: %w[eidas0-mfa eidas1-mfa eidas2 eidas3],
             },
           },
         }.to_json
@@ -100,7 +100,7 @@ RSpec.describe ProConnectController do
     let(:user_info) do
       {
         "sub" => "ab70770d-1285-46e6-b4d0-3601b49698d4",
-        "email" => "francis.factice@exemple.gouv.fr",
+        "email" => "francis.factice@exemple.fr",
         "given_name" => "Francis Factice",
         "usual_name" => "Factice",
         "siret" => "13002526500013",
@@ -184,7 +184,7 @@ RSpec.describe ProConnectController do
             get :callback, params: { state:, code: }
           end.to change { agent.reload.email }.from("autre@exemple.fr").to(user_info["email"])
           expect_agent_to_be_updated_and_logged_in(agent)
-          expect(flash[:info]).to include("Note : votre adresse e-mail a été mise à jour depuis ProConnect. Ancienne adresse : autre@exemple.fr, nouvelle adresse : #{user_info['email']}")
+          expect(flash[:login]).to include("Note : votre adresse e-mail a été mise à jour depuis ProConnect. Ancienne adresse : autre@exemple.fr, nouvelle adresse : #{user_info['email']}")
         end
       end
 
@@ -277,7 +277,7 @@ RSpec.describe ProConnectController do
                                                                           id_token: {
                                                                             acr: {
                                                                               essential: true,
-                                                                              values: %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa],
+                                                                              values: %w[eidas0-mfa eidas1-mfa eidas2 eidas3],
                                                                             },
                                                                           },
                                                                         }.to_json)

@@ -1,0 +1,50 @@
+module DomainRedirectionAfterLogin
+  def should_redirect_to_domain_etat?(current_domain, agent)
+    # On ne veut pas faire de redirection depuis les noms de domaines historiques (solidarités et aide num)
+    return false if current_domain != Domain::RDV_SERVICE_PUBLIC
+
+    return false if agent.pro_connect_openid_sub.blank?
+
+    organisations = agent.organisations
+    if organisations.exists?
+      organisations.all?(&:rdv_etat?)
+    elsif agent.pro_connect_idp_id.in?(ProconnectIdentityProviders::ETAT)
+      true
+    else
+      france_service_email = VerifiedServicePublicDomainNames.france_service?(agent.email)
+      etat_email = VerifiedServicePublicDomainNames.verified?(agent.email)
+      anct = agent.email.ends_with?("anct.gouv.fr")
+
+      etat_email && !france_service_email && !anct
+    end
+  end
+
+  def should_redirect_to_domain_anct?(current_domain, agent)
+    organisations = agent.organisations
+    current_domain == Domain::RDV_SERVICE_PUBLIC_ETAT &&
+      organisations.exists? &&
+      organisations.all?(&:rdv_mairie?) &&
+      agent.territories_through_organisations.all?(&:operator_id)
+  end
+
+  protected
+
+  def redirect_target_url_in_domain(domain)
+    stored_path = stored_location_for(:agent)
+    if stored_path
+      # on réécrit manuellement l’URL car on souhaite garder les query params du stored_path
+      add_query_string_params_to_url(
+        "#{request.protocol}#{domain.host_name}#{stored_path}",
+        automatic_redirection_from_other_domain: "1"
+      )
+    else
+      # On veut renvoyer vers l'URL post-connexion pour les agents par défaut (authenticated_agent_root_url)
+      # Comme elle a été définie à '/' on a du en redéfinir une explicite qui ne peut pas être confondue avec
+      # une route non-authentifiée
+      unauthenticated_explicit_agent_root_url(
+        host: domain.host_name,
+        automatic_redirection_from_other_domain: "1"
+      )
+    end
+  end
+end

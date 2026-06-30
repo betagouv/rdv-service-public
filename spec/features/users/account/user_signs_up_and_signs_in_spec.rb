@@ -22,7 +22,6 @@ RSpec.describe "User signs in" do
       click_on "Recevoir un code de connexion"
       fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: user.email).code
       click_on "Valider"
-      expect(page).to have_content("Connexion réussie")
       expect(user.reload.already_logged_in?).to be true
       click_link "Déconnexion"
       expect(page).to have_current_path(root_path, ignore_query: true)
@@ -40,7 +39,6 @@ RSpec.describe "User signs in" do
       fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: user.email).code
       click_on "Valider"
 
-      expect(page).to have_content("Connexion réussie")
       expect(user.reload.already_logged_in?).to be true
     end
   end

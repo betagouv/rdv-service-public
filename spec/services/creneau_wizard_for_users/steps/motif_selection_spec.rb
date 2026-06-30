@@ -10,8 +10,8 @@ RSpec.describe CreneauWizardForUsers::Steps::MotifSelection do
   context "when motifs from multiple services are available" do
     let(:motif_a) { create(:motif, service: service_a) }
     let(:motif_b) { create(:motif, service: service_b) }
-    let(:service_b) { create(:service, name: "B") }
-    let(:service_a) { create(:service, name: "A") }
+    let(:service_b) { create(:service, name: "Service B") }
+    let(:service_a) { create(:service, name: "Service A") }
     let(:matching_motifs) { Motif.where(id: [motif_a.id, motif_b.id]) }
 
     describe "#services" do
@@ -42,8 +42,8 @@ RSpec.describe CreneauWizardForUsers::Steps::MotifSelection do
     let(:motif_a) { create(:motif, service: service_a) }
     let(:motif_b) { create(:motif, service: service_b) }
     let(:motif_c) { create(:motif, service: nil) }
-    let(:service_b) { create(:service, name: "B") }
-    let(:service_a) { create(:service, name: "A") }
+    let(:service_b) { create(:service, name: "Service B") }
+    let(:service_a) { create(:service, name: "Service A") }
     let(:matching_motifs) { Motif.where(id: [motif_a.id, motif_b.id, motif_c.id]) }
 
     it "sorts the services properly" do

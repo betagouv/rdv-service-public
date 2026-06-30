@@ -32,10 +32,6 @@
   color: var(--text-action-high-blue-france);
 }
 
-.rdv-color-text-mention-grey {
-  color: var(--text-mention-grey);
-}
-
 .rdv-color-text-default-success {
   color: var(--text-default-success);
 }
@@ -133,8 +129,8 @@
   max-width: 400px;
 }
 
-.rdv-min-width-200px {
-  min-width: 200px;
+.rdv-min-width-210 {
+  min-width: 210px;
 }
 
 .rdv-max-height-12rem {
@@ -162,6 +158,12 @@
   object-fit: contain;
 }
 
+// SPACING
+
+.rdv-margin-top-negative-8px {
+  margin-top: -8px;
+}
+
 // OTHERS
 
 // utile pour désactiver le soulignement des liens du DSFR
@@ -178,7 +180,7 @@
 
 // Une pastille qui reprend la couleur du badge d'info pour guide l'utilisateur vers une page qui comportera ce badge
 .rdv-pastille {
-  background-color: #a9bfff;
+  background-color: var(--text-default-info);
   border-radius: 4px;
   width: 8px;
   height: 8px;

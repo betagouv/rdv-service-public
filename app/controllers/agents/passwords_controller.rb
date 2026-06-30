@@ -2,8 +2,10 @@ class Agents::PasswordsController < Devise::PasswordsController
   respond_to :html, :json
 
   def create
-    agent = Agent.find_by(email: resource_params[:email])
+    email = resource_params[:email].presence
+    redirect_to root_path, flash: { error: "Veuillez saisir une adresse e-mail" } and return unless email
 
+    agent = Agent.find_by(email: email)
     if agent
       if agent.complete? && agent.pro_connect_openid_sub.blank? # Les agents qui sont ProConnectés ne peuvent plus se connecter par mot de passe
         agent.send_reset_password_instructions

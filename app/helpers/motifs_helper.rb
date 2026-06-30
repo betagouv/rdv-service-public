@@ -46,7 +46,16 @@ module MotifsHelper
   end
 
   def build_badge_tag_for(badge_name)
-    tag.span(I18n.t("motifs.badges.#{badge_name}"), class: "badge badge-motif-#{badge_name}")
+    classes = {
+      bookable_by_invited_users: "fr-badge--success fr-badge--no-icon",
+      bookable_by_everyone: "fr-badge--success fr-badge--no-icon",
+      bookable_by_agents_and_prescripteurs: "fr-badge--success fr-badge--no-icon",
+      for_secretariat: "fr-badge--info  fr-badge--no-icon",
+      follow_up: "fr-badge--info  fr-badge--no-icon",
+      collectif: "fr-badge--purple-glycine fr-icon-team-fill fr-badge--icon-left",
+      archived: "",
+    }
+    tag.span(I18n.t("motifs.badges.#{badge_name}"), class: "fr-ml-1v fr-badge fr-badge--sm #{classes[badge_name]}")
   end
 
   # L'option "agents_and_prescripteurs_and_invited_users"
@@ -104,7 +113,7 @@ module MotifsHelper
     if motif.send("#{option_name}?")
       tag.span("☑️ ") + tag.span(Motif.human_attribute_name("#{option_name}_hint"))
     else
-      tag.span("désactivée", class: "text-muted")
+      tag.span("désactivée", class: "fr-text-mention--grey")
     end
   end
 
@@ -112,15 +121,20 @@ module MotifsHelper
     if motif.send("#{option_name}?")
       tag.span("Oui")
     else
-      tag.span("désactivée", class: "text-muted")
+      tag.span("désactivée", class: "fr-text-mention--grey")
     end
   end
 
-  def motif_attribute_row(legend, arg_value = nil, hint: nil, &block)
+  def motif_attribute_row(legend, arg_value = nil, hint: nil, margin: true, &block)
     value = block.present? ? capture(&block) : display_value_or_na_placeholder(arg_value)
-    value += tag.div(hint, class: "text-muted") if arg_value.present? && arg_value.exclude?("text-muted") && hint.present?
-    tag.div(tag.div(legend, class: "col-md-4 text-right") +
-        tag.div(value, class: "col-md-8 text-bold"), class: "row")
+
+    inner_tags = tag.span("#{legend} : ") + tag.span(value, class: "text-bold")
+
+    if hint.present?
+      inner_tags += tag.div(hint, class: "fr-text-mention--grey")
+    end
+
+    tag.div(inner_tags, class: ("fr-mt-4w" if margin))
   end
 
   def available_slots_count(motif)
@@ -135,10 +149,10 @@ module MotifsHelper
   end
 
   def restriction_for_rdv_to_html(motif)
-    auto_link(simple_format(motif.restriction_for_rdv, {}, wrapper_tag: "span"), html: { target: "_blank" })
+    auto_link(simple_format(motif.restriction_for_rdv, {}, wrapper_tag: "p"), html: { target: "_blank" })
   end
 
   def instruction_for_rdv_to_html(motif)
-    auto_link(simple_format(motif.instruction_for_rdv, {}, wrapper_tag: "span"), html: { target: "_blank" })
+    auto_link(simple_format(motif.instruction_for_rdv, {}, wrapper_tag: "p"), html: { target: "_blank" })
   end
 end

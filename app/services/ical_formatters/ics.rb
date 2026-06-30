@@ -36,7 +36,6 @@ module IcalFormatters
       cal
     end
 
-    # rubocop:disable Metrics/PerceivedComplexity
     def self.populate_event(event, payload, tzid)
       event.uid = payload[:ical_uid]
       event.status = if payload[:action].present? && payload[:action] == :destroy
@@ -69,6 +68,5 @@ module IcalFormatters
       event.organizer = "mailto:#{payload[:domain].secretariat_email}"
       event.categories = ["RDV Service Public"] # Cette catégorie permet de filtrer tous les événements que nous créons.
     end
-    # rubocop:enable Metrics/PerceivedComplexity
   end
 end

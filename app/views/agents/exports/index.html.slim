@@ -3,7 +3,7 @@
 - if @exports.any?
   .row.my-4
     .col-md-12
-      .text-muted.font-14
+      .fr-text-mention--grey.font-14
         |> Vous trouverez ci-dessous les exports réalisés au cours de ces deux dernières semaines.
         => "Les liens de téléchargement expirent chaque soir à minuit."
         |> Si le lien a expiré, vous pouvez générer un nouvel export à partir de la
@@ -17,7 +17,7 @@
           td.align-middle
             = export.to_s
             br
-            .text-muted
+            .fr-text-mention--grey
               = export.organisation_ids.map { Organisation.find(_1).name }.join(", ")
           td.align-middle
             .text-right

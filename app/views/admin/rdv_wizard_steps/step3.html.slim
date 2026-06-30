@@ -21,18 +21,16 @@ ruby:
           fieldset
             - lieux = Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name
             = f.select :lieu_id, lieux.collect { |l| [l.full_name, l.id] }, { include_blank: true }, class: "select2-input fr-select", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: "", "auto-select-sole-option": true, "select2-config": { disableSearch: lieux.count <= 5 } }
-            small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
+            small.form-text.fr-text-mention--grey data={"rdv-lieu-target": "new_lieu_link"}
               = t(".single_use_lieu_hint_html")
           fieldset data={ "rdv-lieu-target": "new_lieu_fieldset" }
             .border.p-2.bg-light
               = f.fields_for :lieu, (new_lieu_record ? @rdv.lieu : Lieu.new) do |f2|
                 = render "admin/lieux/lieu_fields", f: f2
-            small.form-text.text-muted data={"rdv-lieu-target": "select_lieu_link"}
+            small.form-text.fr-text-mention--grey data={"rdv-lieu-target": "select_lieu_link"}
               = t(".existing_lieu_hint_html")
       - elsif @rdv.home?
         = f.dsfr_text_field :address, label: "Lieu (RDV à domicile)", disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}", data: { "address-autocomplete": "on" }, dir: "ltr"
-      - elsif @rdv.phone?
-        = f.dsfr_text_field :address, label: "Lieu (RDV téléphonique)", disabled: true, hint: "Il n'y a pas d'adresse car le RDV est téléphonique", data: { "address-autocomplete": "on" }, dir: "ltr"
       .fr-input-group
         = f.label :agents, class: "fr-label"
         = f.select :agent_ids, @rdv.motif.authorized_agents.collect { |a| [a.reverse_full_name_and_service, a.id] }, {}, multiple: true, class: "select2-input fr-select", data: { "auto-select-sole-option": true }

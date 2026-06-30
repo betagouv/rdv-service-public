@@ -3,7 +3,7 @@ class Ical::RruleExpander
     @raw_ical = raw_ical
   end
 
-  def compute_occurrences_within(time_range) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def compute_occurrences_within(time_range)
     all_occurrences = []
     calendars = Icalendar::Calendar.parse(@raw_ical)
 
@@ -38,6 +38,7 @@ class Ical::RruleExpander
           start_time = exception_ical_event.dtstart.to_time
           next if exception_ical_event.transp == "TRANSPARENT"
           next unless start_time >= time_range.min && start_time < time_range.max
+          next if exception_ical_event.dtend.nil?
 
           all_occurrences << Recurrence::Occurrence.new(starts_at: exception_ical_event.dtstart.in_time_zone, ends_at: exception_ical_event.dtend.in_time_zone)
         end

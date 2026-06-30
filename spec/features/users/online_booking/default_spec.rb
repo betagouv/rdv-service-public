@@ -474,23 +474,23 @@ RSpec.describe "User can search for rdvs" do
 
     it "isn't shown to the users" do
       visit root_path(departement: "92")
-      expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.")
+      expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé. Veuillez réessayer ultérieurement.")
 
       motif.update!(bookable_by: "everyone") # to make sure this spec isn't a false positive
 
       visit root_path(departement: "92")
-      expect(page).not_to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.")
+      expect(page).not_to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé. Veuillez réessayer ultérieurement.")
     end
 
     it "isn't shown to the users when bookable_by is agents_and_prescripteurs_and_invited_users" do
       motif.update!(bookable_by: "agents_and_prescripteurs_and_invited_users")
       visit root_path(departement: "92")
-      expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.")
+      expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé. Veuillez réessayer ultérieurement.")
 
       motif.update!(bookable_by: "everyone") # to make sure this spec isn't a false positive
 
       visit root_path(departement: "92")
-      expect(page).not_to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.")
+      expect(page).not_to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé. Veuillez réessayer ultérieurement.")
     end
   end
 
@@ -603,7 +603,6 @@ RSpec.describe "User can search for rdvs" do
     fill_in("Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: "michel@lapin.fr").code)
     click_on("Valider")
 
-    expect(page).to have_content("Connexion réussie")
     expect(page).to have_content("Étape 1 sur 3")
   end
 

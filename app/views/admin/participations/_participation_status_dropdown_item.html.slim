@@ -1,11 +1,11 @@
 /# locals: (participation:, status:, contextual_agents:)
 
 = link_to admin_organisation_rdv_participation_path(participation.rdv.organisation, participation.rdv, participation, participation: { status: status }, contextual_agent_ids: contextual_agents&.map(&:id)),
-  class: "dropdown-item", data: { turbo_method: :put, confirm: change_status_confirmation_message(participation.rdv, status) } do
+  class: "dropdown-item", data: { turbo_method: :put, turbo_confirm: change_status_confirmation_message(participation.rdv, status) } do
   span
     => icon("fr-icon-circle-fill", class: "rdv-status-#{status}")
     = Participation.human_attribute_value(:status, status, context: :action)
-    .text-wrap.text-muted
+    .text-wrap.fr-text-mention--grey
       = Participation.human_attribute_value(:status, status, context: :explanation)
       - if status.in?(Rdv::RDV_STATUSES_TO_NOTIFY) && participation.rdv.in_the_future?
         <br />

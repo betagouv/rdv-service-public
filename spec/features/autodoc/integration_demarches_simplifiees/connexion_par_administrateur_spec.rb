@@ -23,27 +23,21 @@ RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par u
   specify do
     doc = Autodoc.start_scenario("1) Connexion de à RDV Service Public par un admin", self, category: "4) Intégration à Démarches Simplifiées")
 
+    login_as(agent, scope: :agent)
+
     visit oauth_authorization_path(
       client_id: oauth_application.uid,
       redirect_uri: oauth_application.redirect_uri.split("\n").first, response_type: :code, scope: :write, state: "fakestate"
     )
     doc.start_section("Connexion initiale")
 
+    # Si je ne suis pas connecté, je me fais rediriger vers le /authorize de ProConnect pour le silent login
+    # Pour simplifier cette spec, on s'est connecté au préalable
+
     doc.add_text <<~TEXT
       Depuis Démarches Simplifiées, l'administrateur connecte RDV Service Public.
       Il n'a pas besoin d'avoir un compte sur RDV Service Public : il peut directement utiliser ProConnect.
     TEXT
-
-    text = <<~TEXT
-      Je peux me connecter avec ProConnect même si je n'ai jamais utilisé RDV Service Public.
-      Si j'ai déjà un compte, je peux aussi me connecter par email et mot de passe.
-      Si je suis déjà connecté à RDV Service Public, cet écran ne s'affiche pas et je passe directement au suivant.
-    TEXT
-    doc.add_screenshot(page, text: text, wait_for: "S’identifier avec\nProConnect", disable_high_res_zoom: true)
-
-    fill_in "Adresse email", with: agent.email
-    fill_in "Mot de passe", with: agent.password
-    click_on "Se connecter"
 
     doc.add_screenshot(page,
                        text: "On me demande de confirmer que j'accepte de connecter les deux applications.",

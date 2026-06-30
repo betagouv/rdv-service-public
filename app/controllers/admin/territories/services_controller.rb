@@ -1,6 +1,25 @@
 class Admin::Territories::ServicesController < Admin::Territories::BaseController
+  def new
+    authorize(current_territory, :manage_services?, policy_class: Agent::TerritoryPolicy)
+    @service = Service.new
+  end
+
+  def create
+    authorize(current_territory, :manage_services?, policy_class: Agent::TerritoryPolicy)
+    permitted_params = params.require(:service).permit(:name, :short_name)
+    @service = Service.new(permitted_params)
+
+    if @service.save
+      current_territory.territory_services.find_or_create_by!(service_id: @service.id)
+      flash[:success] = %(Le service "#{@service.name} (#{@service.short_name})" vient d'être créé et activé dans votre espace.)
+      redirect_to edit_admin_territory_services_path(territory_id: current_territory.id)
+    else
+      render :new
+    end
+  end
+
   def edit
-    authorize(current_territory, policy_class: Agent::TerritoryPolicy)
+    authorize(current_territory, :manage_services?, policy_class: Agent::TerritoryPolicy)
 
     activated_services = format_for_checkboxes(current_territory.services.reject(&:secretariat?))
     other_services = format_for_checkboxes(Service.where.not(id: current_territory.service_ids).reject(&:secretariat?))
@@ -9,7 +28,7 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
   end
 
   def update
-    authorize(current_territory, policy_class: Agent::TerritoryPolicy)
+    authorize(current_territory, :manage_services?, policy_class: Agent::TerritoryPolicy)
     current_territory.update!(services_params)
     flash[:success] = "Liste des services disponibles mise à jour"
 

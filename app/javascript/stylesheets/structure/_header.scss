@@ -57,7 +57,7 @@ a[href].link-dsfr {
   font-weight: 500;
 
   line-height: 1.5rem;
-  color: $blue;
+  color: var(--text-action-high-blue-france);
   border: 2px solid transparent;
 
   &:hover {

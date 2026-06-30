@@ -15,18 +15,13 @@ module ApplicationHelper
   end
 
   def alert_dsfr_type_for(alert)
-    case alert
-    when :success
-      :success
-    when :alert
-      :warning
-    when :error
-      :error
-    when :notice
-      :info
-    else
-      raise ArgumentError, "alert should be a key among :success, :alert, :error or :notice"
-    end
+    {
+      success: :success,
+      alert: :warning,
+      error: :error,
+      notice: :info,
+      login: :info,
+    }[alert] || raise(ArgumentError, "alert should be a key among :success, :alert, :error, :notice, or :login")
   end
 
   def datetime_input(form, field, input_html: {}, options: {})
@@ -90,7 +85,7 @@ module ApplicationHelper
   end
 
   def human_id(sector)
-    tag.span(sector.human_id, class: "badge badge-light text-monospace")
+    tag.span(sector.human_id, class: "fr-badge fr-badge--sm")
   end
 
   def boolean_tag(value, &block)
@@ -101,11 +96,6 @@ module ApplicationHelper
     end
   end
 
-  def boolean_attribute_tag(object, attribute_name)
-    value = object.send(attribute_name)
-    boolean_tag(value) { object.class.human_attribute_value(attribute_name, value) }
-  end
-
   def object_attribute_tag(object, attribute_name, value = :delegate_to_object)
     name = object.class.human_attribute_name(attribute_name)
 
@@ -113,8 +103,13 @@ module ApplicationHelper
       value = object.human_attribute_value(attribute_name)
     end
 
-    tag.strong(tag.span(name) + tag.span(" : ")) +
-      tag.span(value.presence || "Non renseigné", class: class_names("text-muted": value.blank?))
+    value_tag = if value.present?
+                  tag.span(value)
+                else
+                  tag.i("Non renseigné", class: "fr-text-mention--grey")
+                end
+
+    tag.span(sanitize("#{name}&nbsp: "), class: "fr-text-mention--grey") + value_tag
   end
 
   def self_anchor(identifier, &block)

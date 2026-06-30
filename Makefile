@@ -2,10 +2,10 @@ install: ## Setup development environment
 	bin/setup
 
 run: ## Start the application (web, jobs et webpack)
-	OVERMIND_SKIP_ENV=true overmind start -f Procfile.dev
+	overmind start -f Procfile.dev
 
 run_single_instance: ## Run only the RDV Service Public instance
-	OVERMIND_SKIP_ENV=true overmind start -f Procfile.dev -l "web,jobs,js"
+	overmind start -f Procfile.dev -l "web,jobs,js"
 
 lint: lint_rubocop lint_slim lint_brakeman ## Run all linters
 
@@ -50,7 +50,10 @@ review_app: ## Create Scalingo review app for the PR linked to the current branc
 	ruby scripts/devtools/create_review_app.rb
 
 enable_emails_on_review_app:
-	/bin/sh scripts/enable_emails_on_review_app.sh
+	/bin/sh scripts/devtools/enable_emails_on_review_app.sh
+
+display_login_codes_on_review_app:
+	/bin/sh scripts/devtools/display_login_codes_on_review_app.sh
 
 help: ## Display available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'

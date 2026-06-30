@@ -37,7 +37,7 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     custom_cancel_warning_message
   ].freeze
 
-  def batch_update # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
+  def batch_update
     @motifs = Motif.where(id: params[:motif_ids])
     @motifs.each do |motif|
       authorize(motif, :update?, policy_class: Agent::MotifPolicy)

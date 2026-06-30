@@ -21,18 +21,6 @@
   margin-bottom: 8px;
 }
 
-.card-subtitle {
-  color: black;
-  font-size: 1.25rem;
-}
-
-.card-hoverable {
-  border: 1px solid transparent;
-  &:hover {
-    border-color: $blue;
-  }
-}
-
 .light-gray-card {
   background-color: #f6f6f6;
 }

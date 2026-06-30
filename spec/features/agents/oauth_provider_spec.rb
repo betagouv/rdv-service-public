@@ -21,7 +21,8 @@ RSpec.describe "OAuth provider", js: true do
   stub_env_with(
     RDV_SERVICE_PUBLIC_OAUTH_BASE_URL: "http://localhost:#{Capybara.server_port}",
     RDV_SERVICE_PUBLIC_OAUTH_APP_ID: "fake_app_id",
-    RDV_SERVICE_PUBLIC_OAUTH_APP_SECRET: "fake_app_secret"
+    RDV_SERVICE_PUBLIC_OAUTH_APP_SECRET: "fake_app_secret",
+    PRO_CONNECT_DISABLED: "true" # Pour simplifier la connexion dans les tests, on fait une connexion par email/mot de passe
   )
 
   let!(:agent) do
@@ -49,7 +50,6 @@ RSpec.describe "OAuth provider", js: true do
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
 
-    expect(page).to have_content("Connexion réussie")
     expect(page).to have_content("En continuant, vous allez permettre à Démarches Simplifiées d'accéder à votre compte RDV Solidarités")
     click_on "Continuer"
     expect(page).to have_content("Votre email est francis@factice.org")
@@ -71,7 +71,7 @@ RSpec.describe "OAuth provider", js: true do
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
-    expect(page).to have_content("Connexion réussie")
+    expect(page).to have_content("Pour commencer, aidez-nous à en savoir plus :")
 
     visit "http://localhost:4567/"
     click_button "Se connecter avec RDV Service Public"

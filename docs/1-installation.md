@@ -2,19 +2,22 @@
 
 ## Prérequis
 
-- Déploiement:
-  - Ruby 3.3.5 (nous conseillons l’utilisation de [rbenv](https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts))
-  - PostgreSQL >= 12, l’utilisateur doit avoir les droits `superuser`. C'est nécessaire pour pouvoir activer les extensions utilisés.
-- Développement
-  - [Yarn](https://yarnpkg.com/en/docs/install)
-  - [graphviz](https://voormedia.github.io/rails-erd/install.html) (pour [rails-erd](https://github.com/voormedia/rails-erd)).
-  - [redis](https://redis.io/docs/getting-started/installation/)
-  - [Scalingo CLI](https://doc.scalingo.com/cli) (OPTIONAL)
-  - [Make](https://fr.wikipedia.org/wiki/Make) (OPTIONAL)
+- [Mise](https://mise.jdx.dev/getting-started.html) : gère l'installation et les MàJ de ruby, node & yarn
+- PostgreSQL 16, l’utilisateur doit avoir les droits `superuser`. C'est nécessaire pour pouvoir activer les extensions utilisés.
+- [graphviz](https://voormedia.github.io/rails-erd/install.html) (pour [rails-erd](https://github.com/voormedia/rails-erd)).
+- [redis](https://redis.io/docs/getting-started/installation/)
+- [Scalingo CLI](https://doc.scalingo.com/cli) (OPTIONAL)
+- [Make](https://fr.wikipedia.org/wiki/Make) (OPTIONAL)
+- (MacOS spécifique) `brew install libyaml pkgconfig` (pour la gem psych)
 
 ## Setup
 
-Exécutez ce script pour installer les gems et packages et créer la base de données :
+Cette commande installe Ruby, Node et Yarn en respectant les versions des fichiers .node-version, .ruby-version et package.json :
+```bash
+mise install
+```
+
+Cette commande installe les gems et packages et créer la base de données :
 ```bash
 make install  ## appelle bin/setup
 ```

@@ -28,7 +28,12 @@ class Autodoc
       end
     )
 
-    puts "La doc est accessible sur file://#{Rails.root.join('tmp/capybara/autodoc/index.html')}"
+    if @categories.count == 1 && @categories.values.first.count == 1
+      index = @categories.values.first.first.index
+      puts "La doc est accessible sur file://#{Rails.root.join('tmp/capybara/autodoc/')}scenario_#{index}.html"
+    else
+      puts "La doc est accessible sur file://#{Rails.root.join('tmp/capybara/autodoc/index.html')}"
+    end
   end
 
   class Scenario
@@ -55,7 +60,7 @@ class Autodoc
     # On zoome artificiellement pour avoir des captures d'écran en haute résolution, mais cela peut fausser l'affichage
     # des pages qui utilisent un layout centré verticalement.
     # Dans ce cas, il faut passer l'option `disable_high_res_zoom: true` pour avoir un affichage correct (mais une capture d'écran en basse définition)
-    def add_screenshot(page_or_email, text: nil, wait_for: nil, accessibility_checks: true, disable_high_res_zoom: false) # rubocop:disable Metrics/PerceivedComplexity
+    def add_screenshot(page_or_email, text: nil, wait_for: nil, accessibility_checks: true, disable_high_res_zoom: false)
       if wait_for
         @example.expect(page_or_email).to(@example.have_content(wait_for))
       end

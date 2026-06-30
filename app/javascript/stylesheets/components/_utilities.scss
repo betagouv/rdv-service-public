@@ -65,7 +65,7 @@ a[disabled] {
 }
 
 .rdv-color-active-blue {
-  color: var(--background-active-blue-france);
+  color: var(--text-action-high-blue-france);
 }
 
 // GRID
@@ -154,12 +154,6 @@ ul.horizontal-border-between-items {
 
 .no-transition {
   transition: none !important;
-}
-
-.btn-link:disabled,
-.btn-link.disabled,
-button:disabled {
-  pointer-events: auto; // needed for a disabled button to show a tooltip
 }
 
 .cursor-pointer {

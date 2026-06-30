@@ -9,9 +9,9 @@ RSpec.describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
   end
 
   it "only destroys Rdvs that are more than 2 years old and inactive users created more than 2 years ago" do
-    rdv_occurring_25_months_ago = travel_to(25.months.ago) { create(:rdv, starts_at: Time.zone.today.change(hour: 16)) }
-    rdv_occurring_23_months_ago = travel_to(23.months.ago) { create(:rdv, starts_at: Time.zone.today.change(hour: 16)) }
-    rdv_occurring_11_months_ago = travel_to(11.months.ago) { create(:rdv, starts_at: Time.zone.today.change(hour: 16)) }
+    rdv_occurring_25_months_ago = travel_to(25.months.ago) { create(:rdv, starts_at: Time.zone.now.change(hour: 16)) }
+    rdv_occurring_23_months_ago = travel_to(23.months.ago) { create(:rdv, starts_at: Time.zone.now.change(hour: 16)) }
+    rdv_occurring_11_months_ago = travel_to(11.months.ago) { create(:rdv, starts_at: Time.zone.now.change(hour: 16)) }
 
     user_without_rdv_created_23_months_ago = travel_to(23.months.ago) { create(:user) }
 
@@ -66,7 +66,7 @@ RSpec.describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
   end
 
   it "calls the webhooks" do
-    travel_to(25.months.ago) { create(:rdv, organisation: organisation, starts_at: Time.zone.today.change(hour: 16)) }
+    travel_to(25.months.ago) { create(:rdv, organisation: organisation, starts_at: today_at(16)) }
     expect do
       described_class.new.perform
     end.to have_enqueued_job(WebhookJob).with(json_payload_with_meta("webhook_reason", "rgpd"), webhook_endpoint.id)

@@ -6,6 +6,7 @@
 .row.justify-content-md-center
   .col-md-12.col-lg-8
     = form_for(@rdv, url: admin_organisation_rdvs_collectif_path(current_organisation), method: :put, builder: Dsfr::FormBuilder) do |f|
+      = hidden_field_tag :return_to_form_id, @return_to_form_id if @return_to_form_id
       .card
         .card-header
           h3 = rdv_title_for_agent(@rdv)

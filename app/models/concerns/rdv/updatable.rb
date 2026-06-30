@@ -1,7 +1,6 @@
 module Rdv::Updatable
   extend ActiveSupport::Concern
 
-  # rubocop:disable Metrics/PerceivedComplexity
   def update_and_notify(author, attributes, &block)
     Rdv.transaction do
       @old_agent_ids = agent_ids.to_a
@@ -32,7 +31,6 @@ module Rdv::Updatable
       end
     end
   end
-  # rubocop:enable Metrics/PerceivedComplexity
 
   def participation_token(user_id)
     # For user invited with tokens, nil default for not invited users

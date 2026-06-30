@@ -21,6 +21,19 @@ class Admin::Organisations::OnlineBooking::MotifsController < AgentAuthControlle
     end
   end
 
+  def edit_instructions; end
+
+  def update_instructions
+    @motif.assign_attributes(params.require(:motif).permit(:restriction_for_rdv, :instruction_for_rdv))
+
+    if @motif.save
+      flash[:success] = "Les consignes pour les usagers ont été mises à jour."
+      redirect_to admin_organisation_online_booking_motif_path(current_organisation, motif_id: @motif.id)
+    else
+      render :edit_instructions
+    end
+  end
+
   def open
     if @motif.update(bookable_by: :everyone)
       flash[:success] = "Le motif a été ouvert à la réservation en ligne"

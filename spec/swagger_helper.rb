@@ -385,8 +385,10 @@ RSpec.configure do |config|
               bookable_publicly: { type: "boolean" },
               bookable_by: { type: "string", enum: %w[agents agents_and_prescripteurs agents_and_prescripteurs_and_invited_users everyone] },
               service_id: { type: "integer", nullable: true },
+              min_public_booking_delay: { type: "integer", description: "Les premiers créneaux proposés aux usagers et aux prescripteurs ne commenceront pas avant ce délai minimum (en secondes)." },
+              max_public_booking_delay: { type: "integer", description: "Les derniers créneaux proposés aux usagers et aux prescripteurs n'iront pas au delà de ce délai maximum (en secondes)." },
             },
-            required: %w[id deleted_at location_type name organisation_id bookable_publicly bookable_by service_id],
+            required: %w[id deleted_at location_type name organisation_id bookable_publicly bookable_by service_id min_public_booking_delay max_public_booking_delay],
           },
           motif_categories: {
             type: "object",
@@ -624,7 +626,7 @@ RSpec.configure do |config|
           description: "Serveur de démo",
         },
         {
-          url: "https://rdv.anct.gouv.fr",
+          url: "https://rdv.numerique.gouv.fr",
           description: "Serveur de production pour RDV Service Public",
         },
         {

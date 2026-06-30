@@ -10,7 +10,7 @@
   .col-md-6= f.input :last_name, **input_opts
 
 .form-row
-  - if current_domain != Domain::RDV_SERVICE_PUBLIC
+  - unless current_domain.rdv_service_public?
     .col-md-6= f.input :birth_name, **input_opts.deep_merge(frozen_fields_opts)
   - if current_territory.enable_birth_date_field?
     .col-md-6= date_input(f, :birth_date, **input_opts.deep_merge(frozen_fields_opts))
@@ -31,7 +31,7 @@
     **input_opts.deep_merge(user.already_logged_in? ? { disabled: true, input_html: { class: "js-force-disabled" } } : {}) \
   )
 - if user.already_logged_in?
-  .mt-1.text-muted
+  .mt-1.fr-text-mention--grey
     | L'usager s'étant connecté, vous ne pouvez plus modifier ses préférences de notification
 
 - if current_territory.enable_address_field?

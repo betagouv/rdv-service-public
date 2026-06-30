@@ -7,7 +7,7 @@ ul.list-group.list-group-flush.fr-mb-3w.fr-mt-0
       = rdv_tag(rdv)
 
   - if rdv.motif.restriction_for_rdv.present?
-    li.list-group-item.fr-pl-0.fr-py-2w.alert.alert-warning
+    li.list-group-item.fr-pl-0.fr-py-2w
       span.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
       = restriction_for_rdv_to_html(rdv.motif)
 

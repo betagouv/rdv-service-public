@@ -28,7 +28,7 @@ RSpec.describe "User can select a creneau" do
 
       find("a", text: motif.name).click
 
-      expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.")
+      expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé. Veuillez réessayer ultérieurement.")
     end
 
     context "when the user is invited" do

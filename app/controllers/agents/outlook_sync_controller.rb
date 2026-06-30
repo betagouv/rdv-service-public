@@ -1,6 +1,4 @@
 class Agents::OutlookSyncController < AgentAuthController
-  include Admin::AuthenticatedControllerConcern
-
   layout "application_agent_config"
   before_action { @active_agent_preferences_menu_item = :synchronisation }
 

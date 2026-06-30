@@ -15,15 +15,18 @@ class SearchController < ApplicationController
       return
     end
 
-    if [Domain::RDV_SERVICE_PUBLIC, Domain::RDV_SERVICE_PUBLIC_ETAT].include?(current_domain)
+    if current_domain == Domain::RDV_SERVICE_PUBLIC
       @site_vitrine_page = true
-      render "dsfr/rdv_mairie/homepage"
+      render "static_pages/homepage_anct"
+    elsif current_domain == Domain::RDV_SERVICE_PUBLIC_ETAT
+      @site_vitrine_page = true
+      render "static_pages/homepage_etat"
     else
       search_rdv
     end
   end
 
-  def search_rdv # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+  def search_rdv
     if search_on_migrated_organisation
       redirect_to migrated_organisation_booking_url, allow_other_host: true
     elsif current_agent && params[:prescripteur] == Prescripteur::INTERNE && params[:current_organisation]

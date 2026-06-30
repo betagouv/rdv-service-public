@@ -60,7 +60,6 @@ RSpec.describe "Agents can configure online booking" do
 
     it "shows the banner when needed, until the availabilities are open" do
       visit admin_organisation_online_booking_path(organisation)
-      find("label", text: motif.name).click
       click_on "Enregistrer"
 
       expect(page).to have_content("Le motif Motif individuel est ouvert à la réservation en ligne.")
@@ -92,7 +91,6 @@ RSpec.describe "Agents can configure online booking" do
     it "displays the motif's status" do
       visit admin_organisation_online_booking_path(organisation)
 
-      find("label", text: motif.name).click
       click_on "Enregistrer"
 
       expect(page).to have_content("Pas de disponibilités")
@@ -125,7 +123,6 @@ RSpec.describe "Agents can configure online booking" do
     it "displays the motif's status" do
       visit admin_organisation_online_booking_path(organisation)
 
-      find("label", text: motif.name).click
       click_on "Enregistrer"
 
       create(:rdv, motif: motif, max_participants_count: 5, organisation:)

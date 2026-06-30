@@ -7,7 +7,7 @@
 publiccodeYmlVersion: '0.2'
 name: RDV Service Public
 url: 'https://github.com/betagouv/rdv-service-public'
-landingURL: 'https://rdv.anct.gouv.fr/'
+landingURL: 'https://rdv.numerique.gouv.fr/'
 developmentStatus: stable
 softwareType: standalone/backend
 categories:
@@ -32,7 +32,7 @@ description:
   fr:
     documentation: 'https://aide.rdv-service-public.fr/'
     apiDocumentation: |-
-      https://rdv.anct.gouv.fr/api-docs/
+      https://rdv.numerique.gouv.fr/api-docs/
     shortDescription: |-
       outil permettant aux usagers de prendre RDV avec les administrations
     longDescription: |

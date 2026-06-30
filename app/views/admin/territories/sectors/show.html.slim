@@ -27,11 +27,9 @@
           .card-title
             h5 Communes ou rues associées
         .card-body
-          .alert.alert-warning.d-flex.align-items-center
-            div.mr-2.h4 ⚠️
-            div
-              .mb-1 Aucune commune ni rue associée
-              div Ce secteur ne peut pas être recherché par les usagers
+          .fr-alert.fr-alert--warning.fr-mb-2w
+            .mb-1 Aucune commune ni rue associée
+            div Ce secteur ne peut pas être recherché par les usagers
           = link_to new_admin_territory_sector_zone_path(current_territory, @sector), class: "fr-btn fr-btn--icon-left fr-icon-add-line" do
             | Ajouter une commune ou une rue
       - else
@@ -50,18 +48,18 @@
               tr
                 td
                   = zone.city_name
-                  .badge.badge-light.text-monospace= zone.city_code
+                  .fr-badge.fr-badge--sm.fr-ml-1v= zone.city_code
                 - if zone.level_street?
                   td
                     = zone.street_name
-                    .badge.badge-light.text-monospace= zone.street_ban_id
+                    .fr-badge.fr-badge--sm.fr-ml-1v= zone.street_ban_id
                 - else
-                  td.text-muted Commune entière
+                  td.fr-text-mention--grey Commune entière
                 td
                   - policy = Agent::ZonePolicy.new(current_agent, zone)
                   - if policy.destroy?
                     = link_to "retirer", admin_territory_sector_zone_path(current_territory, @sector, zone), method: :delete
-        div= paginate @zones
+        div= paginate @zones, theme: "dsfr"
         .mb-2.rdv-text-align-center
           .mb-2= page_entries_info @zones
           - if @zones.count > 5
@@ -88,7 +86,7 @@
               span.ml-2>= link_to "Retirer", admin_territory_sector_attribution_path(current_territory, @sector, attribution), method: :delete
             .pl-2.py-1.border-left
               - orga_motifs = Motif.sectorisation_level_organisation.where(organisation: attribution.organisation)
-              .text-muted
+              .fr-text-mention--grey
                 = t( \
                   "sectors.motifs_with_organisation_level_sectorisation", \
                   count: orga_motifs.count, \
@@ -102,7 +100,7 @@
             - services_of_attributed_agents = all_attributions.map(&:agent).map(&:services).flatten.uniq
             - services_of_attributed_agents.each do |service|
               span> Service #{service.short_name}
-              span.text-muted.ml-1
+              span.fr-text-mention--grey.ml-1
                 - service_motifs = Motif.sectorisation_level_agent.where(organisation: organisation, service: service)
                 = t( \
                   "sectors.motifs_with_agent_level_sectorisation_in_service", \
@@ -127,15 +125,13 @@
             )
 
         - if @sector.attributions.empty?
-          .alert.alert-warning.d-flex.align-items-center
-            div.mr-2.h4 ⚠️
-            div
-              .mb-1 Aucune organisation ni agent attribués
-              div Ce secteur ne renvoie pas de disponibilités
+          .fr-alert.fr-alert--warning.fr-mb-2w
+            .mb-1 Aucune organisation ni agent attribués
+            div Ce secteur ne renvoie pas de disponibilités
         = link_to new_admin_territory_sector_attribution_path(current_territory, @sector, level: "organisation"), class: "fr-btn fr-btn--icon-left fr-icon-add-line" do
           | Attribuer une organisation ou un agent
       .card-footer
-        .text-muted Lorsqu'un usager cherche une adresse couverte par ce secteur, les disponibilités des organisations ou des agents attribués lui seront proposées
+        .fr-text-mention--grey Lorsqu'un usager cherche une adresse couverte par ce secteur, les disponibilités des organisations ou des agents attribués lui seront proposées
 
     .card
       .small[

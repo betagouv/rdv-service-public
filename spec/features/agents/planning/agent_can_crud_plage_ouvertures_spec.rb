@@ -16,7 +16,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       expect(page).to have_content("Planning de\n#{agent.reverse_full_name}") # vue liste
       click_link "Permanence"
 
-      expect(page).to have_content("Libellé :\nPermanence")
+      expect(page).to have_content("Permanence")
       click_link "Modifier"
 
       expect(page).to have_content("Modifier votre plage d'ouverture")
@@ -143,7 +143,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       expect(page).to have_content "Semaine" # necessary to make sure the calendar page has loaded
       expect(page).to have_content "Permanence"
       first("a.fc-event:not(.fc-event-today)", text: "Permanence").click
-      expect(page).to have_content("Libellé :\nPermanence")
+      expect(page).to have_content("Permanence")
       click_link "Modifier"
 
       expect(page).to have_content("Modifier la plage d'ouverture de Jane FAROU")
@@ -183,7 +183,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
         expect(page).to have_content("Planning deFAROU Jane")
         click_link "Permanence"
 
-        expect(page).to have_content("Libellé :\nPermanence")
+        expect(page).to have_content("Permanence")
         click_link "Modifier"
 
         expect(page).to have_content("Modifier la plage d'ouverture de Jane FAROU")

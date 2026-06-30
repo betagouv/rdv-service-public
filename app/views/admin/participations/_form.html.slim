@@ -18,7 +18,7 @@ div data-controller="destroyable"
       h6= t("admin.participations.notifications_overrides")
       = form.dsfr_check_box :send_lifecycle_notifications
       - if current_organisation.rdv_insertion?
-        span.text-muted.font-14= participation.rdv.motif.human_attribute_value(:visibility_type, context: :hint_checkbox)
+        span.fr-text-mention--grey.font-14= participation.rdv.motif.human_attribute_value(:visibility_type, context: :hint_checkbox)
       = form.dsfr_check_box :send_reminder_notification
       - if current_organisation.rdv_insertion?
-        span.text-muted.font-14= participation.rdv.motif.human_attribute_value(:visibility_type, context: :hint_checkbox)
+        span.fr-text-mention--grey.font-14= participation.rdv.motif.human_attribute_value(:visibility_type, context: :hint_checkbox)

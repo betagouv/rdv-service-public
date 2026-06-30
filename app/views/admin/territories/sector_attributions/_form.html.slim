@@ -10,7 +10,7 @@ do |f|
     label_method: -> { sanitize("&nbsp;&nbsp;") + SectorAttribution.human_attribute_value(:level, _1) }, \
     as: :radio_buttons, \
     wrapper: :vertical_collection_inline
-  .d-flex.align-items-center.mb-3.mt-1.text-muted
+  .d-flex.align-items-center.mb-3.mt-1.fr-text-mention--grey
     = icon("fr-icon-information-fill")
     div.pl-2
     - if sector_attribution.level_organisation?
@@ -46,10 +46,10 @@ do |f|
     disabled: available_organisations.blank? || (sector_attribution.level_agent? && available_agents.blank?)
 
   - if available_organisations.blank?
-    .alert.alert-warning.mt-2
+    .fr-alert.fr-alert--warning.fr-mt-2w
       | Impossible de rajouter une attribution à une organisation entière car les organisations que vous administrez sont déjà attribuées à ce Secteur.
   - elsif sector_attribution.level_agent? && available_agents&.empty?
-    .alert.alert-warning.mt-2
+    .fr-alert.fr-alert--warning.fr-mt-2w
       - if sector.attributions.level_agent.where(organisation: sector_attribution.organisation).any?
         | Tous les agents de l'organisation #{sector_attribution.organisation.name} sont déjà attribués à ce secteur.
       - else

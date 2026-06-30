@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_18_132616) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_10_142439) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -36,7 +36,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_18_132616) do
   create_enum "sms_provider", ["netsize", "send_in_blue", "contact_experience", "sfr_mail2sms", "clever_technologies", "orange_contact_everyone"]
   create_enum "user_created_through", ["unknown", "agent_creation", "user_sign_up", "franceconnect_sign_up", "user_relative_creation", "agent_creation_api", "prescripteur", "auto_through_login"]
   create_enum "user_invited_through", ["devise_email", "external"]
-  create_enum "verticale", ["rdv_insertion", "rdv_solidarites", "rdv_aide_numerique", "rdv_mairie"]
+  create_enum "verticale", ["rdv_insertion", "rdv_solidarites", "rdv_aide_numerique", "rdv_mairie", "rdv_etat"]
 
   create_table "absences", force: :cascade do |t|
     t.bigint "agent_id", null: false
@@ -596,6 +596,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_18_132616) do
     t.time "secondary_start_time"
     t.time "secondary_end_time"
     t.string "hex_color", limit: 7, default: "#c6ecff", null: false
+    t.integer "minutes_after_rdvs", default: 0, null: false
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_plage_ouvertures_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_plage_ouvertures_on_agent_id"
     t.index ["expired_cached"], name: "index_plage_ouvertures_on_expired_cached"
@@ -660,6 +661,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_18_132616) do
     t.integer "created_by_id"
     t.string "created_by_type", null: false
     t.string "visio_url_custom"
+    t.integer "minutes_after_rdv", default: 0, null: false
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by_type", "created_by_id"], name: "index_rdvs_on_created_by_type_and_created_by_id"
     t.index ["ends_at"], name: "index_rdvs_on_ends_at"
@@ -728,7 +730,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_18_132616) do
     t.datetime "updated_at", null: false
     t.string "short_name", null: false
     t.index "lower((name)::text)", name: "index_services_on_lower_name", unique: true
-    t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name", unique: true
+    t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name"
     t.index ["name"], name: "index_services_on_name"
   end
 

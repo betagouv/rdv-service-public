@@ -62,8 +62,6 @@ module RdvExporter
     end
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
   def self.row_array_from(rdv)
     [
       rdv.created_at.year,
@@ -90,8 +88,6 @@ module RdvExporter
       rdv.motif.collectif ? "oui" : "non",
     ]
   end
-  # rubocop:enable Metrics/PerceivedComplexity
-  # rubocop:enable Metrics/CyclomaticComplexity
 
   def self.commune_premier_responsable(rdv)
     rdv.users.map(&:user_to_notify).pluck(:city_name).compact.first

@@ -2,12 +2,12 @@
   = render "devise/shared/error_messages", resource: resource
   = f.input :email, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), placeholder: "nom.prenom@email.com", disabled: true
   - if devise_mapping.confirmable? && resource.pending_reconfirmation?
-    .form-text.text-muted
+    .form-text.fr-text-mention--grey
       | En attente de confirmation pour #{resource.unconfirmed_email}
 
   = f.input :first_name, placeholder: "Prénom", disabled: true
   = f.input :last_name, placeholder: "Nom", disabled: true
   = f.association :services, collection: resource.services, disabled: true, input_html: { class: "select2-input" }
   - if resource.pro_connect_openid_sub
-    .form-text.text-muted.mb-2
+    .form-text.fr-text-mention--grey.mb-2
       | Les informations de votre compte proviennent de ProConnect.

@@ -8,25 +8,25 @@
 ## Présentation
 
 L’objectif de ce service numérique public est de faciliter la gestion et la prise de rendez-vous dans les administrations.
-Il s’agit d’une solution s’adressant à toutes les organsisations publiques : 
+Il s’agit d’une solution s’adressant à toutes les organisations publiques :
 - Administrations de l’État
 - Opérateurs de services publics
 - Collectivités territoriales
 
 Ce service est porté par la [Direction interministérielle du Numérique (DINUM)](https://www.numerique.gouv.fr/dinum/) et l'[incubateur des territoires de l'ANCT](https://incubateur.anct.gouv.fr/).
 
-## Les instances 
+## Les instances
 
 Historiquement crée en 2018 par un consortium de départements sous le nom de « Lapins » devenu « RDV Solidarités », le service s’est généralisé en 2023 pour devenir « RDV Service Public ».
 Il existe aujourd’hui 2 instances principales de l’application :
 - [RDV Solidarités](https://rdv-solidarites.fr)
-- [RDV Service Public](https://rdv.anct.gouv.fr)
+- [RDV Service Public](https://rdv.numerique.gouv.fr)
 
 Une unique instance de démonstration est également disponible aux adresses suivantes : [https://demo.rdv-solidarites.fr](demo.rdv-solidarites.fr) et [https://demo.rdv.anct.gouv.fr](demo.rdv.anct.gouv.fr)
 
 ## Statistiques
 
-Les statistiques d'utilisation du service sont disponibles publiquement à l'adresse suivante : [rdv.anct.gouv.fr/stats](https://rdv.anct.gouv.fr/stats)
+Les statistiques d'utilisation du service sont disponibles publiquement à l'adresse suivante : [rdv.numerique.gouv.fr/stats](https://rdv.numerique.gouv.fr/stats)
 
 Des données ouvertes sont également disponibles sur [data.gouv.fr](https://www.data.gouv.fr/organizations/rdv-service-public/).
 
@@ -38,7 +38,7 @@ Ce logiciel et son code source sont distribués sous [licence AGPL](https://www.
 
 - Fiche du service : [beta.gouv.fr](https://beta.gouv.fr/startups/lapins.html)
 - Guide d'utilisation pour les agent·es : [aide.rdv-service-public.fr](https://aide.rdv-service-public.fr/)
-- Documentation de l'API : [rdv.anct.gouv.fr/api-docs](https://rdv.anct.gouv.fr/api-docs)
+- Documentation de l'API : [rdv.numerique.gouv.fr/api-docs](https://rdv.numerique.gouv.fr/api-docs)
 - Documentation de l'API de notifications (webhooks) : [docs/api/webhooks/api-notifications-webhooks.md](docs/api/webhooks/api-notifications-webhooks.md)
 
 ## Documentation interne

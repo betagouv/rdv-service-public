@@ -54,7 +54,7 @@ RSpec.describe BeneficiaireForm do
 
     it do
       expect(form).to be_invalid
-      expect(form.benign_errors.first).to eq("Sans numéro de téléphone, aucune notification ne sera envoyée au bénéficiaire")
+      expect(form.benign_errors.first).to eq("Sans numéro de téléphone ni adresse email, aucune notification ne sera envoyée au bénéficiaire")
     end
   end
 
