@@ -6,9 +6,10 @@ RSpec.describe "/robots.txt" do
       Disallow: /
       Allow: /$
       Allow: /mds
-      Allow: /accessibility
+      Allow: /accessibilite
       Allow: /mentions_legales
       Allow: /cgu
+      Allow: /cgu_agents
       Allow: /politique_de_confidentialite
       Allow: /aide
     ROBOTS
@@ -22,7 +23,7 @@ RSpec.describe "/robots.txt" do
     ROBOTS
   end
 
-  it "sert un robots.txt privé pour le domaine rdv.numerique.gouv.fr" do
+  it "sert un robots.txt pour tous les domaines mais pas pour la démo" do
     # Ces domaines sont officiels et donc crawlables
     get "https://www.rdv-solidarites.fr/robots.txt"
     expect(response.body).to eq(public_robots)
@@ -30,10 +31,8 @@ RSpec.describe "/robots.txt" do
     expect(response.body).to eq(public_robots)
     get "https://rdv.anct.gouv.fr/robots.txt"
     expect(response.body).to eq(public_robots)
-
-    # Ce domaine n'est pas encore public et donc non crawlables
     get "https://www.rdv.numerique.gouv.fr/robots.txt"
-    expect(response.body).to eq(private_robots)
+    expect(response.body).to eq(public_robots)
 
     # La démo n'est pas crawlable
     with_modified_env({ "RDV_SOLIDARITES_INSTANCE_NAME" => "DEMO" }) do
