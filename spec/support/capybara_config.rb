@@ -10,6 +10,7 @@ playwright_config = {
   timeout: 5,
   timezoneId: "Europe/Paris",
 }
+
 Capybara.register_driver(:playwright) do |app|
   Capybara::Playwright::Driver.new(app, **playwright_config)
 end
