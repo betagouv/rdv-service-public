@@ -21,13 +21,11 @@ class Users::RelativesController < UserAuthController
       organisation_ids: current_user.organisation_ids
     )
     authorize(user, policy_class: User::UserPolicy)
-    return_location = request.referer
     @form = RelativeUserForm.new(user:)
     if @form.submit(**form_params)
       flash[:success] = "#{@form.user.full_name} a été ajouté comme proche."
-      return_location = add_query_string_params_to_url(request.referer, created_user_id: @form.user.id)
     end
-    respond_modal_with @form, location: return_location
+    respond_modal_with @form, location: request.referer
   end
 
   def edit
