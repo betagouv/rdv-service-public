@@ -226,6 +226,7 @@ RSpec.describe Users::RdvBookingForm do
           selected_users: %w[current_user new_relative_0 new_relative_1]
         )
         expect { form.save }.not_to change(Rdv, :count)
+        expect(form.errors.full_messages).to contain_exactly("Numéro de pré-demande ANTS n'est pas reconnu par l'ANTS")
       end
     end
 
