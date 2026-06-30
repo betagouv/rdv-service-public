@@ -6,16 +6,26 @@
     padding: 0 1rem 0.5rem 0;
   }
   .rdv-nested-fields {
-    width: 100%;
-    z-index: 10;
+    display: grid;
+    grid-template-rows: 1fr;
+    overflow: hidden;
+    transition: grid-template-rows 0.35s ease, padding 0.35s ease, border-color 0.35s ease, margin-top 0.35s ease;
     padding: 1.5rem 1rem;
     margin-left: 0.75rem;
     margin-top: -1.3rem;
     border: 1px solid #ccc;
     border-radius: 3px;
+
+    > div { min-height: 0; }
   }
 
-  &:has(input[type="radio"]:not(:checked)) .rdv-nested-fields {
-    opacity: 0.5;
+  &:has(input[type="radio"]:not(:checked)),
+  &:has(input[type="checkbox"]:not(:checked)) {
+    .rdv-nested-fields {
+      grid-template-rows: 0fr;
+      padding: 0;
+      border-color: transparent;
+      margin-top: 0;
+    }
   }
 }
