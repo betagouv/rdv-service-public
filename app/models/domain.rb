@@ -87,7 +87,7 @@ class Domain
       online_reservation_with_public_link: true,
       sms_sender_name: "RDV S.P.",
       support_email: "support@rdv-service-public.fr",
-      verticale: :rdv_mairie,
+      verticale: :rdv_etat,
       allow_self_onboarding: true,
       secretariat_email: "secretariat-auto@rdv-service-public.fr"
     ),

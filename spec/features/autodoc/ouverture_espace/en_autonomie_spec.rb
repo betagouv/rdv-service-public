@@ -40,7 +40,7 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
 
     expect(Organisation.last).to have_attributes(
       name: "CCAS de Montreuil",
-      verticale: :rdv_etat
+      verticale: "rdv_etat"
     )
 
     open_email(agent.email)
