@@ -33,23 +33,20 @@ module TextSearch
   end
 
   class_methods do
-    def search_by_text(term)
-      return none if term.blank?
+    def search_by_text(search_query)
+      search_query = search_query.strip
+      return none if search_query.blank?
 
-      term = clean_search_term(term)
-
-      if column_names.include?("email") && looks_like_email(term)
-        where("\"#{table_name}\".\"email\" LIKE ?", "#{term}%")
+      if column_names.include?("email") && looks_like_email(search_query)
+        where("\"#{table_name}\".\"email\" LIKE ?", "#{search_query}%")
+      elsif self == User && looks_like_phone_number(search_query)
+        search_by_phone_number(search_query)
+      elsif self == User && looks_like_an_id(search_query)
+        # Certains départements cherchent les usagers via l'ID RDV-S stocké dans leur logiciel de gestion
+        where(id: search_query)
       else
-        full_text_search(term)
+        full_text_search(I18n.transliterate(search_query))
       end
-    end
-
-    def clean_search_term(term)
-      term = term.strip
-      term = I18n.transliterate(term)
-      term = term.sub(/^0/, "+33").gsub(/\s/, "") if looks_like_phone_number(term)
-      term
     end
 
     def looks_like_email(string)
@@ -57,7 +54,24 @@ module TextSearch
     end
 
     def looks_like_phone_number(string)
+      return false unless string.starts_with?("+") || string.starts_with?("0")
+
       /^(\+\d{2})?[\d ]{3,20}$/.match?(string)
+    end
+
+    def search_by_phone_number(search_query)
+      international_number = search_query.sub(/^0/, "+33").gsub(/\s/, "")
+      where_column_starts_with("phone_number_formatted", international_number)
+    end
+
+    def where_column_starts_with(columns_name, query)
+      prefix_next = query.dup
+      prefix_next[-1] = (prefix_next[-1].ord + 1).chr
+      where(columns_name => query...prefix_next)
+    end
+
+    def looks_like_an_id(string)
+      /^\d{3,}$/.match?(string)
     end
   end
 end
