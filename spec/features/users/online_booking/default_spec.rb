@@ -571,7 +571,7 @@ RSpec.describe "User can search for rdvs" do
     fill_in("Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: "michel@lapin.fr").code)
     click_on("Valider")
 
-    expect(page).to have_content("Connexion réussie")
+    expect(page).to have_content("Confirmez votre rendez-vous")
   end
 
   # Remplit les infos usager, coche "proche", crée un nouveau proche et soumet le formulaire

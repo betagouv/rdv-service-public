@@ -28,7 +28,12 @@ class Autodoc
       end
     )
 
-    puts "La doc est accessible sur file://#{Rails.root.join('tmp/capybara/autodoc/index.html')}"
+    if @categories.count == 1 && @categories.values.first.count == 1
+      index = @categories.values.first.first.index
+      puts "La doc est accessible sur file://#{Rails.root.join('tmp/capybara/autodoc/')}scenario_#{index}.html"
+    else
+      puts "La doc est accessible sur file://#{Rails.root.join('tmp/capybara/autodoc/index.html')}"
+    end
   end
 
   class Scenario
