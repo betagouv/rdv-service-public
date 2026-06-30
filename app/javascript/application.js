@@ -49,5 +49,3 @@ window.Stimulus = Application.start()
 import FormController from './controllers/form_controller'
 Stimulus.register('form', FormController)
 
-import ProcheSelectionController from './controllers/proche_selection_controller'
-Stimulus.register('proche-selection', ProcheSelectionController)
