@@ -9,12 +9,20 @@
   |> #{@motif.name}
   = render "availability_badge", motif: @motif, availabilities_count: count
 
-.fr-grid-row
-  .fr-col-12.fr-col-lg-10
-    - if @motif.bookable_by_everyone? && count == 0
+- content_for :right_of_page_title do
+  = dsfr_link_to "Voir les détails du motif", admin_organisation_motif_path(current_organisation, @motif), class: "fr-icon-arrow-right-line fr-link--icon-right fr-mr-2w"
+
+.fr-grid-row.fr-mr-2w
+  .fr-col-12
+    - if @motif.bookable_outside_of_organisation? && count == 0
       .fr-callout.fr-pb-2w
         - if @motif.individuel?
-          p Attention, ce motif est ouvert à la réservation en ligne, mais il n’est pas encore accessible à vos usagers.
+          - if @motif.bookable_by_agents_and_prescripteurs?
+            p Attention, ce motif est ouvert aux prescripteurs, mais il n'y a aucun créneau disponible.
+          - elsif @motif.bookable_by_invited_users?
+            p Attention, ce motif est ouvert aux usagers invités, mais il n'y a aucun créneau disponible.
+          - else
+            p Attention, ce motif est ouvert à la réservation en ligne, mais il n’est pas encore accessible à vos usagers.
           p Vous devez renseigner des disponibilités associées à ce motif pour le rendre réservable.
           = link_to "Ouvrir une plage d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn"
         - else
@@ -25,17 +33,27 @@
     - unless @motif.bookable_by_everyone?
       .card
         .card-body
-          p Ce motif n'est pas ouvert à la réservation en ligne.
-          = button_to "Ouvrir à la réservation en ligne", open_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn", method: :post
+          = render "bookable_by_text", motif: @motif
+          - if @motif.bookable_by_agents_and_prescripteurs?
+            = button_to "Ouvrir à la réservation en ligne", open_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary", method: :post
+          - elsif @motif.bookable_by_invited_users?
+            = button_to "Ouvrir à tous les usagers", open_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn", method: :post
+          - else
+            = button_to "Ouvrir à la réservation en ligne", open_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn", method: :post
 
-    - if @motif.bookable_by_everyone? && !current_organisation.sectorized?
-      .card
-        .card-body
+    - unless current_organisation.sectorized?
+      - if @motif.bookable_by_everyone?
+        .card.card-body
           h2.fr-h4 Lien de réservation direct
           - motif_booking_link = public_link_to_motif_url(public_link_id: @motif.public_link_id, motif_slug: @motif.slug)
           = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: motif_booking_link }
 
           p.fr-mt-2w Ce lien permet de prendre rendez-vous pour ce motif.
+      - if @motif.bookable_by_agents_and_prescripteurs?
+        .card.card-body
+          h2.fr-h4 Lien de réservation pour les prescripteurs
+          - motif_booking_link = public_link_to_motif_url(public_link_id: @motif.public_link_id, motif_slug: @motif.slug, prescripteur: 1)
+          = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: motif_booking_link }
 
     - if @motif.bookable_outside_of_organisation?
       .card
@@ -44,14 +62,17 @@
             h3.fr-h4 Options de réservation
             = link_to "Modifier", edit_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
 
-          ul
-            li.fr-my-2w Les rendez-vous seront pris au moins #{ min_max_delay_int_to_human(@motif.min_public_booking_delay) } à l'avance.
-            li.fr-my-2w Ils seront pris au maximum #{ min_max_delay_int_to_human(@motif.max_public_booking_delay) } à l'avance.
+          p.fr-my-2w
+            | Les rendez-vous seront pris au moins <b>#{ min_max_delay_int_to_human(@motif.min_public_booking_delay) }</b> et au maximum <b>#{ min_max_delay_int_to_human(@motif.max_public_booking_delay) }</b> à l'avance.
+            = icon("fr-icon-information-line", "aria-describedby" => "booking-delay-tooltip", class: "fr-icon--sm fr-ml-1w")
+            span.fr-tooltip.fr-placement#booking-delay-tooltip role="tooltip"
+              | Par exemple, s'il y avait des disponibilités en continu, un usager pourrait actuellement prendre rendez-vous entre #{human_date_format(Time.zone.now + @motif.min_public_booking_delay)} et #{human_date_format(Time.zone.now + @motif.max_public_booking_delay)}.
 
+          p.fr-my-2w
             - if @motif.rdvs_editable_by_user
-              li.fr-my-2w Les usagers sont autorisés à déplacer le rendez-vous jusqu'à 48 heures avant celui-ci.
+              | Les usagers sont autorisés à déplacer le rendez-vous jusqu'à 48 heures avant celui-ci.
             - else
-              li.fr-my-2w Les usagers ne sont pas autorisés à déplacer le rendez-vous.
+              | Les usagers ne sont pas autorisés à déplacer le rendez-vous.
 
       .card
         .card-body
@@ -73,6 +94,18 @@
             p.fr-mt-4w Instructions à afficher après la prise de rendez-vous :
             .fr-highlight.fr-mb-2w
               i= instruction_for_rdv_to_html(@motif)
+
+    - if current_territory.sectors.any? && @motif.bookable_by_everyone_or_bookable_by_invited_users?
+      .card.card-body
+        .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+          h2.fr-h4 Sectorisation
+          .fr-btns-group.fr-btns-group--inline
+            - if current_agent.territorial_admin_in?(current_territory)
+              = link_to "Configuration des secteurs", admin_territory_sectors_path(current_territory), class: "fr-btn fr-btn--tertiary"
+            = link_to "Modifier", edit_sectorisation_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
+
+        div= @motif.human_attribute_value(:sectorisation_level)
+        div.fr-text-mention--grey= @motif.human_attribute_value(:sectorisation_level, context: :hint)
 
     - if @motif.bookable_by_everyone?
       .card
