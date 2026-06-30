@@ -7,7 +7,8 @@ PROJECT_DIR="$(pwd)"
 VM_NAME="devbox"
 
 echo "==> Creating Lima VM..."
-limactl start --name="$VM_NAME" --cpus=4 --memory=4 --disk=20 -y
+# we do not use ubuntu 26 yet because chromium is not pre-built yet
+limactl start template://ubuntu-24.04 --name="$VM_NAME" --cpus=4 --memory=4 --disk=20 -y
 
 echo "==> Configuring mount (read-write, project dir only)..."
 LIMA_YAML="$HOME/.lima/$VM_NAME/lima.yaml"
@@ -37,13 +38,13 @@ limactl shell "$VM_NAME" -- bash -c "
 
   sudo apt-get update -y && sudo apt-get install -y \
     build-essential curl git vim tmux \
-    postgresql redis-server chromium-browser
+    postgresql redis-server
 
   sudo systemctl enable postgresql redis-server
   sudo systemctl start postgresql redis-server
 
   # Allow any local user to connect as any PostgreSQL role (dev only)
-  sudo sed -i 's/^local\s\+all\s\+all\s\+peer/local   all             all                                     trust/' /etc/postgresql/18/main/pg_hba.conf
+  sudo sed -i 's/^local\s\+all\s\+all\s\+peer/local   all             all                                     trust/' /etc/postgresql/16/main/pg_hba.conf
   sudo systemctl reload postgresql
   sudo -u postgres createuser --superuser rdvsp 2>/dev/null || echo 'role rdvsp already exists'
 
@@ -72,8 +73,6 @@ limactl shell "$VM_NAME" -- bash -c "
 
   # VM-local env overrides (not committed to the project)
   cat > ~/.env.local <<'ENVEOF'
-export PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium-browser
-export SKIP_PLAYWRIGHT_INSTALL=1
 export POSTGRES_USER=rdvsp
 ENVEOF
   grep -q 'source ~/.env.local' ~/.bashrc || echo 'source ~/.env.local' >> ~/.bashrc

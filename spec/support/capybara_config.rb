@@ -10,8 +10,6 @@ playwright_config = {
   timeout: 5,
   timezoneId: "Europe/Paris",
 }
-playwright_config[:executablePath] = ENV["PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH"] if ENV["PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH"]
-
 Capybara.register_driver(:playwright) do |app|
   Capybara::Playwright::Driver.new(app, **playwright_config)
 end
@@ -59,11 +57,9 @@ RSpec.configure do |config|
       raise "Playwright gem expects Playwright version #{Playwright::COMPATIBLE_PLAYWRIGHT_VERSION}, but yarn.lock has #{playwright_yarn_version.inspect}"
     end
 
-    unless ENV["PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH"]
-      playwright_install_list = `node_modules/.bin/playwright install --list`
-      unless playwright_install_list.match?(/chromium_headless_shell-\d+/)
-        raise "Playwright browser Chromium headless is not installed. Please run 'yarn run playwright install chromium --with-deps'"
-      end
+    playwright_install_list = `node_modules/.bin/playwright install --list`
+    unless playwright_install_list.match?(/chromium_headless_shell-\d+/)
+      raise "Playwright browser Chromium headless is not installed. Please run 'yarn run playwright install chromium --with-deps'"
     end
   end
 end
