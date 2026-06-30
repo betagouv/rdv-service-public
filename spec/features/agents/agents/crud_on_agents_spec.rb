@@ -127,7 +127,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
       click_link("activer des services supplémentaires")
 
       check("CSS")
-      click_button("Enregistrer")
+      click_button("Valider la sélection")
       expect(page).to have_content("Liste des services disponibles mise à jour")
 
       fill_in "Email", with: "jean@paul.com"
