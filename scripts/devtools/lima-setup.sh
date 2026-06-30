@@ -59,9 +59,10 @@ limactl shell "$VM_NAME" -- bash -c "
 
   mise trust $PROJECT_DIR/mise.toml
   cd $PROJECT_DIR && mise install
+  export PATH=\"\$HOME/.local/share/mise/shims:\$PATH\"
 
   # AI agents
-  curl -fsSL https://claude.ai/install.sh | sh
+  curl -fsSL https://claude.ai/install.sh | bash
   echo 'alias claude=\"claude --dangerously-skip-permissions\"' >> ~/.bashrc
   npm install -g @kilocode/cli
 
