@@ -48,10 +48,6 @@ limactl shell "$VM_NAME" -- bash -c "
   sudo systemctl reload postgresql
   sudo -u postgres createuser --superuser rdvsp 2>/dev/null || echo 'role rdvsp already exists'
 
-  # Configure git — update with your own name and email
-  # git config --global user.name 'Your Name'
-  # git config --global user.email 'your@email.com'
-
   curl https://mise.run | sh
   export PATH=\"\$HOME/.local/bin:\$PATH\"
   eval \"\$(\$HOME/.local/bin/mise activate bash)\"
@@ -67,7 +63,7 @@ limactl shell "$VM_NAME" -- bash -c "
   echo 'alias claude=\"claude --dangerously-skip-permissions\"' >> ~/.bashrc
   npm install -g @kilocode/cli
 
-  # Share AI agent config/settings from the Mac host (credentials need separate auth in the VM)
+  # Share AI agent config/settings from the host (credentials need separate auth in the VM)
   rm -rf ~/.claude && ln -s $HOME/.claude ~/.claude
   mkdir -p ~/.config && rm -rf ~/.config/kilo && ln -s $HOME/.config/kilo ~/.config/kilo
 

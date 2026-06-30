@@ -6,24 +6,12 @@ Il recommande notamment de faire tourner les agents dans des VM pour limiter les
 
 L'éditeur reste sur le système hôte, les commandes (rails, ruby, rspec…) tournent dans la VM.
 
-## VM pour Mac Os avec Lima
+## VM sandboxée avec Lima
 
 Installation et usage (depuis la racine du projet) :
 - `brew install lima`
 - `scripts/devtools/lima-setup.sh`
-- `limactl shell devbox` puis `claude` puis `/login` la première fois
+- `limactl shell devbox` puis par exemple `claude` puis `/login` la première fois
 
-La VM n'a accès qu'au répertoire du projet monté en lecture-écriture.
-Les fichiers locaux du Mac ne sont pas accessibles, à part les fichiers de configuration des CLI d'agents IA.
-Les surcharges spécifiques à la VM (variables d'environnement, config Playwright, utilisateur PostgreSQL) sont dans `~/.env.local` à l'intérieur de la VM.
-
-### Git
-
-Si vous souhaitez permettre aux agents de committer, configurez `user.name` et `user.email` dans la VM :
-
-```bash
-limactl shell devbox
-git config --global user.name "Prénom Nom"
-git config --global user.email "prenom@email.fr"
-```
+La VM n'a accès qu'au répertoire du projet RDVSP monté en lecture-écriture et aux fichiers de configuration des CLI d'agents IA.
 
