@@ -50,13 +50,6 @@ class Users::RdvBookingForm
 
   def show_social_fields? = service.nil? || service.user_field_groups.include?(:social)
 
-  def new_participation
-    # user_id: plutôt que user: pour éviter que inverse_of ajoute @new_participation à @user.participations
-    # ce qui déclencherait un autosave prématuré lors de @user.save! et ferait échouer create_and_notify!
-    # Fallback to @user.id when the proche isn't persisted yet (e.g. during the authorization check before save)
-    @new_participation ||= Participation.new(rdv:, user_id: selected_users_records.first&.id || @user.id, created_by: @user)
-  end
-
   def new_proches
     built = (@user.relatives.target || []).select(&:new_record?)
     extras_count = [selected_users_expected_count - built.size, 0].max
@@ -101,10 +94,7 @@ class Users::RdvBookingForm
   end
 
   def create_participation
-    # new_participation may have been built before @user.save! (e.g. during the authorization check),
-    # so selected_users_records.first was nil and user_id fell back to @user.id. Re-evaluate now that the
-    # proche has been persisted and has a real id.
-    new_participation.user_id = selected_users_records.first&.id
+    new_participation = Participation.new(rdv:, user: selected_users_records.first, created_by: @user)
     new_participation.create_and_notify!(@user)
     @invitation_token = new_participation.restricted_auth_token
   end

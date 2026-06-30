@@ -173,16 +173,15 @@ RSpec.describe Users::RdvBookingForm do
       form = described_class.new(user:, rdv_builder:, user_attributes:, domain:, selected_users: ["new_relative_0"])
       expect { form.save }.to change(Participation, :count).by(1).and change(User, :count).by(1)
       proche = user.reload.relatives.first
-      expect(form.new_participation.user).to eq(proche)
       expect(rdv_collectif.reload.users).to contain_exactly(proche)
     end
   end
 
-  context "motif collectif" do
+  context "motif collectif - inscription du current_user" do
     let(:domain) { Domain::RDV_SERVICE_PUBLIC }
     let!(:organisation) { create(:organisation) }
     let!(:motif) { create(:motif, :collectif, organisation:) }
-    let!(:rdv_collectif) { create(:rdv, :without_users, motif:, agents: [agent], organisation:) }
+    let!(:rdv_collectif) { create(:rdv, motif:, agents: [agent], organisation:) }
     let(:rdv_builder) { Users::RdvBuilder.new(user, { rdv_collectif_id: rdv_collectif.id }) }
     let!(:lieu) { create(:lieu, organisation:) }
     let!(:agent) { create(:agent, organisations: [organisation]) }
@@ -192,20 +191,10 @@ RSpec.describe Users::RdvBookingForm do
     before { allow(rdv_builder).to receive(:creneau).and_return(creneau) }
 
     it do
-      form = described_class.new(user:, rdv_builder:, domain:)
+      form = described_class.new(user:, rdv_builder:, domain:, selected_users: ["current_user"])
       expect { form.save }.to change(Participation, :count).by(1)
-      expect(form.new_participation).to be_persisted
-      expect { form.new_participation.reload }.not_to raise_error
-    end
-
-    context "new_participation est appelé avant le save" do
-      it "la participation est est persistée et rechargeable après save" do
-        form = described_class.new(user:, rdv_builder:, domain:)
-        participation = form.new_participation # déclenche la mémoisation avant le save, comme authorize dans le controler
-        expect { form.save }.to change(Participation, :count).by(1)
-        expect(participation).to be_persisted
-        expect { participation.reload }.not_to raise_error
-      end
+      expect(rdv_collectif.reload.users.count).to eq(2) # la factory par défaut créé le RDV collectif avec un participant
+      expect(rdv_collectif.users).to include(user)
     end
   end
 end
