@@ -33,7 +33,7 @@ module TextSearch
   end
 
   class_methods do
-    def search_by_text(search_query) # rubocop:disable Metrics/PerceivedComplexity
+    def search_by_text(search_query)
       search_query = search_query.strip
       return none if search_query.blank?
 
