@@ -41,7 +41,7 @@ module Users::UserFormConcern
   # - Usager invité via token → affiché, modifiable sauf si il s'est déjà connecté
   # - SSO (FC/ProConnect) → affiché, modifiable
   # - Usager connecté via code → pas affiché (A voir plus tard https://github.com/betagouv/rdv-service-public/pull/6259#discussion_r2959304082)
-  def email_disabled? = signed_in_with_invitation_token? && email.present? && already_logged_in?
+  def email_disabled? = email.present?
 
   def show_landline_phone_number_warning? = phone_number.present? && !phone_number_mobile?
 
