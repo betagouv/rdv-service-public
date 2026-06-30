@@ -14,34 +14,34 @@ fieldset.fr-fieldset.fr-mt-3w data-controller="proche-selection" data-action="ch
   legend.fr-fieldset__legend--regular.fr-fieldset__legend
     | Pour qui prenez-vous rendez-vous ?
 
-  .fr-fieldset__element.rdv-nested-fields-wrapper data-proche-selection-target="option"
+  .fr-fieldset__element.rdv-proche-selection-wrapper data-proche-selection-target="option"
     div class=group_class
       = radio_or_check_box_tag "selected_users[]", "current_user", selected_users.include?("current_user"), id: "selected_user_current"
       = label_tag "selected_user_current", "Moi-même"
     - if rdv_booking_form.requires_ants_predemande_number?
-      .rdv-nested-fields
-        div
+      .rdv-nested-fields-wrapper
+        .rdv-nested-fields-content
           = f.dsfr_text_field :ants_pre_demande_number, disabled: selected_users.exclude?("current_user")
 
   - rdv_booking_form.selectable_existing_relatives.each do |relative|
-    .fr-fieldset__element.rdv-nested-fields-wrapper data-proche-selection-target="option"
+    .fr-fieldset__element.rdv-proche-selection-wrapper data-proche-selection-target="option"
       div class=group_class
         = radio_or_check_box_tag "selected_users[]", "existing_relative_#{relative.id}", selected_users.include?("existing_relative_#{relative.id}"), id: "selected_user_existing_#{relative.id}"
         = label_tag "selected_user_existing_#{relative.id}", relative.full_name
       - if rdv_booking_form.requires_ants_predemande_number?
-        .rdv-nested-fields
-          div
+        .rdv-nested-fields-wrapper
+          .rdv-nested-fields-content
             = f.fields_for :relatives, [relative] do |rf|
               = rf.hidden_field :id
               = rf.dsfr_text_field :ants_pre_demande_number, disabled: selected_users.exclude?("existing_relative_#{relative.id}")
 
   - rdv_booking_form.new_proches.each_with_index do |proche, i|
-    .fr-fieldset__element.rdv-nested-fields-wrapper data-proche-selection-target="option"
+    .fr-fieldset__element.rdv-proche-selection-wrapper data-proche-selection-target="option"
       div class=group_class
         = radio_or_check_box_tag "selected_users[]", "new_relative_#{i}", selected_users.include?("new_relative_#{i}"), id: "selected_user_new_#{i}"
         = label_tag "selected_user_new_#{i}", rdv_booking_form.selected_users_expected_count > 1 ? "Nouveau proche #{i + 1}" : "Une autre personne"
-      .rdv-nested-fields
-        div
+      .rdv-nested-fields-wrapper
+        .rdv-nested-fields-content
           = f.fields_for :relatives, [proche] do |rf|
             .fr-grid-row.fr-grid-row--gutters
               .fr-col-12.fr-col-md-6= rf.dsfr_text_field :first_name, label: "Prénom"
