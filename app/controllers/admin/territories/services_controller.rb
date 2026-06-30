@@ -1,7 +1,8 @@
 class Admin::Territories::ServicesController < Admin::Territories::BaseController
   def new
     authorize(current_territory, :manage_services?, policy_class: Agent::TerritoryPolicy)
-    @service = Service.new
+    permitted_params = params.permit(:name, :short_name)
+    @service = Service.new(permitted_params)
   end
 
   def create

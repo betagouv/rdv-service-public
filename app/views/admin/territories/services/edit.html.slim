@@ -29,9 +29,13 @@
           = f.association :services, collection: format_for_checkboxes(@displayed_services), label: "", as: :check_boxes, label_method: :first, value_method: :second
 
           p.mt-2
-            |> Vous ne trouvez pas votre service dans la liste ?
-            = link_to "Créer un nouveau service", new_admin_territory_services_path(territory_id: current_territory.id)
-            | .
+            - new_form_link = new_admin_territory_services_path(territory_id: current_territory.id, name: @filter)
+            - if @displayed_services.any?
+              |> Vous ne trouvez pas votre service dans la liste ?
+              = link_to "Créer un nouveau service", new_form_link
+            - else
+              |> Aucun résultat pour “#{@filter}” ?
+              = link_to "Créer ce service", new_form_link
 
           .d-flex.rdv-flex-direction-row-md.flex-row-aligned
             - if params[:redirect_to_organisation_id]
