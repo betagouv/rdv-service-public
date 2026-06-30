@@ -1,30 +1,22 @@
 .rdv-proche-selection-wrapper {
-  padding-bottom: 1rem;
-
-  .fr-radio-group,
-  .fr-checkbox-group {
-    z-index: 100;
-    background: white;
-    padding: 0 1rem 0.5rem 0;
-  }
-
   .rdv-nested-fields-wrapper {
     display: grid;
     grid-template-rows: 1fr;
     overflow: hidden;
-    transition: grid-template-rows 0.35s ease;
+    transition: grid-template-rows 0.5s ease;
 
-    > .rdv-nested-fields-content {
+    .rdv-nested-fields-content {
       min-height: 0;
+      .fr-grid-row {
+        padding: 0.5rem 1.1rem;
+      }
     }
   }
 
   &:has(input[type="radio"]:not(:checked)),
   &:has(input[type="checkbox"]:not(:checked)) {
-    padding-bottom: 0rem;
     .rdv-nested-fields-wrapper {
       grid-template-rows: 0fr;
-      opacity: 0;
     }
   }
 }
