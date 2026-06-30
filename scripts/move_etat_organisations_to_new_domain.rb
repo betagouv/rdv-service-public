@@ -14,7 +14,8 @@ Territory.limit(ARGV[0].presence.to_i).find_each do |territory|
     agent.pro_connect_idp_id.in?(ProconnectIdentityProviders::ETAT) || (etat_email && !france_service_email && !anct)
   end
 
-  if all_admins_from_etat
+  # On vérifie qu'il y a au moins un admin de territoire
+  if admins.present? && all_admins_from_etat
     territory.organisations.each do |organisation|
       organisation.update!(verticale: :rdv_etat)
     end
