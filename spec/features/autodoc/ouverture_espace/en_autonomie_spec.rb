@@ -11,7 +11,7 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
     doc.start_section("Côté agent")
     doc.add_text("Contexte: Je suis un agent qui n'a jamais utilisé RDV Service Public")
 
-    visit "http://www.rdv-service-public-test.localhost/"
+    visit root_url(host: Domain::RDV_SERVICE_PUBLIC_ETAT.host_name)
     doc.add_screenshot(page,
                        text: "Je clique sur 'Ouvrir mon espace'",
                        wait_for: "Ouvrir mon espace")
@@ -22,7 +22,7 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
                        wait_for: "Pour ouvrir votre espace, commencez par vous identifier avec ProConnect.")
 
     # ProConnect ne marche pas en tests, donc on triche en faisant un login par email et mot de passe
-    visit new_agent_session_url(host:  "http://www.rdv-service-public-test.localhost")
+    visit new_agent_session_url(host:  Domain::RDV_SERVICE_PUBLIC_ETAT.host_name)
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
@@ -38,6 +38,11 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
                        text: "J'arrive dans mon espace RDV Service Public",
                        wait_for: "Pour commencer, vous pouvez créer votre premier motif de rendez-vous.")
 
+    expect(Organisation.last).to have_attributes(
+      name: "CCAS de Montreuil",
+      verticale: :rdv_etat
+    )
+
     open_email(agent.email)
     expect(current_email.subject).to eq "Votre espace RDV Service Public est ouvert 🚀"
 
@@ -47,7 +52,7 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
     super_admin = create :super_admin
     login_as(super_admin, scope: :super_admin)
 
-    visit super_admins_accounts_for_crm_index_url(host: "http://www.rdv-service-public-test.localhost")
+    visit super_admins_accounts_for_crm_index_url(host: Domain::RDV_SERVICE_PUBLIC_ETAT.host_name)
 
     doc.add_screenshot(page,
                        text: "Le nouvel espace apparait dans la liste des comptes à ajouter au CRM.",
