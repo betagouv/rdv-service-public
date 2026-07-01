@@ -194,29 +194,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@full-ui/headless-calendar@npm:7.0.0-rc.3":
-  version: 7.0.0-rc.3
-  resolution: "@full-ui/headless-calendar@npm:7.0.0-rc.3"
+"@full-ui/headless-calendar@npm:7.0.0":
+  version: 7.0.0
+  resolution: "@full-ui/headless-calendar@npm:7.0.0"
   peerDependencies:
-    temporal-polyfill: ^0.3.2
-  checksum: 10c0/c0f0133fdb7ceadfa7519602d555ba8f38c7a768a757a99557b78aff4a73ae64ff354a8c6b8e5a26a8e045c69d90a2d24df67404dc26a20dde472e40025363c7
+    temporal-polyfill: ^1.0.1
+  checksum: 10c0/59511434d40e9be97da48bfb662bfe2fc99e2535a6fd979607c9624b29e7d8193295917047f3e909761917c89c50b0fd75789cd9c0b2610a9644754b5b266fd5
   languageName: node
   linkType: hard
 
-"@full-ui/headless-grid@npm:7.0.0-rc.3":
-  version: 7.0.0-rc.3
-  resolution: "@full-ui/headless-grid@npm:7.0.0-rc.3"
-  checksum: 10c0/c86d4d98f69635981fe96caa441da23ac40946d828c25afa80c82fe114dc4da81d80980b6825a6317fc925bf017cd0dfaf42f9c6e896108ade0679b7b8f3fbf8
+"@full-ui/headless-grid@npm:7.0.0":
+  version: 7.0.0
+  resolution: "@full-ui/headless-grid@npm:7.0.0"
+  checksum: 10c0/061d3db090956b01360aec0e91b6edf6fa95a6dc54826c3526b6d6de493f181d18e0c3eac4045495a8a73c203aeced1cef5052ea6da6aae7bf4afd63363017b8
   languageName: node
   linkType: hard
 
-"@fullcalendar/core@npm:7.0.0-rc.3":
-  version: 7.0.0-rc.3
-  resolution: "@fullcalendar/core@npm:7.0.0-rc.3"
+"@fullcalendar/core@npm:7.0.0":
+  version: 7.0.0
+  resolution: "@fullcalendar/core@npm:7.0.0"
   peerDependencies:
-    "@full-ui/headless-calendar": 7.0.0-rc.3
-    temporal-polyfill: ^0.3.2
-  checksum: 10c0/7e1e49dd29368e630f95434b3fa1e8958e55569a460564286e7933cdc79428f0fe3b0762f238f3d4d41e0d96df51de81d62b1fb4f3afff4da00ab4b2ba111549
+    "@full-ui/headless-calendar": 7.0.0
+    temporal-polyfill: ^1.0.1
+  checksum: 10c0/c6f296300111c16ea644989f1266302af1a04e20f2d6d59f6992deb50ddb2ad3582d3fb87812e27126f80c125286750d81739fbfd40bdd7afc85101fe5648138
   languageName: node
   linkType: hard
 
@@ -803,31 +803,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fullcalendar-scheduler@npm:7.0.0-rc.3":
-  version: 7.0.0-rc.3
-  resolution: "fullcalendar-scheduler@npm:7.0.0-rc.3"
+"fullcalendar-scheduler@npm:7.0.0":
+  version: 7.0.0
+  resolution: "fullcalendar-scheduler@npm:7.0.0"
   dependencies:
-    "@full-ui/headless-calendar": "npm:7.0.0-rc.3"
-    "@full-ui/headless-grid": "npm:7.0.0-rc.3"
-    "@fullcalendar/core": "npm:7.0.0-rc.3"
+    "@full-ui/headless-calendar": "npm:7.0.0"
+    "@full-ui/headless-grid": "npm:7.0.0"
+    "@fullcalendar/core": "npm:7.0.0"
     preact: "npm:^10.29.0"
   peerDependencies:
-    fullcalendar: 7.0.0-rc.3
-    temporal-polyfill: ^0.3.2
-  checksum: 10c0/9fb9da7a00c43fa3d64f30f2501a137b333dfa86a572e34e94663a5fb6313db320b885f58485fb508f2fa358467add08f183d279cc9b46dd917bd3d6912c1950
+    fullcalendar: 7.0.0
+    temporal-polyfill: ^1.0.1
+  checksum: 10c0/9d5c3c86ef3ceb6f96b420283af6f4b90c6c5f3b0ec5cd730fa0fa6d005c20a6d5ef5da488d5db8225c8a71f05ee76656962ea922a4781c2efce369fdcfcb9a4
   languageName: node
   linkType: hard
 
-"fullcalendar@npm:7.0.0-rc.3":
-  version: 7.0.0-rc.3
-  resolution: "fullcalendar@npm:7.0.0-rc.3"
+"fullcalendar@npm:7.0.0":
+  version: 7.0.0
+  resolution: "fullcalendar@npm:7.0.0"
   dependencies:
-    "@full-ui/headless-calendar": "npm:7.0.0-rc.3"
-    "@fullcalendar/core": "npm:7.0.0-rc.3"
+    "@full-ui/headless-calendar": "npm:7.0.0"
+    "@fullcalendar/core": "npm:7.0.0"
     preact: "npm:^10.29.0"
   peerDependencies:
-    temporal-polyfill: ^0.3.2
-  checksum: 10c0/68e72ca74b1bd9fea2c130385c89c9989e66681a45a1711507ebfb43c44dfc3950f55261864801119327b78a2755299f0d7f7f2cc30fc1240a2071e487529386
+    temporal-polyfill: ^1.0.1
+  checksum: 10c0/5eebaf911d7036ecc04e9d68e033056a828f91490dba352166dae03abfd79ad99ccadd37e7f4fee8a5f32e671d1345402b878f05d90ed361038118805e8c28d0
   languageName: node
   linkType: hard
 
@@ -1020,8 +1020,8 @@ __metadata:
     date-fns: "npm:^4.1.0"
     esbuild: "npm:^0.28.1"
     esbuild-sass-plugin: "npm:^3.6.0"
-    fullcalendar: "npm:7.0.0-rc.3"
-    fullcalendar-scheduler: "npm:7.0.0-rc.3"
+    fullcalendar: "npm:7.0.0"
+    fullcalendar-scheduler: "npm:7.0.0"
     jquery: "npm:^3.4.0"
     jquery-datetimepicker: "npm:^2.5.21"
     kind-of: "npm:>=6.0.3"
@@ -1032,7 +1032,7 @@ __metadata:
     sass-embedded: "npm:^1.97.3"
     select2: "npm:^4.0.8"
     select2-bootstrap4-theme: "npm:^1.0.0"
-    temporal-polyfill: "npm:^0.3.2"
+    temporal-polyfill: "npm:1.0.1"
     whatwg-fetch: "npm:^3.0.0"
   languageName: unknown
   linkType: soft
@@ -1709,19 +1709,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"temporal-polyfill@npm:^0.3.2":
-  version: 0.3.2
-  resolution: "temporal-polyfill@npm:0.3.2"
+"temporal-polyfill@npm:1.0.1":
+  version: 1.0.1
+  resolution: "temporal-polyfill@npm:1.0.1"
   dependencies:
-    temporal-spec: "npm:0.3.1"
-  checksum: 10c0/762795c94e1b6cb0574541d0b09f805ff23b0a2c9d0356ab3fc0205e390a3bce73e047de2fdc54c7d149d6e6d781aa1d95aa62afa5de4c83cb79c129b0e502da
+    temporal-spec: "npm:1.0.0"
+    temporal-utils: "npm:1.0.1"
+  checksum: 10c0/a663055293ae334d95e7829508dc5c8b0a11eb8386760b0a5d9cd189c7e013c3b9d010b8e6f33c384ddede532feb506ff44e51f8a6cb00e90a0be6e689fc8947
   languageName: node
   linkType: hard
 
-"temporal-spec@npm:0.3.1":
-  version: 0.3.1
-  resolution: "temporal-spec@npm:0.3.1"
-  checksum: 10c0/e38eae391bd59ae675f1925a65c8ef302933cf9ce98efedaf2e69269e8c36f2b5d486cd3084367f04a6c1ea0289b925690c0df20a73f0c4629b531775924e850
+"temporal-spec@npm:1.0.0":
+  version: 1.0.0
+  resolution: "temporal-spec@npm:1.0.0"
+  checksum: 10c0/16f24e418ed8f58f094752df2698db29153afed7f36cbbe5a889127ff86479a7f3e7338ed1480e3a96834f9613b55dbe45c74ac46a5a7fd1366ffb1f923e3338
+  languageName: node
+  linkType: hard
+
+"temporal-utils@npm:1.0.1":
+  version: 1.0.1
+  resolution: "temporal-utils@npm:1.0.1"
+  checksum: 10c0/cf229258c81f8283513ef7626f8089e23fb346d53b48d1c37581a11ca621ce4b65f3e0798565fa6f3c4fb48562202634adb343648350caad2e349eeae083d00b
   languageName: node
   linkType: hard
 
