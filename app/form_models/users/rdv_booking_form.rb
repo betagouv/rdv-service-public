@@ -6,10 +6,6 @@ class Users::RdvBookingForm
   delegate :to_query, :motif, :service, to: :rdv_builder
   delegate :add_benign_error, :ignore_benign_errors, :relatives_attributes=, to: :user
   delegate :collectif?, :requires_ants_predemande_number?, to: :rdv
-  delegate :requires_ants_predemande_number?, to: :rdv
-
-  validates :ants_pre_demande_number, presence: true, if: :requires_ants_predemande_number?
-  validates_with AntsPreDemandeNumberStatusValidation, if: :requires_ants_predemande_number?
 
   validate :validate_selected_users_count
   validate :validate_phone_number_present_for_motif_by_phone
@@ -20,6 +16,7 @@ class Users::RdvBookingForm
     @rdv = rdv_builder.rdv
     @domain = domain
     @selected_users = selected_users
+    singleton_class.include(Users::RdvBookingForm::AntsConcern) if requires_ants_predemande_number?
     @user.singleton_class.accepts_nested_attributes_for :relatives
     user_attributes[:relatives_attributes] = filter_and_enrich_relatives_attributes(user_attributes.fetch(:relatives_attributes, {}).values.map(&:symbolize_keys))
     @user.assign_attributes(user_attributes)
@@ -39,7 +36,7 @@ class Users::RdvBookingForm
 
   def show_birth_date_field? = !signed_in_with_invitation_token? && rdv.territory&.enable_birth_date_field?
 
-  def show_ants_pre_demande_number_field? = requires_ants_predemande_number?
+  def show_ants_pre_demande_number_field? = false
 
   def show_logement_field? = rdv.territory.enable_logement_field
 
@@ -64,7 +61,6 @@ class Users::RdvBookingForm
   def selectable_existing_relatives
     @user.relatives.sort_by(&:first_name)
   end
-  def ants_meeting_point_id = rdv_builder.lieu_id
 
   private
 
