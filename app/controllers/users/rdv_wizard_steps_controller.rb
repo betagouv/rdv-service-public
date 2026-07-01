@@ -4,7 +4,7 @@ class Users::RdvWizardStepsController < UserAuthController
   RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, :context, { user_ids: [] }].freeze
   EXTRA_PERMITTED_PARAMS = [
     *WebSearchContext::ADDRESS_SELECTION_PARAMS,
-    :lieu_id, :where, :created_user_id, :rdv_collectif_id, :user_selected_organisation_id,
+    :lieu_id, :where, :rdv_collectif_id, :user_selected_organisation_id,
     :public_link_organisation_id, :duration, :ants_pre_demandes_count,
     { organisation_ids: [], referent_ids: [], external_organisation_ids: [] },
   ].freeze
@@ -70,9 +70,7 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def query_params
-    result = params.permit(*RDV_PERMITTED_PARAMS, *EXTRA_PERMITTED_PARAMS)
-    result[:user_ids] = [result[:created_user_id]] if result[:created_user_id].present?
-    result
+    params.permit(*RDV_PERMITTED_PARAMS, *EXTRA_PERMITTED_PARAMS)
   end
 
   def user_params
