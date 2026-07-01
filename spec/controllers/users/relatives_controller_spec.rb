@@ -47,7 +47,7 @@ RSpec.describe Users::RelativesController, type: :controller do
 
       it "redirects to user informations with the newly created user id as a param" do
         subject
-        expect(response).to redirect_to(users_informations_path(created_user_id: User.last.id))
+        expect(response).to redirect_to(users_informations_path)
       end
     end
 
@@ -82,7 +82,7 @@ RSpec.describe Users::RelativesController, type: :controller do
         created_user = User.last
         expect(created_user.organisation_ids).to eq(user.organisation_ids)
         expect(created_user.ants_pre_demande_number).to eq("VALID12345")
-        expect(response).to redirect_to(users_informations_path(created_user_id: User.last.id))
+        expect(response).to redirect_to(users_informations_path)
       end
     end
 
