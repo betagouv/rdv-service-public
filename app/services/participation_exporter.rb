@@ -25,6 +25,7 @@ module ParticipationExporter
     "créé par",
     "email(s) professionnel.le(s)",
     "rdv collectif",
+    "inscription au rdv collectif par",
   ].freeze
 
   def self.write_xls_to_io(io, rows_enum)
@@ -51,6 +52,7 @@ module ParticipationExporter
 
   def self.rows_from_participations(participations)
     participations.includes(
+      :created_by,
       user: :responsible,
       rdv: [
         :organisation,
@@ -69,6 +71,7 @@ module ParticipationExporter
   def self.row_array_from(participation)
     rdv = participation.rdv
     user = participation.user
+    created_by = participation.created_by
     [
       user.full_name,
       rdv.id,
@@ -93,6 +96,7 @@ module ParticipationExporter
       rdv.author,
       rdv.agents.map(&:email).join(", "),
       rdv.motif.collectif ? "oui" : "non",
+      rdv.collectif? && created_by ? "[#{participation.created_by_type}] #{created_by.full_name_or_email} (id=#{created_by.id}) (email=#{created_by.email})" : "",
     ]
   end
 

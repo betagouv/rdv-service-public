@@ -185,4 +185,39 @@ RSpec.describe ParticipationExporter, type: :service do
       expect(described_class.row_array_from(rdv.participations.first)[20]).to eq("agent 008")
     end
   end
+
+  describe "inscrit par" do
+    subject(:inscrit_par) { described_class.row_array_from(participation)[described_class::HEADER.index("inscription au rdv collectif par")] }
+
+    let!(:rdv) { create(:rdv, :collectif, :without_users) }
+    let!(:participation) { create(:participation, rdv:, created_by: author) }
+
+    context "when created by an usager" do
+      let(:josephine_usager) { create(:user, first_name: "Josephine", last_name: "Duroy") }
+      let(:author) { josephine_usager }
+
+      it { is_expected.to eq("[User] Josephine DUROY (id=#{josephine_usager.id}) (email=#{josephine_usager.email})") }
+    end
+
+    context "when created by an agent" do
+      let(:martine_agent) { create(:agent, first_name: "Martine", last_name: "Validay") }
+      let(:author) { martine_agent }
+
+      it { is_expected.to eq("[Agent] Martine VALIDAY (id=#{martine_agent.id}) (email=#{martine_agent.email})") }
+    end
+
+    context "when created by a prescripteur" do
+      let(:prescripteur) { create(:prescripteur, first_name: "Jean", last_name: "Valjean") }
+      let(:author) { prescripteur }
+
+      it { is_expected.to eq("[Prescripteur] Jean VALJEAN (id=#{prescripteur.id}) (email=#{prescripteur.email})") }
+    end
+
+    context "when rdv is not collectif" do
+      let!(:rdv) { create(:rdv) }
+      let!(:participation) { create(:participation, rdv:, created_by: build(:user)) }
+
+      it { is_expected.to eq("") }
+    end
+  end
 end
