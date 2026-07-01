@@ -79,7 +79,7 @@ Rails.application.routes.draw do
 
   namespace :users do
     resource :rdv_wizard_step, only: %i[new create]
-    resources :rdvs, only: %i[index create show edit update] do
+    resources :rdvs, only: %i[index show edit update] do
       resources :participations, only: %i[index create]
       put "participations/cancel", to: "participations#cancel"
       member do
