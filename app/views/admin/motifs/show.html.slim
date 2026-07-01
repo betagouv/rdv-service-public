@@ -6,6 +6,9 @@
 
 = render "admin/motifs/fil_ariane", current_page_title: content_for(:title)
 
+- if flash[:onboarding] == "first_motif_created"
+  = render "admin/onboarding/banner"
+
 - content_for :right_of_page_title do
   .fr-btns-group.fr-btns-group--inline
     - if @motif_policy.duplicate?
@@ -26,7 +29,7 @@
 
         = motif_attribute_row(Motif.human_attribute_name(:default_duration_in_min_short),  "#{@motif.default_duration_in_min} minutes")
 
-        = motif_attribute_row(Motif.human_attribute_name(:color)) do
+        = motif_attribute_row("Couleur dans l'agenda") do
           span.motif-color-badge>[style="background-color: #{@motif.color};"]
           span.fr-text-mention--grey= @motif.color
 

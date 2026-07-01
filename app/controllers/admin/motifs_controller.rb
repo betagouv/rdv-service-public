@@ -62,7 +62,7 @@ class Admin::MotifsController < AgentAuthController
       if current_organisation.motifs.active.count == 1
         flash[:onboarding] = "first_motif_created"
       end
-      redirect_to admin_organisation_motifs_path(@motif.organisation)
+      redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
     else
       render :new
     end

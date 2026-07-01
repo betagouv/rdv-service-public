@@ -14,6 +14,12 @@ class Admin::Organisations::OnlineBooking::MotifsController < AgentAuthControlle
     authorize(@motif, policy_class: Agent::MotifPolicy)
 
     if @motif.save
+
+      banner = OnlineBookingOnboardingBanner.new(@organisation)
+      if banner.availabilities_needed?
+        session["OnlineBookingMotifsForm:completed"] = true
+      end
+
       flash[:success] = "Les options de réservation en ligne ont été mises à jour."
       redirect_to admin_organisation_online_booking_motif_path(current_organisation, motif_id: @motif.id)
     else

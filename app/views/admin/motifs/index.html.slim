@@ -89,8 +89,7 @@
                       = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_organisation), class: "fr-btn"
 
     - if @motifs_page.any?
-      .d-flex.justify-content-center
+      .d-flex
         = paginate @motifs_page, theme: "dsfr"
       - if agent_can_create_motif? && @current_tab == :active
-        .rdv-text-align-center.m-3
-          = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_organisation), class: "fr-btn"
+        .fr-mb-3w= link_to "Ajouter un motif", new_admin_organisation_motif_path(current_organisation), class: "fr-btn"

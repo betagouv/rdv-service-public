@@ -5,5 +5,5 @@
         h1 Nouvel espace
         = form_for @compte_form, url: agents_territories_path, builder: Dsfr::FormBuilder, as: :compte do |f|
           = f.fields_for :organisation, @compte_form.organisation do |ff|
-            = ff.dsfr_text_field :name, label: "Nom de votre organisation", hint: "par exemple : CCAS de Montreuil", autocomplete: "organization", required: true
+            = ff.dsfr_text_field :name, label: "Nom de votre organisation", hint: "Par exemple : Préfecture de Bobigny", autocomplete: "organization", required: true
           = f.submit "Enregistrer", class: "fr-btn float-right"
