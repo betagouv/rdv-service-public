@@ -33,6 +33,15 @@ $rdvs-fc-header-bg-color: $gray-200;
       background-color: rgb(246, 246, 246);
     }
 
+    &:focus {
+      box-shadow: rgb(221, 221, 221) 0 0 0 1px inset;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $focus-dsfr;
+      outline-offset: 2px;
+    }
+
     // prend le dessus sur une règle très spécifique dans FullCalendar
     // .fc .fc-button-primary:not(:disabled).fc-button-active
     &.fc-button-active.fc-button-primary:not(:disabled),
