@@ -21,7 +21,7 @@
             label.fr-label[for="filter"] Trouvez un service par nom
             .fr-input-wrap.fr-input-wrap--addon
               input#filter.fr-input[name="filter" value=@filter type="text" aria-describedby="filter-messages" list="service_names" autocomplete="off"]
-              button.fr-btn.fr-btn--secondary.fr-btn--icon-left.fr-icon-seo-line[type="submit"] Filtrer
+              button.fr-btn.fr-btn--secondary.fr-btn--icon-left.fr-icon-filter-fill[type="submit"] Filtrer
             #filter-messages.fr-messages-group[aria-live="polite"]
 
         = simple_form_for current_territory, url: admin_territory_services_path(current_territory, redirect_to_organisation_id: params[:redirect_to_organisation_id]) do |f|
