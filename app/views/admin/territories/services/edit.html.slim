@@ -12,10 +12,15 @@
         p Vous pouvez activer ou désactiver les services auxquels vos agents peuvent être affectés.
 
         = form_with(method: :get) do |f|
+
+          datalist#service_names
+            - Service.pluck(:name).each do |name|
+              option = name
+
           .fr-input-group.mt-4.mb-2
             label.fr-label[for="filter"] Trouvez un service par nom
             .fr-input-wrap.fr-input-wrap--addon
-              input#filter.fr-input[name="filter" value=@filter type="text" aria-describedby="filter-messages"]
+              input#filter.fr-input[name="filter" value=@filter type="text" aria-describedby="filter-messages" list="service_names" autocomplete="off"]
               button.fr-btn.fr-btn--secondary.fr-btn--icon-left.fr-icon-seo-line[type="submit"] Filtrer
             #filter-messages.fr-messages-group[aria-live="polite"]
 
@@ -35,7 +40,8 @@
               = link_to "Créer un nouveau service", new_form_link
             - else
               |> Aucun résultat pour “#{@filter}” ?
-              = link_to "Créer ce service", new_form_link, class: "fr-btn fr-btn--tertiary"
+              div
+                = link_to "Créer ce service", new_form_link, class: "fr-btn fr-btn--primary"
 
           - if @displayed_services.any?
             .d-flex.rdv-flex-direction-row-md.flex-row-aligned
