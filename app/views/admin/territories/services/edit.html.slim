@@ -16,7 +16,7 @@
             label.fr-label[for="filter"] Trouvez un service par nom
             .fr-input-wrap.fr-input-wrap--addon
               input#filter.fr-input[name="filter" value=@filter type="text" aria-describedby="filter-messages"]
-              button.fr-btn.fr-btn--icon-left.fr-icon-seo-line[type="submit"] Filtrer
+              button.fr-btn.fr-btn--secondary.fr-btn--icon-left.fr-icon-seo-line[type="submit"] Filtrer
             #filter-messages.fr-messages-group[aria-live="polite"]
 
         = simple_form_for current_territory, url: admin_territory_services_path(current_territory, redirect_to_organisation_id: params[:redirect_to_organisation_id]) do |f|
@@ -35,10 +35,11 @@
               = link_to "Créer un nouveau service", new_form_link
             - else
               |> Aucun résultat pour “#{@filter}” ?
-              = link_to "Créer ce service", new_form_link
+              = link_to "Créer ce service", new_form_link, class: "fr-btn fr-btn--tertiary"
 
-          .d-flex.rdv-flex-direction-row-md.flex-row-aligned
-            - if params[:redirect_to_organisation_id]
-              .mr-2
-                = link_to("Annuler", new_admin_organisation_agent_path(params[:redirect_to_organisation_id]), class: "fr-btn fr-btn--tertiary")
-            = f.submit "Valider la sélection", class: "fr-btn"
+          - if @displayed_services.any?
+            .d-flex.rdv-flex-direction-row-md.flex-row-aligned
+              - if params[:redirect_to_organisation_id]
+                .mr-2
+                  = link_to("Annuler", new_admin_organisation_agent_path(params[:redirect_to_organisation_id]), class: "fr-btn fr-btn--tertiary")
+              = f.submit "Valider la sélection", class: "fr-btn"
