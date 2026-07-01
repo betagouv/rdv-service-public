@@ -34,7 +34,7 @@
           span.fr-text-mention--grey= @motif.color
 
         - if current_territory.services.any? || @motif.service
-          = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service_name, margin: false)
+          = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service_name)
           - if @motif.service.blank?
             span.fr-text-mention--grey= I18n.t("admin.motifs.motif_without_service_explanation")
 
