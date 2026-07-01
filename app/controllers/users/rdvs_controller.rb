@@ -29,9 +29,6 @@ class Users::RdvsController < UserAuthController
     # TODO: reste à migrer
     #
     # authorize(@rdv, policy_class: User::RdvPolicy)
-    # set_user_name_initials_verified
-    # flash[:success] = t(".rdv_confirmed")
-    # redirect_to users_rdv_path(@rdv, invitation_token: notifier.participations_tokens_by_user_id[current_user.id])
   end
 
   def edit; end
