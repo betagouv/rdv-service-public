@@ -1,16 +1,17 @@
 class Users::RdvBookingForm
   include Users::UserFormConcern
 
-  attr_reader :rdv_builder, :invitation_token, :rdv
+  attr_reader :rdv_builder, :invitation_token, :rdv, :selected_users
 
-  delegate :add_benign_error, :ignore_benign_errors, to: :user
   delegate :to_query, :motif, :service, to: :rdv_builder
+  delegate :add_benign_error, :ignore_benign_errors, :relatives_attributes=, to: :user
   delegate :collectif?, :requires_ants_predemande_number?, to: :rdv
   delegate :requires_ants_predemande_number?, to: :rdv
 
   validates :ants_pre_demande_number, presence: true, if: :requires_ants_predemande_number?
   validates_with AntsPreDemandeNumberStatusValidation, if: :requires_ants_predemande_number?
 
+  validate :validate_selected_users_count
   validate :validate_phone_number_present_for_motif_by_phone
 
   def initialize(user:, rdv_builder:, domain:, user_attributes: {}, selected_users: ["current_user"])
@@ -19,6 +20,8 @@ class Users::RdvBookingForm
     @rdv = rdv_builder.rdv
     @domain = domain
     @selected_users = selected_users
+    @user.singleton_class.accepts_nested_attributes_for :relatives
+    user_attributes[:relatives_attributes] = filter_and_enrich_relatives_attributes(user_attributes.fetch(:relatives_attributes, {}).values.map(&:symbolize_keys))
     @user.assign_attributes(user_attributes)
   end
 
@@ -50,11 +53,36 @@ class Users::RdvBookingForm
 
   def show_social_fields? = service.nil? || service.user_field_groups.include?(:social)
 
+  def new_proches
+    built = (@user.relatives.target || []).select(&:new_record?)
+    extras_count = [selected_users_expected_count - built.size, 0].max
+    built + extras_count.times.map { @user.relatives.build }
+  end
+
+  def selected_users_expected_count = 1
+
+  def selectable_existing_relatives
+    @user.relatives.sort_by(&:first_name)
+  end
   def ants_meeting_point_id = rdv_builder.lieu_id
 
   private
 
   def selected_user = selected_users.first
+
+  def filter_and_enrich_relatives_attributes(attrs)
+    # on garde uniquement les nested attributes pour les nouveaux proches sélectionnés
+    attrs
+      .select { _1[:id].blank? }
+      .select.with_index { |_r, idx| selected_users.include?("new_relative_#{idx}") }
+      .map { _1.merge(created_through: "user_relative_creation") }
+  end
+
+  def validate_selected_users_count
+    if selected_users.size != selected_users_expected_count
+      errors.add(:base, selected_users_expected_count == 1 ? "Veuillez sélectionner un·e seul participant·e" : "Veuillez sélectionner #{selected_users_expected_count} participant·es")
+    end
+  end
 
   def validate_phone_number_present_for_motif_by_phone
     errors.add(:phone_number, :missing_for_phone_motif) if rdv.motif.phone? && user.phone_number.blank?
@@ -80,6 +108,10 @@ class Users::RdvBookingForm
       case selected_user
       when "current_user"
         @user
+      when /existing_relative_(\d+)/
+        @user.relatives.find(::Regexp.last_match(1))
+      when /new_relative_(\d+)/
+        @user.relatives.target.select(&:previously_new_record?)[::Regexp.last_match(1).to_i]
       end
     end
   end

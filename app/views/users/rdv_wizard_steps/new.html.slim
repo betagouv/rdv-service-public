@@ -11,7 +11,11 @@
 
           = render "users/users/form_fields", f: f, show_email_field?: true
 
+          /! Section proches
+          - if @skip_proches_step
             = hidden_field_tag "selected_users[]", "current_user"
+          - else
+            = render "select_users_section", f: f, rdv_booking_form: @rdv_booking_form
 
           /! Hidden fields pour les params du wizard
           - @rdv_booking_form.to_query.each do |wizard_key, wizard_value|

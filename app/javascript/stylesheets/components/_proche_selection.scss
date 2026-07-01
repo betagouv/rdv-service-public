@@ -1,0 +1,24 @@
+.rdv-proche-selection-wrapper {
+  .rdv-nested-fields-wrapper {
+    display: grid;
+    grid-template-rows: 1fr;
+    overflow: hidden;
+    transition: grid-template-rows 0.5s ease;
+
+    .rdv-nested-fields-content {
+      min-height: 0;
+
+      .fr-grid-row,
+      .fr-input-group {
+        padding: 0.5rem;
+      }
+    }
+  }
+
+  &:has(input[type="radio"]:not(:checked)),
+  &:has(input[type="checkbox"]:not(:checked)) {
+    .rdv-nested-fields-wrapper {
+      grid-template-rows: 0fr;
+    }
+  }
+}

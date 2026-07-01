@@ -28,6 +28,7 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv_booking_form = Users::RdvBookingForm.new(
       user: current_user, rdv_builder: @rdv_builder, domain: current_domain,
       user_attributes: user_params[:user].to_h.symbolize_keys,
+      selected_users: params[:selected_users]
     )
     return if redirect_to_prendre_rdv_path_if_creneau_unavailable
 
@@ -89,6 +90,7 @@ class Users::RdvWizardStepsController < UserAuthController
                     :ants_pre_demande_number,
                     :ignore_benign_errors,
                     { user_profiles_attributes: %i[logement id organisation_id] },
+                    { relatives_attributes: %i[id first_name last_name birth_date ants_pre_demande_number] },
                   ])
   end
 
