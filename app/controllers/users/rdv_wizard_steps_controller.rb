@@ -20,6 +20,7 @@ class Users::RdvWizardStepsController < UserAuthController
     return if prevent_if_proconnect_restriction_not_respected
 
     @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain)
+    authorize(@rdv_booking_form, policy_class: User::RdvBookingPolicy)
   end
 
   def create
@@ -31,6 +32,8 @@ class Users::RdvWizardStepsController < UserAuthController
       selected_users: params[:selected_users]
     )
     return if redirect_to_prendre_rdv_path_if_creneau_unavailable
+
+    authorize(@rdv_booking_form, policy_class: User::RdvBookingPolicy)
 
     if @rdv_booking_form.save
       flash[:success] = (@rdv_booking_form.collectif? ? "Participation confirmée" : t("users.rdvs.create.rdv_confirmed"))
