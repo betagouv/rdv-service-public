@@ -1,4 +1,4 @@
-RSpec.describe "Créneau devenu indisponible lors de la prise de RDV" do
+RSpec.describe "Prise de RDV - le créneau devient indisponible" do
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
   let(:starts_at) { Time.zone.parse("2022-01-13 10:30") }
 

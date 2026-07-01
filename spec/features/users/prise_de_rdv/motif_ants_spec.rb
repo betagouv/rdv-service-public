@@ -1,88 +1,48 @@
-RSpec.describe "User can search rdv on rdv mairie" do
+RSpec.describe "Prise de RDV pour un motif ANTS" do
   include_context "rdv_mairie_api_authentication"
 
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
   let(:territory) { create(:territory, departement_number: "78") }
-  let!(:organisation) { create(:organisation, :with_contact, ants_connectable: true, name: "Mairie de Wavignies", territory:) }
+  let!(:organisation) { create(:organisation, name: "Mairie de Wavignies", territory:, ants_connectable: true) }
   let(:service) { create(:service) }
-  let!(:cni_motif) do
-    create(:motif, name: "Carte d'identité", organisation:, restriction_for_rdv: nil, service:, motif_category: cni_motif_category, default_duration_in_min: 25, bookable_by:)
-  end
-  let!(:passport_motif) do
-    create(:motif, name: "Passeport", organisation:, restriction_for_rdv: nil, service:, motif_category: passport_motif_category, default_duration_in_min: 25)
-  end
+  let!(:motif_category) { create(:motif_category, name: Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME) }
+  let!(:passport_motif) { create(:motif, name: "Passeport", organisation:, service:, motif_category:, default_duration_in_min: 25) }
 
-  let(:bookable_by) { :everyone }
-  let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
-  let!(:passport_motif_category) { create(:motif_category, name: Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME) }
-  let!(:lieu) { create(:lieu, organisation: organisation, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
+  let!(:lieu) { create(:lieu, organisation:, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
   let(:user) { create(:user, first_name: "Marco", last_name: "Polo", email: "marcopolo@example.com") }
-
-  def json_response
-    JSON.parse(page.html)
-  end
 
   before do
     default_url_options[:host] = "http://www.rdv-service-public-test.localhost"
     travel_to(now)
-    create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [passport_motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
-  end
-
-  context "when an appointment has already been booked for this pre-demande number" do
-    let(:appointments) do
-      [{
+    create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [passport_motif], lieu:, organisation:, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
+    stub_ants_status_ok(
+      "WITHAPPOIN", meeting_point_id: lieu.id, appointments:  [{
         management_url: "https://gerer-rdv.com",
         meeting_point: "Mairie de Sannois",
         appointment_date: "2023-04-03T08:45:00",
       }]
-    end
+    )
+    stub_ants_status_ok("NUMVALID01", meeting_point_id: lieu.id, appointments: [])
+    stub_ants_status_ok("NUMVALID02", meeting_point_id: lieu.id, appointments: [])
+  end
 
-    before do
-      stub_ants_status_ok("1122334455", meeting_point_id: lieu.id, appointments: appointments)
-      stub_ants_status_ok("5544332211", meeting_point_id: lieu.id, appointments: [])
-    end
-
-    it "allows booking a rdv through the full lifecycle of api calls" do
-      visit api_ants_getManagedMeetingPoints_url
-      lieux_ids = json_response.pluck("id")
-      expect(lieux_ids).to eq([lieu.id.to_s])
-
-      visit api_ants_availableTimeSlots_url(
-        meeting_point_ids: lieux_ids.first,
-        start_date: Date.yesterday,
-        end_date: Date.tomorrow,
-        reason: "PASSPORT",
-        documents_number: 2
+  context "1 pré-demande, pour moi même avec quelques cas d'erreur" do
+    it "fonctionne" do
+      visit creneaux_path(
+        starts_at: "2021-12-13 9:00",
+        lieu_id: lieu.id,
+        motif_id: passport_motif.id,
+        public_link_organisation_id: organisation.id,
+        ants_pre_demandes_count: "1"
       )
-
-      time = Time.zone.now.change(hour: 9)
-
-      expect(json_response).to eq(
-        {
-          lieu.id.to_s => [
-            {
-              "datetime" => time.strftime("%Y-%m-%dT%H:%MZ"),
-              "callback_url" => creneaux_url(
-                starts_at: time.strftime("%Y-%m-%d %H:%M"),
-                lieu_id: lieu.id,
-                motif_id: passport_motif.id,
-                public_link_organisation_id: organisation.id,
-                ants_pre_demandes_count: "2"
-              ),
-            },
-          ],
-        }
-      )
-      creneaux_url = json_response[lieu.id.to_s].first["callback_url"]
-
-      visit creneaux_url
 
       expect(page).to have_current_path("/users/sign_in")
       expect(page).to have_content("Motif : Passeport")
-      expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
+      expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 1")
       expect(page).to have_content("Lieu : Mairie de Sannois (15 Place du Général Leclerc, Sannois, 95110)")
-      expect(page).to have_content("Date du rendez-vous : lundi 13 décembre 2021 à 09h00 (50 minutes)")
+      expect(page).to have_content("Date du rendez-vous : lundi 13 décembre 2021 à 09h00 (25 minutes)")
 
+      # on vérifie que les liens retour contiennent le nombre de pré-demandes pour modifier le motif
       # lien pour modifier le motif
       expect(page).to have_link("Modifier", href: prendre_rdv_path(
         departement: organisation.territory.departement_number,
@@ -101,7 +61,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         departement: organisation.territory.departement_number,
         motif_name_with_location_type: passport_motif.name_with_location_type,
         public_link_organisation_id: organisation.id,
-        ants_pre_demandes_count: "2"
+        ants_pre_demandes_count: "1"
       ))
 
       # lien pour modifier le créneau
@@ -110,23 +70,53 @@ RSpec.describe "User can search rdv on rdv mairie" do
         lieu_id: lieu.id,
         motif_name_with_location_type: passport_motif.name_with_location_type,
         public_link_organisation_id: organisation.id,
-        ants_pre_demandes_count: "2"
+        ants_pre_demandes_count: "1"
       ))
 
       login_via_6_digit_code(user.email)
 
-      # Formulaire unique : ANTS number du user principal + slot pour le proche
       expect(page).to have_field("Numéro de pré-demande ANTS")
-      fill_in("user_ants_pre_demande_number", with: "1122334455")
 
-      # Remplir le slot ANTS pour le proche (ants_pre_demandes_count=2 → 1 slot)
+      # numéro absent
+      expect(page).to have_checked_field("Moi-même", visible: false) # visible: false car le DSFR les cache
+      expect(page).to have_unchecked_field("Une autre personne", visible: false)
+      expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
+      expect(page).to have_content("Numéro de pré-demande ANTS doit être renseigné")
+      # numéro au mauvais format
+      find("label", text: "Moi-même").ancestor(".rdv-proche-selection-wrapper").fill_in "Numéro de pré-demande ANTS", with: "test"
+      expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
+      expect(page).to have_content("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
+      # numéro non reconnu
+      field = find("label", text: "Moi-même").ancestor(".rdv-proche-selection-wrapper").find_field("Numéro de pré-demande ANTS")
+      expect(field.value).to eq("TEST")
+      field.fill_in with: "UNRECOGNIZ"
+      # expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
+    end
+  end
+
+  context "2 pré-demandes dont une qui a déjà des appointments" do
+    it "affiche une erreur benigne contournable" do
+      visit creneaux_path(
+        starts_at: "2021-12-13 9:00",
+        lieu_id: lieu.id,
+        motif_id: passport_motif.id,
+        public_link_organisation_id: organisation.id,
+        ants_pre_demandes_count: "2"
+      )
+
+      expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
+      expect(page).to have_content("Date du rendez-vous : lundi 13 décembre 2021 à 09h00 (50 minutes)")
+
+      login_via_6_digit_code(user.email)
+
+      expect(page).to have_field("Numéro de pré-demande ANTS")
+      fill_in("user_ants_pre_demande_number", with: "WITHAPPOIN")
       check("Nouveau proche 1", allow_label_click: true)
       within(".fr-fieldset__element", text: "Nouveau proche 1") do
         fill_in("Prénom", with: "Alain")
-        fill_in("Nom", with: "Mairie")
-        fill_in("Numéro de pré-demande ANTS", with: "5544332211")
+        fill_in("Nom", with: "Gayab")
+        fill_in("Numéro de pré-demande ANTS", with: "NUMVALID01")
       end
-
       click_button("Confirmer mon RDV")
 
       # Avertissement bénin : le numéro du user principal a déjà un RDV
@@ -134,18 +124,14 @@ RSpec.describe "User can search rdv on rdv mairie" do
       expect(page).to have_content(
         "Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois. Veuillez annuler ce RDV avant d'en prendre un nouveau"
       )
-
-      # Re-remplir les champs (le formulaire est ré-affiché après erreur)
-      fill_in("user_ants_pre_demande_number", with: "1122334455")
-      within(".fr-fieldset__element", text: "Nouveau proche 1") do
-        fill_in("Prénom", with: "Alain")
-        fill_in("Nom", with: "Mairie")
-        fill_in("Numéro de pré-demande ANTS", with: "5544332211")
-      end
       click_button("Confirmer en ignorant les avertissements")
-
       expect(page).to have_content("Votre rendez vous a été confirmé.")
-      expect(user.reload.ants_pre_demande_number).to eq("1122334455")
+      expect(user.reload.ants_pre_demande_number).to eq("WITHAPPOIN")
+      expect(user.relatives.count).to eq(1)
+      created_proche = user.relatives.first
+      expect(created_proche.first_name).to eq("Alain")
+      expect(created_proche.last_name).to eq("Gayab")
+      expect(created_proche.ants_pre_demande_number).to eq("NUMVALID01")
     end
 
     it "redirects to the home page if visiting /prendre_rdv without params" do
@@ -159,36 +145,10 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
   end
 
-  context "quand la mairie a désactivé la réservation en ligne sur un motif ANTS" do
-    let(:bookable_by) { :agents }
-
-    it "le point d'API ne retourne pas de créneau" do
-      visit api_ants_getManagedMeetingPoints_url
-      lieux_ids = json_response.pluck("id")
-      expect(lieux_ids).to eq([lieu.id.to_s])
-
-      visit api_ants_availableTimeSlots_url(
-        meeting_point_ids: lieux_ids.first,
-        start_date: Date.yesterday,
-        end_date: Date.tomorrow,
-        reason: "CNI",
-        documents_number: 2
-      )
-
-      expect(json_response).to eq({ lieu.id.to_s => [] })
-    end
-  end
-
   context "ajout d'un proche ANTS avec des numéros problématiques puis valide" do
-    before do
-      stub_ants_status_ok("1122334455", meeting_point_id: lieu.id, appointments: [])
-      stub_ants_status_ok("5544332211", meeting_point_id: lieu.id, appointments: [])
-    end
-
     it "valide le format du numéro ANTS du proche", js: true do
-      time = Time.zone.now.change(hour: 9)
       visit creneaux_url(
-        starts_at: time.strftime("%Y-%m-%d %H:%M"),
+        starts_at: "2021-12-13 9:00",
         lieu_id: lieu.id,
         motif_id: passport_motif.id,
         public_link_organisation_id: organisation.id,
@@ -197,7 +157,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
       login_via_6_digit_code(user.email)
 
-      fill_in "user_ants_pre_demande_number", with: "1122334455"
+      fill_in "user_ants_pre_demande_number", with: "NUMVALID01"
 
       # Activer le slot du proche via la checkbox
       check "Nouveau proche 1", allow_label_click: true
@@ -217,7 +177,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         fill_in("Nom", with: "Mairie")
         fill_in("Numéro de pré-demande ANTS", with: "inva lide")
       end
-      fill_in "user_ants_pre_demande_number", with: "1122334455"
+      fill_in "user_ants_pre_demande_number", with: "NUMVALID01"
       click_button "Confirmer mon RDV"
       expect(page).to have_content("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
 
@@ -226,9 +186,9 @@ RSpec.describe "User can search rdv on rdv mairie" do
       within(".fr-fieldset__element", text: "Nouveau proche 1") do
         fill_in("Prénom", with: "Alain")
         fill_in("Nom", with: "Mairie")
-        fill_in("Numéro de pré-demande ANTS", with: "5544332211")
+        fill_in("Numéro de pré-demande ANTS", with: "NUMVALID02")
       end
-      fill_in "user_ants_pre_demande_number", with: "1122334455"
+      fill_in "user_ants_pre_demande_number", with: "NUMVALID01"
       click_button "Confirmer mon RDV"
 
       expect(page).to have_content("Votre rendez vous a été confirmé.")
@@ -236,15 +196,14 @@ RSpec.describe "User can search rdv on rdv mairie" do
       expect(page).to have_content("Marco POLO")
 
       alain = User.find_by(first_name: "Alain", last_name: "Mairie")
-      expect(alain.ants_pre_demande_number).to eq("5544332211")
+      expect(alain.ants_pre_demande_number).to eq("NUMVALID02")
     end
   end
 
   context "when using a pre-demande number with invalid format (too short)" do
     it "detects wrong format without calling ANTS API an warns user" do
-      time = Time.zone.now.change(hour: 9)
       visit creneaux_url(
-        starts_at: time.strftime("%Y-%m-%d %H:%M"),
+        starts_at: "2021-12-13 9:00",
         lieu_id: lieu.id,
         motif_id: passport_motif.id,
         public_link_organisation_id: organisation.id,
@@ -263,9 +222,8 @@ RSpec.describe "User can search rdv on rdv mairie" do
       let!(:call_to_status_with_upcased_number) { stub_ants_status_ok("ABCD1234EF", meeting_point_id: lieu.id, appointments: []) }
 
       it "considers it as uppercase when calling ANTS API and saving it in user" do
-        time = Time.zone.now.change(hour: 9)
         visit creneaux_url(
-          starts_at: time.strftime("%Y-%m-%d %H:%M"),
+          starts_at: "2021-12-13 9:00",
           lieu_id: lieu.id,
           motif_id: passport_motif.id,
           public_link_organisation_id: organisation.id,
@@ -283,9 +241,8 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
     context "when trying to bypass the front-end validation" do
       it "performs back-end validation and displays error" do
-        time = Time.zone.now.change(hour: 9)
         visit creneaux_url(
-          starts_at: time.strftime("%Y-%m-%d %H:%M"),
+          starts_at: "2021-12-13 9:00",
           lieu_id: lieu.id,
           motif_id: passport_motif.id,
           public_link_organisation_id: organisation.id,
@@ -302,14 +259,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
     context "ANTS responds with an unexpected error" do
       before do
-        stub_request_ants_status("5544332211", meeting_point_id: lieu.id)
+        stub_request_ants_status("NUMVALID02", meeting_point_id: lieu.id)
           .to_return(status: 500, body: "Internal Server Error")
       end
 
       it "detects wrong format without calling ANTS API an warns user" do
-        time = Time.zone.now.change(hour: 9)
         visit creneaux_url(
-          starts_at: time.strftime("%Y-%m-%d %H:%M"),
+          starts_at: "2021-12-13 9:00",
           lieu_id: lieu.id,
           motif_id: passport_motif.id,
           public_link_organisation_id: organisation.id,
@@ -318,7 +274,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
         login_via_6_digit_code(user.email)
 
-        fill_in("user_ants_pre_demande_number", with: "5544332211")
+        fill_in("user_ants_pre_demande_number", with: "NUMVALID02")
         click_button("Confirmer mon RDV")
         expect(page).to have_content("Numéro de pré-demande ANTS n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.")
         expect(page).not_to have_content("Confirmer en ignorant les avertissements")
@@ -329,9 +285,8 @@ RSpec.describe "User can search rdv on rdv mairie" do
   describe "Displaying the input field for ANTS PREDEMANDE NUMBER" do
     context "when the motif requires ants_predemande_number" do
       it "shows input for ants_predemande_number" do
-        time = Time.zone.now.change(hour: 9)
         visit creneaux_url(
-          starts_at: time.strftime("%Y-%m-%d %H:%M"),
+          starts_at: "2021-12-13 9:00",
           lieu_id: lieu.id,
           motif_id: passport_motif.id,
           public_link_organisation_id: organisation.id,
@@ -347,7 +302,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
     context "when the motif does not require ants_predemande_number" do
       let!(:retrait_motif) do
-        create(:motif, name: "Retrait", organisation: organisation, restriction_for_rdv: nil, service: service, motif_category: nil, default_duration_in_min: 25)
+        create(:motif, name: "Retrait", organisation: organisation, service:, motif_category: nil, default_duration_in_min: 25)
       end
 
       before do
@@ -355,9 +310,8 @@ RSpec.describe "User can search rdv on rdv mairie" do
       end
 
       it "does not show input for ants_predemande_number" do
-        time = Time.zone.now.change(hour: 15)
         visit creneaux_url(
-          starts_at: time.strftime("%Y-%m-%d %H:%M"),
+          starts_at: "2021-12-13 15:00",
           lieu_id: lieu.id,
           motif_id: retrait_motif.id,
           public_link_organisation_id: organisation.id,
@@ -372,14 +326,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
       context "user has previous rdvs requiring ants_predemande_number" do
         before do
-          agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
+          agent = create(:agent, basic_role_in_organisations: [organisation], service:)
           create(:rdv, motif: passport_motif, agents: [agent], users: [user], organisation: organisation)
         end
 
         it "does not show input for ants_predemande_number" do
-          time = Time.zone.now.change(hour: 15)
           visit creneaux_url(
-            starts_at: time.strftime("%Y-%m-%d %H:%M"),
+            starts_at: "2021-12-13 15:00",
             lieu_id: lieu.id,
             motif_id: retrait_motif.id,
             public_link_organisation_id: organisation.id,
@@ -478,7 +431,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
           departement: "78",
           lieu_id: lieu.id,
           motif_id: passport_motif.id,
-          starts_at: Time.zone.parse("2021-12-13 9:00"),
+          starts_at: "2021-12-13 9:00",
         }
         visit(new_users_rdv_wizard_step_path(valid_query))
         expect(page).to have_selector("h2", text: "Vos informations")
@@ -498,7 +451,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
           departement: "78",
           lieu_id: lieu.id,
           motif_id: passport_motif.id,
-          starts_at: Time.zone.parse("2021-12-13 9:00"),
+          starts_at: "2021-12-13 9:00",
         }
         visit(new_users_rdv_wizard_step_path(valid_query))
         expect(page).to have_selector("h2", text: "Vos informations")

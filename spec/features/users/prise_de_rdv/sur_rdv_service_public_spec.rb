@@ -1,4 +1,4 @@
-RSpec.describe "User can search rdv on rdv service public" do
+RSpec.describe "Prise de RDV sur RDVSP" do
   include_context "rdv_mairie_api_authentication"
 
   let(:now) { Time.zone.parse("2021-12-13 8:00") }

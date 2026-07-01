@@ -1,4 +1,4 @@
-RSpec.describe "Login multi-fiches durant la prise de RDV en ligne" do
+RSpec.describe "Prise de RDV - Login multi-fiches" do
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
   let!(:territory)      { create(:territory, departement_number: "92") }
   let!(:organisation)   { create(:organisation, territory: territory) }

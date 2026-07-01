@@ -1,4 +1,4 @@
-RSpec.describe "user can use a link that points to RDV search scoped to an organisation" do
+RSpec.describe "Prise de RDV depuis un lien d'organisation public" do
   before { travel_to(Time.zone.parse("2022-09-12 15:00:00")) }
 
   let!(:territory) do
