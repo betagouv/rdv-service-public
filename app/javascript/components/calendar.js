@@ -66,7 +66,9 @@ export class AgendaMonoAgent {
         },
       },
       datesSet: this.datesSet,
+      toolbarTitleClass: 'rdv-fc-toolbar-title',
       eventDidMount: eventRenderer(this.data.selectedEventId),
+      backgroundEventDidMount: eventRenderer(this.data.selectedEventId),
     }
     return new Calendar(this.calendarEl, { ...defaultFullCalendarConfig(), ...options });
   }

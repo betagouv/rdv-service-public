@@ -82,6 +82,9 @@ const defaultFullCalendarConfig = () => ({
   height: "auto",
   selectable: true,
   nowIndicator: true,
+  buttonClass: 'rdv-fc-button',
+  backgroundEventClass: 'rdv-fc-background-event',
+  backgroundEventTitleClass: 'rdv-fc-background-event-title',
   businessHours: {
     // days of week. an array of zero-based day of week integers (0=Sunday)
     daysOfWeek: [1, 2, 3, 4, 5, 6, 0],

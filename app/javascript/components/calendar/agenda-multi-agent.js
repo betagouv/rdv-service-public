@@ -48,9 +48,11 @@ class AgendaMultiAgent {
       buttons: { ...buttonHintsButtons, preferencesModalToggle },
       datesAboveResources: this.data.groupByAgent !== "true",
       datesSet: this.datesSet,
+      toolbarTitleClass: 'rdv-fc-toolbar-title',
       hiddenDays: hiddenDays(this.data),
       select: this.selectEvent,
       eventDidMount: eventRenderer(),
+      backgroundEventDidMount: eventRenderer(),
       views: this.views(),
     };
     return new Calendar(this.calendarEl, { ...defaultFullCalendarConfig(), ...options });
