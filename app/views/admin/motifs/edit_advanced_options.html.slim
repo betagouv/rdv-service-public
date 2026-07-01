@@ -1,0 +1,64 @@
+- content_for :title do
+  / Cette partial est rendue lorsque l'update est invalide, il faut alors afficher
+  / le nom et service du motif tels qu'ils étaient avant la tentative de modif.
+  | Modifier le motif "#{@motif.name_was}"
+  - if @motif.service_id_was.present?
+    |  (#{Service.find(@motif.service_id_was)&.short_name})
+
+= render "admin/motifs/fil_ariane", current_page_title: content_for(:title)
+
+.row.justify-content-center
+  .col-md-12.col-lg-8
+    = form_for @motif, url: admin_organisation_motif_path, builder: Dsfr::FormBuilder, html: { "data-controller": "motif-form" } do |f|
+      = render "model_errors", model: @motif, f: f
+      - motif = @motif
+      - rdvi_mode = current_organisation.rdv_insertion?
+      .card
+        .card-body
+          fieldset.fr-fieldset
+            legend.fr-fieldset__legend--regular.fr-fieldset__legend
+              | Ouverture aux prescripteurs
+              span.fr-hint-text
+                | Les prescripteurs sont des agents qui prennent rendez-vous au nom d'un usager.
+            / TODO: remplacer follow_up par la valeur prescripteur
+            = f.dsfr_check_box :follow_up, label: "Autoriser les prescripteurs à prendre rendez-vous pour ce motif"
+
+      .card
+        .card-body
+          fieldset.fr-fieldset
+            legend.fr-fieldset__legend--regular.fr-fieldset__legend
+              = Motif.human_attribute_name("follow_up_short")
+              span.fr-hint-text
+                = Motif.human_attribute_name("follow_up_warning")
+            = f.dsfr_check_box :follow_up, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "followUpCheckbox"
+
+      .card.collapse [data-motif-form-target="secretariatSection"]
+        .card-body
+          fieldset.fr-fieldset
+            legend.fr-fieldset__legend--regular.fr-fieldset__legend
+              = Motif.human_attribute_name("for_secretariat_short")
+              span.fr-hint-text
+                = Motif.human_attribute_name("for_secretariat_hint")
+            = f.dsfr_check_box :for_secretariat, label: Motif.human_attribute_name("for_secretariat_label"), class: "js-uncheck-on-section-disable"
+
+      .card
+        .card-body
+          ruby:
+            visibility_types = %i[visible_and_notified visible_and_not_notified invisible].map do |value|
+              {
+                value:,
+                checked: @motif.visibility_type == value.to_s || (motif.new_record? && value == :visible_and_notified),
+                label: sanitize(Motif.human_attribute_value(:visibility_type, value, context: :html)),
+                hint: Motif.human_attribute_value(:visibility_type, value, context: rdvi_mode ? :hint_rdv_insertion : :hint),
+              }
+            end
+          = f.dsfr_radio_buttons :visibility_type, visibility_types, hint: "Si ce motif est sensible (par exemple s'il lié à des services médicaux ou sociaux), vous pouvez désactiver les notifications pour protéger la confidentialité de vos usagers."
+
+      - if current_territory.motif_categories.present?
+        .card
+          .card-body
+            = f.dsfr_select :motif_category_id, current_territory.motif_categories.collect { |motif_categorie| [motif_categorie.name, motif_categorie.id] }, { include_blank: "Aucune" }, label: MotifCategory.model_name.human, hint: MotifCategory.human_attribute_name("category_hint")
+
+      .row.mb-5
+        .col.text-right
+          = f.submit("Enregistrer", class: "fr-btn")

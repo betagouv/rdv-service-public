@@ -15,7 +15,7 @@
 
 .fr-grid-row
   .fr-col-12
-    .card.mt-2
+    .card.fr-mt-2w
       .card-body
         h2.fr-h6 Informations générales
         .fr-mt-4w
@@ -38,7 +38,7 @@
         - if @motif.motif_category.present?
           = motif_attribute_row(MotifCategory.model_name.human, @motif.motif_category.name)
 
-    .card.mt-2
+    .card.fr-mt-2w
       .card-body
         .d-flex.rdv-align-items-baseline
           h2.fr-h5.fr-mr-2w Réservation en ligne
@@ -51,47 +51,63 @@
         - if current_agent.admin_in_organisation?(current_organisation)
           = dsfr_link_to "Voir les détails de réservation en ligne", admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-icon-arrow-right-line fr-link--icon-right"
 
-    .card.mt-2
-      .rdv-accordion-card.fr-accordion
-        h2.fr-accordion__title
-          button.fr-h5.fr-accordion__btn aria-expanded="false" aria-controls="options-avancees"
-            | Options avancées
-        .fr-collapse id="options-avancees"
+    .card.fr-mt-2w
+      .card-body
+        h2.fr-h6 Consignes pour les usagers
+        - if @motif.instruction_for_rdv.blank?
+          p.fr-mt-4w
+            i.fr-text-mention--grey Pas d'instructions à afficher après la prise de rendez-vous
+        - else
           = motif_attribute_row \
             Motif.human_attribute_name(:instruction_for_rdv_short), \
             instruction_for_rdv_to_html(@motif), \
             hint: Motif.human_attribute_name(:instruction_for_rdv_hint)
+
+        - if @motif.custom_cancel_warning_message.blank?
+          p.fr-mt-4w
+            i.fr-text-mention--grey Pas de message d'avertissement en cas d'annulation
+        - else
           = motif_attribute_row \
             Motif.human_attribute_name(:custom_cancel_warning_message), \
             @motif.custom_cancel_warning_message, \
             hint: Motif.human_attribute_name(:custom_cancel_warning_message_hint)
 
-          hr
+    .card.fr-mt-2w
+      .rdv-accordion-card.fr-accordion
+        h2.fr-accordion__title
+          button.fr-h5.fr-accordion__btn aria-expanded="false" aria-controls="options-avancees"
+            | Options avancées
+        .fr-collapse id="options-avancees"
+          p
+            - if @motif.bookable_by == "agents"
+              i.fr-text-mention--grey Ce motif n'est pas ouvert à la prise de rendez-vous par les prescripteurs.
+            - else
+              | Ce motif est ouvert à la prise de rendez-vous par les prescripteurs
 
           = motif_attribute_row \
             Motif.human_attribute_name(:follow_up_short), \
             motif_option_activated(@motif, :follow_up), \
-            hint: Motif.human_attribute_name(:follow_up_hint), margin: false
+            hint: Motif.human_attribute_name(:follow_up_hint)
           = motif_attribute_row \
             Motif.human_attribute_name(:for_secretariat_short), \
             motif_option_activated(@motif, :for_secretariat), \
             hint: Motif.human_attribute_name(:for_secretariat_hint)
-          hr
 
-          = motif_attribute_row(Motif.human_attribute_name(:visibility_type), margin: false) do
-            div= sanitize(@motif.human_attribute_value(:visibility_type, context: :html))
+          .fr-mt-4w= sanitize(@motif.human_attribute_value(:visibility_type, context: :html))
 
-            div.fr-text-mention--grey
-              = @motif.human_attribute_value(:visibility_type, context: :hint)
-              - if current_organisation.rdv_insertion?
-                br
-                span= @motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
+          div.fr-text-mention--grey
+            = @motif.human_attribute_value(:visibility_type, context: :hint)
+            - if current_organisation.rdv_insertion?
+              br
+              span= @motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
+
+          = link_to "Modifier", edit_advanced_options_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary fr-mt-2w"
 
     - if @motif_policy.edit? || @motif_policy.destroy?
-      .card.mt-2
+      .card.fr-mt-2w
         .card-body
           - if @motif.archived?
-            h2.fr-h4 Ce motif est archivé
+            h2.fr-h6 Ce motif est archivé
 
             p Il n'est pas possible de prendre de nouveaux rendez-vous pour ce motif.
             .fr-btns-group.fr-btns-group--inline
@@ -101,7 +117,7 @@
                 = link_to t("admin.motifs.actions.destroy"), admin_organisation_motif_path(current_organisation, @motif), method: :delete, data: { confirm: t("admin.motifs.actions.destroy_confirm") }, class: "fr-btn fr-btn--tertiary"
 
           - else
-            h2.fr-h4 Ce motif est actif
+            h2.fr-h6 Ce motif est actif
 
             p Vous pouvez archiver ce motif si vous ne souhaitez pas que de nouveau rendez-vous soit pris.
 

@@ -25,7 +25,7 @@ class Admin::MotifsController < AgentAuthController
   ].freeze
 
   before_action :set_organisation, only: %i[new create]
-  before_action :set_motif, only: %i[show edit update archive unarchive destroy]
+  before_action :set_motif, only: %i[show edit update archive unarchive destroy edit_advanced_options update_advanced_options]
 
   def index
     @current_tab = params[:current_tab] == "archived" ? :archived : :active
@@ -52,15 +52,6 @@ class Admin::MotifsController < AgentAuthController
     authorize(@motif, policy_class: Agent::MotifPolicy)
   end
 
-  def edit
-    authorize(@motif, policy_class: Agent::MotifPolicy)
-  end
-
-  def show
-    authorize(@motif, policy_class: Agent::MotifPolicy)
-    @motif_policy = Agent::MotifPolicy.new(current_agent, @motif)
-  end
-
   def create
     @motif = Motif.new
     @motif.assign_attributes(params.require(:motif).permit(*FORM_ATTRIBUTES))
@@ -77,6 +68,15 @@ class Admin::MotifsController < AgentAuthController
     end
   end
 
+  def show
+    authorize(@motif, policy_class: Agent::MotifPolicy)
+    @motif_policy = Agent::MotifPolicy.new(current_agent, @motif)
+  end
+
+  def edit
+    authorize(@motif, policy_class: Agent::MotifPolicy)
+  end
+
   def update
     authorize(@motif, policy_class: Agent::MotifPolicy)
 
@@ -85,6 +85,24 @@ class Admin::MotifsController < AgentAuthController
 
     if @motif.save
       flash[:success] = "Le motif #{link_to_motif(@motif)} a été modifié."
+      redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
+    else
+      render :edit
+    end
+  end
+
+  def edit_advanced_options
+    authorize(@motif, :edit?, policy_class: Agent::MotifPolicy)
+  end
+
+  def update_advanced_options
+    authorize(@motif, :update?, policy_class: Agent::MotifPolicy)
+
+    @motif.assign_attributes(params.require(:motif).permit(*FORM_ATTRIBUTES))
+    authorize(@motif, :update?, policy_class: Agent::MotifPolicy)
+
+    if @motif.save
+      flash[:success] = "Les options avancées ont été mises à jour."
       redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
     else
       render :edit

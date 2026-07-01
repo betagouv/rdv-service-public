@@ -48,7 +48,6 @@ Rails.application.routes.draw do
     resources :operators
     resources :operator_managers
     resources :services
-    resources :motifs
     resources :lieux
     resources :territories, except: %i[new create]
     resources :territory_creation_requests, only: %i[index edit update]
@@ -288,6 +287,8 @@ Rails.application.routes.draw do
 
       resources :motifs do
         member do
+          get :edit_advanced_options
+          patch :update_advanced_options
           post :archive
           post :unarchive
         end
