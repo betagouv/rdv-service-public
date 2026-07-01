@@ -1,15 +1,12 @@
 class Users::RdvBookingForm
   include Users::UserFormConcern
+  include ActiveModel::Validations::Callbacks
 
   attr_reader :rdv_builder, :invitation_token, :rdv, :selected_users
 
   delegate :to_query, :motif, :service, to: :rdv_builder
   delegate :add_benign_error, :ignore_benign_errors, :relatives_attributes=, to: :user
   delegate :collectif?, :requires_ants_predemande_number?, to: :rdv
-  delegate :requires_ants_predemande_number?, to: :rdv
-
-  validates :ants_pre_demande_number, presence: true, if: :requires_ants_predemande_number?
-  validates_with AntsPreDemandeNumberStatusValidation, if: :requires_ants_predemande_number?
 
   validate :validate_user # ordre important car user.valid? commence par vider les erreurs sur @user
   validate :validate_selected_users_count
@@ -21,6 +18,7 @@ class Users::RdvBookingForm
     @rdv = rdv_builder.rdv
     @domain = domain
     @selected_users = selected_users
+    singleton_class.include(Users::RdvBookingForm::AntsConcern) if requires_ants_predemande_number?
     @user.singleton_class.accepts_nested_attributes_for :relatives
     @user_attributes = user_attributes.symbolize_keys
 
@@ -44,7 +42,7 @@ class Users::RdvBookingForm
 
   def show_birth_date_field? = !signed_in_with_invitation_token? && rdv.territory&.enable_birth_date_field?
 
-  def show_ants_pre_demande_number_field? = requires_ants_predemande_number?
+  def show_ants_pre_demande_number_field? = false
 
   def show_logement_field? = rdv.territory.enable_logement_field
 
@@ -87,6 +85,13 @@ class Users::RdvBookingForm
         existing_relatives_attributes.find { _1[:id] == ::Regexp.last_match(1) }
       end
     end.compact
+  end
+
+  def rewrite_selected_users_new_relatives_index!
+    # lorsque les nouveaux proches 1-3-4 sont sélectionnés mais pas le 2, on force la sélection à 1-2-3
+    # pour aligner avec le filtre fait dans filter_and_prepare_relatives_attributes!
+    c = @selected_users.count { _1.start_with?("new_relative_") }
+    @selected_users = @selected_users.reject { _1.start_with?("new_relative_") }.append(*c.times.map { |i| "new_relative_#{i}" })
   end
 
   def validate_selected_users_count
