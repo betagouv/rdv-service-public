@@ -23,7 +23,7 @@
         = f.input :search, placeholder: "ex. Être appelé par la MDS", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
         = f.submit "Rechercher", class: "fr-btn"
 
-    ul.nav.nav-tabs.fr-mt-2w
+    ul.nav.nav-tabs.fr-mt-2w.fr-mb-2w
       - [[:active, "Actifs", @filtered_motifs.active.count], [:archived, "Archivés", @filtered_motifs.archived.count]].each do |value, label, count|
         li.nav-item
           ruby:
@@ -37,7 +37,9 @@
             = label
             span.fr-badge.fr-badge--sm.ml-1 = count
 
-    table.table.table-centered
+    - @motifs_page.each do |motif|
+      = render "motif_card", motif:
+    /table.table.table-centered
       - if current_organisation.motifs.any?
         thead
           tr
@@ -71,9 +73,6 @@
             th
       tbody
         - if @motifs_page.any?
-          = render partial: "admin/motifs/motif", collection: @motifs_page, as: :motif
-          .d-flex.justify-content-center
-            = paginate @motifs_page, theme: "dsfr"
         - else
           tr
             td(colspan=6)

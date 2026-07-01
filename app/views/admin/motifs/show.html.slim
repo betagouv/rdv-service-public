@@ -8,8 +8,6 @@
 
 - content_for :right_of_page_title do
   .fr-btns-group.fr-btns-group--inline
-    - if !@motif.archived? && @motif_policy.edit?
-      = link_to t("admin.motifs.actions.edit"), edit_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn"
     - if @motif_policy.duplicate?
       = link_to t("admin.motifs.actions.duplicate"), new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: @motif.id), class: "fr-btn fr-btn--secondary"
 
@@ -17,8 +15,10 @@
   .fr-col-12
     .card.fr-mt-2w
       .card-body
-        h2.fr-h6 Informations générales
-        .fr-mt-4w
+        .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+          h2.fr-h6 Informations générales
+          = link_to "Modifier", edit_advanced_options_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
+        div
           = location_type_icon(@motif.location_type, class: "fr-mr-1w fr-icon--sm")
           = "#{@motif.human_attribute_value(:collectif)} #{@motif.human_attribute_value(:location_type).downcase}"
         .fr-hint-text
@@ -53,9 +53,11 @@
 
     .card.fr-mt-2w
       .card-body
-        h2.fr-h6 Consignes pour les usagers
+        .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+          h2.fr-h6 Consignes pour les usagers
+          = link_to "Modifier", edit_advanced_options_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
         - if @motif.instruction_for_rdv.blank?
-          p.fr-mt-4w
+          p
             i.fr-text-mention--grey Pas d'instructions à afficher après la prise de rendez-vous
         - else
           = motif_attribute_row \
