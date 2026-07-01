@@ -18,24 +18,25 @@
     .card.mt-2
       .card-body
         h2.fr-h6 Informations générales
-        - if current_territory.services.any? || @motif.service
-          = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service_name, margin: false)
-          - if @motif.service.blank?
-            span.fr-text-mention--grey= I18n.t("admin.motifs.motif_without_service_explanation")
-        - if @motif.motif_category.present?
-          = motif_attribute_row(MotifCategory.model_name.human, @motif.motif_category.name)
-        = motif_attribute_row \
-          Motif.human_attribute_name(:default_duration_in_min_short), \
-          "#{@motif.default_duration_in_min} minutes"
-        = motif_attribute_row(Motif.human_attribute_name(:color)) do
-          span.motif-color-badge>[style="background-color: #{@motif.color};"]
-          span.fr-text-mention--grey= @motif.color
-
         .fr-mt-4w
           = location_type_icon(@motif.location_type, class: "fr-mr-1w fr-icon--sm")
           = "#{@motif.human_attribute_value(:collectif)} #{@motif.human_attribute_value(:location_type).downcase}"
         .fr-hint-text
           = sanitize(@motif.human_attribute_value(:location_type, context: :hint), scrubber: :prune)
+
+        = motif_attribute_row(Motif.human_attribute_name(:default_duration_in_min_short),  "#{@motif.default_duration_in_min} minutes")
+
+        = motif_attribute_row(Motif.human_attribute_name(:color)) do
+          span.motif-color-badge>[style="background-color: #{@motif.color};"]
+          span.fr-text-mention--grey= @motif.color
+
+        - if current_territory.services.any? || @motif.service
+          = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service_name, margin: false)
+          - if @motif.service.blank?
+            span.fr-text-mention--grey= I18n.t("admin.motifs.motif_without_service_explanation")
+
+        - if @motif.motif_category.present?
+          = motif_attribute_row(MotifCategory.model_name.human, @motif.motif_category.name)
 
     .card.mt-2
       .card-body

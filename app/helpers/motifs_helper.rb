@@ -120,7 +120,7 @@ module MotifsHelper
   def motif_attribute_row(legend, arg_value = nil, hint: nil, margin: true, &block)
     value = block.present? ? capture(&block) : display_value_or_na_placeholder(arg_value)
 
-    inner_tags = tag.span("#{legend} : ") + tag.span(value, class: "text-bold")
+    inner_tags = tag.span("#{legend} : ", class: "fr-text-mention--grey") + tag.span(value)
 
     if hint.present? && !arg_value&.include?("désactivée")
       inner_tags += tag.div(hint, class: "fr-hint-text")
