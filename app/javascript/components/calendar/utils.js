@@ -120,7 +120,7 @@ const defaultFullCalendarConfig = () => ({
 
 function eventClassNames(info) {
   let extendedProps = info.event.extendedProps;
-  const customCssClasses = [];
+  const customCssClasses = ["rdv-fc-event"];
 
   // La nomenclature visuelle pour l'affichage des RDVs selon le statut est la suivante :
   // - RDV à renseigner / futur (unknown)   -> aucun effet

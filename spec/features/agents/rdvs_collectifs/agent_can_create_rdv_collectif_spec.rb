@@ -30,7 +30,7 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
     # et c’est donc le mercredi qui est choisi un peu au hasard
     # en définissant l’offset on arrive à cliquer sur le lundi 😅
     page.driver.with_playwright_page do |pw|
-      slot = pw.locator('[data-time="08:30:00"]').first
+      slot = pw.locator('.fc-timegrid-slot-lane[data-time="08:30:00"]').first
       box = slot.bounding_box
       pw.mouse.click(box["x"] + 10, box["y"] + (box["height"] / 2))
     end

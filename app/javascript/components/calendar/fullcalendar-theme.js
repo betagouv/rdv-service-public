@@ -13,7 +13,23 @@ export const rdvTheme = {
   blockEventClass: "rdv-fc-block-event",
   backgroundEventClass: "rdv-fc-background-event",
   backgroundEventTitleClass: "rdv-fc-background-event-title",
-  // FC v7 classic met le texte des en-têtes de jour dans un wrapper aria-hidden.
-  // On fournit le contenu explicitement pour qu'il soit visible aux lecteurs d'écran.
-  dayHeaderContent: (args) => ({ html: args.text }),
+  // FC v7 classic wraps column header inner text in aria-hidden (the accessible name
+  // is already on the outer [role="columnheader"] via aria-label). axe's
+  // empty-table-header rule requires visible text, not just aria-label, so we remove
+  // aria-hidden from the inner wrapper as each header is mounted.
+  dayHeaderDidMount: ({ el }) => {
+    el.querySelectorAll('[aria-hidden]').forEach(inner => inner.removeAttribute('aria-hidden'))
+  },
+  // FC v7 renders [role="rowheader"][aria-label="Timed"] as an empty element.
+  // Add a visually-hidden span so axe finds text content inside the header.
+  viewDidMount: ({ el }) => {
+    el.querySelectorAll('[role="rowheader"]').forEach(header => {
+      if (!header.textContent.trim()) {
+        const span = document.createElement('span')
+        span.className = 'fr-sr-only'
+        span.textContent = header.getAttribute('aria-label')
+        header.appendChild(span)
+      }
+    })
+  },
 }
