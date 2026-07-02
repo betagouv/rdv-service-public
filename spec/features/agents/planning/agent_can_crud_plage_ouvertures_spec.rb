@@ -66,7 +66,12 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       it "allows creation via range selection", js: true do
         click_link("Vue calendrier")
         page.driver.with_playwright_page do |playwright_page|
-          playwright_page.drag_and_drop('[data-time="08:30:00"]', '[data-time="11:30:00"]')
+          box_start = playwright_page.locator('[data-time="08:30:00"]').first.bounding_box
+          box_end = playwright_page.locator('[data-time="11:30:00"]').first.bounding_box
+          playwright_page.mouse.move(box_start["x"] + (box_start["width"] / 2), box_start["y"] + (box_start["height"] / 2))
+          playwright_page.mouse.down
+          playwright_page.mouse.move(box_end["x"] + (box_end["width"] / 2), box_end["y"] + (box_end["height"] / 2), steps: 5)
+          playwright_page.mouse.up
         end
 
         expect(page).to have_content("Nouvelle plage d'ouverture")
@@ -142,7 +147,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_link "Vue calendrier"
       expect(page).to have_content "Semaine" # necessary to make sure the calendar page has loaded
       expect(page).to have_content "Permanence"
-      first("a.rdv-fc-event", text: "Permanence").click
+      first(".rdv-fc-event", text: "Permanence").click
       expect(page).to have_content("Permanence")
       click_link "Modifier"
 

@@ -80,6 +80,7 @@ const buttonHintsButtons = {
 const defaultFullCalendarConfig = () => ({
   ...rdvTheme,
   locale: frLocale,
+  buttons: buttonHintsButtons,
   allDaySlot: false,
   height: "auto",
   selectable: true,
