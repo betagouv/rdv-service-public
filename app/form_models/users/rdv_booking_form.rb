@@ -11,6 +11,7 @@ class Users::RdvBookingForm
   validates :ants_pre_demande_number, presence: true, if: :requires_ants_predemande_number?
   validates_with AntsPreDemandeNumberStatusValidation, if: :requires_ants_predemande_number?
 
+  validate :validate_user # ordre important car user.valid? commence par vider les erreurs sur @user
   validate :validate_phone_number_present_for_motif_by_phone
 
   def initialize(user:, rdv_builder:, domain:, user_attributes: {}, selected_users: ["current_user"])
@@ -54,7 +55,7 @@ class Users::RdvBookingForm
 
   private
 
-  def selected_user = selected_users.first
+  def validate_user = user.valid?
 
   def validate_phone_number_present_for_motif_by_phone
     errors.add(:phone_number, :missing_for_phone_motif) if rdv.motif.phone? && user.phone_number.blank?
