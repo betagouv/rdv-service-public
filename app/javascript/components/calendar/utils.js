@@ -164,8 +164,8 @@ function eventRenderer(selectedEventId) {
       return
     }
 
-    const start = Intl.DateTimeFormat("fr", { timeZone: 'UTC', hour: 'numeric', minute: 'numeric' }).format(info.event.start);
-    const end = Intl.DateTimeFormat("fr", { timeZone: 'UTC', hour: 'numeric', minute: 'numeric' }).format(info.event.end);
+    const start = Intl.DateTimeFormat("fr", { timeZone: 'Europe/Paris', hour: 'numeric', minute: 'numeric' }).format(info.event.start);
+    const end = Intl.DateTimeFormat("fr", { timeZone: 'Europe/Paris', hour: 'numeric', minute: 'numeric' }).format(info.event.end);
 
     let title = ``;
 
