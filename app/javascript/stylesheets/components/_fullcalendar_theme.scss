@@ -23,6 +23,7 @@
   }
 
   .rdv-fc-button {
+    border-inline: none; // fc-classic-1Wx ajoute border-inline-width: 1px qui prend de la place même transparent
     box-shadow: rgb(221, 221, 221) 0 0 0 1px inset;
   }
 
