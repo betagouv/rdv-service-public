@@ -56,7 +56,6 @@ export class AgendaMonoAgent {
         timeGridOneDay: {
           type: 'timeGrid',
           duration: { days: 1 },
-          buttonText: 'Journée',
           titleFormat: {
             month: 'long',
             year: 'numeric',
