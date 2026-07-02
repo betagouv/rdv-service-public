@@ -50,12 +50,20 @@
   }
 
   .rdv-fc-toolbar-title {
+    margin: 0;
     margin-left: 0.5rem;
   }
 }
 
+// Vue mois et planning : gris subtil DSFR
 .fc-classic-n5m a[href]:hover {
+  background-color: var(--background-contrast-grey) !important;
+}
+
+// Vue semaine et jour : assombrit légèrement la couleur de l'événement pour garder le texte lisible
+.fc-classic-n5m a[href].rdv-fc-block-event:hover {
   background-color: var(--fc-event-color) !important;
+  filter: brightness(0.9);
 }
 
 @media (hover: hover) {
