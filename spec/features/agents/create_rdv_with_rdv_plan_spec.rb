@@ -31,7 +31,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
   it "permet de prendre un rendez-vous", js: true do
     visit agents_rdv_plan_path(rdv_plan.id)
     page.driver.with_playwright_page do |pw| # FC v7 overlay intercepts direct click → use mouse coordinates
-      slot = pw.locator('.fc-timegrid-slot-lane[data-time="08:30:00"]').first
+      slot = pw.locator('[data-time="08:30:00"]').first
       box = slot.bounding_box
       pw.mouse.click(box["x"] + (box["width"] / 2), box["y"] + (box["height"] / 2))
     end

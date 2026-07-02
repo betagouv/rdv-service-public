@@ -203,7 +203,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       # Je ne sais pas comment faire cliquer la spec sur la colonne du lundi, elle clique au milieu de l'élément donc sur le mercredi.
       wednesday = Time.zone.now.beginning_of_week.to_date + 2
       page.driver.with_playwright_page do |pw|
-        slot = pw.locator('.fc-timegrid-slot-lane[data-time="08:30:00"]').first
+        slot = pw.locator('[data-time="08:30:00"]').first
         box = slot.bounding_box
         pw.mouse.click(box["x"] + (box["width"] / 2), box["y"] + (box["height"] / 2))
       end
@@ -213,9 +213,9 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     it "fonctionne depuis la vue jour", js: true do
       page.driver.with_playwright_page { _1.clock.pause_at(Time.zone.parse("2026-04-02 08:00")) }
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
-      click_button "Journée"
+      click_button "Jour"
       page.driver.with_playwright_page do |pw|
-        slot = pw.locator('.fc-timegrid-slot-lane[data-time="08:30:00"]').first
+        slot = pw.locator('[data-time="08:30:00"]').first
         box = slot.bounding_box
         pw.mouse.click(box["x"] + (box["width"] / 2), box["y"] + (box["height"] / 2))
       end

@@ -66,8 +66,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       it "allows creation via range selection", js: true do
         click_link("Vue calendrier")
         page.driver.with_playwright_page do |playwright_page|
-          box_start = playwright_page.locator('.fc-timegrid-slot-lane[data-time="08:30:00"]').first.bounding_box
-          box_end = playwright_page.locator('.fc-timegrid-slot-lane[data-time="11:30:00"]').first.bounding_box
+          box_start = playwright_page.locator('[data-time="08:30:00"]').first.bounding_box
+          box_end = playwright_page.locator('[data-time="11:30:00"]').first.bounding_box
           playwright_page.mouse.move(box_start["x"] + (box_start["width"] / 2), box_start["y"] + (box_start["height"] / 2))
           playwright_page.mouse.down
           playwright_page.mouse.move(box_end["x"] + (box_end["width"] / 2), box_end["y"] + (box_end["height"] / 2), steps: 5)
