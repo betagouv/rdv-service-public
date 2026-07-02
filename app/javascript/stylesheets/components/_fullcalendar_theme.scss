@@ -27,6 +27,11 @@
     box-shadow: rgb(221, 221, 221) 0 0 0 1px inset;
   }
 
+  // Les boutons de navigation (Aujourd'hui, <, >) restent espacés
+  .rdv-fc-nav-group {
+    gap: 4px;
+  }
+
   // FC v7 utilise aria-pressed pour les boutons génériques, aria-selected pour les sélecteurs de vue
   .rdv-fc-button[aria-pressed="true"],
   .rdv-fc-button[aria-selected="true"] {
