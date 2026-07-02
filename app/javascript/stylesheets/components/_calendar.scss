@@ -1,77 +1,7 @@
+@import "./fullcalendar_theme";
+
 .rdv-fc-event-barre {
   text-decoration: line-through;
-}
-
-// DSFR applies background-color: var(--hover-tint) to a[href]:hover and button:not(:disabled):hover,
-// overriding FC v7 event and button styles. FC v7 no longer adds class "fc" to the root —
-// the classic theme uses fc-classic-n5m. Scoping our rules inside .fc-classic-n5m gives us
-// specificity (0,0,3,x) which beats DSFR's (0,0,2,1).
-
-// Redéfinit la palette de boutons FC v7 : fond blanc + texte sombre
-// Les vraies bordures CSS sont supprimées (transparent) et remplacées par box-shadow inset
-// pour éviter les double-bordures dans les groupes de boutons.
-.fc-classic-n5m {
-  --fc-classic-button: #ffffff;
-  --fc-classic-button-border: transparent;
-  --fc-classic-button-strong: #f6f6f6;
-  --fc-classic-button-strong-border: transparent;
-  --fc-classic-button-foreground: #161616;
-  --fc-classic-background-event-opacity: 100%;
-
-  // Titre des plages d'ouverture (background events) : gras à la place de l'italique léger par défaut
-  .rdv-fc-background-event .rdv-fc-background-event-title {
-    font-weight: 600;
-    font-style: normal;
-  }
-
-  // box-shadow inset simule une bordure sans affecter le layout ni créer de double-bordure
-  .rdv-fc-button {
-    box-shadow: rgb(221, 221, 221) 0 0 0 1px inset;
-  }
-
-  // Vue active (ex: "Semaine" sélectionnée) : indicateur bleu DSFR
-  // FC v7 utilise aria-pressed pour les boutons génériques, aria-selected pour les sélecteurs de vue
-  .rdv-fc-button[aria-pressed="true"],
-  .rdv-fc-button[aria-selected="true"] {
-    background-color: white;
-    color: var(--blue-france-sun-113-625);
-    box-shadow: var(--blue-france-sun-113-625) 0 0 0 1px inset;
-
-    &:hover {
-      background-color: white;
-    }
-  }
-
-  button:focus-visible {
-    outline: 2px solid $focus-dsfr;
-    outline-offset: 2px;
-  }
-
-  .rdv-fc-toolbar-title {
-    margin-left: 0.5rem;
-  }
-}
-
-.fc-classic-n5m a[href]:hover {
-  background-color: var(--fc-event-color) !important;
-}
-
-@media (hover: hover) {
-  .fc-classic-n5m .rdv-fc-button:hover,
-  .fc-classic-n5m .rdv-fc-button[aria-pressed="true"]:hover,
-  .fc-classic-n5m .rdv-fc-button[aria-selected="true"]:hover {
-    background-color: var(--fc-classic-button-strong);
-  }
-
-  // fc-classic-Ubk et fc-classic-4yP sont des classes internes FC v7 appliquées aux événements
-  // interactifs (list items, timegrid) — pas d'option *Class stable disponible pour les remplacer.
-  .fc-classic-n5m .fc-classic-Ubk:hover {
-    background-color: var(--fc-classic-faint);
-  }
-
-  .fc-classic-n5m .fc-classic-4yP:hover {
-    background-color: var(--fc-classic-muted);
-  }
 }
 
 .rdv-fc-event-transparent {

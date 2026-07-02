@@ -5,6 +5,7 @@ import classicTheme from 'fullcalendar/themes/classic';
 import 'fullcalendar/skeleton.css';
 import 'fullcalendar/themes/classic/theme.css';
 import 'fullcalendar/themes/classic/palette.css';
+import { rdvTheme } from './fullcalendar-theme';
 
 export const headerToolbarLayout = { left: "today,prev,next,title", center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek", right: "preferencesModalToggle" };
 
@@ -77,14 +78,12 @@ const buttonHintsButtons = {
 };
 
 const defaultFullCalendarConfig = () => ({
+  ...rdvTheme,
   locale: frLocale,
   allDaySlot: false,
   height: "auto",
   selectable: true,
   nowIndicator: true,
-  buttonClass: 'rdv-fc-button',
-  backgroundEventClass: 'rdv-fc-background-event',
-  backgroundEventTitleClass: 'rdv-fc-background-event-title',
   businessHours: {
     // days of week. an array of zero-based day of week integers (0=Sunday)
     daysOfWeek: [1, 2, 3, 4, 5, 6, 0],
