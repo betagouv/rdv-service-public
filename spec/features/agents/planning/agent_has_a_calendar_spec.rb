@@ -110,17 +110,17 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       end
 
       rdv = create(:rdv, agents: [agent], motif:, organisation:, users: [francis], starts_at:)
-      expect(page).to have_selector(".rdv-fc-event", text: "14:00 - 14:45\nFrancis FACTICE")
+      expect(page).to have_selector(".rdv-fc-event", text: "14:00 – 14:45\nFrancis FACTICE")
 
       rdv.update!(starts_at: rdv.starts_at + 1.hour)
-      expect(page).to have_selector(".rdv-fc-event", text: "15:00 - 15:45\nFrancis FACTICE")
+      expect(page).to have_selector(".rdv-fc-event", text: "15:00 – 15:45\nFrancis FACTICE")
 
       gaston = create(:user, first_name: "Gaston", last_name: "Bidon")
       create(:participation, rdv:, user: gaston)
-      expect(page).to have_selector(".rdv-fc-event", text: "15:00 - 15:45\nFrancis FACTICE et Gaston BIDON")
+      expect(page).to have_selector(".rdv-fc-event", text: "15:00 – 15:45\nFrancis FACTICE et Gaston BIDON")
 
       rdv.participations.find { _1.user == francis }.destroy!
-      expect(page).to have_selector(".rdv-fc-event", text: "15:00 - 15:45\nGaston BIDON")
+      expect(page).to have_selector(".rdv-fc-event", text: "15:00 – 15:45\nGaston BIDON")
 
       # Quand on assigne le RDV à un autre agent, il disparaît.
       other_agent = create(:agent, basic_role_in_organisations: [organisation])
@@ -129,7 +129,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
 
       # On va voir l'agenda de l'autre agent et on vérifie que le RDV disparaît bien au destroy.
       visit admin_organisation_planning_agenda_path(organisation, agent_id: other_agent.id)
-      expect(page).to have_selector(".rdv-fc-event", text: "15:00 - 15:45\nGaston BIDON")
+      expect(page).to have_selector(".rdv-fc-event", text: "15:00 – 15:45\nGaston BIDON")
       rdv.destroy!
       expect(page).to have_no_content(".fc-event")
     end
