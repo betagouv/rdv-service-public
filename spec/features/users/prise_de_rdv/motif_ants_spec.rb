@@ -24,6 +24,10 @@ RSpec.describe "Prise de RDV pour un motif ANTS" do
     )
     stub_ants_status_ok("NUMVALID01", meeting_point_id: lieu.id, appointments: [])
     stub_ants_status_ok("NUMVALID02", meeting_point_id: lieu.id, appointments: [])
+    stub_ants_status_ok("UNRECOGNIZ", meeting_point_id: lieu.id, status: "unknown")
+    stub_ants_status_ok("CONSUMED01", meeting_point_id: lieu.id, status: "consumed")
+    stub_ants_status_ok("DECLARED01", meeting_point_id: lieu.id, status: "declared")
+    stub_ants_status_ok("EXPIRED001", meeting_point_id: lieu.id, status: "expired")
   end
 
   context "1 pré-demande, pour moi même avec quelques cas d'erreur" do
@@ -90,11 +94,141 @@ RSpec.describe "Prise de RDV pour un motif ANTS" do
       field = find("label", text: "Moi-même").ancestor(".rdv-proche-selection-wrapper").find_field("Numéro de pré-demande ANTS")
       expect(field.value).to eq("TEST")
       field.fill_in with: "UNRECOGNIZ"
-      # expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
+      expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
+      expect(page).to have_content("Numéro de pré-demande ANTS n'est pas reconnu par l'ANTS")
+
+      # numéro correspondant à un dossier déjà instruit
+      field = find("label", text: "Moi-même").ancestor(".rdv-proche-selection-wrapper").find_field("Numéro de pré-demande ANTS")
+      field.fill_in with: "CONSUMED01"
+      expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
+      expect(page).to have_content("Numéro de pré-demande ANTS correspond à un dossier déjà instruit")
+
+      # numéro non officiellement reconnu par l'ANTS (déclaratif)
+      field = find("label", text: "Moi-même").ancestor(".rdv-proche-selection-wrapper").find_field("Numéro de pré-demande ANTS")
+      field.fill_in with: "DECLARED01"
+      expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
+      expect(page).to have_content("Numéro de pré-demande ANTS n'est pas officiellement reconnu par l'ANTS")
+
+      # numéro correspondant à un dossier expiré
+      field = find("label", text: "Moi-même").ancestor(".rdv-proche-selection-wrapper").find_field("Numéro de pré-demande ANTS")
+      field.fill_in with: "EXPIRED001"
+      expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
+      expect(page).to have_content("Numéro de pré-demande ANTS correspond à un dossier expiré")
+
+      # numéro déjà utilisé pour un RDV existant : avertissement bénin, contournable
+      field = find("label", text: "Moi-même").ancestor(".rdv-proche-selection-wrapper").find_field("Numéro de pré-demande ANTS")
+      field.fill_in with: "WITHAPPOIN"
+      click_on "Confirmer mon RDV"
+      expect(page).not_to have_content("Votre rendez vous a été confirmé")
+      expect(page).to have_content(
+        "Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois. Veuillez annuler ce RDV avant d'en prendre un nouveau"
+      )
+      click_button("Confirmer en ignorant les avertissements")
+      expect(page).to have_content("Votre rendez vous a été confirmé.")
+      expect(user.reload.ants_pre_demande_number).to eq("WITHAPPOIN")
     end
   end
 
-  context "2 pré-demandes dont une qui a déjà des appointments" do
+  context "1 pré-demande, en sélectionnant une autre personne à la place de moi-même" do
+    it "réserve le RDV pour le nouveau proche uniquement, sans exiger de numéro ANTS pour l'usager principal" do
+      visit creneaux_path(
+        starts_at: "2021-12-13 9:00",
+        lieu_id: lieu.id,
+        motif_id: passport_motif.id,
+        public_link_organisation_id: organisation.id,
+        ants_pre_demandes_count: "1"
+      )
+
+      login_via_6_digit_code(user.email)
+
+      choose("Une autre personne", allow_label_click: true)
+      within(".fr-fieldset__element", text: "Une autre personne") do
+        fill_in("Prénom", with: "Alain")
+        fill_in("Nom", with: "Gayab")
+      end
+
+      # numéro absent
+      expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
+      expect(page).to have_content("Numéro de pré-demande ANTS doit être renseigné")
+
+      # numéro au mauvais format
+      find("label", text: "Une autre personne").ancestor(".rdv-proche-selection-wrapper").fill_in "Numéro de pré-demande ANTS", with: "test"
+      expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
+      expect(page).to have_content("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
+
+      # numéro non reconnu
+      field = find("label", text: "Une autre personne").ancestor(".rdv-proche-selection-wrapper").find_field("Numéro de pré-demande ANTS")
+      expect(field.value).to eq("TEST")
+      field.fill_in with: "UNRECOGNIZ"
+      expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
+      expect(page).to have_content("Numéro de pré-demande ANTS n'est pas reconnu par l'ANTS")
+
+      # numéro correspondant à un dossier déjà instruit
+      field = find("label", text: "Une autre personne").ancestor(".rdv-proche-selection-wrapper").find_field("Numéro de pré-demande ANTS")
+      field.fill_in with: "CONSUMED01"
+      expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
+      expect(page).to have_content("Numéro de pré-demande ANTS correspond à un dossier déjà instruit")
+
+      # numéro non officiellement reconnu par l'ANTS (déclaratif)
+      field = find("label", text: "Une autre personne").ancestor(".rdv-proche-selection-wrapper").find_field("Numéro de pré-demande ANTS")
+      field.fill_in with: "DECLARED01"
+      expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
+      expect(page).to have_content("Numéro de pré-demande ANTS n'est pas officiellement reconnu par l'ANTS")
+
+      # numéro correspondant à un dossier expiré
+      field = find("label", text: "Une autre personne").ancestor(".rdv-proche-selection-wrapper").find_field("Numéro de pré-demande ANTS")
+      field.fill_in with: "EXPIRED001"
+      expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
+      expect(page).to have_content("Numéro de pré-demande ANTS correspond à un dossier expiré")
+
+      # numéro déjà utilisé pour un RDV existant : avertissement bénin, contournable
+      field = find("label", text: "Une autre personne").ancestor(".rdv-proche-selection-wrapper").find_field("Numéro de pré-demande ANTS")
+      field.fill_in with: "WITHAPPOIN"
+      click_on "Confirmer mon RDV"
+      expect(page).not_to have_content("Votre rendez vous a été confirmé")
+      expect(page).to have_content(
+        "Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois. Veuillez annuler ce RDV avant d'en prendre un nouveau"
+      )
+      click_button("Confirmer en ignorant les avertissements")
+      expect(page).to have_content("Votre rendez vous a été confirmé.")
+
+      alain = User.find_by(first_name: "Alain", last_name: "Gayab")
+      expect(Rdv.last.users).to contain_exactly(alain)
+      expect(alain.ants_pre_demande_number).to eq("WITHAPPOIN")
+      expect(alain.created_through).to eq("user_relative_creation")
+      expect(user.reload.ants_pre_demande_number).to be_blank
+    end
+  end
+
+  context "1 pré-demande, en sélectionnant un proche déjà existant" do
+    let!(:proche) { create(:user, :relative, responsible: user, first_name: "Marie", last_name: "Martin") }
+
+    it "réserve le RDV pour ce proche et enregistre son numéro ANTS" do
+      visit creneaux_path(
+        starts_at: "2021-12-13 9:00",
+        lieu_id: lieu.id,
+        motif_id: passport_motif.id,
+        public_link_organisation_id: organisation.id,
+        ants_pre_demandes_count: "1"
+      )
+
+      login_via_6_digit_code(user.email)
+
+      choose(proche.full_name, allow_label_click: true)
+      within(".fr-fieldset__element", text: proche.full_name) do
+        fill_in("Numéro de pré-demande ANTS", with: "NUMVALID01")
+      end
+
+      expect { click_button("Confirmer mon RDV") }.to change(Rdv, :count).by(1)
+      expect(page).to have_content("Votre rendez vous a été confirmé.")
+
+      expect(Rdv.last.users).to contain_exactly(proche)
+      expect(proche.reload.ants_pre_demande_number).to eq("NUMVALID01")
+      expect(user.reload.ants_pre_demande_number).to be_blank
+    end
+  end
+
+  context "2 pré-demandes dont une qui a déjà des appointments" do
     it "affiche une erreur benigne contournable" do
       visit creneaux_path(
         starts_at: "2021-12-13 9:00",
