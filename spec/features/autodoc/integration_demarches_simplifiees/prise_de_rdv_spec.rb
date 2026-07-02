@@ -79,8 +79,8 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
                        text: "J'arrive sur mon agenda pour planifier un rendez-vous, je choisis un horaire.",
                        wait_for: "Convenez d'un horaire")
 
-    page.driver.with_playwright_page do |pw| # FC v7 overlay intercepts direct click → use mouse coordinates
-      slot = pw.locator('.fc-timegrid-slot-lane[data-time="08:30:00"]').first
+    page.driver.with_playwright_page do |pw|
+      slot = pw.locator('[data-time="08:30:00"]').first
       box = slot.bounding_box
       pw.mouse.click(box["x"] + (box["width"] / 2), box["y"] + (box["height"] / 2))
     end
