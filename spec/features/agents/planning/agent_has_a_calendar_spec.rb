@@ -48,12 +48,12 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     # On vérifie que la plage n'est pas affichée deux mois plus tard :
     # cela permet de s'assurer que la spec n'est pas en faux-positif
     # à cause de race conditions liées aux appels Ajax.
-    find(".fc-next-button").click
-    find(".fc-next-button").click
+    find('button[aria-label="Mois suivant"]').click
+    find('button[aria-label="Mois suivant"]').click
     expect(page).not_to have_content("Ceci est le libellé de la plage")
     # On revient au mois courant pour re-vérifier
-    find(".fc-prev-button").click
-    find(".fc-prev-button").click
+    find('button[aria-label="Mois précédent"]').click
+    find('button[aria-label="Mois précédent"]').click
     expect(page).to have_content("Ceci est le libellé de la plage")
   end
 
@@ -110,17 +110,17 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       end
 
       rdv = create(:rdv, agents: [agent], motif:, organisation:, users: [francis], starts_at:)
-      expect(page).to have_selector(".fc-event", text: "14:00 - 14:45\nFrancis FACTICE")
+      expect(page).to have_selector(".rdv-fc-event", text: "14:00 - 14:45\nFrancis FACTICE")
 
       rdv.update!(starts_at: rdv.starts_at + 1.hour)
-      expect(page).to have_selector(".fc-event", text: "15:00 - 15:45\nFrancis FACTICE")
+      expect(page).to have_selector(".rdv-fc-event", text: "15:00 - 15:45\nFrancis FACTICE")
 
       gaston = create(:user, first_name: "Gaston", last_name: "Bidon")
       create(:participation, rdv:, user: gaston)
-      expect(page).to have_selector(".fc-event", text: "15:00 - 15:45\nFrancis FACTICE et Gaston BIDON")
+      expect(page).to have_selector(".rdv-fc-event", text: "15:00 - 15:45\nFrancis FACTICE et Gaston BIDON")
 
       rdv.participations.find { _1.user == francis }.destroy!
-      expect(page).to have_selector(".fc-event", text: "15:00 - 15:45\nGaston BIDON")
+      expect(page).to have_selector(".rdv-fc-event", text: "15:00 - 15:45\nGaston BIDON")
 
       # Quand on assigne le RDV à un autre agent, il disparaît.
       other_agent = create(:agent, basic_role_in_organisations: [organisation])
@@ -129,7 +129,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
 
       # On va voir l'agenda de l'autre agent et on vérifie que le RDV disparaît bien au destroy.
       visit admin_organisation_planning_agenda_path(organisation, agent_id: other_agent.id)
-      expect(page).to have_selector(".fc-event", text: "15:00 - 15:45\nGaston BIDON")
+      expect(page).to have_selector(".rdv-fc-event", text: "15:00 - 15:45\nGaston BIDON")
       rdv.destroy!
       expect(page).to have_no_content(".fc-event")
     end
@@ -139,10 +139,10 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
         visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
       end
       plage = create(:plage_ouverture, organisation:, agent:, title: "Ma plage", first_day: Time.zone.now.beginning_of_week.to_date)
-      expect(page).to have_selector(".fc-event.fc-bg-event", text: "Ma plage")
+      expect(page).to have_selector(".rdv-fc-background-event", text: "Ma plage")
 
       plage.update!(title: "Ma SUPER plage")
-      expect(page).to have_selector(".fc-event.fc-bg-event", text: "Ma SUPER plage")
+      expect(page).to have_selector(".rdv-fc-background-event", text: "Ma SUPER plage")
 
       plage.destroy!
       expect(page).to have_no_content(".fc-event")
@@ -154,10 +154,10 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       end
 
       absence = create(:absence, agent:, title: "Mon indispo", first_day: Time.zone.now.beginning_of_week.to_date)
-      expect(page).to have_selector(".fc-event", text: "Mon indispo")
+      expect(page).to have_selector(".rdv-fc-event", text: "Mon indispo")
 
       absence.update!(title: "Ma SUPER indispo")
-      expect(page).to have_selector(".fc-event", text: "Ma SUPER indispo")
+      expect(page).to have_selector(".rdv-fc-event", text: "Ma SUPER indispo")
 
       absence.destroy!
       expect(page).to have_no_content(".fc-event")
@@ -175,9 +175,9 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       end
       expect(page).to have_content("Planning de")
 
-      expect(page).not_to have_selector(".fc-event", text: "Mon indispo")
+      expect(page).not_to have_selector(".rdv-fc-event", text: "Mon indispo")
       create(:absence, agent:, title: "Mon indispo", first_day: Time.zone.now.beginning_of_week.to_date)
-      expect(page).to have_selector(".fc-event", text: "Mon indispo")
+      expect(page).to have_selector(".rdv-fc-event", text: "Mon indispo")
     end
   end
 
@@ -193,7 +193,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       page.driver.with_playwright_page { _1.clock.pause_at(Time.zone.parse("2026-04-14 08:00")) }
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
       click_button "Mois"
-      find(%(.fc-daygrid-day[data-date="2026-04-13"])).click
+      find(%([data-date="2026-04-13"])).click
       expect(page).to have_content("Nouveau RDV pour le 13/04/2026 à 00:00")
     end
 
@@ -202,7 +202,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       click_button "Semaine"
       # Je ne sais pas comment faire cliquer la spec sur la colonne du lundi, elle clique au milieu de l'élément donc sur le mercredi.
       wednesday = Time.zone.now.beginning_of_week.to_date + 2
-      find('.fc-timegrid-slot-lane[data-time="08:30:00"]').click
+      find('[data-time="08:30:00"]').click
       expect(page).to have_content("Nouveau RDV pour le #{I18n.l(wednesday, format: '%-d/%m/%Y')} à 08:30")
     end
 
@@ -210,7 +210,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       page.driver.with_playwright_page { _1.clock.pause_at(Time.zone.parse("2026-04-02 08:00")) }
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
       click_button "Journée"
-      find('.fc-timegrid-slot-lane[data-time="08:30:00"]').click
+      find('[data-time="08:30:00"]').click
       expect(page).to have_content("Nouveau RDV pour le 2/04/2026 à 08:30")
     end
   end
@@ -228,8 +228,8 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
 
       login_as(agent, scope: :agent)
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
-      expect(page).to have_selector(".fc-event", text: "VISIBLE")
-      expect(page).to have_no_selector(".fc-event", text: "Jean MATINAL")
+      expect(page).to have_selector(".rdv-fc-event", text: "VISIBLE")
+      expect(page).to have_no_selector(".rdv-fc-event", text: "Jean MATINAL")
     end
 
     it "montre les RDV hors de la plage 7h-20h quand l'amplitude étendue est activée", js: true do
@@ -240,11 +240,11 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
 
       login_as(agent, scope: :agent)
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
-      expect(page).to have_selector(".fc-event", text: "VISIBLE") # on vérifie que les événements sont bien chargés
+      expect(page).to have_selector(".rdv-fc-event", text: "VISIBLE") # on vérifie que les événements sont bien chargés
       # Avec l'amplitude étendue, le calendrier affiche les créneaux à partir de 0h (au lieu de 7h)
-      expect(page).to have_selector('.fc-timegrid-slot-lane[data-time="05:00:00"]')
+      expect(page).to have_selector('[data-time="05:00:00"]')
       # Le RDV de 5h est rendu dans le DOM
-      expect(page).to have_selector(".fc-event", text: "Jean MATINAL")
+      expect(page).to have_selector(".rdv-fc-event", text: "Jean MATINAL")
     end
   end
 
@@ -263,13 +263,13 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
 
         # vue semaine
         expected_header = ["lun. 9", "mar. 10", "mer. 11", "jeu. 12", "ven. 13"]
-        actual_headers = find_all(".fc-col-header-cell-cushion").map(&:text)
+        actual_headers = find_all("[role='columnheader']").map(&:text)
         expect(actual_headers).to eq(expected_header)
 
         # vue mois
         click_on("Mois")
         expected_header = %w[lundi mardi mercredi jeudi vendredi]
-        actual_headers = find_all(".fc-col-header-cell-cushion").map(&:text)
+        actual_headers = find_all("[role='columnheader']").map(&:text)
         expect(actual_headers).to eq(expected_header)
       end
     end
