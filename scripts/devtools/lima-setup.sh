@@ -27,11 +27,6 @@ echo "==> Restarting VM to apply mount changes..."
 limactl stop "$VM_NAME"
 limactl start "$VM_NAME"
 
-echo "==> Setting up SSH config..."
-mkdir -p ~/.ssh/config.d
-ln -sf "$HOME/.lima/$VM_NAME/ssh.config" ~/.ssh/config.d/"$VM_NAME"
-grep -q "Include config.d/\*" ~/.ssh/config 2>/dev/null || echo "Include config.d/*" >> ~/.ssh/config
-
 echo "==> Installing packages, tools, and languages inside VM..."
 limactl shell "$VM_NAME" -- bash -c "
   set -euo pipefail
