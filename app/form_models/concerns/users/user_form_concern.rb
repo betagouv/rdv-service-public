@@ -15,7 +15,7 @@ module Users::UserFormConcern
              :connected_with_sso?, :pro_connect_openid_sub,
              :logged_once_with_franceconnect?, :signed_in_with_invitation_token?,
              :errors, :errors_are_all_benign?, :benign_errors,
-             :ants_pre_demande_number, :already_logged_in?,
+             :ants_pre_demande_number, :already_logged_in?, :email_editable?,
              to: :user
 
     def self.human_attribute_name(...) = User.human_attribute_name(...)
@@ -35,13 +35,7 @@ module Users::UserFormConcern
 
   def show_franceconnect_frozen_fields_warning? = logged_once_with_franceconnect?
 
-  # Champ email du parcours de RDV :
-  # - Usager invité via token → affiché, modifiable sauf si il s'est déjà connecté
-  # - SSO (FC/ProConnect) → affiché, modifiable
-  # - Usager connecté via code → pas affiché (A voir plus tard https://github.com/betagouv/rdv-service-public/pull/6259#discussion_r2959304082)
-  def show_email_field? = signed_in_with_invitation_token? || connected_with_sso?
-
-  def email_disabled? = signed_in_with_invitation_token? && email.present? && already_logged_in?
+  def show_email_field? = true
 
   def show_landline_phone_number_warning? = phone_number.present? && !phone_number_mobile?
 
