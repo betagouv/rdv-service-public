@@ -1,10 +1,20 @@
-table.table.table-borderless.table-sm
-  thead
-    tr
-      th=t(".date")
-      th=t(".author")
-      th=t(".attribute")
-      th=t(".before")
-      th=t(".after")
-  tbody
-    = render partial: "admin/versions/version", collection: versions
+/# locals: (resource:)
+
+turbo-frame[id="versions_for_#{dom_id(resource)}"]
+  = cache([resource, resource.class.paper_trail_options[:only]], expires_in: 7.days) do
+    table.table.table-borderless.table-sm
+      thead
+        tr
+          th=t(".date")
+          th=t(".author")
+          th=t(".attribute")
+          th=t(".before")
+          th=t(".after")
+      tbody
+        - versions = PaperTrailAugmentedVersion.for_resource(resource).reverse
+        = render partial: "admin/versions/version", collection: versions
+
+    p.fr-text-mention--grey.font-14
+      - unless resource.class.name.in?(CronJob::DestroyOldVersions::MODEL_NAMES_WITH_NO_PERSONAL_INFORMATION)
+        - if resource.created_at < 1.year.ago
+          | Dans le cadre du RGPD, l'historique des changements n'est plus conservé au delà d'un an

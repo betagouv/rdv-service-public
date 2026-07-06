@@ -1,18 +1,5 @@
 /# locals: (resource_policy:, resource:)
 
 - if resource_policy.versions?
-  .card
-    .rdv-accordion-card.fr-accordion
-      h2.fr-accordion__title
-      button.fr-accordion__btn aria-expanded="false" aria-controls="history"
-        = icon("fr-icon-ri-history-line", class: "fr-mr-1v")
-        = t("admin.versions.title")
-    .fr-mx-2w.fr-collapse id="history"
-      turbo-frame[id="versions_for_#{dom_id(resource)}"]
-        = cache([resource, resource.class.paper_trail_options[:only]], expires_in: 7.days) do
-          - versions = PaperTrailAugmentedVersion.for_resource(resource)
-          = render "admin/versions/versions", versions: versions.reverse
-        p.fr-text-mention--grey.font-14
-          - unless resource.class.name.in?(CronJob::DestroyOldVersions::MODEL_NAMES_WITH_NO_PERSONAL_INFORMATION)
-            - if resource.created_at < 1.year.ago
-              | Dans le cadre du RGPD, l'historique des changements n'est plus conservé au delà d'un an
+  = render layout: "admin/versions/accordion_layout" do
+    = render "admin/versions/versions", resource:
