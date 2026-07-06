@@ -8,7 +8,7 @@ VM_NAME="devbox"
 
 echo "==> Creating Lima VM..."
 # we do not use ubuntu 26 yet because chromium is not pre-built yet
-limactl start template://ubuntu-24.04 --name="$VM_NAME" --cpus=4 --memory=4 --disk=20 -y
+limactl start template:ubuntu-24.04 --name="$VM_NAME" --cpus=4 --memory=4 --disk=20 -y
 
 echo "==> Configuring mount (read-write, project dir only)..."
 LIMA_YAML="$HOME/.lima/$VM_NAME/lima.yaml"
