@@ -76,6 +76,12 @@ class Admin::RdvsController < AgentAuthController
     authorize(@rdv, policy_class: Agent::RdvPolicy)
   end
 
+  def versions
+    authorize(@rdv, :show?, policy_class: Agent::RdvPolicy)
+    resource_policy = Agent::RdvPolicy.new(current_agent, @rdv)
+    render partial: "admin/versions/resource_versions_row", locals: { resource_policy:, resource: @rdv }
+  end
+
   def download_participants
     authorize(@rdv, policy_class: Agent::RdvPolicy)
     generator = ParticipantsCsv.new(@rdv)

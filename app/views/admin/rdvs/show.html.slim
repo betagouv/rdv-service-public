@@ -23,4 +23,12 @@
 
 .fr-grid-row
   .fr-col-12
-    = render "admin/versions/resource_versions_row", resource_policy: policy(@rdv, policy_class: Agent::RdvPolicy), resource: @rdv
+    - if policy(@rdv, policy_class: Agent::RdvPolicy).versions?
+      .card
+        .rdv-accordion-card.fr-accordion
+          h2.fr-accordion__title
+          button.fr-accordion__btn aria-expanded="false" aria-controls="history"
+            = icon("fr-icon-ri-history-line", class: "fr-mr-1v")
+            = t("admin.versions.title")
+        .fr-mx-2w.fr-collapse id="history"
+          turbo-frame[id="versions_for_#{dom_id(@rdv)}" loading="lazy" src=versions_admin_organisation_rdv_path(organisation_id: current_organisation.id, id: @rdv.id)]
