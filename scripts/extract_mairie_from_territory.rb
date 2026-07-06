@@ -1,4 +1,6 @@
 # Ce script permet de sortir une mairie du territory historique des mairies, pour lui donner son propre territoire.
+#
+# Exemple pour toutes les mairies : ExtractMairieFromTerritory.extract_all!
 
 # exemple pour une mairie a juste une organisation dans le territoire existant:
 # ExtractMairieFromTerritory.run(110, 155)
@@ -13,14 +15,24 @@ class MotifCategoriesTerritory < ApplicationRecord
 end
 
 class ExtractMairieFromTerritory
-  # organisation_id : l'id de l'organisation d'origine de la mairie
-  def self.run(organisation_id, admin_agent_id, new_territory_id: nil)
-    new(organisation_id, admin_agent_id, new_territory_id:).run
+  def self.extract_all!
+    territory = Territory.where(name: Territory::MAIRIES_NAME).find(1)
+
+    territory.organisations.each do |organisation|
+      admin_agent_ids = AgentRole.where(organisation_id: organisation.id, access_level: :admin).pluck(:agent_id)
+
+      run(organisation.id, admin_agent_ids)
+    end
   end
 
-  def initialize(organisation_id, admin_agent_id, new_territory_id:)
+  # organisation_id : l'id de l'organisation d'origine de la mairie
+  def self.run(organisation_id, admin_agent_ids, new_territory_id: nil)
+    new(organisation_id, admin_agent_ids, new_territory_id:).run
+  end
+
+  def initialize(organisation_id, admin_agent_ids, new_territory_id:)
     @organisation_id = organisation_id
-    @admin_agent_id = admin_agent_id
+    @admin_agent_ids = admin_agent_ids
     @new_territory = Territory.find_by(id: new_territory_id)
   end
 
@@ -28,7 +40,11 @@ class ExtractMairieFromTerritory
     ActiveRecord::Base.logger = Logger.new($stdout)
 
     ActiveRecord::Base.transaction do
-      @new_territory ||= Territory.create!(
+      @new_territory ||= Territory.new(
+        mairies_territory.attributes.except("id", "created_at", "updated_at")
+      )
+
+      @new_territory.update!(
         name: organisation.name,
         departement_number: departement_number
       )
@@ -55,10 +71,12 @@ class ExtractMairieFromTerritory
           service: service
         )
       end
-      AgentTerritorialRole.find_or_initialize_by(
-        territory: @new_territory,
-        agent_id: @admin_agent_id
-      ).save!
+      @admin_agent_ids.each do |admin_agent_id|
+        AgentTerritorialRole.find_or_initialize_by(
+          territory: @new_territory,
+          agent_id: admin_agent_id
+        ).save!
+      end
     end
   end
 
