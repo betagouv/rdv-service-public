@@ -11,6 +11,7 @@ turbo-frame[id="service-toggle-turbo-frame-#{service.id}"]
         value="1"
         checked=current_territory.services.to_a.include?(service)
       ]
-      label.fr-toggle__label[for="service-toggle-#{service.id}"]
-        = service.name
-        strong = flash_message
+      - if flash_message
+        label.fr-toggle__label[for="service-toggle-#{service.id}" data-fr-checked-label="Activé" data-fr-unchecked-label="Désactivé"] = service.name
+      - else
+        label.fr-toggle__label[for="service-toggle-#{service.id}" data-fr-checked-label="" data-fr-unchecked-label=""] = service.name

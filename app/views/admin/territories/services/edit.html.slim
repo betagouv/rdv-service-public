@@ -24,6 +24,7 @@
               button.fr-btn.fr-btn--secondary.fr-btn--icon-left.fr-icon-filter-fill[type="submit"] Filtrer
             #filter-messages.fr-messages-group[aria-live="polite"]
 
+        .fr-mt-3w
         - @displayed_services.each do |service|
           = render partial: "admin/territories/services/service_toggle", locals: { service: }
 
