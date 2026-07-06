@@ -83,6 +83,8 @@ class ExtractMairieFromTerritory
   private
 
   def departement_number
+    return "MA" if organisation.lieux.empty?
+
     zipcode_regex = /\d{5}/
     zipcode = organisation.lieux.first.address[zipcode_regex]
 
