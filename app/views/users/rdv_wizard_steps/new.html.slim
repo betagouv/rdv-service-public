@@ -9,6 +9,8 @@
         = form_for @rdv_booking_form, as: :user, url: users_rdv_wizard_step_path(**@rdv_booking_form.to_query), method: "post", builder: Dsfr::FormBuilder do |f|
           h2.fr-h4 Vos informations
 
+          .fr-text--sm.fr-text-mention--grey Tous les champs sont obligatoires sauf mention contraire
+
           = render "users/users/form_fields", f: f
 
           /! Section proches
