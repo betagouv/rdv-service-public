@@ -257,7 +257,9 @@ Rails.application.routes.draw do
         resource :motif_categories, only: %i[update]
         resources :zone_imports, only: %i[new create]
         resources :zones, only: [:index] # exports only
-        resource :services, only: %i[new create edit update]
+        resource :services, only: %i[new create edit] do
+          put "toggle/:service_id", to: "services#toggle", as: :toggle
+        end
         resource :sectorization, only: [:show]
         resources :sectors do
           resources :zones

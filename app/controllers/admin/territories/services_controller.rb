@@ -31,23 +31,20 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
     @displayed_services = displayed_services.reject(&:secretariat?)
   end
 
-  def update
+  def toggle
     authorize(current_territory, :manage_services?, policy_class: Agent::TerritoryPolicy)
-    current_territory.update!(services_params)
-    flash[:success] = "Liste des services disponibles mise à jour"
-
-    if params[:redirect_to_organisation_id].present?
-      redirect_to new_admin_organisation_agent_path(params[:redirect_to_organisation_id])
+    service = Service.find(params[:service_id])
+    if params[:enabled].to_b
+      current_territory.territory_services.find_or_create_by!(service_id: service.id)
+      flash_message = "Service activé"
     else
-      redirect_to edit_admin_territory_services_path(current_territory)
+      current_territory.territory_services.find_by(service_id: service.id)&.destroy!
+      flash_message = "Service désactivé"
     end
+    render partial: "admin/territories/services/service_toggle", locals: { service:, flash_message: }
   end
 
   private
-
-  def services_params
-    params.require(:territory).permit(service_ids: [])
-  end
 
   helper_method :format_for_checkboxes
   def format_for_checkboxes(services)
