@@ -33,7 +33,7 @@ limactl shell "$VM_NAME" -- bash -c "
 
   sudo apt-get update -y && sudo apt-get install -y \
     build-essential curl git vim tmux \
-    postgresql redis-server
+    postgresql redis-server dnsutils
 
   sudo systemctl enable postgresql redis-server
   sudo systemctl start postgresql redis-server
@@ -49,7 +49,7 @@ limactl shell "$VM_NAME" -- bash -c "
   grep -q 'mise activate' ~/.bashrc || echo 'eval \"\$(\$HOME/.local/bin/mise activate bash)\"' >> ~/.bashrc
   echo 'cd $PROJECT_DIR' >> ~/.bashrc
 
-  mise trust $PROJECT_DIR/mise.toml
+  mise trust --yes $PROJECT_DIR/mise.toml
   cd $PROJECT_DIR && mise install
   export PATH=\"\$HOME/.local/share/mise/shims:\$PATH\"
 
@@ -69,16 +69,59 @@ ENVEOF
   grep -q 'source ~/.env.local' ~/.bashrc || echo 'source ~/.env.local' >> ~/.bashrc
 "
 
-echo "==> Pre-creating dsfr-assets symlink to avoid race condition in parallel:create..."
-limactl shell "$VM_NAME" -- bash -ic "
-  cd $PROJECT_DIR
-  GEM_PATH=\$(bundle exec ruby -e \"puts Gem.loaded_specs['dsfr-assets'].full_gem_path\")
-  rm -f public/assets/artwork
-  ln -s \"\${GEM_PATH}/vendor/assets/stylesheets/artwork\" public/assets/artwork
-"
+# echo "==> Pre-creating dsfr-assets symlink to avoid race condition in parallel:create..."
+# limactl shell "$VM_NAME" -- bash -ic "
+#   cd $PROJECT_DIR
+#   GEM_PATH=\$(bundle exec ruby -e \"puts Gem.loaded_specs['dsfr-assets'].full_gem_path\")
+#   rm -f public/assets/artwork
+#   ln -s \"\${GEM_PATH}/vendor/assets/stylesheets/artwork\" public/assets/artwork
+# "
 
 echo "==> Running make install..."
 limactl shell "$VM_NAME" -- bash -ic "make install"
+
+echo "==> Locking down outbound network (Anthropic API only)..."
+limactl shell "$VM_NAME" -- bash -c '
+  set -euo pipefail
+
+  # Resolve Anthropic domains to IPs while internet is still available
+  ALLOWED_RULES=""
+  for domain in api.anthropic.com statsig.anthropic.com; do
+    while IFS= read -r ip; do
+      [[ "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] || continue
+      ALLOWED_RULES="${ALLOWED_RULES}    ip daddr ${ip} accept  # ${domain}\n"
+    done < <(dig +short A "$domain" 2>/dev/null || true)
+  done
+
+  sudo tee /etc/nftables.conf > /dev/null << EOF
+#!/usr/sbin/nft -f
+flush ruleset
+
+table ip filter {
+  chain output {
+    type filter hook output priority 0; policy drop;
+
+    oifname "lo" accept
+
+    # Lima host<->VM communication (mounts, port forwarding)
+    ip daddr 10.0.0.0/8 accept
+    ip daddr 172.16.0.0/12 accept
+    ip daddr 192.168.0.0/16 accept
+
+    # DNS
+    udp dport 53 accept
+    tcp dport 53 accept
+
+    # Anthropic API (resolved at setup time; re-run setup if IPs change)
+$(printf "%b" "${ALLOWED_RULES}")
+  }
+}
+EOF
+
+  sudo systemctl enable nftables
+  sudo systemctl restart nftables
+  echo "Firewall active: all outbound internet blocked except Anthropic API."
+'
 
 echo ""
 echo "VM '$VM_NAME' is ready. Run: limactl shell $VM_NAME"
