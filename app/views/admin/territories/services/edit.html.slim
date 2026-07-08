@@ -28,7 +28,7 @@
         - @displayed_services.each do |service|
           = render partial: "admin/territories/services/service_toggle", locals: { service: }
 
-        p.mt-2
+        p.fr-mt-3w
           - new_form_link = new_admin_territory_services_path(territory_id: current_territory.id, name: @filter)
           - if @displayed_services.any?
             |> Vous ne trouvez pas votre service dans la liste ?

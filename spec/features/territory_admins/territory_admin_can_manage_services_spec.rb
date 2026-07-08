@@ -7,7 +7,7 @@ RSpec.describe "territory admin can manage services", type: :feature do
   end
 
   describe "Activating/Deactivating services" do
-    it "works" do
+    it "works", js: true do
       pmi = create(:service, :pmi)
       social = create(:service, :social)
       visit edit_admin_territory_services_path(territory)
@@ -15,12 +15,12 @@ RSpec.describe "territory admin can manage services", type: :feature do
 
       # Lier un service existant
       check pmi.name
-      click_on "Valider la sélection"
+      # click_on "Valider la sélection"
       expect(territory.reload.services).to eq([pmi])
 
       # Dé-lier un service
       uncheck pmi.name
-      click_on "Valider la sélection"
+      # click_on "Valider la sélection"
       expect(territory.reload.services).to eq([])
 
       # Filtrage puis ajout
@@ -29,14 +29,14 @@ RSpec.describe "territory admin can manage services", type: :feature do
       expect(page).to have_content(social.name)
       expect(page).not_to have_content(pmi.name)
       check social.name
-      click_on "Valider la sélection"
+      # click_on "Valider la sélection"
       expect(territory.reload.services).to eq([social])
       fill_in "Trouvez un service par nom", with: "pmi"
       click_on "Filtrer"
       expect(page).to have_content(pmi.name)
       expect(page).not_to have_content(social.name)
       check pmi.name
-      click_on "Valider la sélection"
+      # click_on "Valider la sélection"
       expect(territory.reload.services).to contain_exactly(social, pmi)
     end
   end
