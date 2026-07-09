@@ -26,13 +26,7 @@ module IcalFormatters
       cal.add_timezone(tz.ical_timezone(payload[:starts_at]))
       cal.prodid = ICS_UID_SUFFIX
       cal.event { |event| populate_event(event, payload, tzid) }
-      cal.ip_method = if payload[:action] == :destroy
-                        "CANCEL"
-                      elsif payload[:attendees].present?
-                        "REQUEST" # REQUEST is only allowed if ATTENDEEs are present.
-                      else
-                        "PUBLISH"
-                      end
+
       cal
     end
 

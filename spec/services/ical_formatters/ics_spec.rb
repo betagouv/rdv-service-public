@@ -47,6 +47,12 @@ RSpec.describe IcalFormatters::Ics do
       end
     end
 
+    describe "METHOD property" do
+      it "is absent (CalDAV resources must not include METHOD per RFC 4791 §4.1)" do
+        expect(subject).not_to include("METHOD")
+      end
+    end
+
     describe "status" do
       let(:payload) { { starts_at: Time.zone.parse("20190704 15h00"), action: action, domain: Domain::RDV_SOLIDARITES } }
 
