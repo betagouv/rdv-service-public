@@ -1,5 +1,4 @@
 RSpec.describe Motif, type: :model do
-  let(:secretariat) { create(:service, :secretariat) }
   let(:motif) { create(:motif, organisation: organisation) }
   let!(:organisation) { create(:organisation, name: "Mon orga") }
 
@@ -38,12 +37,6 @@ RSpec.describe Motif, type: :model do
         expect(subject.errors.full_messages.to_sentence).to eq(%(Il existe déjà dans Mon orga un motif À domicile nommé "name" ouvert à tous les agents))
       end
     end
-  end
-
-  describe ".create when associated with secretariat" do
-    let(:motif) { build(:motif, service: secretariat, organisation: organisation) }
-
-    it { expect(motif).not_to be_valid }
   end
 
   describe "#soft_delete" do
@@ -133,7 +126,7 @@ RSpec.describe Motif, type: :model do
     end
 
     describe "for secretary admin" do
-      let(:agent) { create(:agent, :secretaire, admin_role_in_organisations: [organisation]) }
+      let(:agent) { create(:agent, :agent_accueil, admin_role_in_organisations: [organisation]) }
 
       it { is_expected.to contain_exactly(motif, motif2, motif3, motif5, motif_without_service) }
     end

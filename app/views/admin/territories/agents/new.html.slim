@@ -2,9 +2,6 @@
 
 .card
   .card-body
-    - if current_territory.organisations_agents.exists?(agent_accueil: true)
-      = dsfr_callout do
-        | Le service secrétariat a été remplacé par une nouvelle permission « Agent d’accueil » que vous pouvez activer pour chaque agent dans les paramètres de l’organisation.
     = simple_form_for [:admin, @agent], as: :admin_agent, url: admin_territory_agents_path(current_territory), html: { method: :post } do |f|
       = render "devise/shared/error_messages", resource: @agent
       = f.input :email, placeholder: t(".email_placeholder"), input_html: { autocomplete: "off"}

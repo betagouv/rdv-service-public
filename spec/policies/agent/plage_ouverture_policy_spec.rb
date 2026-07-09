@@ -22,7 +22,7 @@ RSpec.describe Agent::PlageOuverturePolicy, type: :policy do
 
   context "when given agent is secrétaire" do
     context "when she does not belong to the plage's organisation" do
-      let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [create(:organisation)]) }
+      let(:agent) { create(:agent, :agent_accueil, basic_role_in_organisations: [create(:organisation)]) }
 
       it "allows read/write operations" do
         expect(policy.new?).to       be false
@@ -54,7 +54,7 @@ RSpec.describe Agent::PlageOuverturePolicy, type: :policy do
     end
 
     context "when she belongs to the plage's organisation as admin member" do
-      let(:agent) { create(:agent, :secretaire, admin_role_in_organisations: [plage_ouverture.organisation]) }
+      let(:agent) { create(:agent, :agent_accueil, admin_role_in_organisations: [plage_ouverture.organisation]) }
 
       it "allows read/write operations" do
         expect(policy.new?).to       be true

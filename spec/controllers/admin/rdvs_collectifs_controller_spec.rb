@@ -1,7 +1,7 @@
 RSpec.describe Admin::RdvsCollectifsController, type: :controller do
   let(:motif) { create(:motif, :collectif) }
   let(:organisation) { motif.organisation }
-  let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
+  let(:agent) { create(:agent, :agent_accueil, basic_role_in_organisations: [organisation]) }
 
   before { sign_in agent }
 
@@ -42,7 +42,7 @@ RSpec.describe Admin::RdvsCollectifsController, type: :controller do
     end
 
     context "when the rdv is created by an agent" do
-      let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
+      let(:agent) { create(:agent, :agent_accueil, basic_role_in_organisations: [organisation]) }
 
       it "creates the rdv with the agent as created_by" do
         expect { create_request }.to change(Rdv, :count).by(1)

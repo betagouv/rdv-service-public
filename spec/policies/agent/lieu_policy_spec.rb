@@ -32,7 +32,7 @@ RSpec.describe Agent::LieuPolicy do
   end
 
   context "for a secretaire" do
-    let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [lieu.organisation]) }
+    let(:agent) { create(:agent, :agent_accueil, basic_role_in_organisations: [lieu.organisation]) }
 
     it "does not allow any write operation on lieu" do
       expect(policy.new?).to be(false)

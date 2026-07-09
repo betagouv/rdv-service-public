@@ -3,7 +3,7 @@ RSpec.describe MotifsHelper do
     it "affiche le badge Secrétariat pour un motif `secretariat`" do
       motif = build(:motif, bookable_by: :agents, for_secretariat: true)
       badges = motif_badges(motif)
-      expect(badges).to eq "<span class=\"fr-ml-1v fr-badge fr-badge--sm fr-badge--info  fr-badge--no-icon\">Secrétariat</span>"
+      expect(badges).to eq "<span class=\"fr-ml-1v fr-badge fr-badge--sm fr-badge--info  fr-badge--no-icon\">Agent d&#39;accueil</span>"
     end
 
     it "affiche le badge Suivi pour un motif `follow_up`" do
@@ -33,7 +33,7 @@ RSpec.describe MotifsHelper do
     it "affiche le badge secretariat ET followup pour un motif `for_secretariat` et `follow_up`" do
       motif = build(:motif, bookable_by: :agents, follow_up: true, for_secretariat: true)
       badges = motif_badges(motif)
-      expect(badges).to include("<span class=\"fr-ml-1v fr-badge fr-badge--sm fr-badge--info  fr-badge--no-icon\">Secrétariat</span>")
+      expect(badges).to include("<span class=\"fr-ml-1v fr-badge fr-badge--sm fr-badge--info  fr-badge--no-icon\">Agent d&#39;accueil</span>")
       expect(badges).to include("<span class=\"fr-ml-1v fr-badge fr-badge--sm fr-badge--info  fr-badge--no-icon\">Suivi</span>")
     end
 
