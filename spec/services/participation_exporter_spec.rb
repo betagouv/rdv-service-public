@@ -16,7 +16,8 @@ RSpec.describe ParticipationExporter, type: :service do
         agents: [create(:agent, email: "agent@mail.com", first_name: "Francis", last_name: "Factice")],
         users: [create(:user, first_name: "Gaston", last_name: "Bidon", birth_date: Date.new(2000, 1, 1), address: nil)]
       )
-      participation_row = described_class.row_array_from(rdv.participations.first)
+      participation = rdv.participations.sole
+      participation_row = described_class.row_array_from(participation)
       io = StringIO.new
       described_class.write_xls_to_io(io, [participation_row])
 
@@ -51,7 +52,7 @@ RSpec.describe ParticipationExporter, type: :service do
           "créé par",
           "email(s) professionnel.le(s)",
           "rdv collectif",
-          "inscription au rdv collectif par",
+          "inscrit par",
         ]
       )
 
@@ -78,7 +79,7 @@ RSpec.describe ParticipationExporter, type: :service do
           "Dans le cadre du RGPD, cette information n'est plus conservée au delà d'un an.",
           "agent@mail.com",
           "non",
-          nil,
+          "[Agent] Francis FACTICE (id=#{participation.created_by.id}) (email=agent@mail.com)",
         ]
       )
     end
@@ -194,7 +195,7 @@ RSpec.describe ParticipationExporter, type: :service do
   end
 
   describe "inscrit par" do
-    subject(:inscrit_par) { described_class.row_array_from(participation)[described_class::HEADER.index("inscription au rdv collectif par")] }
+    subject(:inscrit_par) { described_class.row_array_from(participation)[described_class::HEADER.index("inscrit par")] }
 
     let!(:rdv) { create(:rdv, :collectif, :without_users) }
     let!(:participation) { create(:participation, rdv:, created_by: author) }
@@ -218,13 +219,6 @@ RSpec.describe ParticipationExporter, type: :service do
       let(:author) { prescripteur }
 
       it { is_expected.to eq("[Prescripteur] Jean VALJEAN (id=#{prescripteur.id}) (email=#{prescripteur.email})") }
-    end
-
-    context "when rdv is not collectif" do
-      let!(:rdv) { create(:rdv) }
-      let!(:participation) { create(:participation, rdv:, created_by: build(:user)) }
-
-      it { is_expected.to eq("") }
     end
   end
 end
