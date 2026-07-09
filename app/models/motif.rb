@@ -64,7 +64,6 @@ class Motif < ApplicationRecord
   validates :min_public_booking_delay, numericality: { greater_than_or_equal_to: 5.minutes, less_than_or_equal_to: 1.year.minutes } # On a besoin de 5mn pour la staging de Visioplainte, mais on propose 30mn minimum dans l'interface # rubocop:disable Layout/LineLength
   validates :max_public_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
   validate :booking_delay_validation
-  validate :not_associated_with_secretariat
   validates :color, css_hex_color: true
   validate  :validate_location_type_for_rdv_collectif
   validate :cant_change_once_rdvs_exist
@@ -284,12 +283,6 @@ class Motif < ApplicationRecord
     return if min_public_booking_delay.zero? && max_public_booking_delay.zero?
 
     errors.add(:max_public_booking_delay, "doit être supérieur au délai de réservation minimum") if max_public_booking_delay <= min_public_booking_delay
-  end
-
-  def not_associated_with_secretariat
-    return if service_id.nil?
-
-    errors.add(:service_id, "ne peut être le secrétariat") if service.secretariat?
   end
 
   def validate_location_type_for_rdv_collectif

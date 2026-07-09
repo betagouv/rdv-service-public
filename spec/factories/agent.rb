@@ -18,9 +18,12 @@ FactoryBot.define do
       service { nil }
     end
 
-    trait :secretaire do
-      services { [Service.find_by(name: Service::SECRETARIAT) || build(:service, :secretariat)] }
+    trait :agent_accueil do
+      after(:build) do |agent|
+        agent.roles.each { |role| role.agent_accueil = true }
+      end
     end
+
     trait :cnfs do
       services { [Service.find_by(name: Service::CONSEILLER_NUMERIQUE) || build(:service, :conseiller_numerique)] }
     end

@@ -5,7 +5,6 @@ class Service < ApplicationRecord
   # Attributes
   auto_strip_attributes :name, :short_name
 
-  SECRETARIAT = "Secrétariat".freeze
   SERVICE_SOCIAL = "Service social".freeze
   PMI = "PMI (Protection Maternelle Infantile)".freeze
   CONSEILLER_NUMERIQUE = "Conseiller Numérique".freeze
@@ -27,10 +26,6 @@ class Service < ApplicationRecord
   default_scope { order(Arel.sql("unaccent(LOWER(services.name))")) }
 
   ## -
-
-  def secretariat?
-    name == SECRETARIAT
-  end
 
   def service_social?
     name == SERVICE_SOCIAL
