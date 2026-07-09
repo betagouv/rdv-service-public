@@ -75,6 +75,7 @@ namespace :api do
         put :cancel
       end
     end
+    resources :webhooks, only: %i[index create show update delete] do
 
     # Une route pour réinitialiser les données en staging
     if ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "STAGING"
