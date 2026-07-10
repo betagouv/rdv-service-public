@@ -2,16 +2,18 @@
 
 turbo-frame[id="service-toggle-turbo-frame-#{service.id}"]
   = form_with(url: toggle_admin_territory_services_path(territory_id: current_territory, service_id: service.id), method: :put) do
+    - input_id = "service-toggle-#{service.id}"
     .fr-toggle
       input[type="hidden" name="enabled" value="0"]
       input.fr-toggle__input.js-submit-on-change[
         type="checkbox"
-        id="service-toggle-#{service.id}"
+        id=input_id
         name="enabled"
         value="1"
         checked=current_territory.services.to_a.include?(service)
       ]
-      - if flash_message
-        label.fr-toggle__label[for="service-toggle-#{service.id}" data-fr-checked-label="Activé" data-fr-unchecked-label="Désactivé"] = service.name
-      - else
-        label.fr-toggle__label[for="service-toggle-#{service.id}" data-fr-checked-label="" data-fr-unchecked-label=""] = service.name
+      label.fr-toggle__label[for=input_id]
+        = service.name
+        - if flash_message
+          em.fr-mx-1w.fr-text-mention--grey
+            =< flash_message
