@@ -2,7 +2,8 @@
 
 class Api::Visioplainte::WebhookEndpointsController < Api::Visioplainte::BaseController
   def index
-    render_collection(authorized_webhook_endpoint_scope.order(:id))
+    webhook_endpoints = authorized_webhook_endpoint_scope.order(:id)
+    render json: WebhookEndpointBlueprint.render(webhook_endpoints, root: :webhook_endpoints)
   end
 
   def create
@@ -18,14 +19,14 @@ class Api::Visioplainte::WebhookEndpointsController < Api::Visioplainte::BaseCon
     render_record @webhook_endpoint
   end
 
-  def delete; end
+  def destroy
+    @webhook_endpoint = authorized_webhook_endpoint_scope.find(params[:id])
+    @webhook_endpoint.delete!
+
+    head :no_content
+  end
 
   private
-
-  def set_webhook_endpoint
-    @webhook_endpoint = policy_scope(WebhookEndpoint, policy_scope_class: Agent::WebhookEndpointPolicy::Scope).find(params[:id])
-    authorize(@webhook_endpoint, policy_class: Agent::WebhookEndpointPolicy)
-  end
 
   def authorized_webhook_endpoint_scope
     WebhookEndpoint.joins(organisation: :territory).merge(Territory.visioplainte)

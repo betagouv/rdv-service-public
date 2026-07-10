@@ -24,10 +24,14 @@ En date d’octobre 2024, nous avons fini de développer la première version de
 Nous sommes en train de mettre en place l’environnement de staging.
 Les équipes de SensioLabs nous indiquent travailler sur l’intégration de leur côté.
 
+L'application VisioPlainte a été mise en production en février 2026.
+
 ## Fonctionnement de l’API
 
 L’API est implémenté par des contrôleurs tous regroupés dans `app/controllers/api/visioplainte`.
 Les appels à notre API sont authentifiées via un header `X-VISIOPLAINTE-API-KEY`.
+
+Des webhooks sont configurés par API pour notifier l'application Visioplainte si un rendez-vous est annulé depuis l'interface de RDV Service Public.
 
 ## Intégration avec MaSécurité
 
