@@ -42,6 +42,10 @@
     width: 1px;
   }
 
+  .current-organisation {
+    font-weight: 500;
+  }
+
   a:not(.fr-btn):not(.fr-sidemenu__link) {
     color: $menu-item;
     transition: all 0.2s;
