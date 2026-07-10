@@ -8,9 +8,9 @@ class Api::Visioplainte::WebhookEndpointsController < Api::Visioplainte::BaseCon
 
   def create
     @webhook_endpoint = WebhookEndpoint.new(permitted_params)
-    authorize(@webhook_endpoint, policy_class: Agent::WebhookEndpointPolicy)
+    @webhook_endpoint.organisation_id = Territory.visioplainte.first.organisations.sole.id
     @webhook_endpoint.save!
-    render_record @webhook_endpoint
+    render json: WebhookEndpointBlueprint.render(@webhook_endpoint), status: :created
   end
 
   def update

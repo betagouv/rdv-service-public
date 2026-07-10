@@ -40,5 +40,43 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
         end
       end
     end
+
+    post "Créer un endpoint de webhook" do
+      with_visioplainte_authentication
+
+      tags "WebhookEndpoint"
+      description "Crée un endpoint de webhook dans l'espace Visioplainte"
+      parameter name: "target_url", in: :query, type: :string, description: "L'url à appeler pour notifier d'une mise à jour"
+      parameter name: "secret", in: :query, type: :string, description: "Le secret qui servira à signer les appels"
+      parameter name: "subscriptions[]", in: :query, type: :array,
+                description: "Le type de mises à jours pour lesquelles les notifications seront envoyées. Les valeurs possibles  à envoyer dans le tableau sont #{WebhookEndpoint::ALL_SUBSCRIPTIONS}"
+
+      response 201, "Crée l'endpoint de webhook" do
+        run_test!
+        schema({
+                 type: :object,
+                 properties: {
+                   id: { type: :integer },
+                   target_url: { type: :string },
+                   organisation_id: { type: :integer },
+                   subscriptions: { type: :array },
+                 },
+                 required: WebhookEndpointBlueprint.reflections[:default].fields.keys,
+               })
+
+        let(:target_url) { "https://exemple.fr/webhook_rdv_service_public" }
+        let(:"subscriptions[]") { ["rdv"] } # rubocop:disable Rspec/VariableName
+        let(:secret) { "fake_test_secret_123" }
+
+        specify do
+          expect(WebhookEndpoint.last).to have_attributes(
+            organisation: orga_gendarmerie,
+            target_url: "https://exemple.fr/webhook_rdv_service_public",
+            secret: "fake_test_secret_123",
+            subscriptions: ["rdv"]
+          )
+        end
+      end
+    end
   end
 end
