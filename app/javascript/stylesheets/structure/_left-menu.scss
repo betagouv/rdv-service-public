@@ -17,7 +17,9 @@
 
 .left-side-menu-wrapper {
   background: $bg-leftbar;
+  border-right: 1px solid #e3eaef;
 }
+
 .left-side-menu {
   background: $bg-leftbar;
   scrollbar-width: thin;
