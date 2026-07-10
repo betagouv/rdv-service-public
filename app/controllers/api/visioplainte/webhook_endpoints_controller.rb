@@ -16,7 +16,7 @@ class Api::Visioplainte::WebhookEndpointsController < Api::Visioplainte::BaseCon
   def update
     @webhook_endpoint = authorized_webhook_endpoint_scope.find(params[:id])
     @webhook_endpoint.update!(permitted_params)
-    render_record @webhook_endpoint
+    render json: WebhookEndpointBlueprint.render(@webhook_endpoint), status: :ok
   end
 
   def destroy
