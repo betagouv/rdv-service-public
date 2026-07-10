@@ -61,8 +61,10 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
       description "Crée un endpoint de webhook dans l'espace Visioplainte"
       parameter name: "target_url", in: :query, type: :string, description: "L'url à appeler pour notifier d'une mise à jour"
       parameter name: "secret", in: :query, type: :string, description: "Le secret qui servira à signer les appels"
-      parameter name: "subscriptions[]", in: :query, type: :array,
-                description: "Le type de mises à jours pour lesquelles les notifications seront envoyées. Les valeurs possibles  à envoyer dans le tableau sont #{WebhookEndpoint::ALL_SUBSCRIPTIONS}. Typiquement c'est la valeur rdv qui sera la plus utile."
+      parameter name: "subscriptions[]", in: :query, type: :array, description: <<~DOC
+        Le type de mises à jours pour lesquelles les notifications seront envoyées.
+        Les valeurs possibles  à envoyer dans le tableau sont #{WebhookEndpoint::ALL_SUBSCRIPTIONS}. Typiquement c'est la valeur rdv qui sera la plus utile."
+      DOC
 
       response 201, "Crée l'endpoint de webhook" do
         run_test!
@@ -92,7 +94,8 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
       parameter name: "target_url", in: :query, type: :string, description: "L'url à appeler pour notifier d'une mise à jour", required: false
       parameter name: "secret", in: :query, type: :string, description: "Le secret qui servira à signer les appels", required: false
       parameter name: "subscriptions[]", in: :query, type: :array, required: false,
-                description: "Le type de mises à jours pour lesquelles les notifications seront envoyées. Les valeurs possibles  à envoyer dans le tableau sont #{WebhookEndpoint::ALL_SUBSCRIPTIONS}. Typiquement c'est la valeur rdv qui sera la plus utile."
+                description: "Le type de mises à jours pour lesquelles les notifications seront envoyées.\
+                Les valeurs possibles à envoyer dans le tableau sont #{WebhookEndpoint::ALL_SUBSCRIPTIONS}. Typiquement c'est la valeur rdv qui sera la plus utile."
 
       response 200, "Modifie un endpoint de webhook" do
         run_test!
