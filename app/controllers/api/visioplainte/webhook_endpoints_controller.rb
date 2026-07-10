@@ -21,7 +21,7 @@ class Api::Visioplainte::WebhookEndpointsController < Api::Visioplainte::BaseCon
 
   def destroy
     @webhook_endpoint = authorized_webhook_endpoint_scope.find(params[:id])
-    @webhook_endpoint.delete!
+    @webhook_endpoint.destroy!
 
     head :no_content
   end
