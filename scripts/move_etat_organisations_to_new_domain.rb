@@ -70,6 +70,8 @@ ETAT_DOMAIN_NAMES = %w[
   utoulouse.fr
   utt.fr
   uttop.fr
+  ehpadlesoiseaux.fr
+  mr-bellevue.com
 ].freeze
 
 Territory.find_each do |territory|
@@ -82,6 +84,10 @@ Territory.find_each do |territory|
     end
     anct = agent.email&.ends_with?("anct.gouv.fr")
 
+    etat_email ||= agent.email.present? && %w[ch- chu- univ- sdis].any? do |prefix| # Centre Hospitalier ou Centre Hospitalier Universitaire ou Université ou SDIS (pompiers)
+      agent.email.split("@").last.start_with(prefix)
+    end
+
     agent.pro_connect_idp_id.in?(ProconnectIdentityProviders::ETAT) || (etat_email && !france_service_email && !anct)
   end
 
@@ -90,5 +96,11 @@ Territory.find_each do |territory|
     territory.organisations.each do |organisation|
       organisation.update!(verticale: :rdv_etat)
     end
+  end
+end
+
+Territory.where(category: "État").each do |territory|
+  territory.organisations.each do |organisation|
+    organisation.update!(verticale: :rdv_etat)
   end
 end
