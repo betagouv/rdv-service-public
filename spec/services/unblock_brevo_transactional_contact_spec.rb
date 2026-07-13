@@ -26,13 +26,9 @@ RSpec.describe UnblockBrevoTransactionalContact, type: :service do
     stub_env_with(BREVO_API_KEY: "fake-key")
 
     it "fait l'appel Faraday" do
-      stub = instance_double(Faraday::Response, status: 204)
-      faraday_double = instance_double(Faraday::Connection, headers: {})
-      allow(faraday_double).to receive(:headers=)
-      expect(Faraday).to receive(:delete).with("https://api.brevo.com/v3/smtp/blockedContacts/#{CGI.escape(email)}")
-        .and_yield(faraday_double)
-        .and_return(stub)
+      stub_request(:delete, "https://api.brevo.com/v3/smtp/blockedContacts/#{CGI.escape(email)}")
       subject.call
+      expect(WebMock).to have_requested(:delete, "https://api.brevo.com/v3/smtp/blockedContacts/#{CGI.escape(email)}").with(headers: { "Api-Key" => "fake-key", "Accept" => "application/json" })
     end
   end
 end
