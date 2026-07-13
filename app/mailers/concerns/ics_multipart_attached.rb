@@ -10,6 +10,14 @@ module IcsMultipartAttached
 
     cal = IcalFormatters::Ics.from_payload(ics_payload)
 
+    cal.ip_method = if ics_payload[:action] == :destroy
+                      "CANCEL"
+                    elsif ics_payload[:attendees].present?
+                      "REQUEST" # REQUEST is only allowed if ATTENDEEs are present.
+                    else
+                      "PUBLISH"
+                    end
+
     # Specs
     # iCalendar: https://datatracker.ietf.org/doc/html/rfc5545#section-3.6.1
     #   * See section 3.6.1 for VEVENT
