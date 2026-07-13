@@ -17,7 +17,7 @@
   .fr-col-12
     .card.mt-2
       .card-body
-        h2.fr-h4 Informations générales
+        h2.fr-h6 Informations générales
         - if current_territory.services.any? || @motif.service
           = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service_name, margin: false)
           - if @motif.service.blank?
@@ -34,43 +34,21 @@
         .fr-mt-4w
           = location_type_icon(@motif.location_type, class: "fr-mr-1w fr-icon--sm")
           = "#{@motif.human_attribute_value(:collectif)} #{@motif.human_attribute_value(:location_type).downcase}"
-        div.fr-text-mention--grey
+        .fr-hint-text
           = sanitize(@motif.human_attribute_value(:location_type, context: :hint), scrubber: :prune)
 
     .card.mt-2
       .card-body
-        h2.fr-h4 Réservation en ligne
+        .d-flex.rdv-align-items-baseline
+          h2.fr-h5.fr-mr-2w Réservation en ligne
+          = render "admin/organisations/online_booking/motifs/availability_badge", motif: @motif, availabilities_count: @motif.upcoming_availabilities.count
 
-        - if !@motif.bookable_outside_of_organisation?
-          p La réservation en ligne n'est pas activée pour ce motif.
+        - if @motif.bookable_by_everyone?
+          p Ce motif est ouvert à la réservation en ligne.
         - else
-          .mb-2= motif_attribute_row \
-            Motif.human_attribute_name(:bookable_by), \
-            I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.#{@motif.bookable_by}", \
-            organisation_name: @motif.organisation.name \
-            )
-
-          = motif_attribute_row \
-            Motif.human_attribute_name(:min_public_booking_delay_short), \
-            @motif.bookable_outside_of_organisation? && min_max_delay_int_to_human(@motif.min_public_booking_delay), \
-            hint: Motif.human_attribute_name("min_public_booking_delay_hint")
-          = motif_attribute_row \
-            Motif.human_attribute_name(:max_public_booking_delay_short), \
-            @motif.bookable_outside_of_organisation? && \
-              min_max_delay_int_to_human(@motif.max_public_booking_delay), \
-            hint: Motif.human_attribute_name("max_public_booking_delay_hint")
-          = motif_attribute_row \
-            Motif.human_attribute_name(:rdvs_editable_by_user), \
-            motif_option_activated(@motif, :rdvs_editable_by_user), \
-            hint: Motif.human_attribute_name(:rdvs_editable_by_user_hint)
-
-          - if !current_domain.online_reservation_with_public_link && !@motif.follow_up?
-            = motif_attribute_row("Sectorisation") do
-              - if @motif.bookable_by_everyone_or_bookable_by_invited_users?
-                div= @motif.human_attribute_value(:sectorisation_level)
-                div.fr-text-mention--grey= @motif.human_attribute_value(:sectorisation_level, context: :hint)
-              - else
-                span.fr-text-mention--grey N/A
+          = render "admin/organisations/online_booking/motifs/bookable_by_text", motif: @motif
+        - if current_agent.admin_in_organisation?(current_organisation)
+          = dsfr_link_to "Voir les détails de réservation en ligne", admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-icon-arrow-right-line fr-link--icon-right"
 
     .card.mt-2
       .rdv-accordion-card.fr-accordion
@@ -78,6 +56,17 @@
           button.fr-h5.fr-accordion__btn aria-expanded="false" aria-controls="options-avancees"
             | Options avancées
         .fr-collapse id="options-avancees"
+          = motif_attribute_row \
+            Motif.human_attribute_name(:instruction_for_rdv_short), \
+            instruction_for_rdv_to_html(@motif), \
+            hint: Motif.human_attribute_name(:instruction_for_rdv_hint)
+          = motif_attribute_row \
+            Motif.human_attribute_name(:custom_cancel_warning_message), \
+            @motif.custom_cancel_warning_message, \
+            hint: Motif.human_attribute_name(:custom_cancel_warning_message_hint)
+
+          hr
+
           = motif_attribute_row \
             Motif.human_attribute_name(:follow_up_short), \
             motif_option_activated(@motif, :follow_up), \
@@ -96,20 +85,6 @@
               - if current_organisation.rdv_insertion?
                 br
                 span= @motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
-          hr
-
-          = motif_attribute_row \
-            Motif.human_attribute_name(:restriction_for_rdv_short), \
-            restriction_for_rdv_to_html(@motif), \
-            hint: Motif.human_attribute_name(:restriction_for_rdv_hint)
-          = motif_attribute_row \
-            Motif.human_attribute_name(:instruction_for_rdv_short), \
-            instruction_for_rdv_to_html(@motif), \
-            hint: Motif.human_attribute_name(:instruction_for_rdv_hint)
-          = motif_attribute_row \
-            Motif.human_attribute_name(:custom_cancel_warning_message), \
-            @motif.custom_cancel_warning_message, \
-            hint: Motif.human_attribute_name(:custom_cancel_warning_message_hint)
 
     - if @motif_policy.edit? || @motif_policy.destroy?
       .card.mt-2

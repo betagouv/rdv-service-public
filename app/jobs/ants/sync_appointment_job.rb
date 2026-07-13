@@ -35,7 +35,10 @@ module Ants
       # on n’utilise pas de regex ci-dessous pour éviter un faux-positif de Brakeman
       protocol = Rails.env.production? ? "https" : "http"
       @ants_appointments = ants_status["appointments"].select do |appointment|
-        appointment["management_url"].start_with?("#{protocol}://#{Domain::RDV_SERVICE_PUBLIC.host_name}")
+        # On a mis par erreur des rendez-vous avec le nom de domaine de l'état.
+        # Pour permettre de les supprimer lors de l'annulation du rendez-vous, on regarde les deux noms de domaines
+        appointment["management_url"].start_with?("#{protocol}://#{Domain::RDV_SERVICE_PUBLIC.host_name}") ||
+          appointment["management_url"].start_with?("#{protocol}://#{Domain::RDV_SERVICE_PUBLIC_ETAT.host_name}")
       end
 
       return true unless needs_synchronization?

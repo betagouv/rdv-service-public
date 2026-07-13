@@ -53,7 +53,7 @@ RSpec.describe "User can search for rdvs" do
         # FranceConnect ne gèle pas le nom de famille (seul ProConnect le fait)
         expect(page).to have_field("Nom", disabled: false)
         expect(page).to have_content("Les champs d'état civil ne peuvent plus être modifiés suite à la connexion certifiée par FranceConnect")
-        expect(page).to have_field("Email", with: user.email)
+        expect(page).to have_field("Email", with: user.email, disabled: true)
       end
     end
 

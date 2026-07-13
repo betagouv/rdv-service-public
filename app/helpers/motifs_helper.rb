@@ -109,14 +109,6 @@ module MotifsHelper
     CSS_COLOR_NAMES[color] || "#FFFFFF"
   end
 
-  def motif_option_value(motif, option_name)
-    if motif.send("#{option_name}?")
-      tag.span("☑️ ") + tag.span(Motif.human_attribute_name("#{option_name}_hint"))
-    else
-      tag.span("désactivée", class: "fr-text-mention--grey")
-    end
-  end
-
   def motif_option_activated(motif, option_name)
     if motif.send("#{option_name}?")
       tag.span("Oui")
@@ -130,8 +122,8 @@ module MotifsHelper
 
     inner_tags = tag.span("#{legend} : ") + tag.span(value, class: "text-bold")
 
-    if hint.present?
-      inner_tags += tag.div(hint, class: "fr-text-mention--grey")
+    if hint.present? && !arg_value&.include?("désactivée")
+      inner_tags += tag.div(hint, class: "fr-hint-text")
     end
 
     tag.div(inner_tags, class: ("fr-mt-4w" if margin))

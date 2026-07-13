@@ -121,24 +121,29 @@ class Users::RdvWizardStepsController < UserAuthController
     result
   end
 
+  def user_params_permitted_keys
+    keys = [
+      :first_name,
+      :last_name,
+      :birth_name,
+      :phone_number,
+      :birth_date,
+      :address,
+      :caisse_affiliation,
+      :affiliation_number,
+      :family_situation,
+      :number_of_children,
+      :notify_by_email,
+      :notify_by_sms,
+      :ants_pre_demande_number,
+      :ignore_benign_errors,
+      { user_profiles_attributes: %i[logement id organisation_id] },
+    ]
+    keys << :email if current_user.email_editable?
+    keys
+  end
+
   def user_params
-    params.permit(user: [
-                    :first_name,
-                    :last_name,
-                    :birth_name,
-                    :phone_number,
-                    :birth_date,
-                    :email,
-                    :address,
-                    :caisse_affiliation,
-                    :affiliation_number,
-                    :family_situation,
-                    :number_of_children,
-                    :notify_by_email,
-                    :notify_by_sms,
-                    :ants_pre_demande_number,
-                    :ignore_benign_errors,
-                    { user_profiles_attributes: %i[logement id organisation_id] },
-                  ])
+    params.permit(user: user_params_permitted_keys)
   end
 end

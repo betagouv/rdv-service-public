@@ -73,4 +73,39 @@ RSpec.describe Users::RdvWizardStepsController, type: :controller do
       end
     end
   end
+
+  describe "#create quand l'usager tente de modifier son email en bypassant le disabled HTML" do
+    let!(:user) { create(:user, email: "original@exemple.fr") }
+    let!(:organisation) { create(:organisation) }
+    let!(:motif) { create(:motif, :at_public_office, organisation:, default_duration_in_min: 30) }
+
+    before { sign_in user }
+
+    it "ignore le paramètre email" do
+      post :create, params: {
+        rdv: { starts_at: 1.month.from_now, motif_id: motif.id, user_ids: [user.id] },
+        user: { first_name: "Léa", last_name: "Boubakar", phone_number: nil, email: "hacked@exemple.fr" },
+      }
+      expect(response).to have_http_status(:redirect) # pas d'erreur
+      expect(user.reload).to have_attributes(email: "original@exemple.fr", first_name: "Léa", last_name: "Boubakar")
+    end
+  end
+
+  describe "#create quand l'usager invité pour la premiere fois via RDVI tente de modifier son email" do
+    let!(:user) { create(:user, email: "original@exemple.fr", latest_login_at: nil) }
+    let!(:organisation) { create(:organisation) }
+    let!(:motif) { create(:motif, :at_public_office, organisation:, default_duration_in_min: 30) }
+    let!(:invitation_token) { user.set_rdv_invitation_token! }
+
+    before { request.session[:invitation] = { invitation_token:, expires_at: 1.hour.from_now } }
+
+    it "autorise la modification de l'email" do
+      post :create, params: {
+        rdv: { starts_at: 1.month.from_now, motif_id: motif.id, user_ids: [user.id] },
+        user: { first_name: "Léa", last_name: "Boubakar", phone_number: nil, email: "nouvel@email.fr" },
+      }
+      expect(response).to have_http_status(:redirect) # pas d'erreur
+      expect(user.reload.email).to eq("nouvel@email.fr")
+    end
+  end
 end

@@ -169,6 +169,33 @@ RSpec.describe "User can be invited" do
     end
   end
 
+  describe "quand l'usager invité a un email mais ne s'est jamais connecté" do
+    let!(:user) do
+      create(
+        :user,
+        first_name: "john", last_name: "doe", email: "jesuis@unemail.fr", latest_login_at: nil,
+        phone_number: "0682605955", address: "26 avenue de la resistance, Paris, 75016",
+        birth_date: Date.new(1988, 12, 20), organisations: [organisation]
+      )
+    end
+
+    before { travel_to(now) }
+
+    it "affiche le champ Email modifiable et le prend en compte" do
+      # Une visite sur prendre_rdv_path est nécessaire pour valider le token d'invitation et
+      # stocker la session, avant de pouvoir accéder directement à l'étape "Vos informations"
+      visit prendre_rdv_path(departement: departement_number, invitation_token: invitation_token)
+      visit new_users_rdv_wizard_step_path(
+        step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: departement_number, starts_at: (now + 1.month).change(hour: 11, min: 0)
+      )
+      expect(page).to have_content("Vos informations")
+      expect(page).to have_field("Email", with: "jesuis@unemail.fr", disabled: false)
+      fill_in("Email", with: "nouvel@email.fr")
+      click_button("Continuer")
+      expect(user.reload.email).to eq("nouvel@email.fr")
+    end
+  end
+
   describe "in motifs selection page" do
     let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
     let!(:motif2) do
