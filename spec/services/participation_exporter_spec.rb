@@ -26,53 +26,60 @@ RSpec.describe ParticipationExporter, type: :service do
       # Il est important de toujours ajouter les nouvelles colonnes
       # à la fin pour ne pas gêner les SI des départements,
       # qui se basent parfois sur la position et non le libellé.
-      expect(header_row).to contain_exactly(
-        "usager",
-        "rdv_id",
-        "année",
-        "date prise rdv",
-        "heure prise rdv",
-        "origine",
-        "date rdv",
-        "heure rdv",
-        "service",
-        "motif",
-        "contexte",
-        "statut",
-        "lieu",
-        "professionnel.le(s)",
-        "commune du responsable",
-        "usager mineur ?",
-        "résultat des notifications",
-        "Organisation",
-        "date naissance",
-        "code postal du responsable",
-        "créé par",
-        "email(s) professionnel.le(s)",
-        "rdv collectif"
+      expect(header_row).to eq(
+        [
+          "usager",
+          "rdv_id",
+          "année",
+          "date prise rdv",
+          "heure prise rdv",
+          "origine",
+          "date rdv",
+          "heure rdv",
+          "service",
+          "motif",
+          "contexte",
+          "statut",
+          "lieu",
+          "professionnel.le(s)",
+          "commune du responsable",
+          "usager mineur ?",
+          "résultat des notifications",
+          "Organisation",
+          "date naissance",
+          "code postal du responsable",
+          "créé par",
+          "email(s) professionnel.le(s)",
+          "rdv collectif",
+          "inscription au rdv collectif par",
+        ]
       )
 
-      expect(first_data_row).to contain_exactly(
-        "Gaston BIDON",
-        rdv.id,
-        2023, "01/01/2023", "12h50",
-        "Créé par un agent",
-        "07/04/2023", "14h30",
-        "PMI",
-        "Consultation",
-        "des infos sur le rdv",
-        "À renseigner",
-        "MDS Paris Nord (21 rue des Ardennes, Paris, 75019)",
-        "Francis FACTICE",
-        nil,
-        "non",
-        nil,
-        "MDS Paris",
-        "01/01/2000",
-        nil,
-        "Dans le cadre du RGPD, cette information n'est plus conservée au delà d'un an.",
-        "agent@mail.com",
-        "non"
+      expect(first_data_row).to eq(
+        [
+
+          "Gaston BIDON",
+          rdv.id,
+          2023, "01/01/2023", "12h50",
+          "Créé par un agent",
+          "07/04/2023", "14h30",
+          "PMI",
+          "Consultation",
+          "des infos sur le rdv",
+          "À renseigner",
+          "MDS Paris Nord (21 rue des Ardennes, Paris, 75019)",
+          "Francis FACTICE",
+          nil,
+          "non",
+          nil,
+          "MDS Paris",
+          "01/01/2000",
+          nil,
+          "Dans le cadre du RGPD, cette information n'est plus conservée au delà d'un an.",
+          "agent@mail.com",
+          "non",
+          nil,
+        ]
       )
     end
   end
@@ -183,6 +190,41 @@ RSpec.describe ParticipationExporter, type: :service do
       rdv = create(:rdv, created_by: agent)
       rdv.versions.first.update!(whodunnit: "agent 008")
       expect(described_class.row_array_from(rdv.participations.first)[20]).to eq("agent 008")
+    end
+  end
+
+  describe "inscription au rdv collectif par" do
+    subject(:inscrit_par) { described_class.row_array_from(participation)[described_class::HEADER.index("inscription au rdv collectif par")] }
+
+    let!(:rdv) { create(:rdv, :collectif, :without_users) }
+    let!(:participation) { create(:participation, rdv:, created_by: author) }
+
+    context "when created by an usager" do
+      let(:josephine_usager) { create(:user, first_name: "Josephine", last_name: "Duroy") }
+      let(:author) { josephine_usager }
+
+      it { is_expected.to eq("[User] Josephine DUROY (id=#{josephine_usager.id}) (email=#{josephine_usager.email})") }
+    end
+
+    context "when created by an agent" do
+      let(:martine_agent) { create(:agent, first_name: "Martine", last_name: "Validay") }
+      let(:author) { martine_agent }
+
+      it { is_expected.to eq("[Agent] Martine VALIDAY (id=#{martine_agent.id}) (email=#{martine_agent.email})") }
+    end
+
+    context "when created by a prescripteur" do
+      let(:prescripteur) { create(:prescripteur, first_name: "Jean", last_name: "Valjean") }
+      let(:author) { prescripteur }
+
+      it { is_expected.to eq("[Prescripteur] Jean VALJEAN (id=#{prescripteur.id}) (email=#{prescripteur.email})") }
+    end
+
+    context "when rdv is not collectif" do
+      let!(:rdv) { create(:rdv) }
+      let!(:participation) { create(:participation, rdv:, created_by: build(:user)) }
+
+      it { is_expected.to eq("") }
     end
   end
 end

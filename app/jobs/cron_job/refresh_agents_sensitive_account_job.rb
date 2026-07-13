@@ -2,6 +2,8 @@ class CronJob::RefreshAgentsSensitiveAccountJob < CronJob
   SENSITIVE_TERRITORY_RDV_THRESHOLD = 5_000
 
   def perform
+    return if disabled?
+
     sensitive_ids = (sensitive_territory_admin_ids + rdv_insertion_admin_agent_ids).uniq
 
     # rubocop:disable Rails/SkipsModelValidations
@@ -11,6 +13,10 @@ class CronJob::RefreshAgentsSensitiveAccountJob < CronJob
   end
 
   private
+
+  def disabled?
+    ENV["DISABLE_REFRESH_AGENTS_SENSITIVE_ACCOUNT_JOB"] == "true"
+  end
 
   def territory_admin_ids
     AgentTerritorialRole.distinct.pluck(:agent_id)
