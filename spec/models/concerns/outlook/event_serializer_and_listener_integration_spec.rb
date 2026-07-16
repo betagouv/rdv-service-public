@@ -260,6 +260,25 @@ RSpec.describe Outlook::EventSerializerAndListener do
     end
   end
 
+  describe "timezone handling" do
+    it "uses the organisation's timezone, not the server default" do
+      organisation_guadeloupe = create(:organisation, time_zone: "America/Guadeloupe")
+      motif_guadeloupe = create(:motif, organisation: organisation_guadeloupe)
+      agent_guadeloupe = create(:agent, microsoft_graph_token: "token", organisations: [organisation_guadeloupe])
+
+      create_request_stub = stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
+        .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
+
+      create(:rdv, agents: [agent_guadeloupe], motif: motif_guadeloupe, organisation: organisation_guadeloupe,
+                   starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30)
+
+      expect(create_request_stub.with(body: hash_including(
+        "start" => hash_including("timeZone" => "America/Guadeloupe"),
+        "end" => hash_including("timeZone" => "America/Guadeloupe")
+      ))).to have_been_requested.once
+    end
+  end
+
   context "when the rdv has a link in a partner application" do
     let(:rdv_plan) do
       create(:rdv_plan, dossier_url: "http://demarches-simplifies.test/exemple", oauth_application: oauth_application)
