@@ -1,83 +1,40 @@
-nav.left-side-menu-wrapper
-  .left-side-menu
-    .d-flex.logo-and-hamburger.align-items-center
-      div.d-md-none.p-2
-        a.d-flex.align-items-center data-toggle="collapse" href="#menu-agent"
-          span> Menu
-          span.h3.ml-1
-            = icon("fr-icon-menu-fill", class: "rdv-color-active-blue")
+aside.left-side-menu-wrapper
+  div.left-side-menu
+    .fr-p-2w.d-flex.justify-content-center
+      = link_to "Trouver un RDV", search_rdv_slot_url_with(@user), class: "fr-btn"
+    .current-organisation
+      = current_organisation_in_left_menu do
+        .d-flex.justify-content-between.w-100
+          div.d-flex.align-items-center
+            div.d-flex.flex-column
+              = current_organisation.name
+              - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
+                span.fr-text--xs.fr-mb-0= current_agent.services_short_names
+          - if current_agent.organisations_count > 1
+            div.d-flex.align-items-center
+              = icon("fr-icon-arrow-down-s-line", class: "menu-arrow")
+      = render "layouts/left_menu/organisation_switcher"
+
     - if content_for? :side_nav_menu
       = yield :side_nav_menu
     - else
-      - active_item = @current_menu_item || active_menu_item
-      ul.side-nav.list-unstyled#menu-agent.pb-3.mb-0
-        li.p-2
-          .d-flex.justify-content-center
-            = link_to "Trouver un RDV", search_rdv_slot_url_with(@user), class: "fr-btn"
-        li.current-organisation
-          = current_organisation_in_left_menu do
-            .d-flex.justify-content-between.w-100
-              div.d-flex.align-items-center
-                div.d-flex.flex-column
-                  = current_organisation.name
-                  - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
-                    span.fr-text--xs.fr-mb-0= current_agent.services_short_names
-              - if current_agent.organisations_count > 1
-                div.d-flex.align-items-center
-                  = icon("fr-icon-arrow-down-s-line", class: "menu-arrow")
-          = render "layouts/left_menu/organisation_switcher"
-
-        li.fr-pb-0
-          / Dette technique due au feature flag du nouveau planning :
-          / - @agent est l'agent sélectionné dans le planning, utilisé par les vues de planning
-          / - @contextual_agents.first est l'agent gardé en contexte pour l'afficher dans le fil d'ariane d'un RDV#show
-          - selected_agent = @agent || @contextual_agents&.first
-
-          - query_params = selected_agent ? { agent_id: selected_agent } : {}
-          = active_link_to(admin_organisation_planning_agenda_path(current_organisation, **query_params), active: active_item == :menu_planning, class: "side-menu__item")
-            span.fr-icon-calendar-event-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
-            | Planning
-
-        li.fr-pb-0
-          = active_link_to(admin_organisation_users_path(current_organisation), active: active_item == :menu_users, class: "side-menu__item")
-            span.fr-icon-group-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
-            | Usagers
-
-        li.fr-pb-0
-          = active_link_to(admin_organisation_rdvs_path(current_organisation), active: active_item == :menu_liste_rdvs, class: "side-menu__item")
-            span.fr-icon-survey-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
-            | Liste des RDV
-
-        li.fr-pb-0
-          = active_link_to(admin_organisation_rdvs_collectifs_path(current_organisation), class: "side-menu__item")
-            span.fr-icon-team-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
-            | RDV collectifs
-
-        li.fr-pb-0
-          = active_link_to(admin_organisation_stats_path(current_organisation), class: "side-menu__item")
-            span.fr-icon-bar-chart-box-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
-            | Statistiques
-
+      ruby:
+        active_item = @current_menu_item || active_menu_item
+        selected_agent = @agent || @contextual_agents&.first
+        query_params = selected_agent ? { agent_id: selected_agent } : {}
+      = render(DsfrComponent::SideMenuComponent.new(title: "Menu")) do |menu|
+        ruby:
+          menu.with_item(title: safe_join([icon("fr-icon-calendar-event-line", class: "fr-icon--sm fr-mr-1w"), "Planning"]), path: admin_organisation_planning_agenda_path(current_organisation, **query_params), current_page: active_item == :menu_planning)
+          menu.with_item(title: safe_join([icon("fr-icon-group-line", class: "fr-icon--sm fr-mr-1w"), "Usagers"]), path: admin_organisation_users_path(current_organisation), current_page: active_item == :menu_users)
+          menu.with_item(title: safe_join([icon("fr-icon-survey-line", class: "fr-icon--sm fr-mr-1w"), "Liste des RDV"]), path: admin_organisation_rdvs_path(current_organisation), current_page: active_item == :menu_liste_rdvs)
+          menu.with_item(title: safe_join([icon("fr-icon-team-line", class: "fr-icon--sm fr-mr-1w"), "RDV collectifs"]), path: admin_organisation_rdvs_collectifs_path(current_organisation), current_page: current_page?(admin_organisation_rdvs_collectifs_path(current_organisation)))
+          menu.with_item(title: safe_join([icon("fr-icon-bar-chart-box-line", class: "fr-icon--sm fr-mr-1w"), "Statistiques"]), path: admin_organisation_stats_path(current_organisation), current_page: current_page?(admin_organisation_stats_path(current_organisation)))
         - if current_agent.admin_in_organisation?(current_organisation)
-          li.fr-pb-0
-            = active_link_to(admin_organisation_configuration_path(current_organisation), active: active_item == :menu_settings, class: "side-menu__item")
-              span.fr-icon-settings-5-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
-              | Configuration
-              / On ajoute une condition sur la date de création de l'organisation pour éviter de faire des requêtes sur les tables motifs et lieux à chaque chargement de page
-              - if active_item != :menu_settings && current_organisation.created_at > 30.days.ago && needs_configuration(current_organisation)
-                .fr-ml-1w.rdv-pastille
-
+          ruby:
+            config_badge = active_item != :menu_settings && current_organisation.created_at > 30.days.ago && needs_configuration(current_organisation)
+            config_badge_html = config_badge ? tag.span(class: "fr-ml-1w rdv-pastille") : "".html_safe
+            menu.with_item(title: safe_join([icon("fr-icon-settings-5-line", class: "fr-icon--sm fr-mr-1w"), "Configuration", config_badge_html]), path: admin_organisation_configuration_path(current_organisation), current_page: active_item == :menu_settings)
         - else
-          li.fr-pb-0
-            = active_link_to(admin_organisation_lieux_path(current_organisation), class: "side-menu__item")
-              = lieu_icon(class: "fr-icon--sm fr-mr-1w")
-              | Lieux
-          li.fr-pb-0
-            = active_link_to(admin_organisation_motifs_path(current_organisation), class: "side-menu__item")
-              = motif_icon(class: "fr-icon--sm fr-mr-1w")
-              | Motifs
-
-        li.fr-pb-0
-          = active_link_to admin_organisation_support_path(current_organisation), class: "side-menu__item"
-            span.fr-icon-question-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
-            | Aide et support
+          - menu.with_item(title: safe_join([icon("fr-icon-building-line", class: "fr-icon--sm fr-mr-1w"), "Lieux"]), path: admin_organisation_lieux_path(current_organisation), current_page: current_page?(admin_organisation_lieux_path(current_organisation)))
+          - menu.with_item(title: safe_join([icon("fr-icon-draft-line", class: "fr-icon--sm fr-mr-1w"), "Motifs"]), path: admin_organisation_motifs_path(current_organisation), current_page: current_page?(admin_organisation_motifs_path(current_organisation)))
+        - menu.with_item(title: safe_join([icon("fr-icon-question-line", class: "fr-icon--sm fr-mr-1w"), "Aide et support"]), path: admin_organisation_support_path(current_organisation), current_page: current_page?(admin_organisation_support_path(current_organisation)))

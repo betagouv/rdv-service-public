@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
 
-  @include media-breakpoint-up(sm) {
+  @include media-breakpoint-up(md) {
     flex-direction: row;
   }
 }
@@ -17,13 +17,36 @@
 
 .left-side-menu-wrapper {
   background: $bg-leftbar;
-  border-right: 1px solid $card-border-color;
+  border-right: 1px solid #e3eaef;
 }
+
 .left-side-menu {
   background: $bg-leftbar;
   scrollbar-width: thin;
 
-  a:not(.fr-btn) {
+  .fr-sidemenu,
+  .fr-sidemenu__inner {
+    padding: 0;
+    box-shadow: none;
+  }
+
+  // Le titre "Menu" est conservé pour l'accessibilité (aria-labelledby + bouton mobile),
+  // mais masqué visuellement sur desktop où il serait redondant.
+  .fr-sidemenu__title {
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
+  .current-organisation {
+    font-weight: 500;
+  }
+
+  a:not(.fr-btn):not(.fr-sidemenu__link) {
     color: $menu-item;
     transition: all 0.2s;
 
@@ -43,10 +66,6 @@
         border-left-style: solid;
         border-left-color: var(--text-action-high-blue-france);
         color: var(--text-action-high-blue-france);
-      }
-
-      &.side-menu__item--small {
-        padding: 6px 12px;
       }
     }
 
@@ -72,15 +91,6 @@
     border-top: 1px solid $card-border-color;
     border-bottom: 1px solid $card-border-color;
   }
-
-  .side-nav-title {
-    letter-spacing: 0.05em;
-    pointer-events: none;
-    cursor: default;
-    text-transform: uppercase;
-    color: $menu-item;
-    font-weight: $font-weight-bold;
-  }
 }
 
 @include media-breakpoint-up(md) {
@@ -98,29 +108,11 @@
     max-height: 100vh; // pour permettre de scroller dans le menu
     overflow-y: auto;
     overflow-x: hidden;
-
-    .logo-and-hamburger {
-      justify-content: center;
-    }
   }
 }
 
 @include media-breakpoint-down(sm) {
-  .left-side-menu {
-    .logo-and-hamburger {
-      justify-content: space-between;
-    }
-  }
   .content-page {
     margin-left: 0 !important;
-  }
-
-  // the order of these next 2 rules is important
-  #menu-agent.collapsing,
-  #menu-agent.show {
-    display: block;
-  }
-  #menu-agent {
-    display: none;
   }
 }
