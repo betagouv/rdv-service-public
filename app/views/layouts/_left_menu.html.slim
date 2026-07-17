@@ -22,7 +22,7 @@ aside.left-side-menu-wrapper
         active_item = @current_menu_item || active_menu_item
         selected_agent = @agent || @contextual_agents&.first
         query_params = selected_agent ? { agent_id: selected_agent } : {}
-      = render(DsfrComponent::SideMenuComponent.new(title: "Menu")) do |menu|
+      = render(DsfrComponent::SideMenuComponent.new(title: "Menu", html_attributes: {id: "menu"} )) do |menu|
         ruby:
           menu.with_item(title: safe_join([icon("fr-icon-calendar-event-line", class: "fr-icon--sm fr-mr-1w"), "Planning"]), path: admin_organisation_planning_agenda_path(current_organisation, **query_params), current_page: active_item == :menu_planning)
           menu.with_item(title: safe_join([icon("fr-icon-group-line", class: "fr-icon--sm fr-mr-1w"), "Usagers"]), path: admin_organisation_users_path(current_organisation), current_page: active_item == :menu_users)
