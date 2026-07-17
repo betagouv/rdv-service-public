@@ -261,7 +261,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
   end
 
   describe "timezone handling" do
-    it "uses the organisation's timezone, not the server default" do
+    it "sends datetime without UTC offset so Outlook respects the timeZone field" do
       organisation_guadeloupe = create(:organisation, time_zone: "America/Guadeloupe")
       motif_guadeloupe = create(:motif, organisation: organisation_guadeloupe)
       agent_guadeloupe = create(:agent, microsoft_graph_token: "token", organisations: [organisation_guadeloupe])
@@ -273,8 +273,8 @@ RSpec.describe Outlook::EventSerializerAndListener do
                    starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30)
 
       expect(create_request_stub.with(body: hash_including(
-        "start" => hash_including("timeZone" => "America/Guadeloupe"),
-        "end" => hash_including("timeZone" => "America/Guadeloupe")
+        "start" => { "dateTime" => "2023-01-01T11:00:00", "timeZone" => "America/Guadeloupe" },
+        "end" => { "dateTime" => "2023-01-01T11:30:00", "timeZone" => "America/Guadeloupe" }
       ))).to have_been_requested.once
     end
   end
