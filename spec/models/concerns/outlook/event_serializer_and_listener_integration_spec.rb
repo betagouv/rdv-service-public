@@ -46,11 +46,11 @@ RSpec.describe Outlook::EventSerializerAndListener do
           content: expected_description,
         },
         start: {
-          dateTime: "2023-01-01T11:00:00+01:00",
+          dateTime: "2023-01-01T11:00:00",
           timeZone: "Europe/Paris",
         },
         end: {
-          dateTime: "2023-01-01T11:30:00+01:00",
+          dateTime: "2023-01-01T11:30:00",
           timeZone: "Europe/Paris",
         },
         location: {
@@ -80,11 +80,11 @@ RSpec.describe Outlook::EventSerializerAndListener do
             content: expected_description,
           },
           start: {
-            dateTime: "2023-01-01T11:00:00+01:00",
+            dateTime: "2023-01-01T11:00:00",
             timeZone: "Europe/Paris",
           },
           end: {
-            dateTime: "2023-01-01T11:40:00+01:00",
+            dateTime: "2023-01-01T11:40:00",
             timeZone: "Europe/Paris",
           },
           location: {
@@ -138,11 +138,11 @@ RSpec.describe Outlook::EventSerializerAndListener do
             content: expected_description,
           },
           start: {
-            dateTime: "2023-01-01T11:00:00+01:00",
+            dateTime: "2023-01-01T11:00:00",
             timeZone: "Europe/Paris",
           },
           end: {
-            dateTime: "2023-01-01T11:40:00+01:00",
+            dateTime: "2023-01-01T11:40:00",
             timeZone: "Europe/Paris",
           },
           location: {
