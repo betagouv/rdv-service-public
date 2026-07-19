@@ -10,7 +10,7 @@ L'éditeur reste sur le système hôte, les commandes (rails, ruby, rspec…) to
 
 Installation et usage (depuis la racine du projet) :
 - `brew install lima`
-- `scripts/devtools/lima-setup-host.sh`
+- `scripts/devtools/lima-vm/host-create-vm.sh`
 - `limactl shell devbox` puis par exemple `claude` puis `/login` la première fois
 
 La VM n'a accès qu'au répertoire du projet RDVSP monté en lecture-écriture et aux fichiers de configuration des CLI d'agents IA.
