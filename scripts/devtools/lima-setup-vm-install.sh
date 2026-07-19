@@ -1,55 +1,45 @@
 #!/usr/bin/env bash
-# Runs inside Lima VM. Called by lima-setup.sh via limactl shell.
-# Required env vars: PROJECT_DIR, HOST_HOME
+# S'exécute dans la VM Lima. Appelé par lima-setup-host.sh via limactl shell.
+# Variables d'environnement requises : PROJECT_DIR, HOST_HOME, ALLOWED_IPS
 set -euo pipefail
 
 sudo apt-get update -y
 sudo apt-get install -y build-essential curl git vim tmux postgresql redis-server dnsutils
-
 sudo systemctl enable postgresql redis-server
 sudo systemctl start postgresql redis-server
 
-# Allow any local user to connect as any PostgreSQL role (dev only)
+# configuration Postgres pour autoriser tout utilisateur local à se connecter avec n'importe quel rôle
 sudo sed -i 's/^local\s\+all\s\+all\s\+peer/local   all             all                                     trust/' /etc/postgresql/16/main/pg_hba.conf
 sudo systemctl reload postgresql
 sudo -u postgres createuser --superuser rdvsp 2>/dev/null || echo 'role rdvsp already exists'
+echo 'export POSTGRES_USER=rdvsp' >> ~/.bashrc
+export POSTGRES_USER=rdvsp
 
-# Installer mise puis ruby, node, yarn
+# Installe mise puis ruby, node, yarn
+rm -rf ~/.local && ln -s "$PROJECT_DIR/tmp/lima-vm-cache/local" ~/.local # cache persisté pour mise et les gems
 curl https://mise.run | sh
 export PATH="$HOME/.local/bin:$PATH"
-eval "$($HOME/.local/bin/mise activate bash)"
-grep -q 'mise activate' ~/.bashrc || echo 'eval "$($HOME/.local/bin/mise activate bash)"' >> ~/.bashrc
-echo "cd $PROJECT_DIR" >> ~/.bashrc
-mise --yes trust "$PROJECT_DIR/mise.toml"
-cd "$PROJECT_DIR" && mise install
+cd "$PROJECT_DIR" && mise trust && mise install && mise reshim
+echo 'eval "$($HOME/.local/bin/mise activate bash)"' >> ~/.bashrc
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 
-# Installer les agents IA (seulement Claude)
+# toujours ouvrir bash dans le dossier du projet
+echo "cd $PROJECT_DIR" >> ~/.bashrc
+
+# Installe Claude
 curl -fsSL https://claude.ai/install.sh | bash
 echo 'alias claude="claude --dangerously-skip-permissions"' >> ~/.bashrc
-
-# Share AI agent config/settings from the host (credentials need separate auth in the VM)
 rm -rf ~/.claude && ln -s "$HOST_HOME/.claude" ~/.claude
 
-# VM-local env overrides (not committed to the project)
-cat > ~/.env.local <<'ENVEOF'
-export POSTGRES_USER=rdvsp
-ENVEOF
-grep -q 'source ~/.env.local' ~/.bashrc || echo 'source ~/.env.local' >> ~/.bashrc
-
-source ~/.env.local
+# Dépendances spécifiques du projet
 make install
 
-# --- NETWORK
-
-# récupérer les IP des domaines autorisés
+# config pare-feu : règles nftables pour les IP résolues par l'hôte (ALLOWED_IPS)
 ALLOWED_RULES=""
-for domain in api.anthropic.com statsig.anthropic.com; do
-  while IFS= read -r ip; do
-    [[ "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] || continue
-    ALLOWED_RULES="${ALLOWED_RULES}    ip daddr ${ip} accept  # ${domain}\n"
-  done < <(dig +short A "$domain" 2>/dev/null || true)
-done
+while IFS=' ' read -r ip domain; do
+  [[ -n "$ip" ]] || continue
+  ALLOWED_RULES="${ALLOWED_RULES}    ip daddr ${ip} accept  # ${domain}\n"
+done <<< "$ALLOWED_IPS"
 
 # configurer les règles pour autoriser uniquement ces domaines
 sudo tee /etc/nftables.conf > /dev/null << EOF
@@ -62,7 +52,7 @@ table ip filter {
 
     oifname "lo" accept
 
-    # Lima host<->VM communication (mounts, port forwarding)
+    # Communication hôte Lima <-> VM
     ip daddr 10.0.0.0/8 accept
     ip daddr 172.16.0.0/12 accept
     ip daddr 192.168.0.0/16 accept
@@ -71,12 +61,11 @@ table ip filter {
     udp dport 53 accept
     tcp dport 53 accept
 
-    # Anthropic API (resolved at setup time; re-run setup if IPs change)
+    # domaines autorisés
 $(printf "%b" "${ALLOWED_RULES}")
   }
 }
 EOF
-
 sudo systemctl enable nftables
 sudo systemctl restart nftables
-echo "Firewall active: all outbound internet blocked except Anthropic API."
+echo "Pare-feu actif"

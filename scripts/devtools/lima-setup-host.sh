@@ -1,23 +1,43 @@
 #!/usr/bin/env bash
-# Setup a Lima VM (devbox) for rdv-service-public development.
-# Run from the root of the project on your Mac.
+# Prépare une VM Lima devbox. À lancer depuis la racine du projet RDVSP.
 set -euo pipefail
 
 PROJECT_DIR="$(pwd)"
-VM_NAME="devbox"
+VM_NAME="rdvsp-devbox"
 
-echo "==> Creating Lima VM..."
-# we do not use ubuntu 26 yet because chromium is not pre-built yet
+if limactl list --format='{{.Name}}' | grep -qx "$VM_NAME"; then
+  echo "==> Deleting existing Lima VM '$VM_NAME'..."
+  limactl delete --force "$VM_NAME"
+fi
+
+mkdir -p "$PROJECT_DIR/tmp/lima-vm-cache/local"
+
+echo "==> Création de la VM Lima…"
+# on n'utilise pas encore ubuntu 26 car chromium n'y est pas pré-compilé
 limactl start template:ubuntu-24.04 --name="$VM_NAME" --cpus=4 --memory=4 --disk=20 -y \
   --set ".mounts[0] = {\"location\": \"$PROJECT_DIR\", \"writable\": true}" \
-  --set ".mounts[1] = {\"location\": \"$HOME/.claude\", \"writable\": true}" \
-  --set ".mounts[2] = {\"location\": \"$HOME/.config/kilo\", \"writable\": true}"
+  --set ".mounts[1] = {\"location\": \"$HOME/.claude\", \"writable\": true}"
 
-echo "==> Installing packages, tools, and languages inside VM..."
+echo "==> Résolution des IP des domaines autorisés…"
+ALLOWED_IPS=""
+for domain in api.anthropic.com statsig.anthropic.com rubygems.org; do
+  while IFS= read -r ip; do
+    [[ "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] || continue
+    ALLOWED_IPS="${ALLOWED_IPS}${ip} ${domain}"$'\n'
+  done < <(dig +short A "$domain" 2>/dev/null || true)
+done
+
+echo "==> Installation des dépendances dans la VM…"
 limactl shell "$VM_NAME" -- \
-  env PROJECT_DIR="$PROJECT_DIR" HOST_HOME="$HOME" \
+  env PROJECT_DIR="$PROJECT_DIR" HOST_HOME="$HOME" ALLOWED_IPS="$ALLOWED_IPS" \
   bash "$PROJECT_DIR/scripts/devtools/lima-setup-vm-install.sh"
+
+# ~/.claude.json contient les credentials mais est hors du ~/.claude qui est monté
+if [[ -f "$HOME/.claude.json" ]]; then
+  echo "==> Copie de ~/.claude.json…"
+  limactl copy "$HOME/.claude.json" "$VM_NAME:.claude.json"
+fi
 
 
 echo ""
-echo "VM '$VM_NAME' is ready. Run: limactl shell $VM_NAME"
+echo "La VM '$VM_NAME' est prête. Run: limactl shell $VM_NAME"
