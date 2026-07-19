@@ -15,9 +15,9 @@ ALLOWED_DOMAINS=(
   # GitHub
   github.com codeload.github.com objects.githubusercontent.com raw.githubusercontent.com api.github.com
   # Registries de paquets
-  registry.npmjs.org pypi.org files.pythonhosted.org rubygems.org crates.io static.crates.io
+  registry.npmjs.org pypi.org files.pythonhosted.org rubygems.org crates.io static.crates.io tuf-repo-cdn.sigstore.dev
   # Mise / runtimes
-  mise.jdx.dev mise.run
+  mise.jdx.dev mise.run mise-versions.jdx.dev
   # APT Ubuntu
   deb.debian.org archive.ubuntu.com security.ubuntu.com ports.ubuntu.com
 )
