@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # S'exécute dans la VM Lima. Appelé par lima-setup-host.sh via limactl shell.
-# Variables d'environnement requises : PROJECT_DIR, HOST_HOME, ALLOWED_IPS
+# Variables d'environnement requises : PROJECT_DIR, HOST_HOME, ALLOWED_IPS, VM_NAME
 set -euo pipefail
 
 sudo apt-get update -y
@@ -30,6 +30,24 @@ echo "cd $PROJECT_DIR" >> ~/.bashrc
 curl -fsSL https://claude.ai/install.sh | bash
 echo 'alias claude="claude --dangerously-skip-permissions"' >> ~/.bashrc
 rm -rf ~/.claude && ln -s "$HOST_HOME/.claude" ~/.claude
+
+# Installe opencode
+curl -fsSL https://opencode.ai/install | bash
+echo 'export PATH="$HOME/.opencode/bin:$PATH"' >> ~/.bashrc
+mkdir -p ~/.config ~/.local/share/opencode
+rm -rf ~/.config/opencode && ln -s "$HOST_HOME/.config/opencode" ~/.config/opencode
+
+# Permet aux agents de savoir qu'ils tournent dans cette devbox :
+# - export dans ~/.bashrc (hérité par tout processus lancé depuis un shell interactif, ex. un agent et ses sous-processus)
+# - /etc/environment pour les sessions gérées par PAM
+# - fichier /etc/rdvsp-devbox pour les outils qui n'héritent pas de l'environnement
+echo "export RDVSP_DEVBOX=${VM_NAME}" >> ~/.bashrc
+echo "RDVSP_DEVBOX=${VM_NAME}" | sudo tee -a /etc/environment > /dev/null
+sudo tee /etc/rdvsp-devbox > /dev/null << EOF
+You are inside the Lima devbox VM '${VM_NAME}' for the RDVSP project.
+- Postgres and Redis run locally in this VM; the project dir is a live mount of the host checkout.
+- Outbound traffic is restricted by an nftables allowlist (see /etc/nftables.conf); requests to other domains will fail.
+EOF
 
 # Dépendances spécifiques du projet
 make install
