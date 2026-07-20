@@ -147,6 +147,9 @@ Rails.application.routes.draw do
         post :resend, on: :collection
       end
       resource :preferences, only: %i[show update]
+      resource :visio_numerique, only: %i[show], controller: :visio_numerique do
+        post :create_room, on: :collection
+      end
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
         resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync do
           post :calendar_selection
