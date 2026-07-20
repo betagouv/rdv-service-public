@@ -6,8 +6,8 @@ RSpec.describe "Lien Reprendre RDV depuis les emails d'annulation", type: :reque
       lieu = create(:lieu, organisation:)
       create(:plage_ouverture, motifs: [motif], lieu:, organisation:)
       user = create(:user)
-      token = user.set_rdv_invitation_token!
       rdv = create(:rdv, organisation:, motif:, lieu:, users: [user])
+      token = rdv.participations.first.restricted_auth_token
 
       mail = Users::RdvMailer.with(rdv:, user:, token:).rdv_cancelled
       link_url = Nokogiri::HTML(mail.html_part.body.to_s).at_css('a[href*="prendre_rdv"]')["href"]
@@ -25,8 +25,8 @@ RSpec.describe "Lien Reprendre RDV depuis les emails d'annulation", type: :reque
       lieu = create(:lieu, organisation:)
       create(:plage_ouverture, motifs: [motif], lieu:, organisation:)
       user = create(:user)
-      token = user.set_rdv_invitation_token!
       rdv = create(:rdv, organisation:, motif:, lieu:, users: [user])
+      token = rdv.participations.first.restricted_auth_token
 
       mail = Users::RdvMailer.with(rdv:, user:, token:).rdv_cancelled
       link_url = Nokogiri::HTML(mail.html_part.body.to_s).at_css('a[href*="prendre_rdv"]')["href"]
@@ -44,9 +44,9 @@ RSpec.describe "Lien Reprendre RDV depuis les emails d'annulation", type: :reque
       lieu = create(:lieu, organisation:)
       create(:plage_ouverture, motifs: [motif], lieu:, organisation:)
       user = create(:user)
-      token = user.set_rdv_invitation_token!
       rdv = create(:rdv, :collectif, organisation:, motif:, lieu:)
       participation = create(:participation, rdv:, user:)
+      token = rdv.participations.first.restricted_auth_token
 
       mail = Users::RdvMailer.with(rdv:, user:, token:, participation:).participation_cancelled
       link_url = Nokogiri::HTML(mail.body.to_s).at_css('a[href*="prendre_rdv"]')["href"]
@@ -64,9 +64,9 @@ RSpec.describe "Lien Reprendre RDV depuis les emails d'annulation", type: :reque
       lieu = create(:lieu, organisation:)
       create(:plage_ouverture, motifs: [motif], lieu:, organisation:)
       user = create(:user)
-      token = user.set_rdv_invitation_token!
       rdv = create(:rdv, :collectif, organisation:, motif:, lieu:)
       participation = create(:participation, rdv:, user:)
+      token = rdv.participations.first.restricted_auth_token
 
       mail = Users::RdvMailer.with(rdv:, user:, token:, participation:).participation_cancelled
       link_url = Nokogiri::HTML(mail.body.to_s).at_css('a[href*="prendre_rdv"]')["href"]
