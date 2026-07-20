@@ -69,12 +69,12 @@ module Outlook
           content: event_description,
         },
         start: {
-          dateTime: rdv.starts_at.iso8601,
-          timeZone: Time.zone_default.tzinfo.identifier,
+          dateTime: rdv.starts_at.strftime("%Y-%m-%dT%H:%M:%S"),
+          timeZone: rdv.organisation.time_zone,
         },
         end: {
-          dateTime: rdv.ends_at.iso8601,
-          timeZone: Time.zone_default.tzinfo.identifier,
+          dateTime: rdv.ends_at.strftime("%Y-%m-%dT%H:%M:%S"),
+          timeZone: rdv.organisation.time_zone,
         },
         location: {
           displayName: rdv.address_without_personal_information,
