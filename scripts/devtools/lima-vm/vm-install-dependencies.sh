@@ -9,6 +9,8 @@ sudo apt-get install -y build-essential curl git vim tmux postgresql redis-serve
 sudo systemctl enable postgresql redis-server
 sudo systemctl start postgresql redis-server
 
+sudo systemctl disable --now motd-news.timer # système d'annonces ubuntu
+
 # config Postgres
 sudo sed -i 's/^local\s\+all\s\+all\s\+peer/local   all             all                                     trust/' /etc/postgresql/16/main/pg_hba.conf
 sudo systemctl reload postgresql
