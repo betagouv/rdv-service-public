@@ -31,6 +31,10 @@ Capybara.configure do |config|
   config.server = :puma, { Silent: true }
   config.disable_animation = true
   config.save_path = Rails.root.join("tmp/capybara")
+  # La valeur par défaut (2s) est trop courte quand plusieurs process parallel_tests
+  # se disputent le CPU (en CI comme en local) : ça provoque des Playwright::TimeoutError
+  # qui ressemblent à des bugs applicatifs mais ne sont que de la contention.
+  config.default_max_wait_time = 5
 
   # This is necessary when using Selenium + custom .localhost domain.
   # See: https://stackoverflow.com/a/63973323/2864020

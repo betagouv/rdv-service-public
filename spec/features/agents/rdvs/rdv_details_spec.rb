@@ -107,10 +107,10 @@ RSpec.describe "Agent can see RDV details correctly" do
       it "allows editing the RDV status", js: true do
         visit admin_organisation_rdv_path(organisation, rdv)
         find(".btn", text: "À renseigner").click
-        expect do
-          find("span", text: "Rendez-vous honoré").click
-          sleep 1
-        end.to change { rdv.reload.status }.to("seen")
+        find("span", text: "Rendez-vous honoré").click
+        # On attend le re-rendu du turbo-frame (requête PUT asynchrone) plutôt qu'un sleep fixe, pour éviter une flaky spec.
+        expect(page).to have_content("Rendez-vous mis à jour")
+        expect(rdv.reload.status).to eq("seen")
       end
     end
   end

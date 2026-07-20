@@ -123,7 +123,9 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
                        text: "Je suis Proconnecté automatiquement et redirigé vers RDV Aide Numérique, je clique sur Copier les données",
                        wait_for: "Ces données vont être copiées")
 
-    click_on "Copier les données"
+    # La copie synchrone de toutes les données de l'organisation (agents, plages, motifs, rdvs...)
+    # peut dépasser le default_max_wait_time par défaut, d'où ce délai étendu pour éviter une flaky spec.
+    Capybara.using_wait_time(10) { click_on "Copier les données" }
 
     doc.add_screenshot(page,
                        text: "La migration est réussie. Mes usagers sont maintenant disponibles sur RDV Service Public",

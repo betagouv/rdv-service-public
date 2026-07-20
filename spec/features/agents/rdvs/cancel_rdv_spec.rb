@@ -15,7 +15,8 @@ RSpec.describe "Agent can cancel a RDV", js: true do
     accept_alert do
       find("span", text: "Annulé à l’initiative du service").click
     end
-    sleep 1 # Pour attendre que la requête ajax se finisse
+    # On attend le re-rendu du turbo-frame (requête PUT asynchrone) plutôt qu'un sleep fixe, pour éviter une flaky spec.
+    expect(page).to have_css("#rdv-status-#{rdv.id} .rdv-status-revoked")
     expect(rdv.reload.status).to eq("revoked")
 
     perform_enqueued_jobs

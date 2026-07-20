@@ -11,14 +11,15 @@ RSpec.describe "Les agents peuvent renseigner le statut des rendez-vous pour nou
     visit root_path
     click_link "1 RDV à renseigner"
     find(".fr-btn", text: "Rendez-vous honoré").click
-    sleep 1 # Pour attendre que la requête ajax se finisse
+    # On attend le re-rendu du turbo-frame (requête PUT asynchrone) plutôt qu'un sleep fixe, pour éviter une flaky spec.
+    expect(page).to have_css("#rdv-status-#{rdv.id} .rdv-status-seen")
     expect(page).to have_content("Rendez-vous mis à jour")
     expect(rdv.reload.status).to eq("seen")
 
     # Et on peut faire un reset
     find(".btn", text: "Rendez-vous honoré").click
     find("span", text: "Réinitialiser").click
-    sleep 1 # Pour attendre que la requête ajax se finisse
+    expect(page).to have_css(".fr-btn", text: "Rendez-vous honoré")
     expect(page).to have_content("Rendez-vous mis à jour")
     expect(rdv.reload.status).to eq("unknown")
   end
@@ -30,7 +31,7 @@ RSpec.describe "Les agents peuvent renseigner le statut des rendez-vous pour nou
       find(".fr-btn", text: "Autre").click
       find("span", text: "Annulé à l’initiative du service").click
 
-      sleep 1 # Pour attendre que la requête ajax se finisse
+      expect(page).to have_css("#rdv-status-#{rdv.id} .rdv-status-revoked")
       expect(page).to have_content("Rendez-vous mis à jour")
       expect(rdv.reload.status).to eq("revoked")
     end
@@ -40,14 +41,14 @@ RSpec.describe "Les agents peuvent renseigner le statut des rendez-vous pour nou
     visit admin_organisation_rdv_path(rdv.organisation, rdv)
     find(".btn", text: "À renseigner").click
     find("span", text: "Rendez-vous honoré").click
-    sleep 1 # Pour attendre que la requête ajax se finisse
+    expect(page).to have_css("#rdv-status-#{rdv.id} .rdv-status-seen")
     expect(page).to have_content("Rendez-vous mis à jour")
     expect(rdv.reload.status).to eq("seen")
 
     # Et on peut faire un reset
     find(".btn", text: "Rendez-vous honoré").click
     find("span", text: "Réinitialiser").click
-    sleep 1 # Pour attendre que la requête ajax se finisse
+    expect(page).to have_css("#rdv-status-#{rdv.id} .rdv-status-unknown_past")
     expect(page).to have_content("Rendez-vous mis à jour")
     expect(rdv.reload.status).to eq("unknown")
   end
