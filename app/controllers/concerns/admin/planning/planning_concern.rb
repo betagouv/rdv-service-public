@@ -9,8 +9,9 @@ module Admin::Planning::PlanningConcern
   private
 
   def set_agents
+    agent_ids = Array(params[:agent_id]).compact_blank
     agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
-      .where(id: Array(params[:agent_id]).compact_blank)
+      .in_order_of(:id, agent_ids) # equivalent to WHERE IN + ORDER BY respecting array values
       .load
 
     case agents.size
