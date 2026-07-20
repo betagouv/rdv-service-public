@@ -16,11 +16,11 @@ div
     p
       | Vous pouvez reprendre un rendez-vous en cliquant sur le lien ci-dessous :
     .btn-wrapper
-      / Il y a peut-être un bug ici : il manquerait le lieu_id, qui fait partie des choix de l'usager
       = link_to "Reprendre RDV", prendre_rdv_url(\
         departement: @rdv.organisation.departement_number,
         motif_name_with_location_type: @rdv.motif.name_with_location_type,
-        organisation_ids: [@rdv.organisation_id],
+        public_link_organisation_id: @rdv.organisation_id,
+        lieu_id: @rdv.lieu_id,
         address: @rdv.address,
         invitation_token: @token \
       ), class: "btn btn-primary"

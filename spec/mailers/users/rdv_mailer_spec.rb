@@ -191,7 +191,8 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       expected_url = prendre_rdv_url(
         departement: rdv.organisation.departement_number,
         motif_name_with_location_type: rdv.motif.name_with_location_type,
-        organisation_ids: [rdv.organisation_id],
+        public_link_organisation_id: rdv.organisation_id,
+        lieu_id: rdv.lieu_id,
         address: rdv.address,
         invitation_token: token,
         host: Domain::RDV_SOLIDARITES.host_name
@@ -245,7 +246,8 @@ RSpec.describe Users::RdvMailer, type: :mailer do
         expected_url = prendre_rdv_url(
           departement: rdv.organisation.departement_number,
           motif_name_with_location_type: rdv.motif.name_with_location_type,
-          organisation_ids: [rdv.organisation_id],
+          public_link_organisation_id: rdv.organisation_id,
+          lieu_id: rdv.lieu_id,
           address: rdv.address,
           invitation_token: token,
           host: Domain::RDV_SOLIDARITES.host_name
