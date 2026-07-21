@@ -39,7 +39,7 @@ RSpec.describe Rdv::VisioConcern, type: :concern do
 
       specify do
         expect(rdv).to be_invalid
-        expect(rdv.errors[:visio_url_custom].first).to eq("n'est pas une URL valide")
+        expect(rdv.errors[:visio_url_custom].first).to eq("n’est pas une URL valide")
       end
     end
 
