@@ -31,6 +31,7 @@ FileUtils.chdir APP_ROOT do
   system! "bin/rails db:prepare"
   system! "bundle exec dotenv -f '.env.rdv_solidarites,.env' bin/rails db:prepare"
 
+
   puts "\n== Preparing parallel test databases =="
   system! "RAILS_ENV=test rake parallel:create"
 
