@@ -188,14 +188,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
       mail = described_class.with(rdv: rdv, user: user, token: token).rdv_cancelled
 
-      expected_url = prendre_rdv_url(
-        departement: rdv.organisation.departement_number,
-        motif_name_with_location_type: rdv.motif.name_with_location_type,
-        organisation_ids: [rdv.organisation_id],
-        address: rdv.address,
-        invitation_token: token,
-        host: Domain::RDV_SOLIDARITES.host_name
-      )
+      expected_url = reprendre_rdv_from_participation_invitation_token_short_url(tkn: token, host: Domain::RDV_SOLIDARITES.host_name)
 
       expect(mail.html_part.body).to have_link("Reprendre RDV", href: expected_url)
     end
@@ -242,14 +235,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       let(:motif) { create(:motif, :collectif, organisation:, bookable_by: :everyone) }
 
       it "le corps contient un lien pour reprendre RDV" do
-        expected_url = prendre_rdv_url(
-          departement: rdv.organisation.departement_number,
-          motif_name_with_location_type: rdv.motif.name_with_location_type,
-          organisation_ids: [rdv.organisation_id],
-          address: rdv.address,
-          invitation_token: token,
-          host: Domain::RDV_SOLIDARITES.host_name
-        )
+        expected_url = reprendre_rdv_from_participation_invitation_token_short_url(tkn: token, host: Domain::RDV_SOLIDARITES.host_name)
 
         expect(mail.body).to have_link("Reprendre RDV", href: expected_url)
       end

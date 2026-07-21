@@ -47,11 +47,15 @@ class Users::RdvSms < Users::BaseSms
   end
 
   def cancellation_footer(rdv, token)
-    url = prendre_rdv_short_url(host: domain_host, tkn: token)
-    if rdv.phone_number.present?
-      "Appelez le #{rdv.phone_number} ou allez sur #{url} pour reprendre RDV."
-    else
-      "Allez sur #{url} pour reprendre RDV."
+    if rdv.motif.bookable_by_everyone?
+      url = reprendre_rdv_from_participation_invitation_token_short_url(host: domain_host, tkn: token)
+      if rdv.phone_number.present?
+        "Appelez le #{rdv.phone_number} ou allez sur #{url} pour reprendre RDV."
+      else
+        "Allez sur #{url} pour reprendre RDV."
+      end
+    elsif rdv.phone_number.present?
+      "Appelez le #{rdv.phone_number} pour reprendre RDV."
     end
   end
 
