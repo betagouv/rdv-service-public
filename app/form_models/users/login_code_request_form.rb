@@ -25,7 +25,9 @@ module Users
       return true if User.loginable_by_code_for_email(email).any?
 
       error =
-        if Agent.exists?(email:)
+        if User.fiches_for_email(email).with_sso.any?
+          "Ce compte usager se connecte avec FranceConnect ou ProConnect. Merci d’utiliser ce moyen de connexion."
+        elsif Agent.exists?(email:)
           <<~ERROR
             Aucun compte usager n’existe pour cet email.
             Si vous souhaitez vous connecter en tant qu’agent, veuillez vous rendre sur la page de connexion agent.

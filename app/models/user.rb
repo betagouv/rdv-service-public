@@ -101,6 +101,7 @@ class User < ApplicationRecord
   scope :relative, -> { where.not(responsible_id: nil) }
   scope :fiches_for_email, ->(email) { where(email:) }
   scope :without_sso, -> { where(franceconnect_openid_sub: nil, pro_connect_openid_sub: nil) }
+  scope :with_sso, -> { where.not(franceconnect_openid_sub: nil).or(where.not(pro_connect_openid_sub: nil)) }
   scope :loginable_by_code_for_email, ->(email) { fiches_for_email(email).without_sso }
   scope :loginable_by_code_for_email_in_territory_or_without_territory, lambda { |email, territory_id:|
     loginable_by_code_for_email(email)
