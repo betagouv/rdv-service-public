@@ -435,10 +435,7 @@ Rails.application.routes.draw do
   get "r/:id/:tkn" => "redirect#rdv_short", as: "rdv_short"
   # >> REMOVE AFTER 01/01/2027
 
-  get "prdv", to: (redirect do |_path_params, req|
-    query_params = format_redirect_params(req.params)
-    "prendre_rdv#{query_params}"
-  end), as: "prendre_rdv_short"
+  get "prdv", to: "redirect#reprendre_rdv_from_participation_invitation_token", as: "reprendre_rdv_from_participation_invitation_token_short"
 
   def format_redirect_params(params)
     # we rename the short parameter tkn
