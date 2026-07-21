@@ -11,19 +11,19 @@ RSpec.describe TextSearch, type: :concern do
 
   describe(User) do
     it "returns users that match with first name" do
-      create(:user, first_name: "jean")
-      patricia = create(:user, first_name: "patricia")
+      create(:user, first_name: "jean", last_name: "valjean")
+      patricia = create(:user, first_name: "patricia", last_name: "duroy")
       expect(described_class.search_by_text("patricia")).to eq([patricia])
     end
 
     it "returns users that match with partial email" do
-      create(:user, email: "jean@moustache.fr")
-      patricia = create(:user, email: "patoche@duroy.fr")
+      create(:user, email: "jean@moustache.fr", first_name: "Jean", last_name: "Bernard")
+      patricia = create(:user, email: "patoche@duroy.fr", first_name: "Patricia", last_name: "Girard")
       expect(described_class.search_by_text("patoche@dur")).to eq([patricia])
       expect(described_class.search_by_text("patoche@")).to eq([patricia])
       expect(described_class.search_by_text("pato")).to eq([patricia])
 
-      francis = create(:user, email: "francis_du_74@msn.com")
+      francis = create(:user, email: "francis_du_74@msn.com", first_name: "Francis", last_name: "Lemoine")
       expect(described_class.search_by_text("francis")).to eq([francis])
       expect(described_class.search_by_text("francis_")).to eq([francis])
       # Ces deux recherches ne fonctionnent pas actuellement, à voir plus tard
@@ -65,9 +65,9 @@ RSpec.describe TextSearch, type: :concern do
     end
 
     it "ignores accents" do
-      francois = create(:user, first_name: "François")
-      emilie = create(:user, first_name: "Émilie")
-      dede = create(:user, first_name: "Dédé")
+      francois = create(:user, first_name: "François", last_name: "Girard")
+      emilie = create(:user, first_name: "Émilie", last_name: "Robert")
+      dede = create(:user, first_name: "Dédé", last_name: "Lefevre")
       expect(described_class.search_by_text("franco")).to eq([francois])
       expect(described_class.search_by_text("franço")).to eq([francois])
       expect(described_class.search_by_text("emi")).to eq([emilie])
