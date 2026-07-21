@@ -127,14 +127,14 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
 
       # on vérifie qu'un clic sur "Annuler" dans la boite de confirmation annuler bien l'action
       all("td .dropdown-toggle").first.click
-      dismiss_confirm do
-        expect { all("a.dropdown-item").first.click and sleep 0.5 }.not_to change { rdv_collectif.participations.sole.reload.status }
-      end
+      dismiss_confirm { all("a.dropdown-item").first.click }
+      expect(page).to have_css("td .dropdown-toggle.rdv-status-unknown_future")
+      expect(rdv_collectif.participations.sole.reload.status).to eq("unknown")
 
       all("td .dropdown-toggle").first.click
-      accept_confirm do
-        expect { all("a.dropdown-item").first.click and sleep 0.5 }.to change { rdv_collectif.participations.sole.reload.status }
-      end
+      accept_confirm { all("a.dropdown-item").first.click }
+      expect(page).to have_css("td .dropdown-toggle.rdv-status-excused")
+      expect(rdv_collectif.participations.sole.reload.status).to eq("excused")
     end
   end
 end
