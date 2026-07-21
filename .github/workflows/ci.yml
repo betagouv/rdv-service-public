@@ -117,18 +117,58 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # cette strategy permet de lancer deux jobs de feature specs en parallèle pour accélérer l’exécution
-        name: [unit, feature_agents, feature_rest]
+        # optimise la concurrence permise par GitHub : 20 jobs * 4cpu chacun
+        # 3 patterns (unit / e2e agent / e2e rest) * 3 shard (_1, _2, _3) = 9 jobs (on laisse de la place pour les ~7 autres)
+        # 4 groupes parallel ("1,2,3,4") = 4 processes
+        name:
+          [
+            unit_1,
+            unit_2,
+            unit_3,
+            feature_agents_1,
+            feature_agents_2,
+            feature_agents_3,
+            feature_rest_1,
+            feature_rest_2,
+            feature_rest_3,
+          ]
         include:
-          - dirname: "**"
-            command: "parallel:spec['spec/(?!features)']"
-            name: unit
-          - dirname: features/agents
-            command: "parallel:spec[spec/features/agents]"
-            name: feature_agents
-          - dirname: features
-            command: "parallel:spec['spec/features/(?!(agents|autodoc))']"
-            name: feature_rest
+          - pattern: "spec/(?!features)"
+            only_group: "1,2,3,4"
+            name: unit_1
+            sibling_names: [unit_2, unit_3]
+          - pattern: "spec/(?!features)"
+            only_group: "5,6,7,8"
+            name: unit_2
+            sibling_names: [unit_1, unit_3]
+          - pattern: "spec/(?!features)"
+            only_group: "9,10,11,12"
+            name: unit_3
+            sibling_names: [unit_1, unit_2]
+          - pattern: "spec/features/agents"
+            only_group: "1,2,3,4"
+            name: feature_agents_1
+            sibling_names: [feature_agents_2, feature_agents_3]
+          - pattern: "spec/features/agents"
+            only_group: "5,6,7,8"
+            name: feature_agents_2
+            sibling_names: [feature_agents_1, feature_agents_3]
+          - pattern: "spec/features/agents"
+            only_group: "9,10,11,12"
+            name: feature_agents_3
+            sibling_names: [feature_agents_1, feature_agents_2]
+          - pattern: "spec/features/(?!(agents|autodoc))"
+            only_group: "1,2,3,4"
+            name: feature_rest_1
+            sibling_names: [feature_rest_2, feature_rest_3]
+          - pattern: "spec/features/(?!(agents|autodoc))"
+            only_group: "5,6,7,8"
+            name: feature_rest_2
+            sibling_names: [feature_rest_1, feature_rest_3]
+          - pattern: "spec/features/(?!(agents|autodoc))"
+            only_group: "9,10,11,12"
+            name: feature_rest_3
+            sibling_names: [feature_rest_1, feature_rest_2]
     services:
       postgres:
         image: postgres
@@ -186,17 +226,44 @@ jobs:
         if: steps.cache-precompiled-assets.outputs.cache-hit != 'true' # Skip if cache was restored
         run: RAILS_ENV=test bundle exec rails assets:precompile
       - name: Prepare runtime log cache key
-        run: "ls spec/${{ matrix.dirname }}/**/*.rb > tmp/spec_${{ matrix.name }}_files.txt"
+        run: "find spec -name '*_spec.rb' | grep -P '${{ matrix.pattern }}' > tmp/spec_${{ matrix.name }}_files.txt || true"
+      - name: Restore first sibling's runtime log
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          key: specs-runtime-log-${{ matrix.sibling_names[0] }}-${{ hashFiles(format('tmp/spec_{0}_files.txt', matrix.name)) }}
+          path: tmp/rspec-runtime-${{ matrix.sibling_names[0] }}.log
+      - name: Restore second sibling's runtime log
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          key: specs-runtime-log-${{ matrix.sibling_names[1] }}-${{ hashFiles(format('tmp/spec_{0}_files.txt', matrix.name)) }}
+          path: tmp/rspec-runtime-${{ matrix.sibling_names[1] }}.log
       - name: Cache parallel test feature spec runtime log
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
-          key: specs-runtime-log-${{ hashFiles(format('tmp/spec_{0}_files.txt', matrix.name)) }}
-          path: tmp/parallel_runtime_rspec.log
-        # By setting up and running in the same call, we save the app boot time
-      - name: Setup parallel tests and run feature specs
-        run: "RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema ${{ matrix.command }}"
+          key: specs-runtime-log-${{ matrix.name }}-${{ hashFiles(format('tmp/spec_{0}_files.txt', matrix.name)) }}
+          path: tmp/rspec-runtime-${{ matrix.name }}.log
+      - name: Setup parallel tests
+        run: RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+      - name: Run feature specs shard
+        run: |
+          cat tmp/rspec-runtime-*.log > tmp/rspec-runtime-merged.log 2>/dev/null || true
+          if [ -s tmp/rspec-runtime-merged.log ]; then
+            GROUP_BY=runtime
+            RUNTIME_LOG_ARGS="--runtime-log tmp/rspec-runtime-merged.log --allowed-missing 100"
+          else
+            GROUP_BY=filesize
+            RUNTIME_LOG_ARGS=""
+          fi
+          RAILS_ENV=test bundle exec parallel_test spec --type rspec --pattern '${{ matrix.pattern }}' -n 12 --only-group ${{ matrix.only_group }} --group-by "$GROUP_BY" $RUNTIME_LOG_ARGS
         env:
           HOST: http://example.com
+          CI_SHARD_NAME: ${{ matrix.name }}
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
           POSTGRES_USER: lapin_test
