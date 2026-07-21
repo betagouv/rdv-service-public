@@ -2,6 +2,10 @@
 
 Quelques notes à propos de commandes, de scripts et autres bricoles qui nous aident.
 
+## Agents LLM
+
+Voir [llm-usage.md](llm-usage.md) pour configurer une VM Lima sandboxée avec Claude Code
+
 ## Console SuperAdmin
 
 L’accès à /super_admins se fait:
