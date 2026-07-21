@@ -46,11 +46,11 @@ RSpec.describe Outlook::EventSerializerAndListener do
           content: expected_description,
         },
         start: {
-          dateTime: "2023-01-01T11:00:00+01:00",
+          dateTime: "2023-01-01T11:00:00",
           timeZone: "Europe/Paris",
         },
         end: {
-          dateTime: "2023-01-01T11:30:00+01:00",
+          dateTime: "2023-01-01T11:30:00",
           timeZone: "Europe/Paris",
         },
         location: {
@@ -80,11 +80,11 @@ RSpec.describe Outlook::EventSerializerAndListener do
             content: expected_description,
           },
           start: {
-            dateTime: "2023-01-01T11:00:00+01:00",
+            dateTime: "2023-01-01T11:00:00",
             timeZone: "Europe/Paris",
           },
           end: {
-            dateTime: "2023-01-01T11:40:00+01:00",
+            dateTime: "2023-01-01T11:40:00",
             timeZone: "Europe/Paris",
           },
           location: {
@@ -138,11 +138,11 @@ RSpec.describe Outlook::EventSerializerAndListener do
             content: expected_description,
           },
           start: {
-            dateTime: "2023-01-01T11:00:00+01:00",
+            dateTime: "2023-01-01T11:00:00",
             timeZone: "Europe/Paris",
           },
           end: {
-            dateTime: "2023-01-01T11:40:00+01:00",
+            dateTime: "2023-01-01T11:40:00",
             timeZone: "Europe/Paris",
           },
           location: {
@@ -257,6 +257,25 @@ RSpec.describe Outlook::EventSerializerAndListener do
           rdv.destroy!
         end.not_to have_enqueued_job(Outlook::SyncEventJob)
       end
+    end
+  end
+
+  describe "timezone handling" do
+    it "sends datetime without UTC offset so Outlook respects the timeZone field" do
+      organisation_guadeloupe = create(:organisation, time_zone: "America/Guadeloupe")
+      motif_guadeloupe = create(:motif, organisation: organisation_guadeloupe)
+      agent_guadeloupe = create(:agent, microsoft_graph_token: "token", organisations: [organisation_guadeloupe])
+
+      create_request_stub = stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
+        .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
+
+      create(:rdv, agents: [agent_guadeloupe], motif: motif_guadeloupe, organisation: organisation_guadeloupe,
+                   starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30)
+
+      expect(create_request_stub.with(body: hash_including(
+        "start" => { "dateTime" => "2023-01-01T11:00:00", "timeZone" => "America/Guadeloupe" },
+        "end" => { "dateTime" => "2023-01-01T11:30:00", "timeZone" => "America/Guadeloupe" }
+      ))).to have_been_requested.once
     end
   end
 

@@ -602,123 +602,123 @@
                     "value": {
                       "guichets": [
                         {
-                          "id": 312,
+                          "id": 4559,
                           "name": "GUICHET 0"
                         },
                         {
-                          "id": 313,
+                          "id": 4560,
                           "name": "GUICHET 1"
                         },
                         {
-                          "id": 314,
+                          "id": 4561,
                           "name": "GUICHET 2"
                         },
                         {
-                          "id": 315,
+                          "id": 4562,
                           "name": "GUICHET 3"
                         },
                         {
-                          "id": 316,
+                          "id": 4563,
                           "name": "GUICHET 4"
                         },
                         {
-                          "id": 317,
+                          "id": 4564,
                           "name": "GUICHET 5"
                         },
                         {
-                          "id": 318,
+                          "id": 4565,
                           "name": "GUICHET 6"
                         },
                         {
-                          "id": 319,
+                          "id": 4566,
                           "name": "GUICHET 7"
                         },
                         {
-                          "id": 320,
+                          "id": 4567,
                           "name": "GUICHET 8"
                         },
                         {
-                          "id": 321,
+                          "id": 4568,
                           "name": "GUICHET 9"
                         },
                         {
-                          "id": 322,
+                          "id": 4569,
                           "name": "GUICHET 10"
                         },
                         {
-                          "id": 323,
+                          "id": 4570,
                           "name": "GUICHET 11"
                         },
                         {
-                          "id": 324,
+                          "id": 4571,
                           "name": "GUICHET 12"
                         },
                         {
-                          "id": 325,
+                          "id": 4572,
                           "name": "GUICHET 13"
                         },
                         {
-                          "id": 326,
+                          "id": 4573,
                           "name": "GUICHET 14"
                         },
                         {
-                          "id": 327,
+                          "id": 4574,
                           "name": "GUICHET 15"
                         },
                         {
-                          "id": 328,
+                          "id": 4575,
                           "name": "GUICHET 16"
                         },
                         {
-                          "id": 329,
+                          "id": 4576,
                           "name": "GUICHET 17"
                         },
                         {
-                          "id": 330,
+                          "id": 4577,
                           "name": "GUICHET 18"
                         },
                         {
-                          "id": 331,
+                          "id": 4578,
                           "name": "GUICHET 19"
                         },
                         {
-                          "id": 332,
+                          "id": 4579,
                           "name": "GUICHET 20"
                         },
                         {
-                          "id": 333,
+                          "id": 4580,
                           "name": "GUICHET 21"
                         },
                         {
-                          "id": 334,
+                          "id": 4581,
                           "name": "GUICHET 22"
                         },
                         {
-                          "id": 335,
+                          "id": 4582,
                           "name": "GUICHET 23"
                         },
                         {
-                          "id": 336,
+                          "id": 4583,
                           "name": "GUICHET 24"
                         },
                         {
-                          "id": 337,
+                          "id": 4584,
                           "name": "GUICHET 25"
                         },
                         {
-                          "id": 338,
+                          "id": 4585,
                           "name": "GUICHET 26"
                         },
                         {
-                          "id": 339,
+                          "id": 4586,
                           "name": "GUICHET 27"
                         },
                         {
-                          "id": 340,
+                          "id": 4587,
                           "name": "GUICHET 28"
                         },
                         {
-                          "id": 341,
+                          "id": 4588,
                           "name": "GUICHET 29"
                         }
                       ]
@@ -796,31 +796,31 @@
                           "id": 11,
                           "starts_at": "2024-08-19T09:00:00+02:00",
                           "ends_at": "2024-08-19T12:00:00+02:00",
-                          "guichet_id": 372
+                          "guichet_id": 4619
                         },
                         {
                           "id": 11,
                           "starts_at": "2024-08-20T09:00:00+02:00",
                           "ends_at": "2024-08-20T12:00:00+02:00",
-                          "guichet_id": 372
+                          "guichet_id": 4619
                         },
                         {
                           "id": 11,
                           "starts_at": "2024-08-21T09:00:00+02:00",
                           "ends_at": "2024-08-21T12:00:00+02:00",
-                          "guichet_id": 372
+                          "guichet_id": 4619
                         },
                         {
                           "id": 11,
                           "starts_at": "2024-08-22T09:00:00+02:00",
                           "ends_at": "2024-08-22T12:00:00+02:00",
-                          "guichet_id": 372
+                          "guichet_id": 4619
                         },
                         {
                           "id": 11,
                           "starts_at": "2024-08-23T09:00:00+02:00",
                           "ends_at": "2024-08-23T12:00:00+02:00",
-                          "guichet_id": 372
+                          "guichet_id": 4619
                         }
                       ]
                     }
@@ -973,7 +973,7 @@
                       "duration_in_min": 30,
                       "ends_at": "2024-08-19 08:30:00 +0200",
                       "guichet": {
-                        "id": 466,
+                        "id": 4713,
                         "name": "Superviseur FICTIF"
                       },
                       "starts_at": "2024-08-19 08:00:00 +0200",
@@ -1155,7 +1155,7 @@
                       "duration_in_min": 30,
                       "ends_at": "2024-08-19 08:30:00 +0200",
                       "guichet": {
-                        "id": 559,
+                        "id": 4806,
                         "name": "Superviseur FICTIF"
                       },
                       "starts_at": "2024-08-19 08:00:00 +0200",
@@ -1207,6 +1207,296 @@
                     "status",
                     "user_id"
                   ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/visioplainte/webhook_endpoints": {
+      "get": {
+        "summary": "Lister les endpoints de webhooks",
+        "security": [
+          {
+            "X-VISIOPLAINTE-API-KEY": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-VISIOPLAINTE-API-KEY",
+            "in": "header",
+            "description": "Clé d'API",
+            "example": "visioplainte-api-test-key-123456",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "WebhookEndpoint"
+        ],
+        "description": "Liste tous les endpoints de webhooks de l'espace Visioplainte",
+        "responses": {
+          "200": {
+            "description": "Renvoie la liste",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "webhook_endpoints": [
+                        {
+                          "id": 124,
+                          "organisation_id": 161,
+                          "subscriptions": [
+                            "rdv"
+                          ],
+                          "target_url": "https://exemple.fr/webhook_rdv_service_public"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer un endpoint de webhook",
+        "security": [
+          {
+            "X-VISIOPLAINTE-API-KEY": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-VISIOPLAINTE-API-KEY",
+            "in": "header",
+            "description": "Clé d'API",
+            "example": "visioplainte-api-test-key-123456",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "target_url",
+            "in": "query",
+            "description": "L'url à appeler pour notifier d'une mise à jour",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "secret",
+            "in": "query",
+            "description": "Le secret qui servira à signer les appels",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subscriptions[]",
+            "in": "query",
+            "description": "Le type de mises à jours pour lesquelles les notifications seront envoyées. Les valeurs possibles  à envoyer dans le tableau sont [\"rdv\", \"absence\", \"plage_ouverture\", \"user\", \"user_profile\", \"organisation\", \"motif\", \"lieu\", \"agent\", \"agent_role\", \"referent_assignation\"]. Typiquement c'est la valeur rdv qui sera la plus utile.",
+            "schema": {
+              "type": "array"
+            }
+          }
+        ],
+        "tags": [
+          "WebhookEndpoint"
+        ],
+        "description": "Crée un endpoint de webhook dans l'espace Visioplainte",
+        "responses": {
+          "201": {
+            "description": "Crée l'endpoint de webhook",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "id": 126,
+                      "organisation_id": 163,
+                      "subscriptions": [
+                        "rdv"
+                      ],
+                      "target_url": "https://exemple.fr/webhook_rdv_service_public"
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "target_url": {
+                      "type": "string"
+                    },
+                    "organisation_id": {
+                      "type": "integer"
+                    },
+                    "subscriptions": {
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "organisation_id",
+                    "subscriptions",
+                    "target_url"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/visioplainte/webhook_endpoints/{id}": {
+      "patch": {
+        "summary": "Modifier un endpoint de webhook",
+        "security": [
+          {
+            "X-VISIOPLAINTE-API-KEY": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-VISIOPLAINTE-API-KEY",
+            "in": "header",
+            "description": "Clé d'API",
+            "example": "visioplainte-api-test-key-123456",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "L'id de l'endpoint de webhook à modifier",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "target_url",
+            "in": "query",
+            "description": "L'url à appeler pour notifier d'une mise à jour",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "secret",
+            "in": "query",
+            "description": "Le secret qui servira à signer les appels",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subscriptions[]",
+            "in": "query",
+            "required": false,
+            "description": "Le type de mises à jours pour lesquelles les notifications seront envoyées. Les valeurs possibles  à envoyer dans le tableau sont [\"rdv\", \"absence\", \"plage_ouverture\", \"user\", \"user_profile\", \"organisation\", \"motif\", \"lieu\", \"agent\", \"agent_role\", \"referent_assignation\"]. Typiquement c'est la valeur rdv qui sera la plus utile.",
+            "schema": {
+              "type": "array"
+            }
+          }
+        ],
+        "description": "Crée un endpoint de webhook dans l'espace Visioplainte, typiquement pour faire une rotation de secret",
+        "responses": {
+          "200": {
+            "description": "Modifie un endpoint de webhook",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "id": 128,
+                      "organisation_id": 165,
+                      "subscriptions": [
+                        "rdv"
+                      ],
+                      "target_url": "https://exemple.fr/webhook_rdv_service_public"
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "target_url": {
+                      "type": "string"
+                    },
+                    "organisation_id": {
+                      "type": "integer"
+                    },
+                    "subscriptions": {
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "organisation_id",
+                    "subscriptions",
+                    "target_url"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer un endpoint de webhook",
+        "security": [
+          {
+            "X-VISIOPLAINTE-API-KEY": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-VISIOPLAINTE-API-KEY",
+            "in": "header",
+            "description": "Clé d'API",
+            "example": "visioplainte-api-test-key-123456",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "L'id de l'endpoint de webhook à supprimer",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "description": "Supprime un endpoint de webhook dans l'espace Visioplainte",
+        "responses": {
+          "204": {
+            "description": "Supprime un endpoint de webhook",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": ""
+                  }
                 }
               }
             }
