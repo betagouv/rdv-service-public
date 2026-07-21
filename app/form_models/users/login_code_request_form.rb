@@ -24,8 +24,11 @@ module Users
     def validate_user_exists_or_suggest_agent
       return true if User.loginable_by_code_for_email(email).any?
 
+      sso_user = User.fiches_for_email(email).with_sso.first
       error =
-        if Agent.exists?(email:)
+        if sso_user
+          "Ce compte usager se connecte avec #{sso_user.sso_provider_name}. Merci d’utiliser ce moyen de connexion."
+        elsif Agent.exists?(email:)
           <<~ERROR
             Aucun compte usager n’existe pour cet email.
             Si vous souhaitez vous connecter en tant qu’agent, veuillez vous rendre sur la page de connexion agent.

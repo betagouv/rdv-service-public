@@ -17,6 +17,36 @@ RSpec.describe Users::LoginCodeRequestForm, type: :form_model do
     end
   end
 
+  context "l’usager existe mais s’est créé via FranceConnect" do
+    let!(:user) { create(:user, :using_france_connect, email: "us@ger.fr") }
+
+    it "le form est invalide et précise qu'il faut utiliser FranceConnect" do
+      form = described_class.new(LoginCode.new(email: "us@ger.fr", first_name: "Jean", last_name: "Dupont", domain_id: "RDV_SERVICE_PUBLIC"))
+      expect(form).to be_invalid
+      expect(form.errors[:base]).to include("Ce compte usager se connecte avec FranceConnect. Merci d’utiliser ce moyen de connexion.")
+    end
+  end
+
+  context "l’usager existe mais s’est créé via ProConnect" do
+    let!(:user) { create(:user, :using_pro_connect, email: "us@ger.fr") }
+
+    it "le form est invalide et précise qu'il faut utiliser ProConnect" do
+      form = described_class.new(LoginCode.new(email: "us@ger.fr", first_name: "Jean", last_name: "Dupont", domain_id: "RDV_SERVICE_PUBLIC"))
+      expect(form).to be_invalid
+      expect(form.errors[:base]).to include("Ce compte usager se connecte avec ProConnect. Merci d’utiliser ce moyen de connexion.")
+    end
+  end
+
+  context "l'usager n'existe pas mais un agent existe avec cet email" do
+    let!(:agent) { create(:agent, email: "us@ger.fr") }
+
+    it "le form est invalide et suggère la page de connexion agent" do
+      form = described_class.new(LoginCode.new(email: "us@ger.fr", first_name: "Jean", last_name: "Dupont", domain_id: "RDV_SERVICE_PUBLIC"))
+      expect(form).to be_invalid
+      expect(form.errors[:base].join).to include("page de connexion agent")
+    end
+  end
+
   context "l'usager n'existe pas, avec behaviour :upsert_user" do
     it "le form est valide et la sauvegarde créé le login_code" do
       form = described_class.new(LoginCode.new(email: "new@user.fr", first_name: "Nina", last_name: "Personne", domain_id: "RDV_SERVICE_PUBLIC"), behaviour: "upsert_user")
