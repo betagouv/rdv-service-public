@@ -26,13 +26,19 @@ RSpec.describe UnblockBrevoTransactionalContact, type: :service do
     stub_env_with(BREVO_API_KEY: "fake-key")
 
     it "fait l'appel Faraday" do
-      stub = instance_double(Faraday::Response, status: 204)
-      faraday_double = instance_double(Faraday::Connection, headers: {})
-      allow(faraday_double).to receive(:headers=)
-      expect(Faraday).to receive(:delete).with("https://api.brevo.com/v3/smtp/blockedContacts/#{CGI.escape(email)}")
-        .and_yield(faraday_double)
-        .and_return(stub)
+      stub_request(:delete, "https://api.brevo.com/v3/smtp/blockedContacts/test%40example.com")
       subject.call
+      expect(WebMock).to have_requested(:delete, "https://api.brevo.com/v3/smtp/blockedContacts/test%40example.com").with(headers: { "Api-Key" => "fake-key", "Accept" => "application/json" })
+    end
+
+    it "loggue l'appel à Sentry en cas d'échec" do
+      stub_request(:delete, "https://api.brevo.com/v3/smtp/blockedContacts/#{CGI.escape(email)}").and_return({ status: 500, body: { error: "something happened and i'm sorry" }.to_json })
+      expect { subject.call }.to raise_error(Faraday::ServerError)
+
+      Sentry.capture_message("woops")
+      request_breadcrumb, response_breadcrumb = sentry_events.last.breadcrumbs.compact
+      expect(request_breadcrumb.data[:url].to_s).to eq("https://api.brevo.com/v3/smtp/blockedContacts/test%40example.com")
+      expect(response_breadcrumb.data[:body]).to eq({ error: "something happened and i'm sorry" }.to_json)
     end
   end
 end
