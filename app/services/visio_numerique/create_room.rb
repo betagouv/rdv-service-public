@@ -1,16 +1,21 @@
 module VisioNumerique
   class CreateRoom
-    API_BASE_URL = "https://visio-sandbox.beta.numerique.gouv.fr/external-api/v1.0".freeze
-
     class ApiError < StandardError; end
+    class NotConfiguredError < StandardError; end
 
     def initialize(access_token:)
       @access_token = access_token
     end
 
+    def self.configured?
+      ENV["VISIO_NUMERIQUE_API_URL"].present?
+    end
+
     def call
+      raise NotConfiguredError, "VISIO_NUMERIQUE_API_URL n'est pas configuré" unless self.class.configured?
+
       response = Typhoeus.post(
-        "#{API_BASE_URL}/rooms/",
+        "#{ENV['VISIO_NUMERIQUE_API_URL']}/rooms/",
         headers: {
           "Authorization" => "Bearer #{@access_token}",
           "Content-Type" => "application/json",
