@@ -4,7 +4,7 @@ Quelques notes à propos de commandes, de scripts et autres bricoles qui nous ai
 
 ## Agents LLM
 
-Voir [llm-usage.md](llm-usage.md) pour configurer une VM Lima sandboxée avec Claude Code et Kilo Code.
+Voir [llm-usage.md](llm-usage.md) pour configurer une VM Lima sandboxée avec Claude Code
 
 ## Console SuperAdmin
 

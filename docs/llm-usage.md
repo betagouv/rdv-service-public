@@ -15,3 +15,5 @@ Installation et usage (depuis la racine du projet) :
 
 La VM n'a accès qu'au répertoire du projet RDVSP monté en lecture-écriture et aux fichiers de configuration des CLI d'agents IA.
 
+On ne met pas en place de pare-feu (type nftables) car il serait désactivable par les agents, et que c'est très gênant à l'usage.
+
