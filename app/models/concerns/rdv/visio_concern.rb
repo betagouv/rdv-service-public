@@ -5,6 +5,7 @@ module Rdv::VisioConcern
     webinaire.numerique.gouv.fr
     webconf.numerique.gouv.fr
     visio.numerique.gouv.fr
+    visio-sandbox.beta.numerique.gouv.fr
     teams.live.com
     meet.google.com
     zoom.us
