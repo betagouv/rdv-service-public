@@ -30,4 +30,10 @@ export PATH="$HOME/.local/share/mise/shims:$PATH"
 echo "cd $PROJECT_DIR" >> ~/.bashrc # toujours ouvrir le terminal dans le repo
 echo "export RDVSP_DEVBOX=${VM_NAME}" >> ~/.bashrc # permet aux agents d'identifier qu'ils tournent dans la VM
 
+# Installe Claude
+curl -fsSL https://claude.ai/install.sh | bash
+echo 'alias claude="claude --dangerously-skip-permissions"' >> ~/.bashrc
+rm -rf ~/.claude && ln -s "$HOST_HOME/.claude" ~/.claude
+
 make install
+
