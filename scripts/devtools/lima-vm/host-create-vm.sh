@@ -59,7 +59,5 @@ if [[ "$INSTALL_OPENCODE" == "true" ]]; then
   fi
 fi
 
-"$SCRIPTS_DIR/host-update-firewall.sh" "$VM_NAME"
-
 echo ""
 echo "La VM '$VM_NAME' est prête. Run: limactl shell $VM_NAME"
