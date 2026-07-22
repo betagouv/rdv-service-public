@@ -40,10 +40,10 @@ class SearchController < ApplicationController
 
       @current_step = CreneauWizardForUsers::CurrentStepPicker.new(@context).current_step
 
-      if !current_domain.provides_address_selection? && @current_step == :address_selection
-        redirect_to root_path
-      else
+      if search_allowed?
         render :search_rdv
+      else
+        redirect_to root_path
       end
     end
   end
@@ -137,6 +137,11 @@ class SearchController < ApplicationController
       flash[:alert] = "Organisation non trouvée"
       redirect_to root_path
     end
+  end
+
+  def search_allowed?
+    current_domain.provides_address_selection? || # toujours autorisé sur RDVS
+      (@current_step != :address_selection && params[:public_link_organisation_id].present?) # toujours scopé sur RDVSP
   end
 
   def search_params
