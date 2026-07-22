@@ -14,7 +14,7 @@ RSpec.describe ProConnectController do
         client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
         redirect_uri: "http://test.host/agent_connect/callback",
         response_type: "code",
-        scope: "openid email given_name usual_name siret idp_id lasuite_visio lasuite_visio:rooms:create",
+        scope: "openid email given_name usual_name siret idp_id",
         state: be_a(String),
         nonce: be_a(String),
         claims: {
@@ -42,7 +42,7 @@ RSpec.describe ProConnectController do
           client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
           redirect_uri: "http://test.host/agent_connect/callback",
           response_type: "code",
-          scope: "openid email given_name usual_name siret idp_id lasuite_visio lasuite_visio:rooms:create",
+          scope: "openid email given_name usual_name siret idp_id",
           state: be_a(String),
           nonce: be_a(String),
           claims: {
@@ -71,7 +71,7 @@ RSpec.describe ProConnectController do
         client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
         redirect_uri: "http://test.host/agent_connect/callback",
         response_type: "code",
-        scope: "openid email given_name usual_name siret idp_id lasuite_visio lasuite_visio:rooms:create",
+        scope: "openid email given_name usual_name siret idp_id",
         state: be_a(String),
         nonce: be_a(String),
         claims: {

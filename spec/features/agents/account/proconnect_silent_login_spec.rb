@@ -49,7 +49,7 @@ RSpec.describe "Agent is automatically logged in with pro connect" do
         redirect_uri: "#{Capybara.app_host}/agent_connect/callback",
         response_type: "code",
         prompt: "none",
-        scope: "openid email given_name usual_name siret idp_id lasuite_visio lasuite_visio:rooms:create",
+        scope: "openid email given_name usual_name siret idp_id",
         state: be_a(String),
         nonce: be_a(String),
         claims: {
@@ -150,7 +150,7 @@ RSpec.describe "Agent is automatically logged in with pro connect" do
         redirect_uri: "#{Capybara.app_host}/agent_connect/callback",
         response_type: "code",
         prompt: "none",
-        scope: "openid email given_name usual_name siret idp_id lasuite_visio lasuite_visio:rooms:create",
+        scope: "openid email given_name usual_name siret idp_id",
         state: be_a(String),
         nonce: be_a(String),
         claims: {
