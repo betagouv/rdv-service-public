@@ -42,6 +42,7 @@ RSpec.describe SearchController, type: :controller do
   let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id])) }
 
   before do
+    request.host = Domain::RDV_SOLIDARITES.host_name
     travel_to(now)
     allow(Users::GeoSearch).to receive(:new)
       .with(departement: departement_number, city_code: city_code, street_ban_id: nil)

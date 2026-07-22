@@ -123,7 +123,7 @@ RSpec.describe "User can search for rdvs" do
 
     describe "On RDV Service Public" do
       it "doesn't require an ANTS predemande number for a relative", js: true do
-        visit "http://www.rdv-service-public-test.localhost/#{path_for_creneau_choice}"
+        visit "http://www.rdv-service-public-test.localhost/#{path_for_creneau_choice_on_rdvsp}"
         choose_creneau
         sign_up
 
@@ -663,6 +663,17 @@ RSpec.describe "User can search for rdvs" do
       longitude: "",
       motif_name_with_location_type: "vaccination-public_office",
       street_ban_id: "",
+      service_id: service&.id
+    )
+  end
+
+  def path_for_creneau_choice_on_rdvsp
+    prendre_rdv_path(
+      public_link_organisation_id: organisation.id,
+      departement: territory92.departement_number,
+      date: "2022-01-13 08:00:00 +0100",
+      lieu_id: lieu&.id,
+      motif_name_with_location_type: "vaccination-public_office",
       service_id: service&.id
     )
   end

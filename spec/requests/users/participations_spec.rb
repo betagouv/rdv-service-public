@@ -79,6 +79,20 @@ RSpec.describe "Users::Participants", type: :request do
     end
   end
 
+  describe "Sur le domaine RDVSP, quand le RDV collectif est complet" do
+    let(:other_user) { create(:user) }
+    let(:rdv) { create(:rdv, :collectif, users: [other_user], max_participants_count: 1) }
+    let!(:other_collectif_rdv) { create(:rdv, :collectif, motif: rdv.motif, organisation: rdv.organisation, lieu: rdv.lieu) }
+
+    it "redirige vers la page de sélection de créneaux avec le même motif visible" do
+      # ce test vérifie que la redirection sur RDVSP n'est pas bloquée par la guard-clause des recherches géographiques
+      post users_rdv_participations_url(rdv, host: "www.rdv-service-public-test.localhost")
+      follow_redirect! while response.redirect?
+      expect(response.body).to include("Ce créneau n'est plus disponible")
+      expect(response.body).to include(rdv.motif.name)
+    end
+  end
+
   describe "Participation update (if excused)" do
     let(:participation1) { create(:participation, rdv: rdv, user: user) }
 
