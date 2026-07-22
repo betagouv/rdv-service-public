@@ -140,14 +140,8 @@ class SearchController < ApplicationController
   end
 
   def search_allowed?
-    # ne se déclenche pas sur un domaine ou la recherche par adresse est activée
-    return true if current_domain.provides_address_selection?
-
-    # interdit d'accéder à la sélection d'adresse sur RDVSP
-    return false if @current_step == :address_selection
-
-    # interdit de chercher des créneaux sans passer de public_link_organisation_id
-    params[:public_link_organisation_id].present?
+    current_domain.provides_address_selection? || # toujours autorisé sur RDVS
+      (@current_step != :address_selection && params[:public_link_organisation_id].present?) # toujours scopé sur RDVSP
   end
 
   def search_params
