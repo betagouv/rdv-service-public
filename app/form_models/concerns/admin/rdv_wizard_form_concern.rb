@@ -35,6 +35,8 @@ module Admin::RdvWizardFormConcern
   end
 
   def minutes_after_rdv_from_plage_ouvertures
+    return 0 if @rdv.ends_at.nil? || @rdv.starts_at >= @rdv.ends_at
+
     PlageOuverture
       .joins(:motifs)
       .where(motifs: @rdv.motif)

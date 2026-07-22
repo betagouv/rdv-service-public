@@ -68,7 +68,7 @@ class Rdv < ApplicationRecord
   validates :starts_at, :ends_at, :agents, :status, presence: true
   validate :lieu_is_not_disabled_if_needed
   validates :starts_at, realistic_date: true
-  validate :duration_is_plausible
+  validates :duration_in_min, numericality: { greater_than: 0, allow_nil: true }
   validates :max_participants_count, numericality: { greater_than: 0, allow_nil: true }
 
   validates :participations, presence: true, unless: :collectif?
@@ -405,12 +405,6 @@ class Rdv < ApplicationRecord
     else
       unknown!
     end
-  end
-
-  def duration_is_plausible
-    return if starts_at.nil? || ends_at.nil?
-
-    errors.add(:duration_in_min, :must_be_positive) if starts_at >= ends_at
   end
 
   def lieu_is_not_disabled_if_needed
