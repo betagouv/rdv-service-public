@@ -23,10 +23,18 @@ Avant d'écrire du Ruby ou du Slim, lis la config du linter concerné (`.rubocop
 
 Lance toujours les linters et specs pertinents après un changement non trivial avant de considérer la tâche terminée.
 
-## Qualité du code
+## Sécurité
 
 Le plus important lorsque tu proposes des fonctionnalités est de réfléchir aux enjeux de sécurité.
 Les changements de permissions ou l'exposition involontaire de données qui ne l'étaient pas jusqu'ici sont à éviter ou alors à indiquer clairement dans les descriptions de PR.
+
+# Qualité
+
+Propose des changements minimaux. Évite autant que possible les PR de plusieurs centaines de lignes.
+
+Lorsque tu rédiges des PR sois succinct et utilise ce pattern : `# Contexte ... # Solution ... # Captures d'écran`
+
+Indique bien clairement comment reproduire le problème manuellement si c'est un bug que tu corriges.
 
 ### Environnement de travail
 
