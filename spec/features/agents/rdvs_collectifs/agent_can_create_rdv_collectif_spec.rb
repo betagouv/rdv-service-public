@@ -53,7 +53,7 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
     expect(page).to have_selector(".list-group-item", text: /Agent, horaires & lieu/)
 
     click_button("Confirmer le RDV")
-    sleep 1
+    expect(page).to have_content("Le rendez-vous a été créé.")
     perform_enqueued_jobs
     open_email("alain@tiptop.fr")
     expect(current_email.subject).to match(/Nouveau RDV ajouté pour .+ sur votre agenda RDV Service Public/)
