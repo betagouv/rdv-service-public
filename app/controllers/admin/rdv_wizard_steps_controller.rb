@@ -32,7 +32,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
       @rdv.lieu.availability = :single_use
     end
 
-    maybe_create_visio_numerique_room
+    assign_visio_numerique_room_if_applicable
 
     if @rdv_wizard.save
       redirect_to @rdv_wizard.success_path, @rdv_wizard.success_flash
@@ -73,7 +73,11 @@ class Admin::RdvWizardStepsController < AgentAuthController
     @rdv_wizard.service_id = @services.first.id if @services.count == 1
   end
 
-  def maybe_create_visio_numerique_room
+  # Cette méthode est dans le controller plutôt que dans le visio_concern car la création du salon
+  # nécessite l'access token ProConnect de session, disponible uniquement quand c'est l'agent qui initie le RDV.
+  # Quand l'API proposera un token longue durée spécifique à Visio, cette logique pourra être déplacée
+  # dans le visio_concern pour couvrir aussi les RDV initiés par un usager ou un autre agent.
+  def assign_visio_numerique_room_if_applicable
     return unless current_step == "step4"
     return unless @rdv.motif&.visio?
     return if session[:pro_connect_access_token].blank?
