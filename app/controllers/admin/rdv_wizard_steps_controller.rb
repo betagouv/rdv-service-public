@@ -82,6 +82,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
     @rdv.visio_url_custom = result["url"]
   rescue VisioNumerique::CreateRoom::ApiError => e
     Rails.logger.error("Visio Numerique API error: #{e.message}")
+    Sentry.capture_exception(e)
   end
 
   def rdv_params
