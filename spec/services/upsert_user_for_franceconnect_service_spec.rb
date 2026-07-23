@@ -26,6 +26,14 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
 
       expect_france_connect_fields_to_be_up_to_date(service.user.reload)
     end
+
+    it "sets latest_login_at" do
+      freeze_time do
+        service = described_class.new(omniauth_info)
+        service.perform
+        expect(service.user.reload.latest_login_at).to eq(Time.zone.now)
+      end
+    end
   end
 
   context "pre-existing user with same franceconnect sub but different infos" do
@@ -48,6 +56,14 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
         expect(service.new_user?).to be(false)
 
         expect_france_connect_fields_to_be_up_to_date(service.user.reload)
+      end
+
+      it "updates latest_login_at" do
+        freeze_time do
+          service = described_class.new(omniauth_info)
+          service.perform
+          expect(service.user.reload.latest_login_at).to eq(Time.zone.now)
+        end
       end
 
       context "when the france connect email has capital letters" do
