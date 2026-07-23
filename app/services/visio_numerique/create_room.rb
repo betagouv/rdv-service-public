@@ -14,18 +14,18 @@ module VisioNumerique
     def call
       raise NotConfiguredError, "VISIO_NUMERIQUE_API_URL n'est pas configuré" unless self.class.configured?
 
-      response = Typhoeus.post(
-        "#{ENV['VISIO_NUMERIQUE_API_URL']}/rooms/",
-        headers: {
-          "Authorization" => "Bearer #{@access_token}",
-          "Content-Type" => "application/json",
-        },
-        body: {}.to_json
-      )
+      connection = Faraday.new("#{ENV['VISIO_NUMERIQUE_API_URL']}/") do |f|
+        f.request :json
+        f.response :json
+      end
 
-      raise ApiError, "HTTP #{response.response_code}: #{response.response_body}" unless response.success?
+      response = connection.post("rooms/") do |req|
+        req.headers["Authorization"] = "Bearer #{@access_token}"
+      end
 
-      JSON.parse(response.body)
+      raise ApiError, "HTTP #{response.status}: #{response.body}" unless response.success?
+
+      response.body
     end
   end
 end
