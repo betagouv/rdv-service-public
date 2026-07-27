@@ -304,6 +304,27 @@ RSpec.describe Users::RdvBookingForm do
       end
     end
 
+    context "sélectionnés : current_user avec un numéro mal formatté + 1 nouveau proche avec un numéro déjà utilisé + 1 nouveau proche valide" do
+      it "affiche uniquement l'erreur bloquante, sans mélanger le message bénin (HTML) au milieu" do
+        form = described_class.new(
+          user:, rdv_builder:, domain:,
+          user_attributes: {
+            first_name: "Léa", last_name: "Boubakar", phone_number: "0612345678",
+            ants_pre_demande_number: "abhs",
+            relatives_attributes: {
+              "0" => { first_name: "Marc", last_name: "Durant", ants_pre_demande_number: "WITHAPPOI1" },
+              "1" => { first_name: "Julie", last_name: "Martin", ants_pre_demande_number: "VALID00002" },
+            },
+          },
+          selected_users: %w[current_user new_relative_0 new_relative_1]
+        )
+        expect { form.save }.not_to change(Rdv, :count)
+        expect(form.errors_are_all_benign?).to be false
+        expect(form.not_benign_errors.map(&:message)).to contain_exactly("doit comporter 10 chiffres et lettres")
+        expect(form.benign_errors.join).to include("<a href=")
+      end
+    end
+
     context "sélectionnés : current_user + 2 nouveaux proches, dont un a déjà un appointment, en ignorant les avertissements" do
       it "n'empêche pas la création" do
         form = described_class.new(
