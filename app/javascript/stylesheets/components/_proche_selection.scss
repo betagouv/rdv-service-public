@@ -3,6 +3,7 @@
     display: grid;
     grid-template-rows: 1fr;
     overflow: hidden;
+    visibility: visible;
     transition: grid-template-rows 0.5s ease;
 
     .rdv-nested-fields-content {
@@ -19,6 +20,7 @@
   &:has(input[type="checkbox"]:not(:checked)) {
     .rdv-nested-fields-wrapper {
       grid-template-rows: 0fr;
+      visibility: hidden;
     }
   }
 }
