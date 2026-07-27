@@ -14,7 +14,7 @@ module Users::UserFormConcern
              :notify_by_email, :notify_by_sms,
              :connected_with_sso?, :pro_connect_openid_sub,
              :logged_once_with_franceconnect?, :signed_in_with_invitation_token?,
-             :errors, :errors_are_all_benign?, :benign_errors,
+             :errors, :errors_are_all_benign?, :benign_errors, :not_benign_errors,
              :ants_pre_demande_number, :already_logged_in?, :email_editable?,
              to: :user
 

@@ -25,14 +25,14 @@ RSpec.describe User::RdvPolicy, type: :policy do
   let!(:rdv) { create(:rdv, organisation: organisation, agents: [agent], motif: motif, users: [user], created_by: user) }
 
   context "Rdv belongs to user" do
-    it_behaves_like "permit actions", :rdv, :show?, :index?, :new?, :edit?, :update?, :create?, :creneaux?, :cancel?
+    it_behaves_like "permit actions", :rdv, :show?, :index?, :edit?, :update?, :creneaux?, :cancel?
     it_behaves_like "included in scope"
   end
 
   context "Rdv belongs to user for a relative" do
     let(:rdv) { create(:rdv, organisation: organisation, agents: [agent], motif: motif, users: [relative], created_by: user) }
 
-    it_behaves_like "permit actions", :rdv, :show?, :index?, :new?, :edit?, :update?, :create?, :creneaux?, :cancel?
+    it_behaves_like "permit actions", :rdv, :show?, :index?, :edit?, :update?, :creneaux?, :cancel?
     it_behaves_like "included in scope"
   end
 
@@ -40,7 +40,7 @@ RSpec.describe User::RdvPolicy, type: :policy do
     let(:rdv) { create(:rdv, organisation: organisation, agents: [agent], motif: motif, users: [user2], created_by: user) }
 
     it_behaves_like "permit actions", :rdv, :index?
-    it_behaves_like "not permit actions", :rdv, :show?, :new?, :edit?, :update?, :create?, :creneaux?, :cancel?
+    it_behaves_like "not permit actions", :rdv, :show?, :edit?, :update?, :creneaux?, :cancel?
     it_behaves_like "not included in scope"
   end
 
@@ -54,7 +54,6 @@ RSpec.describe User::RdvPolicy, type: :policy do
   context "User signed in with an invitation token" do
     before { user.signed_in_with_invitation_token! }
 
-    it_behaves_like "permit actions", :rdv, :new?, :create?
     it_behaves_like "not permit actions", :rdv, :index?, :edit?, :update?, :creneaux?, :cancel?, :show?
     it_behaves_like "included in scope"
   end
@@ -63,24 +62,24 @@ RSpec.describe User::RdvPolicy, type: :policy do
     context "Rdv belongs to user" do
       let!(:rdv) { create(:rdv, :collectif, organisation: organisation, agents: [agent], users: [user]) }
 
-      it_behaves_like "permit actions", :rdv, :show?, :index?, :new?
-      it_behaves_like "not permit actions", :rdv, :edit?, :update?, :creneaux?, :create?, :cancel?
+      it_behaves_like "permit actions", :rdv, :show?, :index?
+      it_behaves_like "not permit actions", :rdv, :edit?, :update?, :creneaux?, :cancel?
       it_behaves_like "included in scope"
     end
 
     context "Rdv belongs to user for a relative" do
       let(:rdv) { create(:rdv, :collectif, organisation: organisation, agents: [agent], users: [relative]) }
 
-      it_behaves_like "permit actions", :rdv, :show?, :index?, :new?
-      it_behaves_like "not permit actions", :rdv, :edit?, :update?, :creneaux?, :create?, :cancel?
+      it_behaves_like "permit actions", :rdv, :show?, :index?
+      it_behaves_like "not permit actions", :rdv, :edit?, :update?, :creneaux?, :cancel?
       it_behaves_like "included in scope"
     end
 
     context "Rdv belongs to another user" do
       let(:rdv) { create(:rdv, :collectif, organisation: organisation, agents: [agent], users: [user2]) }
 
-      it_behaves_like "permit actions", :rdv, :index?, :new?
-      it_behaves_like "not permit actions", :rdv, :show?, :edit?, :update?, :creneaux?, :create?, :cancel?
+      it_behaves_like "permit actions", :rdv, :index?
+      it_behaves_like "not permit actions", :rdv, :show?, :edit?, :update?, :creneaux?, :cancel?
       it_behaves_like "included in scope"
     end
 
@@ -89,8 +88,7 @@ RSpec.describe User::RdvPolicy, type: :policy do
 
       before { user.signed_in_with_invitation_token! }
 
-      it_behaves_like "permit actions", :rdv, :new?
-      it_behaves_like "not permit actions", :rdv, :index?, :edit?, :update?, :creneaux?, :cancel?, :show?, :create?
+      it_behaves_like "not permit actions", :rdv, :index?, :edit?, :update?, :creneaux?, :cancel?, :show?
       it_behaves_like "included in scope"
     end
   end

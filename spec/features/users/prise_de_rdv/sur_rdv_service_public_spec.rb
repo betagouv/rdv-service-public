@@ -1,4 +1,4 @@
-RSpec.describe "User can search rdv on rdv service public" do
+RSpec.describe "Prise de RDV sur RDVSP" do
   include_context "rdv_mairie_api_authentication"
 
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
@@ -35,9 +35,7 @@ RSpec.describe "User can search rdv on rdv service public" do
 
     expect(page).not_to have_field("Numéro de pré-demande ANTS")
 
-    click_button("Continuer")
-    click_button("Continuer")
-    click_link("Confirmer mon RDV")
+    click_button("Confirmer mon RDV")
     expect(page).to have_content("Votre rendez vous a été confirmé.")
   end
 
@@ -58,7 +56,6 @@ RSpec.describe "User can search rdv on rdv service public" do
       it "permet de prendre un RDV" do
         visit(new_users_rdv_wizard_step_path(step: 1, departement: "24", motif_id: motif.id, lieu_id: lieu.id, starts_at: Time.zone.parse("2024-11-05 08:00")))
         expect(page).to have_content("Vos informations")
-        click_on("Continuer")
         click_on("Confirmer mon RDV")
         expect(page).to have_content "Votre rendez vous a été confirmé."
         expect(user.rdvs.count).to eq(1)

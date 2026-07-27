@@ -59,8 +59,6 @@ RSpec.describe "un agent peut définir un temps de battement entre chaque RDV" d
       fill_in("login_code_code", with: LoginCode.last.code)
       click_on("Valider")
       fill_in("Téléphone", with: "0611223344")
-      click_on("Continuer")
-      click_on("Continuer")
       click_on("Confirmer mon RDV")
       expect(Rdv.last).to have_attributes(minutes_after_rdv: 10)
     end
