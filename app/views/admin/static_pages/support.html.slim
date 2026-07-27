@@ -33,8 +33,8 @@ ruby:
     .fr-card__img
       = dsfr_svg "artwork/pictograms/leisure/community", class: "fr-responsive-img"
 
-.fr-grid-row.fr-grid-row--gutters.fr-mt-4w
-  .fr-col.fr-col-12.fr-col-md-4
+.fr-grid-row.fr-grid-row--gutters.fr-mt-4w.fr-mb-4w
+  .fr-col.fr-col-12.fr-col-md-6.fr-col-lg-3
     .fr-card.fr-enlarge-link.fr-card--sm
       .fr-card__body
         .fr-card__content
@@ -43,7 +43,7 @@ ruby:
           p.fr-card__desc
             | Explorez les fonctionnalités de l'outil à travers la documentation, et trouvez les informations dont vous avez besoin.
 
-  .fr-col.fr-col-12.fr-col-md-4
+  .fr-col.fr-col-12.fr-col-md-6.fr-col-lg-3
     .fr-card.fr-enlarge-link.fr-card--sm
       .fr-card__body
         .fr-card__content
@@ -51,7 +51,7 @@ ruby:
             = link_to "Feuille de route", "https://projets.numerique.gouv.fr/boards/1790017229354436112", target: "_blank"
           p.fr-card__desc
             | Découvrez les nouvelles fonctionnalités et améliorations principales sur lesquelles nous sommes en train de travailler.
-  .fr-col.fr-col-12.fr-col-md-4
+  .fr-col.fr-col-12.fr-col-md-6.fr-col-lg-3
     .fr-card.fr-enlarge-link.fr-card--sm
       .fr-card__body
         .fr-card__content
@@ -59,3 +59,16 @@ ruby:
             = link_to "État du service", "https://rdv-service-public.instatus.com", target: "_blank"
           .fr-card__desc
             | Suivez en temps réel l'état du service et abonnez-vous pour recevoir une notification en cas de panne.
+  .fr-col.fr-col-12.fr-col-md-6.fr-col-lg-3
+    .fr-card.fr-enlarge-link.fr-card--sm
+      .fr-card__body
+        .fr-card__content
+          h3.fr-card__title
+            - if current_domain.rdv_service_public?
+              = link_to "Donnez votre avis", "https://tally.so/r/obBope", target: "_blank"
+            - elsif current_domain == Domain::RDV_SOLIDARITES
+              = link_to "Donnez votre avis", "https://tally.so/r/5BkP56", target: "_blank"
+            - else
+              = link_to "Donnez votre avis", "https://tally.so/r/0QMR5N", target: "_blank"
+          p.fr-card__desc
+            | Aidez nous a améliorer le produit en nous partageant vos remarques et suggestions.
