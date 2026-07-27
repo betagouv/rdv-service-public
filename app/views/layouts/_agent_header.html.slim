@@ -33,7 +33,7 @@ header.header.bg-white
               span.fr-icon--sm.fr-mr-2v.fr-icon-building-line[aria-hidden="true"]
               = "Vos organisations"
             li = link_to agents_exports_path, class: "dropdown-item-dsfr dropdown-item" do
-              span.fr-icon--sm.fr-mr-2v.fr-icon-booklet-line[aria-hidden="true"]
+              span.fr-icon--sm.fr-mr-2v.fr-icon-file-download-line[aria-hidden="true"]
               = "Vos exports"
             li.dropdown-divider.my-1[aria-hidden="true"]
             - Agent::TerritoryPolicy::Scope.new(current_agent, Territory.all).resolve.distinct.order(:name).each do |territory|
