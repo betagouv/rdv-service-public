@@ -76,7 +76,6 @@ class User < ApplicationRecord
   has_many :rdvs, through: :participations
 
   accepts_nested_attributes_for :external_references
-  accepts_nested_attributes_for :relatives
 
   include User::ResponsabilityConcern # relies on belongs_to :responsible
 

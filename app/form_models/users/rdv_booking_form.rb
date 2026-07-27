@@ -19,7 +19,6 @@ class Users::RdvBookingForm
     @domain = domain
     @selected_users = selected_users
     singleton_class.include(Users::RdvBookingForm::AntsConcern) if requires_ants_predemande_number?
-    @user.singleton_class.accepts_nested_attributes_for :relatives
     @user_attributes = user_attributes.symbolize_keys
 
     filter_and_prepare_relatives_attributes! if @user_attributes[:relatives_attributes].present?
