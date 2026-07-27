@@ -3,7 +3,13 @@ class User::RdvBookingPolicy < ApplicationPolicy
   alias rdv_booking_form record
 
   def new?
-    !rdv.revoked? && motif_bookable? && (rdv.collectif? || rdv.users == [current_user])
+    return false unless motif_bookable?
+
+    if rdv.collectif?
+      !rdv.revoked?
+    else
+      rdv.users == [current_user] # dans le GET new le rdv est instancié avec current_user
+    end
   end
 
   def create?
