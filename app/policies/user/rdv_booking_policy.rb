@@ -16,15 +16,10 @@ class User::RdvBookingPolicy < ApplicationPolicy
   def motif_bookable? = rdv.motif.bookable_by_everyone_or_bookable_by_invited_users?
 
   def only_current_user_or_relatives_are_selected?
-    rdv_booking_form.selected_users.all? do |user|
-      case user
-      when "current_user", /\Anew_relative_(\d+)\z/
-        true
-      when /\Aexisting_relative_(\d+)\z/
-        current_user_or_relatives_ids.include?(Regexp.last_match(1).to_i)
-      else
-        false
-      end
+    rdv_booking_form.selected_users_params.all? do |param|
+      param.current_user? ||
+        param.new_relative? ||
+        (param.existing_relative? && current_user_or_relatives_ids.include?(param.id.to_i))
     end
   end
 

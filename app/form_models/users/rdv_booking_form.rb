@@ -63,6 +63,8 @@ class Users::RdvBookingForm
 
   def selected_users_expected_count = 1
 
+  def selected_users_params = selected_users.map { SelectedUserParam.parse(_1) }
+
   def selectable_existing_relatives
     @user.relatives.sort_by(&:first_name)
   end
@@ -76,21 +78,23 @@ class Users::RdvBookingForm
   def filter_and_prepare_relatives_attributes!
     # garde uniquement les attributs des proches ayant été cochés et ajoute created_through pour les nouveaux
     new_relatives_attributes, existing_relatives_attributes = @user_attributes[:relatives_attributes].values.map(&:symbolize_keys).partition { _1[:id].blank? }
-    @user_attributes[:relatives_attributes] = selected_users.map do |selected_user|
-      case selected_user
-      when /new_relative_(\d+)/
-        new_relatives_attributes[::Regexp.last_match(1).to_i].merge(created_through: "user_relative_creation")
-      when /existing_relative_(\d+)/
-        existing_relatives_attributes.find { _1[:id] == ::Regexp.last_match(1) }
+    @user_attributes[:relatives_attributes] = selected_users_params.filter_map do |param|
+      if param.new_relative?
+        new_relatives_attributes[param.index].merge(created_through: "user_relative_creation")
+      elsif param.existing_relative?
+        existing_relatives_attributes.find { _1[:id] == param.id }
       end
-    end.compact
+    end
   end
 
   def rewrite_selected_users_new_relatives_index!
     # lorsque les nouveaux proches 1-3-4 sont sélectionnés mais pas le 2, on force la sélection à 1-2-3
     # pour aligner avec le filtre fait dans filter_and_prepare_relatives_attributes!
-    c = @selected_users.count { _1.start_with?("new_relative_") }
-    @selected_users = @selected_users.reject { _1.start_with?("new_relative_") }.append(*c.times.map { |i| "new_relative_#{i}" })
+    new_relatives_count = selected_users_params.count(&:new_relative?)
+    @selected_users = selected_users_params
+      .reject(&:new_relative?)
+      .map(&:to_s)
+      .append(*new_relatives_count.times.map { |i| "new_relative_#{i}" })
   end
 
   def validate_selected_users_count
@@ -119,14 +123,14 @@ class Users::RdvBookingForm
   end
 
   def selected_users_records
-    selected_users.map do |selected_user|
-      case selected_user
-      when "current_user"
+    selected_users_params.map do |param|
+      case param.type
+      when :current_user
         @user
-      when /existing_relative_(\d+)/
-        @user.relatives.find(::Regexp.last_match(1))
-      when /new_relative_(\d+)/
-        @user.relatives.target.select(&:previously_new_record?)[::Regexp.last_match(1).to_i]
+      when :existing_relative
+        @user.relatives.find(param.id)
+      when :new_relative
+        @user.relatives.target.select(&:previously_new_record?)[param.index]
       end
     end
   end
