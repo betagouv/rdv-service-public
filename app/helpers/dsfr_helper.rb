@@ -79,6 +79,7 @@ module DsfrHelper
     value = form.object.send(field)&.strftime("%d/%m/%Y %H:%M")
     merged_data = { behaviour: "datetimepicker" }.merge(data)
     label_text = options.delete(:label)
+    required = options.delete(:required) || false
     label_text ||= form.object.class.human_attribute_name(field) if form.object.class.respond_to?(:human_attribute_name)
     label_text ||= field.to_s.humanize
 
@@ -86,7 +87,7 @@ module DsfrHelper
       safe_join(
         [
           form.label(field, label_text, class: "fr-label"),
-          form.text_field(field, value: value, data: merged_data, autocomplete: "off", class: "fr-input"),
+          form.text_field(field, value: value, data: merged_data, autocomplete: "off", class: "fr-input", required:),
         ]
       )
     end
