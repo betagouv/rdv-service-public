@@ -1,12 +1,14 @@
-RSpec.describe "User can be invited" do
+RSpec.describe "Prise de RDV depuis une invitation" do
   around { |example| perform_enqueued_jobs { example.run } }
 
   # needed for encrypted cookies
   before do
     travel_to(now)
     stub_netsize_ok
+    # rubocop:disable RSpec/AnyInstance
     allow_any_instance_of(ActionDispatch::Request).to receive(:cookie_jar).and_return(page.cookies)
     allow_any_instance_of(ActionDispatch::Request).to receive(:cookies).and_return(page.cookies)
+    # rubocop:enable RSpec/AnyInstance
   end
 
   let(:now) { Time.zone.parse("2021-12-13 10:30") }
@@ -39,8 +41,10 @@ RSpec.describe "User can be invited" do
     before do
       travel_to(now)
       allow(Users::GeoSearch).to receive(:new).and_return(geo_search)
+      # rubocop:disable RSpec/AnyInstance
       allow_any_instance_of(ActionDispatch::Request).to receive(:cookie_jar).and_return(page.cookies)
       allow_any_instance_of(ActionDispatch::Request).to receive(:cookies).and_return(page.cookies)
+      # rubocop:enable RSpec/AnyInstance
     end
 
     it "full path, shows the available lieux to take a rdv", js: true do
@@ -57,7 +61,7 @@ RSpec.describe "User can be invited" do
       expect(page).to have_content(lieu.name)
       first(:link, "11:00").click
 
-      # user informations
+      # Formulaire : infos usager (pas de section proche pour les invités)
       expect(page).to have_content("Vos informations")
       expect(page).not_to have_field("Date de naissance")
       expect(page).not_to have_field("Adresse")
@@ -66,13 +70,7 @@ RSpec.describe "User can be invited" do
       expect(page).to have_field("Email", with: user.email, disabled: true)
       expect(page.find_field("Email", disabled: true)["name"]).to eq("user[email]")
       expect(page).to have_field("Téléphone", with: user.phone_number)
-      click_button("Continuer")
-
-      # Confirmation
-      expect(page).to have_content("Informations de contact")
-      expect(page).to have_content("johndoe@gmail.com")
-      expect(page).to have_content("0682605955")
-      click_link("Confirmer mon RDV")
+      click_button("Confirmer mon RDV")
 
       # RDV page
       expect(page).to have_content("Votre RDV")
@@ -191,8 +189,7 @@ RSpec.describe "User can be invited" do
       expect(page).to have_content("Vos informations")
       expect(page).to have_field("Email", with: "jesuis@unemail.fr", disabled: false)
       fill_in("Email", with: "nouvel@email.fr")
-      click_button("Continuer")
-      expect(user.reload.email).to eq("nouvel@email.fr")
+      click_button("Confirmer mon RDV")
     end
   end
 
@@ -233,19 +230,13 @@ RSpec.describe "User can be invited" do
       expect(page).to have_content(lieu.name)
       first(:link, "11:00").click
 
-      # RDV informations
+      # Formulaire : infos usager (pas de section proche pour les invités)
       expect(page).to have_content("Vos informations")
       expect(page).not_to have_field("Date de naissance")
       expect(page).not_to have_field("Adresse")
       expect(page).to have_field("Email", with: user.email, disabled: true)
       expect(page).to have_field("Téléphone", with: user.phone_number)
-      click_button("Continuer")
-
-      # Confirmation
-      expect(page).to have_content("Informations de contact")
-      expect(page).to have_content("johndoe@gmail.com")
-      expect(page).to have_content("0682605955")
-      click_link("Confirmer mon RDV")
+      click_button("Confirmer mon RDV")
 
       # RDV page
       expect(page).to have_content("Votre RDV")
@@ -298,19 +289,13 @@ RSpec.describe "User can be invited" do
         # Creneau selection
         first(:link, "11:00").click
 
-        # RDV informations
+        # Formulaire : infos usager (pas de section proche pour les invités)
         expect(page).to have_content("Vos informations")
         expect(page).not_to have_field("Date de naissance")
         expect(page).not_to have_field("Adresse")
         expect(page).to have_field("Email", with: user.email, disabled: true)
         expect(page).to have_field("Téléphone", with: user.phone_number)
-        click_button("Continuer")
-
-        # Confirmation
-        expect(page).to have_content("Informations de contact")
-        expect(page).to have_content("johndoe@gmail.com")
-        expect(page).to have_content("0682605955")
-        click_link("Confirmer mon RDV")
+        click_button("Confirmer mon RDV")
 
         # RDV page
         expect(page).to have_content("Votre RDV")

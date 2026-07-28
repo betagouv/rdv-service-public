@@ -157,14 +157,12 @@ RSpec.describe "User can update their information" do
     end
   end
 
-  describe "updating email for FranceConnect user" do
-    context "when the user is connected with FranceConnect" do
-      let(:user) { create(:user, :using_france_connect, organisations: [organisation]) }
+  context "when the user is connected with FranceConnect" do
+    let(:user) { create(:user, :using_france_connect, organisations: [organisation]) }
 
-      it "does not allow changing the email" do
-        visit users_informations_path
-        expect(page).to have_field("Email", with: user.email, disabled: true)
-      end
+    it "does not allow changing the email" do
+      visit users_informations_path
+      expect(page).to have_field("Email", with: user.email, disabled: true)
     end
   end
 end

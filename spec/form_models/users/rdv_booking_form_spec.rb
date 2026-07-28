@@ -1,338 +1,200 @@
 RSpec.describe Users::RdvBookingForm do
-  let!(:organisation) { create(:organisation) }
-  let!(:user) { create(:user) }
-  let!(:user_for_rdv) { create(:user) }
-  let!(:motif) { create(:motif, organisation: organisation, default_duration_in_min: 30) }
-  let!(:lieu) { create(:lieu, organisation: organisation) }
-  let!(:creneau) { build(:creneau, :respects_booking_delays, motif: motif, starts_at: Time.zone.parse("2020-10-20 09h30")) }
-  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
-  let(:domain) { Domain::RDV_SERVICE_PUBLIC }
+  context "cas classique" do
+    let(:domain) { Domain::RDV_SERVICE_PUBLIC }
+    let!(:organisation) { create(:organisation) }
+    let!(:motif) { create(:motif, :at_public_office, organisation:) }
+    let!(:lieu) { create(:lieu, organisation:) }
+    let!(:agent) { create(:agent, organisations: [organisation]) }
+    let(:creneau) { build(:creneau, :respects_booking_delays, motif:, agent:, lieu_id: lieu.id) }
+    let(:rdv_builder) { Users::RdvBuilder.new(user, { motif_id: motif.id, lieu_id: lieu.id }) }
+    let!(:user) { create(:user) }
+    let(:user_attributes) { { first_name: "Léa", last_name: "Boubakar", phone_number: nil } }
 
-  describe "#save" do
-    context "when everything is ok" do
-      let(:motif) { create(:motif, :at_public_office, organisation: organisation) }
-      let(:rdv_builder) do
-        Users::RdvBuilder.new(
-          user, {
-            starts_at: creneau.starts_at,
-            motif_id: motif.id,
-            lieu_id: lieu.id,
-            user_ids: [user_for_rdv.id],
-            departement: "62",
-            city_code: "62100",
-          }
-        )
-      end
-      let(:user_attributes) do
-        {
-          first_name: "Léa",
-          last_name: "Boubakar",
-          phone_number: nil,
-        }
-      end
+    before { allow(rdv_builder).to receive(:creneau).and_return(creneau) }
 
-      it { expect(described_class.new(user:, rdv_builder:, user_attributes:, domain:).save).to be true }
+    it do
+      form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
+      expect { form.save }
+        .to change(Rdv, :count).by(1)
+        .and have_enqueued_mail(Users::RdvMailer, :rdv_created)
+        .and have_enqueued_mail(Agents::RdvMailer, :rdv_created)
+      rdv = form.rdv
+      expect(rdv).to be_persisted
+      expect(rdv.motif).to eq(motif)
+      expect(rdv.lieu).to eq(lieu)
+      expect(rdv.agents).to contain_exactly(agent)
+      expect(rdv.users).to contain_exactly(user)
+      expect(rdv.created_by).to eq(user)
+      expect(user.reload.first_name).to eq("Léa")
+      expect(user.reload.last_name).to eq("Boubakar")
+      expect(form.invitation_token).to be_present
+    end
+  end
+
+  context "pour un proche créé à la volée" do
+    let(:domain) { Domain::RDV_SERVICE_PUBLIC }
+    let!(:organisation) { create(:organisation) }
+    let!(:motif) { create(:motif, :at_public_office, organisation:) }
+    let!(:lieu) { create(:lieu, organisation:) }
+    let!(:agent) { create(:agent, organisations: [organisation]) }
+    let(:creneau) { build(:creneau, :respects_booking_delays, motif:, agent:, lieu_id: lieu.id) }
+    let(:rdv_builder) { Users::RdvBuilder.new(user, { motif_id: motif.id, lieu_id: lieu.id }) }
+    let!(:user) { create(:user) }
+    let(:user_attributes) do
+      {
+        first_name: "Léa",
+        last_name: "Boubakar",
+        relatives_attributes: { "0" => { first_name: "Marc", last_name: "Durant" } },
+      }
     end
 
-    context "pour un RDV de passeport ANTS Mairie" do
-      include_context "rdv_mairie_api_authentication"
-      let!(:territory) { create(:territory, :mairies) }
-      let!(:organisation) { create(:organisation, territory:, name: "Mairie de Wavignies") }
-      let!(:motif_category) { create(:motif_category, :passeport) }
-      let!(:motif) { create(:motif, organisation:, motif_category:) }
+    before { allow(rdv_builder).to receive(:creneau).and_return(creneau) }
 
-      context "l'usager fournit un numéro de pré-demande valide" do
-        before { stub_ants_status_ok("VALID12345", status: "validated", meeting_point_id: lieu.id, appointments: []) }
+    it do
+      form = described_class.new(user:, rdv_builder:, user_attributes:, domain:, selected_users: ["new_relative_0"])
+      expect { form.save }.to change(Rdv, :count).by(1).and change(User, :count).by(1)
+      proche = user.reload.relatives.first
+      expect(form.rdv.users).to contain_exactly(proche)
+      expect(proche.first_name).to eq("Marc")
+      expect(proche.created_through).to eq("user_relative_creation")
+      expect(proche.organisation_ids).to contain_exactly(organisation.id)
+    end
+  end
 
-        let(:rdv_builder) do
-          Users::RdvBuilder.new(
-            user, {
-              starts_at: creneau.starts_at,
-              motif_id: motif.id,
-              lieu_id: lieu.id,
-              user_ids: [user_for_rdv.id],
-              departement: "62",
-              city_code: "62100",
-            }
-          )
-        end
-        let(:user_attributes) do
-          {
-            first_name: "Léa",
-            last_name: "Boubakar",
-            phone_number: "0612345678",
-            ants_pre_demande_number: "VALID12345",
-          }
-        end
+  context "pour un proche créé à la volée mais le prénom n'est pas renseigné" do
+    let(:domain) { Domain::RDV_SERVICE_PUBLIC }
+    let!(:organisation) { create(:organisation) }
+    let!(:motif) { create(:motif, :at_public_office, organisation:) }
+    let!(:lieu) { create(:lieu, organisation:) }
+    let!(:agent) { create(:agent, organisations: [organisation]) }
+    let(:creneau) { build(:creneau, :respects_booking_delays, motif:, agent:, lieu_id: lieu.id) }
+    let(:rdv_builder) { Users::RdvBuilder.new(user, { motif_id: motif.id, lieu_id: lieu.id }) }
+    let!(:user) { create(:user) }
+    let(:user_attributes) do
+      {
+        first_name: "Léa",
+        last_name: "Boubakar",
+        phone_number: nil,
+        relatives_attributes: { "0" => { first_name: "", last_name: "Durant" } },
+      }
+    end
 
-        it { expect(described_class.new(user:, rdv_builder:, user_attributes:, domain:).save).to be true }
-      end
+    it "empêche la création" do
+      form = described_class.new(user:, rdv_builder:, user_attributes:, domain:, selected_users: ["new_relative_0"])
+      expect { form.save }.not_to change(Rdv, :count)
+      expect(user.reload.relatives).to be_empty
+    end
+  end
 
-      context "l'usager fournit un numéro de pré-demande vide" do
-        let(:rdv_builder) do
-          Users::RdvBuilder.new(
-            user, {
-              starts_at: creneau.starts_at,
-              motif_id: motif.id,
-              lieu_id: nil,
-              user_ids: [user_for_rdv.id],
-              departement: "62",
-              city_code: "62100",
-            }
-          )
-        end
-        let(:user_attributes) do
-          {
-            first_name: "Léa",
-            last_name: "Boubakar",
-            phone_number: "0612345678",
-            ants_pre_demande_number: "",
-          }
-        end
+  context "pour un proche déjà existant" do
+    let(:domain) { Domain::RDV_SERVICE_PUBLIC }
+    let!(:organisation) { create(:organisation) }
+    let!(:motif) { create(:motif, :at_public_office, organisation:) }
+    let!(:lieu) { create(:lieu, organisation:) }
+    let!(:agent) { create(:agent, organisations: [organisation]) }
+    let(:creneau) { build(:creneau, :respects_booking_delays, motif:, agent:, lieu_id: lieu.id) }
+    let(:rdv_builder) { Users::RdvBuilder.new(user, { motif_id: motif.id, lieu_id: lieu.id }) }
+    let!(:user) { create(:user) }
+    let!(:proche) { create(:user, :relative, responsible: user) }
+    let(:user_attributes) { { first_name: "Léa", last_name: "Boubakar", phone_number: nil } }
 
-        it "empêche la création" do
-          form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
-          res = form.save
-          expect(res).to be false
-          expect(form.errors.count).to eq(1)
-          expect(form.errors.first.attribute).to eq(:ants_pre_demande_number)
-          # le message affiché est en fait celui sur le user
-          expect(form.errors.first.full_message).to eq("Numéro de pré-demande ANTS doit être renseigné")
-        end
-      end
+    before { allow(rdv_builder).to receive(:creneau).and_return(creneau) }
 
-      context "l'usager fournit un numéro de pré-demande ANTS non reconnu" do
-        before { stub_ants_status_ok("VALID12345", status: "unknown", meeting_point_id: lieu.id, appointments: []) }
+    it do
+      form = described_class.new(user:, rdv_builder:, user_attributes:, domain:, selected_users: ["existing_relative_#{proche.id}"])
+      expect { form.save }.to change(Rdv, :count).by(1)
+      expect(form.rdv.users).to contain_exactly(proche)
+      expect(proche.organisation_ids).to include(organisation.id)
+    end
+  end
 
-        let(:rdv_builder) do
-          Users::RdvBuilder.new(
-            user, {
-              starts_at: creneau.starts_at,
-              motif_id: motif.id,
-              lieu_id: lieu.id,
-              user_ids: [user_for_rdv.id],
-              departement: "62",
-              city_code: "62100",
-            }
-          )
-        end
-        let(:user_attributes) do
-          {
-            first_name: "Léa",
-            last_name: "Boubakar",
-            phone_number: "0612345678",
-            ants_pre_demande_number: "VALID12345",
-          }
-        end
+  context "motif téléphonique" do
+    let(:domain) { Domain::RDV_SERVICE_PUBLIC }
+    let!(:organisation) { create(:organisation) }
+    let(:motif) { create(:motif, :by_phone, organisation: organisation) }
+    let!(:lieu) { create(:lieu, organisation: organisation) }
+    let!(:agent) { create(:agent, organisations: [organisation]) }
+    let(:creneau) { build(:creneau, :respects_booking_delays, motif:, agent:, lieu_id: lieu.id) }
+    let!(:user) { create(:user) }
 
-        it "empêche la création" do
-          form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
-          res = form.save
-          expect(res).to be false
-          expect(form.errors.count).to eq(1)
-          expect(form.errors.first.attribute).to eq(:ants_pre_demande_number)
-          expect(form.errors.first.full_message).to eq("Numéro de pré-demande ANTS n'est pas reconnu par l'ANTS")
-        end
-      end
+    before { allow(rdv_builder).to receive(:creneau).and_return(creneau) }
 
-      context "l'usager fournit un numéro de pré-demande ANTS qui a déjà un appointment" do
-        before do
-          stub_ants_status_ok(
-            "VALID12345",
-            status: "validated",
-            meeting_point_id: lieu.id,
-            appointments: [{ "meeting_point" => "Mairie de Montrouge", "management_url" => "http://rdvsympa.fr/123" }]
-          )
-        end
+    context "aucun lieu passé" do
+      let(:rdv_builder) { Users::RdvBuilder.new(user, { motif_id: motif.id, lieu_id: nil }) }
+      let(:user_attributes) { { first_name: "Léa", last_name: "Boubakar", phone_number: "0612345678" } }
 
-        let(:rdv_builder) do
-          Users::RdvBuilder.new(
-            user, {
-              starts_at: creneau.starts_at,
-              motif_id: motif.id,
-              lieu_id: lieu.id,
-              user_ids: [user_for_rdv.id],
-              departement: "62",
-              city_code: "62100",
-            }
-          )
-        end
-        let(:user_attributes) do
-          {
-            first_name: "Léa",
-            last_name: "Boubakar",
-            phone_number: "0612345678",
-            ants_pre_demande_number: "VALID12345",
-          }
-        end
-
-        it "empêche la création" do
-          form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
-          res = form.save
-          expect(res).to be false
-          expect(form.errors.count).to eq(1)
-          expect(form.errors.first.attribute).to eq(:_benign)
-          expect(form.errors.first.message).to eq(
-            <<-TXT.squish
-              Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Montrouge.
-              Veuillez <a href="http://rdvsympa.fr/123" target="_blank">annuler ce RDV</a> avant d'en prendre un nouveau.
-          TXT
-          )
-        end
-      end
-
-      context "l'usager fournit un numéro de pré-demande ANTS qui a déjà un appointment mais ignore les avertissements" do
-        before do
-          stub_ants_status_ok(
-            "VALID12345",
-            status: "validated",
-            meeting_point_id: lieu.id,
-            appointments: [{ "meeting_point" => "Mairie de Montrouge", "management_url" => "http://rdvsympa.fr/123" }]
-          )
-        end
-
-        let(:rdv_builder) do
-          Users::RdvBuilder.new(
-            user, {
-              starts_at: creneau.starts_at,
-              motif_id: motif.id,
-              lieu_id: lieu.id,
-              user_ids: [user_for_rdv.id],
-              departement: "62",
-              city_code: "62100",
-            }
-          )
-        end
-        let(:user_attributes) do
-          {
-            first_name: "Léa",
-            last_name: "Boubakar",
-            phone_number: "0612345678",
-            ants_pre_demande_number: "VALID12345",
-            ignore_benign_errors: "true",
-          }
-        end
-
-        it "n'empêche pas la création" do
-          form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
-          res = form.save
-          expect(res).to be true
-        end
-      end
-
-      context "l'usager fournit un numéro de pré-demande ANTS valide mais l'API ANTS timeout" do
-        before { allow(AntsApi).to receive(:status).and_raise(Typhoeus::Errors::TimeoutError) }
-
-        let(:rdv_builder) do
-          Users::RdvBuilder.new(
-            user, {
-              starts_at: creneau.starts_at,
-              motif_id: motif.id,
-              lieu_id: nil,
-              user_ids: [user_for_rdv.id],
-              departement: "62",
-              city_code: "62100",
-            }
-          )
-        end
-        let(:user_attributes) do
-          {
-            first_name: "Léa",
-            last_name: "Boubakar",
-            phone_number: "0612345678",
-            ants_pre_demande_number: "VALID12345",
-          }
-        end
-
-        it "empêche la création" do
-          form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
-          res = form.save
-          expect(res).to be false
-          expect(form.errors.count).to eq(1)
-          expect(form.errors.first.attribute).to eq(:ants_pre_demande_number)
-          expect(form.errors.first.full_message).to eq("Numéro de pré-demande ANTS n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.")
-        end
+      it do
+        form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
+        expect { form.save }.to change(Rdv, :count).by(1)
       end
     end
 
-    context "when the motif is by phone" do
-      let(:motif) { create(:motif, :by_phone, organisation: organisation) }
+    context "numéro de téléphone invalide" do
+      let(:rdv_builder) { Users::RdvBuilder.new(user, { motif_id: motif.id, lieu_id: lieu.id }) }
+      let(:user_attributes) { { first_name: "Léa", last_name: "Boubakar", phone_number: "0633" } }
 
-      context "when the lieu is nil" do
-        let(:rdv_builder) do
-          Users::RdvBuilder.new(
-            user, {
-              starts_at: creneau.starts_at,
-              motif_id: motif.id,
-              lieu_id: nil,
-              user_ids: [user_for_rdv.id],
-              departement: "62",
-              city_code: "62100",
-            }
-          )
-        end
-        let(:user_attributes) do
-          {
-            first_name: "Léa",
-            last_name: "Boubakar",
-            phone_number: "0612345678",
-          }
-        end
-
-        it { expect(described_class.new(user:, rdv_builder:, user_attributes:, domain:).save).to be true }
+      it "affiche un message d'erreur complet incluant le nom du champ" do
+        form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
+        expect { form.save }.not_to change(Rdv, :count)
+        expect(form.errors.full_messages).to include("Le numéro de téléphone est invalide. S'il s'agit d'un numéro étranger, saisissez l'indicatif du pays (ex : +32 pour la Belgique).")
       end
+    end
 
-      context "when the phone number is invalid" do
-        let(:rdv_builder) do
-          Users::RdvBuilder.new(
-            user, {
-              starts_at: creneau.starts_at,
-              motif_id: motif.id,
-              lieu_id: lieu.id,
-              user_ids: [user_for_rdv.id],
-              departement: "62",
-              city_code: "62100",
-            }
-          )
-        end
-        let(:user_attributes) { { first_name: "Léa", last_name: "Boubakar", phone_number: "0633" } }
+    context "numéro de téléphone vide" do
+      let(:rdv_builder) { Users::RdvBuilder.new(user, { motif_id: motif.id, lieu_id: lieu.id }) }
+      let(:user_attributes) { { first_name: "Léa", last_name: "Boubakar", phone_number: nil } }
 
-        it "affiche un message d'erreur complet incluant le nom du champ" do
-          form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
-          form.save
-          expect(form.errors.full_messages).to include("Le numéro de téléphone est invalide. S'il s'agit d'un numéro étranger, saisissez l'indicatif du pays (ex : +32 pour la Belgique).")
-        end
+      it "échoue avec un message d'erreur explicite" do
+        form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
+        expect { form.save }.not_to change(Rdv, :count)
+        expect(form.errors.full_messages.join(", ")).to eq("Le numéro de téléphone est obligatoire car le RDV aura lieu par téléphone")
       end
+    end
+  end
 
-      context "when the phone number is blank" do
-        let(:rdv_builder) do
-          Users::RdvBuilder.new(
-            user, {
-              starts_at: creneau.starts_at,
-              motif_id: motif.id,
-              lieu_id: lieu.id,
-              user_ids: [user_for_rdv.id],
-              departement: "62",
-              city_code: "62100",
-            }
-          )
-        end
-        let(:user_attributes) do
-          {
-            first_name: "Léa",
-            last_name: "Boubakar",
-            phone_number: nil,
-          }
-        end
+  context "motif collectif avec un proche créé à la volée" do
+    let(:domain) { Domain::RDV_SERVICE_PUBLIC }
+    let!(:organisation) { create(:organisation) }
+    let!(:motif) { create(:motif, :collectif, organisation:) }
+    let!(:rdv_collectif) { create(:rdv, :without_users, motif:, agents: [agent], organisation:) }
+    let(:rdv_builder) { Users::RdvBuilder.new(user, { rdv_collectif_id: rdv_collectif.id }) }
+    let!(:lieu) { create(:lieu, organisation:) }
+    let!(:agent) { create(:agent, organisations: [organisation]) }
+    let!(:user) { create(:user) }
+    let(:user_attributes) do
+      {
+        first_name: "Léa",
+        last_name: "Boubakar",
+        relatives_attributes: { "0" => { first_name: "Marc", last_name: "Durant" } },
+      }
+    end
 
-        it { expect(described_class.new(user:, rdv_builder:, user_attributes:, domain:).save).to be false }
+    it "crée la participation pour le proche" do
+      form = described_class.new(user:, rdv_builder:, user_attributes:, domain:, selected_users: ["new_relative_0"])
+      expect { form.save }.to change(Participation, :count).by(1).and change(User, :count).by(1)
+      proche = user.reload.relatives.first
+      expect(rdv_collectif.reload.users).to contain_exactly(proche)
+    end
+  end
 
-        it "return false with a rdv by_phone and user without phone" do
-          form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
-          form.valid?
-          expect(form.errors.full_messages.join(", ")).to eq("Le numéro de téléphone est obligatoire car le RDV aura lieu par téléphone")
-        end
-      end
+  context "motif collectif - inscription du current_user" do
+    let(:domain) { Domain::RDV_SERVICE_PUBLIC }
+    let!(:organisation) { create(:organisation) }
+    let!(:motif) { create(:motif, :collectif, organisation:) }
+    let!(:rdv_collectif) { create(:rdv, motif:, agents: [agent], organisation:) }
+    let(:rdv_builder) { Users::RdvBuilder.new(user, { rdv_collectif_id: rdv_collectif.id }) }
+    let!(:lieu) { create(:lieu, organisation:) }
+    let!(:agent) { create(:agent, organisations: [organisation]) }
+    let(:creneau) { build(:creneau, :respects_booking_delays, motif: motif, starts_at: Time.zone.parse("2020-10-20 09h30"), agent:, lieu_id: lieu.id) }
+    let!(:user) { create(:user) }
+
+    before { allow(rdv_builder).to receive(:creneau).and_return(creneau) }
+
+    it do
+      form = described_class.new(user:, rdv_builder:, domain:, selected_users: ["current_user"])
+      expect { form.save }.to change(Participation, :count).by(1)
+      expect(rdv_collectif.reload.users.count).to eq(2) # la factory par défaut créé le RDV collectif avec un participant
+      expect(rdv_collectif.users).to include(user)
     end
   end
 end

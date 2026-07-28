@@ -1,4 +1,4 @@
-RSpec.describe "Organisation selection (when motif does not require lieu)" do
+RSpec.describe "Prise de RDV - Sélection d'une organisation quand le motif est téléphonique" do
   before { travel_to(Time.zone.parse("2024-01-08 08:00")) }
 
   let!(:service_social) { create(:service, name: "Service Social") }
