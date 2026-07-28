@@ -1,5 +1,10 @@
 @import "./fullcalendar_theme";
 
+// Décale les RDVs vers la droite pour laisser visible la plage d'ouverture en background
+.rdv-fc-block-event {
+  margin-inline-start: 5%;
+}
+
 .rdv-fc-event-barre {
   text-decoration: line-through;
 }
