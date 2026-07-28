@@ -5,15 +5,12 @@ module Rdv::VisioConcern
     webinaire.numerique.gouv.fr
     webconf.numerique.gouv.fr
     visio.numerique.gouv.fr
+    visio-sandbox.beta.numerique.gouv.fr
     teams.live.com
     meet.google.com
     zoom.us
     meet.jit.si
     kmeet.infomaniak.com
-  ].freeze
-
-  NON_PRODUCTION_VALID_DOMAINS = %w[
-    visio-sandbox.beta.numerique.gouv.fr
   ].freeze
 
   VISIO_URL_TYPES = %w[default custom].freeze
@@ -39,13 +36,9 @@ module Rdv::VisioConcern
     res = URI::DEFAULT_PARSER.make_regexp(%w[http https]).match(visio_url_custom)
     if !res
       errors.add :visio_url_custom, "n’est pas une URL valide"
-    elsif all_valid_domains.none? { |domain| res[4].end_with?(domain) }
+    elsif VALID_DOMAINS.none? { |domain| res[4].end_with?(domain) }
       errors.add :visio_url_custom, "doit provenir d’un des domaines suivants : #{VALID_DOMAINS.to_sentence}"
     end
-  end
-
-  def all_valid_domains
-    Rails.env.production? ? VALID_DOMAINS : VALID_DOMAINS + NON_PRODUCTION_VALID_DOMAINS
   end
 
   # visio_url_type est un attribut PORO non persisté qui permet d’afficher les radio buttons
