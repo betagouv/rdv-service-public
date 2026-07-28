@@ -24,6 +24,8 @@ module VisioNumerique
       Faraday.new("#{api_url}/") do |f|
         f.request :json
         f.response :json
+        f.options.timeout = 5
+        f.options.open_timeout = 2
       end
     end
 
