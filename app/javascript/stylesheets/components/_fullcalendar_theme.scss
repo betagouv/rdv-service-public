@@ -55,6 +55,18 @@
   }
 }
 
+// En-têtes de colonnes : permet le retour à la ligne des noms d'agents en vue multi-agents.
+// FC v7 applique overflow:hidden (fc-iG) sur le <th> et white-space:nowrap (fc-Jx) sur le div intérieur,
+// tous deux en !important. On cible via des attributs HTML stables plutôt que les classes obfusquées.
+.fc-classic-n5m [role="columnheader"][data-resource-id] {
+  overflow: visible !important;
+}
+
+.fc-classic-n5m [role="columnheader"][data-resource-id] > div {
+  white-space: normal !important;
+  max-width: 100%;
+}
+
 // Vue mois et planning : gris subtil DSFR
 .fc-classic-n5m a[href]:hover {
   background-color: var(--background-contrast-grey) !important;
