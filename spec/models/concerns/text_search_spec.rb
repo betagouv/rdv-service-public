@@ -50,6 +50,17 @@ RSpec.describe TextSearch, type: :concern do
       expect(described_class.search_by_text("+596 696")).to eq([martine])
     end
 
+    it "returns users that match with a phone number ending in 9" do
+      user = create(:user, phone_number: "0658837569")
+      expect(described_class.search_by_text("0658837569")).to eq([user])
+    end
+
+    it "returns users that match with a partial phone number prefix ending in 9" do
+      user = create(:user, phone_number: "0699123456")
+      expect(described_class.search_by_text("+33699")).to eq([user])
+      expect(described_class.search_by_text("+33700")).to eq([])
+    end
+
     it "returns users that match the given ID" do
       jean = create(:user, id: 1234567)
       _eglantine = create(:user)

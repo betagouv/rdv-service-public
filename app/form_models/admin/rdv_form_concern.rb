@@ -20,12 +20,12 @@ module Admin::RdvFormConcern
     validate :check_duplicates
 
     delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :rdv
-    validate :warn_overlapping_plage_ouverture
-    validate :warn_overlapping_absence
-    validate :warn_rdvs_ending_shortly_before
-    validate :warn_rdvs_overlapping_rdv
-    validate :warn_rdv_duplicate_suspected
-    validate :warn_starts_in_the_past
+    validate :warn_overlapping_plage_ouverture, if: -> { starts_at.present? }
+    validate :warn_overlapping_absence, if: -> { starts_at.present? }
+    validate :warn_rdvs_ending_shortly_before, if: -> { starts_at.present? }
+    validate :warn_rdvs_overlapping_rdv, if: -> { starts_at.present? }
+    validate :warn_rdv_duplicate_suspected, if: -> { starts_at.present? }
+    validate :warn_starts_in_the_past, if: -> { starts_at.present? }
     validate :warn_name_too_long_for_sms
   end
 
