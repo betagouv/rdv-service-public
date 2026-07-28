@@ -273,6 +273,12 @@ class User < ApplicationRecord
     signed_in_with_restricted_auth_token? && !(email.present? && already_logged_in?)
   end
 
+  # Un usager déjà connecté peut demander à changer son email via le parcours à code de confirmation,
+  # sauf s'il s'est connecté avec FranceConnect (adresse certifiée par l'État).
+  def can_change_email?
+    franceconnect_openid_sub.blank?
+  end
+
   protected
 
   def generate_rdv_invitation_token
