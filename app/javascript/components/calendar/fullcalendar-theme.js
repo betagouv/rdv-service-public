@@ -11,6 +11,7 @@ export const rdvTheme = {
   buttonGroupClass: (info) => info.hasSelection ? "rdv-fc-view-group" : "rdv-fc-nav-group",
   eventClass: "rdv-fc-event",
   blockEventClass: "rdv-fc-block-event",
+  blockEventTimeClass: "rdv-fc-event-time",
   backgroundEventClass: "rdv-fc-background-event",
   backgroundEventTitleClass: "rdv-fc-background-event-title",
   // FC v7 classic wraps column header inner text in aria-hidden (the accessible name

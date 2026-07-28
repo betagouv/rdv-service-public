@@ -91,6 +91,8 @@ const defaultFullCalendarConfig = () => ({
       startTime: '07:00',
       endTime: '20:00',
   },
+  eventTimeFormat: { hour: "numeric", minute: "2-digit", omitZeroMinute: true },
+  displayEventEnd: false,
   selectAllow: canSelectOnlyOneDay,
   eventClass: eventClassNames,
   eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security

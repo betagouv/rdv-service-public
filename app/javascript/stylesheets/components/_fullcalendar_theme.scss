@@ -17,6 +17,11 @@
   --fc-classic-button-foreground: #161616;
   --fc-classic-background-event-opacity: 100%;
 
+  // Affiche l'heure après le titre dans les événements bloc (comportement v6)
+  .rdv-fc-event-time {
+    order: 1;
+  }
+
   .rdv-fc-background-event .rdv-fc-background-event-title {
     font-weight: 600;
     font-style: normal;
