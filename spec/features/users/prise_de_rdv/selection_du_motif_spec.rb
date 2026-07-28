@@ -1,4 +1,4 @@
-RSpec.describe "Motif selection" do
+RSpec.describe "Prise de RDV - Sélection du motif" do
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
 
   before { travel_to(now) }

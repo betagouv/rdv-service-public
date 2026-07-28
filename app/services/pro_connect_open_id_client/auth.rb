@@ -1,7 +1,7 @@
 # voir https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/implementation_technique
 module ProConnectOpenIdClient
   class Auth
-    SCOPES = "openid email given_name usual_name siret idp_id".freeze
+    SCOPES = "openid email given_name usual_name siret idp_id lasuite_visio lasuite_visio:rooms:create".freeze
     ACR_FOR_2FA = %w[eidas0-mfa eidas1-mfa eidas2 eidas3].freeze
 
     def initialize(client_id:, client_secret:, login_hint: nil, prompt: nil)

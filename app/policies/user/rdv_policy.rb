@@ -13,19 +13,6 @@ class User::RdvPolicy < ApplicationPolicy
     !current_user.signed_in_with_invitation_token?
   end
 
-  def new?
-    return false if record.revoked?
-
-    (record.collectif? && record.bookable_by_everyone_or_bookable_by_invited_users?) || rdv_belongs_to_user_or_relatives?
-  end
-
-  def create?
-    return false if record.collectif?
-
-    record.motif.bookable_by_everyone_or_bookable_by_invited_users? &&
-      rdv_belongs_to_user_or_relatives?
-  end
-
   def show?
     record.motif.visible? &&
       rdv_belongs_to_user_or_relatives? && (

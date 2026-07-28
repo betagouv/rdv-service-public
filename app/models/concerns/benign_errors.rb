@@ -18,15 +18,25 @@ module BenignErrors
   end
 
   def benign_errors
-    errors[:_benign]
+    errors.filter { benign_error?(_1) }.map(&:message)
   end
 
   def not_benign_errors
-    # I would like to use ActiveModel::Errors#slice! here, but it relies on making a copy of the Errors.
-    errors.filter { |k, _| k.attribute != :_benign }
+    # NOTE: il y a une incohérence de types renvoyés entre les deux méthodes benign_errors et not_benign_errors
+    errors.filter { !benign_error?(_1) }
   end
 
   def errors_are_all_benign?
-    errors.attribute_names == [:_benign]
+    errors.any? && errors.all? { benign_error?(_1) }
+  end
+
+  private
+
+  # Les erreurs bénignes ajoutées sur un proche (ex: relative.add_benign_error) peuvent être
+  # importées par Rails sous la clé "association._benign" (ActiveRecord::Associations::NestedError)
+  # lorsque la validation en cascade d'une association imbriquée se déclenche. Il faut les
+  # reconnaître comme bénignes elles aussi, pas seulement la clé exacte :_benign.
+  def benign_error?(error)
+    error.attribute == :_benign || error.attribute.to_s.end_with?("._benign")
   end
 end

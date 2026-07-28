@@ -4,6 +4,9 @@ module User::ResponsabilityConcern
   included do
     before_save :set_organisation_ids_from_responsible, if: :responsible_id_changed?
     accepts_nested_attributes_for :responsible
+    accepts_nested_attributes_for :relatives
+    # cette double direction des accepts_nested_attributes_for peut causer des cascades de validation gênantes
+    # Je pense qu'on devrait abandonner les responsible_attributes en simplifiant les formulaires côté agent
     validate :cannot_be_responsible_of_self
     validate :cannot_be_responsible_for_my_responsible
   end
