@@ -2,6 +2,7 @@ class SearchController < ApplicationController
   layout "application_base"
 
   include TokenInvitable
+  include Search::LogParamsConcern
   prepend_before_action :store_invitation_in_session_and_redirect, only: %i[search_rdv]
 
   def home
@@ -103,21 +104,6 @@ class SearchController < ApplicationController
 
   def prescripteur
     redirect_to prendre_rdv_path(request.query_parameters.merge(prescripteur: 1))
-  end
-
-  # Permet d'identifier dans les logs (via lograge) quelle organisation/motif est ciblé par une
-  # recherche sur /prendre_rdv, pour repérer un éventuel scraping massif d'une organisation donnée.
-  LOGGABLE_SEARCH_PARAMS = %i[
-    public_link_organisation_id external_organisation_ids user_selected_organisation_id organisation_ids
-    referent_ids service_id motif_id motif_name_with_location_type motif_category_short_name departement prescripteur
-  ].freeze
-
-  def append_info_to_payload(payload)
-    super
-    return unless action_name == "search_rdv"
-
-    payload[:search_params] = params.slice(*LOGGABLE_SEARCH_PARAMS).to_unsafe_h.compact_blank
-    payload[:user_agent] = request.user_agent
   end
 
   private
