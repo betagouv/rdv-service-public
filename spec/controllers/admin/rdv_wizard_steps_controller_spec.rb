@@ -100,6 +100,33 @@ RSpec.describe Admin::RdvWizardStepsController, type: :controller do
         expect(response.body).to include("Ce rendez-vous a une date située dans le passé")
       end
     end
+
+    context "with a visio motif and a ProConnect access_token in session" do
+      let(:motif) { create(:motif, location_type: :visio) }
+
+      before { session[:pro_connect_access_token] = "un-token" }
+
+      it "creates a Visio Numérique room and assigns its url" do
+        stub_request(:post, "#{VisioNumerique::CreateRoom::DEFAULT_API_URL}/rooms/")
+          .to_return(status: 200, body: { url: "https://visio.numerique.gouv.fr/room-xyz" }.to_json, headers: { "Content-Type" => "application/json" })
+
+        create_request
+
+        expect(Rdv.last.visio_url_custom).to eq("https://visio.numerique.gouv.fr/room-xyz")
+      end
+
+      context "when VISIO_NUMERIQUE_DISABLED is set" do
+        stub_env_with(VISIO_NUMERIQUE_DISABLED: "true")
+
+        it "doesn't try to create a Visio Numérique room" do
+          expect(VisioNumerique::CreateRoom).not_to receive(:new)
+
+          create_request
+
+          expect(Rdv.last.visio_url_custom).to be_nil
+        end
+      end
+    end
   end
 
   context "POST step2 avec motif téléphonique et l’usager a un numéro de téléphone" do
