@@ -2,6 +2,7 @@ class SearchController < ApplicationController
   layout "application_base"
 
   include TokenInvitable
+  include Search::LogParamsConcern
   prepend_before_action :store_invitation_in_session_and_redirect, only: %i[search_rdv]
 
   def home
