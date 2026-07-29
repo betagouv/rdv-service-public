@@ -3,6 +3,7 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
 
   def index
     rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).where(params.permit(:organisation_id))
+    rdvs = rdvs.distinct # nécessaire car le scope de la policy fait des INNER JOIN vers agents_rdvs et participations
 
     rdvs = rdvs.starts_after(Time.zone.parse(params[:starts_after])) if params[:starts_after].present?
     rdvs = rdvs.starts_before(Time.zone.parse(params[:starts_before])) if params[:starts_before].present?
@@ -39,7 +40,7 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
       rdvs = rdvs.where(status: params[:status])
     end
 
-    render_collection(rdvs, options: params.permit(include: []))
+    render_collection(rdvs.order(:id), options: params.permit(include: []))
   end
 
   # Cet endpoint est utilisé seulement pour la copie des données d'une instance à l'autre, il n'est donc pas documenté.
