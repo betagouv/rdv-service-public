@@ -1,16 +1,32 @@
 module Search::LogParamsConcern
   extend ActiveSupport::Concern
 
-  # on recopie ici plutôt que de référencer les constantes pour éviter que
-  # des futurs ajouts potentiellement sensibles soient automatiquement loggés
-  LOGGABLE_SEARCH_PARAMS = (
-    # from WebSearchContext::ADDRESS_SELECTION_PARAMS
-    %i[latitude longitude address city_code street_ban_id departement] +
-    # from WebSearchContext::USER_CHOICE_PARAMS
-    %i[service_id motif_name_with_location_type lieu_id user_selected_organisation_id motif_id ants_pre_demandes_count] +
-    # from SearchController#search_params
-    %i[motif_category_short_name date public_link_organisation_id prescripteur organisation_ids external_organisation_ids]
-  ).freeze
+  # on recopie ici et on commente explicitement les params à ne pas logger
+  LOGGABLE_SEARCH_PARAMS = [
+    # -- from WebSearchContext::ADDRESS_SELECTION_PARAMS
+    "latitude",
+    "longitude",
+    # "address",
+    "city_code",
+    # "street_ban_id",
+    "departement",
+    # -- from WebSearchContext::USER_CHOICE_PARAMS
+    "service_id",
+    "motif_name_with_location_type",
+    "lieu_id",
+    "user_selected_organisation_id",
+    "motif_id",
+    "ants_pre_demandes_count",
+    # -- from SearchController#search_params
+    "motif_category_short_name",
+    "date",
+    "public_link_organisation_id",
+    "prescripteur",
+    # "autofocus",
+    "organisation_ids",
+    # "referent_ids",
+    "external_organisation_ids",
+  ].freeze
 
   # méthode automatiquement appelée par lograge cf https://github.com/roidrage/lograge/#installation
   def append_info_to_payload(payload)
