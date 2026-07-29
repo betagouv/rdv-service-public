@@ -1,4 +1,22 @@
 RSpec.describe LoginCode, type: :model do
+  describe "validations" do
+    it "est valide avec un email bien formé" do
+      expect(described_class.new(email: "usager@exemple.fr", domain_id: "RDV_SERVICE_PUBLIC")).to be_valid
+    end
+
+    it "est invalide sans email" do
+      login_code = described_class.new(email: "", domain_id: "RDV_SERVICE_PUBLIC")
+      expect(login_code).not_to be_valid
+      expect(login_code.errors[:email]).to include("doit être rempli·e")
+    end
+
+    it "est invalide avec un email mal formé" do
+      login_code = described_class.new(email: "pas-un-email", domain_id: "RDV_SERVICE_PUBLIC")
+      expect(login_code).not_to be_valid
+      expect(login_code.errors[:email]).to include("n'est pas valide")
+    end
+  end
+
   describe ".most_recent_usable_for scope" do
     before do
       create(:login_code, email: "test@usager1.fr", code: "112233", created_at: 10.minutes.ago, used_at: 8.minutes.ago)
