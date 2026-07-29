@@ -127,8 +127,8 @@ gem "groupdate", "~> 6.1"
 gem "rails_autolink"
 # ActionView helper to render currently active links
 gem "active_link_to"
-gem "dsfr-assets", "~> 1.14.2"
-gem "dsfr-view-components", "~> 5.0.0"
+gem "dsfr-assets", github: "betagouv/dsfr-assets", ref: "fc98aea1ba445d77c1415bdca0fb2557d4b551a6"
+gem "dsfr-view-components", github: "betagouv/dsfr-view-components", ref: "15f7da77b0a458f21214dc692cf9edf075cafa3b"
 gem "dsfr-form_builder", "= 0.0.14" # On fixe la version tant qu’on est pas en 1.0
 
 # Easily create styled HTML emails in Rails.
