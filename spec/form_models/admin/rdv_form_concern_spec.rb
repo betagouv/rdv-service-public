@@ -126,6 +126,15 @@ RSpec.describe Admin::RdvFormConcern, type: :form do
       end
     end
 
+    context "rdv has no starts_at" do
+      let(:rdv) { build(:rdv, starts_at: nil) }
+
+      it "is not valid" do
+        expect(form.valid?).to be false
+        expect(form.errors[:starts_at]).to include "doit être rempli·e"
+      end
+    end
+
     context "rdv is valid but there are an other RDV that start before this ending" do
       let!(:agent_new_rdv) { create(:agent) }
       let(:rdv) { build(:rdv, agents: [agent_new_rdv]) }

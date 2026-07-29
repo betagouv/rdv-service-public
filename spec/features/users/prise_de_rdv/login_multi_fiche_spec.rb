@@ -1,4 +1,4 @@
-RSpec.describe "Login multi-fiches durant la prise de RDV en ligne" do
+RSpec.describe "Prise de RDV - Login multi-fiches" do
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
   let!(:territory)      { create(:territory, departement_number: "92") }
   let!(:organisation)   { create(:organisation, territory: territory) }
@@ -49,7 +49,7 @@ RSpec.describe "Login multi-fiches durant la prise de RDV en ligne" do
 
       page.all("h3.fr-tile__title button[type=submit]").first.click
 
-      expect(page).to have_content("Étape 1 sur 3")
+      expect(page).to have_content("Confirmez votre rendez-vous")
     end
   end
 
@@ -60,7 +60,7 @@ RSpec.describe "Login multi-fiches durant la prise de RDV en ligne" do
       reach_creneau_page
       enter_code_for("alice@test.fr", first_name: "Bob", last_name: "Martin")
 
-      expect(page).to have_content("Étape 1 sur 3")
+      expect(page).to have_content("Confirmez votre rendez-vous")
       expect(user.reload.first_name).to eq("Alice")
       expect(user.reload.last_name).to eq("Dupont")
     end

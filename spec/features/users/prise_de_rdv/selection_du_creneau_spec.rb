@@ -1,4 +1,4 @@
-RSpec.describe "User can select a creneau" do
+RSpec.describe "Prise de RDV - Sélection du créneau" do
   let(:now) { Time.zone.parse("2021-12-13 8:05") }
 
   let!(:territory92) { create(:territory, departement_number: "92") }
