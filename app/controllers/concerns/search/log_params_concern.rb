@@ -4,8 +4,8 @@ module Search::LogParamsConcern
   # on recopie ici et on commente explicitement les params à ne pas logger
   LOGGABLE_SEARCH_PARAMS = [
     # -- from WebSearchContext::ADDRESS_SELECTION_PARAMS
-    "latitude",
-    "longitude",
+    # "latitude",
+    # "longitude",
     # "address",
     "city_code",
     # "street_ban_id",
