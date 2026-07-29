@@ -33,7 +33,6 @@ class UpsertUserForFranceconnectService < BaseService
         created_through: "franceconnect_sign_up"
       )
     )
-    @user.latest_login_at = Time.zone.now
     @user.save!(context: :france_connect_login)
     @user
   end
@@ -46,6 +45,7 @@ class UpsertUserForFranceconnectService < BaseService
       franceconnect_openid_sub: omniauth_info.sub,
       last_name: omniauth_info.preferred_username.presence || omniauth_info.family_name, # nom d'usage (optionnel),
       logged_once_with_franceconnect: true,
+      latest_login_at: Time.zone.now,
     }.compact # do not fill with missing values
   end
 end

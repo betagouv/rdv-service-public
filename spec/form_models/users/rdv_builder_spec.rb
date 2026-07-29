@@ -75,6 +75,11 @@ RSpec.describe Users::RdvBuilder do
       expect(rdv_builder.rdv.duration_in_min).to be_nil
       expect(rdv_builder.creneau).to be_nil
     end
+
+    it "to_query_for_search_redirection ne lève pas d'erreurs" do
+      rdv_builder = described_class.new(user, attributes)
+      expect(rdv_builder.to_query_for_search_redirection).to include(service: nil, motif_name_with_location_type: nil)
+    end
   end
 
   context "le lieu_id ne correspond à aucun lieu existant" do
