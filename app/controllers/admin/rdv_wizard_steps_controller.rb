@@ -80,6 +80,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
   def assign_visio_numerique_room_if_applicable
     return unless current_step == "step4"
     return unless @rdv.motif&.visio?
+    return if ENV["VISIO_NUMERIQUE_DISABLED"]
     return if session[:pro_connect_access_token].blank?
 
     result = VisioNumerique::CreateRoom.new(access_token: session[:pro_connect_access_token]).call
