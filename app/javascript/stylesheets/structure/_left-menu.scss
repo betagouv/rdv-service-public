@@ -46,7 +46,7 @@
     font-weight: 500;
   }
 
-  a:not(.fr-btn):not(.fr-sidemenu__link) {
+  a:not(.fr-btn):not(.fr-sidemenu__link):not(.fr-link) {
     color: $menu-item;
     transition: all 0.2s;
 
@@ -75,14 +75,6 @@
       text-decoration: none;
       background-color: rgb(246, 246, 246);
     }
-  }
-
-  .menu-arrow {
-    transition: transform 0.4s;
-  }
-
-  [aria-expanded="true"] .menu-arrow {
-    transform: rotate(-180deg);
   }
 
   .current-organisation {

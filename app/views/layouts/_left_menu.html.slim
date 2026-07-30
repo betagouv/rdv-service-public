@@ -3,17 +3,14 @@ aside.left-side-menu-wrapper
     .fr-p-2w.d-flex.justify-content-center
       = link_to "Trouver un RDV", search_rdv_slot_url_with(@user), class: "fr-btn"
     .current-organisation
-      = current_organisation_in_left_menu do
-        .d-flex.justify-content-between.w-100
-          div.d-flex.align-items-center
-            div.d-flex.flex-column
-              = current_organisation.name
-              - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
-                span.fr-text--xs.fr-mb-0= current_agent.services_short_names
-          - if current_agent.organisations_count > 1
-            div.d-flex.align-items-center
-              = icon("fr-icon-arrow-down-s-line", class: "menu-arrow")
-      = render "layouts/left_menu/organisation_switcher"
+      .fr-pt-2w.fr-pr-2w.fr-pb-2w.fr-pl-3w.d-flex.align-items-center
+        div.d-flex.flex-column
+          = current_organisation.name
+          - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
+            span.fr-text--xs.fr-mb-0= current_agent.services_short_names
+      - if current_agent.organisations_count > 1
+        .fr-pl-3w.fr-pb-2w.fr-mt-n2w
+          = link_to "Changer d'organisation", admin_organisations_path, class: "fr-link fr-link--icon-right fr-icon-arrow-right-line fr-link--xs"
 
     - if content_for? :side_nav_menu
       = yield :side_nav_menu

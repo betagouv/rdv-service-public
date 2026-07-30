@@ -60,12 +60,4 @@ module AgentsHelper
 
     !current_agent.admin_in_organisation?(current_organisation)
   end
-
-  def current_organisation_in_left_menu(&block)
-    if current_agent.organisations_count > 1
-      link_to(".left-submenu-account", "data-toggle" => :collapse, "aria-expanded" => "false", class: "side-menu__item", &block)
-    else
-      tag.div(class: "pt-2 pr-2 pb-2 pl-3", &block)
-    end
-  end
 end
