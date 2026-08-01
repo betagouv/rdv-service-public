@@ -6,7 +6,7 @@
 if Rails.env.test?
   # Il faut copier la méthode `handle_positional_args` depuis `action_dispatch/routing/route_set.rb:292`
   # puis ajouter le `raise` dans le block `args.each_with_index` comme ci-dessous.
-  raise "Il faut recopier ce code quand on change de version de Rails" if Rails.version != "8.0.5"
+  raise "Il faut recopier ce code quand on change de version de Rails" if Rails.version != "8.0.5.1"
 
   class ActionDispatch::Routing::RouteSet::NamedRouteCollection::UrlHelper
     def handle_positional_args(controller_options, inner_options, args, result, path_params)
