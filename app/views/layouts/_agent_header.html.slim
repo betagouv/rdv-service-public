@@ -35,7 +35,7 @@ header.header.bg-white
             li = link_to agents_exports_path, class: "dropdown-item-dsfr dropdown-item" do
               span.fr-icon--sm.fr-mr-2v.fr-icon-file-download-line[aria-hidden="true"]
               = "Vos exports"
-            - territories = Agent::TerritoryPolicy::Scope.new(current_agent, Territory.all).resolve.distinct.order(:name)
+            - territories = Agent::TerritoryPolicy::Scope.new(current_agent, Territory.all).resolve.distinct.order(:name).load
             - if territories.any?
               li.dropdown-divider.my-1[aria-hidden="true"]
               - territories.each do |territory|
