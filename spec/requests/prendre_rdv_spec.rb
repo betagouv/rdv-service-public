@@ -132,4 +132,13 @@ RSpec.describe "Search", type: :request do
       end
     end
   end
+
+  # dans le le CDAD de la Côte d'Or,  les agents ont distribué un lien de prise de rendez-vous à
+  # l'échelle de leur espace. Pour éviter de casser ce lien, et en attendant d'avoir une solution plus pérenne,
+  # on autorise l'utilisation du paramètre departement dans ce cas.
+  # Leur nom de département étant C21, il n'y a pas de risque de permettre de scraper d'autres territoires.
+  it "marche pour le lien du CDAD de la Côte d'Or" do
+    get prendre_rdv_url(host: "www.rdv-service-public-test.localhost", departement: "C21")
+    expect(response).to be_successful
+  end
 end

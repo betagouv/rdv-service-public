@@ -142,7 +142,16 @@ class SearchController < ApplicationController
 
   def search_allowed?
     current_domain.provides_address_selection? || # toujours autorisé sur RDVS
-      (@current_step != :address_selection && params[:public_link_organisation_id].present?) # toujours scopé sur RDVSP
+      (@current_step != :address_selection && params[:public_link_organisation_id].present?) || # toujours scopé sur RDVSP
+      exception_for_cdad_21?
+  end
+
+  def exception_for_cdad_21?
+    # dans le le CDAD de la Côte d'Or,  les agents ont distribué un lien de prise de rendez-vous à
+    # l'échelle de leur espace. Pour éviter de casser ce lien, et en attendant d'avoir une solution plus pérenne,
+    # on autorise l'utilisation du paramètre departement dans ce cas.
+    # Leur nom de département étant C21, il n'y a pas de risque de permettre de scraper d'autres territoires.
+    params[:departement] == "C21"
   end
 
   def search_params
