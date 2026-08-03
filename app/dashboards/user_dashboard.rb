@@ -25,6 +25,7 @@ class UserDashboard < Administrate::BaseDashboard
     affiliation_number: Field::String,
     number_of_children: Field::Number,
     birth_date: Field::DateTime,
+    logged_once_with_franceconnect: Field::Boolean,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     deleted_at: Field::DateTime,
@@ -54,6 +55,7 @@ class UserDashboard < Administrate::BaseDashboard
     address
     phone_number
     birth_date
+    logged_once_with_franceconnect
     responsible
     relatives
     caisse_affiliation
