@@ -22,8 +22,10 @@ By default, it renders:
       <%= content_for(:title) || 'Dashboard' %> - <%= Rails.application.class.module_parent_name.titlecase %>
     </title>
     <%= render "common/favicon" %>
-    <%= javascript_include_tag 'administrate' %>
-    <%= stylesheet_link_tag 'administrate', media: "all" %>
+    <%= javascript_include_tag 'administrate/application' %>
+    <%= javascript_include_tag 'super_admin' %>
+    <%= stylesheet_link_tag 'administrate/application', media: "all" %>
+    <%= stylesheet_link_tag 'super_admin', media: "all" %>
     <%= csrf_meta_tags %>
   </head>
   <body>
