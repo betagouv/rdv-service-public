@@ -3,7 +3,7 @@ button[data-fr-opened="false" aria-controls="blog-posts-modal" type="button" cla
   - if BlogPost.new_content_for_agent?(current_agent)
     .ml-1.fr-badge.fr-badge--new.fr-badge--sm.fr-pl-3v
 
-dialog#blog-posts-modal.fr-modal[aria-labelledby="blog-posts-modal-title" aria-modal="true"]
+dialog#blog-posts-modal.fr-modal[aria-labelledby="blog-posts-modal-title"]
   .fr-container.fr-container--fluid.fr-container-md
     .fr-grid-row.fr-grid-row--center
       .fr-col-12.fr-col-md-8
@@ -11,4 +11,5 @@ dialog#blog-posts-modal.fr-modal[aria-labelledby="blog-posts-modal-title" aria-m
           .fr-modal__header
             button[aria-controls="blog-posts-modal" title="Fermer" type="button" class="fr-btn--close fr-btn"] Fermer
           .fr-modal__content.fr-mb-4w
+            h2.fr-modal__title#blog-posts-modal-title Nouveautés
             turbo-frame#blog-posts[src=agents_blog_posts_path(format: "turbo_stream") loading="lazy"]

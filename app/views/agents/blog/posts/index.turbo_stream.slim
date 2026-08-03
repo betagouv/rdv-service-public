@@ -1,6 +1,4 @@
 = turbo_stream.update "blog-posts" do
-  h2.fr-h4 id="blog-posts-modal-title" Nouveautés
-
   - if @posts.any?
     ul.fr-raw-list
       - @posts.each do |post|
