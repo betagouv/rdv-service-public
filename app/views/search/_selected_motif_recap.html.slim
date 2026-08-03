@@ -3,7 +3,6 @@
     li.list-group-item
       .row
         .col
-          span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
           | Motif :&nbsp;
           = context.first_matching_motif.name
         .col-auto
@@ -11,22 +10,18 @@
     - case context.first_matching_motif.location_type
     - when Motif.location_types[:phone]
       li.list-group-item
-        span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
         | RDV téléphonique
     - when Motif.location_types[:home]
       li.list-group-item
-        span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
         | RDV à domicile
     - when Motif.location_types[:visio]
       li.list-group-item
-        span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
         | RDV par visioconférence
     - when Motif.location_types[:public_office]
       - if context.ants_pre_demandes_count.present?
         li.list-group-item
           .row
             .col
-              span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
               | Nombre de pré-demandes ANTS à déposer :&nbsp;
               = context.ants_pre_demandes_count
             .col-auto
@@ -35,7 +30,6 @@
         li.list-group-item
           .row
             .col
-              span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
               | Lieu :&nbsp;
               = context.lieu.full_name
             .col-auto

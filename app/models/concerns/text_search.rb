@@ -65,9 +65,12 @@ module TextSearch
     end
 
     def where_column_starts_with(columns_name, query)
-      prefix_next = query.dup
-      prefix_next[-1] = (prefix_next[-1].ord + 1).chr
-      where(columns_name => query...prefix_next)
+      # on voudrait faire un LIKE 'query%' mais sous la collation de la DB (non-C),
+      # ce LIKE ne peut pas utiliser l'index btree standard et force un Seq Scan.
+      # on utilise une requête par intervalle : val >= query AND val < query_with_last_char_incremented
+      # La borne haute est calculée avec succ plutôt que ord+1 pour garder la cohérence des chiffres
+      # "+334459".succ = "+334460" tandis que "+33445" + ("9".ord + 1).chr = ""+33445:"
+      where(columns_name => query...query.succ)
     end
 
     def looks_like_an_id(string)

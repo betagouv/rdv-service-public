@@ -4,7 +4,7 @@ html lang="fr"
     = yield :html_head_prepend
     = render "common/head_agent"
   body
-    - links = [dsfr_link_to("Contenu", "#main"), link_to("Pied de page", "#footer")]
+    - links = [dsfr_link_to("Contenu", "#main"), dsfr_link_to("Menu", "#menu"), dsfr_link_to("Pied de page", "#footer")]
     = dsfr_skiplink label: "Accès rapide", links: links
 
     = render "layouts/agent_header"
