@@ -2,9 +2,10 @@
   h2.fr-h4 id="blog-posts-modal-title" Nouveautés
 
   - if @posts.any?
-    - @posts.each do |post|
-      .m-2
-        = render partial: "agents/blog/posts/post", locals: { post: post }
+    ul.fr-raw-list
+      - @posts.each do |post|
+        li.m-2
+          = render partial: "agents/blog/posts/post", locals: { post: post }
     .m-2
       = dsfr_link_to("Voir toutes les nouveautés", BlogPost::DOCS_URL, target: "_blank")
   - else
