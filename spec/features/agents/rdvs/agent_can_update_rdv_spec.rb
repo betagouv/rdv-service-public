@@ -91,19 +91,26 @@ RSpec.describe "Agent can update a RDV", js: true do
   end
 
   context "ajout d’un agent au RDV" do
-    let!(:agent_jungyoon) { create(:agent, first_name: "Jung Yoon", last_name: "Han", email: "jungyoon@angouleme.fr", basic_role_in_organisations: [organisation]) }
+    let!(:agent_jungyoon) do
+      create(:agent, first_name: "Jung Yoon", last_name: "Han", email: "jungyoon@angouleme.fr", basic_role_in_organisations: [organisation])
+    end
+    let(:starts_at) { Time.zone.local(2026, 8, 4, 16, 0, 0) }
 
-    it "envoie un email à l’agent ajouté", skip: "cf PR #5399" do # rubocop:disable RSpec/Pending
+    before { travel_to(Time.zone.local(2026, 8, 4, 16, 0, 0)) }
+
+    it "envoie un email à l’agent ajouté" do
       visit edit_admin_organisation_rdv_path(organisation, rdv)
-      select("Jung Yoon HAN (Urbanisme)", from: "rdv_agent_ids")
+      select("Jung Yoon HAN", from: "rdv_agent_ids")
       click_button "Enregistrer"
 
-      expect(page).to have_content("Jung Yoon HAN (Urbanisme)")
-      expect(page).to have_content("Shiraz NADIR (Urbanisme)")
+      expect(page).to have_content("Jung Yoon HAN")
+      expect(page).to have_content("Shiraz NADIR")
       perform_enqueued_jobs
+
       open_email "shiraz@angouleme.fr"
       expect(current_email).not_to be_nil
       expect(current_email.subject).to match(/RDV .* modifié/)
+
       open_email "jungyoon@angouleme.fr"
       expect(current_email).not_to be_nil
       expect(current_email.subject).to match(/Nouveau RDV/)
