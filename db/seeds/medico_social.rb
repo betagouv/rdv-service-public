@@ -195,7 +195,7 @@ motifs_attributes = 1000.times.map do |i|
     created_at: now,
     updated_at: now,
     name: "motif_#{i}",
-    color: Motif.new.send(:random_color),
+    color: Motif::DSFR_ILLUSTRATION_COLORS.sample,
     organisation_id: org_arques.id,
     service_id: service_pmi.id,
     bookable_by: :everyone,

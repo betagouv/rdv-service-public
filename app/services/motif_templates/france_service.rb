@@ -24,7 +24,7 @@ module MotifTemplates
 
         motif_attrs = template_attrs
           .slice(:name, :location_type, :default_duration_in_min, :restriction_for_rdv, :instruction_for_rdv)
-          .merge(service:)
+          .merge(service:, color: "#99CC99")
 
         Motif.new(motif_attrs)
       end
