@@ -5,10 +5,10 @@ module Rdv::Updatable
     Rdv.transaction do
       @old_agent_ids = agent_ids.to_a
 
-      # TODO: sortir les agent ids un peu plus joliment
-      assign_attributes(attributes) # this can assign agent_ids and thus persist
-      reload # Pour recharger les agents_rdvs
-      assign_attributes(attributes) # Pour recharger les autres attributs
+      # Cet update permet de persister les agent_rdvs, ce qui permet ensuite de faire les validations sur les conflits de rdvs
+      update(attributes.slice(:agent_ids))
+
+      assign_attributes(attributes) # Pour assigner les autres attributs
 
       self.updated_at = Time.zone.now
 
