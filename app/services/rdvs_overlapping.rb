@@ -10,7 +10,6 @@ class RdvsOverlapping
     return Rdv.none if starts_at.nil? || ends_at.nil? || starts_at > ends_at
 
     agents = rdv.agents
-
     agents = agents.to_a if rdv.new_record?
 
     Rdv.where.not(id: @rdv.id)
