@@ -73,8 +73,8 @@ class OffDays
       title: jour_ferie.label,
       start: jour_ferie.date.beginning_of_day.as_json,
       end: jour_ferie.date.end_of_day.as_json,
-      backgroundColor: AbsencesHelper::CALENDAR_BACKGROUND_COLOR,
-      textColor: "white",
+      color: AbsencesHelper::CALENDAR_BACKGROUND_COLOR,
+      contrastColor: "white",
     }
   end.freeze
 

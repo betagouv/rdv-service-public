@@ -24,7 +24,7 @@ RSpec.describe Admin::Api::Agenda::ExternalCalendarEventsController, type: :cont
         "start" => event_within_time_range.starts_at.as_json,
         "end" => event_within_time_range.ends_at.as_json,
         "resourceIds" => [event_within_time_range.agent.id],
-        "backgroundColor" => "rgba(52, 57, 58, 0.7)",
+        "color" => "rgba(52, 57, 58, 0.7)",
       },
     ]
     expect(response.parsed_body).to match_array(expected_response)

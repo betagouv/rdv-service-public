@@ -1,9 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 
-import { Calendar } from '@fullcalendar/core';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import { defaultFullCalendarConfig, eventRenderer } from '../components/calendar/utils'
+import { Calendar } from 'fullcalendar';
+import timeGridPlugin from 'fullcalendar/timegrid';
+import interactionPlugin from 'fullcalendar/interaction';
+import { classicTheme, defaultFullCalendarConfig, eventRenderer } from '../components/calendar/utils'
 
 export default class extends Controller {
   connect() {
@@ -49,7 +49,7 @@ export default class extends Controller {
 
   calendarConfig = (dataset) => {
     const options = {
-      plugins: [timeGridPlugin, interactionPlugin],
+      plugins: [classicTheme, timeGridPlugin, interactionPlugin],
       eventSources: JSON.parse(dataset.eventSourcesJson),
       initialDate: JSON.parse(dataset.defaultDateJson),
       initialView: dataset.singleDay === "true" ? 'timeGridDay' : 'timeGridWeek',
