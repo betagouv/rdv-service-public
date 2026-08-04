@@ -16,7 +16,7 @@ dialog#organisation-switcher-modal.fr-modal[aria-labelledby="organisation-switch
               - if multiple_territories
                 p.fr-text--sm.rdv-organisation-switcher-territory
                   | Espace : #{territory.name_for_agent}
-              ul.list-unstyled.rdv-organisation-switcher-list
+              ul.fr-raw-list.rdv-organisation-switcher-list
                 - organisations.each do |organisation|
                   li
                     - if organisation == current_organisation
