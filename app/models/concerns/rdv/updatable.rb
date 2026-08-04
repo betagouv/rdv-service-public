@@ -4,7 +4,12 @@ module Rdv::Updatable
   def update_and_notify(author, attributes, &block)
     Rdv.transaction do
       @old_agent_ids = agent_ids.to_a
+
+      # TODO: sortir les agent ids un peu plus joliment
       assign_attributes(attributes) # this can assign agent_ids and thus persist
+      reload # Pour recharger les agents_rdvs
+      assign_attributes(attributes) # Pour recharger les autres attributs
+
       self.updated_at = Time.zone.now
 
       previous_participations = participations.select(&:persisted?)
@@ -65,8 +70,7 @@ module Rdv::Updatable
   end
 
   def rdv_updated?
-    starts_at_changed? || lieu_changed? || visio_url_custom_changed?
-    # || agents_changed? désactivé pour l’instant cf https://github.com/betagouv/rdv-service-public/pull/5399
+    starts_at_changed? || lieu_changed? || visio_url_custom_changed? || agents_changed?
   end
 
   private

@@ -96,9 +96,9 @@ RSpec.describe "Agent can update a RDV", js: true do
     end
     let(:starts_at) { Time.zone.local(2026, 8, 4, 16, 0, 0) }
 
-    before { travel_to(Time.zone.local(2026, 8, 4, 16, 0, 0)) }
+    before { travel_to(Time.zone.local(2026, 8, 3, 16, 0, 0)) }
 
-    it "envoie un email à l’agent ajouté" do
+    it "envoie un email à l’agent ajouté mais pas à l'usager" do
       visit edit_admin_organisation_rdv_path(organisation, rdv)
       select("Jung Yoon HAN", from: "rdv_agent_ids")
       click_button "Enregistrer"
@@ -114,6 +114,9 @@ RSpec.describe "Agent can update a RDV", js: true do
       open_email "jungyoon@angouleme.fr"
       expect(current_email).not_to be_nil
       expect(current_email.subject).to match(/Nouveau RDV/)
+
+      open_email rdv.users.first # TODO: vérifier que l'usager est bien notifié dans les autres cas
+      expect(current_email).to be_nil
     end
 
     context "un RDV existe à la même heure pour l’agent ajouté" do
