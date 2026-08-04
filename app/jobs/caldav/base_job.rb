@@ -4,6 +4,7 @@ class Caldav::BaseJob < ApplicationJob
     # Cela permet d'identifier singulièrement l'erreur selon le code HTTP de la réponse
     Sentry.get_current_scope.set_fingerprint(["{{default}}", "Calendav::RequestError", http_status.to_s])
     Sentry.capture_exception(exception)
+    puts "coucou #{executions}"
     retry_job queue: :latency_whenever
   end
 end

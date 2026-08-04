@@ -148,15 +148,17 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
     end
 
     it "utilise un fingerprint différent pour chaque statut HTTP de réponse d'erreur" do
-      cal_url = "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id"
+      perform_enqueued_jobs do
+        cal_url = "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id"
 
-      stub_request(:propfind, cal_url).and_return({ status: 403 })
-      described_class.perform_now(agent.id)
-      expect(sentry_events.last.fingerprint).to eq(["{{default}}", "Calendav::RequestError", "403"])
+        stub_request(:propfind, cal_url).and_return({ status: 403 })
+        described_class.perform_later(agent.id)
+        expect(sentry_events.last.fingerprint).to eq(["{{default}}", "Calendav::RequestError", "403"])
 
-      stub_request(:propfind, cal_url).and_return({ status: 500 })
-      described_class.perform_now(agent.id)
-      expect(sentry_events.last.fingerprint).to eq(["{{default}}", "Calendav::RequestError", "500"])
+        stub_request(:propfind, cal_url).and_return({ status: 500 })
+        described_class.perform_later(agent.id)
+        expect(sentry_events.last.fingerprint).to eq(["{{default}}", "Calendav::RequestError", "500"])
+      end
     end
   end
 
