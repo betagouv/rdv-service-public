@@ -62,6 +62,7 @@ tables:
       - reset_password_token
       - invitation_token
       - rdv_invitation_token
+      - ami_france_connect_hash
     non_anonymized_column_names:
       - confirmed_at
       - confirmation_sent_at

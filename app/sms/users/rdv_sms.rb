@@ -2,14 +2,6 @@ class Users::RdvSms < Users::BaseSms
   include Rails.application.routes.url_helpers
   extend ActionView::Helpers::TextHelper
 
-  def rdv_title(rdv)
-    if rdv.collectif? && rdv.name.present?
-      [rdv.service_short_name, truncated_rdv_name].compact.join(" : ")
-    else
-      rdv.service_short_name
-    end
-  end
-
   def rdv_created(rdv, user, token)
     address_format = if @rdv.starts_at < 2.days.from_now
                        :full
@@ -46,6 +38,15 @@ class Users::RdvSms < Users::BaseSms
     @content = "#{base_message}\n#{cancellation_footer(rdv, token)}"
   end
 
+  MAX_RDV_NAME_LENGTH = 50
+
+  def self.truncated_rdv_name(name)
+    omission_length = "...".length
+    truncate(name, length: (MAX_RDV_NAME_LENGTH + omission_length))
+  end
+
+  private
+
   def cancellation_footer(rdv, token)
     if rdv.motif.bookable_by_everyone?
       url = reprendre_rdv_from_participation_invitation_token_short_url(host: domain_host, tkn: token)
@@ -59,18 +60,17 @@ class Users::RdvSms < Users::BaseSms
     end
   end
 
-  MAX_RDV_NAME_LENGTH = 50
-
   def truncated_rdv_name
     "#{self.class.truncated_rdv_name(@rdv.name)},"
   end
 
-  def self.truncated_rdv_name(name)
-    omission_length = "...".length
-    truncate(name, length: (MAX_RDV_NAME_LENGTH + omission_length))
+  def rdv_title(rdv)
+    if rdv.collectif? && rdv.name.present?
+      [rdv.service_short_name, truncated_rdv_name].compact.join(" : ")
+    else
+      rdv.service_short_name
+    end
   end
-
-  private
 
   def starts_at(rdv)
     I18n.l(rdv.starts_at, format: rdv.home? ? :short_sms_approx : :short_sms)

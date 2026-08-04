@@ -1,4 +1,6 @@
-RSpec.describe UpsertUserForFranceconnectService, type: :service do
+RSpec.describe UpsertUserForFranceconnectService do
+  subject(:service) { described_class.new(omniauth_info) }
+
   let(:omniauth_info) do
     OpenStruct.new(email: "jeanne@longo.fr",
                    given_name: "jeanne",
@@ -20,7 +22,6 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
 
   context "no pre-existing user" do
     it "creates a user" do
-      service = described_class.new(omniauth_info)
       expect { service.perform }.to change(User, :count).by(1)
       expect(service.new_user?).to be(true)
 
@@ -29,9 +30,36 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
 
     it "sets latest_login_at" do
       freeze_time do
-        service = described_class.new(omniauth_info)
         service.perform
         expect(service.user.reload.latest_login_at).to eq(Time.zone.now)
+      end
+    end
+
+    describe "ami_france_connect_hash" do
+      # Pour plus d'exemples, voir https://github.com/numerique-gouv/ami-notifications-api/blob/main/ami/user/tests/test_results.csv
+      let(:omniauth_info) do
+        OpenStruct.new(given_name: "Angela Claire Louise",
+                       family_name: "DUBOIS",
+                       preferred_username: "DUPONT",
+                       birthdate: "1962-08-24", gender: :female, birthplace: "75107", birthcountry: "99100")
+      end
+
+      context "when ami is enabled" do
+        stub_env_with(AMI_ENABLED: "true")
+
+        it "sets the ami_france_connect_hash" do
+          service.perform
+          expect(service.user.ami_france_connect_hash).to eq("4abd71ec1f581dce2ea2221cbeac7c973c6aea7bcb835acdfe7d6494f1528060")
+        end
+      end
+
+      context "when ami is not enabled" do
+        stub_env_with(AMI_ENABLED: nil)
+
+        it "doesn't the ami_france_connect_hash" do
+          service.perform
+          expect(service.user.ami_france_connect_hash).to be_blank
+        end
       end
     end
   end
@@ -51,7 +79,6 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
       end
 
       it "finds the user and updates her info" do
-        service = described_class.new(omniauth_info)
         expect { service.perform }.not_to change(User, :count)
         expect(service.new_user?).to be(false)
 
@@ -60,7 +87,6 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
 
       it "updates latest_login_at" do
         freeze_time do
-          service = described_class.new(omniauth_info)
           service.perform
           expect(service.user.reload.latest_login_at).to eq(Time.zone.now)
         end
@@ -77,7 +103,6 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
         end
 
         it "downcases the email" do
-          service = described_class.new(omniauth_info)
           expect { service.perform }.not_to change(User, :count)
           expect(service.new_user?).to be(false)
           user = service.user.reload
@@ -100,7 +125,6 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
       end
 
       it "finds the user and updates her info" do
-        service = described_class.new(omniauth_info)
         expect { service.perform }.not_to change(User, :count)
         expect(service.new_user?).to be(false)
         user = service.user.reload
@@ -128,7 +152,6 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
     end
 
     it "creates a new user" do
-      service = described_class.new(omniauth_info)
       expect { service.perform }.to change(User, :count).by(1)
       expect(service.new_user?).to be(true)
 
