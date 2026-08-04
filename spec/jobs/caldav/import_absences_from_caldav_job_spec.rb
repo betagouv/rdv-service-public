@@ -148,17 +148,38 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
     end
 
     it "utilise un fingerprint différent pour chaque statut HTTP de réponse d'erreur" do
-      perform_enqueued_jobs do
-        cal_url = "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id"
+      cal_url = "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id"
 
-        stub_request(:propfind, cal_url).and_return({ status: 403 })
-        described_class.perform_later(agent.id)
-        expect(sentry_events.last.fingerprint).to eq(["{{default}}", "Calendav::RequestError", "403"])
+      stub_request(:propfind, cal_url).and_return({ status: 403 })
+      described_class.perform_later(agent.id)
+      perform_enqueued_jobs
+      expect(sentry_events.last.fingerprint).to eq(["{{default}}", "Calendav::RequestError", "403"])
 
-        stub_request(:propfind, cal_url).and_return({ status: 500 })
-        described_class.perform_later(agent.id)
-        expect(sentry_events.last.fingerprint).to eq(["{{default}}", "Calendav::RequestError", "500"])
-      end
+      stub_request(:propfind, cal_url).and_return({ status: 500 })
+      described_class.perform_later(agent.id)
+      perform_enqueued_jobs
+      expect(sentry_events.last.fingerprint).to eq(["{{default}}", "Calendav::RequestError", "500"])
+    end
+
+    it "ré-enqueue le job pour réessayer plus tard après une erreur Caldav" do
+      cal_url = "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id"
+      stub_request(:propfind, cal_url).and_return({ status: 500 })
+
+      expect { described_class.perform_now(agent.id) }.to(
+        have_enqueued_job(described_class).with(agent.id).on_queue("latency_whenever")
+      )
+    end
+
+    it "arrête de réessayer après un nombre maximal de tentatives, sans boucle infinie" do
+      cal_url = "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id"
+      stub_request(:propfind, cal_url).and_return({ status: 500 })
+
+      described_class.perform_later(agent.id)
+
+      expect { perform_enqueued_jobs while enqueued_jobs.any? }.to raise_error(Calendav::RequestError)
+
+      expect(a_request(:propfind, cal_url)).to have_been_made.times(13)
+      expect(enqueued_jobs).to be_empty
     end
   end
 
