@@ -15,7 +15,6 @@ Motif.create!(
   name: "Dépôt de plainte par visioconférence (Visioplainte)",
   default_duration_in_min: 30,
   min_public_booking_delay: 2 * 60 * 60,
-  color: "#FF7C00",
   location_type: :visio,
   service: service_gendarmerie,
   visibility_type: Motif::VISIBLE_AND_NOT_NOTIFIED,

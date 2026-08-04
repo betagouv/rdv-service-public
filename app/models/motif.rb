@@ -74,6 +74,12 @@ class Motif < ApplicationRecord
   # Hooks
 
   after_initialize { self.public_link_id ||= SecureRandom.base58(8) }
+  DSFR_ILLUSTRATION_COLORS = [
+    "#B7A73F", "#68A532", "#00A95F", "#009081", "#009099", "#465F9D", "#417DC4", "#A558A0",
+    "#E18B76", "#CE614A", "#C8AA39", "#C3992A", "#E4794A", "#D1B781", "#C08C65", "#BD987A",
+    "#AEA397",
+  ].freeze
+  after_initialize { self.color ||= DSFR_ILLUSTRATION_COLORS.sample }
 
   # Scopes
   scope :active, lambda { |active = true|
