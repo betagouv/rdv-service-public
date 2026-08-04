@@ -5,12 +5,17 @@ aside.left-side-menu-wrapper
     .current-organisation
       .fr-pt-2w.fr-pr-2w.fr-pb-2w.fr-pl-3w.d-flex.align-items-center
         div.d-flex.flex-column
-          = current_organisation.name
+          span.d-flex.align-items-center
+            = current_organisation.name
+            - if current_agent.admin_in_organisation?(current_organisation)
+              span.fr-badge.fr-badge--sm.fr-badge--pink-tuile.fr-icon-user-setting-fill.fr-badge--icon-left.fr-badge--icon-only.fr-ml-1w[title="Vous administrez cette organisation"]
+                span.fr-sr-only Administrateur
           - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
             span.fr-text--xs.fr-mb-0= current_agent.services_short_names
       - if current_agent.organisations_count > 1
         .fr-pl-3w.fr-pb-2w.fr-mt-n2w
-          = link_to "Changer d'organisation", admin_organisations_path, class: "fr-link fr-link--icon-right fr-icon-arrow-right-line fr-link--xs"
+          button.fr-link.fr-link--icon-right.fr-icon-arrow-right-line.fr-link--xs[data-fr-opened="false" aria-controls="organisation-switcher-modal" type="button"]
+            | Changer d'organisation
 
     - if content_for? :side_nav_menu
       = yield :side_nav_menu

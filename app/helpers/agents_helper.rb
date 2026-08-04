@@ -60,4 +60,8 @@ module AgentsHelper
 
     !current_agent.admin_in_organisation?(current_organisation)
   end
+
+  def organisations_grouped_by_territory_for_switcher
+    current_agent.organisations.includes(:territory).ordered_by_name.group_by(&:territory)
+  end
 end
