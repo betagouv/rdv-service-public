@@ -37,8 +37,3 @@
     - if current_agent_can_create_agent_in?(current_organisation)
       .m-3.d-flex.justify-content-center.align-items-center
         = link_to t("agents.create_cta"), new_admin_organisation_agent_path(current_organisation), class: "fr-btn"
-        - if needs_agent_search?
-          - if @invited_agents_count > 0
-            = link_to "Voir les #{@invited_agents_count} invitations en attente", admin_organisation_invitations_path(current_organisation), class: "fr-btn fr-btn--tertiary-no-outline"
-          - else
-            .m-2 Aucune invitation en attente

@@ -365,7 +365,7 @@ Rails.application.routes.draw do
           end
         end
       end
-      resources :invitations, only: [:index] do
+      resources :invitations, only: [] do
         post :reinvite, on: :member
       end
       resource :merge_users, only: %i[new create]
