@@ -79,7 +79,10 @@ Rails.application.routes.draw do
 
   namespace :users do
     resource :rdv_wizard_step, only: %i[new create]
-    resources :rdvs, only: %i[index create show edit update] do
+    # pour éviter les 404 lors d’un refresh après un premier post qui a rendu :new
+    get :rdv_wizard_step, to: redirect(path: "/users/rdv_wizard_step/new")
+    post :rdvs, to: redirect(status: 303) { |_params, request| "/users/rdv_wizard_step/new?#{request.query_string}" } # TODO: supprimer après le 03/08/2026
+    resources :rdvs, only: %i[index show edit update] do
       resources :participations, only: %i[index create]
       put "participations/cancel", to: "participations#cancel"
       member do
@@ -327,6 +330,8 @@ Rails.application.routes.draw do
               patch :update_user_type
               get :edit_instructions
               patch :update_instructions
+              get :edit_sectorisation
+              patch :update_sectorisation
             end
           end
         end
@@ -360,7 +365,7 @@ Rails.application.routes.draw do
           end
         end
       end
-      resources :invitations, only: [:index] do
+      resources :invitations, only: [] do
         post :reinvite, on: :member
       end
       resource :merge_users, only: %i[new create]
@@ -433,10 +438,7 @@ Rails.application.routes.draw do
   get "r/:id/:tkn" => "redirect#rdv_short", as: "rdv_short"
   # >> REMOVE AFTER 01/01/2027
 
-  get "prdv", to: (redirect do |_path_params, req|
-    query_params = format_redirect_params(req.params)
-    "prendre_rdv#{query_params}"
-  end), as: "prendre_rdv_short"
+  get "prdv", to: "redirect#reprendre_rdv_from_participation_invitation_token", as: "reprendre_rdv_from_participation_invitation_token_short"
 
   def format_redirect_params(params)
     # we rename the short parameter tkn

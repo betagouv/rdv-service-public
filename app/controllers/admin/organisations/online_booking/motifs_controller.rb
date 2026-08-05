@@ -34,6 +34,19 @@ class Admin::Organisations::OnlineBooking::MotifsController < AgentAuthControlle
     end
   end
 
+  def edit_sectorisation; end
+
+  def update_sectorisation
+    @motif.assign_attributes(params.require(:motif).permit(:sectorisation_level))
+
+    if @motif.save
+      flash[:success] = "Le niveau de sectorisation a été mis à jour."
+      redirect_to admin_organisation_online_booking_motif_path(current_organisation, motif_id: @motif.id)
+    else
+      render :edit_sectorisation
+    end
+  end
+
   def open
     if @motif.update(bookable_by: :everyone)
       flash[:success] = "Le motif a été ouvert à la réservation en ligne"

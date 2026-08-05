@@ -54,6 +54,39 @@ RSpec.describe Ants::SyncAppointmentJob do
       expect(AntsApi).not_to receive(:create)
       described_class.perform_now(ants_pre_demande_number: "A123456789")
     end
+
+    context "quand on a mis par erreur dans la base ANTS un rendez-vous avec le mauvais nom de domaine" do
+      before do
+        allow(AntsApi).to receive(:status)
+          .with(hash_including(ants_pre_demande_number: "A123456789", meeting_point_id: lieu.id.to_s))
+          .and_return(
+            {
+              "status" => "validated",
+              "appointments" => [
+                {
+                  "management_url" => "http://#{Domain::RDV_SERVICE_PUBLIC_ETAT.host_name}/users/rdvs/#{rdv.id}",
+                  "meeting_point" => "Mairie de Saumur",
+                  "appointment_date" => "2020-04-20 08:00:00",
+                },
+              ],
+            }
+          )
+      end
+
+      it "détecte quand même que c'est le bon rendez-vous à supprimer" do
+        expect(AntsApi).to receive(:delete)
+          .with(
+            {
+              ants_pre_demande_number: "A123456789",
+              meeting_point: "Mairie de Saumur",
+              meeting_point_id: lieu.id.to_s,
+              appointment_date: "2020-04-20 08:00:00",
+            }
+          )
+        expect(AntsApi).not_to receive(:create)
+        described_class.perform_now(ants_pre_demande_number: "A123456789")
+      end
+    end
   end
 
   context "Synchro pour un ants_pre_demande_number correspondant à un usager ayant un RDV mais qui n’est pas un RDV ANTS" do

@@ -1,7 +1,6 @@
 class Users::RdvsController < UserAuthController
   before_action :verify_user_name_initials, :set_rdv, :set_can_see_rdv_motif, only: %i[show creneaux ics edit cancel update]
   before_action :set_can_see_rdv_motif, only: %i[show edit index]
-  before_action :set_geo_search, only: [:create]
   before_action :set_lieu, only: %i[edit update]
   before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
 
@@ -24,44 +23,6 @@ class Users::RdvsController < UserAuthController
                 else
                   @rdv_page.future.order(starts_at: :asc)
                 end
-  end
-
-  def create
-    lieu = Lieu.find(new_rdv_extra_params[:lieu_id]) if new_rdv_extra_params[:lieu_id].present?
-    motif = Motif.find(rdv_params[:motif_id])
-    @creneau = CreneauxSearch::ForUser.creneau_for(
-      user: current_user,
-      starts_at: Time.zone.parse(rdv_params[:starts_at]),
-      motif: motif,
-      lieu: lieu,
-      geo_search: @geo_search,
-      duration_in_min: duration_in_min_for(motif:)
-    )
-    ActiveRecord::Base.transaction do
-      if @creneau.present?
-        @rdv = build_rdv_from_creneau(@creneau)
-        authorize(@rdv, policy_class: User::RdvPolicy)
-        @save_succeeded = @rdv.save
-      end
-    end
-    skip_authorization if @creneau.nil?
-    if @save_succeeded
-      notifier = Notifiers::RdvCreated.new(@rdv, current_user)
-      notifier.perform
-      set_user_name_initials_verified
-      flash[:success] = t(".rdv_confirmed")
-      redirect_to users_rdv_path(@rdv, invitation_token: notifier.participations_tokens_by_user_id[current_user.id])
-    else
-      # TODO: cette liste de paramètres devrait ressembler a SearchController#search_params, mais sans certains paramètres de choix du wizard de créneaux
-      query = {
-        address: new_rdv_extra_params[:address] || new_rdv_extra_params[:where],
-        city_code: new_rdv_extra_params[:city_code], street_ban_id: new_rdv_extra_params[:street_ban_id],
-        service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type,
-        departement: new_rdv_extra_params[:departement], organisation_ids: new_rdv_extra_params[:organisation_ids],
-        ants_pre_demandes_count: new_rdv_extra_params[:ants_pre_demandes_count],
-      }
-      redirect_to prendre_rdv_path(query), flash: { error: t(".creneau_unavailable") }
-    end
   end
 
   def edit; end
@@ -140,51 +101,5 @@ class Users::RdvsController < UserAuthController
 
     flash[:alert] = "Ce créneau n'est plus disponible"
     redirect_to creneaux_users_rdv_path(@rdv)
-  end
-
-  def set_geo_search
-    @geo_search = Users::GeoSearch.new(
-      departement: params[:departement],
-      city_code: params[:city_code],
-      street_ban_id: params[:street_ban_id].presence
-    )
-  end
-
-  def build_rdv_from_creneau(creneau)
-    rdv = creneau.build_rdv
-    rdv.assign_attributes(
-      users: users_for_rdv,
-      created_by: current_user
-    )
-    rdv
-  end
-
-  def users_for_rdv
-    if rdv_params[:user_ids]
-      current_user.available_users_for_rdv.find(rdv_params[:user_ids])
-    else
-      [current_user]
-    end
-  end
-
-  def new_rdv_extra_params
-    params.permit(
-      :lieu_id, :motif_name_with_location_type, :departement, :where, :address, :city_code, :street_ban_id,
-      :invitation_token, { organisation_ids: [] }, :ants_pre_demandes_count
-    )
-  end
-
-  def rdv_params
-    params.permit(:starts_at, :motif_id, :context, user_ids: [])
-  end
-
-  def duration_in_min_for(motif:)
-    if params[:duration]
-      params[:duration].to_i
-    elsif params[:ants_pre_demandes_count].present?
-      motif.default_duration_in_min * params[:ants_pre_demandes_count].to_i
-    else
-      motif.default_duration_in_min
-    end
   end
 end

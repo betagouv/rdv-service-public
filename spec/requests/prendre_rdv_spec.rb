@@ -108,4 +108,37 @@ RSpec.describe "Search", type: :request do
       expect(response).to be_successful
     end
   end
+
+  describe "GET /prendre_rdv sur les domaines sans recherche géographique" do
+    [
+      "www.rdv-service-public-test.localhost",
+      "www.rdv-service-public-etat-test.localhost",
+    ].each do |host|
+      context "sur #{host}" do
+        it "redirige vers l'accueil si le paramètre departement est fourni" do
+          get prendre_rdv_url(host:, departement: "75")
+          expect(response).to redirect_to(root_url(host:))
+        end
+
+        it "redirige vers l'accueil si tous les paramètres de recherche géo sont fournis" do
+          get prendre_rdv_url(host:, departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
+          expect(response).to redirect_to(root_url(host:))
+        end
+
+        it "redirige vers l'accueil si des paramètres géo sans departement sont fournis" do
+          get prendre_rdv_url(host:, latitude: "48.859", longitude: "2.347")
+          expect(response).to redirect_to(root_url(host:))
+        end
+      end
+    end
+  end
+
+  # dans le le CDAD de la Côte d'Or,  les agents ont distribué un lien de prise de rendez-vous à
+  # l'échelle de leur espace. Pour éviter de casser ce lien, et en attendant d'avoir une solution plus pérenne,
+  # on autorise l'utilisation du paramètre departement dans ce cas.
+  # Leur nom de département étant C21, il n'y a pas de risque de permettre de scraper d'autres territoires.
+  it "marche pour le lien du CDAD de la Côte d'Or" do
+    get prendre_rdv_url(host: "www.rdv-service-public-test.localhost", departement: "C21")
+    expect(response).to be_successful
+  end
 end

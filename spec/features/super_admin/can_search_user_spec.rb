@@ -1,6 +1,6 @@
 RSpec.describe "Un super admin peut chercher un utilisateur", js: true do
   let(:super_admin) { create(:super_admin) }
-  let!(:user) { create(:user, first_name: "Katia", last_name: "Garcia") }
+  let!(:user) { create(:user, first_name: "Katia", last_name: "Garcia", phone_number: "0611223344") }
   let!(:another_user) { create(:user, first_name: "Tanguy", last_name: "Laverdure") } # On crée un autre utilisateur pour s’assurer que la recherche fonctionne correctement
 
   it "par email" do
@@ -24,7 +24,7 @@ RSpec.describe "Un super admin peut chercher un utilisateur", js: true do
     visit super_admins_users_path
 
     field = find_field("search")
-    field.set(user.phone_number)
+    field.set("061122")
     page.execute_script <<-JS
       var form = document.querySelector('form');
       form.requestSubmit();

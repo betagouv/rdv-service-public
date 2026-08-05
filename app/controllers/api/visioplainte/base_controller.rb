@@ -16,6 +16,8 @@ class Api::Visioplainte::BaseController < ActionController::Base # rubocop:disab
 
     territory = Territory.visioplainte.first
 
+    territory.roles.delete_all
+
     territory.organisations.find_each do |organisation|
       organisation.plage_ouvertures.delete_all
       organisation.rdvs.destroy_all

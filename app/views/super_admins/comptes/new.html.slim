@@ -20,7 +20,7 @@ section.main-content__body
       // Administrate met automatiquement des select2 pour les formulaires qu’il génère automatiquement. On reproduit ce comportement ici.
       .form-group.field-unit--has-many[style="width: 100%"]
         = ff.label :tag_ids, "Tags", class: "form-control-label"
-        = ff.select :tag_ids, Tag.order(:name).pluck(:name, :id), {}, { multiple: true, class: "form-control", style: "width: 100%" }
+        = ff.select :tag_ids, Tag.order(:name).pluck(:name, :id), {}, { multiple: true, class: "form-control", style: "width: 100%", "data-controller": "select" }
 
     = f.simple_fields_for :organisation do |ff|
       div[style="margin: 8px 0"]

@@ -1,50 +1,10 @@
-<%# Copied from app/views/super_admins/application/show.html.erb %>
-
-<% content_for(:title) { t("administrate.actions.show_resource", name: page.page_title) } %>
-
-<header class="main-content__header">
-  <h1 class="main-content__page-title">
-    <%= content_for(:title) %>
-  </h1>
-
-  <div>
-    <%= link_to(
-      t("administrate.actions.edit_resource", name: page.page_title),
-      [:edit, namespace, page.resource],
-      class: "button",
-    ) if accessible_action?(page.resource, :edit) %>
-
-    <%= link_to(
-      t("administrate.actions.destroy"),
-      [namespace, page.resource],
-      class: "button button--danger",
-      method: :delete,
-      data: { confirm: t("administrate.actions.confirm") }
-    ) if accessible_action?(page.resource, :destroy) %>
-  </div>
-</header>
-
-<section class="main-content__body">
-
-  <dl>
-    <% page.attributes.each do |attribute| %>
-      <dt class="attribute-label" id="<%= attribute.name %>">
-      <%= t(
-        "helpers.label.#{resource_name}.#{attribute.name}",
-        default: page.resource.class.human_attribute_name(attribute.name),
-      ) %>
-      </dt>
-
-      <dd class="attribute-data attribute-data--<%=attribute.html_class%>">
-        <%= render_field attribute, page: page %>
-      </dd>
-    <% end %>
-  </dl>
-
+<!-- Sections spéciales à la fin du tableau principal -->
+<% content_for(:after_main) do %>
   <% if accessible_action?(page.resource, :create_france_connect_motifs) %>
     <%= render partial: "super_admins/organisations/motifs_templates", locals: { organisation: page.resource } %>
   <% end %>
+  <%= render partial: "super_admins/history", locals: {resource: page.resource} %>
+<% end %>
 
-  <%= render partial: 'super_admins/history', locals: { resource: page.resource } %>
-
-</section>
+<!-- Render du template standard -->
+<%= render template: "administrate/application/show", locals: local_assigns %>

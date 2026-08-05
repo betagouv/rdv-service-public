@@ -4,6 +4,21 @@ RSpec.describe "Admin::RdvCollectifs", type: :request do
   let(:organisation) { create(:organisation) }
   let(:motif) { create(:motif, :collectif, organisation:) }
 
+  describe "POST /admin/organisations/:organisation_id/rdvs_collectifs" do
+    it "affiche une erreur de validation au lieu de planter quand starts_at est vide" do
+      lieu = create(:lieu, organisation:)
+      agent = create(:agent, admin_role_in_organisations: [organisation])
+      sign_in agent
+
+      post admin_organisation_rdvs_collectifs_path(organisation),
+           params: { rdv: { motif_id: motif.id, agent_ids: [agent.id], lieu_id: lieu.id,
+                            duration_in_min: 30, starts_at: "", } }
+
+      expect(response).to be_successful
+      expect(response.body).to include("L’horaire du RDV doit être rempli·e")
+    end
+  end
+
   describe "PUT /admin/organisations/:organisation_id/rdvs_collectifs/:id" do
     context "quand l'agent vient de la sélection de créneaux avec un usager en contexte" do
       it "redirige vers la page de créneaux et affiche un flash avec le motif et la date" do

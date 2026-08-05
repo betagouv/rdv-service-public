@@ -1,8 +1,10 @@
-import { Calendar } from '@fullcalendar/core';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
+import { Calendar } from 'fullcalendar';
+import timeGridPlugin from 'fullcalendar/timegrid';
+import dayGridPlugin from 'fullcalendar/daygrid';
+import interactionPlugin from 'fullcalendar/interaction';
 import {
+  classicTheme,
+  buttonHintsButtons,
   defaultFullCalendarConfig,
   preferencesModalToggle,
   hiddenDays,
@@ -23,14 +25,14 @@ export class AgendaPlageOuverture {
 
   initFullCalendar = () => {
     const options = {
-      plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+      plugins: [classicTheme, dayGridPlugin, timeGridPlugin, interactionPlugin],
       ...calendarTimeRange(this.data),
       eventSources: JSON.parse(this.data.eventSourcesJson),
       hiddenDays: hiddenDays(this.data),
       select: this.selectEvent,
       initialView: "timeGridWeek",
       headerToolbar: { left: "today,prev,next,title", center: "dayGridMonth,timeGridWeek", right: "preferencesModalToggle" },
-      customButtons: { preferencesModalToggle },
+      buttons: { ...buttonHintsButtons, preferencesModalToggle },
     }
     return new Calendar(this.calendarEl, { ...defaultFullCalendarConfig(), ...options });
   }

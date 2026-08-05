@@ -11,7 +11,7 @@ const isDev = process.env.NODE_ENV === "development";
 
 const config = {
   entryPoints: {
-    administrate: "./app/javascript/administrate",
+    super_admin: "./app/javascript/super_admin",
     application: "./app/javascript/application",
     application_test: "./app/javascript/application_test",
     application_agent: "./app/javascript/application_agent",

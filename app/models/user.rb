@@ -276,6 +276,12 @@ class User < ApplicationRecord
     latest_login_at?
   end
 
+  # Seul un usager invité via token, qui n'a pas encore d'email confirmé par une précédente connexion,
+  # peut modifier son email. Dans tous les autres cas (SSO, usager déjà connecté, usager connecté via code…) il est figé.
+  def email_editable?
+    signed_in_with_invitation_token? && !(email.present? && already_logged_in?)
+  end
+
   protected
 
   def generate_rdv_invitation_token

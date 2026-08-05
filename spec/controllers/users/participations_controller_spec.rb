@@ -49,8 +49,14 @@ RSpec.describe Users::ParticipationsController, type: :controller do
 
       it "redirige vers la page de prise de rendez-vous" do
         post :create, params: { rdv_id: rdv.id, user_id: user.id }
-        expect(response)
-          .to redirect_to(prendre_rdv_path(motif_name_with_location_type: rdv.motif.name_with_location_type, lieu_id: rdv.lieu.id, departement: rdv.organisation.territory.departement_number))
+        expect(response).to redirect_to(
+          prendre_rdv_path(
+            motif_name_with_location_type: rdv.motif.name_with_location_type,
+            lieu_id: rdv.lieu.id,
+            departement: rdv.organisation.territory.departement_number,
+            public_link_organisation_id: rdv.organisation_id
+          )
+        )
       end
     end
   end

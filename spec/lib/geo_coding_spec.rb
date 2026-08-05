@@ -108,5 +108,26 @@ RSpec.describe GeoCoding do
         expect(result).to be_nil
       end
     end
+
+    context "quand l'API renvoie une erreur (ex: page HTML de maintenance)" do
+      before do
+        stub_request(
+          :get,
+          "https://data.geopf.fr/geocodage/search/?q=20%20avenue%20de%20S%C3%A9gur,%20Paris,%2075007"
+        ).to_return(status: 503, body: "<html><body>Service indisponible</body></html>", headers: {})
+      end
+
+      it "retourne nil sans lever d'exception" do
+        result = geo_coding.get_geolocation_results(address, departement_number)
+
+        expect(result).to be_nil
+      end
+
+      it "ne met pas la réponse en échec en cache" do
+        geo_coding.get_geolocation_results(address, departement_number)
+
+        expect(Rails.cache.read("api-adresse:#{address}")).to be_nil
+      end
+    end
   end
 end

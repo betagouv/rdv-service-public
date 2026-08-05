@@ -64,7 +64,7 @@ RSpec.describe Admin::MotifsController, type: :controller do
     context "with invalid params" do
       let(:invalid_attributes) do
         {
-          name: "test motif",
+          name: motif.name, # On a une condition d'unicité sur les intitulés de motifs
         }
       end
 

@@ -1,9 +1,11 @@
-import { Calendar } from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import listPlugin from '@fullcalendar/list';
-import interactionPlugin from '@fullcalendar/interaction';
+import { Calendar } from 'fullcalendar';
+import dayGridPlugin from 'fullcalendar/daygrid';
+import timeGridPlugin from 'fullcalendar/timegrid';
+import listPlugin from 'fullcalendar/list';
+import interactionPlugin from 'fullcalendar/interaction';
 import {
+  classicTheme,
+  buttonHintsButtons,
   defaultFullCalendarConfig,
   eventRenderer,
   setupRealtimeRefresh,
@@ -39,7 +41,7 @@ export class AgendaMonoAgent {
   initFullCalendar = () => {
     const options = {
       ...calendarTimeRange(this.data),
-      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
+      plugins: [classicTheme, dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: handleAjaxError,
       initialDate: this.getDefaultDate(),
@@ -49,12 +51,11 @@ export class AgendaMonoAgent {
       dayHeaderContent: dayHeaderContent,
       select: this.selectEvent,
       headerToolbar: headerToolbarLayout,
-      customButtons: { preferencesModalToggle },
+      buttons: { ...buttonHintsButtons, preferencesModalToggle },
       views: {
         timeGridOneDay: {
           type: 'timeGrid',
           duration: { days: 1 },
-          buttonText: 'Journée',
           titleFormat: {
             month: 'long',
             year: 'numeric',
@@ -65,6 +66,7 @@ export class AgendaMonoAgent {
       },
       datesSet: this.datesSet,
       eventDidMount: eventRenderer(this.data.selectedEventId),
+      backgroundEventDidMount: eventRenderer(this.data.selectedEventId),
     }
     return new Calendar(this.calendarEl, { ...defaultFullCalendarConfig(), ...options });
   }

@@ -13,7 +13,7 @@ module ProConnectOpenIdClient
       @client_secret = client_secret
     end
 
-    attr_reader :id_token_for_logout, :user_info
+    attr_reader :id_token_for_logout, :user_info, :access_token
 
     def fetch_user_info_from_code!(code)
       validate_state!
@@ -96,9 +96,10 @@ module ProConnectOpenIdClient
       response_hash = JSON.parse(response.body)
 
       @id_token_for_logout = response_hash["id_token"]
+      @access_token = response_hash["access_token"]
       validate_nonce!(@id_token_for_logout)
 
-      response_hash["access_token"]
+      @access_token
     end
 
     def validate_nonce!(encoded_id_token)

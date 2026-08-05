@@ -105,6 +105,26 @@ RSpec.describe "RDV API" do
       end
     end
 
+    context "quand un RDV a plusieurs agents assignés" do
+      let!(:rdv_with_two_agents) { create(:rdv, organisation: organisation, motif: motif, users: [user], agents: [agent, other_agent]) }
+
+      it "n'apparaît pas en double et ne fausse pas total_count/total_pages (INNER JOIN vers agents_rdvs)" do
+        stub_const("Api::V1::BaseController::PAGINATE_PER", 2)
+        rdv_ids = []
+        get "/api/v1/rdvs", headers: headers, as: :json
+        expect(parsed_response_body["meta"]["total_count"]).to eq 6
+        expect(parsed_response_body["meta"]["total_pages"]).to eq 3
+        rdv_ids += parsed_response_body["rdvs"].pluck("id")
+        get "/api/v1/rdvs", headers: headers, params: { page: 2 }, as: :json
+        rdv_ids += parsed_response_body["rdvs"].pluck("id")
+        get "/api/v1/rdvs", headers: headers, params: { page: 3 }, as: :json
+        rdv_ids += parsed_response_body["rdvs"].pluck("id")
+        expect(rdv_ids.count).to eq(6)
+        expect(rdv_ids.uniq.count).to eq(6)
+        expect(rdv_ids).to include(rdv_with_two_agents.id)
+      end
+    end
+
     describe "utilise la bonne timezone" do
       context "lorsque la timezone de l'organisation est la timezone par défaut (Europe/Paris)" do
         it "utilise la timezone de l'instance" do

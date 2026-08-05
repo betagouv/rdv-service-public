@@ -15,7 +15,6 @@ Motif.create!(
   name: "Dépôt de plainte par visioconférence (Visioplainte)",
   default_duration_in_min: 30,
   min_public_booking_delay: 2 * 60 * 60,
-  color: "#FF7C00",
   location_type: :visio,
   service: service_gendarmerie,
   visibility_type: Motif::VISIBLE_AND_NOT_NOTIFIED,
@@ -37,6 +36,7 @@ superviseur_gendarmerie = Agent.new(
 superviseur_gendarmerie.skip_confirmation!
 superviseur_gendarmerie.save!
 AgentTerritorialAccessRight.create(agent: superviseur_gendarmerie, territory: territory)
+AgentTerritorialRole.create(agent: superviseur_gendarmerie, territory: territory)
 
 30.times do |i|
   Agent.create!(

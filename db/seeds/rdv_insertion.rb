@@ -60,7 +60,6 @@ territory_yonne.services << service_rsa
 # MOTIFS Drome
 motif1_drome1 = Motif.create!(
   name: "RSA - Orientation : rdv sur site",
-  color: "#00ffff",
   default_duration_in_min: 60,
   organisation: org_drome1,
   bookable_by: :agents_and_prescripteurs_and_invited_users,
@@ -76,7 +75,6 @@ motif1_drome1 = Motif.create!(
 )
 motif2_drome1 = Motif.create!(
   name: "RSA accompagnement",
-  color: "#000000",
   default_duration_in_min: 30,
   organisation: org_drome1,
   bookable_by: :agents_and_prescripteurs_and_invited_users,
@@ -87,7 +85,6 @@ motif2_drome1 = Motif.create!(
 )
 motif_drome2 = Motif.create!(
   name: "RSA - Orientation : rdv sur site",
-  color: "#00ffff",
   default_duration_in_min: 60,
   organisation: org_drome2,
   bookable_by: :agents_and_prescripteurs_and_invited_users,
@@ -99,7 +96,6 @@ motif_drome2 = Motif.create!(
 )
 motif_convoc_drome1 = Motif.create!(
   name: "Convocation RSA - Orientation : rdv sur site",
-  color: "#00ffff",
   default_duration_in_min: 60,
   organisation: org_drome1,
   bookable_by: :agents,
@@ -113,7 +109,6 @@ motif_convoc_drome1 = Motif.create!(
 # MOTIFS Yonne
 motif_yonne_physique = Motif.create!(
   name: "RSA - Codiagnostic d'orientation",
-  color: "#000000",
   default_duration_in_min: 30,
   organisation: org_yonne,
   service: service_rsa,
@@ -122,7 +117,6 @@ motif_yonne_physique = Motif.create!(
 )
 motif_yonne_telephone = Motif.create!(
   name: "RSA - Orientation : rdv téléphonique",
-  color: "#000000",
   default_duration_in_min: 30,
   organisation: org_yonne,
   service: service_rsa,

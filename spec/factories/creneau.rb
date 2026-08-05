@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :creneau do
     starts_at { 10.days.from_now }
     motif
+    minutes_after_rdv { 0 }
 
     trait :does_not_respect_min_public_booking_delay do
       motif { build(:motif, min_public_booking_delay: 14.days) }

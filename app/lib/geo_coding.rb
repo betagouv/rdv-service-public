@@ -1,6 +1,6 @@
 class GeoCoding
   def find_geo_coordinates(address)
-    address_api_response(address).dig("features", 0, "geometry", "coordinates")
+    address_api_response(address)&.dig("features", 0, "geometry", "coordinates")
   end
 
   def get_geolocation_results(address, departement_number)
@@ -29,10 +29,12 @@ class GeoCoding
   end
 
   def address_api_response(address)
-    address_api_response = Rails.cache.fetch("api-adresse:#{address}") do
-      Faraday.get("https://data.geopf.fr/geocodage/search/", q: address)
+    Rails.cache.fetch("api-adresse:#{address}", skip_nil: true) do
+      response = Faraday.get("https://data.geopf.fr/geocodage/search/", q: address)
+      JSON.parse(response.body) if response.success?
     end
-
-    JSON.parse(address_api_response.body)
+  rescue JSON::ParserError => e
+    Sentry.capture_exception(e)
+    nil
   end
 end

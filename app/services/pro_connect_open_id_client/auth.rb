@@ -1,7 +1,8 @@
 # voir https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/implementation_technique
 module ProConnectOpenIdClient
   class Auth
-    SCOPES = "openid email given_name usual_name siret idp_id".freeze
+    BASE_SCOPES = "openid email given_name usual_name siret idp_id".freeze
+    VISIO_SCOPES = "lasuite_visio lasuite_visio:rooms:create".freeze
     ACR_FOR_2FA = %w[eidas0-mfa eidas1-mfa eidas2 eidas3].freeze
 
     def initialize(client_id:, client_secret:, login_hint: nil, prompt: nil)
@@ -20,7 +21,7 @@ module ProConnectOpenIdClient
         response_type: "code",
         client_id: @client_id,
         redirect_uri: callback_url,
-        scope: SCOPES,
+        scope: scopes,
         state: state,
         nonce: nonce,
         login_hint: @login_hint,
@@ -32,6 +33,12 @@ module ProConnectOpenIdClient
     end
 
     private
+
+    def scopes
+      return BASE_SCOPES if ENV["VISIO_NUMERIQUE_DISABLED"]
+
+      "#{BASE_SCOPES} #{VISIO_SCOPES}"
+    end
 
     def claims(force_2fa:)
       {

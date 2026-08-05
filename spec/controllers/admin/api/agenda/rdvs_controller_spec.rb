@@ -34,7 +34,7 @@ RSpec.describe Admin::Api::Agenda::RdvsController, type: :controller do
         expect(returns_rdvs.pluck("id")).to contain_exactly(rdv.id, rdv_from_other_organisation.id)
 
         # Les RDVs des autres orgas sont affichés en gris
-        expect(returns_rdvs.find { _1["id"] == rdv_from_other_organisation.id }["backgroundColor"]).to eq("#757575")
+        expect(returns_rdvs.find { _1["id"] == rdv_from_other_organisation.id }["color"]).to eq("#757575")
       end
     end
 
@@ -67,7 +67,7 @@ RSpec.describe Admin::Api::Agenda::RdvsController, type: :controller do
           rdv_of_another_service = create(:rdv, agents: [given_agent], organisation: organisation, starts_at: mercredi_15h, motif: create(:motif, service: other_service, organisation:))
           get :index, params: fullcalendar_time_range_params.merge(agent_id: given_agent.id, organisation_id: organisation.id, format: :json)
           expect(response.parsed_body.size).to eq(1)
-          expect(response.parsed_body[0].keys).to eq(%w[start end title textColor backgroundColor extendedProps])
+          expect(response.parsed_body[0].keys).to eq(%w[start end title contrastColor color extendedProps])
           expect(response.parsed_body[0]["title"]).to eq("Occupé⋅e (en RDV)")
           expect(Time.zone.parse(response.parsed_body[0]["start"])).to eq(rdv_of_another_service.starts_at)
           expect(Time.zone.parse(response.parsed_body[0]["end"])).to eq(rdv_of_another_service.ends_at)
@@ -85,7 +85,7 @@ RSpec.describe Admin::Api::Agenda::RdvsController, type: :controller do
           rdv_of_another_org_same_service = create(:rdv, agents: [given_agent], organisation: other_org, starts_at: aujourdhui_lundi_15h, motif: motif_of_other_org)
           get :index, params: fullcalendar_time_range_params.merge(agent_id: given_agent.id, organisation_id: organisation.id, format: :json)
           expect(response.parsed_body.size).to eq(1)
-          expect(response.parsed_body[0].keys).to eq(%w[start end title textColor backgroundColor extendedProps])
+          expect(response.parsed_body[0].keys).to eq(%w[start end title contrastColor color extendedProps])
           expect(response.parsed_body[0]["title"]).to eq("Occupé⋅e (en RDV)")
           expect(Time.zone.parse(response.parsed_body[0]["start"])).to eq(rdv_of_another_org_same_service.starts_at)
           expect(Time.zone.parse(response.parsed_body[0]["end"])).to eq(rdv_of_another_org_same_service.ends_at)

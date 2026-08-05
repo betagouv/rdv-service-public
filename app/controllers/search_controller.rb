@@ -2,6 +2,7 @@ class SearchController < ApplicationController
   layout "application_base"
 
   include TokenInvitable
+  include Search::LogParamsConcern
   prepend_before_action :store_invitation_in_session_and_redirect, only: %i[search_rdv]
 
   def home
@@ -40,10 +41,10 @@ class SearchController < ApplicationController
 
       @current_step = CreneauWizardForUsers::CurrentStepPicker.new(@context).current_step
 
-      if !current_domain.provides_address_selection? && @current_step == :address_selection
-        redirect_to root_path
-      else
+      if search_allowed?
         render :search_rdv
+      else
+        redirect_to root_path
       end
     end
   end
@@ -64,7 +65,7 @@ class SearchController < ApplicationController
   def public_link_with_public_motif_id
     motif = Motif.find_by(public_link_id: params[:public_link_id])
     if motif
-      redirect_to_organisation_search(motif.organisation, motif:)
+      redirect_to_organisation_search(motif.organisation, **{ motif:, prescripteur: params[:prescripteur] }.compact)
     else
       redirect_to root_path, flash: { error: "Motif introuvable" }
     end
@@ -125,17 +126,32 @@ class SearchController < ApplicationController
     public_link_to_org_url(organisation_id: export.destination_organisation_id, org_slug: organisation.slug, host: ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"])
   end
 
-  def redirect_to_organisation_search(organisation, motif: nil)
+  def redirect_to_organisation_search(organisation, motif: nil, prescripteur: nil)
     if organisation
       redirect_to prendre_rdv_path({
         public_link_organisation_id: organisation.id,
         departement: organisation.territory.departement_number,
         motif_id: motif&.id,
+        prescripteur:,
       }.compact)
     else
       flash[:alert] = "Organisation non trouvée"
       redirect_to root_path
     end
+  end
+
+  def search_allowed?
+    current_domain.provides_address_selection? || # toujours autorisé sur RDVS
+      (@current_step != :address_selection && params[:public_link_organisation_id].present?) || # toujours scopé sur RDVSP
+      exception_for_cdad_21?
+  end
+
+  def exception_for_cdad_21?
+    # dans le le CDAD de la Côte d'Or,  les agents ont distribué un lien de prise de rendez-vous à
+    # l'échelle de leur espace. Pour éviter de casser ce lien, et en attendant d'avoir une solution plus pérenne,
+    # on autorise l'utilisation du paramètre departement dans ce cas.
+    # Leur nom de département étant C21, il n'y a pas de risque de permettre de scraper d'autres territoires.
+    params[:departement] == "C21"
   end
 
   def search_params
