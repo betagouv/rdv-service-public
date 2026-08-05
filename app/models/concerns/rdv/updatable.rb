@@ -32,15 +32,11 @@ module Rdv::Updatable
     end
   end
 
-  def update_status_and_notify(author, attributes)
+  def update_status_and_notify(author, status:)
     Rdv.transaction do
       @old_agent_ids = agent_ids.to_a
-      assign_attributes(attributes) # this can assign agent_ids and thus persist
+      self.status = status
       self.updated_at = Time.zone.now
-
-      previous_participations = participations.select(&:persisted?)
-      remove_duplicate_participations
-      set_created_by_for_new_participations(author)
 
       if status_changed? && valid?
         self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
@@ -49,7 +45,7 @@ module Rdv::Updatable
       end
 
       if save
-        notify!(author, previous_participations)
+        notify!(author, participations)
         true
       else
         raise ActiveRecord::Rollback
