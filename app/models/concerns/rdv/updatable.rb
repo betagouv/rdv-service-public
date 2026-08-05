@@ -33,7 +33,28 @@ module Rdv::Updatable
   end
 
   def update_status_and_notify(author, attributes)
-    update_and_notify(author, attributes)
+    Rdv.transaction do
+      @old_agent_ids = agent_ids.to_a
+      assign_attributes(attributes) # this can assign agent_ids and thus persist
+      self.updated_at = Time.zone.now
+
+      previous_participations = participations.select(&:persisted?)
+      remove_duplicate_participations
+      set_created_by_for_new_participations(author)
+
+      if status_changed? && valid?
+        self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
+        change_participation_statuses
+        participations.reload # reload is needed after .persisted? method call
+      end
+
+      if save
+        notify!(author, previous_participations)
+        true
+      else
+        raise ActiveRecord::Rollback
+      end
+    end
   end
 
   def participation_token(user_id)
