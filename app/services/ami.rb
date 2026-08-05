@@ -67,7 +67,7 @@ class Ami
       event_date: Time.zone.now,
       content_icon: "fr-icon-calendar-event-line",
       item_type: "RDV",
-      item_id: @participation.rdv_id,
+      item_id: @participation.rdv_id, # Ce champs est affiché en tant que "référence dossier" dans l'interface d'AMI, il faudrait peut-être mettre autre chose
       content_link: Rails.application.routes.url_helpers.rdv_short_from_token_url(@participation.restricted_auth_token, host: domain_host),
       valid_until: @participation.rdv.starts_at.iso8601,
     }
