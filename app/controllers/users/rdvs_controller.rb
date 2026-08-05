@@ -49,6 +49,7 @@ class Users::RdvsController < UserAuthController
     else
       flash[:error] = "Impossible d'annuler le RDV."
     end
+    # TODO: the call to @rdv.participation_token is broken, but is that really a problem?
     redirect_to users_rdv_path(@rdv, invitation_token: @rdv.participation_token(current_user.id))
   end
 

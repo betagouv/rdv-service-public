@@ -26,9 +26,11 @@ module Rdv::Updatable
     end
   end
 
-  def participation_token(user_id)
-    # For user invited with tokens, nil default for not invited users
-    @notifier&.participations_tokens_by_user_id&.fetch(user_id, nil)
+  private
+
+  def rdv_updated?
+    starts_at_changed? || lieu_changed? || visio_url_custom_changed?
+    # || agents_changed? désactivé pour l’instant cf https://github.com/betagouv/rdv-service-public/pull/5399
   end
 
   def lieu_changed?
@@ -43,13 +45,6 @@ module Rdv::Updatable
   def starts_at_changed?
     previous_changes["starts_at"].present?
   end
-
-  def rdv_updated?
-    starts_at_changed? || lieu_changed? || visio_url_custom_changed?
-    # || agents_changed? désactivé pour l’instant cf https://github.com/betagouv/rdv-service-public/pull/5399
-  end
-
-  private
 
   def visio_url_custom_changed?
     collectif? && visio? && previous_changes["visio_url_custom"].present?
@@ -73,10 +68,8 @@ module Rdv::Updatable
 
   def notify!(author, previous_participations)
     if rdv_updated?
-      @notifier = Notifiers::RdvUpdated.new(self, author, old_agent_ids: @old_agent_ids)
+      Notifiers::RdvUpdated.new(self, author, old_agent_ids: @old_agent_ids).perform
     end
-
-    @notifier&.perform
 
     if collectif? && previous_participations.sort != participations.sort
       Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
