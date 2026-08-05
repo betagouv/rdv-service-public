@@ -20,6 +20,13 @@ RSpec.describe Admin::AgentsController, type: :controller do
       subject
       expect(assigns(:agents).to_a.first).to eq(agent1)
     end
+
+    it "lists intervenant agents after agents with pending invitations" do
+      intervenant = create(:agent, :intervenant, organisations: [organisation])
+      subject
+      agents = assigns(:agents).to_a
+      expect(agents.index(agent1)).to be < agents.index(intervenant)
+    end
   end
 
   describe "DELETE #destroy" do
