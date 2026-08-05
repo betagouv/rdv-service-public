@@ -110,19 +110,12 @@ class Admin::RdvsController < AgentAuthController
   def update_status
     authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
 
-    @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
+    @rdv_form = Admin::EditRdvStatusForm.new(@rdv, pundit_user)
     @success = @rdv_form.submit(params.require(:rdv).permit(:status).merge(ignore_benign_errors: true))
 
     respond_to do |format|
       format.turbo_stream do
         render locals: { rdv: @rdv, contextual_agents: @contextual_agents, quick_update: params[:quick_update] }
-      end
-      format.html do
-        if @success
-          redirect_to admin_organisation_rdv_path(current_organisation, @rdv, contextual_agent_ids: @contextual_agents.map(&:id)), rdv_success_flash
-        else
-          render :edit
-        end
       end
     end
   end
