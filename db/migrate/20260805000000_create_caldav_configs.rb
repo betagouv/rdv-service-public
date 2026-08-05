@@ -7,9 +7,9 @@ class CreateCaldavConfigs < ActiveRecord::Migration[8.0]
   def up
     create_table :caldav_configs do |t|
       t.references :agent, null: false, foreign_key: true, index: { unique: true }
-      t.string :caldav_agenda_url
-      t.string :caldav_username
-      t.string :caldav_password
+      t.string :caldav_agenda_url, null: false
+      t.string :caldav_username, null: false
+      t.string :caldav_password, null: false
       t.string :caldav_sync_token
       t.datetime :caldav_disconnect_started_at
       t.boolean :caldav_include_sensitive_data, default: false, null: false
