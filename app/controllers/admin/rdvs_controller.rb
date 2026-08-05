@@ -188,7 +188,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def rdv_update_params
-    allowed_params = params.require(:rdv).permit(:status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name, :visio_url_custom, :visio_url_type,
+    allowed_params = params.require(:rdv).permit(:lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name, :visio_url_custom, :visio_url_type,
                                                  participations_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
                                                  lieu_attributes: %i[name address latitude longitude id],
                                                  agent_ids: [])
@@ -217,7 +217,7 @@ class Admin::RdvsController < AgentAuthController
 
   def rdv_success_flash
     {
-      notice: if rdv_update_params[:status].in?(Rdv::CANCELLED_STATUSES)
+      notice: if @rdv.status.in?(Rdv::CANCELLED_STATUSES)
                 I18n.t("admin.rdvs.message.success.cancel")
               else
                 I18n.t("admin.rdvs.message.success.update")
