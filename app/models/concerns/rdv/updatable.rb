@@ -11,12 +11,6 @@ module Rdv::Updatable
       remove_duplicate_participations
       set_created_by_for_new_participations(author)
 
-      if status_changed? && valid?
-        self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
-        change_participation_statuses
-        participations.reload # reload is needed after .persisted? method call
-      end
-
       if block_given?
         unless block.call(self) # yield RDV before saving, can be used to run policy check
           raise ActiveRecord::Rollback
@@ -37,16 +31,6 @@ module Rdv::Updatable
     @notifier&.participations_tokens_by_user_id&.fetch(user_id, nil)
   end
 
-  def new_cancelled_notifier(author, previous_participations)
-    # Don't notify RDV cancellation to users that had previously cancelled their individual participation
-    available_users_for_notif = previous_participations.select(&:send_lifecycle_notifications?).select(&:not_cancelled?).map(&:user)
-    Notifiers::RdvCancelled.new(self, author, available_users_for_notif)
-  end
-
-  def rdv_status_reloaded_from_cancelled?
-    status_previously_was.in?(Rdv::CANCELLED_STATUSES) && status == "unknown"
-  end
-
   def lieu_changed?
     # Rappel :
     # - si le motif du RDV est de type `public_office`, le lieu est forcément renseigné, sinon il est forcément nil
@@ -54,10 +38,6 @@ module Rdv::Updatable
     return false unless lieu
 
     previous_changes["lieu_id"].present? || lieu.previous_changes.keys.include?("name") || lieu.previous_changes.keys.include?("address")
-  end
-
-  def rdv_cancelled?
-    previous_changes["status"]&.last.in?(Rdv::CANCELLED_STATUSES)
   end
 
   def starts_at_changed?
@@ -92,12 +72,7 @@ module Rdv::Updatable
   end
 
   def notify!(author, previous_participations)
-    if rdv_cancelled?
-      file_attentes.destroy_all
-      @notifier = new_cancelled_notifier(author, previous_participations)
-    elsif rdv_status_reloaded_from_cancelled?
-      @notifier = Notifiers::RdvCreated.new(self, author)
-    elsif rdv_updated?
+    if rdv_updated?
       @notifier = Notifiers::RdvUpdated.new(self, author, old_agent_ids: @old_agent_ids)
     end
 
@@ -105,22 +80,6 @@ module Rdv::Updatable
 
     if collectif? && previous_participations.sort != participations.sort
       Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
-    end
-  end
-
-  def change_participation_statuses
-    case status
-    when "unknown"
-      # Setting to unknown means resetting the rdv status by agents and reset ALL participations statuses
-      participations.each { _1.update!(status: status) }
-    when "revoked", "excused"
-      # When rdv status is revoked/excused, not cancelled participations are updated to revoked/excused
-      # Collectives RDV status cannot be excused (validations)
-      participations.not_cancelled.each { _1.update!(status: status) }
-    when "seen", "noshow"
-      # When rdv status is seen/noshow, unknowns participations statuses are updated to seen/noshow
-      # Collectives RDV status cannot be noshow (validations)
-      participations.unknown.each { _1.update!(status: status) }
     end
   end
 
