@@ -12,9 +12,8 @@ class Admin::EditRdvStatusForm
   end
 
   def submit(rdv_attributes)
-    @rdv.update_and_notify(@current_agent, rdv_attributes) do |rdv_before_save|
-      @rdv = rdv_before_save
-      valid?
+    if valid?
+      Rdv::UpdateStatusAndNotify.new(@rdv, @current_agent, status: rdv_attributes["status"]).perform
     end
   end
 end
