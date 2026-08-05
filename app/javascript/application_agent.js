@@ -48,6 +48,7 @@ import DependentInputController from './controllers/dependent_input_controller'
 import FormController from "./controllers/form_controller"
 import PrintController from "./controllers/print_controller"
 import LagaufreController from "./controllers/lagaufre"
+import BlogPostsModalController from "./controllers/blog_posts_modal_controller"
 
 window.Stimulus = Application.start()
 Stimulus.register('checkbox-select-all', CheckboxSelectAll)
@@ -57,6 +58,7 @@ Stimulus.register('dependent-input', DependentInputController)
 Stimulus.register('form', FormController)
 Stimulus.register('print', PrintController)
 Stimulus.register('lagaufre', LagaufreController)
+Stimulus.register('blog-posts-modal', BlogPostsModalController)
 
 import './stylesheets/print'
 import './stylesheets/application_agent'
