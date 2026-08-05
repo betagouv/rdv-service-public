@@ -1,11 +1,16 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
+  # Ces colonnes ont été déplacées vers la table caldav_configs.
+  # Elles seront supprimées dans une migration ultérieure.
+  self.ignored_columns += %w[
+    caldav_agenda_url caldav_username caldav_password caldav_sync_token
+    caldav_disconnect_started_at caldav_include_sensitive_data
+  ]
+
   include Agent::CaldavConfiguration
   include Agent::FeatureFlags
   include Agent::PreloadRoles
-
-  encrypts :caldav_password, deterministic: true
 
   # Mixins
   has_paper_trail(

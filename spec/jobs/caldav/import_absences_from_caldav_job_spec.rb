@@ -82,7 +82,9 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
       end
     end
 
-    let(:agent) { create(:agent, :with_caldav_config, caldav_sync_token: "rsuneaitren") }
+    let(:agent) { create(:agent, :with_caldav_config) }
+
+    before { agent.caldav_config.update!(caldav_sync_token: "rsuneaitren") }
 
     it "supprime un événement s’il est déjà enregistré localement mais qu'il devient TRANSP:TRANSPARENT" do
       ExternalCalendarEvent.create(

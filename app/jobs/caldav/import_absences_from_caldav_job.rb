@@ -88,7 +88,7 @@ module Caldav
 
         ExternalCalendarEvent.where(agent: agent, url: deleted_events).delete_all if deleted_events.any?
 
-        agent.update_columns(caldav_sync_token: new_sync_token) # rubocop:disable Rails/SkipsModelValidations
+        agent.caldav_config.update_columns(caldav_sync_token: new_sync_token) # rubocop:disable Rails/SkipsModelValidations
       end
     end
 
