@@ -66,6 +66,29 @@ RSpec.describe "Agents can be managed by organisation admins" do
       end
     end
 
+    describe "when the agent already has a pending invitation for this organisation" do
+      let!(:invited_agent) do
+        create(:agent, :not_confirmed, email: "jean@paul.com", service: pmi, basic_role_in_organisations: [organisation1], invitation_accepted_at: nil)
+      end
+
+      before do
+        allow(UnblockBrevoTransactionalContact).to receive(:new).and_return(instance_double(UnblockBrevoTransactionalContact, call: true))
+      end
+
+      it "proposes to resend the invitation instead of a generic error" do
+        click_link "Ajouter un agent", match: :first
+        fill_in "Email", with: "jean@paul.com"
+        click_button "Enregistrer"
+
+        expect(page).to have_content("Une invitation a déjà été envoyée à jean@paul.com")
+        expect(Agent.count).to eq(2)
+
+        click_link "Renvoyer l’invitation"
+
+        expect(page).to have_content("Une nouvelle invitation a été envoyée à l'agent jean@paul.com")
+      end
+    end
+
     stub_env_for_proconnect
     specify "CRUD on agents" do
       create(:agent, first_name: "Tony", last_name: "Patrick", email: "tony@patrick.fr", service: pmi, basic_role_in_organisations: [organisation1], invitation_accepted_at: nil)

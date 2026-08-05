@@ -41,6 +41,7 @@ class Admin::AgentsController < AgentAuthController
       flash[:alert] = create_agent.warning_message
       redirect_to admin_organisation_agents_path(current_organisation)
     else
+      @pending_invitation_conflict_organisation = create_agent.pending_invitation_conflict_organisation
       render_new
     end
   end

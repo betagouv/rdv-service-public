@@ -40,6 +40,11 @@ class AdminCreatesAgent
 
   attr_reader :warning_message
 
+  # @return [Organisation, nil] l'organisation pour laquelle l'agent a déjà une invitation en attente, si c'est la raison de l'échec
+  def pending_invitation_conflict_organisation
+    @agent&.roles&.find { |role| !role.persisted? && role.errors.of_kind?(:agent, :taken_invited) }&.organisation
+  end
+
   def confirmation_message
     return nil unless @agent.valid?
 
