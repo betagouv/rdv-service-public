@@ -98,9 +98,8 @@ class Admin::RdvsController < AgentAuthController
     authorize(@rdv, policy_class: Agent::RdvPolicy)
 
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
-    @success = @rdv_form.submit(rdv_update_params)
 
-    if @success
+    if @rdv_form.submit(rdv_update_params)
       redirect_to admin_organisation_rdv_path(current_organisation, @rdv, contextual_agent_ids: @contextual_agents.map(&:id)), notice: I18n.t("admin.rdvs.message.success.update")
     else
       render :edit
@@ -111,7 +110,7 @@ class Admin::RdvsController < AgentAuthController
     authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
 
     @rdv_form = Admin::EditRdvStatusForm.new(@rdv, current_agent)
-    @success = @rdv_form.submit(params.require(:rdv).permit(:status))
+    @rdv_form.submit(params.require(:rdv).permit(:status))
 
     respond_to do |format|
       format.turbo_stream do
