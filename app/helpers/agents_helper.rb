@@ -44,6 +44,8 @@ module AgentsHelper
     case controller_name
     when "lieux", "agents", "invitations", "motifs", "online_bookings", "configurations", "organisations"
       :menu_settings
+    when "rdvs_collectifs", "motif_selections"
+      :menu_rdv_collectifs
     when "users", "merge_users", "referent_assignations"
       :menu_users
     when "rdvs"
