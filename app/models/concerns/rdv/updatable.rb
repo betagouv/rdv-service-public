@@ -38,6 +38,7 @@ module Rdv::Updatable
       self.status = status
       self.updated_at = Time.zone.now
 
+      previous_participations = participations.clone
       if status_changed? && valid?
         self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
         change_participation_statuses
@@ -47,7 +48,7 @@ module Rdv::Updatable
       if save
         if rdv_cancelled?
           file_attentes.destroy_all
-          @notifier = new_cancelled_notifier(author, participations)
+          @notifier = new_cancelled_notifier(author, previous_participations)
         elsif rdv_status_reloaded_from_cancelled?
           @notifier = Notifiers::RdvCreated.new(self, author)
         end
