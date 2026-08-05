@@ -42,10 +42,12 @@ module AgentsHelper
 
   def active_menu_item
     case controller_name
-    when "lieux", "agents", "invitations", "motifs", "online_bookings", "configurations", "organisations"
+    when "lieux", "agents", "invitations", "motifs", "configurations", "organisations"
       :menu_settings
     when "rdvs_collectifs", "motif_selections"
       :menu_rdv_collectifs
+    when "online_bookings"
+      :menu_online_booking
     when "users", "merge_users", "referent_assignations"
       :menu_users
     when "rdvs"
