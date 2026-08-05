@@ -110,8 +110,8 @@ class Admin::RdvsController < AgentAuthController
   def update_status
     authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
 
-    @rdv_form = Admin::EditRdvStatusForm.new(@rdv, pundit_user)
-    @success = @rdv_form.submit(params.require(:rdv).permit(:status).merge(ignore_benign_errors: true))
+    @rdv_form = Admin::EditRdvStatusForm.new(@rdv, current_agent)
+    @success = @rdv_form.submit(params.require(:rdv).permit(:status))
 
     respond_to do |format|
       format.turbo_stream do

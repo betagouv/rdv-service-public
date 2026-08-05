@@ -5,6 +5,8 @@ module Admin::RdvDuplicatesFormConcern
     validate :check_duplicates
   end
 
+  private
+
   def check_duplicates
     suspicious_rdvs = Rdv.includes(:users, :agents).where(
       organisation: rdv.organisation,

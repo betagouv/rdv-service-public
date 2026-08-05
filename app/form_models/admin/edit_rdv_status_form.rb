@@ -1,28 +1,20 @@
 class Admin::EditRdvStatusForm
   include ActiveModel::Model
   include Admin::RdvDuplicatesFormConcern
-  include Pundit::Authorization
 
-  attr_accessor :rdv, :agent_context
+  attr_accessor :rdv
 
   delegate :errors, to: :rdv
 
-  def initialize(rdv, agent_context)
+  def initialize(rdv, current_agent)
     @rdv = rdv
-    @agent_context = agent_context
+    @current_agent = current_agent
   end
 
   def submit(rdv_attributes)
-    @rdv.update_and_notify(agent_context.agent, rdv_attributes) do |rdv_before_save|
-      authorize(rdv_before_save, :update?, policy_class: Agent::RdvPolicy)
+    @rdv.update_and_notify(@current_agent, rdv_attributes) do |rdv_before_save|
       @rdv = rdv_before_save
       valid?
     end
-  end
-
-  private
-
-  def pundit_user
-    agent_context
   end
 end
