@@ -32,6 +32,10 @@ module Rdv::Updatable
     end
   end
 
+  def update_status_and_notify(author, attributes)
+    update_and_notify(author, attributes)
+  end
+
   def participation_token(user_id)
     # For user invited with tokens, nil default for not invited users
     @notifier&.participations_tokens_by_user_id&.fetch(user_id, nil)

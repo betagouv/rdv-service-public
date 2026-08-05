@@ -77,7 +77,7 @@ class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
     if rdv.blank?
       render(json: { errors: ["Pas de rdv pour cet id"] }, status: :not_found)
     else
-      rdv.update_and_notify(rdv.users.first, status: "excused")
+      rdv.update_status_and_notify(rdv.users.first, status: "excused")
       render json: Visioplainte::RdvBlueprint.render(rdv), status: :ok
     end
   end
