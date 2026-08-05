@@ -45,7 +45,15 @@ module Rdv::Updatable
       end
 
       if save
-        notify!(author, participations)
+        if rdv_cancelled?
+          file_attentes.destroy_all
+          @notifier = new_cancelled_notifier(author, participations)
+        elsif rdv_status_reloaded_from_cancelled?
+          @notifier = Notifiers::RdvCreated.new(self, author)
+        end
+
+        @notifier&.perform
+
         true
       else
         raise ActiveRecord::Rollback
