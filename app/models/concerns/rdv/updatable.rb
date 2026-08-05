@@ -32,36 +32,6 @@ module Rdv::Updatable
     end
   end
 
-  def update_status_and_notify(author, status:)
-    Rdv.transaction do
-      @old_agent_ids = agent_ids.to_a
-      self.status = status
-      self.updated_at = Time.zone.now
-
-      previous_participations = participations.clone
-      if status_changed? && valid?
-        self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
-        change_participation_statuses
-        participations.reload # reload is needed after .persisted? method call
-      end
-
-      if save
-        if rdv_cancelled?
-          file_attentes.destroy_all
-          @notifier = new_cancelled_notifier(author, previous_participations)
-        elsif rdv_status_reloaded_from_cancelled?
-          @notifier = Notifiers::RdvCreated.new(self, author)
-        end
-
-        @notifier&.perform
-
-        true
-      else
-        raise ActiveRecord::Rollback
-      end
-    end
-  end
-
   def participation_token(user_id)
     # For user invited with tokens, nil default for not invited users
     @notifier&.participations_tokens_by_user_id&.fetch(user_id, nil)
