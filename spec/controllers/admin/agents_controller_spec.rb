@@ -13,6 +13,15 @@ RSpec.describe Admin::AgentsController, type: :controller do
 
   after { Devise.mailer.deliveries.clear }
 
+  describe "GET #index" do
+    subject { get :index, params: { organisation_id: organisation.id } }
+
+    it "lists agents with pending invitations first" do
+      subject
+      expect(assigns(:agents).to_a.first).to eq(agent1)
+    end
+  end
+
   describe "DELETE #destroy" do
     subject { delete :destroy, params: { organisation_id: organisation.id, id: agent1.id } }
 
