@@ -8,7 +8,6 @@ class Agent < ApplicationRecord
     caldav_disconnect_started_at caldav_include_sensitive_data
   ]
 
-  include Agent::CaldavConfiguration
   include Agent::FeatureFlags
   include Agent::PreloadRoles
 
@@ -90,6 +89,7 @@ class Agent < ApplicationRecord
   has_many :referent_assignations, dependent: :destroy
   has_many :instance_exports, dependent: :destroy
   has_one :territory_creation_request, dependent: :destroy
+  has_one :caldav_config, dependent: :destroy
 
   accepts_nested_attributes_for :roles, :agent_territorial_access_rights
 
@@ -353,5 +353,9 @@ class Agent < ApplicationRecord
 
   def lagaufre_access?
     email.include?(".gouv.fr")
+  end
+
+  def caldav_configured?
+    caldav_config.present?
   end
 end

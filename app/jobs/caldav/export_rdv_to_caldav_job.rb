@@ -28,10 +28,10 @@ module Caldav
     private
 
     def create_event
-      payload = agents_rdv.rdv.payload(action: :create, recipient: agents_rdv.agent, sensitive_data: agent.caldav_include_sensitive_data)
+      payload = agents_rdv.rdv.payload(action: :create, recipient: agents_rdv.agent, sensitive_data: caldav_config.caldav_include_sensitive_data)
       ics = IcalFormatters::Ics.from_payload(payload).to_ical
       identifier = "#{agents_rdv.rdv.uuid}.ics"
-      event = agent.caldav_client.events.create(agent.caldav_agenda_url, identifier, ics)
+      event = caldav_client.events.create(caldav_config.caldav_agenda_url, identifier, ics)
       # Le provider Caldav n’utilise pas forcément l’identifiant qu’on lui donne pour créer l’event
       # on stocke donc l’url complète de l’event créé pour être sûr de pouvoir le retrouver.
       # On utilise update_columns pour éviter de déclencher des callbacks
@@ -39,13 +39,13 @@ module Caldav
     end
 
     def update_event
-      payload = agents_rdv.rdv.payload(action: :update, recipient: agents_rdv.agent, sensitive_data: agent.caldav_include_sensitive_data)
+      payload = agents_rdv.rdv.payload(action: :update, recipient: agents_rdv.agent, sensitive_data: caldav_config.caldav_include_sensitive_data)
       ics = IcalFormatters::Ics.from_payload(payload).to_ical
-      agent.caldav_client.events.update(agents_rdv.caldav_url, ics)
+      caldav_client.events.update(agents_rdv.caldav_url, ics)
     end
 
     def delete_event(caldav_event_url)
-      agent.caldav_client.events.delete(caldav_event_url)
+      caldav_client.events.delete(caldav_event_url)
     rescue Calendav::RequestError => e
       if e.response.status.code == 404
         # L'événement externe à supprimer est introuvable, pas la peine de retry
@@ -61,6 +61,14 @@ module Caldav
 
     def agents_rdv
       @agents_rdv ||= AgentsRdv.find_by_id(@agents_rdv_id)
+    end
+
+    def caldav_config
+      agent.caldav_config
+    end
+
+    def caldav_client
+      caldav_config.caldav_client
     end
   end
 end

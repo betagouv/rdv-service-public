@@ -47,7 +47,7 @@ class Agents::CaldavSyncController < AgentAuthController
 
     error = caldav_config_error
     if error.nil?
-      flash[:success] = "La synchronisation avec votre agenda CalDAV #{current_agent.caldav_username} est activée."
+      flash[:success] = "La synchronisation avec votre agenda CalDAV #{agent.caldav_config.caldav_username} est activée."
       caldav_config.save!
       Caldav::MassExportEventToCaldavJob.perform_later(current_agent)
     else
@@ -73,7 +73,7 @@ class Agents::CaldavSyncController < AgentAuthController
   # Vérifie la configuration CalDAV en 3 étapes : authentification, lecture, écriture.
   # Retourne nil si tout est OK, ou un message d’erreur décrivant l’étape qui a échoué.
   def caldav_config_error
-    client = current_agent.caldav_client
+    client = current_agent.caldav_config.caldav_client
     agenda_url = params[:caldav_agenda_url]
 
     begin

@@ -12,7 +12,7 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
       VCR.use_cassette("caldav/event_list_weekly_and_daily") do
         expect { described_class.new.perform(agent.id) }.to(
           change(ExternalCalendarEvent, :count).by(2).and(
-            change { agent.reload.caldav_sync_token }.from(nil)
+            change { agent.caldav_config.reload.caldav_sync_token }.from(nil)
           )
         )
       end
