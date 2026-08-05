@@ -6,7 +6,6 @@ class Rdv::UpdateStatusAndNotify
   end
 
   def perform
-    @rdv.update_status_and_notify(@author, status: @status)
     Rdv.transaction do
       @rdv.status = @status
       @rdv.updated_at = Time.zone.now
