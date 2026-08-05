@@ -44,7 +44,7 @@ class Users::RdvsController < UserAuthController
   end
 
   def cancel
-    if @rdv.update_status_and_notify(current_user, status: "excused")
+    if Rdv::UpdateStatusAndNotify.new(@rdv, current_user, status: "excused").perform
       flash[:notice] = "Le RDV a bien été annulé."
     else
       flash[:error] = "Impossible d'annuler le RDV."
