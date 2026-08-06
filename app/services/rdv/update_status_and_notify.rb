@@ -20,7 +20,7 @@ class Rdv::UpdateStatusAndNotify
       end
 
       if @rdv.save
-        if rdv_cancelled?
+        if @rdv.status.in?(Rdv::CANCELLED_STATUSES)
           @rdv.file_attentes.destroy_all
           @notifier = new_cancelled_notifier(@author, previous_participations)
         elsif rdv_status_reloaded_from_cancelled?
@@ -52,10 +52,6 @@ class Rdv::UpdateStatusAndNotify
       # Collectives RDV status cannot be noshow (validations)
       @rdv.participations.unknown.each { _1.update!(status: @rdv.status) }
     end
-  end
-
-  def rdv_cancelled?
-    @rdv.previous_changes["status"]&.last.in?(Rdv::CANCELLED_STATUSES)
   end
 
   def new_cancelled_notifier(author, previous_participations)
