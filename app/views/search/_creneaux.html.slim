@@ -40,7 +40,7 @@ div
                     aria-controls=(show_instructions ? modal_id : "")
                     data-fr-opened=(show_instructions ? "false" : "")
                     aria-label=%(Choisir le créneau du #{l(creneau.starts_at, format: '%A %-d %b')} à #{l(creneau.starts_at, format: '%H:%M')})
-                    autofocus
+                    autofocus=autofocus
                   )
                     = l(creneau.starts_at, format: "%H:%M")
                     - if creneau.motif.follow_up?
