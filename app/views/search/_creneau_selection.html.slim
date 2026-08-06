@@ -18,7 +18,7 @@
     - elsif context.matching_motifs.present?
       .card.mb-3
         .card-body
-          = render "search/creneaux", date_range: context.date_range, query_params: context.query_params, creneau_selection_service: creneau_selection_service
+          = render "search/creneaux", date_range: context.date_range, creneau_selection_service: creneau_selection_service
     - else
       .card.mb-3
         .card-body

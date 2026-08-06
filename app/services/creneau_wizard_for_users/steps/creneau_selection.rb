@@ -1,6 +1,7 @@
 class CreneauWizardForUsers::Steps::CreneauSelection
   def initialize(search_context)
     @context = search_context
+    @query_params = @context.query_params
   end
 
   def no_availability?
@@ -21,17 +22,17 @@ class CreneauWizardForUsers::Steps::CreneauSelection
     @available_collective_rdvs ||= creneaux_search.available_collective_rdvs
   end
 
-  def previous_week_path(date_range, query_params)
+  def previous_week_path(date_range)
     previous_from_date = date_range.begin - 7.days
-    url_helpers.prendre_rdv_path(query_params.merge(date: previous_from_date, autofocus: "last"))
+    current_step_path(date: previous_from_date, autofocus: "last")
   end
 
-  def next_week_path(query_params)
-    prendre_rdv_path(query_params.merge(date: date_range.end + 1.day, autofocus: "first"))
+  def next_week_path
+    current_step_path(date: date_range.end + 1.day, autofocus: "first")
   end
 
-  def next_availability_path(query_params)
-    prendre_rdv_path(query_params.merge(date: next_availability.starts_at, autofocus: "first"))
+  def next_availability_path
+    current_step_path(date: next_availability.starts_at, autofocus: "first")
   end
 
   def wizard_after_creneau_selection_path(params)
@@ -53,6 +54,10 @@ class CreneauWizardForUsers::Steps::CreneauSelection
   end
 
   private
+
+  def current_step_path(extra_params)
+    url_helpers.prendre_rdv_path(@query_params.merge(extra_params))
+  end
 
   def url_helpers
     Rails.application.routes.url_helpers
