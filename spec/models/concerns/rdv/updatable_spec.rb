@@ -15,6 +15,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
 
   describe "#update_and_notify" do
     it "updates the Rdv" do
+      # TODO: remove status changes in this file
       expect { rdv.update_and_notify(agent, status: "noshow") }.to change { rdv.reload.status }.to("noshow")
     end
 

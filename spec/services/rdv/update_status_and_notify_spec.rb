@@ -1,9 +1,12 @@
 RSpec.describe Rdv::UpdateStatusAndNotify do
   subject(:perform) { described_class.new(rdv, agent, status: new_status).perform }
 
+  before { stub_netsize_ok }
+
   let(:rdv) { create(:rdv, status: previous_status) }
   let(:agent) { rdv.agents.first }
   let(:user) { rdv.users.first }
+  let(:organisation) { create(:organisation) }
   let(:previous_status) { :unknown }
 
   %w[excused revoked noshow].each do |status|
