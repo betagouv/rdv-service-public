@@ -3,6 +3,7 @@ RSpec.describe Rdv::UpdateStatusAndNotify do
 
   let(:rdv) { create(:rdv, status: previous_status) }
   let(:agent) { rdv.agents.first }
+  let(:user) { rdv.users.first }
   let(:previous_status) { :unknown }
 
   %w[excused revoked noshow].each do |status|
@@ -74,6 +75,7 @@ RSpec.describe Rdv::UpdateStatusAndNotify do
 
   describe "sends relevant notifications" do
     let(:rdv_co) { create(:rdv, motif:, users: [user_co1, user_co2], agents: [agent], organisation:) }
+    let(:motif) { create(:motif, :collectif, organisation:) }
     let(:user_co1) { create(:user) }
     let(:user_co2) { create(:user) }
 
