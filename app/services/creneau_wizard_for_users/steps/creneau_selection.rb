@@ -21,9 +21,20 @@ class CreneauWizardForUsers::Steps::CreneauSelection
     @available_collective_rdvs ||= creneaux_search.available_collective_rdvs
   end
 
-  def wizard_after_creneau_selection_path(params)
-    url_helpers = Rails.application.routes.url_helpers
+  def previous_week_path(date_range, query_params)
+    previous_from_date = date_range.begin - 7.days
+    url_helpers.prendre_rdv_path(query_params.merge(date: previous_from_date, autofocus: "last"))
+  end
 
+  def next_week_path(query_params)
+    prendre_rdv_path(query_params.merge(date: date_range.end + 1.day, autofocus: "first"))
+  end
+
+  def next_availability_path(query_params)
+    prendre_rdv_path(query_params.merge(date: next_availability.starts_at, autofocus: "first"))
+  end
+
+  def wizard_after_creneau_selection_path(params)
     if @context.query_params[:prescripteur] == Prescripteur::INTERNE
       # context est un AgentPrescriptionSearchContext
       organisation = @context.current_organisation
@@ -42,6 +53,10 @@ class CreneauWizardForUsers::Steps::CreneauSelection
   end
 
   private
+
+  def url_helpers
+    Rails.application.routes.url_helpers
+  end
 
   def creneaux_search
     @creneaux_search ||= @context.creneaux_search_for(@context.lieu, @context.first_matching_motif)

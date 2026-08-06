@@ -2,13 +2,12 @@
 
 div
   .row
-    - previous_from_date = date_range.begin - 7.days
     - if date_range.begin > Time.zone.today
       .col-12.col-md-auto.mb-2.mb-md-0.d-flex.align-items-center.justify-content-center
         / Pour des questions d’accessibilité, on met le focus sur le premier ou le dernier créneau lorsqu’on clique
         / sur les boutons semaine précédente ou semaine suivante.
-        = link_to "", prendre_rdv_path(query_params.merge(date: previous_from_date, autofocus: "last")), class: "fr-btn fr-icon-arrow-left-s-line fr-hidden fr-unhidden-md", aria: { label: "Semaine précédente" }
-        = link_to "sem. précédente", prendre_rdv_path(query_params.merge(date: previous_from_date, autofocus: "last")), class: "fr-btn fr-btn--icon-left fr-icon-arrow-left-s-line fr-hidden-md", aria: { label: "Semaine précédente" }
+        = link_to "", creneau_selection_service.previous_week_path(query_params), class: "fr-btn fr-icon-arrow-left-s-line fr-hidden fr-unhidden-md", aria: { label: "Semaine précédente" }
+        = link_to "sem. précédente", creneau_selection_service.previous_week_path(query_params), class: "fr-btn fr-btn--icon-left fr-icon-arrow-left-s-line fr-hidden-md", aria: { label: "Semaine précédente" }
 
     .col
       .row
@@ -56,7 +55,7 @@ div
         - next_availability = creneau_selection_service.next_availability
         - if next_availability
           .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
-            = link_to prendre_rdv_path(query_params.merge(date: next_availability.starts_at, autofocus: "first")),
+            = link_to creneau_selection_service.next_availability_path(query_params),
                     class: "fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-arrow-right-s-line",
                     data: { disable_with: "Veuillez patienter…" },
                     autofocus: params[:autofocus].present? do
@@ -67,5 +66,5 @@ div
                   strong= l(next_availability.starts_at, format: :human)
     - if params[:date].blank? || !creneau_selection_service.after_max_public_booking_delay?(params[:date].to_date + 6.days)
       .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
-        = link_to "", prendre_rdv_path(query_params.merge(date: date_range.end + 1.day, autofocus: "first")), class: "fr-btn fr-icon-arrow-right-s-line fr-hidden fr-unhidden-md", aria: { label: "semaine suivante"}
-        = link_to "sem. prochaine", prendre_rdv_path(query_params.merge(date: date_range.end + 1.day, autofocus: "first")), class:  "fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line fr-hidden-md", aria: { label: "semaine suivante"}
+        = link_to "", creneau_selection_service.next_week_path(query_params), class: "fr-btn fr-icon-arrow-right-s-line fr-hidden fr-unhidden-md", aria: { label: "semaine suivante"}
+        = link_to "sem. prochaine", creneau_selection_service.next_week_path(query_params), class:  "fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line fr-hidden-md", aria: { label: "semaine suivante"}
