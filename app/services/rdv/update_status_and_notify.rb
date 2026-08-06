@@ -36,6 +36,10 @@ class Rdv::UpdateStatusAndNotify
     end
   end
 
+  def participation_token_for(user_id)
+    @notifier.participations_tokens_by_user_id[user_id]
+  end
+
   private
 
   def change_participation_statuses
