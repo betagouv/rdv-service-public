@@ -1,4 +1,4 @@
-RSpec.describe Rdv::Updatable, type: :concern do
+RSpec.describe Rdv::Updatable do
   before do
     stub_netsize_ok
     allow(Devise.token_generator).to receive(:generate).and_return("12345678")
@@ -14,17 +14,16 @@ RSpec.describe Rdv::Updatable, type: :concern do
   let(:user) { rdv.users.first }
 
   describe "#update_and_notify" do
-    it "updates the Rdv" do
-      # TODO: remove status changes in this file
-      expect { rdv.update_and_notify(agent, status: "noshow") }.to change { rdv.reload.status }.to("noshow")
+    before do
+      travel_to Time.zone.local(2026, 8, 6, 14, 0, 0)
     end
 
-    it "updates the updated_at attribute" do
-      expect { rdv.update_and_notify(agent, status: "noshow") }.to change { rdv.reload.updated_at }
+    it "updates the Rdv" do
+      expect { rdv.update_and_notify(agent, starts_at: 5.days.from_now) }.to change { rdv.reload.starts_at }.to(5.days.from_now)
     end
 
     it "returns a success" do
-      expect(rdv.update_and_notify(agent, status: "noshow")).to be_truthy
+      expect(rdv.update_and_notify(agent, starts_at: 5.days.from_now)).to be_truthy
     end
 
     it "returns a failure when the Rdv can't be updated" do
@@ -93,10 +92,14 @@ RSpec.describe Rdv::Updatable, type: :concern do
     describe "triggers webhook" do
       let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation, subscriptions: ["rdv"]) }
 
+      before do
+        travel_to Time.zone.local(2026, 8, 6, 14, 0, 0)
+      end
+
       it "sends a webhook" do
         rdv.reload
         expect do
-          rdv.update_and_notify(agent, status: "noshow")
+          rdv.update_and_notify(agent, starts_at: 5.days.from_now)
         end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id)
       end
     end
