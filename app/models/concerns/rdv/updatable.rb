@@ -28,6 +28,31 @@ module Rdv::Updatable
 
   private
 
+  def remove_duplicate_participations
+    existing_participations = Participation.where(rdv_id: id).to_a # pour éviter une requête N+1
+
+    participations.each do |participation|
+      existing_participation = existing_participations.find { |p| p.user_id == participation.user_id }
+      next unless existing_participation
+
+      participation.id = existing_participation.id
+    end.uniq!
+  end
+
+  def set_created_by_for_new_participations(author) # rubocop:disable Naming/AccessorMethodName
+    participations.select(&:new_record?).each { |participation| participation.created_by = author }
+  end
+
+  def notify!(author, previous_participations)
+    if rdv_updated?
+      Notifiers::RdvUpdated.new(self, author, old_agent_ids: @old_agent_ids).perform
+    end
+
+    if collectif? && previous_participations.sort != participations.sort
+      Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
+    end
+  end
+
   def rdv_updated?
     starts_at_changed? || lieu_changed? || visio_url_custom_changed?
     # || agents_changed? désactivé pour l’instant cf https://github.com/betagouv/rdv-service-public/pull/5399
@@ -53,30 +78,5 @@ module Rdv::Updatable
   def agents_changed?
     # we cannot use ActiveModel::Dirty methods here for this has_many association
     @old_agent_ids.to_set != agent_ids.to_set
-  end
-
-  def remove_duplicate_participations
-    existing_participations = Participation.where(rdv_id: id).to_a # pour éviter une requête N+1
-
-    participations.each do |participation|
-      existing_participation = existing_participations.find { |p| p.user_id == participation.user_id }
-      next unless existing_participation
-
-      participation.id = existing_participation.id
-    end.uniq!
-  end
-
-  def notify!(author, previous_participations)
-    if rdv_updated?
-      Notifiers::RdvUpdated.new(self, author, old_agent_ids: @old_agent_ids).perform
-    end
-
-    if collectif? && previous_participations.sort != participations.sort
-      Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
-    end
-  end
-
-  def set_created_by_for_new_participations(author) # rubocop:disable Naming/AccessorMethodName
-    participations.select(&:new_record?).each { |participation| participation.created_by = author }
   end
 end
