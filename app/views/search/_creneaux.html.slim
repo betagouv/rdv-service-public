@@ -5,6 +5,8 @@ div
     - previous_from_date = date_range.begin - 7.days
     - if date_range.begin > Time.zone.today
       .col-12.col-md-auto.mb-2.mb-md-0.d-flex.align-items-center.justify-content-center
+        / Pour des questions d’accessibilité, on met le focus sur le premier ou le dernier créneau lorsqu’on clique
+        / sur les boutons semaine précédente ou semaine suivante.
         = link_to "", prendre_rdv_path(query_params.merge(date: previous_from_date, autofocus: "last")), class: "fr-btn fr-icon-arrow-left-s-line fr-hidden fr-unhidden-md", aria: { label: "Semaine précédente" }
         = link_to "sem. précédente", prendre_rdv_path(query_params.merge(date: previous_from_date, autofocus: "last")), class: "fr-btn fr-btn--icon-left fr-icon-arrow-left-s-line fr-hidden-md", aria: { label: "Semaine précédente" }
 
@@ -25,7 +27,7 @@ div
               .fr-grid-row
                 - creneaux_by_date[date].sort.each do |creneau|
                   ruby:
-                    autofocus = (@context.autofocus == "first" && creneau == creneaux.min) || (@context.autofocus == "last" && creneau == creneaux.max)
+                    autofocus = (params[:autofocus] == "first" && creneau == creneaux.min) || (params[:autofocus] == "last" && creneau == creneaux.max)
                     confirm_path = creneau_selection_service.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at)
                     show_instructions = creneau.motif.restriction_for_rdv.present? && params[:accepted_restrictions_for].to_i != creneau.motif.id
                     modal_id = "rdv-restriction-motif-#{creneau.motif.id}-#{creneau.starts_at.to_i}"
@@ -55,7 +57,7 @@ div
             = link_to prendre_rdv_path(query_params.merge(date: next_availability.starts_at, autofocus: "first")),
                     class: "fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-arrow-right-s-line",
                     data: { disable_with: "Veuillez patienter…" },
-                    autofocus: @context.autofocus.present? do
+                    autofocus: params[:autofocus].present? do
               .d-flex.align-items-center
                 div
                   | Prochaine disponibilité le
