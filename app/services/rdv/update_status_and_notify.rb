@@ -10,7 +10,8 @@ class Rdv::UpdateStatusAndNotify
       @rdv.status = @status
       @rdv.updated_at = Time.zone.now
 
-      previous_participations = @rdv.participations.clone
+      # On utilise #compact_blank pour faire une copie des participations qui ne sera pas modifiée pendant le #reload plus bas
+      previous_participations = @rdv.participations.compact_blank
 
       if @rdv.status_changed? && @rdv.valid?
         @rdv.cancelled_at = @rdv.status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
