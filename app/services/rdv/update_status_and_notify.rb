@@ -8,7 +8,6 @@ class Rdv::UpdateStatusAndNotify
   def perform
     Rdv.transaction do
       @rdv.status = @status
-      @rdv.updated_at = Time.zone.now
 
       # On utilise #compact_blank pour faire une copie des participations qui ne sera pas modifiée pendant le #reload plus bas
       previous_participations = @rdv.participations.compact_blank

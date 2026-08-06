@@ -5,7 +5,6 @@ module Rdv::Updatable
     Rdv.transaction do
       @old_agent_ids = agent_ids.to_a
       assign_attributes(attributes) # this can assign agent_ids and thus persist
-      self.updated_at = Time.zone.now
 
       previous_participations = participations.select(&:persisted?)
       remove_duplicate_participations
