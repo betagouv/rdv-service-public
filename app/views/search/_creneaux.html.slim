@@ -1,8 +1,8 @@
-/# locals: (date_range:, creneau_selection_service:)
+/# locals: (creneau_selection_service:)
 
 div
   .row
-    - if date_range.begin > Time.zone.today
+    - if creneau_selection_service.date_range.begin > Time.zone.today
       .col-12.col-md-auto.mb-2.mb-md-0.d-flex.align-items-center.justify-content-center
         / Pour des questions d’accessibilité, on met le focus sur le premier ou le dernier créneau lorsqu’on clique
         / sur les boutons semaine précédente ou semaine suivante.
@@ -15,7 +15,7 @@ div
           creneaux = creneau_selection_service.creneaux
           creneaux_by_date = creneaux.group_by { |c| c.starts_at.to_date }
 
-        - date_range.each do |date|
+        - creneau_selection_service.date_range.each do |date|
           .fr-col-6.fr-col-md-3.fr-col-lg.fr-pl-1w.fr-pr-1w
             p.rdv-text-align-center
               strong= l(date, format: "%A")

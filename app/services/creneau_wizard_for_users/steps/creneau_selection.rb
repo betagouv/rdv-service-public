@@ -2,7 +2,10 @@ class CreneauWizardForUsers::Steps::CreneauSelection
   def initialize(search_context)
     @context = search_context
     @query_params = @context.query_params
+    @date_range = @context.date_range
   end
+
+  attr_reader :date_range
 
   def no_availability?
     creneaux.empty? && next_availability.nil?
@@ -22,7 +25,7 @@ class CreneauWizardForUsers::Steps::CreneauSelection
     @available_collective_rdvs ||= creneaux_search.available_collective_rdvs
   end
 
-  def previous_week_path(date_range)
+  def previous_week_path
     previous_from_date = date_range.begin - 7.days
     current_step_path(date: previous_from_date, autofocus: "last")
   end
