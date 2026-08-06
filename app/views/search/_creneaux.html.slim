@@ -1,3 +1,5 @@
+/# locals: (date_range:, query_params:, creneau_selection_service:)
+
 div
   .row
     - previous_from_date = date_range.begin - 7.days
@@ -9,6 +11,7 @@ div
     .col
       .row
         ruby:
+          creneaux = creneau_selection_service.creneaux
           creneaux_by_date = creneaux.group_by { |c| c.starts_at.to_date }
 
         - date_range.each do |date|
@@ -46,6 +49,7 @@ div
               p.rdv-text-align-center.fr-text--sm
                 | Pas de créneau disponible
 
+        - next_availability = creneau_selection_service.next_availability
         - if next_availability
           .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
             = link_to prendre_rdv_path(query_params.merge(date: next_availability.starts_at, autofocus: "first")),
