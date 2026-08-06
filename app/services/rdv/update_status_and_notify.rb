@@ -24,7 +24,7 @@ class Rdv::UpdateStatusAndNotify
           @rdv.file_attentes.destroy_all
           @notifier = new_cancelled_notifier(@author, previous_participations)
         elsif rdv_status_reloaded_from_cancelled?
-          @notifier = Notifiers::RdvCreated.new(self, @author)
+          @notifier = Notifiers::RdvCreated.new(@rdv, @author)
         end
 
         @notifier&.perform
