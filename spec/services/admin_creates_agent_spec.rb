@@ -24,4 +24,28 @@ RSpec.describe AdminCreatesAgent do
       expect(agent.organisations).to eq [organisation]
     end
   end
+
+  context "when the agent already has a pending invitation for this organisation" do
+    subject(:service) do
+      described_class.new(
+        agent_params: { email: existing_agent.email, service_ids: [] },
+        current_agent: admin,
+        organisations: [organisation],
+        access_level: :basic
+      )
+    end
+
+    let(:organisation) { create(:organisation) }
+    let(:admin) { create(:agent, admin_role_in_organisations: [organisation]) }
+    let!(:existing_agent) do
+      create(:agent, :not_confirmed, basic_role_in_organisations: [organisation], invitation_accepted_at: nil)
+    end
+
+    it "does not add a new role and exposes the conflicting organisation" do
+      agent = service.call
+
+      expect(agent).to be_invalid
+      expect(service.pending_invitation_conflict_organisation).to eq(organisation)
+    end
+  end
 end
