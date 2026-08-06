@@ -2,7 +2,6 @@ module Admin::RdvFormConcern
   extend ActiveSupport::Concern
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::TranslationHelper # allows getting a SafeBuffer instead of a String when using #translate (which a direct call to I18n.t doesn't do)
-  include Admin::RdvDuplicatesFormConcern
 
   included do
     attr_accessor :rdv
@@ -18,6 +17,7 @@ module Admin::RdvFormConcern
     delegate :errors, to: :rdv
 
     validate -> { rdv.validate }
+    include Admin::RdvDuplicatesFormConcern
 
     delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :rdv
     validate :warn_overlapping_plage_ouverture, if: -> { starts_at.present? }
