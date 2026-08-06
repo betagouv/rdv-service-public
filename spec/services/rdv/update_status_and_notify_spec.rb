@@ -56,7 +56,7 @@ RSpec.describe Rdv::UpdateStatusAndNotify do
         perform
 
         expect_notifications_sent_for(rdv, user, :rdv_created)
-        expect_notifications_sent_for(rdv, agent, :rdv_create)
+        expect_notifications_sent_for(rdv, agent, :rdv_created)
       end
     end
 
@@ -171,6 +171,7 @@ RSpec.describe Rdv::UpdateStatusAndNotify do
   end
 
   describe "#change_participation_statuses on RDV.status change (individual rdvs)" do
+    let(:agent) { create(:agent, rdv_notifications_level: "all") }
     let(:rdv) { create(:rdv, agents: [agent]) }
     let!(:participation1) { create(:participation, rdv: rdv) }
     let!(:participation2) { create(:participation, rdv: rdv) }
