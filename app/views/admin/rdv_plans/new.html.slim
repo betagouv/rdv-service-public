@@ -1,0 +1,14 @@
+- content_for :title do
+  | Invitation à prendre rendez-vous
+
+.fr-grid-row.justify-content-center
+  .fr-col-md-12.col-lg-8
+    .card.card-body
+      = form_for [:admin, current_organisation, @rdv_plan], builder: Dsfr::FormBuilder do |f|
+        = f.hidden_field :motif_id
+        = f.hidden_field :lieu_id
+        = f.hidden_field :user_id
+        = render "model_errors", model: @rdv_plan, f: f
+        p Vous allez inviter #{@rdv_plan.user.full_name} à prendre rendez-vous pour #{@rdv_plan.motif.name}.
+
+        = f.submit "Envoyer l'invitation", class: "fr-btn"

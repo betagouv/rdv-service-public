@@ -315,6 +315,9 @@ Rails.application.routes.draw do
           get :a_renseigner
         end
       end
+
+      resources :rdv_plans, only: %i[new create show index]
+
       scope module: "organisations" do
         resource :online_booking, only: %i[show edit update] do
           member do

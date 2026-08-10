@@ -1,7 +1,7 @@
 module Agent::FeatureFlags
   extend ActiveSupport::Concern
 
-  AVAILABLE_FEATURES = [].freeze
+  AVAILABLE_FEATURES = ["rdv_plan_invitations"].freeze
 
   def feature_enabled?(feature)
     feature_flags[feature] == true

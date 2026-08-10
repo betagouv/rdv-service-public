@@ -2,7 +2,9 @@ class Agent::RdvPlanPolicy < ApplicationPolicy
   def create?
     authorized_lieu && pundit_user == record.planning_agent
   end
+  alias new? create?
   alias edit? create?
+  alias show? create? # TODO: on voudra sans doute proposer un scope plus large
 
   class Scope < Scope
     def resolve
