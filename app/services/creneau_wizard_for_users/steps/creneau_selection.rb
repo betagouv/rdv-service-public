@@ -18,6 +18,7 @@ class CreneauWizardForUsers::Steps::CreneauSelection
   end
 
   delegate :creneaux, to: :@creneaux_search
+  attr_reader :date_range
 
   def after_max_public_booking_delay?(date)
     date >= (Time.zone.now + @motif.max_public_booking_delay.seconds).to_date
