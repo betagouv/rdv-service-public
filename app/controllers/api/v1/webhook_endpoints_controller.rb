@@ -11,10 +11,11 @@ class Api::V1::WebhookEndpointsController < Api::V1::AgentAuthBaseController
   end
 
   def create
-    params.permit(:target_url, :secret, :organisation_id, subscriptions: [])
+    create_permitted_params = params.permit(:target_url, :secret, :organisation_id, subscriptions: [])
 
-    @webhook_endpoint = WebhookEndpoint.new(webhook_endpoint_params)
+    @webhook_endpoint = WebhookEndpoint.new(create_permitted_params)
     authorize(@webhook_endpoint, policy_class: Agent::WebhookEndpointPolicy)
+
     @webhook_endpoint.save!
     TriggerWebhookJob.perform_later(@webhook_endpoint.id) unless trigger_disabled
     render_record @webhook_endpoint
