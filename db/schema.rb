@@ -648,6 +648,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_17_155729) do
     t.enum "location_type", enum_type: "location_type"
     t.bigint "oauth_application_id"
     t.text "dossier_url"
+    t.text "invitation_token"
     t.index ["lieu_id"], name: "index_rdv_plans_on_lieu_id"
     t.index ["motif_id"], name: "index_rdv_plans_on_motif_id"
     t.index ["oauth_application_id"], name: "index_rdv_plans_on_oauth_application_id"

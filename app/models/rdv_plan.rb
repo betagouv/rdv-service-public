@@ -15,6 +15,8 @@ class RdvPlan < ApplicationRecord
   # TODO: il faudrait mettre à jour la spec swagger pour utiliser de l'oauth pour pouvoir enlever le `optional: true`
   belongs_to :oauth_application, class_name: "Doorkeeper::Application", optional: true
 
+  encrypts :invitation_token, deterministic: true
+
   delegate :organisation, to: :motif
 
   validate :return_url_is_authorized
@@ -54,6 +56,12 @@ class RdvPlan < ApplicationRecord
     end
 
     rdv
+  end
+
+  def generate_invitation_token!
+    # On reprend la même logique que CustomDeviseTokenGenerator
+    self.invitation_token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8) until invitation_token && self.class.where(invitation_token:).none?
+    save!
   end
 
   private

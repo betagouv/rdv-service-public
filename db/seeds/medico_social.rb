@@ -153,7 +153,7 @@ _motif_org_paris_nord_social_droits = Motif.create!(
   name: "Droits sociaux",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
-  bookable_by: :everyone,
+  bookable_by: :agents,
   location_type: :public_office
 )
 _motif_org_paris_nord_social_collectif = Motif.create!(
@@ -858,3 +858,13 @@ Absence.create!(
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(18)
 )
+
+rdv_plan = RdvPlan.create!(
+  motif_id: _motif_org_paris_nord_social_droits.id,
+  lieu_id: lieu_org_paris_nord_bolivar,
+  user: user_org_paris_nord_patricia,
+  planning_agent: agent_org_paris_nord_pmi_martine
+)
+
+rdv_plan.generate_invitation_token!
+puts "Pour tester les invitations: http://www.rdv-etat.localhost:3000/invit/#{rdv_plan.invitation_token}"
