@@ -1,4 +1,13 @@
 class CreneauxSearch::ForUser
+  def self.build_from_rdv_plan(rdv_plan, date_range:)
+    new(
+      motif: rdv_plan.motif,
+      lieu: rdv_plan.lieu,
+      user: rdv_plan.user,
+      date_range:
+    )
+  end
+
   def initialize(motif:, date_range: nil, user: nil, lieu: nil, geo_search: nil, duration_in_min: nil)
     @user = user
     @motif = motif

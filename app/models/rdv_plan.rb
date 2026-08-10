@@ -36,7 +36,7 @@ class RdvPlan < ApplicationRecord
     self.location_type, self.lieu_id = modalite.split("-")
   end
 
-  def create_rdv(user_attributes:, participation_attributes:)
+  def create_rdv_and_notify(author, user_attributes: {}, participation_attributes: {})
     update_user_before_creating_rdv(user_attributes:)
 
     rdv = Rdv.create(
@@ -46,13 +46,13 @@ class RdvPlan < ApplicationRecord
       organisation: organisation,
       lieu: lieu,
       starts_at: starts_at,
-      created_by: planning_agent,
+      created_by: author,
       ends_at: starts_at + (duration_in_minutes || motif.default_duration_in_min).minutes
     )
 
     if rdv.persisted?
       update(rdv: rdv)
-      Notifiers::RdvCreated.perform_with(rdv, planning_agent)
+      Notifiers::RdvCreated.perform_with(rdv, author)
     end
 
     rdv
