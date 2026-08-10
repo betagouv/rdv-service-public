@@ -11,11 +11,7 @@ header.header.bg-white
       ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
         = render "layouts/rdv_a_renseigner", organisation: defined?(current_organisation) && current_organisation
         li.list-inline-item
-          = link_to agents_blog_posts_path, class: "btn rdv-color-active-blue link-dsfr d-flex justify-content-center", data: { modal: true } do
-            | Nouveautés
-            - if BlogPost.new_content_for_agent?(current_agent)
-              .ml-1.fr-badge.fr-badge--new.fr-badge--sm.fr-pl-3v
-
+          = render "layouts/blog_posts_modal"
         li#rdv-account-dropdown.list-inline-item.dropdown.mr-2
           button.link-dsfr.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false"
             = current_agent.full_name
@@ -35,11 +31,13 @@ header.header.bg-white
             li = link_to agents_exports_path, class: "dropdown-item-dsfr dropdown-item" do
               span.fr-icon--sm.fr-mr-2v.fr-icon-file-download-line[aria-hidden="true"]
               = "Vos exports"
-            li.dropdown-divider.my-1[aria-hidden="true"]
-            - Agent::TerritoryPolicy::Scope.new(current_agent, Territory.all).resolve.distinct.order(:name).each do |territory|
-              li = link_to admin_territory_path(territory), class: "dropdown-item-dsfr dropdown-item" do
-                span.fr-icon--sm.fr-mr-2v.fr-icon-settings-5-line[aria-hidden="true"]
-                | Paramètres de #{territory.name_for_agent}
+            - territories = Agent::TerritoryPolicy::Scope.new(current_agent, Territory.all).resolve.distinct.order(:name).load
+            - if territories.any?
+              li.dropdown-divider.my-1[aria-hidden="true"]
+              - territories.each do |territory|
+                li = link_to admin_territory_path(territory), class: "dropdown-item-dsfr dropdown-item" do
+                  span.fr-icon--sm.fr-mr-2v.fr-icon-settings-5-line[aria-hidden="true"]
+                  | Paramètres de #{territory.name_for_agent}
             li.dropdown-divider.my-1[aria-hidden="true"]
             li = link_to destroy_agent_session_path, method: :delete, class: "dropdown-item-dsfr dropdown-item" do
               span.fr-icon--sm.fr-mr-2v.fr-icon-logout-box-r-line[aria-hidden="true"]

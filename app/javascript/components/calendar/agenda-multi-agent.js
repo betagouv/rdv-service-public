@@ -1,7 +1,9 @@
-import { Calendar } from "@fullcalendar/core";
-import resourceTimegridPlugin from "@fullcalendar/resource-timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
+import { Calendar } from "fullcalendar";
+import resourceTimegridPlugin from "fullcalendar-scheduler/resource-timegrid";
+import interactionPlugin from "fullcalendar/interaction";
 import {
+  classicTheme,
+  buttonHintsButtons,
   defaultFullCalendarConfig,
   eventRenderer,
   setupRealtimeRefresh,
@@ -29,8 +31,8 @@ class AgendaMultiAgent {
   initFullCalendar = () => {
     const options = {
       ...calendarTimeRange(this.data),
-      plugins: [resourceTimegridPlugin, interactionPlugin],
-      schedulerLicenseKey: "GPL-My-Project-Is-Open-Source",
+      plugins: [classicTheme, resourceTimegridPlugin, interactionPlugin],
+      schedulerLicenseKey: "AGPL-My-Frontend-And-Backend-Are-Open-Source",
       resources: this.resources,
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: handleAjaxError,
@@ -43,12 +45,13 @@ class AgendaMultiAgent {
       },
       titleFormat: weekTitleFormat,
       dayHeaderContent: dayHeaderContent,
-      customButtons: { preferencesModalToggle },
+      buttons: { ...buttonHintsButtons, preferencesModalToggle },
       datesAboveResources: this.data.groupByAgent !== "true",
       datesSet: this.datesSet,
       hiddenDays: hiddenDays(this.data),
       select: this.selectEvent,
       eventDidMount: eventRenderer(),
+      backgroundEventDidMount: eventRenderer(),
       views: this.views(),
     };
     return new Calendar(this.calendarEl, { ...defaultFullCalendarConfig(), ...options });

@@ -8,7 +8,16 @@
     .card
       .card-body.js_agent_role_form
         = form_for [:admin, @agent], url: admin_organisation_agents_path(current_organisation), html: { method: :post }, builder: Dsfr::FormBuilder do |f|
-          = render "devise/shared/error_messages", resource: @agent
+          - if @pending_invitation_conflict_organisation
+            = dsfr_alert type: :error, title: "Invitation déjà en cours", html_attributes: { class: "fr-mb-2w" } do
+              | Une invitation a déjà été envoyée à #{@agent.email} pour rejoindre #{@pending_invitation_conflict_organisation.name} et n’a pas encore été acceptée.
+              br
+              = link_to "Renvoyer l’invitation",
+                      reinvite_admin_organisation_invitation_path(current_organisation, @agent),
+                      method: :post,
+                      class: "fr-btn fr-btn--sm fr-mt-2v"
+          - else
+            = render "devise/shared/error_messages", resource: @agent
           = f.fields_for @agent_role do |ff|
             ruby:
               role_choices = @roles.map do |role|

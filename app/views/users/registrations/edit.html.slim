@@ -5,10 +5,16 @@
     p.rdv-font-weight-bold Adresse email
     p Votre adresse email actuelle est : #{resource.email}
     .fr-alert.fr-alert--info.fr-mb-4w
-      p
-        | Pour modifier votre adresse email, veuillez contacter le support via le
-        =< link_to "formulaire de contact", new_aide_demande_support_path(role: :usager, sujet: "Changement adresse e-mail")
-        | .
+      - if resource.logged_once_with_franceconnect?
+        p
+          | Votre compte étant connecté à FranceConnect, la modification de votre adresse email doit se faire directement depuis FranceConnect. Consultez le
+          =< link_to "guide d'aide FranceConnect", "https://aide.franceconnect.gouv.fr/faq/comptes-identifiants/modification-email/", target: "_blank", rel: "noopener"
+          | .
+      - else
+        p
+          | Pour modifier votre adresse email, veuillez contacter le support via le
+          =< link_to "formulaire de contact", new_aide_demande_support_path(role: :usager, sujet: "Changement adresse e-mail")
+          | .
     hr.fr-mt-2w
     p Vous souhaitez supprimer votre compte ?
     - if resource.can_be_soft_deleted?
