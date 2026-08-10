@@ -1,0 +1,9 @@
+div
+  p Bonjour,
+  p
+    | Vous êtes invité.e à prendre rendez-vous pour le motif #{@rdv_plan.motif}
+
+  .btn-wrapper
+    = link_to "Prendre rendez-vous", rdv_plan_invitations_url(@rdv_plan.invitation_token), class:"btn btn-primary"
+
+  = t("mailers.common.farewell_html", domain_name: domain.name)

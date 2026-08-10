@@ -15,6 +15,7 @@ class Admin::RdvPlansController < AgentAuthController
 
     if @rdv_plan.save
       @rdv_plan.generate_invitation_token!
+      Users::RdvPlanMailer.with(rdv_plan: @rdv_plan).invitation.deliver_later
 
       redirect_to admin_organisation_rdv_plan_path(current_organisation, @rdv_plan)
     else

@@ -5,3 +5,7 @@
   .fr-col-md-12.col-lg-8
     .card.card-body
       p Vous avez invité #{@rdv_plan.user.full_name} à prendre rendez-vous pour #{@rdv_plan.motif.name}.
+
+      - invitation_url = rdv_plan_invitations_url(@rdv_plan.invitation_token, host: @rdv_plan.organisation.domain.host_name)
+      p Le lien d'invitation est #{link_to(invitation_url, invitation_url)}
+
