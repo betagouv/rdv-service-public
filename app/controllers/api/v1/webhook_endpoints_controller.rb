@@ -11,6 +11,8 @@ class Api::V1::WebhookEndpointsController < Api::V1::AgentAuthBaseController
   end
 
   def create
+    params.permit(:target_url, :secret, :organisation_id, subscriptions: [])
+
     @webhook_endpoint = WebhookEndpoint.new(webhook_endpoint_params)
     authorize(@webhook_endpoint, policy_class: Agent::WebhookEndpointPolicy)
     @webhook_endpoint.save!
@@ -19,7 +21,9 @@ class Api::V1::WebhookEndpointsController < Api::V1::AgentAuthBaseController
   end
 
   def update
-    @webhook_endpoint.update!(webhook_endpoint_params)
+    update_permitted_params = params.permit(:target_url, :secret, subscriptions: [])
+
+    @webhook_endpoint.update!(update_permitted_params)
     TriggerWebhookJob.perform_later(@webhook_endpoint.id) unless trigger_disabled
     render_record @webhook_endpoint
   end
@@ -37,14 +41,6 @@ class Api::V1::WebhookEndpointsController < Api::V1::AgentAuthBaseController
 
   def set_organisation
     @organisation = Organisation.find(params[:organisation_id])
-  end
-
-  def permitted_params
-    params.permit(:target_url, :secret, :organisation_id, :trigger, subscriptions: [])
-  end
-
-  def webhook_endpoint_params
-    permitted_params.except(:trigger)
   end
 
   def pundit_user
