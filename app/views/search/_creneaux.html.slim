@@ -4,7 +4,7 @@ div
   .row
     - if creneau_selection_service.date_range.begin > Time.zone.today
       .col-12.col-md-auto.mb-2.mb-md-0.d-flex.align-items-center.justify-content-center
-        / Pour des questions d’accessibilité, on met le focus sur le premier ou le dernier créneau lorsqu’on clique
+        / Pour faciliter la navigation au clavier pour l'accessibilité, on met le focus sur le premier ou le dernier créneau lorsqu’on clique
         / sur les boutons semaine précédente ou semaine suivante.
         = link_to "", creneau_selection_service.previous_week_path, class: "fr-btn fr-icon-arrow-left-s-line fr-hidden fr-unhidden-md", aria: { label: "Semaine précédente" }
         = link_to "sem. précédente", creneau_selection_service.previous_week_path, class: "fr-btn fr-btn--icon-left fr-icon-arrow-left-s-line fr-hidden-md", aria: { label: "Semaine précédente" }
