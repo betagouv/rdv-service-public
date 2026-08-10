@@ -30,6 +30,10 @@ class SearchContext
     referent_ids.present?
   end
 
+  def date_range
+    start_date..(start_date + 6.days)
+  end
+
   def filter_motifs(available_motifs)
     motifs = available_motifs
     motifs = motifs.where(follow_up: follow_up?)
@@ -52,10 +56,6 @@ class SearchContext
   end
 
   private
-
-  def date_range
-    start_date..(start_date + 6.days)
-  end
 
   attr_reader :referent_ids, :lieu_id
 
