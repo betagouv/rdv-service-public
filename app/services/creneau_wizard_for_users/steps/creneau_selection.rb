@@ -6,10 +6,7 @@ class CreneauWizardForUsers::Steps::CreneauSelection
     @start_date = @context.start_date
     @motif = @context.first_matching_motif
     @creneaux_search = @context.creneaux_search_for(@context.lieu, @motif)
-  end
-
-  def date_range
-    @start_date..(@start_date + 6.days)
+    @date_range = @context.date_range
   end
 
   def no_availability?

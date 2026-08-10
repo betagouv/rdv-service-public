@@ -53,6 +53,10 @@ class SearchContext
 
   private
 
+  def date_range
+    start_date..(start_date + 6.days)
+  end
+
   attr_reader :referent_ids, :lieu_id
 
   def matching_motifs
