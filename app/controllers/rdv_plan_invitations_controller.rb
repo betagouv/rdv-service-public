@@ -39,6 +39,11 @@ class RdvPlanInvitationsController < ApplicationController
       flash[:success] = t("users.rdvs.create.rdv_confirmed")
 
       rdv = @rdv_plan.rdv
+
+      user = rdv_plan.user
+      user.signed_in_with_invitation_token!(rdv: rdv)
+      sign_in(user, store: false)
+
       redirect_to users_rdv_path(@rdv_plan.rdv, invitation_token: rdv.participations.find_by(user_id: @rdv_plan.user_id).restricted_auth_token)
     else
 
