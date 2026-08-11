@@ -13,7 +13,6 @@ RSpec.describe TokenInvitable, type: :controller do
   end
 
   let!(:token) { "some-token" }
-  let!(:invitation) { instance_double(Invitation) }
   let!(:user) { create(:user) }
   let!(:now) { Time.zone.parse("2022-08-03 10:22:00") }
 
@@ -29,11 +28,6 @@ RSpec.describe TokenInvitable, type: :controller do
     subject { get :fake_action, params: params }
 
     let!(:params) { { invitation_token: token, motif_category_short_name: "rsa_orientation" } }
-
-    before do
-      allow(Invitation).to receive(:new).with(params).and_return(invitation)
-      allow(invitation).to receive(:user).and_return(user)
-    end
 
     context "when no token is passed" do
       let!(:token) { nil }
@@ -51,9 +45,7 @@ RSpec.describe TokenInvitable, type: :controller do
     end
 
     context "when an invalid user token is passed" do
-      before do
-        allow(invitation).to receive(:token_valid?).and_return(false)
-      end
+      let!(:token) { "some-token" }
 
       it "does not store the token in session" do
         subject
@@ -68,13 +60,12 @@ RSpec.describe TokenInvitable, type: :controller do
     end
 
     context "when a valid user token is passed" do
-      before do
-        allow(invitation).to receive(:token_valid?).and_return(true)
-      end
+      let!(:token) { user.set_rdv_invitation_token! }
 
-      it "stores the token in session" do
+      it "stores the token and the invitation params in session" do
         subject
-        expect(request.session[:restricted_auth]).to eq(params.merge(expires_at: Time.zone.parse("2022-08-03 10:32:00")))
+        expect(request.session[:restricted_auth]).to eq(invitation_token: token, expires_at: Time.zone.parse("2022-08-03 10:32:00"))
+        expect(request.session[:rdv_insertion_invitation]).to eq(motif_category_short_name: "rsa_orientation")
       end
 
       it "redirects to current path without the token" do
@@ -88,13 +79,10 @@ RSpec.describe TokenInvitable, type: :controller do
         before { sign_in user }
 
         context "when it is the user linked to the invitation" do
-          before do
-            allow(invitation).to receive(:user).and_return(user)
-          end
-
           it "does stores the invitation in session and redirect" do
             subject
-            expect(request.session[:restricted_auth]).to eq(params.merge(expires_at: Time.zone.parse("2022-08-03 10:32:00")))
+            expect(request.session[:restricted_auth]).to eq(invitation_token: token, expires_at: Time.zone.parse("2022-08-03 10:32:00"))
+            expect(request.session[:rdv_insertion_invitation]).to eq(motif_category_short_name: "rsa_orientation")
             expect(response).to redirect_to("/fake_action?motif_category_short_name=rsa_orientation")
           end
         end
@@ -102,9 +90,7 @@ RSpec.describe TokenInvitable, type: :controller do
         context "when it is another user" do
           let!(:other_user) { create(:user) }
 
-          before do
-            allow(invitation).to receive(:user).and_return(other_user)
-          end
+          before { sign_in other_user }
 
           it "redirects to root path with a message" do
             subject
@@ -119,17 +105,11 @@ RSpec.describe TokenInvitable, type: :controller do
   describe "#sign_in_with_session_token" do
     subject { get :fake_action }
 
-    let!(:attributes) do
-      { invitation_token: token, motif_category_short_name: "rsa_orientation", expires_at: Time.zone.parse("2022-08-03 10:32:00") }
-    end
+    let!(:token) { user.set_rdv_invitation_token! }
 
     before do
-      request.session[:restricted_auth] = attributes
-      allow(Invitation).to receive(:new).with(attributes).and_return(invitation)
-      allow(invitation).to receive(:token_valid?).and_return(true)
-      allow(invitation).to receive(:expired?).and_return(false)
-      allow(invitation).to receive(:user).and_return(user)
-      allow(invitation).to receive(:rdv)
+      request.session[:restricted_auth] = { invitation_token: token, expires_at: Time.zone.parse("2022-08-03 10:32:00") }
+      request.session[:rdv_insertion_invitation] = { motif_category_short_name: "rsa_orientation" }
     end
 
     it "connecte l'usager et indique le mode de connexion utilisé" do
@@ -140,9 +120,7 @@ RSpec.describe TokenInvitable, type: :controller do
     end
 
     context "when the token is invalid" do
-      before do
-        allow(invitation).to receive(:token_valid?).and_return(false)
-      end
+      let!(:token) { "some random token" }
 
       it "deletes the invitation and redirects to root path with a message" do
         subject
@@ -154,7 +132,7 @@ RSpec.describe TokenInvitable, type: :controller do
 
     context "when the session expired" do
       before do
-        allow(invitation).to receive(:expired?).and_return(true)
+        request.session[:restricted_auth] = { invitation_token: token, expires_at: 5.minutes.ago }
       end
 
       it "deletes the invitation and redirects to root path with a message" do
@@ -166,9 +144,9 @@ RSpec.describe TokenInvitable, type: :controller do
     end
 
     context "when a user is logged in already" do
-      before { sign_in user }
-
       context "when it is the invited user" do
+        before { sign_in user }
+
         it "does not mark the user as only invited" do
           subject
           expect(response).to be_successful
@@ -180,9 +158,7 @@ RSpec.describe TokenInvitable, type: :controller do
       context "when it is another user" do
         let!(:other_user) { create(:user) }
 
-        before do
-          allow(invitation).to receive(:user).and_return(other_user)
-        end
+        before { sign_in other_user }
 
         it "redirects to root path with a message" do
           subject
