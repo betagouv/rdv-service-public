@@ -70,6 +70,6 @@ module TokenInvitable
 
   # Les clés du hash renvoyé par cette méthode devraient correspondre à InvitationSearchContext::INVITATION_PARAMS
   def rdv_insertion_invitation_query_params
-    session[:rdv_insertion_invitation]
+    session[:rdv_insertion_invitation].symbolize_keys
   end
 end
