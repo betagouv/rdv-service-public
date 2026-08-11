@@ -14,7 +14,7 @@ module TokenInvitable
   def store_invitation_in_session_and_redirect
     return if params[:invitation_token].blank?
 
-    restricted_auth = Invitation.new(current_url_params)
+    restricted_auth = RestrictedAuth.new(invitation_token: params[:invitation_token])
     return redirect_with_error(t("devise.invitations.invitation_token_invalid")) unless restricted_auth.token_valid?
     return redirect_with_error(t("devise.invitations.current_user_mismatch")) if current_user_mismatch?(restricted_auth.user)
 
