@@ -12,7 +12,7 @@ class Api::Rdvinsertion::InvitationsController < Api::Rdvinsertion::AgentAuthBas
   private
 
   def user
-    @user ||= User.find_by(rdv_invitation_token.params[:invitation_token])
+    @user ||= RestrictedAuth.new(invitation_token: params[:invitation_token]).user
   end
 
   def creneau_availability_count
