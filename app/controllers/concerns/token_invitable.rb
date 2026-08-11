@@ -65,7 +65,7 @@ module TokenInvitable
   def invitation_to_take_rdv?
     return false unless session[:invitation]
 
-    User.find_by(rdv_invitation_token: session[:invitation][:invitation_token])
+    User.find_by(rdv_invitation_token: session[:invitation]["invitation_token"])
   end
 
   # Les clés du hash renvoyé par cette méthode devraient correspondre à InvitationSearchContext::INVITATION_PARAMS
