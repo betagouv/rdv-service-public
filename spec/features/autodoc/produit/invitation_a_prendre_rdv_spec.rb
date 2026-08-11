@@ -7,6 +7,7 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
 
   before { login_as(agent, scope: :agent) }
+  around { |example| perform_enqueued_jobs { example.run } }
 
   specify do
     doc = Autodoc.start_scenario("Invitation à prendre rendez-vous", self, category: "3) Produit", accessibility_checks: false)
@@ -55,7 +56,7 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
     doc.add_screenshot(
       page,
       text: "On me récapitule les infos. Je clique sur Envoyer l'invitation",
-      wait_for: "Nouvelle invitation"
+      wait_for: "Vous allez inviter"
     )
 
     click_on "Envoyer l'invitation"
@@ -66,6 +67,48 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
       wait_for: "Vous avez invité"
     )
 
+    logout
+
     doc.start_section("Côté usager")
+
+    # TODO: faire marcher la spec pour les emails
+    # open_email(user.email)
+    #
+    # expect(current_email.subject).to eq "Votre espace RDV Service Public est ouvert 🚀"
+    #
+    # doc.add_screenshot(current_email, text: "Je reçois un email d'invitation")
+    #
+    # current_email.click_on "Prendre rendez-vous"
+    #
+    # doc.add_screenshot(
+    #   page,
+    #   text: "Je choisis un créneau",
+    #   wait_for: "Choisissez un créneau"
+    # )
+
+    invitation_token = RdvPlan.last.invitation_token
+    visit rdv_plan_invitations_path(invitation_token)
+
+    doc.add_screenshot(
+      page,
+      text: "On me propose de choisir un créneaux",
+      wait_for: "Vous êtes invité"
+    )
+
+    click_on "Prochaine disponibilité"
+
+    doc.add_screenshot(
+      page,
+      text: "Je choisis un créneau",
+      wait_for: "8:00"
+    )
+
+    click_on "8:00"
+
+    doc.add_screenshot(
+      page,
+      text: "Le rendez-vous est confirmé",
+      wait_for: "confirmé"
+    )
   end
 end

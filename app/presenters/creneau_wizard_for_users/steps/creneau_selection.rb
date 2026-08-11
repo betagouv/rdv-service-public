@@ -1,12 +1,40 @@
 class CreneauWizardForUsers::Steps::CreneauSelection
-  def initialize(search_context)
-    @context = search_context
-    @query_params = @context.query_params
+  def self.build_from_invitation(motif:, lieu:, user:, start_date:, invitation_token:)
+    date_range = start_date..(start_date + 6.days)
 
-    @start_date = @context.start_date
-    @motif = @context.first_matching_motif
-    @creneaux_search = @context.creneaux_search_for(@context.lieu, @motif)
-    @date_range = @context.date_range
+    creneaux_search = CreneauxSearch::ForUser.new(
+      motif:,
+      lieu:,
+      user:,
+      date_range:
+    )
+
+    new(motif:, creneaux_search:, date_range:, invitation_token:)
+  end
+
+  def self.build_from_context(context)
+    motif = context.first_matching_motif
+
+    new(
+      motif: context.first_matching_motif,
+      creneaux_search: context.creneaux_search_for(context.lieu, motif),
+      date_range: context.date_range,
+      context:,
+      query_params: context.query_params
+    )
+  end
+
+  def initialize(motif:, creneaux_search:, date_range:, context: nil, query_params: nil, invitation_token: nil)
+    @motif = motif
+    @creneaux_search = creneaux_search
+    @date_range = date_range
+
+    @context = context
+    @query_params = query_params
+
+    @invitation_token = invitation_token
+
+    @start_date = date_range.begin
   end
 
   def no_availability?
@@ -42,6 +70,10 @@ class CreneauWizardForUsers::Steps::CreneauSelection
   end
 
   def wizard_after_creneau_selection_path(params)
+    if @invitation_token
+      return url_helpers.rdv_plan_invitations_create_rdv_path({ rdv_plan_invitation_token: @invitation_token }.merge(params))
+    end
+
     if @context.query_params[:prescripteur] == Prescripteur::INTERNE
       # context est un AgentPrescriptionSearchContext
       organisation = @context.current_organisation
@@ -62,7 +94,11 @@ class CreneauWizardForUsers::Steps::CreneauSelection
   private
 
   def current_step_path(extra_params)
-    url_helpers.prendre_rdv_path(@query_params.merge(extra_params))
+    if @context && @query_params
+      url_helpers.prendre_rdv_path(@query_params.merge(extra_params))
+    elsif @invitation_token
+      url_helpers.rdv_plan_invitations_path(@invitation_token, extra_params)
+    end
   end
 
   def url_helpers

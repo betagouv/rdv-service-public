@@ -1,4 +1,4 @@
-- creneau_selection_service = CreneauWizardForUsers::Steps::CreneauSelection.new(context)
+- creneau_selection_service = CreneauWizardForUsers::Steps::CreneauSelection.build_from_context(context)
 .fr-container
   = render "search/selected_motif_recap", context: context
   - if creneau_selection_service.no_availability?

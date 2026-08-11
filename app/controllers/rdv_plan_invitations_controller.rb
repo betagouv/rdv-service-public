@@ -5,8 +5,10 @@ class RdvPlanInvitationsController < ApplicationController
     @rdv_plan = RdvPlan.find_by(invitation_token: params[:rdv_plan_invitation_token])
 
     if @rdv_plan.rdv.blank?
-      start_date = Time.zone.today
-      @creneaux_search = CreneauxSearch::ForUser.build_from_rdv_plan(@rdv_plan, date_range: start_date..(start_date + 6.days))
+      @creneau_selection_service = CreneauWizardForUsers::Steps::CreneauSelection.build_from_invitation(
+        motif: @rdv_plan.motif, lieu: @rdv_plan.lieu, user: @rdv_plan.user, start_date: params[:date].presence&.to_date || Time.zone.today,
+        invitation_token: @rdv_plan.invitation_token
+      )
     else
 
       rdv = @rdv_plan.rdv
