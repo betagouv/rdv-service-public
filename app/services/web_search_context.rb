@@ -1,5 +1,5 @@
 class WebSearchContext < SearchContext
-  attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude, :departement, :ants_pre_demandes_count, :autofocus
+  attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude, :departement, :ants_pre_demandes_count
 
   # departement est un cas particulier parce qu'il est aussi utilisé en dehors de addresse selection pour
   # passer cette première étape
@@ -31,10 +31,6 @@ class WebSearchContext < SearchContext
     @user_selected_organisation_id = query_params[:user_selected_organisation_id]
     @motif_id = query_params[:motif_id]
     @ants_pre_demandes_count = query_params[:ants_pre_demandes_count]
-
-    # Pour des questions d’accessibilité, on met le focus sur le premier ou le dernier créneau lorsqu’on clique
-    # sur les boutons semaine précédente ou semaine suivante.
-    @autofocus = query_params.delete(:autofocus)
   end
 
   def invitation?
