@@ -59,7 +59,7 @@ module TokenInvitable
   end
 
   def restricted_auth
-    @restricted_auth ||= (session[:invitation].present? ? RestrictedAuth.new(session[:invitation]) : nil)
+    @restricted_auth ||= (session[:invitation].present? ? RestrictedAuth.new(**session[:invitation].symbolize_keys) : nil)
   end
 
   def invitation_to_take_rdv?
