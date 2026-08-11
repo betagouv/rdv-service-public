@@ -7,7 +7,7 @@ class RestrictedAuth
   attr_reader :token, :expires_at
 
   def user
-    participation_by_invitation_token&.user&.user_to_notify
+    user_by_rdv_invitation_token || participation_by_invitation_token&.user&.user_to_notify
   end
 
   def rdv
@@ -23,6 +23,10 @@ class RestrictedAuth
   end
 
   private
+
+  def user_by_rdv_invitation_token
+    @user_by_rdv_invitation_token ||= token.present? ? User.find_by(rdv_invitation_token: token) : nil
+  end
 
   def participation_by_invitation_token
     return nil if token.blank?
