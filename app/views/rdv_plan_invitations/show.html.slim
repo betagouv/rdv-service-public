@@ -1,6 +1,6 @@
-.fr-container
+.fr-container.fr-m-4w
   | Vous êtes invité.e à prendre rendez-vous
 
-  / On mettra ici un vrai sélecteur de créneaux
+  p On mettra ici un vrai sélecteur de créneaux
   - starts_at = @creneaux_search.next_availability.starts_at
   = link_to l(starts_at, format: "%H:%M"), rdv_plan_invitations_create_rdv_path(rdv_plan_invitation_token: @rdv_plan.invitation_token, starts_at: starts_at.to_s), method: :post, class: "fr-btn fr-btn--tertiary", data: { disable_with: "Veuillez patienter…"}
