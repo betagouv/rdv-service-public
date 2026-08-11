@@ -1,7 +1,21 @@
+= render "search/banner", context: OpenStruct.new(public_link_organisation: @rdv_plan.motif.organisation)
+
 .fr-container.fr-m-4w
-  | Vous êtes invité.e à prendre rendez-vous
+  section.fr-col-12.fr-col-lg-10.fr-col-offset-lg-1
+    p.fr-text--lg Vous êtes invité.e à prendre rendez-vous pour le motif <b>#{@rdv_plan.motif.name}</b>
 
-  p Choisissez un créneau:
+    - if @rdv_plan.lieu
+      p.fr-text--lg Le rendez-vous aura lieu à #{@rdv_plan.lieu.name}, à #{@rdv_plan.lieu.address}
+    - elsif @rdv_plan.motif.visio
+      p.fr-text--lg Le rendez-vous aura lieu par visioconférence
+    - elsif @rdv_plan.motif.phone
+      / TODO: garder juste les 2 derniers chiffres
+      p.fr-text--lg L'agent vous appellera au #{@rdv_plan.user.humanized_phone_number}
+    - elsif @rdv_plan.motif.home
+      p.fr-text--lg L'agent se rendra à vorte domicile.
 
-  = render "search/creneaux", creneau_selection_service: @creneau_selection_service
+    p.fr-text--lg Choisissez un créneau:
 
+    .card
+      .card-body
+        = render "search/creneaux", creneau_selection_service: @creneau_selection_service

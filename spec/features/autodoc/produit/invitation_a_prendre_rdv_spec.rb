@@ -1,13 +1,20 @@
 RSpec.describe "Invitation à prendre rendez-vous", js: true do
   let!(:motif) { create(:motif, name: "Suivi de dossier", organisation:) }
-  let(:organisation) { create(:organisation) }
+  let(:organisation) { create(:organisation, name: "DREETS de l'Ile de France") }
   let!(:agent) { create(:agent, admin_role_in_organisations: [motif.organisation]) }
   let!(:user) { create(:user, organisations: [organisation]) }
-  let(:lieu) { create(:lieu, organisation: organisation) }
+  let(:lieu) { create(:lieu, organisation: organisation, name: "Cabinet vétérinaire", address: "21 rue des Ardennes, 75019 Paris") }
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
 
   before { login_as(agent, scope: :agent) }
   around { |example| perform_enqueued_jobs { example.run } }
+
+  around do |example|
+    previous_host = Capybara.app_host
+    Capybara.app_host = "http://www.rdv-service-public-test.localhost:#{previous_host[/\d+/]}"
+    example.run
+    Capybara.app_host = previous_host
+  end
 
   specify do
     doc = Autodoc.start_scenario("Invitation à prendre rendez-vous", self, category: "3) Produit", accessibility_checks: false)
