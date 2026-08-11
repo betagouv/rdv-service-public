@@ -78,20 +78,19 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
 
     doc.start_section("Côté usager")
 
-    # TODO: faire marcher la spec pour les emails
-    # open_email(user.email)
-    #
-    # expect(current_email.subject).to eq "Votre espace RDV Service Public est ouvert 🚀"
-    #
-    # doc.add_screenshot(current_email, text: "Je reçois un email d'invitation")
-    #
-    # current_email.click_on "Prendre rendez-vous"
-    #
-    # doc.add_screenshot(
-    #   page,
-    #   text: "Je choisis un créneau",
-    #   wait_for: "Choisissez un créneau"
-    # )
+    open_email(user.email)
+
+    expect(current_email.subject).to eq "Vous êtes invité.e à prendre rendez-vous"
+
+    doc.add_screenshot(current_email, text: "Je reçois un email d'invitation")
+
+    current_email.click_on "Prendre rendez-vous"
+
+    doc.add_screenshot(
+      page,
+      text: "Je choisis un créneau",
+      wait_for: "Choisissez un créneau"
+    )
 
     invitation_token = RdvPlan.last.invitation_token
     visit rdv_plan_invitations_path(invitation_token)
