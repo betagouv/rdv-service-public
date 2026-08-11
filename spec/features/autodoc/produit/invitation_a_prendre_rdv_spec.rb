@@ -1,6 +1,6 @@
 RSpec.describe "Invitation à prendre rendez-vous", js: true do
   let!(:motif) { create(:motif, name: "Suivi de dossier", organisation:) }
-  let(:organisation) { create(:organisation, name: "DREETS de l'Ile de France") }
+  let(:organisation) { create(:organisation, name: "DREETS de l'Ile de France", verticale: :rdv_etat) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [motif.organisation]) }
   let!(:user) { create(:user, organisations: [organisation]) }
   let(:lieu) { create(:lieu, organisation: organisation, name: "Cabinet vétérinaire", address: "21 rue des Ardennes, 75019 Paris") }
@@ -88,17 +88,8 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
 
     doc.add_screenshot(
       page,
-      text: "Je choisis un créneau",
+      text: "On me propose des créneaux",
       wait_for: "Choisissez un créneau"
-    )
-
-    invitation_token = RdvPlan.last.invitation_token
-    visit rdv_plan_invitations_path(invitation_token)
-
-    doc.add_screenshot(
-      page,
-      text: "On me propose de choisir un créneaux",
-      wait_for: "Vous êtes invité"
     )
 
     click_on "Prochaine disponibilité"
