@@ -11,11 +11,7 @@ RSpec.describe Anonymizer do
     end
 
     context "user" do
-      let!(:user) { create(:user, email: "user@example.com", first_name: "jean", last_name: "jacques") }
-
-      before do
-        ActiveRecord::Base.connection.execute("UPDATE users SET franceconnect_openid_sub = '12345' WHERE id = #{user.id}")
-      end
+      let!(:user) { create(:user, email: "user@example.com", first_name: "jean", last_name: "jacques", franceconnect_openid_sub: "12345") }
 
       it "anonymizes first and last name and email" do
         described_class.anonymize_record!(user)
@@ -24,8 +20,7 @@ RSpec.describe Anonymizer do
       end
 
       it "anonymizes unique franceconnect_openid_sub" do
-        described_class.anonymize_record!(user)
-        expect(ActiveRecord::Base.connection.execute("SELECT franceconnect_openid_sub FROM users WHERE id = #{user.id}").first["franceconnect_openid_sub"]).to eq "[valeur unique anonymisée #{user.id}]"
+        expect { described_class.anonymize_record!(user) }.to change { user.reload.franceconnect_openid_sub }.from("12345").to("[valeur unique anonymisée #{user.id}]")
       end
     end
 
@@ -125,14 +120,9 @@ RSpec.describe Anonymizer do
 
   describe "#anonymize_records!" do
     context "users" do
-      let!(:user1) { create(:user, email: "user@example.com", first_name: "jean", last_name: "jacques") }
-      let!(:user2) { create(:user, email: "user2@example.com", first_name: "marco", last_name: "polo") }
+      let!(:user1) { create(:user, email: "user@example.com", first_name: "jean", last_name: "jacques", franceconnect_openid_sub: "12345") }
+      let!(:user2) { create(:user, email: "user2@example.com", first_name: "marco", last_name: "polo", franceconnect_openid_sub: "67890") }
       let!(:user_without_email) { create(:user, email: nil) }
-
-      before do
-        ActiveRecord::Base.connection.execute("UPDATE users SET franceconnect_openid_sub = '12345' WHERE id = #{user1.id}")
-        ActiveRecord::Base.connection.execute("UPDATE users SET franceconnect_openid_sub = '67890' WHERE id = #{user2.id}")
-      end
 
       it "anonymizes the correct columns" do
         described_class.anonymize_records!("users")
