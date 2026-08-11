@@ -40,9 +40,7 @@ class RdvPlanInvitationsController < ApplicationController
 
       rdv = @rdv_plan.rdv
 
-      user = rdv_plan.user
-      user.signed_in_with_invitation_token!(rdv: rdv)
-      sign_in(user, store: false)
+      set_user_name_initials_verified
 
       redirect_to users_rdv_path(@rdv_plan.rdv, invitation_token: rdv.participations.find_by(user_id: @rdv_plan.user_id).restricted_auth_token)
     else
