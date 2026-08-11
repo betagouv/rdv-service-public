@@ -65,16 +65,9 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
 
         context "when a rdv can be found through the invitation token" do
           let!(:rdv) { create(:rdv) }
-          let!(:invitation) { instance_double(Invitation) }
 
           before do
-            request.session[:invitation] = { invitation_token: "some-token" }
-            allow(Invitation).to receive(:new).and_return(invitation)
-            allow(invitation).to receive(:token_valid?).and_return(true)
-            allow(invitation).to receive(:expired?).and_return(false)
-            allow(invitation).to receive(:token_valid?).and_return(true)
-            allow(invitation).to receive(:user).and_return(user)
-            allow(invitation).to receive(:rdv).and_return(rdv)
+            request.session[:invitation] = { invitation_token: rdv.participations.first.restricted_auth_token }
           end
 
           it "redirects to the rdv path" do
