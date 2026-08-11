@@ -14,7 +14,7 @@ RSpec.describe Anonymizer do
       let!(:user) { create(:user, email: "user@example.com", first_name: "jean", last_name: "jacques") }
 
       before do
-        ActiveRecord::Base.connection.execute("UPDATE users SET confirmation_token = 'CONFIRM_ME' WHERE id = #{user.id}")
+        ActiveRecord::Base.connection.execute("UPDATE users SET franceconnect_openid_sub = '12345' WHERE id = #{user.id}")
       end
 
       it "anonymizes first and last name and email" do
@@ -23,9 +23,9 @@ RSpec.describe Anonymizer do
         expect(user.reload.email).to eq "email_anonymise_#{user.id}@exemple.fr"
       end
 
-      it "anonymizes unique confirmation_token" do
+      it "anonymizes unique franceconnect_openid_sub" do
         described_class.anonymize_record!(user)
-        expect(ActiveRecord::Base.connection.execute("SELECT confirmation_token FROM users WHERE id = #{user.id}").first["confirmation_token"]).to eq "[valeur unique anonymisée #{user.id}]"
+        expect(ActiveRecord::Base.connection.execute("SELECT franceconnect_openid_sub FROM users WHERE id = #{user.id}").first["franceconnect_openid_sub"]).to eq "[valeur unique anonymisée #{user.id}]"
       end
     end
 
@@ -130,8 +130,8 @@ RSpec.describe Anonymizer do
       let!(:user_without_email) { create(:user, email: nil) }
 
       before do
-        ActiveRecord::Base.connection.execute("UPDATE users SET confirmation_token = 'CONFIRM_ME' WHERE id = #{user1.id}")
-        ActiveRecord::Base.connection.execute("UPDATE users SET confirmation_token = 'WAT' WHERE id = #{user2.id}")
+        ActiveRecord::Base.connection.execute("UPDATE users SET franceconnect_openid_sub = '12345' WHERE id = #{user1.id}")
+        ActiveRecord::Base.connection.execute("UPDATE users SET franceconnect_openid_sub = '67890' WHERE id = #{user2.id}")
       end
 
       it "anonymizes the correct columns" do
@@ -142,8 +142,8 @@ RSpec.describe Anonymizer do
         expect(user1.reload.email).to eq "email_anonymise_#{user1.id}@exemple.fr"
         expect(user2.reload.email).to eq "email_anonymise_#{user2.id}@exemple.fr"
         expect(user_without_email.reload.email).to be_nil
-        expect(ActiveRecord::Base.connection.execute("SELECT confirmation_token FROM users WHERE id = #{user1.id}").first["confirmation_token"]).to eq "[valeur unique anonymisée #{user1.id}]"
-        expect(ActiveRecord::Base.connection.execute("SELECT confirmation_token FROM users WHERE id = #{user2.id}").first["confirmation_token"]).to eq "[valeur unique anonymisée #{user2.id}]"
+        expect(user1.reload.franceconnect_openid_sub).to eq "[valeur unique anonymisée #{user1.id}]"
+        expect(user2.reload.franceconnect_openid_sub).to eq "[valeur unique anonymisée #{user2.id}]"
       end
     end
 
