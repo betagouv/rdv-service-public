@@ -14,9 +14,9 @@ module TokenInvitable
   def store_invitation_in_session_and_redirect
     return if params[:invitation_token].blank?
 
-    invitation = Invitation.new(current_url_params)
-    return redirect_with_error(t("devise.invitations.invitation_token_invalid")) unless invitation.token_valid?
-    return redirect_with_error(t("devise.invitations.current_user_mismatch")) if current_user_mismatch?(invitation.user)
+    restricted_auth = Invitation.new(current_url_params)
+    return redirect_with_error(t("devise.invitations.invitation_token_invalid")) unless restricted_auth.token_valid?
+    return redirect_with_error(t("devise.invitations.current_user_mismatch")) if current_user_mismatch?(restricted_auth.user)
 
     session[:invitation] = { invitation_token: params[:invitation_token], expires_at: 10.minutes.from_now }
     session[:rdv_insertion_invitation] = current_url_params.except(:invitation_token)
@@ -34,13 +34,13 @@ module TokenInvitable
   end
 
   def sign_in_with_session_token
-    return delete_invitation_from_session_and_redirect(t("devise.invitations.invitation_token_invalid")) unless invitation.token_valid?
-    return delete_invitation_from_session_and_redirect(t("devise.invitations.current_user_mismatch")) if current_user_mismatch?(invitation.user)
-    return delete_invitation_from_session_and_redirect(t("devise.invitations.session_expired")) if invitation.expired?
+    return delete_invitation_from_session_and_redirect(t("devise.invitations.invitation_token_invalid")) unless restricted_auth.token_valid?
+    return delete_invitation_from_session_and_redirect(t("devise.invitations.current_user_mismatch")) if current_user_mismatch?(restricted_auth.user)
+    return delete_invitation_from_session_and_redirect(t("devise.invitations.session_expired")) if restricted_auth.expired?
     return if current_user.present? # no need to sign in if the user is already connected
 
-    user = invitation.user
-    user.signed_in_with_invitation_token!(rdv: invitation.rdv)
+    user = restricted_auth.user
+    user.signed_in_with_invitation_token!(rdv: restricted_auth.rdv)
     sign_in(user, store: false)
   end
 
@@ -58,8 +58,8 @@ module TokenInvitable
     redirect_to root_path
   end
 
-  def invitation
-    @invitation ||= (session[:invitation].present? ? RestrictedAuth.new(session[:invitation]) : nil)
+  def restricted_auth
+    @restricted_auth ||= (session[:invitation].present? ? RestrictedAuth.new(session[:invitation]) : nil)
   end
 
   def invitation_to_take_rdv?
