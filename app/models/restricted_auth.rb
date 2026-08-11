@@ -1,4 +1,4 @@
-class Invitation
+class RestrictedAuth
   def initialize(invitation_token:, expires_at: nil)
     @token = invitation_token
     @expires_at = expires_at
