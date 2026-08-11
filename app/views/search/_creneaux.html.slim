@@ -26,7 +26,7 @@ div
                   / Pour faciliter la navigation au clavier pour l'accessibilité, on met le focus sur le premier ou le dernier créneau lorsqu’on clique
                   / sur les boutons semaine précédente ou semaine suivante.
                   ruby:
-                    autofocus = (params[:autofocus].in?(["first", nil]) && creneau == creneaux.min) || (params[:autofocus] == "last" && creneau == creneaux.max)
+                    autofocus = (params[:autofocus] == "first" && creneau == creneaux.min) || (params[:autofocus] == "last" && creneau == creneaux.max)
                     confirm_path = creneau_selection_service.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at)
                     show_instructions = creneau.motif.restriction_for_rdv.present? && params[:accepted_restrictions_for].to_i != creneau.motif.id
 
