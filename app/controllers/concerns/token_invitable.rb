@@ -18,7 +18,8 @@ module TokenInvitable
     return redirect_with_error(t("devise.invitations.invitation_token_invalid")) unless invitation.token_valid?
     return redirect_with_error(t("devise.invitations.current_user_mismatch")) if current_user_mismatch?(invitation.user)
 
-    session[:invitation] = current_url_params.merge(expires_at: 10.minutes.from_now)
+    session[:invitation] = { invitation_token: params[:invitation_token], expires_at: 10.minutes.from_now }
+    session[:rdv_insertion_invitation] = current_url_params.except(:invitation_token)
 
     redirect_to current_path_without_token
   end
@@ -58,6 +59,15 @@ module TokenInvitable
   end
 
   def invitation
-    @invitation ||= (session[:invitation].present? ? Invitation.new(session[:invitation]) : nil)
+    @invitation ||= (session[:invitation].present? ? RestrictedAuth.new(session[:invitation]) : nil)
+  end
+
+  def invitation_to_take_rdv?
+    User.find_by(rdv_invitation_token: session[:invitation][:invitation_token])
+  end
+
+  # Les clés du hash renvoyé par cette méthode devraient correspondre à InvitationSearchContext::INVITATION_PARAMS
+  def rdv_insertion_invitation_query_params
+    session[:rdv_insertion_invitation]
   end
 end

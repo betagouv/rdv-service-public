@@ -33,8 +33,8 @@ class SearchController < ApplicationController
     elsif current_agent && params[:prescripteur] == Prescripteur::INTERNE && params[:current_organisation]
       redirect_to search_creneau_admin_organisation_prescription_path(params[:current_organisation], agent_search_params)
     else
-      @context = if invitation&.to_take_rdv?
-                   WebInvitationSearchContext.new(user: current_user, query_params: search_params.merge(invitation.query_params))
+      @context = if invitation_to_take_rdv?
+                   WebInvitationSearchContext.new(user: current_user, query_params: search_params.merge(rdv_insertion_invitation_query_params))
                  else
                    WebSearchContext.new(user: current_user, query_params: search_params)
                  end
