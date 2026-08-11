@@ -64,10 +64,10 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
         end
 
         context "when a rdv can be found through the invitation token" do
-          let!(:rdv) { create(:rdv) }
+          let!(:rdv) { create(:rdv, users: [user]) }
 
           before do
-            request.session[:restricted_auth] = { invitation_token: rdv.participations.first.restricted_auth_token }
+            request.session[:restricted_auth] = { invitation_token: rdv.participations.first.restricted_auth_token, expires_at: 10.minutes.from_now }
           end
 
           it "redirects to the rdv path" do
