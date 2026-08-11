@@ -63,6 +63,8 @@ module TokenInvitable
   end
 
   def invitation_to_take_rdv?
+    return false unless session[:invitation]
+
     User.find_by(rdv_invitation_token: session[:invitation][:invitation_token])
   end
 
