@@ -40,7 +40,7 @@ RSpec.describe TokenInvitable, type: :controller do
 
       it "does not store the token in session" do
         subject
-        expect(request.session[:invitation]).to be_nil
+        expect(request.session[:restricted_auth]).to be_nil
       end
 
       it "does not redirect to root path" do
@@ -57,7 +57,7 @@ RSpec.describe TokenInvitable, type: :controller do
 
       it "does not store the token in session" do
         subject
-        expect(request.session[:invitation]).to be_nil
+        expect(request.session[:restricted_auth]).to be_nil
       end
 
       it "redirects to root path with a message" do
@@ -74,7 +74,7 @@ RSpec.describe TokenInvitable, type: :controller do
 
       it "stores the token in session" do
         subject
-        expect(request.session[:invitation]).to eq(params.merge(expires_at: Time.zone.parse("2022-08-03 10:32:00")))
+        expect(request.session[:restricted_auth]).to eq(params.merge(expires_at: Time.zone.parse("2022-08-03 10:32:00")))
       end
 
       it "redirects to current path without the token" do
@@ -94,7 +94,7 @@ RSpec.describe TokenInvitable, type: :controller do
 
           it "does stores the invitation in session and redirect" do
             subject
-            expect(request.session[:invitation]).to eq(params.merge(expires_at: Time.zone.parse("2022-08-03 10:32:00")))
+            expect(request.session[:restricted_auth]).to eq(params.merge(expires_at: Time.zone.parse("2022-08-03 10:32:00")))
             expect(response).to redirect_to("/fake_action?motif_category_short_name=rsa_orientation")
           end
         end
@@ -124,7 +124,7 @@ RSpec.describe TokenInvitable, type: :controller do
     end
 
     before do
-      request.session[:invitation] = attributes
+      request.session[:restricted_auth] = attributes
       allow(Invitation).to receive(:new).with(attributes).and_return(invitation)
       allow(invitation).to receive(:token_valid?).and_return(true)
       allow(invitation).to receive(:expired?).and_return(false)
@@ -146,7 +146,7 @@ RSpec.describe TokenInvitable, type: :controller do
 
       it "deletes the invitation and redirects to root path with a message" do
         subject
-        expect(request.session[:invitation]).to be_nil
+        expect(request.session[:restricted_auth]).to be_nil
         expect(response).to redirect_to(root_path)
         expect(flash[:error]).to eq("Votre invitation n'est pas valide.")
       end
@@ -159,7 +159,7 @@ RSpec.describe TokenInvitable, type: :controller do
 
       it "deletes the invitation and redirects to root path with a message" do
         subject
-        expect(request.session[:invitation]).to be_nil
+        expect(request.session[:restricted_auth]).to be_nil
         expect(response).to redirect_to(root_path)
         expect(flash[:error]).to eq("La session a expiré")
       end

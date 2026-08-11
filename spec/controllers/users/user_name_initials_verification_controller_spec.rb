@@ -67,7 +67,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
           let!(:rdv) { create(:rdv) }
 
           before do
-            request.session[:invitation] = { invitation_token: rdv.participations.first.restricted_auth_token }
+            request.session[:restricted_auth] = { invitation_token: rdv.participations.first.restricted_auth_token }
           end
 
           it "redirects to the rdv path" do

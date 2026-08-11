@@ -6,7 +6,7 @@ module TokenInvitable
 
   included do
     # :store_invitation_in_session_and_redirect is called first, :sign_in_with_session_token after it
-    prepend_before_action :sign_in_with_session_token, if: -> { session[:invitation].present? }
+    prepend_before_action :sign_in_with_session_token, if: -> { session[:restricted_auth].present? }
   end
 
   private
@@ -18,7 +18,7 @@ module TokenInvitable
     return redirect_with_error(t("devise.invitations.invitation_token_invalid")) unless restricted_auth.token_valid?
     return redirect_with_error(t("devise.invitations.current_user_mismatch")) if current_user_mismatch?(restricted_auth.user)
 
-    session[:invitation] = { invitation_token: params[:invitation_token], expires_at: 10.minutes.from_now }
+    session[:restricted_auth] = { invitation_token: params[:invitation_token], expires_at: 10.minutes.from_now }
     session[:rdv_insertion_invitation] = current_url_params.except(:invitation_token)
 
     redirect_to current_path_without_token
@@ -49,7 +49,7 @@ module TokenInvitable
   end
 
   def delete_invitation_from_session_and_redirect(error_msg)
-    session.delete(:invitation)
+    session.delete(:restricted_auth)
     redirect_with_error(error_msg)
   end
 
@@ -59,13 +59,13 @@ module TokenInvitable
   end
 
   def restricted_auth
-    @restricted_auth ||= (session[:invitation].present? ? RestrictedAuth.new(**session[:invitation].symbolize_keys) : nil)
+    @restricted_auth ||= (session[:restricted_auth].present? ? RestrictedAuth.new(**session[:restricted_auth].symbolize_keys) : nil)
   end
 
   def invitation_to_take_rdv?
-    return false unless session[:invitation]
+    return false unless session[:restricted_auth]
 
-    User.find_by(rdv_invitation_token: session[:invitation]["invitation_token"])
+    User.find_by(rdv_invitation_token: session[:restricted_auth].with_indifferent_access["invitation_token"])
   end
 
   # Les clés du hash renvoyé par cette méthode devraient correspondre à InvitationSearchContext::INVITATION_PARAMS
