@@ -2,7 +2,7 @@
 
 .fr-container.fr-m-4w
   section.fr-col-12.fr-col-lg-10.fr-col-offset-lg-1
-    p.fr-text--lg Vous êtes invité.e à prendre rendez-vous pour le motif <b>#{@rdv_plan.motif.name}</b> (#{@rdv_plan.motif.default_duration_in_min} minutes).
+    p.fr-text--lg Vous êtes invité·e à prendre rendez-vous pour le motif <b>#{@rdv_plan.motif.name}</b>, #{@rdv_plan.motif.default_duration_in_min} minutes.
 
     - if @rdv_plan.lieu
       p.fr-text--lg

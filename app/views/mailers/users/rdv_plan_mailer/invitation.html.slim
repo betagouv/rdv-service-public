@@ -1,7 +1,7 @@
 div
   p Bonjour,
 
-  p Vous êtes invité.e à prendre rendez-vous pour le motif <b>#{@rdv_plan.motif.name}</b> (#{@rdv_plan.motif.default_duration_in_min} minutes).
+  p Vous êtes invité·e à prendre rendez-vous pour le motif <b>#{@rdv_plan.motif.name}</b>, #{@rdv_plan.motif.default_duration_in_min} minutes.
 
   - if @rdv_plan.lieu
     p
