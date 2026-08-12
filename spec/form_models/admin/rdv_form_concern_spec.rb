@@ -168,7 +168,7 @@ RSpec.describe Admin::RdvFormConcern, type: :form do
     let(:rdv) { create(:rdv) }
 
     it "do nothing when no other RDV" do
-      form.check_duplicates
+      form.send(:check_duplicates)
       expect(rdv.errors).to be_empty
     end
 
@@ -182,7 +182,7 @@ RSpec.describe Admin::RdvFormConcern, type: :form do
              starts_at: rdv.starts_at,
              ends_at: rdv.ends_at)
 
-      form.check_duplicates
+      form.send(:check_duplicates)
       expect(rdv.errors.full_messages).to eq(["Il existe déjà un RDV au même moment, au même lieu, pour le même motif, avec les mêmes participant⋅es"])
     end
 
@@ -196,7 +196,7 @@ RSpec.describe Admin::RdvFormConcern, type: :form do
              starts_at: rdv.starts_at,
              ends_at: rdv.ends_at)
 
-      form.check_duplicates
+      form.send(:check_duplicates)
       expect(rdv.errors).to be_empty
     end
   end

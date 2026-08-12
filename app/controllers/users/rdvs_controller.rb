@@ -44,12 +44,13 @@ class Users::RdvsController < UserAuthController
   end
 
   def cancel
-    if @rdv.update_and_notify(current_user, status: "excused")
+    update_status_and_notify = Rdv::UpdateStatusAndNotify.new(@rdv, current_user, status: "excused")
+    if update_status_and_notify.perform
       flash[:notice] = "Le RDV a bien été annulé."
     else
       flash[:error] = "Impossible d'annuler le RDV."
     end
-    redirect_to users_rdv_path(@rdv, invitation_token: @rdv.participation_token(current_user.id))
+    redirect_to users_rdv_path(@rdv, invitation_token: update_status_and_notify.participation_token_for(current_user.id))
   end
 
   def ics

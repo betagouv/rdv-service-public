@@ -9,8 +9,9 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       it "calls update_and_notify function" do
         sign_in rdv.users.first
-        expect_any_instance_of(Rdv).to receive(:update_and_notify).with(rdv.users.first, status: "excused").and_call_original
+        expect_any_instance_of(Rdv::UpdateStatusAndNotify).to receive(:perform).and_call_original
         put :cancel, params: { id: rdv.id }
+        expect(rdv.reload.status).to eq "excused"
       end
 
       it "redirects to the rdv" do
@@ -25,8 +26,9 @@ RSpec.describe Users::RdvsController, type: :controller do
         before { sign_in rdv.users.first }
 
         it "calls update_and_notify function" do
-          expect_any_instance_of(Rdv).to receive(:update_and_notify).with(rdv.users.first, status: "excused").and_call_original
+          expect_any_instance_of(Rdv::UpdateStatusAndNotify).to receive(:perform).and_call_original
           put :cancel, params: { id: rdv.id }
+          expect(rdv.reload.status).to eq "excused"
         end
 
         it "redirects to the rdv" do
