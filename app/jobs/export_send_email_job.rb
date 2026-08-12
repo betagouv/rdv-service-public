@@ -20,7 +20,7 @@ class ExportSendEmailJob < ExportJob
       # d'y stocker un gros volume de donnée pour économiser de la RAM.
       ExportFileBlob.uncached do
         page_blobs.in_batches(of: 10) do |page_blobs_batch|
-          page_blobs_batch.pluck(:data) do |json_rows|
+          page_blobs_batch.pluck(:data).each do |json_rows|
             JSON.parse(json_rows).each do |row|
               yielder << row
             end
