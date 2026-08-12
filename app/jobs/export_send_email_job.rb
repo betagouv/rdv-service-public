@@ -11,11 +11,6 @@ class ExportSendEmailJob < ExportJob
     Export::PARTICIPATIONS_EXPORT => :participations_export,
   }.freeze
 
-  CLASS_FOR_EXPORT_TYPE = {
-    Export::RDV_EXPORT => "RdvExporter",
-    Export::PARTICIPATIONS_EXPORT => "ParticipationExporter",
-  }.freeze
-
   def perform(batch, _params)
     @export = Export.find(batch.properties[:export_id])
     page_blobs = @export.export_file_blobs.pages.order(:page_index)
