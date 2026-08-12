@@ -1,19 +1,19 @@
-= render "search/banner", context: OpenStruct.new(public_link_organisation: @rdv_plan.motif.organisation)
+= render "search/banner", context: OpenStruct.new(public_link_organisation: @rdv_invitation.motif.organisation)
 
 .fr-container.fr-m-4w
   section.fr-col-12.fr-col-lg-10.fr-col-offset-lg-1
-    p.fr-text--lg Vous êtes invité·e à prendre rendez-vous pour le motif <b>#{@rdv_plan.motif.name}</b>, #{@rdv_plan.motif.default_duration_in_min} minutes.
+    p.fr-text--lg Vous êtes invité·e à prendre rendez-vous pour le motif <b>#{@rdv_invitation.motif.name}</b>, #{@rdv_invitation.motif.default_duration_in_min} minutes.
 
-    - if @rdv_plan.lieu
+    - if @rdv_invitation.lieu
       p.fr-text--lg
-        | Le rendez-vous aura lieu à <b>#{@rdv_plan.lieu.name}</b>, au <b>#{@rdv_plan.lieu.address}</b>
-    - elsif @rdv_plan.motif.visio
+        | Le rendez-vous aura lieu à <b>#{@rdv_invitation.lieu.name}</b>, au <b>#{@rdv_invitation.lieu.address}</b>
+    - elsif @rdv_invitation.motif.visio
       p.fr-text--lg
         | Le rendez-vous aura lieu par visioconférence
-    - elsif @rdv_plan.motif.phone
+    - elsif @rdv_invitation.motif.phone
       / TODO: garder juste les 2 derniers chiffres
-      p.fr-text--lg L'agent vous appellera au #{@rdv_plan.user.humanized_phone_number}
-    - elsif @rdv_plan.motif.home
+      p.fr-text--lg L'agent vous appellera au #{@rdv_invitation.user.humanized_phone_number}
+    - elsif @rdv_invitation.motif.home
       p.fr-text--lg L'agent se rendra à votre domicile.
 
     p.fr-text--lg Choisissez un créneau:

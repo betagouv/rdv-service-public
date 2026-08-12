@@ -14,7 +14,7 @@ class RdvInvitation < ApplicationRecord
 
   before_create :set_restricted_authentication_token
 
-  def creneau_search(starts_at)
+  def creneaux_search(starts_at)
     # TODO: vérifier si starts_at doit être une Date
     CreneauxSearch::ForUser.new(
       motif: motif,
@@ -35,15 +35,15 @@ class RdvInvitation < ApplicationRecord
       # TODO: vérifier le niveau de notification de la participation
       rdv = Rdv.create(
         motif:, organisation:, lieu:, starts_at:,
-        ends_at: starts_at + (duration_in_minutes || motif.default_duration_in_min).minutes,
+        ends_at: starts_at + motif.default_duration_in_min.minutes,
         agents: [creneau.agent],
         users: [user],
-        created_by: author
+        created_by: user
       )
 
       if rdv.persisted?
         update(rdv: rdv)
-        Notifiers::RdvCreated.perform_with(rdv, inviting_agent)
+        Notifiers::RdvCreated.perform_with(rdv, user)
       end
     end
 
@@ -54,6 +54,6 @@ class RdvInvitation < ApplicationRecord
 
   def set_restricted_authentication_token
     # On reprend la même logique que CustomDeviseTokenGenerator
-    self.restricted_auth_token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8) until restricted_auth_token && Participation.where(restricted_auth_token:).none?
+    self.token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8) until token && self.class.where(token:).none?
   end
 end

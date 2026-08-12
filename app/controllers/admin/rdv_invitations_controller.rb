@@ -13,7 +13,7 @@ class Admin::RdvInvitationsController < AgentAuthController
     if @rdv_invitation.save
       Users::RdvInvitationMailer.with(rdv_invitation: @rdv_invitation).invitation.deliver_later
 
-      redirect_to admin_organisation_rdv_plan_path(current_organisation, @rdv_invitation)
+      redirect_to admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation)
     else
       render :new
     end

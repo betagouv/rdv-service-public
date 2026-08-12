@@ -6,7 +6,11 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
   let(:lieu) { create(:lieu, organisation: organisation, name: "Cabinet vétérinaire", address: "21 rue des Ardennes, 75019 Paris") }
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
 
-  before { login_as(agent, scope: :agent) }
+  before do
+    travel_to Time.zone.local(2026, 8, 11, 14, 0, 0)
+    login_as(agent, scope: :agent)
+  end
+
   around { |example| perform_enqueued_jobs { example.run } }
 
   around do |example|

@@ -1,0 +1,10 @@
+- content_for :title do
+  | Invitation à prendre rendez-vous
+
+.fr-grid-row.justify-content-center
+  .fr-col-md-12.col-lg-8
+    .card.card-body
+      p Vous avez invité #{@rdv_invitation.user.full_name} à prendre rendez-vous pour #{@rdv_invitation.motif.name}.
+
+      - invitation_url = rdv_invitations_url(@rdv_invitation.token, host: @rdv_invitation.organisation.domain.host_name)
+      p Le lien d'invitation est #{link_to(invitation_url, invitation_url)}
