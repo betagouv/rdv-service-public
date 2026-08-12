@@ -29,10 +29,12 @@ class RdvInvitation < ApplicationRecord
 
     if creneau.nil?
       errors.add(:base, "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre.")
+      return
     end
 
     RdvPlan.transaction do
       # TODO: vérifier le niveau de notification de la participation
+      # TODO: gérer les erreurs sur le rdv
       rdv = Rdv.create(
         motif:, organisation:, lieu:, starts_at:,
         ends_at: starts_at + motif.default_duration_in_min.minutes,
