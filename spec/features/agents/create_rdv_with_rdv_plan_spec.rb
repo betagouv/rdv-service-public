@@ -72,6 +72,15 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     expect(page).to have_content("Retour sur Démarches Simplifiées")
   end
 
+  context "quand il y a d'autres agents dans l'organisation" do
+    let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
+    it "permet de prendre rendez-vous pour un autre agent", js: true do
+      visit agents_rdv_plan_path(rdv_plan.id)
+      find(".fr-select").click # On teste ce cas, puisqu'on a eu des bugs d'affichage qui cassaient cette partie de l'interface lors d'une mise à jour de Fullcalendar
+    end
+  end
+
   it "displays existing RDVs and absences", js: true do
     existing_rdv_this_week = create(:rdv, starts_at: Time.zone.now.beginning_of_week + 8.hours, agents: [agent], motif:, organisation:)
     existing_absence_next_week = create(:absence, first_day: Time.zone.now.beginning_of_week.to_date + 1.week, agent:)

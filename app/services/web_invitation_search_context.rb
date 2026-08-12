@@ -1,5 +1,5 @@
 class WebInvitationSearchContext < InvitationSearchContext
-  attr_reader :errors, :query_params, :organisation_ids, :motif_category_short_name, :autofocus
+  attr_reader :errors, :query_params, :organisation_ids, :motif_category_short_name
 
   def initialize(user:, query_params: {})
     super
@@ -20,10 +20,6 @@ class WebInvitationSearchContext < InvitationSearchContext
 
     # creneau_selection
     @motif_id = query_params[:motif_id]
-
-    # Pour des questions d’accessibilité, on met le focus sur le premier ou le dernier créneau lorsqu’on clique
-    # sur les boutons semaine précédente ou semaine suivante.
-    @autofocus = query_params.delete(:autofocus)
   end
 
   # dupliqué de WebSearchContext

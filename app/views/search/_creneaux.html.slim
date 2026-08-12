@@ -1,17 +1,19 @@
-div id="creneaux-lieu-#{lieu&.id}"
+/# locals: (creneau_selection_service:)
+
+div
   .row
-    - previous_from_date = date_range.begin - 7.days
-    - if date_range.begin > Time.zone.today
+    - if creneau_selection_service.date_range.begin > Time.zone.today
       .col-12.col-md-auto.mb-2.mb-md-0.d-flex.align-items-center.justify-content-center
-        = link_to "", prendre_rdv_path(query_params.merge(date: previous_from_date, autofocus: "last")), class: "fr-btn fr-icon-arrow-left-s-line fr-hidden fr-unhidden-md", aria: { label: "Semaine précédente" }
-        = link_to "sem. précédente", prendre_rdv_path(query_params.merge(date: previous_from_date, autofocus: "last")), class: "fr-btn fr-btn--icon-left fr-icon-arrow-left-s-line fr-hidden-md", aria: { label: "Semaine précédente" }
+        = link_to "", creneau_selection_service.previous_week_path, class: "fr-btn fr-icon-arrow-left-s-line fr-hidden fr-unhidden-md", aria: { label: "Semaine précédente" }
+        = link_to "sem. précédente", creneau_selection_service.previous_week_path, class: "fr-btn fr-btn--icon-left fr-icon-arrow-left-s-line fr-hidden-md", aria: { label: "Semaine précédente" }
 
     .col
       .row
         ruby:
+          creneaux = creneau_selection_service.creneaux
           creneaux_by_date = creneaux.group_by { |c| c.starts_at.to_date }
 
-        - date_range.each do |date|
+        - creneau_selection_service.date_range.each do |date|
           .fr-col-6.fr-col-md-3.fr-col-lg.fr-pl-1w.fr-pr-1w
             p.rdv-text-align-center
               strong= l(date, format: "%A")
@@ -21,19 +23,23 @@ div id="creneaux-lieu-#{lieu&.id}"
             - if creneaux_by_date[date]&.first&.respects_max_public_booking_delay?
               .fr-grid-row
                 - creneaux_by_date[date].sort.each do |creneau|
+                  / Pour faciliter la navigation au clavier pour l'accessibilité, on met le focus sur le premier ou le dernier créneau lorsqu’on clique
+                  / sur les boutons semaine précédente ou semaine suivante.
                   ruby:
-                    autofocus = (@context.autofocus == "first" && creneau == creneaux.min) || (@context.autofocus == "last" && creneau == creneaux.max)
+                    autofocus = (params[:autofocus] == "first" && creneau == creneaux.min) || (params[:autofocus] == "last" && creneau == creneaux.max)
                     confirm_path = creneau_selection_service.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at)
                     show_instructions = creneau.motif.restriction_for_rdv.present? && params[:accepted_restrictions_for].to_i != creneau.motif.id
-                    modal_id = "rdv-restriction-motif-#{creneau.motif.id}-#{creneau.starts_at.to_i}"
-                  = render "/common/modal", id: modal_id, title: "À lire avant de prendre un rendez-vous", body: restriction_for_rdv_to_html(creneau.motif), confirm_path:, confirm_message: "Accepter", cancel_message: "Annuler"
+
+                  - if show_instructions
+                    - modal_id = "rdv-restriction-motif-#{creneau.motif.id}-#{creneau.starts_at.to_i}"
+                    = render "/common/modal", id: modal_id, title: "À lire avant de prendre un rendez-vous", body: restriction_for_rdv_to_html(creneau.motif), confirm_path:, confirm_message: "Accepter", cancel_message: "Annuler"
                   a.fr-col-12.fr-btn.fr-btn--tertiary.fr-mb-1w.rdv-justify-content-center(
                     class=(show_instructions ? "js-prevent-default-onclick" : "")
                     href=confirm_path
                     aria-controls=(show_instructions ? modal_id : "")
                     data-fr-opened=(show_instructions ? "false" : "")
                     aria-label=%(Choisir le créneau du #{l(creneau.starts_at, format: '%A %-d %b')} à #{l(creneau.starts_at, format: '%H:%M')})
-                    autofocus
+                    autofocus=autofocus
                   )
                     = l(creneau.starts_at, format: "%H:%M")
                     - if creneau.motif.follow_up?
@@ -46,12 +52,13 @@ div id="creneaux-lieu-#{lieu&.id}"
               p.rdv-text-align-center.fr-text--sm
                 | Pas de créneau disponible
 
+        - next_availability = creneau_selection_service.next_availability
         - if next_availability
           .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
-            = link_to prendre_rdv_path(query_params.merge(date: next_availability.starts_at, autofocus: "first")),
+            = link_to creneau_selection_service.next_availability_path,
                     class: "fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-arrow-right-s-line",
                     data: { disable_with: "Veuillez patienter…" },
-                    autofocus: @context.autofocus.present? do
+                    autofocus: params[:autofocus].present? do
               .d-flex.align-items-center
                 div
                   | Prochaine disponibilité le
@@ -59,5 +66,5 @@ div id="creneaux-lieu-#{lieu&.id}"
                   strong= l(next_availability.starts_at, format: :human)
     - if params[:date].blank? || !creneau_selection_service.after_max_public_booking_delay?(params[:date].to_date + 6.days)
       .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
-        = link_to "", prendre_rdv_path(query_params.merge(date: date_range.end + 1.day, autofocus: "first")), class: "fr-btn fr-icon-arrow-right-s-line fr-hidden fr-unhidden-md", aria: { label: "semaine suivante"}
-        = link_to "sem. prochaine", prendre_rdv_path(query_params.merge(date: date_range.end + 1.day, autofocus: "first")), class:  "fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line fr-hidden-md", aria: { label: "semaine suivante"}
+        = link_to "", creneau_selection_service.next_week_path, class: "fr-btn fr-icon-arrow-right-s-line fr-hidden fr-unhidden-md", aria: { label: "semaine suivante"}
+        = link_to "sem. prochaine", creneau_selection_service.next_week_path, class:  "fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line fr-hidden-md", aria: { label: "semaine suivante"}

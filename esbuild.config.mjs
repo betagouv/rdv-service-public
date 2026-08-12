@@ -11,16 +11,16 @@ const isDev = process.env.NODE_ENV === "development";
 
 const config = {
   entryPoints: {
-    super_admin: "./app/javascript/super_admin",
     application: "./app/javascript/application",
-    application_test: "./app/javascript/application_test",
     application_agent: "./app/javascript/application_agent",
-    lieux_map: "./app/javascript/lieux_map",
     application_agent_config: "./app/javascript/application_agent_config",
+    application_test: "./app/javascript/application_test",
     charts: "./app/javascript/charts",
-    rdv_plan: "./app/javascript/rdv_plan",
-    mail: "./app/javascript/mail",
     instance_name: "./app/javascript/instance_name",
+    lieux_map: "./app/javascript/lieux_map",
+    mail: "./app/javascript/mail",
+    rdv_plan: "./app/javascript/rdv_plan",
+    super_admin: "./app/javascript/super_admin",
   },
   bundle: true,
   outdir: "app/assets/builds",
