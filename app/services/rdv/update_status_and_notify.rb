@@ -10,7 +10,7 @@ class Rdv::UpdateStatusAndNotify
 
     @rdv.status = @status
 
-    # On utilise #to_a pour faire une copie des participations qui ne sera pas modifiée pendant le #reload plus bas
+    # On utilise #to_a pour faire une copie des participations avec leurs anciens status
     previous_participations = @rdv.participations.to_a
 
     Rdv.transaction do
