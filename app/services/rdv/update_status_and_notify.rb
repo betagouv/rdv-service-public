@@ -6,6 +6,8 @@ class Rdv::UpdateStatusAndNotify
   end
 
   def perform
+    return true if @rdv.status == @status
+
     @rdv.status = @status
 
     # On utilise #to_a pour faire une copie des participations qui ne sera pas modifiée pendant le #reload plus bas
