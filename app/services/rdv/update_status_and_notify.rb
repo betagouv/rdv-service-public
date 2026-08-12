@@ -6,16 +6,16 @@ class Rdv::UpdateStatusAndNotify
   end
 
   def perform
+    @rdv.status = @status
+
+    # On utilise #to_a pour faire une copie des participations qui ne sera pas modifiée pendant le #reload plus bas
+    previous_participations = @rdv.participations.to_a
+
     Rdv.transaction do
-      @rdv.status = @status
-
-      # On utilise #compact_blank pour faire une copie des participations qui ne sera pas modifiée pendant le #reload plus bas
-      previous_participations = @rdv.participations.compact_blank
-
       if @rdv.status_changed? && @rdv.valid?
         @rdv.cancelled_at = @rdv.status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
         change_participation_statuses
-        @rdv.participations.reload # reload is needed after .persisted? method call
+        @rdv.participations.reload
       end
 
       if @rdv.save

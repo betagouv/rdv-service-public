@@ -43,7 +43,7 @@ module Rdv::Updatable
   end
 
   def notify!(author, previous_participations)
-    if rdv_updated?
+    if should_notify_of_changes?
       Notifiers::RdvUpdated.new(self, author, old_agent_ids: @old_agent_ids).perform
     end
 
@@ -52,7 +52,7 @@ module Rdv::Updatable
     end
   end
 
-  def rdv_updated?
+  def should_notify_of_changes?
     starts_at_changed? || lieu_changed? || visio_url_custom_changed?
     # || agents_changed? désactivé pour l’instant cf https://github.com/betagouv/rdv-service-public/pull/5399
   end
