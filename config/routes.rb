@@ -316,7 +316,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :rdv_plans, only: %i[new create show index]
+      resources :rdv_invitations, only: %i[new create show index]
 
       scope module: "organisations" do
         resource :online_booking, only: %i[show edit update] do
@@ -444,10 +444,10 @@ Rails.application.routes.draw do
 
   get "prdv", to: "redirect#reprendre_rdv_from_participation_invitation_token", as: "reprendre_rdv_from_participation_invitation_token_short"
 
-  get "invit/:rdv_plan_invitation_token", to: "rdv_plan_invitations#show", as: "rdv_plan_invitations"
+  get "invit/:rdv_invitation_token", to: "rdv_invitations#show", as: "rdv_invitations"
 
   # Ça devrait être un post, mais c'est galère à faire fonctionner en même temps que prendre_rdv
-  get "invit/:rdv_plan_invitation_token/prendre_rdv", to: "rdv_plan_invitations#create_rdv", as: "rdv_plan_invitations_create_rdv"
+  get "invit/:rdv_invitation_token/prendre_rdv", to: "rdv_invitations#create_rdv", as: "rdv_invitations_create_rdv"
 
   def format_redirect_params(params)
     # we rename the short parameter tkn

@@ -22,7 +22,7 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
     doc.start_section("Côté agent")
 
     doc.add_text("La fonctionnalité est cachée derrière un feature flag")
-    agent.enable_feature!("rdv_plan_invitations")
+    agent.enable_feature!("rdv_invitations")
 
     visit calendar_admin_organisation_planning_plage_ouvertures_path(organisation.id)
 

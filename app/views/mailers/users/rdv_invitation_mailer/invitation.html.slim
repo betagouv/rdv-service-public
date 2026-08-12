@@ -16,6 +16,6 @@ div
     p L'agent se rendra à votre domicile.
 
   .btn-wrapper
-    = link_to "Prendre rendez-vous", rdv_plan_invitations_url(@rdv_plan.invitation_token), class:"btn btn-primary"
+    = link_to "Prendre rendez-vous", rdv_invitations_url(@rdv_invitation.token), class:"btn btn-primary"
 
   = t("mailers.common.farewell_html", domain_name: domain.name)

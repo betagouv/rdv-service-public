@@ -1,15 +1,11 @@
 class CreneauWizardForUsers::Steps::CreneauSelection
-  def self.build_from_invitation(motif:, lieu:, user:, start_date:, invitation_token:)
-    date_range = start_date..(start_date + 6.days)
-
-    creneaux_search = CreneauxSearch::ForUser.new(
-      motif:,
-      lieu:,
-      user:,
-      date_range:
+  def self.build_from_invitation(rdv_invitation:, start_date:)
+    new(
+      motif: rdv_invitation.motif,
+      creneaux_search: rdv_invitation.creneaux_search(start_date),
+      date_range: start_date..(start_date + 6.days),
+      invitation_token: rdv_invitation.token
     )
-
-    new(motif:, creneaux_search:, date_range:, invitation_token:)
   end
 
   def self.build_from_context(context)
@@ -71,7 +67,7 @@ class CreneauWizardForUsers::Steps::CreneauSelection
 
   def wizard_after_creneau_selection_path(params)
     if @invitation_token
-      return url_helpers.rdv_plan_invitations_create_rdv_path({ rdv_plan_invitation_token: @invitation_token }.merge(params))
+      return url_helpers.rdv_invitations_create_rdv_path({ rdv_invitation_token: @invitation_token }.merge(params))
     end
 
     if @context.query_params[:prescripteur] == Prescripteur::INTERNE
@@ -97,7 +93,7 @@ class CreneauWizardForUsers::Steps::CreneauSelection
     if @context && @query_params
       url_helpers.prendre_rdv_path(@query_params.merge(extra_params))
     elsif @invitation_token
-      url_helpers.rdv_plan_invitations_path(@invitation_token, extra_params)
+      url_helpers.rdv_invitations_path(@invitation_token, extra_params)
     end
   end
 

@@ -859,12 +859,11 @@ Absence.create!(
   end_time: Tod::TimeOfDay.new(18)
 )
 
-rdv_plan = RdvPlan.create!(
+rdv_invitation = RdvInvitation.create!(
   motif_id: _motif_org_paris_nord_social_droits.id,
   lieu_id: lieu_org_paris_nord_bolivar,
   user: user_org_paris_nord_patricia,
-  planning_agent: agent_org_paris_nord_pmi_martine
+  inviting_agent: agent_org_paris_nord_pmi_martine
 )
 
-rdv_plan.generate_invitation_token!
-puts "Pour tester les invitations: http://www.rdv-etat.localhost:3000/invit/#{rdv_plan.invitation_token}"
+puts "Pour tester les invitations: http://www.rdv-etat.localhost:3000/invit/#{rdv_invitation.token}"
