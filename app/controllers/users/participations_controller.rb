@@ -3,7 +3,7 @@ class Users::ParticipationsController < UserAuthController
 
   layout "application_narrow"
 
-  include TokenInvitable
+  include RestrictedAuthConcern
 
   def index
     @rdv = policy_scope(Rdv, policy_scope_class: User::RdvPolicy::Scope).find(params[:rdv_id])

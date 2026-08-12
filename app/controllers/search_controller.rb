@@ -1,7 +1,7 @@
 class SearchController < ApplicationController
   layout "application_base"
 
-  include TokenInvitable
+  include RestrictedAuthConcern
   include Search::LogParamsConcern
 
   prepend_before_action(only: %i[search_rdv]) do

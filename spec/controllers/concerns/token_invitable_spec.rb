@@ -1,6 +1,6 @@
-RSpec.describe TokenInvitable, type: :controller do
+RSpec.describe RestrictedAuthConcern, type: :controller do
   controller(ApplicationController) do
-    include TokenInvitable
+    include RestrictedAuthConcern
     prepend_before_action :store_restricted_auth_token_in_session_and_redirect
 
     def fake_action

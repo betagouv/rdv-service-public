@@ -3,7 +3,7 @@ class Users::UserNameInitialsVerificationController < UserAuthController
 
   skip_after_action :verify_authorized
 
-  include TokenInvitable
+  include RestrictedAuthConcern
 
   def new
     @form = Form.new

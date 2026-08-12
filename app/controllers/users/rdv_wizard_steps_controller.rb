@@ -11,7 +11,7 @@ class Users::RdvWizardStepsController < UserAuthController
 
   before_action :set_skip_proches_step
 
-  include TokenInvitable
+  include RestrictedAuthConcern
 
   def new
     @rdv_builder = Users::RdvBuilder.new(current_user, query_params)
