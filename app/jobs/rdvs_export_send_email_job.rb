@@ -11,9 +11,15 @@ class RdvsExportSendEmailJob < ExportJob
     page_blobs = export.export_file_blobs.pages.order(:page_index)
 
     rows_enum = Enumerator.new do |yielder|
-      page_blobs.each do |blob|
-        JSON.parse(blob.data).each do |row|
-          yielder << row
+      # On a pas besoin du cache ActiveRecord ici, on évite donc
+      # d'y stocker un gros volume de donnée pour économiser de la RAM.
+      ExportFileBlob.uncached do
+        page_blobs.in_batches(of: 10) do |page_blobs_batch|
+          page_blobs_batch.pluck(:data) do |json_rows|
+            JSON.parse(json_rows).each do |row|
+              yielder << row
+            end
+          end
         end
       end
     end
