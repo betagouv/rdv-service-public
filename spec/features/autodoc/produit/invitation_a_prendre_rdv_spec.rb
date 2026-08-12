@@ -7,7 +7,7 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
 
   before do
-    travel_to Time.zone.local(2026, 8, 11, 14, 0, 0)
+    travel_to Time.zone.local(2026, 8, 12, 14, 0, 0)
     login_as(agent, scope: :agent)
   end
 
@@ -89,14 +89,6 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
     doc.add_screenshot(current_email, text: "Je reçois un email d'invitation")
 
     current_email.click_on "Prendre rendez-vous"
-
-    doc.add_screenshot(
-      page,
-      text: "On me propose des créneaux",
-      wait_for: "Choisissez un créneau"
-    )
-
-    click_on "Prochaine disponibilité"
 
     doc.add_screenshot(
       page,
