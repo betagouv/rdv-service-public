@@ -1,4 +1,49 @@
 RSpec.describe RdvExporter, type: :service do
+  describe "#write_xls_to_io" do
+    it "return export with header" do
+      rdv = create(:rdv, created_at: Time.zone.parse("2023-01-01"), agents: [create(:agent, email: "agent@mail.com")])
+      rdv_row = described_class.row_array_from(rdv)
+      io = StringIO.new
+      described_class.write_xls_to_io(io, [rdv_row])
+
+      header_row, first_data_row = Spreadsheet.open(io).worksheets.first.rows
+
+      # Les lettres sont les noms de colonnes Excel.
+      # Il est important de toujours ajouter les nouvelles colonnes
+      # à la fin pour ne pas gêner les SI des départements,
+      # qui se basent parfois sur la position et non le libellé.
+      expect(header_row).to eq(
+        [
+          "année", # A
+          "date prise rdv", # B
+          "heure prise rdv", # C
+          "origine", # D
+          "date rdv", # E
+          "heure rdv", # F
+          "service", # G
+          "motif", # H
+          "contexte", # I
+          "statut", # J
+          "lieu", # K
+          "professionnel.le(s)", # L
+          "usager(s)", # M
+          "commune du premier responsable", # N
+          "au moins un usager mineur ?", # O
+          "résultat des notifications", # P
+          "Organisation", # Q
+          "date naissance", # R
+          "code postal du premier responsable", # S
+          "créé par", # T
+          "email(s) professionnel.le(s)", # U
+          "rdv collectif", # V
+        ]
+      )
+
+      expect(first_data_row.first).to eq(2023)
+      expect(first_data_row.last).to eq("non")
+    end
+  end
+
   describe "#row_array_from rdv" do
     describe "année" do
       it "return year of rdv creation" do
