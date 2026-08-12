@@ -16,7 +16,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     params.require(:organisation_ids)
 
     @user = User.new
-    @user.assign_attributes(user_params.merge(created_through: "agent_creation_api"))
+    @user.assign_attributes(params_for_create.merge(created_through: "agent_creation_api"))
     authorize(@user, policy_class: Agent::UserPolicy)
     @user.save!
     render_record @user
@@ -31,7 +31,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
       return
     end
 
-    @user.update!(user_params)
+    @user.update!(params_for_update)
     render_record @user
   end
 
@@ -43,7 +43,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   private
 
   def email_change_not_allowed?
-    @user.already_logged_in? && user_params.key?(:email) && @user.email != user_params[:email]
+    @user.already_logged_in? && params.key?(:email) && @user.email != params[:email]
   end
 
   def set_organisation
@@ -55,6 +55,61 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     authorize(@user, policy_class: Agent::UserPolicy)
   rescue ActiveRecord::RecordNotFound
     render_error :not_found, not_found: :user
+  end
+
+  def params_for_create
+    return @params_for_create if defined? @params_for_create
+
+    attrs = %i[
+      first_name birth_name last_name email address phone_number
+      birth_date responsible_id caisse_affiliation affiliation_number
+      family_situation number_of_children notify_by_sms notify_by_email
+      city_code post_code city_name
+    ]
+
+    @params_for_create = params.permit(*attrs, organisation_ids: [])
+
+    if params[:external_reference].present?
+      attributes_from_params = params.require(:external_reference).permit(:external_id, :external_url)
+
+      territory_id = Organisation.find_by(id: params[:organisation_ids])&.territory_id
+      @params_for_create.merge!(
+        external_references_attributes: [attributes_from_params.merge(
+          oauth_application: doorkeeper_token&.application,
+          territory_id: territory_id
+        )]
+      )
+    end
+
+    if params.key?(:referent_agent_ids)
+      @params_for_create[:referent_agent_ids] = Agent::AgentPolicy::Scope.new(current_agent, Agent).resolve.where(id: params[:referent_agent_ids]).ids
+    end
+
+    @params_for_create
+  end
+
+  def params_for_update
+    return @params_for_update if defined? @params_for_update
+
+    attrs = %i[
+      first_name birth_name last_name email address phone_number
+      birth_date responsible_id caisse_affiliation affiliation_number
+      family_situation number_of_children notify_by_sms notify_by_email
+      city_code post_code city_name
+    ]
+
+    attrs -= User::FranceconnectFrozenFieldsConcern::FROZEN_FIELDS if @user&.logged_once_with_franceconnect?
+
+    @params_for_update = params.permit(*attrs)
+
+    if params.key?(:referent_agent_ids)
+      referents_i_can_modify = Agent::AgentPolicy::Scope.new(pundit_user, @user.referent_agents).resolve
+      referents_i_cant_modify = @user.referent_agents - referents_i_can_modify
+
+      @params_for_update[:referent_agent_ids] = authorized_referent_ids + referents_i_cant_modify.map(&:id)
+    end
+
+    @params_for_update
   end
 
   def user_params
