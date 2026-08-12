@@ -15,7 +15,6 @@ class Rdv::UpdateStatusAndNotify
       if @rdv.status_changed? && @rdv.valid?
         @rdv.cancelled_at = @rdv.status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
         change_participation_statuses
-        @rdv.participations.reload
       end
 
       if @rdv.save
