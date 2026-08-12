@@ -110,38 +110,6 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     @params_for_update
   end
 
-  def user_params
-    attrs = %i[
-      first_name birth_name last_name email address phone_number
-      birth_date responsible_id caisse_affiliation affiliation_number
-      family_situation number_of_children notify_by_sms notify_by_email
-      city_code post_code city_name
-    ]
-
-    attrs -= User::FranceconnectFrozenFieldsConcern::FROZEN_FIELDS if @user&.logged_once_with_franceconnect?
-
-    permitted_params = params.permit(*attrs, organisation_ids: [])
-
-    if params[:external_reference].present?
-      attributes_from_params = params.require(:external_reference).permit(:external_id, :external_url)
-
-      territory_id = Organisation.find_by(id: params[:organisation_ids])&.territory_id
-      permitted_params.merge!(
-        external_references_attributes: [attributes_from_params.merge(
-          oauth_application: doorkeeper_token&.application,
-          territory_id: territory_id
-        )]
-      )
-    end
-
-    return permitted_params unless params.key?(:referent_agent_ids)
-
-    referents_i_can_modify = Agent::AgentPolicy::Scope.new(pundit_user, @user.referent_agents).resolve
-    referents_i_cant_modify = @user.referent_agents - referents_i_can_modify
-
-    permitted_params.merge(referent_agent_ids: authorized_referent_ids + referents_i_cant_modify.map(&:id))
-  end
-
   def authorized_referent_ids
     policy_scope(
       Agent.where(id: params[:referent_agent_ids]),
