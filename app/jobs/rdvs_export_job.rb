@@ -21,7 +21,7 @@ class RdvsExportJob < ExportJob
       end
     end
 
-    batch.enqueue(on_success: RdvsExportSendEmailJob)
+    batch.enqueue(on_success: ExportSendEmailJob)
   end
 
   private
