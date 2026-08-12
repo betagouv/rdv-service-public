@@ -28,6 +28,29 @@ module ParticipationExporter
     "inscription au rdv collectif par",
   ].freeze
 
+  def self.write_xls_to_io(io, rows_enum)
+    workbook = Spreadsheet::Workbook.new
+    sheet = workbook.create_worksheet
+    sheet.row(0).concat(HEADER)
+
+    row_index = 1
+
+    rows_enum.each do |row|
+      sheet_row = sheet.row(row_index)
+
+      # Ces formattages correspondent aux différentes colonnes
+      sheet_row.set_format 3, DateFormat # "date prise rdv"
+      sheet_row.set_format 4, HourFormat # "heure prise rdv"
+      sheet_row.set_format 6, DateFormat # "date rdv"
+      sheet_row.set_format 7, HourFormat # "heure rdv"
+
+      sheet_row.concat(row)
+      row_index += 1
+    end
+
+    workbook.write(io)
+  end
+
   def self.rows_from_participations(participations)
     participations.includes(
       :created_by,
