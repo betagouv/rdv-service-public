@@ -23,18 +23,23 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   end
 
   def update
-    @user.assign_attributes(params_for_update)
+    User.transaction do
+      @user.assign_attributes(params_for_update)
 
-    if @user.email_changed? && @user.already_logged_in?
-      render_error :unprocessable_entity, {
-        errors: {},
-        error_messages: [I18n.t("users.can_not_update_email_of_confirmed_user")],
-      }
-      return
+      if @user.email_changed? && @user.already_logged_in?
+        render_error :unprocessable_entity, {
+          errors: {},
+          error_messages: [I18n.t("users.can_not_update_email_of_confirmed_user")],
+        }
+        return
+      end
+
+      authorize(@user, policy_class: Agent::UserPolicy)
+      @user.save!
+      authorize(@user, policy_class: Agent::UserPolicy)
+
+      render_record @user
     end
-
-    @user.save!
-    render_record @user
   end
 
   def rdv_invitation_token
