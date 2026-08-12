@@ -5,13 +5,13 @@ module TokenInvitable
   extend ActiveSupport::Concern
 
   included do
-    # :store_invitation_in_session_and_redirect is called first, :sign_in_with_session_token after it
+    # :store_restricted_auth_token_in_session_and_redirect is called first, :sign_in_with_session_token after it
     prepend_before_action :sign_in_with_session_token, if: -> { session[:restricted_auth].present? }
   end
 
   private
 
-  def store_invitation_in_session_and_redirect(store_rdv_insertion_invitation: false)
+  def store_restricted_auth_token_in_session_and_redirect(store_rdv_insertion_invitation: false)
     return if params[:invitation_token].blank?
 
     restricted_auth = RestrictedAuth.new(invitation_token: params[:invitation_token])

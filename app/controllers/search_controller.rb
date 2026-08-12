@@ -5,7 +5,7 @@ class SearchController < ApplicationController
   include Search::LogParamsConcern
 
   prepend_before_action(only: %i[search_rdv]) do
-    store_invitation_in_session_and_redirect(store_rdv_insertion_invitation: true)
+    store_restricted_auth_token_in_session_and_redirect(store_rdv_insertion_invitation: true)
   end
 
   def home

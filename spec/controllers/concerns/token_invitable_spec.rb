@@ -1,7 +1,7 @@
 RSpec.describe TokenInvitable, type: :controller do
   controller(ApplicationController) do
     include TokenInvitable
-    prepend_before_action :store_invitation_in_session_and_redirect
+    prepend_before_action :store_restricted_auth_token_in_session_and_redirect
 
     def fake_action
       render plain: "ok"
@@ -24,7 +24,7 @@ RSpec.describe TokenInvitable, type: :controller do
     end
   end
 
-  describe "#store_invitation_in_session_and_redirect" do
+  describe "#store_restricted_auth_token_in_session_and_redirect" do
     subject { get :fake_action, params: params }
 
     let!(:params) { { invitation_token: token, motif_category_short_name: "rsa_orientation" } }
