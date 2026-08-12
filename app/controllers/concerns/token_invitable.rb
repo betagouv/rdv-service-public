@@ -11,7 +11,7 @@ module TokenInvitable
 
   private
 
-  def store_invitation_in_session_and_redirect
+  def store_restricted_auth_in_session_and_redirect
     return if params[:invitation_token].blank?
 
     restricted_auth = RestrictedAuth.new(invitation_token: params[:invitation_token])
@@ -19,9 +19,12 @@ module TokenInvitable
     return redirect_with_error(t("devise.invitations.current_user_mismatch")) if current_user_mismatch?(restricted_auth.user)
 
     session[:restricted_auth] = { invitation_token: params[:invitation_token], expires_at: 10.minutes.from_now }
-    session[:rdv_insertion_invitation] = current_url_params.except(:invitation_token)
 
     redirect_to current_path_without_token
+  end
+
+  def store_rdv_insertion_invitation_in_session
+    session[:rdv_insertion_invitation] = current_url_params.except(:invitation_token)
   end
 
   def current_path_without_token

@@ -3,7 +3,11 @@ class SearchController < ApplicationController
 
   include TokenInvitable
   include Search::LogParamsConcern
-  prepend_before_action :store_invitation_in_session_and_redirect, only: %i[search_rdv]
+
+  prepend_before_action(only: %i[search_rdv]) do
+    store_restricted_auth_in_session_and_redirect
+    store_rdv_insertion_invitation_in_session
+  end
 
   def home
     # Si l'agent est redirigé vers le root_path depuis ProConnect, et qu'on veut le rediriger vers
