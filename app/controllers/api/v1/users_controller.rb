@@ -23,7 +23,9 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   end
 
   def update
-    if email_change_not_allowed?
+    @user.assign_attributes(params_for_update)
+
+    if @user.email_changed? && @user.already_logged_in?
       render_error :unprocessable_entity, {
         errors: {},
         error_messages: [I18n.t("users.can_not_update_email_of_confirmed_user")],
@@ -31,7 +33,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
       return
     end
 
-    @user.update!(params_for_update)
+    @user.save!
     render_record @user
   end
 
@@ -41,10 +43,6 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   end
 
   private
-
-  def email_change_not_allowed?
-    @user.already_logged_in? && params.key?(:email) && @user.email != params[:email]
-  end
 
   def set_organisation
     @organisation = params[:organisation_id].present? ? Organisation.find(params[:organisation_id]) : nil
