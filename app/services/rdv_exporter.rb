@@ -26,28 +26,6 @@ module RdvExporter
     "rdv collectif",
   ].freeze
 
-  def self.write_xls_to_io(io, rows_enum)
-    workbook = Spreadsheet::Workbook.new
-    sheet = workbook.create_worksheet
-    sheet.row(0).concat(HEADER)
-
-    row_index = 1
-
-    rows_enum.each do |row|
-      sheet_row = sheet.row(row_index)
-      # Apply formatting
-      sheet_row.set_format 3, DateFormat
-      sheet_row.set_format 4, HourFormat
-      sheet_row.set_format 6, DateFormat
-      sheet_row.set_format 7, HourFormat
-
-      sheet_row.concat(row)
-      row_index += 1
-    end
-
-    workbook.write(io)
-  end
-
   def self.rows_from_rdvs(rdvs)
     rdvs.includes(
       :organisation,

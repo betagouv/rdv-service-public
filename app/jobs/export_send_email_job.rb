@@ -11,9 +11,14 @@ class ExportSendEmailJob < ExportJob
     Export::PARTICIPATIONS_EXPORT => :participations_export,
   }.freeze
 
+  HEADER_FOR_EXPORT_TYPE = {
+    Export::RDV_EXPORT => RdvExporter::HEADER,
+    Export::PARTICIPATIONS_EXPORT => ParticipationExporter::HEADER,
+  }.freeze
+
   def perform(batch, _params)
-    export = Export.find(batch.properties[:export_id])
-    page_blobs = export.export_file_blobs.pages.order(:page_index)
+    @export = Export.find(batch.properties[:export_id])
+    page_blobs = @export.export_file_blobs.pages.order(:page_index)
 
     rows_enum = Enumerator.new do |yielder|
       # On a pas besoin du cache ActiveRecord ici, on évite donc
@@ -30,14 +35,36 @@ class ExportSendEmailJob < ExportJob
     end
 
     Tempfile.create do |file|
-      RdvExporter.write_xls_to_io(file, rows_enum)
+      write_xls_to_io(file, rows_enum, @export.export_type)
       file.rewind
-      export.store_file(file.read)
+      @export.store_file(file.read)
     end
 
     page_blobs.delete_all
 
-    mailer_method = MAILER_CLASS_FOR_EXPORT_TYPE.fetch(export.export_type)
-    Agents::ExportMailer.public_send(mailer_method, export.id).deliver_later
+    mailer_method = MAILER_CLASS_FOR_EXPORT_TYPE.fetch(@export.export_type)
+    Agents::ExportMailer.public_send(mailer_method, @export.id).deliver_later
+  end
+
+  def self.write_xls_to_io(io, rows_enum, export_type)
+    workbook = Spreadsheet::Workbook.new
+    sheet = workbook.create_worksheet
+    sheet.row(0).concat(HEADER_FOR_EXPORT_TYPE.fetch(export_type))
+
+    row_index = 1
+
+    rows_enum.each do |row|
+      sheet_row = sheet.row(row_index)
+      # Apply formatting
+      sheet_row.set_format 3, DateFormat
+      sheet_row.set_format 4, HourFormat
+      sheet_row.set_format 6, DateFormat
+      sheet_row.set_format 7, HourFormat
+
+      sheet_row.concat(row)
+      row_index += 1
+    end
+
+    workbook.write(io)
   end
 end
