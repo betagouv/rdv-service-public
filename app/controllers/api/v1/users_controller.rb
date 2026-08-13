@@ -85,7 +85,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     end
 
     if params.key?(:referent_agent_ids)
-      @params_for_create[:referent_agent_ids] = Agent::AgentPolicy::Scope.new(current_agent, Agent).resolve.where(id: params[:referent_agent_ids]).ids
+      @params_for_create[:referent_agent_ids] = Agent::AgentPolicy::Scope.new(current_agent, Agent.where(id: params[:referent_agent_ids])).resolve.ids
     end
 
     @params_for_create
@@ -108,17 +108,10 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     if params.key?(:referent_agent_ids)
       referents_i_can_modify = Agent::AgentPolicy::Scope.new(pundit_user, @user.referent_agents).resolve
       referents_i_cant_modify = @user.referent_agents - referents_i_can_modify
-
+      authorized_referent_ids = policy_scope(Agent.where(id: params[:referent_agent_ids]), policy_scope_class: Agent::AgentPolicy::Scope).ids
       @params_for_update[:referent_agent_ids] = authorized_referent_ids + referents_i_cant_modify.map(&:id)
     end
 
     @params_for_update
-  end
-
-  def authorized_referent_ids
-    policy_scope(
-      Agent.where(id: params[:referent_agent_ids]),
-      policy_scope_class: Agent::AgentPolicy::Scope
-    ).ids
   end
 end
