@@ -5,7 +5,8 @@ RSpec.describe Users::FileAttenteSms, type: :service do
     let(:organisation) { build(:organisation) }
     let(:rdv) { build(:rdv, id: 82, organisation: organisation) }
     let(:user) { build(:user) }
-    let(:token) { "12324" }
+
+    before { rdv.participations.first.restricted_auth_token = "12324" }
 
     it do
       expect(subject).to include("Des créneaux se sont libérés pour votre RDV")

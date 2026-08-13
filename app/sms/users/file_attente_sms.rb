@@ -8,6 +8,6 @@ class Users::FileAttenteSms < Users::BaseSms
                  "Des créneaux se sont libérés pour votre RDV."
                end
 
-    @content += "\nPour voir les disponibilités: #{creneaux_users_rdv_short_url(rdv, tkn: token, host: domain_host)}"
+    @content += "\nPour voir les disponibilités: #{creneaux_users_rdv_short_url(rdv, tkn: restricted_auth_token, host: domain_host)}"
   end
 end
