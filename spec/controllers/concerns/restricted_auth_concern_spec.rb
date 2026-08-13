@@ -1,7 +1,10 @@
 RSpec.describe RestrictedAuthConcern do
   controller(ApplicationController) do
-    include described_class
-    prepend_before_action :store_restricted_auth_token_in_session_and_redirect
+    include RestrictedAuthConcern # rubocop:disable RSpec/DescribedClass
+
+    prepend_before_action do
+      store_restricted_auth_token_in_session_and_redirect(store_rdv_insertion_invitation: true)
+    end
 
     def fake_action
       render plain: "ok"
