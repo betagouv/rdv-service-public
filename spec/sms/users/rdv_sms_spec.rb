@@ -1,7 +1,7 @@
-RSpec.describe Users::RdvSms, type: :service do
+RSpec.describe Users::RdvSms do
   describe "#rdv_created" do
     context "with a basic rdv" do
-      subject { described_class.rdv_created(rdv, user, token).content }
+      subject { described_class.rdv_created(rdv, user).content }
 
       let(:organisation) { build(:organisation) }
       let(:pmi) { build(:service, short_name: "PMI") }
@@ -9,7 +9,6 @@ RSpec.describe Users::RdvSms, type: :service do
       let(:lieu) { build(:lieu, name: "MDS Centre", address: "10 rue d'ici, Paris, 75016") }
       let(:rdv) { build(:rdv, motif: motif, organisation: organisation, lieu: lieu, starts_at:, id: 123, name: "Ne Doit pas s'afficher") }
       let(:user) { build(:user) }
-      let(:token) { "12345" }
       let(:starts_at) { Time.zone.local(2021, 12, 10, 13, 10) }
 
       it do
@@ -38,14 +37,13 @@ RSpec.describe Users::RdvSms, type: :service do
     end
 
     context "with a collective rdv" do
-      subject { described_class.rdv_created(rdv, user, token).content }
+      subject { described_class.rdv_created(rdv, user).content }
 
       let(:rdv_name) { "Super Atelier" }
       let(:rdv) { build(:rdv, :collectif, starts_at: Time.zone.local(2021, 12, 10, 13, 10), id: 123, name: rdv_name, motif: motif) }
       let(:motif) { build(:motif, :collectif, service:) }
       let(:service) { build(:service, short_name: "Action Sociale") }
       let(:user) { build(:user) }
-      let(:token) { "12345" }
 
       it "contains rdv title" do
         expect(subject).to include("RDV Action Sociale : Super Atelier, vendredi 10/12 13h10")
@@ -83,9 +81,8 @@ RSpec.describe Users::RdvSms, type: :service do
         user = create(:user, referent_agents: [agent])
         motif = create(:motif, follow_up: true, organisation:)
         rdv = create(:rdv, motif: motif, users: [user], agents: [agent], organisation:)
-        token = "12345"
 
-        content = described_class.rdv_created(rdv, user, token).content
+        content = described_class.rdv_created(rdv, user).content
 
         expect(content).to include("J. BOND")
       end
@@ -93,14 +90,13 @@ RSpec.describe Users::RdvSms, type: :service do
   end
 
   describe "#rdv_updated" do
-    subject { described_class.rdv_updated(rdv, user, token).content }
+    subject { described_class.rdv_updated(rdv, user).content }
 
     let(:pmi) { build(:service, short_name: "PMI") }
     let(:motif) { build(:motif, service: pmi) }
     let(:organisation) { build(:organisation) }
     let(:lieu) { build(:lieu, name: "MDS Centre", address: "10 rue d'ici, Paris, 75016") }
     let(:rdv) { build(:rdv, motif: motif, organisation: organisation, lieu: lieu, starts_at:, id: 124) }
-    let(:token) { "2345" }
     let(:user) { build(:user) }
     let(:starts_at) { Time.zone.local(2021, 12, 10, 13, 10) }
 
@@ -129,14 +125,13 @@ RSpec.describe Users::RdvSms, type: :service do
   end
 
   describe "#rdv_cancelled" do
-    subject { described_class.rdv_cancelled(rdv, user, token).content }
+    subject { described_class.rdv_cancelled(rdv, user).content }
 
     let(:pmi) { build(:service, short_name: "PMI") }
     let(:motif) { build(:motif, service: pmi) }
     let(:lieu) { nil }
     let(:rdv) { build(:rdv, motif: motif, organisation: organisation, lieu: lieu, starts_at: Time.zone.local(2021, 12, 10, 13, 10)) }
     let(:user) { build(:user) }
-    let(:token) { "393939" }
 
     context "with lieu phone number" do
       let(:lieu) { build(:lieu, phone_number: "0123456789") }
@@ -186,7 +181,7 @@ RSpec.describe Users::RdvSms, type: :service do
   end
 
   describe "#rdv_upcoming_reminder" do
-    subject { described_class.rdv_upcoming_reminder(rdv, user, token).content }
+    subject { described_class.rdv_upcoming_reminder(rdv, user).content }
 
     let(:pmi) { build(:service, short_name: "PMI") }
     let(:motif) { build(:motif, service: pmi) }
@@ -194,7 +189,6 @@ RSpec.describe Users::RdvSms, type: :service do
     let(:organisation) { build(:organisation) }
     let(:rdv) { build(:rdv, motif: motif, organisation: organisation, lieu: lieu, starts_at: Time.zone.local(2021, 12, 10, 13, 10), id: 140) }
     let(:user) { build(:user) }
-    let(:token) { "7777" }
 
     it do
       expect(subject).to include("RDV PMI vendredi 10/12 13h10")
@@ -206,10 +200,9 @@ RSpec.describe Users::RdvSms, type: :service do
   end
 
   describe "rdv footer" do
-    subject { described_class.rdv_created(rdv, user, token).content }
+    subject { described_class.rdv_created(rdv, user).content }
 
     let(:user) { build(:user, address: "10 rue de Toulon, Lille, 5000") }
-    let(:token) { "12345" }
 
     describe "depending on motif" do
       let(:rdv) { build(:rdv, motif: motif, users: [user], starts_at: 5.days.from_now, id: 140) }
@@ -252,7 +245,7 @@ RSpec.describe Users::RdvSms, type: :service do
             motif = build(:motif, location_type: location_type)
             rdv = build(:rdv, motif: motif, users: [user], starts_at: 5.days.from_now, id: 1)
 
-            described_class.rdv_created(rdv, user, token).content
+            described_class.rdv_created(rdv, user).content
           end
         end
       end

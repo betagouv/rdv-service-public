@@ -30,7 +30,7 @@ class Participation < ApplicationRecord
   after_initialize :set_default_notifications_flags
   before_validation :set_default_notifications_flags
   before_create :set_status_from_rdv
-  before_create :set_restricted_authentication_token
+  after_initialize :set_restricted_authentication_token
   after_save :update_counter_cache
   after_destroy :update_counter_cache
   # voir Outlook::EventSerializerAndListener pour d'autres callbacks
@@ -99,7 +99,7 @@ class Participation < ApplicationRecord
 
   def set_restricted_authentication_token
     # On reprend la même logique que CustomDeviseTokenGenerator
-    self.restricted_auth_token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8) until restricted_auth_token && Participation.where(restricted_auth_token:).none?
+    self.restricted_auth_token ||= SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8) until restricted_auth_token && Participation.where(restricted_auth_token:).none?
   end
 
   def set_restricted_authentication_token_if_missing_and_save
