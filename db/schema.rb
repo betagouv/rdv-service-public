@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_30_124356) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_12_083736) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -204,6 +204,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_30_124356) do
     t.string "action_name", null: false
     t.bigint "agent_id", null: false
     t.string "authentication_type"
+    t.string "param_names", default: [], array: true
   end
 
   create_table "blog_posts", force: :cascade do |t|
