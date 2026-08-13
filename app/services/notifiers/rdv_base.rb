@@ -1,7 +1,7 @@
 class Notifiers::RdvBase < BaseService
   include Notifiers::AgentsConcern
 
-  attr_reader :participations_tokens_by_user_id, :author, :rdv
+  attr_reader :author, :rdv
 
   # Base class for Rdv notifiers.
   # Subclasses implement the notify_* methods:
@@ -15,7 +15,6 @@ class Notifiers::RdvBase < BaseService
     @rdv = rdv
     @author = author
     @users = users || participations_to_notify.map(&:user)
-    @participations_tokens_by_user_id = {}
   end
 
   def perform
@@ -50,9 +49,8 @@ class Notifiers::RdvBase < BaseService
   def generate_invitation_tokens
     @rdv.participations.each do |participation|
       participant = participation.user
-      user_to_notify = participant.user_to_notify
+      participant.user_to_notify
       participation.set_restricted_authentication_token_if_missing_and_save
-      @participations_tokens_by_user_id[user_to_notify.id] = participation.restricted_auth_token
     end
   end
 

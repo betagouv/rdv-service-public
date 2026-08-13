@@ -35,7 +35,7 @@ class Users::RdvsController < UserAuthController
 
       notifier.perform
       flash[:success] = "Votre RDV a bien été modifié"
-      redirect_to users_rdv_path(@rdv, invitation_token: notifier.participations_tokens_by_user_id[current_user.id])
+      redirect_to users_rdv_path(@rdv, invitation_token: current_user.participation_for(@rdv).restricted_auth_token)
     else
       flash[:error] = "Le RDV n'a pas pu être modifié"
       redirect_to creneaux_users_rdv_path(@rdv)

@@ -1,6 +1,4 @@
 class Notifiers::RdvCollectifParticipations < BaseService
-  attr_reader :participations_tokens_by_user_id
-
   def initialize(rdv, author, previous_participations)
     @rdv = rdv
     @author = author
@@ -22,8 +20,6 @@ class Notifiers::RdvCollectifParticipations < BaseService
     # we don't generate token in this case since the user won't be linked to the rdv
     rdv_cancelled.notify_users_by_mail
     rdv_cancelled.notify_users_by_sms
-
-    @participations_tokens_by_user_id = rdv_created.participations_tokens_by_user_id
   end
 
   private

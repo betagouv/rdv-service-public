@@ -113,7 +113,7 @@ class Users::RdvBookingForm
     @rdv.save!
     notifier = Notifiers::RdvCreated.new(@rdv, @user)
     notifier.perform
-    @invitation_token = notifier.participations_tokens_by_user_id[@user.id]
+    @invitation_token = @user.participation_for(@rdv).restricted_auth_token
   end
 
   def create_participation

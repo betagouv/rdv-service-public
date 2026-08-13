@@ -29,17 +29,6 @@ RSpec.describe Notifiers::RdvCancelled, type: :service do
         expect_notifications_sent_for(rdv, agent2, :rdv_cancelled)
         expect_no_notifications_for(rdv, agent1, :rdv_cancelled)
       end
-
-      it "participations_tokens_by_user_id attribute outputs the tokens" do
-        notifier = described_class.new(rdv, nil)
-        notifier.perform
-        expect(notifier.participations_tokens_by_user_id).to eq(
-          {
-            user1.id => participation1.restricted_auth_token,
-            user2.id => participation2.restricted_auth_token,
-          }
-        )
-      end
     end
 
     context "starts today or tomorrow" do
