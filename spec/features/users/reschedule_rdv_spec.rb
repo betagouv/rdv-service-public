@@ -47,8 +47,6 @@ RSpec.describe "User can reschedule their rdvs" do
       expect(page).not_to have_content "8:00"
       expect(page).to have_content "14:00"
     end
-
-    # TODO: faire une spec quand l'usager du rdv est un proche de l'usager connecté
   end
 
   context "when the rdv doesn't have the same duration as the motif (usually for an ANTS motif and multiple users)" do
