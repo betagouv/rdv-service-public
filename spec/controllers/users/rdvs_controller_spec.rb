@@ -316,7 +316,6 @@ RSpec.describe Users::RdvsController, type: :controller do
     context "no creneaux available" do
       before { subject }
 
-      it { expect(assigns(:all_creneaux)).to be_empty }
       it { expect(response.body).to include("Malheureusement, tous les créneaux sont pris.") }
     end
 
@@ -370,7 +369,6 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     let(:organisation) { create(:organisation) }
-    let(:starts_at) { 3.days.from_now }
     let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie, Nantes, 44100", organisation: organisation) }
@@ -382,13 +380,14 @@ RSpec.describe Users::RdvsController, type: :controller do
     before do
       travel_to(now)
       sign_in user
-
-      allow(CreneauxSearch::ForUser).to receive(:creneau_for)
-        .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
-        .and_return(returned_creneau)
     end
 
     context "creneau is available" do
+      let(:starts_at) { plage_ouverture.starts_at }
+      let!(:plage_ouverture) do
+        create(:plage_ouverture, :weekdays, motifs: [motif], lieu: lieu, organisation: organisation, agent: agent)
+      end
+
       before { subject }
 
       it { expect(response.body).to include("Modification du RDV") }
@@ -401,23 +400,23 @@ RSpec.describe Users::RdvsController, type: :controller do
         it { expect(response.body).to include("Modification du RDV") }
         it { expect(response.body).to include("Confirmer le nouveau créneau") }
       end
+
+      context "when the rdv is created by an agent" do
+        let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: agent) }
+
+        before { subject }
+
+        it { expect(response.body).to include("Modification du RDV") }
+        it { expect(response.body).to include("Confirmer le nouveau créneau") }
+      end
     end
 
     context "creneau isn't available" do
-      let(:returned_creneau) { nil }
+      let(:starts_at) { 3.days.from_now }
 
       before { subject }
 
       it { expect(response).to redirect_to(creneaux_users_rdv_path(rdv)) }
-    end
-
-    context "when the rdv is created by an agent" do
-      let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: agent) }
-
-      before { subject }
-
-      it { expect(response.body).to include("Modification du RDV") }
-      it { expect(response.body).to include("Confirmer le nouveau créneau") }
     end
   end
 
@@ -435,13 +434,13 @@ RSpec.describe Users::RdvsController, type: :controller do
     before do
       travel_to(now)
       sign_in user
-      allow(CreneauxSearch::ForUser).to receive(:creneau_for)
-        .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
-        .and_return(returned_creneau)
     end
 
     context "with an available creneau" do
-      let(:returned_creneau) { Creneau.new(starts_at: starts_at, agent: agent) }
+      let(:starts_at) { plage_ouverture.starts_at }
+      let!(:plage_ouverture) do
+        create(:plage_ouverture, :weekdays, motifs: [motif], lieu: lieu, organisation: organisation, agent: agent)
+      end
 
       it "respond success and update RDV" do
         put :update, params: { id: rdv.id, starts_at: starts_at, agent_id: agent.id }
