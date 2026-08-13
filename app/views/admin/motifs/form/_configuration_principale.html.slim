@@ -24,11 +24,11 @@
       .fr-col-md-6= f.dsfr_input_field :color, :color_field, label: "Couleur associée", style: "height: 2.5rem"
 
 .card
-  .card-body
+  .card-body.fr-pb-0
     = render partial: "admin/motifs/form/location_types", locals: { f: f, disabled: motif.rdvs.any? }
 
 .card
-  .card-body
+  .card-body.fr-pb-0
     - disabled = motif.rdvs.any?
 
     ruby:
@@ -38,5 +38,5 @@
       ]
     = f.dsfr_radio_buttons :collectif, collectif_options, disabled: disabled, rich: true
     - if disabled
-      = dsfr_alert type: :warning, size: :sm, html_attributes: { class: "fr-mb-2v" } do
+      = dsfr_alert type: :warning, size: :sm, html_attributes: { class: "fr-mb-3w" } do
         | Ce motif est déjà utilisé dans au moins un RDV, il n'est pas possible de changer le nombre de participants
