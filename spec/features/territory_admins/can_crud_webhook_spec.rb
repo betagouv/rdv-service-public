@@ -22,6 +22,12 @@ RSpec.describe "territory admin can crud webhooks endpoints" do
     expect(page).to have_content organisation.name
     expect(page).to have_content "https://webhook.test.com"
 
+    expect(WebhookEndpoint.last).to have_attributes(
+      target_url: "https://webhook.test.com",
+      secret: "XSECRET",
+      organisation: organisation
+    )
+
     # Edit
     click_on "Modifier"
     fill_in("URL de destination", with: "https://webhook.test2.com")
@@ -35,6 +41,7 @@ RSpec.describe "territory admin can crud webhooks endpoints" do
     accept_confirm do
       click_link "Supprimer"
     end
+    expect(page).to have_content "Ajouter un webhook"
     expect(page).not_to have_content organisation.name
     expect(organisation.reload.webhook_endpoints.count).to eq(0)
   end
