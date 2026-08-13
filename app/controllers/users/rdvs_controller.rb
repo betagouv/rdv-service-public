@@ -63,7 +63,7 @@ class Users::RdvsController < UserAuthController
   end
 
   def creneaux
-    @creneau_search = CreneauxSearch::ForUser.new(
+    creneau_search = CreneauxSearch::ForUser.new(
       user: @rdv.users.first,
       date_range: Time.zone.today..@rdv.reschedule_max_date,
       motif: @rdv.motif,
@@ -71,11 +71,12 @@ class Users::RdvsController < UserAuthController
       duration_in_min: @rdv.duration_in_min
     )
 
-    @all_creneaux = @rdv.creneaux_available(Time.zone.today..@rdv.reschedule_max_date)
-    return if @all_creneaux.empty?
+    @next_availability = creneau_search.next_availability
+    return if @next_availability.blank?
 
-    start_date = params[:date]&.to_date || @all_creneaux.min.starts_at.to_date
-    end_date = [start_date + 6.days, @all_creneaux.max.starts_at.to_date].min
+    start_date = params[:date]&.to_date || @next_availability.starts_at.to_date
+    end_date = [start_date + 6.days, @rdv.reschedule_max_date].min
+
     @date_range = start_date..end_date
     @creneaux = @rdv.creneaux_available(@date_range)
   end
