@@ -1,7 +1,6 @@
 class Users::RdvsController < UserAuthController
   before_action :verify_user_name_initials, :set_rdv, :set_can_see_rdv_motif, only: %i[show creneaux ics edit cancel update]
   before_action :set_can_see_rdv_motif, only: %i[show edit index]
-  before_action :set_lieu, only: %i[edit update]
   before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
 
   layout "application_narrow", only: %i[show]
@@ -63,13 +62,29 @@ class Users::RdvsController < UserAuthController
   end
 
   def creneaux
-    @all_creneaux = @rdv.creneaux_available(Time.zone.today..@rdv.reschedule_max_date)
-    return if @all_creneaux.empty?
+    next_availability_creneau_search = CreneauxSearch::ForUser.new(
+      user: @rdv.users.first,
+      motif: @rdv.motif,
+      lieu: @rdv.lieu,
+      duration_in_min: @rdv.duration_in_min,
+      date_range: Time.zone.today..@rdv.reschedule_max_date
+    )
 
-    start_date = params[:date]&.to_date || @all_creneaux.min.starts_at.to_date
-    end_date = [start_date + 6.days, @all_creneaux.max.starts_at.to_date].min
+    @next_availability = next_availability_creneau_search.next_availability
+
+    return if @next_availability.blank?
+
+    start_date = params[:date]&.to_date || @next_availability.starts_at.to_date
+    end_date = [start_date + 6.days, @rdv.reschedule_max_date].min
+
     @date_range = start_date..end_date
-    @creneaux = @rdv.creneaux_available(@date_range)
+    @creneaux = CreneauxSearch::ForUser.new(
+      user: @rdv.users.first,
+      motif: @rdv.motif,
+      lieu: @rdv.lieu,
+      duration_in_min: @rdv.duration_in_min,
+      date_range: @date_range
+    ).creneaux
   end
 
   private
@@ -77,15 +92,12 @@ class Users::RdvsController < UserAuthController
   def build_creneau
     @starts_at = Time.zone.parse(params[:starts_at])
     @creneau = CreneauxSearch::ForUser.creneau_for(
-      user: current_user,
+      user: @rdv.users.first,
       starts_at: @starts_at,
       motif: @rdv.motif,
-      lieu: @lieu
+      lieu: @rdv.lieu,
+      duration_in_min: @rdv.duration_in_min
     )
-  end
-
-  def set_lieu
-    @lieu = @rdv.lieu
   end
 
   def set_rdv
