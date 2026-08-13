@@ -28,13 +28,15 @@ class FileAttente < ApplicationRecord
   private
 
   def valid_for_notification?
-    next_availability.present? && (last_creneau_sent_at.nil? || last_creneau_sent_at.to_date < Time.zone.today)
+    next_availability.present? && next_availability.starts_at < end_time && (last_creneau_sent_at.nil? || last_creneau_sent_at.to_date < Time.zone.today)
+  end
+
+  def end_time
+    rdv.starts_at - 2.days
   end
 
   def next_availability
-    end_time = rdv.starts_at - 2.days
-
-    CreneauxSearch::ForUser.new(
+    @next_availability ||= CreneauxSearch::ForUser.new(
       user: rdv.users.first,
       motif: rdv.motif,
       lieu: rdv.lieu,
