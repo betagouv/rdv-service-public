@@ -48,19 +48,12 @@ class Notifiers::RdvBase < BaseService
   end
 
   def generate_invitation_tokens
-    # Prevent token generation to trigger a webhook notification,
-    # because generating the Participation tokens does not change any of the
-    # attributes or associations of the Rdv.
-    @rdv.skip_webhooks = true
-
     @rdv.participations.each do |participation|
       participant = participation.user
       user_to_notify = participant.user_to_notify
       participation.set_restricted_authentication_token_if_missing_and_save
       @participations_tokens_by_user_id[user_to_notify.id] = participation.restricted_auth_token
     end
-
-    @rdv.skip_webhooks = false
   end
 
   ## Configured Mailers
