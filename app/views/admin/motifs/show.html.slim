@@ -76,24 +76,22 @@
             | Options avancées
         .fr-collapse id="options-avancees"
 
+          b= @motif.human_attribute_value(:visibility_type, context: :html)
+
+          .fr-text-mention--grey
+            = @motif.human_attribute_value(:visibility_type, context: :hint)
+            - if current_organisation.rdv_insertion?
+              br
+              span= @motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
+
           = motif_attribute_row \
             Motif.human_attribute_name(:follow_up_short), \
             motif_option_activated(@motif, :follow_up), \
-            hint: Motif.human_attribute_name(:follow_up_hint), margin: false
+            hint: Motif.human_attribute_name(:follow_up_hint)
           = motif_attribute_row \
             Motif.human_attribute_name(:for_secretariat_short), \
             motif_option_activated(@motif, :for_secretariat), \
             hint: Motif.human_attribute_name(:for_secretariat_hint)
-          hr
-
-          = motif_attribute_row(Motif.human_attribute_name(:visibility_type), margin: false) do
-            div= sanitize(@motif.human_attribute_value(:visibility_type, context: :html))
-
-            div.fr-text-mention--grey
-              = @motif.human_attribute_value(:visibility_type, context: :hint)
-              - if current_organisation.rdv_insertion?
-                br
-                span= @motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
 
     - if @motif_policy.edit? || @motif_policy.destroy?
       .card.mt-2
