@@ -59,7 +59,7 @@ class Notifiers::RdvBase < BaseService
   ## Configured Mailers
   #
   def user_mailer(user)
-    Users::RdvMailer.with(rdv: @rdv, user: user, token: @participations_tokens_by_user_id[user.id])
+    Users::RdvMailer.with(rdv: @rdv, user: user)
   end
 
   def agent_mailer(agent)

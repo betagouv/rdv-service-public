@@ -27,7 +27,7 @@ RSpec.describe Notifiers::ParticipationCancelled, type: :service do
     let!(:participation) { create(:participation, rdv:, user:) }
 
     specify do
-      expect_mail_deliver_later(Users::RdvMailer, :participation_cancelled, rdv:, user:, token: instance_of(String), participation:)
+      expect_mail_deliver_later(Users::RdvMailer, :participation_cancelled, rdv:, user:, participation:)
       expect_mail_deliver_later(Agents::RdvMailer, :participation_cancelled, participation:, agent:, author: agent)
       expect_sms_deliver_later(Users::RdvSms, :participation_cancelled, rdv, user)
       described_class.perform_with(participation:, author: agent)
@@ -42,7 +42,7 @@ RSpec.describe Notifiers::ParticipationCancelled, type: :service do
     let(:other_agent) { create(:agent, organisations: [organisation]) }
 
     specify do
-      expect_mail_deliver_later(Users::RdvMailer, :participation_cancelled, rdv:, user:, token: instance_of(String), participation:)
+      expect_mail_deliver_later(Users::RdvMailer, :participation_cancelled, rdv:, user:, participation:)
       expect_mail_deliver_later(Agents::RdvMailer, :participation_cancelled, participation:, agent:, author: other_agent)
       expect_sms_deliver_later(Users::RdvSms, :participation_cancelled, rdv, user)
       described_class.perform_with(participation:, author: other_agent)

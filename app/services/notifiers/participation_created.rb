@@ -23,7 +23,7 @@ class Notifiers::ParticipationCreated < BaseService
     return unless participation.send_lifecycle_notifications?
 
     if user.notifiable_by_email?
-      Users::RdvMailer.with(rdv:, user:, token:).rdv_created.deliver_later
+      Users::RdvMailer.with(rdv:, user:).rdv_created.deliver_later
     end
 
     if user.notifiable_by_sms? && Notifiers::RdvCreated.should_send_sms_to_user?(user:, rdv:, author:)
@@ -37,5 +37,4 @@ class Notifiers::ParticipationCreated < BaseService
 
   def rdv = participation.rdv
   def user = participation.user.user_to_notify
-  def token = participation.restricted_auth_token
 end

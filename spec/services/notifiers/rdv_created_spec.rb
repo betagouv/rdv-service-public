@@ -6,8 +6,6 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
   let(:agent1) { create(:agent, rdv_notifications_level: :others) }
   let(:agent2) { create(:agent, rdv_notifications_level: :others) }
   let(:rdv) { create(:rdv, starts_at: starts_at, motif: motif, agents: [agent1, agent2], users: [user1, user2], organisation: motif.organisation) }
-  let(:token1) { user1.participations.last.restricted_auth_token }
-  let(:token2) { user2.participations.last.restricted_auth_token }
 
   before do
     stub_netsize_ok
@@ -23,8 +21,8 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
     let(:motif) { build(:motif) }
 
     it "déclenche l'envoi d'emails aux utilisateurs et aux autres agents" do
-      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1, token: token1 })
-      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user2, token: token2 })
+      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1 })
+      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user2 })
       expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent2, author: agent1 })
       expect(Agents::RdvMailer).not_to receive(:with).with({ rdv: rdv, agent: agent1, author: agent1 })
       subject
@@ -36,8 +34,8 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
     let(:motif) { build(:motif) }
 
     it "déclenche l'envoi d'emails aux utilisateurs et aux agents" do
-      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1, token: token1 })
-      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user2, token: token2 })
+      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1 })
+      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user2 })
       expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent1, author: user1 })
       expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent2, author: user1 })
       subject
@@ -48,12 +46,6 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
       expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user2)
       subject
     end
-
-    it "l'attribut participations_tokens_by_user_id retourne les tokens pour les utilisateurs correspondants" do
-      notifier = described_class.new(rdv, user1)
-      notifier.perform
-      expect(notifier.participations_tokens_by_user_id).to eq({ user1.id => token1, user2.id => token2 })
-    end
   end
 
   context "commence aujourd'hui ou demain" do
@@ -61,8 +53,8 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
     let(:motif) { build(:motif) }
 
     it "déclenche l'envoi d'emails aux utilisateurs et aux agents" do
-      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1, token: token1 })
-      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user2, token: token2 })
+      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1 })
+      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user2 })
       expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent1, author: user1 })
       expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent2, author: user1 })
       subject
