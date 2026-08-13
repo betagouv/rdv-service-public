@@ -1,6 +1,6 @@
 RSpec.describe Users::FileAttenteSms, type: :service do
   describe "#new_creneau_available" do
-    subject { described_class.new_creneau_available(rdv, user, token).content }
+    subject { described_class.new_creneau_available(rdv, user).content }
 
     let(:organisation) { build(:organisation) }
     let(:rdv) { build(:rdv, id: 82, organisation: organisation) }

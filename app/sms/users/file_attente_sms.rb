@@ -1,7 +1,7 @@
 class Users::FileAttenteSms < Users::BaseSms
   include Rails.application.routes.url_helpers
 
-  def new_creneau_available(rdv, _user, token)
+  def new_creneau_available(rdv, _user)
     @content = if rdv.service_short_name
                  "RDV #{rdv.motif&.service&.short_name}: des créneaux se sont libérés."
                else

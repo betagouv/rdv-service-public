@@ -37,7 +37,7 @@ RSpec.describe CronJob::FileAttenteJob do
 
     it "sends an sms" do
       allow(Users::FileAttenteSms).to receive(:new_creneau_available).and_call_original
-      expect(Users::FileAttenteSms).to receive(:new_creneau_available).with(rdv, user, token)
+      expect(Users::FileAttenteSms).to receive(:new_creneau_available).with(rdv, user)
       subject
     end
 

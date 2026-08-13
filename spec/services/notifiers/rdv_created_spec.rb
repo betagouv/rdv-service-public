@@ -44,8 +44,8 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
     end
 
     it "l'utilisateur reçoit un SMS de confirmation" do
-      expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user1, token1)
-      expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user2, token2)
+      expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user1)
+      expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user2)
       subject
     end
 
@@ -69,8 +69,8 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
     end
 
     it "l'utilisateur reçoit un SMS de confirmation" do
-      expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user1, token1)
-      expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user2, token2)
+      expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user1)
+      expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user2)
       subject
     end
   end
@@ -101,7 +101,7 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
       let(:starts_at) { 1.day.from_now }
 
       it "l'utilisateur reçoit un SMS de confirmation" do
-        expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user1, token1)
+        expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user1)
         subject
       end
     end
@@ -110,7 +110,7 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
       let(:user1) { create(:user, latest_login_at: nil) }
 
       it "l'utilisateur reçoit un SMS de confirmation" do
-        expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user1, token1)
+        expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user1)
         subject
       end
     end

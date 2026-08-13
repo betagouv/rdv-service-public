@@ -29,7 +29,7 @@ RSpec.describe Notifiers::ParticipationCancelled, type: :service do
     specify do
       expect_mail_deliver_later(Users::RdvMailer, :participation_cancelled, rdv:, user:, token: instance_of(String), participation:)
       expect_mail_deliver_later(Agents::RdvMailer, :participation_cancelled, participation:, agent:, author: agent)
-      expect_sms_deliver_later(Users::RdvSms, :participation_cancelled, rdv, user, participation.restricted_auth_token)
+      expect_sms_deliver_later(Users::RdvSms, :participation_cancelled, rdv, user)
       described_class.perform_with(participation:, author: agent)
     end
   end
@@ -44,7 +44,7 @@ RSpec.describe Notifiers::ParticipationCancelled, type: :service do
     specify do
       expect_mail_deliver_later(Users::RdvMailer, :participation_cancelled, rdv:, user:, token: instance_of(String), participation:)
       expect_mail_deliver_later(Agents::RdvMailer, :participation_cancelled, participation:, agent:, author: other_agent)
-      expect_sms_deliver_later(Users::RdvSms, :participation_cancelled, rdv, user, participation.restricted_auth_token)
+      expect_sms_deliver_later(Users::RdvSms, :participation_cancelled, rdv, user)
       described_class.perform_with(participation:, author: other_agent)
     end
   end

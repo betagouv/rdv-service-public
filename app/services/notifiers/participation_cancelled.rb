@@ -27,7 +27,7 @@ class Notifiers::ParticipationCancelled < BaseService
     end
 
     if user.notifiable_by_sms? && (author.is_a?(Agent) || author.is_a?(Prescripteur))
-      Users::RdvSms.participation_cancelled(rdv, user, token).deliver_later
+      Users::RdvSms.participation_cancelled(rdv, user).deliver_later
     end
   end
 

@@ -29,7 +29,7 @@ class Notifiers::ParticipationCreated < BaseService
     end
 
     if user.notifiable_by_sms? && Notifiers::RdvCreated.should_send_sms_to_user?(user:, rdv:, author:)
-      Users::RdvSms.rdv_created(rdv, user, token).deliver_later
+      Users::RdvSms.rdv_created(rdv, user).deliver_later
     end
   end
 

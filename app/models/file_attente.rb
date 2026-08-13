@@ -53,7 +53,7 @@ class FileAttente < ApplicationRecord
 
       ActiveRecord::Base.transaction do
         if user.notifiable_by_sms?
-          Users::FileAttenteSms.new_creneau_available(rdv, user, invitation_token).deliver_later
+          Users::FileAttenteSms.new_creneau_available(rdv, user).deliver_later
         end
 
         if user.notifiable_by_email?
