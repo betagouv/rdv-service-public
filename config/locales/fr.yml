@@ -59,13 +59,6 @@ fr:
               blank: est obligatoire pour les motifs sur place
   agents:
     create_cta: "Ajouter un agent"
-  mailers:
-    agents:
-      export_mailer:
-        rdv_export:
-          subject: Export des RDVs du %{date}
-        full_participation_export:
-          subject: Export des RDVs par usager du %{date}
   date:
     helpers:
       yesterday: hier
