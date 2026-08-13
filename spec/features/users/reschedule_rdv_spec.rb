@@ -49,6 +49,18 @@ RSpec.describe "User can reschedule their rdvs" do
     end
 
     # TODO: faire une spec quand l'usager du rdv est un proche de l'usager connecté
-    # TODO: faire une spec quand la durée du rdv n'est pas la même que celle du motif
+  end
+
+  context "when the rdv doesn't have the same duration as the motif (usually for an ANTS motif and multiple users)" do
+    let!(:motif) { create(:motif, organisation: organisation, default_duration_in_min: 30) }
+    let(:starts_at) { 10.days.from_now }
+    let!(:rdv) { create(:rdv, users: [user], agents: [agent1], starts_at:, ends_at: starts_at + 60.minutes, created_by: user, motif:, lieu:, organisation:) }
+
+    it "affiche des créneaux de 60 min" do
+      click_link("Déplacer le RDV")
+      expect(page).to have_content "8:00"
+      expect(page).not_to have_content "8:30"
+      expect(page).to have_content "9:00"
+    end
   end
 end
