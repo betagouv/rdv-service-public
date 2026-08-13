@@ -5,12 +5,6 @@ class Users::BaseSms < ApplicationSms
     @rdv = rdv
     @user = user
 
-    participation = rdv.participations.find do |participation|
-      participation.user.user_to_notify == user
-    end
-
-    @restricted_auth_token = participation.restricted_auth_token
-
     @receipt_params[:rdv] = rdv
     @receipt_params[:user] = user
   end
@@ -29,7 +23,9 @@ class Users::BaseSms < ApplicationSms
 
   private
 
-  attr_reader :restricted_auth_token
+  def restricted_auth_token
+    @restricted_auth_token ||= @user.participation_for(@rdv).restricted_auth_token
+  end
 
   def domain_host
     @rdv.domain.host_name

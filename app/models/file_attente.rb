@@ -78,12 +78,6 @@ class FileAttente < ApplicationRecord
     participation = user.participation_for(rdv)
     return nil unless participation
 
-    # TODO: Supprimer ce if une fois que toutes les participations ont des restricted_auth_token
-    if participation.restricted_auth_token.nil?
-      participation.set_restricted_authentication_token
-      participation.save
-    end
-
     participation.restricted_auth_token
   end
 end
