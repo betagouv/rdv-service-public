@@ -32,7 +32,7 @@ class Notifiers::ParticipationCreated < BaseService
   end
 
   def notify_agent(agent)
-    Agents::RdvMailer.with(participation:, agent:, token:).participation_created.deliver_later
+    Agents::RdvMailer.with(participation:, agent:).participation_created.deliver_later
   end
 
   def rdv = participation.rdv
