@@ -1,20 +1,14 @@
 class Agents::ExportMailer < ApplicationMailer
-  def rdv_export(export_id)
+  def export_ready(export_id)
     @export = Export.find(export_id)
 
-    mail(
-      to: @export.agent.email,
-      subject: I18n.t("mailers.agents.export_mailer.rdv_export.subject", date: I18n.l(Time.zone.now, format: :dense))
-    )
-  end
+    date = I18n.l(Time.zone.now, format: :dense)
+    subject = {
+      Export::RDV_EXPORT => "Export des RDVs du #{date}",
+      Export::PARTICIPATIONS_EXPORT => "Export des RDVs par usager du #{date}",
+    }.fetch(@export.export_type.to_s)
 
-  def participations_export(export_id)
-    @export = Export.find(export_id)
-
-    mail(
-      to: @export.agent.email,
-      subject: I18n.t("mailers.agents.export_mailer.full_participation_export.subject", date: I18n.l(Time.zone.now, format: :dense))
-    )
+    mail(to: @export.agent.email, subject:)
   end
 
   def domain
