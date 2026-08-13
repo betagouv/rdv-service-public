@@ -20,13 +20,26 @@ class Notifiers::RdvBase < BaseService
   def perform
     return if @rdv.starts_at < Time.zone.now
 
-    notify_users_by_mail
-    notify_users_by_sms
     notify_agents
+    notify_users
   end
 
-  ## Users notifications
+  def notify_users
+    notify_users_by_mail
+    notify_users_by_sms
+  end
+
+  ## Configured Mailers
   #
+  def user_mailer(user)
+    Users::RdvMailer.with(rdv: @rdv, user: user)
+  end
+
+  def agent_mailer(agent)
+    Agents::RdvMailer.with(rdv: @rdv, agent: agent, author: @author)
+  end
+
+  private
 
   def notify_users_by_mail
     return unless methods.include?(:notify_user_by_mail)
@@ -43,18 +56,6 @@ class Notifiers::RdvBase < BaseService
       .select(&:notifiable_by_sms?)
       .each { notify_user_by_sms(_1) }
   end
-
-  ## Configured Mailers
-  #
-  def user_mailer(user)
-    Users::RdvMailer.with(rdv: @rdv, user: user)
-  end
-
-  def agent_mailer(agent)
-    Agents::RdvMailer.with(rdv: @rdv, agent: agent, author: @author)
-  end
-
-  private
 
   def users_to_notify
     @users.map(&:user_to_notify).uniq

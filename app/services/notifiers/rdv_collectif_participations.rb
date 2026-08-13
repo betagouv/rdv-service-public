@@ -10,16 +10,9 @@ class Notifiers::RdvCollectifParticipations < BaseService
     # when rdv is updated by the agent with participations add/remove in the updatable concern
     return if @rdv.starts_at < Time.zone.now
 
-    # FIXME: this is not ideal but it's the simplest workaround to avoid notifying the agent
-    rdv_created = Notifiers::RdvCreated.new(@rdv, @author, new_participants_to_notify)
-    rdv_created.generate_invitation_tokens
-    rdv_created.notify_users_by_mail
-    rdv_created.notify_users_by_sms
+    Notifiers::RdvCreated.new(@rdv, @author, new_participants_to_notify).notify_users
 
-    rdv_cancelled = Notifiers::RdvCancelled.new(@rdv, @author, removed_participants_to_notify)
-    # we don't generate token in this case since the user won't be linked to the rdv
-    rdv_cancelled.notify_users_by_mail
-    rdv_cancelled.notify_users_by_sms
+    Notifiers::RdvCancelled.new(@rdv, @author, removed_participants_to_notify).notify_users
   end
 
   private
