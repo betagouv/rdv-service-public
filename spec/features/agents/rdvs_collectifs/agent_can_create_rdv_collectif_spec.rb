@@ -29,9 +29,11 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
     # ici on clique sur une ligne entière, ce qui a pour effet de cliquer au milieu
     # et c’est donc le mercredi qui est choisi un peu au hasard
     # en définissant l’offset on arrive à cliquer sur le lundi 😅
-    cal_line = find('.fc-timegrid-slot-lane[data-time="08:30:00"]')
-    cal_line_width = cal_line.evaluate_script("this.clientWidth")
-    cal_line.click(x: -((cal_line_width / 2)) + 10, y: 0)
+    page.driver.with_playwright_page do |pw|
+      slot = pw.locator('[data-time="08:30:00"]').first
+      box = slot.bounding_box
+      pw.mouse.click(box["x"] + 10, box["y"] + (box["height"] / 2))
+    end
 
     select("Atelier administratif", from: "rdv_motif_id")
     click_button("Continuer")

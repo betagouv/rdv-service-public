@@ -98,18 +98,23 @@ class Admin::RdvsController < AgentAuthController
     authorize(@rdv, policy_class: Agent::RdvPolicy)
 
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
-    @success = @rdv_form.submit(rdv_update_params)
+
+    if @rdv_form.submit(rdv_update_params)
+      redirect_to admin_organisation_rdv_path(current_organisation, @rdv, contextual_agent_ids: @contextual_agents.map(&:id)), notice: I18n.t("admin.rdvs.message.success.update")
+    else
+      render :edit
+    end
+  end
+
+  def update_status
+    authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
+
+    @rdv_form = Admin::EditRdvStatusForm.new(@rdv, current_agent)
+    @rdv_form.submit(params.require(:rdv).permit(:status))
 
     respond_to do |format|
       format.turbo_stream do
         render locals: { rdv: @rdv, contextual_agents: @contextual_agents, quick_update: params[:quick_update] }
-      end
-      format.html do
-        if @success
-          redirect_to admin_organisation_rdv_path(current_organisation, @rdv, contextual_agent_ids: @contextual_agents.map(&:id)), rdv_success_flash
-        else
-          render :edit
-        end
       end
     end
   end
@@ -175,7 +180,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def rdv_update_params
-    allowed_params = params.require(:rdv).permit(:status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name, :visio_url_custom, :visio_url_type,
+    allowed_params = params.require(:rdv).permit(:lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name, :visio_url_custom, :visio_url_type,
                                                  participations_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
                                                  lieu_attributes: %i[name address latitude longitude id],
                                                  agent_ids: [])
@@ -204,7 +209,7 @@ class Admin::RdvsController < AgentAuthController
 
   def rdv_success_flash
     {
-      notice: if rdv_update_params[:status].in?(Rdv::CANCELLED_STATUSES)
+      notice: if @rdv.status.in?(Rdv::CANCELLED_STATUSES)
                 I18n.t("admin.rdvs.message.success.cancel")
               else
                 I18n.t("admin.rdvs.message.success.update")

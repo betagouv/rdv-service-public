@@ -1,4 +1,4 @@
-= link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: status, ignore_benign_errors: true }),
+= link_to update_status_admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: status }),
   class: "dropdown-item", data: { turbo_method: :put, turbo_confirm: change_status_confirmation_message(rdv, status) } do
   span
     => icon("fr-icon-circle-fill", class: "rdv-status-#{status}")

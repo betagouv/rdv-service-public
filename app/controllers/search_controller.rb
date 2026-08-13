@@ -158,7 +158,7 @@ class SearchController < ApplicationController
     params.permit(
       *WebSearchContext::ADDRESS_SELECTION_PARAMS,
       *WebSearchContext::USER_CHOICE_PARAMS,
-      :motif_category_short_name, :date, :public_link_organisation_id, :prescripteur, :autofocus,
+      :motif_category_short_name, :date, :public_link_organisation_id, :prescripteur,
       organisation_ids: [], referent_ids: [], external_organisation_ids: []
     ).to_h.deep_symbolize_keys
   end

@@ -1,11 +1,13 @@
 - motif_policy = policy(motif, policy_class: Agent::MotifPolicy)
 
 tr
-  td.fr-pr-0.fr-pt-2w.fr-pb-0
+  td.fr-pr-0.fr-py-2w.fr-pb-0
     span.fr-icon-circle-fill style="color: #{motif.color};" &nbsp;
-  td
-    = link_to motif.name, admin_organisation_motif_path(motif.organisation, motif)
-    = motif_badges(motif, only: %i[for_secretariat follow_up collectif])
+  td.fr-p-0
+    / On agrandit la taille du lien pour faciliter le click
+    = link_to admin_organisation_motif_path(motif.organisation, motif), style: "width: 100%; min-height: 48px;", class: "fr-btn fr-btn--tertiary-no-outline fr-m-0" do
+      =  motif.name
+      = motif_badges(motif, only: %i[for_secretariat follow_up collectif])
   td
     = motif_badges(motif, only: %i[bookable_by_everyone bookable_by_agents_and_prescripteurs bookable_by_invited_users])
   - if display_sectorisation_level?

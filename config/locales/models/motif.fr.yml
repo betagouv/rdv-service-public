@@ -50,7 +50,7 @@ fr:
         true: RDV collectif
         false: RDV individuel
       motif/collectifs/hint:
-        true: Le rendez-vous est destiné à plusieurs usagers. Chaque participants est notifié individuellement.
+        true: Le rendez-vous est destiné à plusieurs usagers. Chaque participant est notifié individuellement.
         false: Le rendez-vous est réservé pour un usager en particulier. Cet usager peut être accompagné (parent, tuteur, traducteur, …) pour la consultation individuelle.
       motif/visibility_types/html:
         visible_and_notified: RDV visible et notifié

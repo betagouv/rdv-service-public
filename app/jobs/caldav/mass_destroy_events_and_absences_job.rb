@@ -1,5 +1,5 @@
 module Caldav
-  class MassDestroyEventsAndAbsencesJob < ApplicationJob
+  class MassDestroyEventsAndAbsencesJob < Caldav::BaseJob
     queue_as :latency_5m
     include ExtendedRetryStrategyConcern
 

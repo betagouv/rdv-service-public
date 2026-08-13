@@ -72,7 +72,7 @@ class PrescripteurRdvWizardController < ApplicationController
   def cancel_rdv
     if @prescripteur
       if @prescripteur.rdv.cancellable_by_user?
-        @prescripteur.rdv.update_and_notify(@prescripteur, status: "excused")
+        Rdv::UpdateStatusAndNotify.new(@prescripteur.rdv, @prescripteur, status: "excused").perform
         flash[:success] = "Le rendez-vous a bien été annulé."
       else
         flash[:error] = "Le rendez-vous ne peut plus être annulé."

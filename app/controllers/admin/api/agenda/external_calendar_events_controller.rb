@@ -11,7 +11,7 @@ class Admin::Api::Agenda::ExternalCalendarEventsController < Admin::Api::BaseCon
           title: "Indisponibilité provenant d’un agenda externe",
           start: occurrence.starts_at.as_json,
           end: occurrence.ends_at.as_json,
-          backgroundColor: AbsencesHelper::CALENDAR_BACKGROUND_COLOR,
+          color: AbsencesHelper::CALENDAR_BACKGROUND_COLOR,
           resourceIds: [event.agent_id], # https://fullcalendar.io/docs/resources-and-events
         }
       end

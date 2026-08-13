@@ -167,16 +167,12 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       let(:secret) { "abc123" }
 
       response 200, "Met à jour et renvoie un webhook_endpoint" do
-        let(:other_organisation) { create(:organisation, territory: territory) }
-        let(:organisation_id) { other_organisation.id }
-
         schema "$ref" => "#/components/schemas/webhook_endpoint_with_root"
 
         run_test!
 
         specify do
           expect(webhook_endpoint.reload).to have_attributes(
-            organisation: other_organisation,
             target_url: target_url,
             secret: secret,
             subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role]

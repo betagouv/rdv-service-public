@@ -306,6 +306,7 @@ Rails.application.routes.draw do
         member do
           get :download_participants
           post :send_reminder_manually
+          put :update_status
         end
         collection do
           post :participations_export
@@ -365,7 +366,7 @@ Rails.application.routes.draw do
           end
         end
       end
-      resources :invitations, only: [:index] do
+      resources :invitations, only: [] do
         post :reinvite, on: :member
       end
       resource :merge_users, only: %i[new create]

@@ -1,0 +1,102 @@
+// CSS du thème custom RDV Service Public pour FullCalendar v7.
+// Complément de fullcalendar-theme.js qui définit les options *Class côté JS.
+//
+// Contrainte DSFR : DSFR applique background-color: var(--hover-tint) sur a[href]:hover
+// et button:not(:disabled):hover, ce qui écrase les styles FC v7. FC v7 n'ajoute plus la
+// classe "fc" à la racine — le thème classic utilise fc-classic-n5m. Nos règles scoped sous
+// .fc-classic-n5m ont une spécificité (0,3,0) qui bat celle de DSFR (0,2,1).
+
+// Palette de boutons : fond blanc + texte sombre.
+// Les bordures CSS réelles sont remplacées par box-shadow inset pour éviter les double-bordures
+// dans les groupes de boutons adjacents.
+.fc-classic-n5m {
+  --fc-classic-button: #ffffff;
+  --fc-classic-button-border: transparent;
+  --fc-classic-button-strong: #f6f6f6;
+  --fc-classic-button-strong-border: transparent;
+  --fc-classic-button-foreground: #161616;
+  --fc-classic-background-event-opacity: 100%;
+
+  // Affiche l'heure après le titre dans les événements bloc (comportement v6)
+  .rdv-fc-event-time {
+    order: 1;
+  }
+
+  .rdv-fc-background-event .rdv-fc-background-event-title {
+    font-weight: 600;
+    font-style: normal;
+  }
+
+  .rdv-fc-button {
+    border-inline: none; // fc-classic-1Wx ajoute border-inline-width: 1px qui prend de la place même transparent
+    box-shadow: rgb(221, 221, 221) 0 0 0 1px inset;
+  }
+
+  // Les boutons de navigation (Aujourd'hui, <, >) restent espacés
+  .rdv-fc-nav-group {
+    gap: 4px;
+  }
+
+  // FC v7 utilise aria-pressed pour les boutons génériques, aria-selected pour les sélecteurs de vue
+  .rdv-fc-button[aria-pressed="true"],
+  .rdv-fc-button[aria-selected="true"] {
+    background-color: white;
+    color: var(--blue-france-sun-113-625);
+    box-shadow: var(--blue-france-sun-113-625) 0 0 0 1px inset;
+
+    &:hover {
+      background-color: white;
+    }
+  }
+
+  button:focus-visible {
+    outline: 2px solid $focus-dsfr;
+    outline-offset: 2px;
+  }
+
+  .rdv-fc-toolbar-title {
+    margin: 0;
+    margin-left: 0.5rem;
+  }
+}
+
+// En-têtes de colonnes : permet le retour à la ligne des noms d'agents en vue multi-agents.
+// FC v7 applique overflow:hidden (fc-iG) sur le <th> et white-space:nowrap (fc-Jx) sur le div intérieur,
+// tous deux en !important. On cible via des attributs HTML stables plutôt que les classes obfusquées.
+.fc-classic-n5m [role="columnheader"][data-resource-id] {
+  overflow: visible !important;
+}
+
+.fc-classic-n5m [role="columnheader"][data-resource-id] > div {
+  white-space: normal !important;
+  max-width: 100%;
+}
+
+// Vue mois et planning : gris subtil DSFR
+.fc-classic-n5m a[href]:hover {
+  background-color: var(--background-contrast-grey) !important;
+}
+
+// Vue semaine et jour : assombrit légèrement la couleur de l'événement pour garder le texte lisible
+.fc-classic-n5m a[href].rdv-fc-block-event:hover {
+  background-color: var(--fc-event-color) !important;
+  filter: brightness(0.9);
+}
+
+@media (hover: hover) {
+  .fc-classic-n5m .rdv-fc-button:hover,
+  .fc-classic-n5m .rdv-fc-button[aria-pressed="true"]:hover,
+  .fc-classic-n5m .rdv-fc-button[aria-selected="true"]:hover {
+    background-color: var(--fc-classic-button-strong);
+  }
+
+  // fc-classic-Ubk et fc-classic-4yP sont des classes internes FC v7 appliquées aux événements
+  // interactifs (list items, timegrid) — pas d'option *Class stable disponible pour les remplacer.
+  .fc-classic-n5m .fc-classic-Ubk:hover {
+    background-color: var(--fc-classic-faint);
+  }
+
+  .fc-classic-n5m .fc-classic-4yP:hover {
+    background-color: var(--fc-classic-muted);
+  }
+}

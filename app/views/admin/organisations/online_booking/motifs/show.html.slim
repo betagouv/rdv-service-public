@@ -79,21 +79,8 @@
           .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
             h2.fr-h4 Consignes pour les usagers
             = link_to "Modifier", edit_instructions_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
-          - if @motif.restriction_for_rdv.blank?
-            p
-              i Pas d'instructions à accepter avant la prise de rendez-vous
-          - else
-            p Instructions à accepter avant la prise de rendez-vous :
-            .fr-highlight.fr-mb-2w
-              i= restriction_for_rdv_to_html(@motif)
-
-          - if @motif.instruction_for_rdv.blank?
-            p.fr-mt-4w
-              i Pas d'instructions à afficher après la prise de rendez-vous
-          - else
-            p.fr-mt-4w Instructions à afficher après la prise de rendez-vous :
-            .fr-highlight.fr-mb-2w
-              i= instruction_for_rdv_to_html(@motif)
+          = render "admin/motifs/restriction_for_rdv_recap", motif: @motif
+          = render "admin/motifs/instruction_for_rdv_recap", motif: @motif
 
     - if current_territory.sectors.any? && @motif.bookable_by_everyone_or_bookable_by_invited_users?
       .card.card-body

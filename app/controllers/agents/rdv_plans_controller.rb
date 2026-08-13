@@ -148,8 +148,8 @@ class Agents::RdvPlansController < AgentAuthController
           title: @rdv_plan.user.full_name,
           start: @rdv_plan.starts_at.as_json,
           end: (@rdv_plan.starts_at + (@rdv_plan.duration_in_minutes || 30).minutes).as_json,
-          textColor: "white",
-          backgroundColor: "#6a6af4",
+          contrastColor: "white",
+          color: "#6a6af4",
         },
       ]
     end
