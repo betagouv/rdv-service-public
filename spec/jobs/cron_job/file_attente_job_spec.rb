@@ -6,7 +6,6 @@ RSpec.describe CronJob::FileAttenteJob do
 
   around { |example| perform_enqueued_jobs { example.run } }
 
-  let!(:token) { participation.restricted_auth_token }
   let!(:user) { create(:user) }
   let!(:file_attente) { create(:file_attente, rdv: rdv, user: user) }
   let!(:rdv) { create(:rdv, starts_at: now + 2.weeks, lieu: lieu, motif: motif, users: [user], agents: [agent], organisation: organisation) }
@@ -43,7 +42,7 @@ RSpec.describe CronJob::FileAttenteJob do
 
     it "sends an email" do
       allow(Users::FileAttenteMailer).to receive(:with).and_call_original
-      expect(Users::FileAttenteMailer).to receive(:with).with({ rdv: rdv, user: user, token: token })
+      expect(Users::FileAttenteMailer).to receive(:with).with({ rdv:, user: })
       subject
     end
 
@@ -61,7 +60,7 @@ RSpec.describe CronJob::FileAttenteJob do
 
       it "sends the notification to the responsible with a valid invitation token" do
         allow(Users::FileAttenteMailer).to receive(:with).and_call_original
-        expect(Users::FileAttenteMailer).to receive(:with).with(hash_including(user: responsible, token: be_present))
+        expect(Users::FileAttenteMailer).to receive(:with).with(hash_including(user: responsible, token: participation.restricted_auth_token))
         subject
       end
     end
