@@ -7,9 +7,9 @@ class Users::RdvsController < UserAuthController
   layout "application_narrow", only: %i[show]
   layout "application_base", only: %i[index]
 
-  include TokenInvitable
+  include RestrictedAuthConcern
 
-  prepend_before_action :store_invitation_in_session_and_redirect, only: %i[show creneaux]
+  prepend_before_action :store_restricted_auth_token_in_session_and_redirect, only: %i[show creneaux]
 
   def index
     authorize(Rdv, policy_class: User::RdvPolicy)
