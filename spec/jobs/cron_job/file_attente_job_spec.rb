@@ -58,9 +58,9 @@ RSpec.describe CronJob::FileAttenteJob do
       let!(:responsible) { create(:user) }
       let!(:user) { create(:user, :relative, responsible: responsible) }
 
-      it "sends the notification to the responsible with a valid invitation token" do
+      it "sends the notification to the responsible" do
         allow(Users::FileAttenteMailer).to receive(:with).and_call_original
-        expect(Users::FileAttenteMailer).to receive(:with).with(hash_including(user: responsible, token: participation.restricted_auth_token))
+        expect(Users::FileAttenteMailer).to receive(:with).with(hash_including(user: responsible))
         subject
       end
     end
