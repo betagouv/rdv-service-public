@@ -22,22 +22,16 @@ class Rdv::UpdateStatusAndNotify
       if @rdv.save
         if @rdv.status.in?(Rdv::CANCELLED_STATUSES)
           @rdv.file_attentes.destroy_all
-          @notifier = new_cancelled_notifier(@author, previous_participations)
+          new_cancelled_notifier(@author, previous_participations).perform
         elsif rdv_status_reloaded_from_cancelled?
-          @notifier = Notifiers::RdvCreated.new(@rdv, @author)
+          Notifiers::RdvCreated.new(@rdv, @author).perform
         end
-
-        @notifier&.perform
 
         true
       else
         raise ActiveRecord::Rollback
       end
     end
-  end
-
-  def participation_token_for(user_id)
-    @notifier.participations_tokens_by_user_id[user_id]
   end
 
   private
