@@ -1,7 +1,6 @@
 class Users::RdvsController < UserAuthController
   before_action :verify_user_name_initials, :set_rdv, :set_can_see_rdv_motif, only: %i[show creneaux ics edit cancel update]
   before_action :set_can_see_rdv_motif, only: %i[show edit index]
-  before_action :set_lieu, only: %i[edit update]
   before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
 
   layout "application_narrow", only: %i[show]
@@ -96,13 +95,9 @@ class Users::RdvsController < UserAuthController
       user: @rdv.users.first,
       starts_at: @starts_at,
       motif: @rdv.motif,
-      lieu: @lieu,
+      lieu: @rdv.lieu,
       duration_in_min: @rdv.duration_in_min
     )
-  end
-
-  def set_lieu
-    @lieu = @rdv.lieu
   end
 
   def set_rdv
