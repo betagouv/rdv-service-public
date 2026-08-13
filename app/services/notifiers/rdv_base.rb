@@ -20,8 +20,6 @@ class Notifiers::RdvBase < BaseService
   def perform
     return if @rdv.starts_at < Time.zone.now
 
-    generate_invitation_tokens
-
     notify_users_by_mail
     notify_users_by_sms
     notify_agents
@@ -44,14 +42,6 @@ class Notifiers::RdvBase < BaseService
     users_to_notify
       .select(&:notifiable_by_sms?)
       .each { notify_user_by_sms(_1) }
-  end
-
-  def generate_invitation_tokens
-    @rdv.participations.each do |participation|
-      participant = participation.user
-      participant.user_to_notify
-      participation.set_restricted_authentication_token_if_missing_and_save
-    end
   end
 
   ## Configured Mailers
