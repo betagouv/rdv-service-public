@@ -1,9 +1,16 @@
 RSpec.describe Users::RdvSms do
+  let(:organisation) { build(:organisation) }
+
+  let(:restricted_auth_token) { "12345A" }
+
+  before do
+    rdv.participations.first.restricted_auth_token = restricted_auth_token
+  end
+
   describe "#rdv_created" do
     context "with a basic rdv" do
       subject { described_class.rdv_created(rdv, user).content }
 
-      let(:organisation) { build(:organisation) }
       let(:pmi) { build(:service, short_name: "PMI") }
       let(:motif) { build(:motif, service: pmi, organisation:) }
       let(:lieu) { build(:lieu, name: "MDS Centre", address: "10 rue d'ici, Paris, 75016") }
@@ -75,13 +82,12 @@ RSpec.describe Users::RdvSms do
     end
 
     context "with a follow_up rdv" do
-      it "contains referent name" do
-        organisation = create(:organisation)
-        agent = create(:agent, first_name: "James", last_name: "Bond")
-        user = create(:user, referent_agents: [agent])
-        motif = create(:motif, follow_up: true, organisation:)
-        rdv = create(:rdv, motif: motif, users: [user], agents: [agent], organisation:)
+      let(:motif) { create(:motif, follow_up: true, organisation:) }
+      let(:user) { create(:user, referent_agents: [agent]) }
+      let(:agent) { create(:agent, first_name: "James", last_name: "Bond") }
+      let(:rdv) { create(:rdv, motif: motif, users: [user], agents: [agent], organisation:) }
 
+      it "contains referent name" do
         content = described_class.rdv_created(rdv, user).content
 
         expect(content).to include("J. BOND")
@@ -99,6 +105,7 @@ RSpec.describe Users::RdvSms do
     let(:rdv) { build(:rdv, motif: motif, organisation: organisation, lieu: lieu, starts_at:, id: 124) }
     let(:user) { build(:user) }
     let(:starts_at) { Time.zone.local(2021, 12, 10, 13, 10) }
+    let(:restricted_auth_token) { "2345" }
 
     it do
       expect(subject).to include("RDV modifié: PMI vendredi 10/12 13h10")
@@ -140,7 +147,7 @@ RSpec.describe Users::RdvSms do
       it "contains cancelled RDV's infos and lieu's phone number" do
         expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé.\n"
         expected_content += "Appelez le 0123456789 "
-        expected_content += "ou allez sur http://www.rdv-solidarites-test.localhost/prdv?tkn=393939 pour reprendre RDV."
+        expected_content += "ou allez sur http://www.rdv-solidarites-test.localhost/prdv?tkn=12345A pour reprendre RDV."
         expect(subject).to eq(expected_content)
       end
     end
@@ -152,7 +159,7 @@ RSpec.describe Users::RdvSms do
       it "contains cancelled RDV's infos" do
         expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé.\n"
         expected_content += "Appelez le 0100000000 "
-        expected_content += "ou allez sur http://www.rdv-solidarites-test.localhost/prdv?tkn=393939 pour reprendre RDV."
+        expected_content += "ou allez sur http://www.rdv-solidarites-test.localhost/prdv?tkn=12345A pour reprendre RDV."
         expect(subject).to eq(expected_content)
       end
     end
@@ -163,7 +170,7 @@ RSpec.describe Users::RdvSms do
 
       it "contains cancelled RDV's infos" do
         expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé.\n"
-        expected_content += "Allez sur http://www.rdv-solidarites-test.localhost/prdv?tkn=393939 pour reprendre RDV."
+        expected_content += "Allez sur http://www.rdv-solidarites-test.localhost/prdv?tkn=12345A pour reprendre RDV."
         expect(subject).to eq(expected_content)
       end
     end
@@ -174,7 +181,7 @@ RSpec.describe Users::RdvSms do
 
       it "contains cancelled RDV's infos" do
         expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé.\n"
-        expected_content += "Allez sur http://www.rdv-solidarites-test.localhost/prdv?tkn=393939 pour reprendre RDV."
+        expected_content += "Allez sur http://www.rdv-solidarites-test.localhost/prdv?tkn=12345A pour reprendre RDV."
         expect(subject).to eq(expected_content)
       end
     end
@@ -195,7 +202,7 @@ RSpec.describe Users::RdvSms do
       expect(subject).to include("MDS Centre")
       expect(subject).to include("10 rue d'ici, Paris, 75016")
       expect(subject).to include("Gérer mon RDV")
-      expect(subject).to include("www.rdv-solidarites-test.localhost/r/7777")
+      expect(subject).to include("www.rdv-solidarites-test.localhost/r/12345A")
     end
   end
 
@@ -240,12 +247,14 @@ RSpec.describe Users::RdvSms do
       end
 
       context "if we add a new location type without adding the location text" do
-        it "would raise an error in this block" do
-          Motif.location_types.each_value do |location_type|
-            motif = build(:motif, location_type: location_type)
-            rdv = build(:rdv, motif: motif, users: [user], starts_at: 5.days.from_now, id: 1)
+        Motif.location_types.each_value do |location_type|
+          context "for the location type #{location_type}" do
+            let(:motif) { build(:motif, location_type: location_type) }
+            let(:rdv) { build(:rdv, motif: motif, users: [user], starts_at: 5.days.from_now, id: 1) }
 
-            described_class.rdv_created(rdv, user).content
+            it "would raise an error in this block" do
+              described_class.rdv_created(rdv, user).content
+            end
           end
         end
       end
