@@ -63,6 +63,14 @@ class Users::RdvsController < UserAuthController
   end
 
   def creneaux
+    @creneau_search = CreneauxSearch::ForUser.new(
+      user: @rdv.users.first,
+      date_range: Time.zone.today..@rdv.reschedule_max_date,
+      motif: @rdv.motif,
+      lieu: @lieu,
+      duration_in_min: @rdv.duration_in_min
+    )
+
     @all_creneaux = @rdv.creneaux_available(Time.zone.today..@rdv.reschedule_max_date)
     return if @all_creneaux.empty?
 
@@ -77,10 +85,11 @@ class Users::RdvsController < UserAuthController
   def build_creneau
     @starts_at = Time.zone.parse(params[:starts_at])
     @creneau = CreneauxSearch::ForUser.creneau_for(
-      user: current_user,
+      user: @rdv.users.first,
       starts_at: @starts_at,
       motif: @rdv.motif,
-      lieu: @lieu
+      lieu: @lieu,
+      duration_in_min: @rdv.duration_in_min
     )
   end
 

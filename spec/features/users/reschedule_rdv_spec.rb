@@ -49,5 +49,6 @@ RSpec.describe "User can reschedule their rdvs" do
     end
 
     # TODO: faire une spec quand l'usager du rdv est un proche de l'usager connecté
+    # TODO: faire une spec quand la durée du rdv n'est pas la même que celle du motif
   end
 end
