@@ -232,13 +232,6 @@ class Rdv < ApplicationRecord
       !home?
   end
 
-  def creneaux_available(date_range)
-    date_range = CreneauxSearch::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délay
-    return [] if date_range.blank?
-
-    CreneauxSearch::Calculator.available_slots(motif:, lieu:, date_range:, duration_in_min:)
-  end
-
   # Ces plages d'ouvertures sont utilisé pour afficher des infos
   # s'il y a un chevauchement avec le RDV.
   #
