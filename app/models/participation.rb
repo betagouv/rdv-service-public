@@ -30,7 +30,7 @@ class Participation < ApplicationRecord
   after_initialize :set_default_notifications_flags
   before_validation :set_default_notifications_flags
   before_create :set_status_from_rdv
-  after_initialize :set_restricted_authentication_token
+  before_create :set_restricted_authentication_token
   after_save :update_counter_cache
   after_destroy :update_counter_cache
   # voir Outlook::EventSerializerAndListener pour d'autres callbacks
