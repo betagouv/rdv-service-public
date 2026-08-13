@@ -51,40 +51,48 @@
           = dsfr_link_to "Voir les détails de réservation en ligne", admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-icon-arrow-right-line fr-link--icon-right"
 
     .card.mt-2
+      .card-body
+        h2.fr-h5 Consignes à destination de l'usager
+
+        = render "admin/motifs/instruction_for_rdv_recap", motif: @motif
+
+        p.fr-mt-4w
+          b =Motif.human_attribute_name(:custom_cancel_warning_message)
+
+          = icon("fr-icon-information-line", "aria-describedby" => "cancel-warning-message-tooltip", class: "fr-icon--sm fr-ml-1w")
+          span.fr-tooltip.fr-placement#cancel-warning-message-tooltip role="tooltip"
+            = Motif.human_attribute_name(:custom_cancel_warning_message_hint)
+        - if @motif.custom_cancel_warning_message.blank?
+          p
+            i.fr-text-mention--grey Pas d'instructions à afficher quand l'usager annule le rendez-vous
+        - else
+          .fr-highlight.fr-mb-2w
+             = @motif.custom_cancel_warning_message
+
+    .card.mt-2
       .rdv-accordion-card.fr-accordion
         h2.fr-accordion__title
           button.fr-h5.fr-accordion__btn aria-expanded="false" aria-controls="options-avancees"
             | Options avancées
         .fr-collapse id="options-avancees"
-          = motif_attribute_row \
-            Motif.human_attribute_name(:instruction_for_rdv_short), \
-            instruction_for_rdv_to_html(@motif), \
-            hint: Motif.human_attribute_name(:instruction_for_rdv_hint)
-          = motif_attribute_row \
-            Motif.human_attribute_name(:custom_cancel_warning_message), \
-            @motif.custom_cancel_warning_message, \
-            hint: Motif.human_attribute_name(:custom_cancel_warning_message_hint)
 
-          hr
+          b= @motif.human_attribute_value(:visibility_type, context: :html)
+
+          .fr-text-mention--grey
+            = @motif.human_attribute_value(:visibility_type, context: :hint)
+            - if current_organisation.rdv_insertion?
+              br
+              span= @motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
 
           = motif_attribute_row \
             Motif.human_attribute_name(:follow_up_short), \
             motif_option_activated(@motif, :follow_up), \
-            hint: Motif.human_attribute_name(:follow_up_hint), margin: false
+            hint: Motif.human_attribute_name(:follow_up_hint)
+
           = motif_attribute_row \
             Motif.human_attribute_name(:for_secretariat_short), \
             motif_option_activated(@motif, :for_secretariat), \
             hint: Motif.human_attribute_name(:for_secretariat_hint)
-          hr
-
-          = motif_attribute_row(Motif.human_attribute_name(:visibility_type), margin: false) do
-            div= sanitize(@motif.human_attribute_value(:visibility_type, context: :html))
-
-            div.fr-text-mention--grey
-              = @motif.human_attribute_value(:visibility_type, context: :hint)
-              - if current_organisation.rdv_insertion?
-                br
-                span= @motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
 
     - if @motif_policy.edit? || @motif_policy.destroy?
       .card.mt-2
