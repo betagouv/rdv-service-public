@@ -31,9 +31,8 @@ class Users::RdvsController < UserAuthController
   def update
     old_agent_ids = @rdv.agent_ids.to_a
     if @rdv.update(starts_at: @creneau.starts_at, ends_at: @creneau.starts_at + @rdv.duration_in_min.minutes, agent_ids: [@creneau.agent.id])
-      notifier = Notifiers::RdvUpdated.new(@rdv, current_user, old_agent_ids: old_agent_ids)
+      Notifiers::RdvUpdated.new(@rdv, current_user, old_agent_ids: old_agent_ids).perform
 
-      notifier.perform
       flash[:success] = "Votre RDV a bien été modifié"
       redirect_to users_rdv_path(@rdv, invitation_token: current_user.participation_for(@rdv).restricted_auth_token)
     else
