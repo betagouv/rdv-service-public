@@ -4,7 +4,7 @@ class BackfillParticipationsRestrictedAuthTokens < ActiveRecord::Migration[8.0]
   def change
     # Cette migration est très lente à exécuter. Il faudra la préparer en faisant tourner ces 4 lignes dans la console de prod avant la mise en ligne
     Participation.where(restricted_auth_token: nil).find_each do |participation|
-      participation.set_restricted_authentication_token
+      participation.send(:set_restricted_authentication_token)
       participation.save
     end
 
