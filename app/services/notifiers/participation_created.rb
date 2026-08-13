@@ -13,8 +13,6 @@ class Notifiers::ParticipationCreated < BaseService
 
     return if rdv.starts_at < Time.zone.now
 
-    participation.set_restricted_authentication_token_if_missing_and_save
-
     notify_user
     notify_agents
   end
