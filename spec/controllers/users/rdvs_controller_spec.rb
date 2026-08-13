@@ -215,7 +215,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         let!(:invitation_token) { user.set_rdv_invitation_token! }
 
         before do
-          request.session[:invitation] = { invitation_token:, expires_at: 1.hour.from_now }
+          request.session[:restricted_auth] = { invitation_token:, expires_at: 1.hour.from_now }
         end
 
         it "redirects to the identity verification form" do
@@ -281,7 +281,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         let!(:invitation_token) { user.set_rdv_invitation_token! }
 
         before do
-          request.session[:invitation] = { invitation_token: invitation_token, expires_at: 1.hour.from_now }
+          request.session[:restricted_auth] = { invitation_token: invitation_token, expires_at: 1.hour.from_now }
         end
 
         it "is not authorized" do
