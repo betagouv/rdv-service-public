@@ -111,7 +111,7 @@ RSpec.describe "Agent can update a RDV", js: true do
       expect(current_email).not_to be_nil
       expect(current_email.subject).to match(/Nouveau RDV/)
 
-      open_email rdv.users.first # TODO: vérifier que l'usager est bien notifié dans les autres cas
+      open_email rdv.users.first
       expect(current_email).to be_nil
     end
 
