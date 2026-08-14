@@ -178,5 +178,29 @@ RSpec.describe "/api/v1/users" do
         expect(existing_user.reload.referent_agents).to contain_exactly(myself, agent_from_other_org)
       end
     end
+
+    # Afin d'éviter les failles de sécurité liées à l'édition
+    # d'association, nous ignorons organisation_ids lors de l'update.
+    # En cas de besoin nous définirons un endpoint séparé pour ajouter une orga à un usager.
+    describe "ignorer organisation_ids" do
+      context "avec une valeur légitime de organisation_ids" do
+        let!(:my_other_organisation) { create(:organisation).tap { |org| myself.roles.create!(access_level: :admin, organisation_id: org.id) } }
+        let(:params) { { organisation_ids: [my_organisation.id, my_other_organisation.id] } }
+
+        it "ne modifie pas les orgas de l'usager" do
+          expect { put "/api/v1/users/#{existing_user.id}", headers:, params:, as: :json }.not_to change { existing_user.reload.organisation_ids }
+          expect(response).to have_http_status(:success)
+        end
+      end
+
+      context "avec une valeur illégitime de organisation_ids" do
+        let(:params) { { organisation_ids: [create(:organisation).id] } }
+
+        it "ne modifie pas les orgas de l'usager" do
+          expect { put "/api/v1/users/#{existing_user.id}", headers:, params:, as: :json }.not_to change { existing_user.reload.organisation_ids }
+          expect(response).to have_http_status(:success)
+        end
+      end
+    end
   end
 end
