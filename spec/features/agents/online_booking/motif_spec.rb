@@ -134,7 +134,7 @@ RSpec.describe "Réservation en ligne pour un motif en particulier" do
       expect(page).to have_content("La réservation en ligne pour ce motif est maintenant ouverte uniquement aux usagers invités")
       expect(motif.reload).to have_attributes(bookable_by: "agents_and_prescripteurs_and_invited_users")
 
-      click_on "Ouvrir à la réservation en ligne"
+      click_on "Ouvrir à tous les usagers"
 
       expect(page).to have_content("Le motif a été ouvert à la réservation en ligne")
       expect(motif.reload).to have_attributes(bookable_by: "everyone")

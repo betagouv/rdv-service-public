@@ -37,9 +37,14 @@
           - if @motif.bookable_by_agents_and_prescripteurs?
             = button_to "Ouvrir à la réservation en ligne", update_bookable_by_admin_organisation_online_booking_motif_path(current_organisation, @motif, bookable_by: :everyone), class: "fr-btn fr-btn--secondary", method: :post
           - elsif @motif.bookable_by_invited_users?
-            = button_to "Ouvrir à tous les usagers", update_bookable_by_admin_organisation_online_booking_motif_path(current_organisation, @motif, bookable_by: :everyone), class: "fr-btn", method: :post
+            .fr-btns-group.fr-btns-group--inline
+              = button_to "Ouvrir à tous les usagers", update_bookable_by_admin_organisation_online_booking_motif_path(current_organisation, @motif, bookable_by: :everyone), class: "fr-btn", method: :post
+              = button_to "Fermer à la réservation en ligne", update_bookable_by_admin_organisation_online_booking_motif_path(current_organisation, @motif, bookable_by: :agents), class: "fr-btn fr-btn--secondary", method: :post
           - else
-            = button_to "Ouvrir à la réservation en ligne", update_bookable_by_admin_organisation_online_booking_motif_path(current_organisation, @motif, bookable_by: :everyone), class: "fr-btn", method: :post
+            .fr-btns-group.fr-btns-group--inline
+              = button_to "Ouvrir à la réservation en ligne", update_bookable_by_admin_organisation_online_booking_motif_path(current_organisation, @motif, bookable_by: :everyone), class: "fr-btn", method: :post
+              - if current_organisation.rdv_insertion?
+                = button_to "Ouvrir aux usagers invités", update_bookable_by_admin_organisation_online_booking_motif_path(current_organisation, @motif, bookable_by: :agents_and_prescripteurs_and_invited_users), class: "fr-btn fr-btn--secondary", method: :post
 
     - unless current_organisation.sectorized?
       - if @motif.bookable_by_everyone?
@@ -99,4 +104,7 @@
         .card-body
           h3.fr-h4 Réservation en ligne
           p Ce motif est <b>ouvert</b> à la réservation en ligne : les usagers pourront prendre rendez-vous pour ce motif depuis le lien de réservation (sous réserve d’avoir une plage d’ouverture associée).
-          = button_to "Fermer à la réservation en ligne", update_bookable_by_admin_organisation_online_booking_motif_path(current_organisation, @motif, bookable_by: :agents), class: "fr-btn fr-btn--secondary", method: :post
+          .fr-btns-group.fr-btns-group--inline
+            = button_to "Fermer à la réservation en ligne", update_bookable_by_admin_organisation_online_booking_motif_path(current_organisation, @motif, bookable_by: :agents), class: "fr-btn fr-btn--secondary", method: :post
+            - if current_organisation.rdv_insertion?
+              = button_to "Restreindre aux usagers invités", update_bookable_by_admin_organisation_online_booking_motif_path(current_organisation, @motif, bookable_by: :agents_and_prescripteurs_and_invited_users), class: "fr-btn fr-btn--secondary", method: :post
