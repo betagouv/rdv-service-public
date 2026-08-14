@@ -438,6 +438,7 @@ tables:
       - action_name
       - agent_id
       - authentication_type
+      - param_names
 
   - table_name: exports
     non_anonymized_column_names:

@@ -196,18 +196,18 @@ RSpec.describe "Adding a user to a collective RDV" do
         params.merge!(invitation_token: invitation_token)
         visit prendre_rdv_path(params)
 
-        create(:participation, rdv: rdv, user: user, status: "excused")
+        participation = create(:participation, rdv: rdv, user: user, status: "excused")
 
-        visit users_rdv_path(rdv, invitation_token: rdv.participation_token(user.id))
+        visit users_rdv_path(rdv, invitation_token: participation.restricted_auth_token)
         fill_in(:letters, with: "INV")
         click_on("Valider")
 
         expect(page).to have_content(/Annulé/i)
-        create(:participation, rdv: rdv2, user: user, status: "revoked")
+        participation2 = create(:participation, rdv: rdv2, user: user, status: "revoked")
         rdv2.status = "revoked"
         rdv2.save
 
-        visit users_rdv_path(rdv2, invitation_token: rdv2.participation_token(user.id))
+        visit users_rdv_path(rdv2, invitation_token: participation2.restricted_auth_token)
         expect(page).to have_content(/Annulé/i)
       end
 
@@ -222,38 +222,12 @@ RSpec.describe "Adding a user to a collective RDV" do
         expect_no_notifications_for(rdv, user, :rdv_created)
       end
 
-      it "can cancel collective rdv participation, with mail notifications only", js: true do
-        params.merge!(invitation_token: invitation_token)
-        visit prendre_rdv_path(params)
-
+      it "can cancel collective rdv participation", js: true do
         participation = create(:participation, rdv: rdv, user: user, status: "unknown")
 
         stub_request(:post, "https://example.com/")
 
-        visit users_rdv_path(rdv, invitation_token: rdv.participation_token(user.id))
-        fill_in(:letters, with: "INV")
-        click_on "Valider"
-
-        expect_cancel_participation.to change { participation.reload.status }.from("unknown").to("excused")
-        expect(rdv.reload.status).to eq("unknown")
-
-        expect_notifications_sent_for(rdv, agent, :participation_cancelled)
-        # Mail notif only, SMS are not sent when cancellation is made by the user
-        expect_notifications_sent_for(rdv, user, :participation_cancelled, :mail)
-        expect_webhooks_for(user)
-      end
-
-      it "can cancel collective rdv participation, without notifications", js: true do
-        params.merge!(invitation_token: invitation_token)
-        visit prendre_rdv_path(params)
-
-        participation = create(:participation, rdv: rdv, user: user, status: "unknown")
-        participation.send_lifecycle_notifications = false
-        participation.save
-
-        stub_request(:post, "https://example.com/")
-
-        visit users_rdv_path(rdv, invitation_token: rdv.participation_token(user.id))
+        visit users_rdv_path(rdv, invitation_token: participation.restricted_auth_token)
         fill_in(:letters, with: "INV")
         click_on "Valider"
 

@@ -78,4 +78,45 @@ RSpec.describe "agent can export RDVs" do
     rdv_ids = 4.times.map { book.worksheets[0].row(_1 + 1)[1] }
     expect(rdv_ids).to match_array(rdvs.map(&:id))
   end
+
+  describe "the whole export process" do
+    it "has an attachment file name which contains the current date without org ID when more than one orga" do
+      other_organisation = create(:organisation)
+      agent.roles.create!(organisation: other_organisation)
+      travel_to(Time.zone.parse("2022-09-14 09:00:00"))
+
+      RdvsExportJob.perform_now(agent: agent, organisation_ids: [organisation.id, other_organisation.id], options: {})
+
+      expect { perform_enqueued_jobs }.to have_enqueued_mail(Agents::ExportMailer, :export_ready)
+      expect(Export.last.file_name).to eq("export-rdv-2022-09-14.xls")
+    end
+
+    it "has an attachment which contains the current date and org ID" do
+      # Le département du Var se base sur la position de chaque caractère du nom
+      # de fichier pour extraire la date et l'ID d'organisation, donc
+      # si on modifie le fichier il faut soit les prévenir soit ajouter à la fin.
+
+      travel_to(Time.zone.parse("2022-09-14 09:00:00"))
+
+      RdvsExportJob.perform_now(agent: agent, organisation_ids: [organisation.id], options: {})
+
+      # Perform batch of jobs and callback job
+      expect { perform_enqueued_jobs }.to have_enqueued_mail
+      # Deliver email
+      perform_enqueued_jobs
+
+      expect(Export.last.file_name).to eq("export-rdv-2022-09-14-org-#{organisation.id.to_s.rjust(6, '0')}.xls")
+      email = first_email_sent_to(agent.email)
+      expect(email.html_part.body.to_s).to include("Votre export est prêt")
+    end
+
+    it "prevents agent from exporting an org in which she does not belong" do
+      not_agents_org = create(:organisation)
+
+      expect do
+        RdvsExportJob.perform_now(agent: agent, organisation_ids: [organisation.id, not_agents_org.id], options: {})
+      end.to change(sentry_events, :size).by(1)
+      expect(sentry_events.last.exception.values.first.value).to eq("Agent does not belong to all requested organisation(s) (RuntimeError)")
+    end
+  end
 end

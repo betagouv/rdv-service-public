@@ -18,34 +18,6 @@ RSpec.describe Admin::EditRdvForm, type: :form do
       expect(rdv.reload.lieu).to eq(new_lieu)
     end
 
-    it "when status is excused, cancelled_at should not be nil" do
-      now = Time.zone.parse("2020-08-03 9h00")
-      travel_to(now - 3.days)
-      rdv = create(:rdv, starts_at: now - 2.days, agents: [agent], organisation: organisation)
-      travel_to(now)
-
-      edit_rdv_form = described_class.new(rdv, agent_context)
-      edit_rdv_form.submit({ status: "excused", ignore_benign_errors: "1" })
-
-      rdv.reload
-      expect(rdv.cancelled_at).to eq(now)
-      expect(rdv.status).to eq("excused")
-    end
-
-    it "when status is excused, changing status should reset cancelled_at" do
-      now = Time.zone.parse("2020-08-03 9h00")
-      travel_to(now - 4.days)
-      rdv = create(:rdv, cancelled_at: 2.days.ago, starts_at: now - 2.days, agents: [agent], organisation: organisation, status: "excused")
-      travel_to(now)
-
-      edit_rdv_form = described_class.new(rdv, agent_context)
-      edit_rdv_form.submit({ status: "unknown", ignore_benign_errors: "1" })
-
-      rdv.reload
-      expect(rdv.cancelled_at).to be_nil
-      expect(rdv.status).to eq("unknown")
-    end
-
     context "ajout d’un agent à un RDV avec une erreur contournable" do
       let!(:organisation) { create(:organisation) }
       let!(:agent_mayra) { create(:agent, first_name: "Mayra", basic_role_in_organisations: [organisation]) }

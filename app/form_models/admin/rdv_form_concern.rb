@@ -17,7 +17,7 @@ module Admin::RdvFormConcern
     delegate :errors, to: :rdv
 
     validate -> { rdv.validate }
-    validate :check_duplicates
+    include Admin::RdvDuplicatesFormConcern
 
     delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :rdv
     validate :warn_overlapping_plage_ouverture, if: -> { starts_at.present? }
@@ -27,27 +27,6 @@ module Admin::RdvFormConcern
     validate :warn_rdv_duplicate_suspected, if: -> { starts_at.present? }
     validate :warn_starts_in_the_past, if: -> { starts_at.present? }
     validate :warn_name_too_long_for_sms
-  end
-
-  def check_duplicates
-    suspicious_rdvs = Rdv.includes(:users, :agents).where(
-      organisation: rdv.organisation,
-      lieu: rdv.lieu,
-      starts_at: rdv.starts_at,
-      ends_at: rdv.ends_at,
-      motif: rdv.motif,
-      status: Rdv::NOT_CANCELLED_STATUSES
-    )
-    suspicious_rdvs = suspicious_rdvs.where.not(id: rdv.id) if rdv.persisted?
-
-    suspicious_rdvs = suspicious_rdvs.select do |existing_rdv|
-      participants_of_existing_rdv = Set.new(existing_rdv.users + existing_rdv.agents)
-      # Not using `rdv.users` because it does a db call, which returns an empty array because `rdv` is not persisted.
-      # Using participations/agents_rdvs is safe because they are built from the nested attributes.
-      participants_of_current_rdv = Set.new(rdv.participations.map(&:user) + rdv.agents_rdvs.map(&:agent))
-      participants_of_existing_rdv == participants_of_current_rdv
-    end
-    errors.add(:base, :duplicate) if suspicious_rdvs.any?
   end
 
   private

@@ -1,9 +1,12 @@
 class SearchController < ApplicationController
   layout "application_base"
 
-  include TokenInvitable
+  include RestrictedAuthConcern
   include Search::LogParamsConcern
-  prepend_before_action :store_invitation_in_session_and_redirect, only: %i[search_rdv]
+
+  prepend_before_action(only: %i[search_rdv]) do
+    store_restricted_auth_token_in_session_and_redirect(store_rdv_insertion_invitation: true)
+  end
 
   def home
     # Si l'agent est redirigé vers le root_path depuis ProConnect, et qu'on veut le rediriger vers
@@ -33,8 +36,8 @@ class SearchController < ApplicationController
     elsif current_agent && params[:prescripteur] == Prescripteur::INTERNE && params[:current_organisation]
       redirect_to search_creneau_admin_organisation_prescription_path(params[:current_organisation], agent_search_params)
     else
-      @context = if invitation&.to_take_rdv?
-                   WebInvitationSearchContext.new(user: current_user, query_params: search_params.merge(invitation.query_params))
+      @context = if invitation_to_take_rdv?
+                   WebInvitationSearchContext.new(user: current_user, query_params: search_params.merge(rdv_insertion_invitation_query_params))
                  else
                    WebSearchContext.new(user: current_user, query_params: search_params)
                  end
@@ -158,7 +161,7 @@ class SearchController < ApplicationController
     params.permit(
       *WebSearchContext::ADDRESS_SELECTION_PARAMS,
       *WebSearchContext::USER_CHOICE_PARAMS,
-      :motif_category_short_name, :date, :public_link_organisation_id, :prescripteur, :autofocus,
+      :motif_category_short_name, :date, :public_link_organisation_id, :prescripteur,
       organisation_ids: [], referent_ids: [], external_organisation_ids: []
     ).to_h.deep_symbolize_keys
   end

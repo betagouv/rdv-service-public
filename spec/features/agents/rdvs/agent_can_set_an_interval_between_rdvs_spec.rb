@@ -49,7 +49,7 @@ RSpec.describe "un agent peut définir un temps de battement entre chaque RDV" d
     it "respecte le temps de battement dans le calcul de créneaux et enregistre le temps de battement dans le RDV créé" do
       visit "/org/#{motif.organisation.public_link_id}"
       click_on motif.name
-      expect(page.all("a[autofocus]").map(&:text)).to eq(["09:00", "09:40", "10:20", "11:00"])
+      expect(page.all("a.fr-btn--tertiary").map(&:text)).to eq(["09:00", "09:40", "10:20", "11:00"])
 
       click_on("10:20")
       fill_in("Prénom", with: "Patricia")
@@ -67,7 +67,7 @@ RSpec.describe "un agent peut définir un temps de battement entre chaque RDV" d
       it "respecte le temps de battement dans le calcul de créneaux et enregistre le temps de battement dans le RDV créé" do
         visit "/org/#{motif.organisation.public_link_id}"
         click_on motif.name
-        expect(page.all("a[autofocus]").map(&:text)).to eq(["09:00", "09:40", "10:20", "11:00"])
+        expect(page.all("a.fr-btn--tertiary").map(&:text)).to eq(["09:00", "09:40", "10:20", "11:00"])
 
         click_on("10:20")
         click_on("Je suis un prescripteur qui oriente un bénéficiaire")
@@ -108,7 +108,7 @@ RSpec.describe "un agent peut définir un temps de battement entre chaque RDV" d
       click_link "Élargir la recherche"
       click_on motif.name
       click_on orga_du_rdv.name
-      expect(page.all("a[autofocus]").map(&:text)).to eq(["09:00", "09:40", "10:20", "11:00"])
+      expect(page.all("a.fr-btn--tertiary.rdv-justify-content-center").map(&:text)).to eq(["09:00", "09:40", "10:20", "11:00"])
 
       click_on("10:20")
       click_on("Confirmer le rdv")
