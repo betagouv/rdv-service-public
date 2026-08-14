@@ -26,4 +26,11 @@ module Notifiers::AgentsConcern
 
     true
   end
+
+  # true if the passed date (or time) is today or tomorrow
+  def self.soon_date?(date)
+    return false unless date.respond_to?(:to_date)
+
+    [Date.current, Date.current + 1].include?(date.to_date)
+  end
 end
