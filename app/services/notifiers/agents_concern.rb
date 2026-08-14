@@ -14,6 +14,10 @@ module Notifiers::AgentsConcern
   end
 
   def should_notify_agent?(agent)
+    Notifiers::AgentsConcern.should_notify_agent?(rdv, agent)
+  end
+
+  def self.should_notify_agent?(rdv, agent, author)
     level = agent.rdv_notifications_level
     return true if level == "all"
     return false if level == "none"

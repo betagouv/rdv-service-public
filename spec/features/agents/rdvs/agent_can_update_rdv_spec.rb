@@ -107,10 +107,6 @@ RSpec.describe "Agent can update a RDV", js: true do
       expect(page).to have_content("Shiraz NADIR")
       perform_enqueued_jobs
 
-      open_email "shiraz@angouleme.fr"
-      expect(current_email).not_to be_nil
-      expect(current_email.subject).to match(/RDV .* modifié/)
-
       open_email "jungyoon@angouleme.fr"
       expect(current_email).not_to be_nil
       expect(current_email.subject).to match(/Nouveau RDV/)

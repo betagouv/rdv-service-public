@@ -48,7 +48,7 @@ module Rdv::Updatable
       # les nouveaux agents reçoivent un mail qui indique que le rdv est modifié, et pas qu'il est ajouté.
       Notifiers::RdvUpdated.new(self, author, old_agent_ids: @old_agent_ids).perform
     elsif agents_changed?
-      Notifiers::Agent::AddedToRdv.new(self, author, agent_ids - @old_agent_ids)
+      Notifiers::Agent::AddedToRdv.new(rdv: self, author:, agent_ids: (agent_ids - @old_agent_ids)).notify_agents
     end
 
     if collectif? && previous_participations.sort != participations.sort
