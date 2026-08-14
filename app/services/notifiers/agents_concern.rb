@@ -14,7 +14,7 @@ module Notifiers::AgentsConcern
   end
 
   def should_notify_agent?(agent)
-    Notifiers::AgentsConcern.should_notify_agent?(rdv, agent)
+    Notifiers::AgentsConcern.should_notify_agent?(rdv, agent, author)
   end
 
   def self.should_notify_agent?(rdv, agent, author)
