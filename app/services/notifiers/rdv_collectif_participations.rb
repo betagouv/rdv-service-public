@@ -11,8 +11,6 @@ class Notifiers::RdvCollectifParticipations < BaseService
     return if @rdv.starts_at < Time.zone.now
 
     Notifiers::RdvCreated.new(@rdv, @author, new_participants_to_notify).notify_users
-
-    Notifiers::RdvCancelled.new(@rdv, @author, removed_participants_to_notify).notify_users
   end
 
   private
@@ -23,17 +21,6 @@ class Notifiers::RdvCollectifParticipations < BaseService
 
   def new_participants_to_notify
     new_participations.select(&:not_cancelled?).select(&:send_lifecycle_notifications).map(&:user)
-  end
-
-  def removed_participations
-    # Using the in-memory records instead of using SQL because
-    # the previous participations have been removed from the DB
-    @previous_participations.select { |p| !p.user_id.in?(current_participations.map(&:user_id)) } # rubocop:disable Style/InverseMethods
-  end
-
-  def removed_participants_to_notify
-    # We do not notify already cancelled participations
-    removed_participations.select(&:not_cancelled?).select(&:send_lifecycle_notifications).map(&:user)
   end
 
   def current_participations
