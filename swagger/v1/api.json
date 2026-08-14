@@ -4673,19 +4673,6 @@
             }
           },
           {
-            "name": "organisation_ids[]",
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "description": "ID des organisations",
-            "example": "[123]",
-            "required": false
-          },
-          {
             "name": "first_name",
             "in": "query",
             "description": "Prénom",

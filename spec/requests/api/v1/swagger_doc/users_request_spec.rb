@@ -71,7 +71,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       description "Met à jour un·e usager·ère"
 
       parameter name: :user_id, in: :path, type: :integer, description: "ID de l'usager·ère", example: 123
-      parameter name: "organisation_ids[]", in: :query, schema: { type: :array, items: { type: :string } }, description: "ID des organisations", example: "[123]", required: false
       parameter name: "first_name", in: :query, type: :string, description: "Prénom", example: "Johnny", required: false
       parameter name: "last_name", in: :query, type: :string, description: "Nom", example: "Silverhand", required: false
       parameter name: "birth_name", in: :query, type: :string, description: "Nom de naissance", example: "Fripouille", required: false
