@@ -44,7 +44,11 @@ module Rdv::Updatable
 
   def notify!(author, previous_participations)
     if should_notify_of_changes?
+      # Il y a un léger bug: si on ajoute des agents en même temps qu'on change le starts_at,
+      # les nouveaux agents reçoivent un mail qui indique que le rdv est modifié, et pas qu'il est ajouté.
       Notifiers::RdvUpdated.new(self, author, old_agent_ids: @old_agent_ids).perform
+    elsif agents_changed?
+      Notifiers::Agent::AddedToRdv.new(self, author, agent_ids - @old_agent_ids)
     end
 
     if collectif? && previous_participations.sort != participations.sort
@@ -54,7 +58,6 @@ module Rdv::Updatable
 
   def should_notify_of_changes?
     starts_at_changed? || lieu_changed? || visio_url_custom_changed?
-    # || agents_changed? désactivé pour l’instant cf https://github.com/betagouv/rdv-service-public/pull/5399
   end
 
   def lieu_changed?
