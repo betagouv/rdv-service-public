@@ -6,11 +6,6 @@ class ExportSendEmailJob < ExportJob
     key: -> { "high_ram_usage_export" }
   )
 
-  MAILER_CLASS_FOR_EXPORT_TYPE = {
-    Export::RDV_EXPORT => :rdv_export,
-    Export::PARTICIPATIONS_EXPORT => :participations_export,
-  }.freeze
-
   def perform(batch, _params)
     @export = Export.find(batch.properties[:export_id])
     page_blobs = @export.export_file_blobs.pages.order(:page_index)
@@ -41,7 +36,6 @@ class ExportSendEmailJob < ExportJob
 
     page_blobs.delete_all
 
-    mailer_method = MAILER_CLASS_FOR_EXPORT_TYPE.fetch(@export.export_type)
-    Agents::ExportMailer.public_send(mailer_method, @export.id).deliver_later
+    Agents::ExportMailer.export_ready(@export.id).deliver_later
   end
 end

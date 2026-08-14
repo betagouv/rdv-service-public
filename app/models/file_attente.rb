@@ -20,19 +20,29 @@ class FileAttente < ApplicationRecord
 
   def send_notification_if_valid
     return if rdv.motif.phone?
-
-    end_time = rdv.starts_at - 2.days
-    date_range = Time.zone.today..end_time.to_date
-    creneaux = rdv.creneaux_available(date_range)
-    return unless valid_for_notification?(creneaux)
+    return unless valid_for_notification?
 
     send_notification
   end
 
   private
 
-  def valid_for_notification?(creneaux)
-    !creneaux.empty? && (last_creneau_sent_at.nil? || last_creneau_sent_at.to_date < Time.zone.today)
+  def valid_for_notification?
+    next_availability.present? && next_availability.starts_at < end_time && (last_creneau_sent_at.nil? || last_creneau_sent_at.to_date < Time.zone.today)
+  end
+
+  def end_time
+    rdv.starts_at - 2.days
+  end
+
+  def next_availability
+    @next_availability ||= CreneauxSearch::ForUser.new(
+      user: rdv.users.first,
+      motif: rdv.motif,
+      lieu: rdv.lieu,
+      duration_in_min: rdv.duration_in_min,
+      date_range: Time.zone.today..end_time.to_date
+    ).next_availability
   end
 
   def send_notification
