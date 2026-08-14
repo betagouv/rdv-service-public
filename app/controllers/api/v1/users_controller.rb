@@ -62,14 +62,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   def params_for_create
     return @params_for_create if defined? @params_for_create
 
-    attrs = %i[
-      first_name birth_name last_name email address phone_number
-      birth_date responsible_id caisse_affiliation affiliation_number
-      family_situation number_of_children notify_by_sms notify_by_email
-      city_code post_code city_name
-    ]
-
-    @params_for_create = params.permit(*attrs, organisation_ids: [])
+    @params_for_create = params.permit(*attrs_for_create_and_update, organisation_ids: [])
 
     if params[:external_reference].present?
       attributes_from_params = params.require(:external_reference).permit(:external_id, :external_url)
@@ -93,14 +86,8 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   def params_for_update
     return @params_for_update if defined? @params_for_update
 
-    attrs = %i[
-      first_name birth_name last_name email address phone_number
-      birth_date responsible_id caisse_affiliation affiliation_number
-      family_situation number_of_children notify_by_sms notify_by_email
-      city_code post_code city_name
-    ]
-
-    attrs -= User::FranceconnectFrozenFieldsConcern::FROZEN_FIELDS if @user&.logged_once_with_franceconnect?
+    attrs = attrs_for_create_and_update
+    attrs -= User::FranceconnectFrozenFieldsConcern::FROZEN_FIELDS if @user.logged_once_with_franceconnect?
 
     @params_for_update = params.permit(*attrs)
 
@@ -112,5 +99,32 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     end
 
     @params_for_update
+  end
+
+  def attrs_for_create_and_update
+    %i[
+      first_name
+      last_name
+      birth_name
+      birth_date
+
+      email
+      phone_number
+
+      responsible_id
+
+      notify_by_sms
+      notify_by_email
+
+      caisse_affiliation
+      affiliation_number
+      family_situation
+      number_of_children
+
+      address
+      city_code
+      post_code
+      city_name
+    ]
   end
 end
