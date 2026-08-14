@@ -325,8 +325,7 @@ Rails.application.routes.draw do
         namespace :online_booking do
           resources :motifs, only: %i[show edit update] do
             member do
-              post :open
-              post :close
+              post :update_bookable_by
               get :edit_user_type
               patch :update_user_type
               get :edit_instructions
