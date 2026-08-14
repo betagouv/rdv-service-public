@@ -25,6 +25,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   def update
     User.transaction do
       @user.assign_attributes(params_for_update)
+      authorize(@user, policy_class: Agent::UserPolicy)
 
       if @user.email_changed? && @user.already_logged_in?
         render_error :unprocessable_entity, {
@@ -34,9 +35,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
         return
       end
 
-      authorize(@user, policy_class: Agent::UserPolicy)
       @user.save!
-      authorize(@user, policy_class: Agent::UserPolicy)
 
       render_record @user
     end
