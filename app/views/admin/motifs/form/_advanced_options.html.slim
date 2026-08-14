@@ -1,60 +1,50 @@
-.card
-  .card-body
-    fieldset.fr-fieldset
-      legend.fr-fieldset__legend--regular.fr_fieldset__legend
-        | Consignes à destination de l'usager
-        span.fr-hint-text Vous pouvez paramétrer des messages par défaut, qui s’afficheront avant la prise de rendez-vous, après la confirmation du rendez-vous, et/ou en cas d’annulation du rendez-vous.
-      .fr-fieldset__element.fr-mt-2w
-        = f.dsfr_text_area :restriction_for_rdv,
-                label: sanitize("Instructions à accepter <strong>avant</strong> la prise du RDV"),
-                placeholder: "Laissez vide si vous ne souhaitez pas donner d’instruction.",
-                rows: 5,
-                hint: link_to("Voir un exemple", image_path("motif_form/restriction_for_rdv.png"), target: "_blank")
-      .fr-fieldset__element.fr-mt-2w
-        = f.dsfr_text_area :instruction_for_rdv,
-                label: sanitize("Instructions affichées <strong>après</strong> la prise du RDV"),
-                placeholder: "Laissez vide si vous ne souhaitez pas donner d’instruction.",
-                rows: 5,
-                hint: link_to("Voir un exemple", image_path("motif_form/instruction_for_rdv.png"), target: "_blank")
-      .fr-fieldset__element.fr-mt-2w
-        = f.dsfr_text_area :custom_cancel_warning_message,
-                label: sanitize("Message d’avertissement </strong>en cas d’annulation</strong>"),
-                placeholder: "Laissez vide si vous ne souhaitez pas afficher de messager d’avertissement.",
-                rows: 5,
-                hint: link_to("Voir un exemple", image_path("motif_form/custom_cancel_warning_message.png"), target: "_blank")
+fieldset.fr-fieldset
+  legend.fr-fieldset__legend--regular.fr_fieldset__legend
+    | Consignes à destination de l'usager
+    span.fr-hint-text Vous pouvez paramétrer des messages par défaut, qui s’afficheront avant la prise de rendez-vous, après la confirmation du rendez-vous, et/ou en cas d’annulation du rendez-vous.
+  .fr-fieldset__element.fr-mt-2w
+    = f.dsfr_text_area :restriction_for_rdv,
+            label: sanitize("Instructions à accepter <strong>avant</strong> la prise du RDV"),
+            placeholder: "Laissez vide si vous ne souhaitez pas donner d’instruction.",
+            rows: 5,
+            hint: link_to("Voir un exemple", image_path("motif_form/restriction_for_rdv.png"), target: "_blank")
+  .fr-fieldset__element.fr-mt-2w
+    = f.dsfr_text_area :instruction_for_rdv,
+            label: sanitize("Instructions affichées <strong>après</strong> la prise du RDV"),
+            placeholder: "Laissez vide si vous ne souhaitez pas donner d’instruction.",
+            rows: 5,
+            hint: link_to("Voir un exemple", image_path("motif_form/instruction_for_rdv.png"), target: "_blank")
+  .fr-fieldset__element.fr-mt-2w
+    = f.dsfr_text_area :custom_cancel_warning_message,
+            label: sanitize("Message d’avertissement </strong>en cas d’annulation</strong>"),
+            placeholder: "Laissez vide si vous ne souhaitez pas afficher de messager d’avertissement.",
+            rows: 5,
+            hint: link_to("Voir un exemple", image_path("motif_form/custom_cancel_warning_message.png"), target: "_blank")
 
-.card
-  .card-body.pt-4
-    ruby:
-      visibility_types = %i[visible_and_notified visible_and_not_notified invisible].map do |value|
-        {
-          value:,
-          checked: @motif.visibility_type == value.to_s || (motif.new_record? && value == :visible_and_notified),
-          label: sanitize(Motif.human_attribute_value(:visibility_type, value, context: :html)),
-          hint: Motif.human_attribute_value(:visibility_type, value, context: rdvi_mode ? :hint_rdv_insertion : :hint),
-        }
-      end
-    = f.dsfr_radio_buttons :visibility_type, visibility_types, hint: "Si ce motif est sensible (par exemple s'il lié à des services médicaux ou sociaux), vous pouvez désactiver les notifications pour protéger la confidentialité de vos usagers."
+ruby:
+  visibility_types = %i[visible_and_notified visible_and_not_notified invisible].map do |value|
+    {
+      value:,
+      checked: @motif.visibility_type == value.to_s || (motif.new_record? && value == :visible_and_notified),
+      label: sanitize(Motif.human_attribute_value(:visibility_type, value, context: :html)),
+      hint: Motif.human_attribute_value(:visibility_type, value, context: rdvi_mode ? :hint_rdv_insertion : :hint),
+    }
+  end
+= f.dsfr_radio_buttons :visibility_type, visibility_types, hint: "Si ce motif est sensible (par exemple s'il lié à des services médicaux ou sociaux), vous pouvez désactiver les notifications pour protéger la confidentialité de vos usagers."
 
-.card
-  .card-body
-    fieldset.fr-fieldset
-      legend.fr-fieldset__legend--regular.fr-fieldset__legend
-        = Motif.human_attribute_name("follow_up_short")
-        span.fr-hint-text
-          = Motif.human_attribute_name("follow_up_warning")
-      = f.dsfr_check_box :follow_up, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "followUpCheckbox"
+fieldset.fr-fieldset
+  legend.fr-fieldset__legend--regular.fr-fieldset__legend
+    = Motif.human_attribute_name("follow_up_short")
+    span.fr-hint-text
+      = Motif.human_attribute_name("follow_up_warning")
+  = f.dsfr_check_box :follow_up, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "followUpCheckbox"
 
-.card.collapse [data-motif-form-target="secretariatSection"]
-  .card-body
-    fieldset.fr-fieldset
-      legend.fr-fieldset__legend--regular.fr-fieldset__legend
-        = Motif.human_attribute_name("for_secretariat_short")
-        span.fr-hint-text
-          = Motif.human_attribute_name("for_secretariat_hint")
-      = f.dsfr_check_box :for_secretariat, label: Motif.human_attribute_name("for_secretariat_label"), class: "js-uncheck-on-section-disable"
+fieldset.fr-fieldset
+  legend.fr-fieldset__legend--regular.fr-fieldset__legend
+    = Motif.human_attribute_name("for_secretariat_short")
+    span.fr-hint-text
+      = Motif.human_attribute_name("for_secretariat_hint")
+  = f.dsfr_check_box :for_secretariat, label: Motif.human_attribute_name("for_secretariat_label"), class: "js-uncheck-on-section-disable"
 
 - if current_territory.motif_categories.present?
-  .card
-    .card-body
-      = f.dsfr_select :motif_category_id, current_territory.motif_categories.collect { |motif_categorie| [motif_categorie.name, motif_categorie.id] }, { include_blank: "Aucune" }, label: MotifCategory.model_name.human, hint: MotifCategory.human_attribute_name("category_hint")
+  = f.dsfr_select :motif_category_id, current_territory.motif_categories.collect { |motif_categorie| [motif_categorie.name, motif_categorie.id] }, { include_blank: "Aucune" }, label: MotifCategory.model_name.human, hint: MotifCategory.human_attribute_name("category_hint")
