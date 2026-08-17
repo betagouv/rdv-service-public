@@ -34,6 +34,8 @@ tables:
     truncated: true
   - table_name: oauth_access_grants
     truncated: true
+  - table_name: external_calendar_sync_logs
+    truncated: true
   - table_name: users
     anonymized_column_names:
       - first_name
