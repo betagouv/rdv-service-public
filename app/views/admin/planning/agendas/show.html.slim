@@ -6,6 +6,12 @@
   - else
     | Agenda de #{@agent.full_name_and_service}
 
+- content_for :right_of_page_title do
+  button.fr-btn.fr-icon-add-line.fr-btn--icon-left[data-fr-opened="false" aria-controls="planning-new-modal" type="button"]
+    | Nouveau
+
+= render partial: "admin/planning/new_modal", locals: { agent: @agent }
+
 ruby:
   event_sources = [
     { id: "Rdv",            url: admin_api_agenda_rdvs_path(agent_id: @agent.id, organisation_id: current_organisation.id, format: :json) },
