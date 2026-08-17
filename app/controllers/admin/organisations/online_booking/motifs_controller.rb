@@ -1,6 +1,7 @@
 class Admin::Organisations::OnlineBooking::MotifsController < AgentAuthController
   before_action :set_organisation
   before_action :set_motif
+  before_action { @current_menu_item = :menu_online_booking }
 
   def show; end
 
