@@ -17,8 +17,13 @@ class CreateCaldavConfigs < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    Agent.select(:id, *CALDAV_ATTRIBUTES).where.not(caldav_username: nil).each do |agent|
-      CaldavConfig.create!(agent.attributes.slice(*CALDAV_ATTRIBUTES).symbolize_keys.merge(agent_id: agent.id))
+    # Agent n'a pas `encrypts` sur caldav_password : sa valeur brute est déjà le texte chiffré.
+    # CaldavConfig, elle, a `encrypts` sur cette colonne : une simple affectation la rechiffrerait.
+    # `without_encryption` permet d'écrire ce texte chiffré tel quel, sans le rechiffrer.
+    ActiveRecord::Encryption.without_encryption do
+      Agent.select(:id, *CALDAV_ATTRIBUTES).where.not(caldav_username: nil).each do |agent|
+        CaldavConfig.create!(agent.attributes.slice(*CALDAV_ATTRIBUTES).symbolize_keys.merge(agent_id: agent.id))
+      end
     end
   end
 
