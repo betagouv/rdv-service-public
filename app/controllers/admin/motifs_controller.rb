@@ -41,7 +41,7 @@ class Admin::MotifsController < AgentAuthController
 
     source_motif = Agent::MotifPolicy::Scope.new(current_agent, Motif).resolve.find_by(id: params[:duplicated_from_motif_id] || params.dig(:motif, :duplicated_from_motif_id))
     if source_motif
-      @motif.assign_attributes(source_motif.attributes.symbolize_keys.slice(*FORM_ATTRIBUTES))
+      @motif.assign_attributes(source_motif.attributes.symbolize_keys.slice(*(FORM_ATTRIBUTES + params_copied_during_duplication)))
       @motif.duplicated_from_motif_id = source_motif.id
     end
 
@@ -59,6 +59,11 @@ class Admin::MotifsController < AgentAuthController
 
   def create
     @motif = Motif.new
+
+    source_motif = Agent::MotifPolicy::Scope.new(current_agent, Motif).resolve.find_by(id: params[:duplicated_from_motif_id] || params.dig(:motif, :duplicated_from_motif_id))
+
+    @motif.assign_attributes(source_motif.attributes.symbolize_keys.slice(*params_copied_during_duplication))
+
     @motif.assign_attributes(motif_params)
     @motif.organisation ||= current_organisation
     authorize(@motif, policy_class: Agent::MotifPolicy)
@@ -125,6 +130,11 @@ class Admin::MotifsController < AgentAuthController
         form_params[:bookable_by] = prescription ? :agents_and_prescripteurs : :agents
       end
     end
+  end
+
+  def params_copied_during_duplication
+    %i[sectorisation_level min_public_booking_delay max_public_booking_delay bookable_by
+       rdvs_editable_by_user restriction_for_rdv]
   end
 
   def display_sectorisation_level?
