@@ -8,10 +8,7 @@ class Admin::MotifsController < AgentAuthController
     color
     motif_category_id
     default_duration_in_min
-    bookable_by
     location_type
-    max_public_booking_delay
-    min_public_booking_delay
     visibility_type
     restriction_for_rdv
     instruction_for_rdv
@@ -19,8 +16,6 @@ class Admin::MotifsController < AgentAuthController
     for_secretariat
     follow_up
     collectif
-    sectorisation_level
-    rdvs_editable_by_user
     duplicated_from_motif_id
     prescription
   ].freeze
