@@ -94,6 +94,11 @@
             motif_option_activated(@motif, :for_secretariat), \
             hint: Motif.human_attribute_name(:for_secretariat_hint)
 
+          = motif_attribute_row \
+            "Ouverture aux prescripteurs", \
+            motif_option_activated(@motif, :prescription), \
+            hint: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone"))
+
     - if @motif_policy.edit? || @motif_policy.destroy?
       .card.mt-2
         .card-body
