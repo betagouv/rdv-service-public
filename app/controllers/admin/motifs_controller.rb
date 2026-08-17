@@ -21,7 +21,7 @@ class Admin::MotifsController < AgentAuthController
   ].freeze
 
   before_action :set_organisation, only: %i[new create]
-  before_action :set_motif, only: %i[show edit update archive unarchive destroy]
+  before_action :set_motif, only: %i[show edit update archive unarchive destroy edit_consignes edit_advanced_options]
 
   def index
     @current_tab = params[:current_tab] == "archived" ? :archived : :active
@@ -90,6 +90,14 @@ class Admin::MotifsController < AgentAuthController
     else
       render :edit
     end
+  end
+
+  def edit_consignes
+    authorize(@motif, :edit?, policy_class: Agent::MotifPolicy)
+  end
+
+  def edit_advanced_options
+    authorize(@motif, :edit?, policy_class: Agent::MotifPolicy)
   end
 
   def archive

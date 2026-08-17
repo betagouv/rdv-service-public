@@ -1,0 +1,23 @@
+- content_for :title do
+  / Cette partial est rendue lorsque l'update est invalide, il faut alors afficher
+  / le nom et service du motif tels qu'ils étaient avant la tentative de modif.
+  | Modifier le motif "#{@motif.name_was}"
+  - if @motif.service_id_was.present?
+    |  (#{Service.find(@motif.service_id_was)&.short_name})
+
+= render "admin/motifs/fil_ariane", current_page_title: content_for(:title)
+
+.row
+  .col-md-12
+    = form_for @motif, url: admin_organisation_motif_path, builder: Dsfr::FormBuilder, html: { "data-controller": "motif-form" } do |f|
+      = render "model_errors", model: @motif, f: f
+
+      .fr-grid-row.justify-content-center
+        .fr-col-md-12.fr-col-lg-8
+          .card.mt-2
+            .card-body
+              = render "admin/motifs/form/consignes", f: f, motif: @motif, rdvi_mode: current_organisation.rdv_insertion?
+
+              .d-flex.rdv-justify-content-space-between
+                = link_to("Annuler", admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--tertiary-no-outline")
+                = f.submit("Enregistrer", class: "fr-btn")

@@ -7,6 +7,7 @@
           button.fr-accordion__btn aria-expanded="false" aria-controls="options-avancees" type="button"
             | Consignes et options avancées
         .fr-collapse id="options-avancees"
+          = render "admin/motifs/form/consignes", f: f, motif: motif, rdvi_mode: rdvi_mode
           = render "admin/motifs/form/advanced_options", f: f, motif: motif, rdvi_mode: rdvi_mode
 
     .fr-grid-row.mb-5
