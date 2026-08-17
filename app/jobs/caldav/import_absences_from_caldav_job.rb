@@ -7,8 +7,8 @@ module Caldav
       key: -> { "Caldav::ImportAbsencesFromCaldavJob-#{arguments.first}" }
     )
 
-    before_enqueue { |job| throw :abort if job.class.synced_during_last_minute?(agent_id: job.arguments.first) }
-    before_perform { |job| throw :abort if job.class.synced_during_last_minute?(agent_id: job.arguments.first) }
+    # before_enqueue { |job| throw :abort if job.class.synced_during_last_minute?(agent_id: job.arguments.first) }
+    # before_perform { |job| throw :abort if job.class.synced_during_last_minute?(agent_id: job.arguments.first) }
 
     def self.store_latest_run_timestamp(agent_id:) = Redis.with_connection { _1.set("latest_caldav_import:#{agent_id}", Time.zone.now, ex: 1.minute) }
     def self.synced_during_last_minute?(agent_id:) = Redis.with_connection { _1.get("latest_caldav_import:#{agent_id}") }&.to_time&.after?(1.minute.ago)

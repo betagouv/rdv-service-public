@@ -14,7 +14,7 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
 
   before do
     sign_in agent
-    allow_any_instance_of(Agent).to receive(:caldav_client).and_return(caldav_client) # rubocop:disable RSpec/AnyInstance
+    allow_any_instance_of(CaldavConfig).to receive(:caldav_client).and_return(caldav_client) # rubocop:disable RSpec/AnyInstance
     allow(caldav_client).to receive(:principal_url).and_return("https://caldav.example.fr/dav/principals/user")
     allow(caldav_client).to receive(:events).and_return(caldav_events)
     allow(caldav_client).to receive(:calendars).and_return(caldav_calendars)
@@ -38,8 +38,8 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
         put :update, params: caldav_params
 
         expect(response).to redirect_to(agents_calendar_sync_caldav_sync_path)
-        expect(agent.reload.caldav_username).to eq("user@example.fr")
-        expect(agent.reload.caldav_agenda_url).to eq("https://caldav.example.fr/dav/calendars/user/default")
+        expect(agent.caldav_config.reload.caldav_username).to eq("user@example.fr")
+        expect(agent.caldav_config.reload.caldav_agenda_url).to eq("https://caldav.example.fr/dav/calendars/user/default")
         expect(flash[:success]).to eq("La synchronisation avec votre agenda CalDAV user@example.fr est activée.")
       end
 
@@ -63,7 +63,7 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
 
       it "ne sauvegarde pas les identifiants" do
         put :update, params: caldav_params
-        expect(agent.reload.caldav_username).to be_nil
+        expect(agent.caldav_config).to be_nil
       end
     end
 
@@ -81,7 +81,7 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
 
       it "ne sauvegarde pas les identifiants" do
         put :update, params: caldav_params
-        expect(agent.reload.caldav_username).to be_nil
+        expect(agent.caldav_config).to be_nil
       end
     end
 
@@ -99,7 +99,7 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
 
       it "ne sauvegarde pas les identifiants" do
         put :update, params: caldav_params
-        expect(agent.reload.caldav_username).to be_nil
+        expect(agent.caldav_config).to be_nil
       end
     end
   end
@@ -113,7 +113,7 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
       delete :destroy
 
       expect(response).to redirect_to(agents_calendar_sync_caldav_sync_path)
-      expect(agent.reload.caldav_disconnect_started_at.present?).to be(true)
+      expect(agent.caldav_config.reload.caldav_disconnect_started_at.present?).to be(true)
     end
   end
 end
