@@ -18,15 +18,28 @@ export default class extends Controller {
 
   refreshSection(section, disable, resetCheckbox) {
     if(disable) {
-      $(sectionRoot).collapse("hide")
+      this.disableSection(section, resetCheckbox)
     }
     else {
-      $(section).collapse("show")
+      this.enableSection(section, resetCheckbox)
     }
   }
 
   shouldDisableSecretariat() {
     return this.locationType === "home" || this.followUpCheckbox.checked
+  }
+
+  enableSection(sectionRoot, resetCheckbox) {
+    $(sectionRoot).collapse("show")
+    if(resetCheckbox) {
+      sectionRoot.querySelectorAll(".js-check-on-section-enable").forEach(box => box.checked = true)
+    }
+  }
+  disableSection(sectionRoot, resetCheckbox) {
+    $(sectionRoot).collapse("hide")
+    if(resetCheckbox) {
+      sectionRoot.querySelectorAll(".js-uncheck-on-section-disable").forEach(box => box.checked = false)
+    }
   }
 
   get locationType() {
