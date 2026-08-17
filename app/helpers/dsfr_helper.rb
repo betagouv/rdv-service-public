@@ -7,6 +7,13 @@ module DsfrHelper
     end
   end
 
+  # Lien n'affichant qu'une icône DSFR (fr-icon-*) : le nom accessible ne doit pas reposer
+  # uniquement sur l'attribut title (RGAA 6.1/6.2), on ajoute donc un texte fr-sr-only.
+  def icon_link_to(accessible_name, url, html_options = {})
+    html_options = html_options.reverse_merge(title: accessible_name)
+    link_to(url, html_options) { tag.span(accessible_name, class: "fr-sr-only") }
+  end
+
   def icon(icon_name, html_options = {})
     if html_options[:title]
       tag.span("", class: "#{icon_name} #{html_options.delete(:class)}", **html_options)
