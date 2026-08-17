@@ -39,7 +39,7 @@ fieldset.fr-fieldset
       = Motif.human_attribute_name("follow_up_warning")
   = f.dsfr_check_box :follow_up, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "followUpCheckbox"
 
-fieldset.fr-fieldset
+fieldset.fr-fieldset [data-motif-form-target="secretariatSection"]
   legend.fr-fieldset__legend--regular.fr-fieldset__legend
     = Motif.human_attribute_name("for_secretariat_short")
     span.fr-hint-text
