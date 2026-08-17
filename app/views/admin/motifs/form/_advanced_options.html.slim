@@ -46,5 +46,17 @@ fieldset.fr-fieldset
       = Motif.human_attribute_name("for_secretariat_hint")
   = f.dsfr_check_box :for_secretariat, label: Motif.human_attribute_name("for_secretariat_label"), class: "js-uncheck-on-section-disable"
 
+- prescription_cannot_be_disabled = @motif.bookable_by.to_sym.in?(%i[agents_and_prescripteurs_and_invited_users everyone])
+
+fieldset.fr-fieldset
+  legend.fr-fieldset__legend--regular.fr-fieldset__legend
+    | Ouverture aux prescripteurs
+    span.fr-hint-text
+      = sanitize(t("activerecord.attributes.motif.prescription_hint"))
+      - if prescription_cannot_be_disabled
+        br
+        | Ce motif étant ouvert à la réservation en ligne, il est automatiquement ouvert aux prescripteurs.
+  = f.dsfr_check_box :prescription, label: "Autoriser les prescripteurs à prendre rendez-vous pour ce motif", class: "js-uncheck-on-section-disable", checked: (prescription_cannot_be_disabled || @motif.bookable_by.to_sym == :agents_and_prescripteurs ), disabled: prescription_cannot_be_disabled
+
 - if current_territory.motif_categories.present?
   = f.dsfr_select :motif_category_id, current_territory.motif_categories.collect { |motif_categorie| [motif_categorie.name, motif_categorie.id] }, { include_blank: "Aucune" }, label: MotifCategory.model_name.human, hint: MotifCategory.human_attribute_name("category_hint")

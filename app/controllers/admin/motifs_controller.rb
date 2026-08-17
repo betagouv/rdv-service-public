@@ -63,7 +63,7 @@ class Admin::MotifsController < AgentAuthController
 
   def create
     @motif = Motif.new
-    @motif.assign_attributes(params.require(:motif).permit(*FORM_ATTRIBUTES))
+    @motif.assign_attributes(motif_params)
     @motif.organisation ||= current_organisation
     authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.save
@@ -80,7 +80,7 @@ class Admin::MotifsController < AgentAuthController
   def update
     authorize(@motif, policy_class: Agent::MotifPolicy)
 
-    @motif.assign_attributes(params.require(:motif).permit(*FORM_ATTRIBUTES))
+    @motif.assign_attributes(motif_params)
     authorize(@motif, policy_class: Agent::MotifPolicy)
 
     if @motif.save
@@ -121,6 +121,15 @@ class Admin::MotifsController < AgentAuthController
   end
 
   private
+
+  def motif_params
+    params.require(:motif).permit(*FORM_ATTRIBUTES).tap do |form_params|
+      if form_params.key?("prescription")
+        prescription = form_params.delete("prescription")
+        form_params[:bookable_by] = prescription ? :agents_and_prescripteurs : :agents
+      end
+    end
+  end
 
   def display_sectorisation_level?
     @display_sectorisation_level ||= current_organisation.motifs.active.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?

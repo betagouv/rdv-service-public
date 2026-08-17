@@ -36,11 +36,16 @@ RSpec.describe "Agent can CRUD motifs" do
       ## Check secretariat is unavailable
       expect(page.all("select#motif_service_id option").map(&:value)).to contain_exactly("", service.id.to_s)
       find("#motif_service_id").find(:option, service.name).select_option
-      fill_in "Nom", with: "Suivi bonne nuit"
+      fill_in "Nom", with: "Suivi de dossier"
       fill_in "Couleur associée", with: "#000"
       click_button "Créer le motif"
 
       expect_page_title("Motifs de rendez-vous")
+
+      expect(Motif.find_by(name: "Suivi de dossier")).to have_attributes(
+        organisation: organisation,
+        bookable_by: "agents"
+      )
       expect(page).to have_content("Suivi bonne nuit")
     end
   end
