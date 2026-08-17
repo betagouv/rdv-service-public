@@ -56,7 +56,7 @@ fieldset.fr-fieldset
       - if prescription_cannot_be_disabled
         br
         | Ce motif étant ouvert à la réservation en ligne, il est automatiquement ouvert aux prescripteurs.
-  = f.dsfr_check_box :prescription, label: "Autoriser les prescripteurs à prendre rendez-vous pour ce motif", class: "js-uncheck-on-section-disable", checked: (prescription_cannot_be_disabled || @motif.bookable_by.to_sym == :agents_and_prescripteurs ), disabled: prescription_cannot_be_disabled
+  = f.dsfr_check_box :prescription, label: "Autoriser les prescripteurs à prendre rendez-vous pour ce motif", checked: (prescription_cannot_be_disabled || @motif.bookable_by.to_sym == :agents_and_prescripteurs ), disabled: prescription_cannot_be_disabled
 
 - if current_territory.motif_categories.present?
   = f.dsfr_select :motif_category_id, current_territory.motif_categories.collect { |motif_categorie| [motif_categorie.name, motif_categorie.id] }, { include_blank: "Aucune" }, label: MotifCategory.model_name.human, hint: MotifCategory.human_attribute_name("category_hint")

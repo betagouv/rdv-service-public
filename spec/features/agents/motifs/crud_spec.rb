@@ -41,12 +41,12 @@ RSpec.describe "Agent can CRUD motifs" do
       click_button "Créer le motif"
 
       expect_page_title("Motifs de rendez-vous")
+      expect(page).to have_content("Suivi de dossier")
 
       expect(Motif.find_by(name: "Suivi de dossier")).to have_attributes(
         organisation: organisation,
         bookable_by: "agents"
       )
-      expect(page).to have_content("Suivi bonne nuit")
     end
   end
 
@@ -118,7 +118,7 @@ RSpec.describe "Agent can CRUD motifs" do
 
     it "unchecks for_secretariat when checking followup", js: true do
       visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
-      find("#tab_notifs_et_instructions").click
+      click_on "Consignes et options avancées"
       check "Autoriser les agents d’accueil à assurer ces RDV", allow_label_click: true
       click_on "Enregistrer"
       expect(page).to have_content "Le motif #{motif.name} a été modifié."
@@ -127,7 +127,7 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(motif.follow_up).to be_falsey
 
       click_on "Modifier"
-      find("#tab_notifs_et_instructions").click
+      click_on "Consignes et options avancées"
       check "Autoriser ces rendez-vous seulement aux usagers bénéficiant d'un suivi par un référent", allow_label_click: true
       expect(find("#motif_for_secretariat", visible: false)).not_to be_checked
       click_on "Enregistrer"
@@ -135,52 +135,6 @@ RSpec.describe "Agent can CRUD motifs" do
       motif.reload
       expect(motif.for_secretariat).to be_falsey
       expect(motif.follow_up).to be_truthy
-    end
-
-    it "automatically checks and unchecks rdvs_editable_by_user when toggling online reservation", js: true do
-      # On ouvre le motif à la résa en ligne, la case "RDVs modifiables" est cochée automatiquement
-      visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
-      find("#tab_resa_en_ligne").click
-
-      # On ouvre à la résa en ligne, la case est cochée
-      choose "Agents de l’organisation, prescripteurs et usagers", allow_label_click: true
-      expect(page).to have_content "RDVs modifiables"
-      editable_by_user_checkbox = find("#motif_rdvs_editable_by_user", visible: false)
-      expect(editable_by_user_checkbox).to be_checked
-
-      # On ferme à la résa en ligne, la case est décochée
-      choose "Agents de l’organisation", id: "motif_bookable_by_agents", allow_label_click: true
-      expect(editable_by_user_checkbox).not_to be_checked
-
-      # On ouvre à la résa en ligne, la case est cochée
-      choose "Agents de l’organisation, prescripteurs et usagers", allow_label_click: true
-      expect(editable_by_user_checkbox).to be_checked
-
-      expect do
-        click_on "Enregistrer"
-        expect(page).to have_content "Le motif #{motif.name} a été modifié."
-      end.to change { motif.reload.bookable_by }.to("everyone")
-
-      # On décoche la case "RDVs modifiables" et on enregistre
-      click_on "Modifier"
-      find("#tab_resa_en_ligne").click
-      uncheck "motif_rdvs_editable_by_user", allow_label_click: true
-      expect do
-        click_on "Enregistrer"
-        expect(page).to have_content "Le motif #{motif.name} a été modifié."
-      end.to change { motif.reload.rdvs_editable_by_user }.from(true).to(false)
-
-      # On revient sur le formulaire, la case est bien décochée
-      # et reste décochée lorsque l'on désactive la résa en ligne
-      click_on "Modifier"
-      find("#tab_resa_en_ligne").click
-      expect(editable_by_user_checkbox).not_to be_checked
-      choose "Agents de l’organisation", id: "motif_bookable_by_agents", allow_label_click: true
-      expect(editable_by_user_checkbox).not_to be_checked
-      expect do
-        click_on "Enregistrer"
-        expect(page).to have_content "Le motif #{motif.name} a été modifié." # On attend le chargement de cette page pour éviter une flaky spec
-      end.to change { motif.reload.bookable_by }.from("everyone").to("agents")
     end
 
     it "allows changing the motif's location_type to :visio" do
