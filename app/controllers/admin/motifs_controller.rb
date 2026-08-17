@@ -22,6 +22,7 @@ class Admin::MotifsController < AgentAuthController
     sectorisation_level
     rdvs_editable_by_user
     duplicated_from_motif_id
+    prescription
   ].freeze
 
   before_action :set_organisation, only: %i[new create]
@@ -125,7 +126,7 @@ class Admin::MotifsController < AgentAuthController
   def motif_params
     params.require(:motif).permit(*FORM_ATTRIBUTES).tap do |form_params|
       if form_params.key?("prescription")
-        prescription = form_params.delete("prescription")
+        prescription = form_params.delete("prescription").to_boolean
         form_params[:bookable_by] = prescription ? :agents_and_prescripteurs : :agents
       end
     end
