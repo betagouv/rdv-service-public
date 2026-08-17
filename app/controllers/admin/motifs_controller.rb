@@ -62,7 +62,9 @@ class Admin::MotifsController < AgentAuthController
 
     source_motif = Agent::MotifPolicy::Scope.new(current_agent, Motif).resolve.find_by(id: params[:duplicated_from_motif_id] || params.dig(:motif, :duplicated_from_motif_id))
 
-    @motif.assign_attributes(source_motif.attributes.symbolize_keys.slice(*params_copied_during_duplication))
+    if source_motif
+      @motif.assign_attributes(source_motif.attributes.symbolize_keys.slice(*params_copied_during_duplication))
+    end
 
     @motif.assign_attributes(motif_params)
     @motif.organisation ||= current_organisation
