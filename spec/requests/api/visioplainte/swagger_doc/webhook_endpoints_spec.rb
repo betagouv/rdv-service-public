@@ -24,6 +24,12 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
            })
   end
 
+  example_params = {
+    target_url: "https://exemple.fr/webhook_rdv_service_public",
+    subscriptions: ["rdv"],
+    secret: "fake_test_secret_123",
+  }
+
   path "/api/visioplainte/webhook_endpoints" do
     get "Lister les endpoints de webhooks" do
       with_visioplainte_authentication
@@ -60,18 +66,12 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
       tags "WebhookEndpoint"
       description "Crée un endpoint de webhook dans l'espace Visioplainte"
 
-      example_values = {
-        target_url: "https://exemple.fr/webhook_rdv_service_public",
-        subscriptions: ["rdv"],
-        secret: "fake_test_secret_123",
-      }
-
       parameter(name: "webhook_endpoint_attributes", in: :body, description: "Les attributs du webhook endpoint à créer", type: :object, schema: {
-                  example: example_values,
+                  example: example_params,
                   properties: {
-                    target_url: { type: :string, description: "L'url à appeler pour notifier d'une mise à jour" },
-                    secret: { type: :string, description: "Le secret qui servira à signer les appels" },
-                    subscriptions: { type: :array,
+                    target_url: { type: :string, required: true, description: "L'url à appeler pour notifier d'une mise à jour" },
+                    secret: { type: :string, required: true, description: "Le secret qui servira à signer les appels" },
+                    subscriptions: { type: :array, required: true,
                                      items: { type: "string",
                                               description: "Le type de mises à jours pour lesquelles les notifications seront envoyées. Les valeurs possibles  à envoyer dans le tableau sont #{WebhookEndpoint::ALL_SUBSCRIPTIONS}. Typiquement c'est la valeur rdv qui sera la plus utile.", }, }, # rubocop:disable Layout/LineLength
                   },
@@ -80,9 +80,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
       response 201, "Crée l'endpoint de webhook" do
         run_test!
         document_schema
-        let(:webhook_endpoint_attributes) do
-          example_values
-        end
+        let(:webhook_endpoint_attributes) { example_params }
 
         specify do
           expect(WebhookEndpoint.last).to have_attributes(
@@ -104,16 +102,25 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
       description "Crée un endpoint de webhook dans l'espace Visioplainte, typiquement pour faire une rotation de secret"
 
       parameter name: "id", in: :path, type: :integer, description: "L'id de l'endpoint de webhook à modifier"
-      parameter name: "target_url", in: :query, type: :string, description: "L'url à appeler pour notifier d'une mise à jour", required: false
-      parameter name: "secret", in: :query, type: :string, description: "Le secret qui servira à signer les appels", required: false
-      parameter name: "subscriptions[]", in: :query, type: :array, required: false,
-                description: "Le type de mises à jours pour lesquelles les notifications seront envoyées.\
-                Les valeurs possibles à envoyer dans le tableau sont #{WebhookEndpoint::ALL_SUBSCRIPTIONS}. Typiquement c'est la valeur rdv qui sera la plus utile."
+
+      parameter(name: "webhook_endpoint_attributes", in: :body, description: "Les attributs du webhook endpoint à créer", type: :object, schema: {
+                  example: example_params,
+                  properties: {
+                    target_url: { type: :string, required: false, description: "L'url à appeler pour notifier d'une mise à jour" },
+                    secret: { type: :string, required: false, description: "Le secret qui servira à signer les appels" },
+                    subscriptions: { type: :array, required: false,
+                                     items: { type: "string",
+                                              description: "Le type de mises à jours pour lesquelles les notifications seront envoyées. Les valeurs possibles  à envoyer dans le tableau sont #{WebhookEndpoint::ALL_SUBSCRIPTIONS}. Typiquement c'est la valeur rdv qui sera la plus utile.", }, }, # rubocop:disable Layout/LineLength
+                  },
+                })
 
       response 200, "Modifie un endpoint de webhook" do
         run_test!
         document_schema
-        let(:secret) { "new_fake_test_secret_456" }
+        let(:webhook_endpoint_attributes) do
+          { secret: "new_fake_test_secret_456" }
+        end
+
         let(:id) { webhook_endpoint.id }
         let!(:webhook_endpoint) do
           create(:webhook_endpoint, organisation: orga_gendarmerie, target_url: "https://exemple.fr/webhook_rdv_service_public", subscriptions: [:rdv])
