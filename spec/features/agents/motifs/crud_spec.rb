@@ -289,4 +289,41 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(page).to have_content("Vous pouvez maintenant ajouter le lieu où vous allez faire vos rendez-vous.")
     end
   end
+
+  describe "prescription" do
+    it "allows enabling prescription for the motif" do
+      visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
+      check "Autoriser les prescripteurs à prendre rendez-vous pour ce motif"
+      click_on "Enregistrer"
+
+      expect(page).to have_content("Le motif Suivi bonjour a été modifié")
+      expect(motif.reload.bookable_by).to eq "agents_and_prescripteurs"
+    end
+
+    context "when the motif is open to prescripteurs" do
+      let!(:motif) { create(:motif, name: "Suivi bonjour", organisation:, bookable_by: "agents_and_prescripteurs") }
+
+      it "allows disabling prescription for the motif" do
+        visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
+        uncheck "Autoriser les prescripteurs à prendre rendez-vous pour ce motif"
+        click_on "Enregistrer"
+
+        expect(page).to have_content("Le motif Suivi bonjour a été modifié")
+        expect(motif.reload.bookable_by).to eq "agents"
+      end
+    end
+
+    context "when the motif is open to online booking" do
+      let!(:motif) { create(:motif, name: "Suivi bonjour", organisation:, bookable_by: "everyone") }
+
+      it "doesn't allow changing the prescription level" do
+        visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
+        expect(page).to have_field("motif_prescription", disabled: true)
+
+        click_on "Enregistrer"
+        expect(page).to have_content("Le motif Suivi bonjour a été modifié")
+        expect(motif.reload.bookable_by).to eq "everyone"
+      end
+    end
+  end
 end
