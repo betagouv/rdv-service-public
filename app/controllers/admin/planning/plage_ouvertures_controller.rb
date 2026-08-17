@@ -79,7 +79,12 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
   def update
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
-    if @plage_ouverture.update(plage_ouverture_params)
+    @plage_ouverture.assign_attributes(plage_ouverture_params)
+    # `plage_ouverture_params` permet de changer `agent_id` : on revérifie la policy sur l'état
+    # final avant de sauvegarder, pour ne pas autoriser une réassignation vers un agent non couvert
+    # par `same_agent_or_has_access?`.
+    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
+    if @plage_ouverture.save
       Notifiers::Agent::PlageOuverture.new(@plage_ouverture).updated!
       flash[:success] = "La plage d'ouverture a été modifiée."
       update_online_booking_banner_display
