@@ -17,7 +17,7 @@ RSpec.describe "Agent can CRUD motifs" do
       click_link motif.name
 
       expect(page).to have_content(motif.name)
-      click_link "Modifier"
+      click_link "Modifier", match: :first
 
       expect_page_title("Modifier le motif")
       fill_in "Nom", with: "Suivi bonsoir"
@@ -68,7 +68,7 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(organisation.motifs.count).to eq 1
       expect(page).to have_content("Demande de permis de construire")
 
-      click_link "Modifier"
+      click_link "Modifier", match: :first
 
       expect_page_title("Modifier le motif")
       fill_in "Nom", with: "Renouvellement de permis de construire"
@@ -126,7 +126,7 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(motif.for_secretariat).to be_truthy
       expect(motif.follow_up).to be_falsey
 
-      click_on "Modifier"
+      click_link "Modifier", match: :first
       click_on "Consignes et options avancées"
       check "Autoriser ces rendez-vous seulement aux usagers bénéficiant d'un suivi par un référent", allow_label_click: true
       expect(find("#motif_for_secretariat", visible: false)).not_to be_checked
@@ -142,7 +142,7 @@ RSpec.describe "Agent can CRUD motifs" do
 
       visit admin_organisation_motifs_path(organisation)
       click_on motif.name
-      click_on "Modifier"
+      click_link "Modifier", match: :first
       expect(page).to have_content "L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV."
       choose "Par visioconférence"
       expect { click_on "Enregistrer" }.to change { motif.reload.location_type }.from("public_office").to("visio")
