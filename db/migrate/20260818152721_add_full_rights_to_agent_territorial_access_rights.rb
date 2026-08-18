@@ -18,6 +18,12 @@ class AddFullRightsToAgentTerritorialAccessRights < ActiveRecord::Migration[8.0]
   end
 
   def down
+    # Bascule inverse : recrée les lignes agent_territorial_roles correspondant aux
+    # AgentTerritorialAccessRight ayant full_rights: true.
+    AgentTerritorialAccessRight.where(full_rights: true).find_each do |access_right|
+      MigrationAgentTerritorialRole.find_or_create_by!(agent_id: access_right.agent_id, territory_id: access_right.territory_id)
+    end
+
     remove_column :agent_territorial_access_rights, :full_rights
   end
 end
