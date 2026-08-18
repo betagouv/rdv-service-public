@@ -11,17 +11,13 @@ RSpec.describe "Admin can configure the organisation" do
   it "can give territorial admin access to other agent" do
     visit edit_admin_territory_agent_path(territory, other_agent)
     check("Administrateur de #{territory.name_for_agent}")
-    within(".agent-territorial") do
-      expect { click_on("Enregistrer") }.to change { other_agent.reload.territorial_admin_in?(territory) }.to(true)
-    end
+    expect { click_on("Enregistrer les droits d'accès") }.to change { other_agent.reload.territorial_admin_in?(territory) }.to(true)
   end
 
   it "can't remove the last territorial admin" do
     visit edit_admin_territory_agent_path(territory, agent)
     uncheck("Administrateur de #{territory.name_for_agent}")
-    within(".agent-territorial") do
-      click_on("Enregistrer")
-    end
+    click_on("Enregistrer les droits d'accès")
 
     expect(page).to have_content "Il doit toujours y avoir au moins un agent responsable par espace"
     expect(agent.reload.territorial_admin_in?(territory)).to be true

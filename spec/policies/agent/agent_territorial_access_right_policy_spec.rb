@@ -32,4 +32,18 @@ RSpec.describe Agent::AgentTerritorialAccessRightPolicy do
       expect(policy.update?).to be true
     end
   end
+
+  context "current_agent is territorial admin and can see the target agent" do
+    let(:organisation) { create(:organisation, territory: territory) }
+    let(:agent) { create(:agent, role_in_territories: [territory]) }
+    let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+    let(:agent_territorial_access_right) { create(:agent_territorial_access_right, agent: target_agent, territory: territory) }
+
+    it "allows editing full_rights, but not the specific access rights" do
+      expect(policy.edit_full_rights?).to be true
+      expect(policy.allow_to_manage_access_rights?).to be false
+      expect(policy.edit?).to be true
+      expect(policy.update?).to be true
+    end
+  end
 end
