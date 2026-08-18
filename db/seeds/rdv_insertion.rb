@@ -139,8 +139,8 @@ agent_orgs_rdv_insertion = Agent.new(
     { organisation: org_yonne, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
   ],
   agent_territorial_access_rights_attributes: [
-    { territory: territory_drome, full_rights: true },
-    { territory: territory_yonne, full_rights: true },
+    { territory: territory_drome, full_rights: true, allow_to_manage_teams: true },
+    { territory: territory_yonne, full_rights: true, allow_to_manage_teams: true },
   ]
 )
 agent_orgs_rdv_insertion.services = [service_rsa]

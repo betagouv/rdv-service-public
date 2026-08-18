@@ -1,17 +1,4 @@
 RSpec.describe AgentTerritorialAccessRight, type: :model do
-  describe "validations" do
-    it "is valid with full_rights and no specific right" do
-      access_right = build(:agent_territorial_access_right, full_rights: true)
-      expect(access_right).to be_valid
-    end
-
-    it "is invalid with full_rights and a specific right" do
-      access_right = build(:agent_territorial_access_right, full_rights: true, allow_to_manage_teams: true)
-      expect(access_right).not_to be_valid
-      expect(access_right.errors[:full_rights]).to be_present
-    end
-  end
-
   describe "at least one full_rights admin per territory" do
     context "there is another agent with full_rights" do
       let!(:territory) { create(:territory) }

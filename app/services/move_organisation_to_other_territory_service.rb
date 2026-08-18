@@ -113,14 +113,11 @@ class MoveOrganisationToOtherTerritoryService < BaseService
       access_right_target = agent.agent_territorial_access_rights.find_by(territory: @territory_target)
       if access_right_target
         Rails.logger.info("  ⚠️  Droits d'accès existants pour l'agent #{agent.id} - fusion des permissions")
-        merged_full_rights = access_right_target.full_rights? || access_right_origin.full_rights?
         access_right_target.update!(
-          full_rights: merged_full_rights,
-          # full_rights n'est pas compatible avec les droits spécifiques (cf. validation du modèle) :
-          # dans ce cas full_rights couvre déjà tout, les droits spécifiques n'ont plus d'utilité.
-          allow_to_manage_teams: !merged_full_rights && (access_right_target.allow_to_manage_teams? || access_right_origin.allow_to_manage_teams?),
-          allow_to_manage_access_rights: !merged_full_rights && (access_right_target.allow_to_manage_access_rights? || access_right_origin.allow_to_manage_access_rights?),
-          allow_to_invite_agents: !merged_full_rights && (access_right_target.allow_to_invite_agents? || access_right_origin.allow_to_invite_agents?)
+          full_rights: access_right_target.full_rights? || access_right_origin.full_rights?,
+          allow_to_manage_teams: access_right_target.allow_to_manage_teams? || access_right_origin.allow_to_manage_teams?,
+          allow_to_manage_access_rights: access_right_target.allow_to_manage_access_rights? || access_right_origin.allow_to_manage_access_rights?,
+          allow_to_invite_agents: access_right_target.allow_to_invite_agents? || access_right_origin.allow_to_invite_agents?
         )
         counters[:access_rights_merges] += 1
       else

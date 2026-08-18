@@ -49,7 +49,7 @@ all_cdad_agent = Agent.new(
     { organisation: org_cdad2, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
   ],
   agent_territorial_access_rights_attributes: [
-    { territory: territory_gironde, full_rights: true },
+    { territory: territory_gironde, full_rights: true, allow_to_manage_teams: true },
   ]
 )
 all_cdad_agent.skip_confirmation!
@@ -67,7 +67,7 @@ cdad1_agent = Agent.new(
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_BASIC },
   ],
   agent_territorial_access_rights_attributes: [
-    { territory: territory_gironde, full_rights: true },
+    { territory: territory_gironde, full_rights: true, allow_to_manage_teams: true },
   ]
 )
 cdad1_agent.skip_confirmation!
@@ -85,7 +85,7 @@ cdad1_admin = Agent.new(
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
   ],
   agent_territorial_access_rights_attributes: [
-    { territory: territory_gironde, full_rights: true },
+    { territory: territory_gironde, full_rights: true, allow_to_manage_teams: true },
   ]
 )
 cdad1_admin.skip_confirmation!
@@ -103,7 +103,7 @@ cdad2_agent = Agent.new(
     { organisation: org_cdad2, access_level: AgentRole::ACCESS_LEVEL_BASIC },
   ],
   agent_territorial_access_rights_attributes: [
-    { territory: territory_gironde, full_rights: true },
+    { territory: territory_gironde, full_rights: true, allow_to_manage_teams: true },
   ]
 )
 cdad2_agent.skip_confirmation!
@@ -121,7 +121,7 @@ cdad2_admin = Agent.new(
     { organisation: org_cdad2, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
   ],
   agent_territorial_access_rights_attributes: [
-    { territory: territory_gironde, full_rights: true },
+    { territory: territory_gironde, full_rights: true, allow_to_manage_teams: true },
   ]
 )
 cdad2_admin.skip_confirmation!

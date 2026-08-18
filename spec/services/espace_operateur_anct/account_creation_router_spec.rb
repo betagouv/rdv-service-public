@@ -63,7 +63,9 @@ RSpec.describe EspaceOperateurANCT::AccountCreationRouter do
             expect(AgentRole.last).to have_attributes(agent: agent, organisation: organisation, access_level: "admin")
             expect(AgentTerritorialAccessRight.last).to have_attributes(
               agent: agent, territory: territory,
-              full_rights: true
+              full_rights: true,
+              allow_to_manage_access_rights: true,
+              allow_to_invite_agents: true
             )
           end
         end

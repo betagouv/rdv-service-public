@@ -393,6 +393,9 @@ agent_org_paris_nord_pmi_martine = Agent.new(
   agent_territorial_access_rights_attributes: [{
     territory: territory75,
     full_rights: true,
+    allow_to_manage_teams: true,
+    allow_to_manage_access_rights: true,
+    allow_to_invite_agents: true,
   }]
 )
 agent_org_paris_nord_pmi_martine.skip_confirmation!
@@ -469,6 +472,9 @@ org_arques_pmi_maya = Agent.new(
   agent_territorial_access_rights_attributes: [{
     territory: territory62,
     full_rights: true,
+    allow_to_manage_teams: true,
+    allow_to_manage_access_rights: true,
+    allow_to_invite_agents: true,
   }]
 )
 org_arques_pmi_maya.skip_confirmation!

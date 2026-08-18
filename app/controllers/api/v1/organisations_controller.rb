@@ -28,7 +28,10 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
       @organisation.save!
 
       AgentRole.create!(agent: current_agent, access_level: :admin, organisation: @organisation)
-      AgentTerritorialAccessRight.create!(agent: current_agent, territory: @organisation.territory, full_rights: true)
+      AgentTerritorialAccessRight.create!(agent: current_agent, territory: @organisation.territory,
+                                          full_rights: true,
+                                          allow_to_manage_access_rights: true,
+                                          allow_to_invite_agents: true)
 
       external_reference_params = params[:external_reference]
 
