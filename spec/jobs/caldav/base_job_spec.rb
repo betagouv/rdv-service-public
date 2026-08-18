@@ -6,7 +6,7 @@ RSpec.describe Caldav::BaseJob do
     MyCaldavJob.class_eval do
       def perform(agent_id)
         agent = Agent.find(agent_id)
-        agent.caldav_client.calendars.find(agent.caldav_agenda_url, sync: true)
+        agent.caldav_config.caldav_client.calendars.find(agent.caldav_config.caldav_agenda_url, sync: true)
       end
     end
     MyCaldavJob
@@ -14,7 +14,7 @@ RSpec.describe Caldav::BaseJob do
 
   describe "gestion des réponses en erreur" do
     it "enregistre requête et réponse dans Sentry si la récupération du token retourne une erreur" do
-      cal_url = agent.caldav_agenda_url
+      cal_url = agent.caldav_config.caldav_agenda_url
       stub_request(:propfind, cal_url)
         .and_return({ status: 500, body: "ceci est mon corps", headers: { "Set-Cookie" => "secret" } })
 

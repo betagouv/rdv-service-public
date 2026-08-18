@@ -12,7 +12,7 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
       VCR.use_cassette("caldav/event_list_weekly_and_daily") do
         expect { described_class.new.perform(agent.id) }.to(
           change(ExternalCalendarEvent, :count).by(2).and(
-            change { agent.reload.caldav_sync_token }.from(nil)
+            change { agent.caldav_config.reload.caldav_sync_token }.from(nil)
           )
         )
       end
@@ -82,7 +82,9 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
       end
     end
 
-    let(:agent) { create(:agent, :with_caldav_config, caldav_sync_token: "rsuneaitren") }
+    let(:agent) { create(:agent, :with_caldav_config) }
+
+    before { agent.caldav_config.update!(caldav_sync_token: "rsuneaitren") }
 
     it "supprime un événement s’il est déjà enregistré localement mais qu'il devient TRANSP:TRANSPARENT" do
       ExternalCalendarEvent.create(

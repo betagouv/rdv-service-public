@@ -17,17 +17,18 @@ module Caldav
     # https://github.com/pat/calendav?tab=readme-ov-file#synchronising
     #
     def perform(agent_id)
-      agent = Agent.find(agent_id)
-      Sentry.set_user({ id: agent.id, role: "Agent", email: agent.email })
-      return unless agent.caldav_configured? || agent.caldav_disconnect_started_at.present?
+      @agent = Agent.find(agent_id)
+      Sentry.set_user({ id: @agent.id, role: "Agent", email: @agent.email })
+      return unless @agent.caldav_configured?
+      return if caldav_config.caldav_disconnect_started_at
 
-      if agent.caldav_sync_token
-        updated_events, deleted_events, new_sync_token = changes_since_last_sync_of(agent:)
+      if caldav_config.caldav_sync_token
+        updated_events, deleted_events, new_sync_token = changes_since_last_sync_of
       else
-        updated_events, deleted_events, new_sync_token = all_events_for(agent:)
+        updated_events, deleted_events, new_sync_token = all_events_for
       end
 
-      update_local_events_of(agent:, updated_events:, deleted_events:, new_sync_token:)
+      update_local_events_of(updated_events:, deleted_events:, new_sync_token:)
 
       # Import successful: set job debounce and update realtime calendars
       self.class.store_latest_run_timestamp(agent_id:)
@@ -36,8 +37,8 @@ module Caldav
 
     private
 
-    def changes_since_last_sync_of(agent:)
-      collection = agent.caldav_client.calendars.sync(agent.caldav_agenda_url, agent.caldav_sync_token)
+    def changes_since_last_sync_of
+      collection = caldav_client.calendars.sync(caldav_config.caldav_agenda_url, caldav_config.caldav_sync_token)
       new_sync_token = collection.sync_token
 
       # Dans les deux cas suivants, on rejette les changements qui ne sont pas des événements
@@ -56,14 +57,14 @@ module Caldav
       [updated_events, deleted_events, new_sync_token]
     end
 
-    def all_events_for(agent:)
-      new_sync_token = agent.caldav_client.calendars.find(agent.caldav_agenda_url, sync: true).sync_token
-      updated_events = agent.caldav_client.events.list(agent.caldav_agenda_url) # Cette méthode ne récupère que les événements et rejette bien les VTODO
+    def all_events_for
+      new_sync_token = caldav_client.calendars.find(caldav_config.caldav_agenda_url, sync: true).sync_token
+      updated_events = caldav_client.events.list(caldav_config.caldav_agenda_url) # Cette méthode ne récupère que les événements et rejette bien les VTODO
       deleted_events = []
       [updated_events, deleted_events, new_sync_token]
     end
 
-    def update_local_events_of(agent:, updated_events:, deleted_events:, new_sync_token:)
+    def update_local_events_of(updated_events:, deleted_events:, new_sync_token:)
       # On exclut le traitement des événements provenant d'un RDV de chez nous
       urls_of_rdvs = AgentsRdv.where(caldav_url: updated_events.map(&:url)).pluck(:caldav_url).to_set
       updated_events = updated_events.reject { _1.url.in?(urls_of_rdvs) }
@@ -76,7 +77,7 @@ module Caldav
         hashes_to_upsert = updated_events.map do |event|
           raw_ical = recurring?(event) ? Ical::Scrubber.new(event.calendar_data).scrubbed : nil
           {
-            agent_id: agent.id,
+            agent_id: @agent.id,
             url: event.url,
             starts_at: event.dtstart,
             ends_at: event.dtend,
@@ -86,9 +87,9 @@ module Caldav
 
         ExternalCalendarEvent.upsert_all(hashes_to_upsert, unique_by: :index_external_calendar_events_on_agent_id_and_url) # rubocop:disable Rails/SkipsModelValidations
 
-        ExternalCalendarEvent.where(agent: agent, url: deleted_events).delete_all if deleted_events.any?
+        ExternalCalendarEvent.where(agent: @agent, url: deleted_events).delete_all if deleted_events.any?
 
-        agent.update_columns(caldav_sync_token: new_sync_token) # rubocop:disable Rails/SkipsModelValidations
+        caldav_config.update_columns(caldav_sync_token: new_sync_token) # rubocop:disable Rails/SkipsModelValidations
       end
     end
 
@@ -106,6 +107,14 @@ module Caldav
       else
         event.transp != "TRANSPARENT"
       end
+    end
+
+    def caldav_config
+      @agent.caldav_config
+    end
+
+    def caldav_client
+      caldav_config.caldav_client
     end
   end
 end
