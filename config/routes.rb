@@ -297,7 +297,7 @@ Rails.application.routes.draw do
       end
       resources :rdvs_collectifs, only: %i[index new create edit update] do
         collection do
-          resources :motifs, only: [:index], as: :rdvs_collectif_motifs, controller: "rdvs_collectifs/motifs"
+          resources :motif_selections, only: [:index], as: :rdvs_collectif_motif_selections, controller: "rdvs_collectifs/motif_selections"
         end
       end
       resources :rdvs, except: [:new] do

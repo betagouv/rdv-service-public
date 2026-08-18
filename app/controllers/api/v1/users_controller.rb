@@ -16,23 +16,29 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     params.require(:organisation_ids)
 
     @user = User.new
-    @user.assign_attributes(user_params.merge(created_through: "agent_creation_api"))
+    @user.assign_attributes(params_for_create.merge(created_through: "agent_creation_api"))
     authorize(@user, policy_class: Agent::UserPolicy)
     @user.save!
     render_record @user
   end
 
   def update
-    if email_change_not_allowed?
-      render_error :unprocessable_entity, {
-        errors: {},
-        error_messages: [I18n.t("users.can_not_update_email_of_confirmed_user")],
-      }
-      return
-    end
+    User.transaction do
+      @user.assign_attributes(params_for_update)
+      authorize(@user, policy_class: Agent::UserPolicy)
 
-    @user.update!(user_params)
-    render_record @user
+      if @user.email_changed? && @user.already_logged_in?
+        render_error :unprocessable_entity, {
+          errors: {},
+          error_messages: [I18n.t("users.can_not_update_email_of_confirmed_user")],
+        }
+        return
+      end
+
+      @user.save!
+
+      render_record @user
+    end
   end
 
   def rdv_invitation_token
@@ -41,10 +47,6 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   end
 
   private
-
-  def email_change_not_allowed?
-    @user.already_logged_in? && user_params.key?(:email) && @user.email != user_params[:email]
-  end
 
   def set_organisation
     @organisation = params[:organisation_id].present? ? Organisation.find(params[:organisation_id]) : nil
@@ -57,23 +59,16 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     render_error :not_found, not_found: :user
   end
 
-  def user_params
-    attrs = %i[
-      first_name birth_name last_name email address phone_number
-      birth_date responsible_id caisse_affiliation affiliation_number
-      family_situation number_of_children notify_by_sms notify_by_email
-      city_code post_code city_name
-    ]
+  def params_for_create
+    return @params_for_create if defined? @params_for_create
 
-    attrs -= User::FranceconnectFrozenFieldsConcern::FROZEN_FIELDS if @user&.logged_once_with_franceconnect?
-
-    permitted_params = params.permit(*attrs, organisation_ids: [])
+    @params_for_create = params.permit(*attrs_for_create_and_update, organisation_ids: [])
 
     if params[:external_reference].present?
       attributes_from_params = params.require(:external_reference).permit(:external_id, :external_url)
 
       territory_id = Organisation.find_by(id: params[:organisation_ids])&.territory_id
-      permitted_params.merge!(
+      @params_for_create.merge!(
         external_references_attributes: [attributes_from_params.merge(
           oauth_application: doorkeeper_token&.application,
           territory_id: territory_id
@@ -81,18 +76,55 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
       )
     end
 
-    return permitted_params unless params.key?(:referent_agent_ids)
+    if params.key?(:referent_agent_ids)
+      @params_for_create[:referent_agent_ids] = Agent::AgentPolicy::Scope.new(current_agent, Agent.where(id: params[:referent_agent_ids])).resolve.ids
+    end
 
-    referents_i_can_modify = Agent::AgentPolicy::Scope.new(pundit_user, @user.referent_agents).resolve
-    referents_i_cant_modify = @user.referent_agents - referents_i_can_modify
-
-    permitted_params.merge(referent_agent_ids: authorized_referent_ids + referents_i_cant_modify.map(&:id))
+    @params_for_create
   end
 
-  def authorized_referent_ids
-    policy_scope(
-      Agent.where(id: params[:referent_agent_ids]),
-      policy_scope_class: Agent::AgentPolicy::Scope
-    ).ids
+  def params_for_update
+    return @params_for_update if defined? @params_for_update
+
+    attrs = attrs_for_create_and_update
+    attrs -= User::FranceconnectFrozenFieldsConcern::FROZEN_FIELDS if @user.logged_once_with_franceconnect?
+
+    @params_for_update = params.permit(*attrs)
+
+    if params.key?(:referent_agent_ids)
+      referents_i_can_modify = Agent::AgentPolicy::Scope.new(pundit_user, @user.referent_agents).resolve
+      referents_i_cant_modify = @user.referent_agents - referents_i_can_modify
+      authorized_referent_ids = policy_scope(Agent.where(id: params[:referent_agent_ids]), policy_scope_class: Agent::AgentPolicy::Scope).ids
+      @params_for_update[:referent_agent_ids] = authorized_referent_ids + referents_i_cant_modify.map(&:id)
+    end
+
+    @params_for_update
+  end
+
+  def attrs_for_create_and_update
+    %i[
+      first_name
+      last_name
+      birth_name
+      birth_date
+
+      email
+      phone_number
+
+      responsible_id
+
+      notify_by_sms
+      notify_by_email
+
+      caisse_affiliation
+      affiliation_number
+      family_situation
+      number_of_children
+
+      address
+      city_code
+      post_code
+      city_name
+    ]
   end
 end
