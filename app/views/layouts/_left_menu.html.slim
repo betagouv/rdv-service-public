@@ -7,9 +7,6 @@ aside.left-side-menu-wrapper
         div.d-flex.flex-column
           span.d-flex.align-items-center
             = current_organisation.name
-            - if current_agent.admin_in_organisation?(current_organisation)
-              span.fr-badge.fr-badge--sm.fr-badge--pink-tuile.fr-icon-user-setting-fill.fr-badge--icon-left.fr-badge--icon-only.fr-ml-1w[title="Vous administrez cette organisation"]
-                span.fr-sr-only Administrateur
           - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
             span.fr-text--xs.fr-mb-0= current_agent.services_short_names
       - if current_agent.organisations_count > 1

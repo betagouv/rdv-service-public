@@ -23,15 +23,9 @@ dialog#organisation-switcher-modal.fr-modal[aria-labelledby="organisation-switch
                       .rdv-organisation-switcher-item.rdv-organisation-switcher-item--current
                         span.d-flex.align-items-center
                           = organisation.name
-                          - if current_agent.admin_in_organisation?(organisation)
-                            span.fr-badge.fr-badge--sm.fr-badge--pink-tuile.fr-icon-user-setting-fill.fr-badge--icon-left.fr-badge--icon-only.fr-ml-1w[title="Vous administrez cette organisation"]
-                              span.fr-sr-only Administrateur
                         span.fr-badge.fr-badge--blue-cumulus.fr-badge--sm.fr-badge--no-icon ORGANISATION ACTUELLE
                     - else
                       = link_to admin_organisation_planning_agenda_path(organisation), class: "rdv-organisation-switcher-item" do
                         span.d-flex.align-items-center
                           = organisation.name
-                          - if current_agent.admin_in_organisation?(organisation)
-                            span.fr-badge.fr-badge--sm.fr-badge--pink-tuile.fr-icon-user-setting-fill.fr-badge--icon-left.fr-badge--icon-only.fr-ml-1w[title="Vous administrez cette organisation"]
-                              span.fr-sr-only Administrateur
                         = icon("fr-icon-arrow-right-s-line")
