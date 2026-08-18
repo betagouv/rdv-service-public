@@ -136,7 +136,7 @@
     padding: 1rem;
     border: 1px solid var(--border-default-grey);
     border-radius: 4px;
-    color: var(--text-action-high-blue-france);
+    color: var(--text-default-grey);
     font-weight: 500;
     cursor: pointer;
 
@@ -145,6 +145,8 @@
     &:focus {
       text-decoration: none;
       background-color: rgba(0, 0, 0, 0.05);
+      color: var(--text-action-high-blue-france);
+      border-color: var(--text-action-high-blue-france);
     }
 
     &:active {
@@ -152,8 +154,9 @@
     }
 
     &--current {
-      color: var(--text-default-grey);
+      color: var(--text-action-high-blue-france);
       cursor: default;
+      border-color: var(--text-action-high-blue-france);
 
       &:hover,
       &:focus,
