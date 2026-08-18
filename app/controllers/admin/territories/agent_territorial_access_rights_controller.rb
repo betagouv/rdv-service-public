@@ -5,8 +5,11 @@ class Admin::Territories::AgentTerritorialAccessRightsController < Admin::Territ
     agent_territorial_access_right.assign_attributes(agent_territorial_access_right_params)
     authorize(agent_territorial_access_right, policy_class: Agent::AgentTerritorialAccessRightPolicy)
 
-    agent_territorial_access_right.save!
-    flash[:success] = "Droits d'accès mis à jour"
+    if agent_territorial_access_right.save
+      flash[:success] = "Droits d'accès mis à jour"
+    else
+      flash[:error] = agent_territorial_access_right.errors.full_messages.to_sentence
+    end
     redirect_to edit_admin_territory_agent_path(current_territory, agent)
   end
 

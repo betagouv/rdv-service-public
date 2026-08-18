@@ -49,12 +49,11 @@ all_cdad_agent = Agent.new(
     { organisation: org_cdad2, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
   ],
   agent_territorial_access_rights_attributes: [
-    { territory: territory_gironde, allow_to_manage_teams: true },
+    { territory: territory_gironde, full_rights: true },
   ]
 )
 all_cdad_agent.skip_confirmation!
 all_cdad_agent.save!
-all_cdad_agent.territorial_roles.create!(territory: territory_gironde)
 
 cdad1_agent = Agent.new(
   email: "cdad1@cdad.fr",
@@ -68,12 +67,11 @@ cdad1_agent = Agent.new(
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_BASIC },
   ],
   agent_territorial_access_rights_attributes: [
-    { territory: territory_gironde, allow_to_manage_teams: true },
+    { territory: territory_gironde, full_rights: true },
   ]
 )
 cdad1_agent.skip_confirmation!
 cdad1_agent.save!
-cdad1_agent.territorial_roles.create!(territory: territory_gironde)
 
 cdad1_admin = Agent.new(
   email: "cdad1_admin@cdad.fr",
@@ -87,12 +85,11 @@ cdad1_admin = Agent.new(
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
   ],
   agent_territorial_access_rights_attributes: [
-    { territory: territory_gironde, allow_to_manage_teams: true },
+    { territory: territory_gironde, full_rights: true },
   ]
 )
 cdad1_admin.skip_confirmation!
 cdad1_admin.save!
-cdad1_admin.territorial_roles.create!(territory: territory_gironde)
 
 cdad2_agent = Agent.new(
   email: "cdad2@cdad.fr",
@@ -106,12 +103,11 @@ cdad2_agent = Agent.new(
     { organisation: org_cdad2, access_level: AgentRole::ACCESS_LEVEL_BASIC },
   ],
   agent_territorial_access_rights_attributes: [
-    { territory: territory_gironde, allow_to_manage_teams: true },
+    { territory: territory_gironde, full_rights: true },
   ]
 )
 cdad2_agent.skip_confirmation!
 cdad2_agent.save!
-cdad2_agent.territorial_roles.create!(territory: territory_gironde)
 
 cdad2_admin = Agent.new(
   email: "cdad2_admin@cdad.fr",
@@ -125,12 +121,11 @@ cdad2_admin = Agent.new(
     { organisation: org_cdad2, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
   ],
   agent_territorial_access_rights_attributes: [
-    { territory: territory_gironde, allow_to_manage_teams: true },
+    { territory: territory_gironde, full_rights: true },
   ]
 )
 cdad2_admin.skip_confirmation!
 cdad2_admin.save!
-cdad2_admin.territorial_roles.create!(territory: territory_gironde)
 # Intervenants
 
 cdad_intervenant1 = Agent.new(

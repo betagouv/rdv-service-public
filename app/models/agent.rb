@@ -83,7 +83,12 @@ class Agent < ApplicationRecord
   has_many :absences, dependent: :destroy
   has_many :agents_rdvs, dependent: :restrict_with_error
   has_many :roles, class_name: "AgentRole", dependent: :destroy
-  has_many :territorial_roles, class_name: "AgentTerritorialRole", dependent: :destroy
+  # "territorial_roles" est le statut d'administrateur de l'espace (full_rights: true), fusionné
+  # dans la table agent_territorial_access_rights. dependent: :destroy est porté par
+  # agent_territorial_access_rights ci-dessus, qui couvre déjà ces lignes.
+  # rubocop:disable Rails/HasManyOrHasOneDependent, Rails/InverseOf
+  has_many :territorial_roles, -> { where(full_rights: true) }, class_name: "AgentTerritorialAccessRight"
+  # rubocop:enable Rails/HasManyOrHasOneDependent, Rails/InverseOf
   has_many :sector_attributions, dependent: :destroy
   has_many :agent_teams, dependent: :destroy
   has_many :referent_assignations, dependent: :destroy
@@ -174,7 +179,6 @@ class Agent < ApplicationRecord
       plage_ouvertures.destroy_all
       agent_services.destroy_all
       agent_territorial_access_rights.destroy_all
-      territorial_roles.destroy_all
       agent_teams.destroy_all
       referent_assignations.destroy_all
       sector_attributions.destroy_all

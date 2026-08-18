@@ -7,7 +7,7 @@ RSpec.describe AgentTerritorialRole, type: :model do
 
       it "allows destroying one role" do
         role1.destroy
-        expect(territory.roles.count).to eq 1
+        expect(described_class.where(territory: territory).count).to eq 1
       end
     end
 
@@ -17,7 +17,7 @@ RSpec.describe AgentTerritorialRole, type: :model do
 
       it "does not allow destroying it" do
         role1.destroy
-        expect(territory.roles.count).to eq 1
+        expect(described_class.where(territory: territory).count).to eq 1
         expect(role1.errors).to be_present
       end
     end

@@ -19,11 +19,11 @@ class CronJob::RefreshAgentsSensitiveAccountJob < CronJob
   end
 
   def territory_admin_ids
-    AgentTerritorialRole.distinct.pluck(:agent_id)
+    AgentTerritorialAccessRight.where(full_rights: true).distinct.pluck(:agent_id)
   end
 
   def sensitive_territory_admin_ids
-    AgentTerritorialRole.where(territory_id: sensitive_territory_ids).pluck(:agent_id)
+    AgentTerritorialAccessRight.where(full_rights: true, territory_id: sensitive_territory_ids).pluck(:agent_id)
   end
 
   def sensitive_territory_ids

@@ -11,6 +11,7 @@ class AgentTerritorialAccessRightDashboard < Administrate::BaseDashboard
     id: Field::Number,
     territory: Field::BelongsTo,
     agent: Field::BelongsTo,
+    full_rights: Field::Boolean,
     allow_to_manage_teams: Field::Boolean,
     allow_to_manage_access_rights: Field::Boolean,
     allow_to_invite_agents: Field::Boolean,
@@ -25,6 +26,7 @@ class AgentTerritorialAccessRightDashboard < Administrate::BaseDashboard
     id
     territory
     agent
+    full_rights
     allow_to_manage_teams
     allow_to_manage_access_rights
     allow_to_invite_agents
@@ -35,6 +37,7 @@ class AgentTerritorialAccessRightDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     agent
     territory
+    full_rights
     allow_to_manage_teams
     allow_to_manage_access_rights
     allow_to_invite_agents
@@ -44,6 +47,7 @@ class AgentTerritorialAccessRightDashboard < Administrate::BaseDashboard
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = %i[
+    full_rights
     allow_to_manage_teams
     allow_to_manage_access_rights
     allow_to_invite_agents

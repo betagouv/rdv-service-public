@@ -36,7 +36,6 @@ RSpec.describe Admin::Territories::AgentRolesController, type: :controller do
       organisation = create(:organisation, territory: territory)
       organisation2 = create(:organisation, territory: territory)
       agent = create(:agent, role_in_territories: [territory])
-      create(:agent_territorial_access_right, territory: territory, agent: agent)
       agent_role = create(:agent_role, organisation: organisation, agent: agent, access_level: "basic")
       create(:agent_role, organisation: organisation2, agent: agent, access_level: "basic")
 
@@ -53,7 +52,6 @@ RSpec.describe Admin::Territories::AgentRolesController, type: :controller do
     it "redirect to territorial_agent_edit on success if it the last organisation" do
       organisation = create(:organisation, territory: territory)
       agent = create(:agent, role_in_territories: [territory])
-      create(:agent_territorial_access_right, territory: territory, agent: agent)
       agent_role = create(:agent_role, organisation: organisation, agent: agent, access_level: "basic")
 
       last_agent = create(:agent)
@@ -69,7 +67,6 @@ RSpec.describe Admin::Territories::AgentRolesController, type: :controller do
     it "destroy agent_role" do
       organisation = create(:organisation, territory: territory)
       agent = create(:agent, role_in_territories: [territory])
-      create(:agent_territorial_access_right, territory: territory, agent: agent)
       agent_role = create(:agent_role, organisation: organisation, agent: agent, access_level: "basic")
 
       # Il doit toujours y avoir un dernier admin dans une organisation pour le moment

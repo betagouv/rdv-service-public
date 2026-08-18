@@ -46,12 +46,7 @@ class Compte
         create_example_motifs!
       end
 
-      AgentTerritorialRole.create!(agent: agent, territory: territory)
-      AgentTerritorialAccessRight.create!(
-        agent: agent, territory: territory,
-        allow_to_manage_access_rights: true,
-        allow_to_invite_agents: true
-      )
+      AgentTerritorialAccessRight.create!(agent: agent, territory: territory, full_rights: true)
 
       if agent.invitation_created_at.nil? # On n'envoie pas ce mail si l'agent a déjà reçu un mail d'invitation
         Agents::TerritoryCreationRequestMailer.accepted(

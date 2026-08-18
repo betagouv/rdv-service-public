@@ -139,15 +139,13 @@ agent_orgs_rdv_insertion = Agent.new(
     { organisation: org_yonne, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
   ],
   agent_territorial_access_rights_attributes: [
-    { territory: territory_drome, allow_to_manage_teams: true },
-    { territory: territory_yonne, allow_to_manage_teams: true },
+    { territory: territory_drome, full_rights: true },
+    { territory: territory_yonne, full_rights: true },
   ]
 )
 agent_orgs_rdv_insertion.services = [service_rsa]
 agent_orgs_rdv_insertion.skip_confirmation!
 agent_orgs_rdv_insertion.save!
-agent_orgs_rdv_insertion.territorial_roles.create!(territory: territory_drome)
-agent_orgs_rdv_insertion.territorial_roles.create!(territory: territory_yonne)
 
 ## Lieux
 lieu_org_drome1_crest = Lieu.create!(

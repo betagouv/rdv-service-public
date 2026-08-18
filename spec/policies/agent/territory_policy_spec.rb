@@ -19,10 +19,9 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
                       :allow_to_manage_teams?
     end
 
-    context "admin access to this territory" do
+    context "admin access to this territory (full_rights)" do
       let(:territory) { create(:territory) }
       let(:agent) { create(:agent, role_in_territories: [territory]) }
-      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory) }
 
       it_behaves_like "permit actions",
                       :territory,
@@ -143,7 +142,7 @@ RSpec.describe Agent::TerritoryPolicy::Scope, type: :policy do
       end
 
       let!(:territory_with_role) do
-        create(:territory, name: "Espace ou j'ai un AgentTerritorialRole").tap do |territory|
+        create(:territory, name: "Espace ou j'ai le statut administrateur (full_rights)").tap do |territory|
           agent.territorial_roles.create!(territory:)
         end
       end
@@ -164,15 +163,8 @@ RSpec.describe Agent::TerritoryPolicy::Scope, type: :policy do
         end
       end
 
-      let!(:territory_with_role_and_rights) do
-        create(:territory, name: "Espace ou j'ai un à la fois un role et des rights").tap do |territory|
-          agent.territorial_roles.create!(territory:)
-          agent.agent_territorial_access_rights.create!(territory:, allow_to_manage_access_rights: true)
-        end
-      end
-
       let!(:territory_with_role_for_another_agent) do
-        create(:territory, name: "Espace où quelqu'un d'autre a un AgentTerritorialRole").tap do |territory|
+        create(:territory, name: "Espace où quelqu'un d'autre a le statut administrateur (full_rights)").tap do |territory|
           create(:agent).territorial_roles.create!(territory:)
         end
       end
@@ -183,13 +175,12 @@ RSpec.describe Agent::TerritoryPolicy::Scope, type: :policy do
         end
       end
 
-      it "includes any territory where I either have a role or any right" do
+      it "includes any territory where I either have full_rights or any specific right" do
         expect(subject).to contain_exactly(
           territory_with_role,
           territory_manage_teams,
           territory_invite_agents,
-          territory_manage_access_rights,
-          territory_with_role_and_rights
+          territory_manage_access_rights
         )
       end
     end

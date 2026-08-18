@@ -6,7 +6,6 @@ RSpec.describe "territory admin can crud webhooks endpoints" do
   end
 
   before do
-    create(:agent_territorial_access_right, agent: agent, territory: territory)
     login_as(agent, scope: :agent)
     visit admin_territory_path(id: territory.id)
   end
