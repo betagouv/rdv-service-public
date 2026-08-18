@@ -9,7 +9,7 @@ ruby:
   end
 
 .card.card-body.fr-pb-0
-  = f.dsfr_radio_buttons :visibility_type, visibility_types, hint: "Si ce motif est sensible (par exemple s'il lié à des services médicaux ou sociaux), vous pouvez désactiver les notifications pour protéger la confidentialité de vos usagers."
+  = f.dsfr_radio_buttons :visibility_type, visibility_types, legend: sanitize("<b>#{t('activerecord.attributes.motif.visibility_type')}</b>"), hint: "Si ce motif est sensible (par exemple s'il lié à des services médicaux ou sociaux), vous pouvez désactiver les notifications pour protéger la confidentialité de vos usagers."
 
 .card.card-body.fr-pb-0
   fieldset.fr-fieldset.fr-mb-0
