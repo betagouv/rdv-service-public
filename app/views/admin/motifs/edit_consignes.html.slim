@@ -7,14 +7,14 @@
 
 = render "admin/motifs/fil_ariane", current_page_title: content_for(:title)
 
-.row
-  .col-md-12
+.fr-grid-row
+  .fr-col-md-12
     = form_for @motif, url: admin_organisation_motif_path, builder: Dsfr::FormBuilder, html: { "data-controller": "motif-form" } do |f|
       = render "model_errors", model: @motif, f: f
 
       .fr-grid-row.justify-content-center
         .fr-col-md-12.fr-col-lg-8
-          .card.mt-2
+          .card
             .card-body
               = render "admin/motifs/form/consignes", f: f, motif: @motif, rdvi_mode: current_organisation.rdv_insertion?
 
