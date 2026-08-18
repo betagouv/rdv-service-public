@@ -10,9 +10,10 @@ class RdvPlan < ApplicationRecord
   belongs_to :motif, optional: true
   belongs_to :lieu, optional: true
   belongs_to :rdv, optional: true
+  # Le `optional: true` sur les oauth_application est un peu anticipé : on pourra avoir ce cas quand des
+  # rdv_plans seront créés en natif depuis l'application, probablement pour enregistrer un brouillon de rdv
+  # TODO: il faudrait mettre à jour la spec swagger pour utiliser de l'oauth pour pouvoir enlever le `optional: true`
   belongs_to :oauth_application, class_name: "Doorkeeper::Application", optional: true
-
-  encrypts :invitation_token, deterministic: true
 
   delegate :organisation, to: :motif
 
@@ -33,7 +34,7 @@ class RdvPlan < ApplicationRecord
     self.location_type, self.lieu_id = modalite.split("-")
   end
 
-  def create_rdv_and_notify(author, user_attributes: {}, participation_attributes: {})
+  def create_rdv(user_attributes: {}, participation_attributes: {})
     update_user_before_creating_rdv(user_attributes:)
 
     rdv = Rdv.create(
@@ -43,22 +44,16 @@ class RdvPlan < ApplicationRecord
       organisation: organisation,
       lieu: lieu,
       starts_at: starts_at,
-      created_by: author,
+      created_by: planning_agent,
       ends_at: starts_at + (duration_in_minutes || motif.default_duration_in_min).minutes
     )
 
     if rdv.persisted?
       update(rdv: rdv)
-      Notifiers::RdvCreated.perform_with(rdv, author)
+      Notifiers::RdvCreated.perform_with(rdv, planning_agent)
     end
 
     rdv
-  end
-
-  def generate_invitation_token!
-    # On reprend la même logique que CustomDeviseTokenGenerator
-    self.invitation_token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8) until invitation_token && self.class.where(invitation_token:).none?
-    save!
   end
 
   private

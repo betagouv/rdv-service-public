@@ -91,7 +91,7 @@ class Agents::RdvPlansController < AgentAuthController
                                  { send_lifecycle_notifications: false, send_reminder_notification: false }
                                end
 
-    rdv = @rdv_plan.create_rdv_and_notify(current_agent, user_attributes:, participation_attributes:)
+    rdv = @rdv_plan.create_rdv(user_attributes:, participation_attributes:)
 
     if rdv.valid?
       flash[:success] = "Le rendez-vous a été créé."
