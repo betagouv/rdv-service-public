@@ -1,11 +1,9 @@
 - content_for :title do
-  / Cette partial est rendue lorsque l'update est invalide, il faut alors afficher
-  / le nom et service du motif tels qu'ils étaient avant la tentative de modif.
-  | Modifier le motif "#{@motif.name_was}"
-  - if @motif.service_id_was.present?
-    |  (#{Service.find(@motif.service_id_was)&.short_name})
+  | Modifier les options avancées du motif "#{@motif.name_was}"
 
-= render "admin/motifs/fil_ariane", current_page_title: content_for(:title)
+- content_for :fil_ariane do
+  - titles_and_paths = [["Configuration", admin_organisation_configuration_path(current_organisation)], ["Motifs de rendez-vous", admin_organisation_motifs_path(current_organisation)], [@motif.name, admin_organisation_motif_path(current_organisation, @motif)]]
+  = render "common/fil_ariane", titles_and_paths: titles_and_paths, current_page_title: "Modifier les options avancées"
 
 .row
   .col-md-12
