@@ -1,13 +1,18 @@
 RSpec.describe "Invitation à prendre rendez-vous", js: true do
   let!(:motif) { create(:motif, name: "Suivi de dossier", organisation:) }
+  let!(:plage_ouverture) do
+    create(:plage_ouverture, :weekdays, motifs: [motif], lieu: lieu, organisation: organisation, first_day: now.next_week(:monday))
+  end
   let(:organisation) { create(:organisation, name: "DREETS de l'Ile de France", verticale: :rdv_etat) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [motif.organisation]) }
   let!(:user) { create(:user, organisations: [organisation]) }
   let(:lieu) { create(:lieu, organisation: organisation, name: "Cabinet vétérinaire", address: "21 rue des Ardennes, 75019 Paris") }
-  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
+  let(:now) do
+    Time.zone.local(2026, 8, 12, 14, 0, 0)
+  end
 
   before do
-    travel_to Time.zone.local(2026, 8, 12, 14, 0, 0)
+    travel_to now
     login_as(agent, scope: :agent)
   end
 
@@ -96,7 +101,7 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
       wait_for: "8:00"
     )
 
-    click_on "8:00"
+    click_on "8:00", match: :first
 
     doc.add_screenshot(
       page,
