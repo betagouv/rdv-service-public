@@ -3,7 +3,7 @@ aside.left-side-menu-wrapper
     .fr-p-2w.d-flex.justify-content-center
       = link_to "Trouver un RDV", search_rdv_slot_url_with(@user), class: "fr-btn"
     .current-organisation
-      .fr-pt-2w.fr-pr-2w.fr-pb-2w.fr-pl-3w.d-flex.align-items-center
+      .fr-pt-2w.fr-pr-2w.fr-pb-2w.fr-pl-2w.d-flex.align-items-center
         div.d-flex.flex-column
           span.d-flex.align-items-center
             = current_organisation.name
@@ -13,7 +13,7 @@ aside.left-side-menu-wrapper
           - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
             span.fr-text--xs.fr-mb-0= current_agent.services_short_names
       - if current_agent.organisations_count > 1
-        .fr-pl-3w.fr-pb-2w.fr-mt-n2w
+        .fr-pl-2w.fr-pb-2w.fr-mt-n2w
           button.fr-link.fr-link--icon-right.fr-icon-arrow-right-line.fr-link--xs[data-fr-opened="false" aria-controls="organisation-switcher-modal" type="button"]
             | Changer d'organisation
 
