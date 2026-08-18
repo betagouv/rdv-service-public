@@ -1,5 +1,4 @@
 class Notifiers::ParticipationCreated < BaseService
-  include DateHelper
   include Notifiers::AgentsConcern
 
   attr_reader :participation, :author

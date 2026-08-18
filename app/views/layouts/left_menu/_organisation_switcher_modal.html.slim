@@ -1,0 +1,31 @@
+- organisations_by_territory = organisations_grouped_by_territory_for_switcher
+- multiple_territories = organisations_by_territory.size > 1
+
+dialog#organisation-switcher-modal.fr-modal[aria-labelledby="organisation-switcher-modal-title" data-fr-concealing-backdrop="true"]
+  .fr-container.fr-container--fluid.fr-container-md
+    .fr-grid-row.fr-grid-row--center
+      .fr-col-12.fr-col-md-8.fr-col-lg-6
+        .fr-modal__body
+          .fr-modal__header
+            button.fr-btn--close.fr-btn[aria-controls="organisation-switcher-modal" title="Fermer" type="button"]
+              | Fermer
+          .fr-modal__content
+            h2#organisation-switcher-modal-title.fr-modal__title
+              | Choisissez votre organisation
+            - organisations_by_territory.each do |territory, organisations|
+              - if multiple_territories
+                p.fr-text--sm.rdv-organisation-switcher-territory
+                  | Espace : #{territory.name_for_agent}
+              ul.fr-raw-list.rdv-organisation-switcher-list
+                - organisations.each do |organisation|
+                  li
+                    - if organisation == current_organisation
+                      .rdv-organisation-switcher-item.rdv-organisation-switcher-item--current
+                        span.d-flex.align-items-center
+                          = organisation.name
+                        span.fr-badge.fr-badge--blue-cumulus.fr-badge--sm.fr-badge--no-icon ORGANISATION ACTUELLE
+                    - else
+                      = link_to admin_organisation_planning_agenda_path(organisation), class: "rdv-organisation-switcher-item" do
+                        span.d-flex.align-items-center
+                          = organisation.name
+                        = icon("fr-icon-arrow-right-s-line")

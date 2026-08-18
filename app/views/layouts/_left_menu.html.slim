@@ -3,17 +3,16 @@ aside.left-side-menu-wrapper
     .fr-p-2w.d-flex.justify-content-center
       = link_to "Trouver un RDV", search_rdv_slot_url_with(@user), class: "fr-btn"
     .current-organisation
-      = current_organisation_in_left_menu do
-        .d-flex.justify-content-between.w-100
-          div.d-flex.align-items-center
-            div.d-flex.flex-column
-              = current_organisation.name
-              - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
-                span.fr-text--xs.fr-mb-0= current_agent.services_short_names
-          - if current_agent.organisations_count > 1
-            div.d-flex.align-items-center
-              = icon("fr-icon-arrow-down-s-line", class: "menu-arrow")
-      = render "layouts/left_menu/organisation_switcher"
+      .fr-pt-2w.fr-pr-2w.fr-pb-2w.fr-pl-2w.d-flex.align-items-center
+        div.d-flex.flex-column
+          span.d-flex.align-items-center
+            = current_organisation.name
+          - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
+            span.fr-text--xs.fr-mb-0= current_agent.services_short_names
+      - if current_agent.organisations_count > 1
+        .fr-pl-2w.fr-pb-2w.fr-mt-n2w
+          button.fr-link.fr-link--icon-right.fr-icon-arrow-right-line.fr-link--xs[data-fr-opened="false" aria-controls="organisation-switcher-modal" type="button"]
+            | Changer d'organisation
 
     - if content_for? :side_nav_menu
       = yield :side_nav_menu
@@ -25,6 +24,9 @@ aside.left-side-menu-wrapper
       = render(DsfrComponent::SideMenuComponent.new(title: "Menu", html_attributes: {id: "menu"} )) do |menu|
         ruby:
           menu.with_item(title: safe_join([icon("fr-icon-calendar-event-line", class: "fr-icon--sm fr-mr-1w"), "Planning"]), path: admin_organisation_planning_agenda_path(current_organisation, **query_params), current_page: active_item == :menu_planning)
+        - if current_agent.admin_in_organisation?(current_organisation)
+          - menu.with_item(title: safe_join([icon("fr-icon-global-line", class: "fr-icon--sm fr-mr-1w"), "Réservation en ligne"]), path: admin_organisation_online_booking_path(current_organisation), current_page: active_item == :menu_online_booking)
+        ruby:
           menu.with_item(title: safe_join([icon("fr-icon-group-line", class: "fr-icon--sm fr-mr-1w"), "Usagers"]), path: admin_organisation_users_path(current_organisation), current_page: active_item == :menu_users)
           menu.with_item(title: safe_join([icon("fr-icon-survey-line", class: "fr-icon--sm fr-mr-1w"), "Liste des RDV"]), path: admin_organisation_rdvs_path(current_organisation), current_page: active_item == :menu_liste_rdvs)
           menu.with_item(title: safe_join([icon("fr-icon-team-line", class: "fr-icon--sm fr-mr-1w"), "RDV collectifs"]), path: admin_organisation_rdvs_collectifs_path(current_organisation), current_page: active_item == :menu_rdv_collectifs)

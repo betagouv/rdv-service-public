@@ -37,25 +37,4 @@ RSpec.describe DateHelper do
       expect(relative_date_with_preposition(Time.zone.tomorrow)).to eq("de demain")
     end
   end
-
-  describe "#soon_date?" do
-    it "return false" do
-      date = Time.zone.parse("2021-12-23 15:30")
-      expect(soon_date?(date)).to be_falsey
-    end
-
-    it "return true when date is today" do
-      now = Time.zone.parse("2021-12-23 15:30")
-      travel_to(now)
-      date = now
-      expect(soon_date?(date)).to be_truthy
-    end
-
-    it "return true when date is tomorrow" do
-      now = Time.zone.parse("2021-12-23 15:30")
-      travel_to(now)
-      date = now + 1.day
-      expect(soon_date?(date)).to be_truthy
-    end
-  end
 end
