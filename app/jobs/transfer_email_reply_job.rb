@@ -28,12 +28,23 @@ class TransferEmailReplyJob < ApplicationJob
   def perform(sendinblue_hash)
     @sendinblue_hash = sendinblue_hash.with_indifferent_access
 
-    if rdv&.agents&.pluck(:email)&.compact&.any?
+    if rdv.blank?
+      forward_to_default_mailbox
+      return
+    end
+
+    if rdv.agents.pluck(:email).compact.any?
       notify_agents
     elsif rdv&.organisation&.email.present?
-      notify_organisation
+      notify_organisation(rdv.organisation.email)
     else
-      forward_to_default_mailbox
+      inviters_of_intervenants = rdv.agents.map(&:invited_by)
+
+      if inviters_of_intervenants.any?
+        notify_organisation(inviters_of_intervenants.first.email)
+      else
+        forward_to_default_mailbox
+      end
     end
   end
 
@@ -49,11 +60,11 @@ class TransferEmailReplyJob < ApplicationJob
     ).deliver_now
   end
 
-  def notify_organisation
+  def notify_organisation(email_address)
     Agents::ReplyTransferMailer.notify_organisation(
       rdv: rdv,
       author: user || source_mail.header[:from],
-      organisation: rdv.organisation,
+      email_address: email_address,
       reply_body: extracted_response,
       source_mail: source_mail
     ).deliver_now
