@@ -1,4 +1,6 @@
 RSpec.describe Agents::CaldavSyncController, type: :controller do
+  render_views
+
   let(:agent) { create(:agent) }
   let(:caldav_client) { instance_double(Calendav::Client) }
   let(:caldav_events) { instance_double(Calendav::Clients::EventsClient) }
