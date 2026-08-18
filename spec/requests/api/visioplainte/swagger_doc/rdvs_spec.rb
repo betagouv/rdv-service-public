@@ -67,18 +67,33 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
 
       tags "Rendez-vous"
       description "Crée un rdv et réserve le créneau correspondant."
-      parameter name: "starts_at", in: :query, type: :string,
-                description: "datetime au format iso8601. Normalement c'est une des valeurs proposées par l'endpoint de liste des créneaux.",
-                example: "2024-08-19T08:00:00+02:00", required: true
+      parameter(name: :params, in: :body,
+                schema: {
+                  type: :object,
+                  properties: {
+                    starts_at: {
+                      type: :string,
+                      description: "datetime au format iso8601. Normalement c'est une des valeurs proposées par l'endpoint de liste des créneaux.",
+                      example: "2024-08-19T08:00:00+02:00",
+                      required: true,
+                    },
+
+                  },
+                })
 
       response 201, "Prend le rdv" do
         run_test!
         schema rdv_response_schema
-        let(:starts_at) { "2024-08-19T08:00:00+02:00" }
+        let(:params) do
+          { starts_at: "2024-08-19T08:00:00+02:00" }
+        end
       end
 
       response 422, "Si le créneau n'est pas disponible" do
-        let(:starts_at) { "2024-11-19T08:00:00+02:00" }
+        let(:params) do
+          { starts_at: "2024-11-19T08:00:00+02:00" }
+        end
+
         run_test!
         schema type: :object, properties: { errors: { type: :array, items: { type: :string } } }, required: %w[errors]
       end

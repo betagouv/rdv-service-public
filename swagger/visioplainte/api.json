@@ -944,16 +944,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "starts_at",
-            "in": "query",
-            "description": "datetime au format iso8601. Normalement c'est une des valeurs proposées par l'endpoint de liste des créneaux.",
-            "example": "2024-08-19T08:00:00+02:00",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "tags": [
@@ -1055,6 +1045,23 @@
                   "required": [
                     "errors"
                   ]
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "starts_at": {
+                    "type": "string",
+                    "description": "datetime au format iso8601. Normalement c'est une des valeurs proposées par l'endpoint de liste des créneaux.",
+                    "example": "2024-08-19T08:00:00+02:00",
+                    "required": true
+                  }
                 }
               }
             }
@@ -1281,30 +1288,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "target_url",
-            "in": "query",
-            "description": "L'url à appeler pour notifier d'une mise à jour",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "secret",
-            "in": "query",
-            "description": "Le secret qui servira à signer les appels",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "subscriptions[]",
-            "in": "query",
-            "description": "Le type de mises à jours pour lesquelles les notifications seront envoyées. Les valeurs possibles  à envoyer dans le tableau sont [\"rdv\", \"absence\", \"plage_ouverture\", \"user\", \"user_profile\", \"organisation\", \"motif\", \"lieu\", \"agent\", \"agent_role\", \"referent_assignation\"]. Typiquement c'est la valeur rdv qui sera la plus utile.",
-            "schema": {
-              "type": "array"
-            }
           }
         ],
         "tags": [
@@ -1319,8 +1302,8 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "id": 126,
-                      "organisation_id": 163,
+                      "id": 247,
+                      "organisation_id": 634,
                       "subscriptions": [
                         "rdv"
                       ],
@@ -1341,7 +1324,10 @@
                       "type": "integer"
                     },
                     "subscriptions": {
-                      "type": "array"
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   },
                   "required": [
@@ -1354,6 +1340,42 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "target_url": "https://exemple.fr/webhook_rdv_service_public",
+                  "subscriptions": [
+                    "rdv"
+                  ],
+                  "secret": "fake_test_secret_123"
+                },
+                "properties": {
+                  "target_url": {
+                    "type": "string",
+                    "required": true,
+                    "description": "L'url à appeler pour notifier d'une mise à jour"
+                  },
+                  "secret": {
+                    "type": "string",
+                    "required": true,
+                    "description": "Le secret qui servira à signer les appels"
+                  },
+                  "subscriptions": {
+                    "type": "array",
+                    "required": true,
+                    "items": {
+                      "type": "string",
+                      "description": "Le type de mises à jours pour lesquelles les notifications seront envoyées. Les valeurs possibles  à envoyer dans le tableau sont [\"rdv\", \"absence\", \"plage_ouverture\", \"user\", \"user_profile\", \"organisation\", \"motif\", \"lieu\", \"agent\", \"agent_role\", \"referent_assignation\"]. Typiquement c'est la valeur rdv qui sera la plus utile."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "description": "Les attributs du webhook endpoint à créer"
         }
       }
     },
@@ -1384,34 +1406,10 @@
             "schema": {
               "type": "integer"
             }
-          },
-          {
-            "name": "target_url",
-            "in": "query",
-            "description": "L'url à appeler pour notifier d'une mise à jour",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "secret",
-            "in": "query",
-            "description": "Le secret qui servira à signer les appels",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "subscriptions[]",
-            "in": "query",
-            "required": false,
-            "description": "Le type de mises à jours pour lesquelles les notifications seront envoyées. Les valeurs possibles  à envoyer dans le tableau sont [\"rdv\", \"absence\", \"plage_ouverture\", \"user\", \"user_profile\", \"organisation\", \"motif\", \"lieu\", \"agent\", \"agent_role\", \"referent_assignation\"]. Typiquement c'est la valeur rdv qui sera la plus utile.",
-            "schema": {
-              "type": "array"
-            }
           }
+        ],
+        "tags": [
+          "WebhookEndpoint"
         ],
         "description": "Crée un endpoint de webhook dans l'espace Visioplainte, typiquement pour faire une rotation de secret",
         "responses": {
@@ -1422,8 +1420,8 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "id": 128,
-                      "organisation_id": 165,
+                      "id": 249,
+                      "organisation_id": 636,
                       "subscriptions": [
                         "rdv"
                       ],
@@ -1444,7 +1442,10 @@
                       "type": "integer"
                     },
                     "subscriptions": {
-                      "type": "array"
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   },
                   "required": [
@@ -1457,6 +1458,42 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "target_url": "https://exemple.fr/webhook_rdv_service_public",
+                  "subscriptions": [
+                    "rdv"
+                  ],
+                  "secret": "fake_test_secret_123"
+                },
+                "properties": {
+                  "target_url": {
+                    "type": "string",
+                    "required": false,
+                    "description": "L'url à appeler pour notifier d'une mise à jour"
+                  },
+                  "secret": {
+                    "type": "string",
+                    "required": false,
+                    "description": "Le secret qui servira à signer les appels"
+                  },
+                  "subscriptions": {
+                    "type": "array",
+                    "required": false,
+                    "items": {
+                      "type": "string",
+                      "description": "Le type de mises à jours pour lesquelles les notifications seront envoyées. Les valeurs possibles  à envoyer dans le tableau sont [\"rdv\", \"absence\", \"plage_ouverture\", \"user\", \"user_profile\", \"organisation\", \"motif\", \"lieu\", \"agent\", \"agent_role\", \"referent_assignation\"]. Typiquement c'est la valeur rdv qui sera la plus utile."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "description": "Les attributs du webhook endpoint à créer"
         }
       },
       "delete": {
@@ -1486,6 +1523,9 @@
               "type": "integer"
             }
           }
+        ],
+        "tags": [
+          "WebhookEndpoint"
         ],
         "description": "Supprime un endpoint de webhook dans l'espace Visioplainte",
         "responses": {
