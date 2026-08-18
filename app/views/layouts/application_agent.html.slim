@@ -39,4 +39,6 @@ html lang="fr"
               = yield
 
       = render "layouts/agent_footer"
+    - if current_agent.organisations_count > 1
+      = render "layouts/left_menu/organisation_switcher_modal"
     #modal-holder

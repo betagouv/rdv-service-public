@@ -44,9 +44,32 @@
 
   .current-organisation {
     font-weight: 500;
+
+    // Ce contrôle ouvre la modale de changement d'organisation : c'est un <button> (pas de
+    // navigation, pas de href) mais on veut qu'il ait le même rendu visuel qu'un lien fr-link.
+    // Le soulignement (et son épaississement au survol, icône comprise) est généré par le DSFR
+    // via un dégradé en arrière-plan appliqué au sélecteur [href], qui ne cible que les <a>.
+    // On réplique cette mécanique pour notre <button>, qui n'a pas d'attribut href.
+    button.fr-link {
+      background-image: var(--underline-img), var(--underline-img);
+      background-position:
+        var(--underline-x) 100%,
+        var(--underline-x) calc(100% - var(--underline-thickness));
+      background-repeat: no-repeat, no-repeat;
+      background-size:
+        var(--underline-hover-width) calc(var(--underline-thickness) * 2),
+        var(--underline-idle-width) var(--underline-thickness);
+      transition: background-size 0s;
+
+      &:hover {
+        color: $link-hover-color;
+        background-color: transparent;
+        --underline-hover-width: var(--underline-max-width);
+      }
+    }
   }
 
-  a:not(.fr-btn):not(.fr-sidemenu__link) {
+  a:not(.fr-btn):not(.fr-sidemenu__link):not(.fr-link) {
     color: $menu-item;
     transition: all 0.2s;
 
@@ -77,19 +100,78 @@
     }
   }
 
-  .menu-arrow {
-    transition: transform 0.4s;
-  }
-
-  [aria-expanded="true"] .menu-arrow {
-    transform: rotate(-180deg);
-  }
-
   .current-organisation {
     background-color: lighten($bg-leftbar, 10%);
-    font-size: 1.125rem;
+    font-size: 1.25rem;
+    font-weight: 600;
     border-top: 1px solid $card-border-color;
-    border-bottom: 1px solid $card-border-color;
+  }
+}
+
+.rdv-organisation-switcher-territory {
+  color: var(--text-mention-grey);
+  margin-bottom: 0.5rem;
+
+  & + & {
+    margin-top: 1.5rem;
+  }
+}
+
+.rdv-organisation-switcher-list {
+  margin-bottom: 1.5rem;
+
+  li + li {
+    margin-top: 0.5rem;
+  }
+
+  // Le sélecteur générique du DSFR "a[href]:hover, button:not(:disabled):hover, ..."
+  // (background-color: var(--hover-tint)) est plus spécifique qu'un simple ".foo:hover" et
+  // l'emporterait sinon sur notre propre fond de survol ; on imbrique donc dans la liste
+  // parente pour dépasser sa spécificité.
+  .rdv-organisation-switcher-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid var(--border-default-grey);
+    border-radius: 4px;
+    color: var(--text-default-grey);
+    font-weight: 500;
+    cursor: pointer;
+
+    // Même intensité de survol/appui que les tuiles du DSFR (mécanique .fr-enlarge-link)
+    &:hover,
+    &:focus {
+      text-decoration: none;
+      background-color: rgba(0, 0, 0, 0.05);
+      color: var(--text-action-high-blue-france);
+      border-color: var(--text-action-high-blue-france);
+    }
+
+    &:active {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    &--current {
+      color: var(--text-action-high-blue-france);
+      cursor: default;
+      border-color: var(--text-action-high-blue-france);
+
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: transparent;
+      }
+    }
+  }
+}
+
+.fr-badge--icon-only {
+  padding-right: 0;
+
+  &::before {
+    margin-right: 0;
   }
 }
 
