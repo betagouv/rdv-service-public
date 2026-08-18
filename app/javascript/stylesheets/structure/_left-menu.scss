@@ -102,7 +102,8 @@
 
   .current-organisation {
     background-color: lighten($bg-leftbar, 10%);
-    font-size: 1.125rem;
+    font-size: 1.25rem;
+    font-weight: 600;
     border-top: 1px solid $card-border-color;
   }
 }
