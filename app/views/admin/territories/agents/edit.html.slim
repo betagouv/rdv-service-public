@@ -28,10 +28,11 @@ h1
               .fr-mb-0.fr-text--sm.fr-text-mention--grey
                 | Vous n’avez pas les droits nécessaires pour modifier les services des agents
 
-  - target_access_right = @agent.agent_territorial_access_rights.find_or_initialize_by(territory: current_territory)
-  - access_right_policy = Agent::AgentTerritorialAccessRightPolicy.new(current_agent, target_access_right)
-  - can_edit_access_rights = access_right_policy.allow_to_manage_access_rights?
-  - can_edit_full_rights = access_right_policy.edit_full_rights?
+  ruby:
+    target_access_right = @agent.agent_territorial_access_rights.find_or_initialize_by(territory: current_territory)
+    access_right_policy = Agent::AgentTerritorialAccessRightPolicy.new(current_agent, target_access_right)
+    can_edit_access_rights = access_right_policy.allow_to_manage_access_rights?
+    can_edit_full_rights = access_right_policy.edit_full_rights?
   .card.m-2.rounded
     h2.card-header
       = t(".agent_access_rights_legend")

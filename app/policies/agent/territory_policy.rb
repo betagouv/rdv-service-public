@@ -6,7 +6,7 @@ class Agent::TerritoryPolicy
   end
 
   def territorial_admin?
-    @current_agent.territorial_roles.exists?(territory_id: @territory.id)
+    @current_agent.agent_territorial_access_rights.exists?(territory_id: @territory.id, full_rights: true)
   end
 
   alias manage_services? territorial_admin?

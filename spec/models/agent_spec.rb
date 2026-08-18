@@ -60,7 +60,6 @@ RSpec.describe Agent, type: :model do
       expect(agent.plage_ouvertures).to be_empty
       expect(agent.services).to be_empty
       expect(agent.agent_territorial_access_rights).to be_empty
-      expect(agent.territorial_roles).to be_empty
       expect(agent.teams).to be_empty
       expect(agent.referent_assignations).to be_empty
       expect(agent.sector_attributions).to be_empty

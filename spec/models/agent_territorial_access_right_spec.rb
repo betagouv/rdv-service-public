@@ -7,13 +7,13 @@ RSpec.describe AgentTerritorialAccessRight, type: :model do
 
       it "allows destroying one" do
         access_right1.destroy
-        expect(territory.roles.count).to eq 1
+        expect(territory.agent_territorial_access_rights.where(full_rights: true).count).to eq 1
       end
 
       it "allows unsetting full_rights on one" do
         access_right1.update(full_rights: false)
         expect(access_right1.reload.full_rights?).to be false
-        expect(territory.roles.count).to eq 1
+        expect(territory.agent_territorial_access_rights.where(full_rights: true).count).to eq 1
       end
     end
 
@@ -23,7 +23,7 @@ RSpec.describe AgentTerritorialAccessRight, type: :model do
 
       it "does not allow destroying it" do
         access_right1.destroy
-        expect(territory.roles.count).to eq 1
+        expect(territory.agent_territorial_access_rights.where(full_rights: true).count).to eq 1
         expect(access_right1.errors).to be_present
       end
 

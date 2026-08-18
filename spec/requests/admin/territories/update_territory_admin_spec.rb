@@ -18,7 +18,7 @@ RSpec.describe "Update territory admin" do
     it "doesn't allow making an agent a territorial admin" do
       patch admin_territory_agent_territorial_access_right_path(territory_id: territory.id, id: other_agent.id),
             params: { agent_territorial_access_right: { full_rights: "1" } }
-      expect(other_agent.reload.territorial_roles).to be_empty
+      expect(other_agent.reload.agent_territorial_access_rights.where(full_rights: true)).to be_empty
     end
   end
 end

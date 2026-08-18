@@ -83,12 +83,6 @@ class Agent < ApplicationRecord
   has_many :absences, dependent: :destroy
   has_many :agents_rdvs, dependent: :restrict_with_error
   has_many :roles, class_name: "AgentRole", dependent: :destroy
-  # "territorial_roles" est le statut d'administrateur de l'espace (full_rights: true), fusionné
-  # dans la table agent_territorial_access_rights. dependent: :destroy est porté par
-  # agent_territorial_access_rights ci-dessus, qui couvre déjà ces lignes.
-  # rubocop:disable Rails/HasManyOrHasOneDependent, Rails/InverseOf
-  has_many :territorial_roles, -> { where(full_rights: true) }, class_name: "AgentTerritorialAccessRight"
-  # rubocop:enable Rails/HasManyOrHasOneDependent, Rails/InverseOf
   has_many :sector_attributions, dependent: :destroy
   has_many :agent_teams, dependent: :destroy
   has_many :referent_assignations, dependent: :destroy
@@ -103,7 +97,7 @@ class Agent < ApplicationRecord
   has_many :teams, through: :agent_teams
   has_many :lieux, through: :plage_ouvertures
   has_many :rdvs, dependent: :restrict_with_error, through: :agents_rdvs
-  has_many :territories, through: :territorial_roles
+  has_many :territories, -> { where(agent_territorial_access_rights: { full_rights: true }) }, through: :agent_territorial_access_rights
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
   # we specify dependent: :destroy because by default it will be deleted (dependent: :delete)
   # and we need to destroy to trigger the callbacks on the model
@@ -268,7 +262,7 @@ class Agent < ApplicationRecord
   end
 
   def territorial_admin_in?(territory)
-    territorial_roles.exists?(territory: territory)
+    agent_territorial_access_rights.exists?(territory: territory, full_rights: true)
   end
 
   def participates_in?(rdv)

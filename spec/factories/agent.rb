@@ -61,7 +61,7 @@ FactoryBot.define do
         agent.roles << build(:agent_role, :admin, agent: agent, organisation: organisation)
       end
       evaluator.role_in_territories.each do |territory|
-        agent.territorial_roles << build(:agent_territorial_access_right, :full_rights, agent: agent, territory: territory)
+        agent.agent_territorial_access_rights << build(:agent_territorial_access_right, :full_rights, agent: agent, territory: territory)
       end
     end
 

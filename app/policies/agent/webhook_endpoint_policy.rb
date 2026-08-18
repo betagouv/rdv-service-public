@@ -10,7 +10,7 @@ class Agent::WebhookEndpointPolicy < ApplicationPolicy
   end
 
   def new?
-    pundit_user.territorial_roles.any?
+    pundit_user.agent_territorial_access_rights.where(full_rights: true).any?
   end
 
   alias create? territorial_admin?
@@ -26,7 +26,7 @@ class Agent::WebhookEndpointPolicy < ApplicationPolicy
     end
 
     def resolve
-      @scope.joins(:organisation).where(organisations: { territory_id: @current_agent.territorial_roles.select(:territory_id) })
+      @scope.joins(:organisation).where(organisations: { territory_id: @current_agent.agent_territorial_access_rights.where(full_rights: true).select(:territory_id) })
     end
   end
 end

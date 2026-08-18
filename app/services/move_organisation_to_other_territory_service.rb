@@ -143,7 +143,7 @@ class MoveOrganisationToOtherTerritoryService < BaseService
     Rails.logger.info("   Vous devriez envisager de le supprimer ou de transférer ses ressources restantes.")
     remaining_teams = @territory_origin.teams.count
     remaining_sectors = @territory_origin.sectors.count
-    remaining_roles = @territory_origin.roles.count
+    remaining_roles = @territory_origin.agent_territorial_access_rights.where(full_rights: true).count
     Rails.logger.info("   Ressources restantes: #{remaining_teams} équipes, #{remaining_sectors} secteurs, #{remaining_roles} rôles")
   end
 end

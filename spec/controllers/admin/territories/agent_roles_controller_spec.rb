@@ -1,6 +1,6 @@
 RSpec.describe Admin::Territories::AgentRolesController, type: :controller do
   # Le territory doit avoir au moins un agent admin d'espace restant
-  let!(:territory) { create(:territory).tap { |t| t.roles.create!(agent: create(:agent)) } }
+  let!(:territory) { create(:territory).tap { |t| t.agent_territorial_access_rights.create!(agent: create(:agent), full_rights: true) } }
 
   describe "POST #update" do
     it "changes role and redirect to territorial agent edit" do

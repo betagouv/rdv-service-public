@@ -26,7 +26,7 @@ class Agent::SectorPolicy
     end
 
     def resolve
-      @scope.where(territory_id: @current_agent.territorial_roles.select(:territory_id))
+      @scope.where(territory_id: @current_agent.agent_territorial_access_rights.where(full_rights: true).select(:territory_id))
     end
   end
 end

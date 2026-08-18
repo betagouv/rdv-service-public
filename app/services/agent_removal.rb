@@ -25,7 +25,7 @@ class AgentRemoval
   end
 
   def should_soft_delete?
-    (@agent.organisations - [@organisation]).empty? && @agent.territorial_roles.empty?
+    (@agent.organisations - [@organisation]).empty? && @agent.agent_territorial_access_rights.where(full_rights: true).empty?
   end
 
   def confirmation_message

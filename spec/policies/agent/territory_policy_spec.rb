@@ -143,7 +143,7 @@ RSpec.describe Agent::TerritoryPolicy::Scope, type: :policy do
 
       let!(:territory_with_role) do
         create(:territory, name: "Espace ou j'ai le statut administrateur (full_rights)").tap do |territory|
-          agent.territorial_roles.create!(territory:)
+          agent.agent_territorial_access_rights.create!(territory:, full_rights: true)
         end
       end
 
@@ -165,7 +165,7 @@ RSpec.describe Agent::TerritoryPolicy::Scope, type: :policy do
 
       let!(:territory_with_role_for_another_agent) do
         create(:territory, name: "Espace où quelqu'un d'autre a le statut administrateur (full_rights)").tap do |territory|
-          create(:agent).territorial_roles.create!(territory:)
+          create(:agent).agent_territorial_access_rights.create!(territory:, full_rights: true)
         end
       end
 

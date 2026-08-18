@@ -144,11 +144,11 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
 
     specify do
       subject.call
-      expect(agent1.territorial_roles.where(territory: territory_origin)).to be_present
-      expect(agent1.territorial_roles.where(territory: territory_target)).to be_present
-      expect(agent2.territorial_roles.where(territory: territory_target)).to be_present
-      expect(agent_wu.territorial_roles.where(territory: territory_origin)).to be_present
-      expect(agent_wu.territorial_roles.where(territory: territory_target)).not_to be_present
+      expect(agent1.agent_territorial_access_rights.where(territory: territory_origin, full_rights: true)).to be_present
+      expect(agent1.agent_territorial_access_rights.where(territory: territory_target, full_rights: true)).to be_present
+      expect(agent2.agent_territorial_access_rights.where(territory: territory_target, full_rights: true)).to be_present
+      expect(agent_wu.agent_territorial_access_rights.where(territory: territory_origin, full_rights: true)).to be_present
+      expect(agent_wu.agent_territorial_access_rights.where(territory: territory_target, full_rights: true)).not_to be_present
     end
   end
 
