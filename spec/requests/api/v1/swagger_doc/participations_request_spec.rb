@@ -42,7 +42,7 @@ RSpec.describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
         let(:client) { access_admin_agent["client"].to_s }
         let(:user) { build(:user, first_name: "Jean") }
         let!(:participation_object) { create(:participation, status: "seen", user: user, rdv: rdv) }
-        let!(:territorial_role) { AgentTerritorialRole.create(territory: organisation.territory, agent: admin_agent) }
+        let!(:territorial_role) { AgentTerritorialAccessRight.create(territory: organisation.territory, agent: admin_agent, full_rights: true) }
         let!(:rdv) { create(:rdv, organisation: organisation, agents: [admin_agent]) }
         let(:participation) { { participation: { status: status } } }
         let(:id) { participation_object.id }
