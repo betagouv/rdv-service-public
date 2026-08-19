@@ -32,14 +32,11 @@ tr
         | )
   td
     .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline
-      = link_to "", edit_admin_organisation_planning_plage_ouverture_path(organisation, plage_ouverture),
-              title: "Modifier",
+      = icon_link_to "Modifier", edit_admin_organisation_planning_plage_ouverture_path(organisation, plage_ouverture),
               class: "fr-btn fr-btn--tertiary fr-icon-edit-fill"
-      = link_to "", new_admin_organisation_planning_plage_ouverture_path(organisation, agent_id: plage_ouverture.agent, duplicate_plage_ouverture_id: plage_ouverture),
-              title: "Dupliquer",
+      = icon_link_to "Dupliquer", new_admin_organisation_planning_plage_ouverture_path(organisation, agent_id: plage_ouverture.agent, duplicate_plage_ouverture_id: plage_ouverture),
               class: "fr-btn fr-btn--tertiary fr-icon-clipboard-fill"
-      = link_to "", admin_organisation_planning_plage_ouverture_path(organisation, plage_ouverture),
+      = icon_link_to "Supprimer", admin_organisation_planning_plage_ouverture_path(organisation, plage_ouverture),
               method: :delete,
-              title: "Supprimer",
               class: "fr-btn fr-btn--tertiary fr-icon-delete-fill",
               data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?" }
