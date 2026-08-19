@@ -1,3 +1,5 @@
+# Ces feature specs sont complétées par des specs sur les permissions dans spec/controllers/admin/territories/agent_territorial_access_rights_controller_spec.rb
+
 RSpec.describe "territory admin can manage agents", type: :feature do
   let(:territory) { create(:territory, departement_number: "62") }
   let(:organisation) { create(:organisation, territory: territory) }

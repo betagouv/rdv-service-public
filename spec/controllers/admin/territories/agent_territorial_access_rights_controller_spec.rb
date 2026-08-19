@@ -1,3 +1,5 @@
+# Ces specs de permissions complètent les specs de features de spec/features/territory_admins/territory_admin_can_manage_agents_spec.rb
+
 RSpec.describe Admin::Territories::AgentTerritorialAccessRightsController, type: :controller do
   let!(:territory) { create(:territory).tap { |t| t.agent_territorial_access_rights.create!(agent: create(:agent), territory_admin: true) } }
   let(:organisation) { create(:organisation, territory: territory) }
