@@ -233,6 +233,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_24_085938) do
     t.boolean "caldav_include_sensitive_data", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "caldav_calendar_name"
     t.index ["agent_id"], name: "index_caldav_configs_on_agent_id", unique: true
   end
 

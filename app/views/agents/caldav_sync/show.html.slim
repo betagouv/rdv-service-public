@@ -35,6 +35,8 @@ p
       .fr-mb-2w
         .fr-badge.fr-badge--success Synchronisation active
         p.fr-my-2w Votre agenda est synchronisé avec l'agenda CalDAV #{current_agent.caldav_config.caldav_username}.
+        - if current_agent.caldav_config.caldav_calendar_name.present?
+          p.fr-my-2w Nom d’affichage : #{current_agent.caldav_config.caldav_calendar_name}.
       .fr-btns-group.fr-btns-group--inline
         - if current_agent.organisations.any?
           = link_to("Voir mon agenda", admin_organisation_planning_agenda_path(current_agent.organisations.first), class: "fr-btn fr-btn--secondary")
@@ -57,6 +59,12 @@ p
     .fr-input-group
       label.fr-label for="caldav_agenda_url" URL du serveur ou de l’agenda CalDAV
       input#caldav_agenda_url.fr-input[type="text" name="caldav_agenda_url" required]
+    .fr-input-group
+      label.fr-label for="caldav_calendar_name"
+        | Nom d’affichage de l’agenda
+        span.fr-hint-text
+          | Optionnel. Ce nom sera utilisé dans le planning pour vous indiquer les indisponibilités provenant de votre agenda externe.
+      input#caldav_calendar_name.fr-input[type="text" name="caldav_calendar_name"]
     fieldset.fr-fieldset
       legend.fr-fieldset__legend--regular.fr-fieldset__legend
         | Données personnelles dans l'agenda externe

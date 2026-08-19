@@ -30,6 +30,19 @@ RSpec.describe Admin::Api::Agenda::ExternalCalendarEventsController, type: :cont
     expect(response.parsed_body).to match_array(expected_response)
   end
 
+  it "uses the caldav calendar name in the title when present" do
+    agent = create(:agent, :with_caldav_config)
+    agent.caldav_config.update!(caldav_calendar_name: "Agenda perso")
+    sign_in agent
+
+    ExternalCalendarEvent.create!(agent:, url: "1234", starts_at: today_at(10, 30), ends_at: today_at(12))
+
+    current_week = Time.zone.now.beginning_of_week.beginning_of_day..Time.zone.now.end_of_week.end_of_day
+    get :index, params: { agent_id: agent.id, start: current_week.begin, end: current_week.end, format: :json }
+
+    expect(response.parsed_body).to contain_exactly(hash_including("title" => "Indisponibilité provenant de Agenda perso"))
+  end
+
   it "returns unauthorized if agent is not logged in" do
     get :index, params: { agent_id: 1, organisation_id: 1, start: Date.new(2019, 8, 12), end: Date.new(2019, 8, 19), format: :json }
     expect(response).to be_unauthorized
