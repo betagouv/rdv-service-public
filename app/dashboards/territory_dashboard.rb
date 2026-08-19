@@ -44,6 +44,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     name
     departement_number
     work_on_sunday
+    admin_agents
     agent_territorial_access_rights
     organisations
     category
