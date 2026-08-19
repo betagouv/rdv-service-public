@@ -4,7 +4,7 @@ RSpec.describe Admin::Territories::AgentTerritorialAccessRightsController, type:
 
   describe "PATCH #update" do
     context "when the current agent is territory admin" do
-      let(:current_agent) { create(:agent, role_in_territories: [territory]) }
+      let(:current_agent) { create(:agent, admin_in_territories: [territory]) }
       let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
       before { sign_in current_agent }
@@ -34,7 +34,7 @@ RSpec.describe Admin::Territories::AgentTerritorialAccessRightsController, type:
 
       it "does not allow removing the last territory admin" do
         solo_admin_territory = create(:territory)
-        solo_admin = create(:agent, role_in_territories: [solo_admin_territory])
+        solo_admin = create(:agent, admin_in_territories: [solo_admin_territory])
         sign_in solo_admin
 
         expect do

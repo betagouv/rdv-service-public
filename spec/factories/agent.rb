@@ -47,7 +47,7 @@ FactoryBot.define do
     end
 
     transient do
-      role_in_territories { [] }
+      admin_in_territories { [] }
     end
 
     after(:build) do |agent, evaluator|
@@ -60,7 +60,7 @@ FactoryBot.define do
       evaluator.admin_role_in_organisations.each do |organisation|
         agent.roles << build(:agent_role, :admin, agent: agent, organisation: organisation)
       end
-      evaluator.role_in_territories.each do |territory|
+      evaluator.admin_in_territories.each do |territory|
         agent.agent_territorial_access_rights << build(:agent_territorial_access_right, :territory_admin, agent: agent, territory: territory)
       end
     end

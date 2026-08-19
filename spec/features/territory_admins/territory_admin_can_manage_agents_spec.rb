@@ -4,7 +4,7 @@ RSpec.describe "territory admin can manage agents", type: :feature do
 
   describe "listing agents" do
     it "works" do
-      zarg = create(:agent, last_name: "Zarg", admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      zarg = create(:agent, last_name: "Zarg", admin_role_in_organisations: [organisation], admin_in_territories: [territory])
       blot = create(:agent, last_name: "Blot", basic_role_in_organisations: [organisation])
       create(:agent_territorial_access_right, agent: blot, territory: territory)
       login_as(zarg, scope: :agent)
@@ -27,7 +27,7 @@ RSpec.describe "territory admin can manage agents", type: :feature do
 
   describe "inviting an agent" do
     let(:admin) do
-      create(:agent, role_in_territories: [territory], admin_role_in_organisations: [organisation, other_organisation])
+      create(:agent, admin_in_territories: [territory], admin_role_in_organisations: [organisation, other_organisation])
     end
     let!(:organisation) { create(:organisation, name: "MDS de Valence", territory: territory) }
     let!(:other_organisation) { create(:organisation, name: "MDS de Chambéry", territory: territory) }
@@ -78,8 +78,8 @@ RSpec.describe "territory admin can manage agents", type: :feature do
     it "works" do
       team_a = create(:team, name: "A", territory: territory)
       team_b = create(:team, name: "B", territory: territory)
-      current_agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [], teams: [team_a])
-      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [], teams: [team_a, team_b])
+      current_agent = create(:agent, admin_role_in_organisations: [organisation], admin_in_territories: [], teams: [team_a])
+      agent = create(:agent, admin_role_in_organisations: [organisation], admin_in_territories: [], teams: [team_a, team_b])
       create(:agent_territorial_access_right, agent: current_agent, territory: territory, allow_to_manage_teams: true)
       create(:agent_territorial_access_right, agent: agent, territory: territory)
       login_as(current_agent, scope: :agent)

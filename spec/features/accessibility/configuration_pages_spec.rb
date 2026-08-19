@@ -1,7 +1,7 @@
 RSpec.describe "configuration pages", js: true do
   it "index of configuration" do
     territory = create(:territory)
-    agent = create(:agent, role_in_territories: [territory])
+    agent = create(:agent, admin_in_territories: [territory])
     login_as(agent, scope: :agent)
 
     path = admin_territory_path(territory)

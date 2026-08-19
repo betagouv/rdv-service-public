@@ -8,7 +8,7 @@ RSpec.describe CronJob::RefreshAgentsSensitiveAccountJob, type: :job do
     it "met sensitive_account à true pour les admins de territoires avec beaucoup de RDVs" do
       territory = create(:territory)
       organisation = create(:organisation, territory: territory)
-      agent = create(:agent, role_in_territories: [territory], sensitive_account: false)
+      agent = create(:agent, admin_in_territories: [territory], sensitive_account: false)
       create_list(:rdv, 3, organisation: organisation)
 
       described_class.perform_now
@@ -18,7 +18,7 @@ RSpec.describe CronJob::RefreshAgentsSensitiveAccountJob, type: :job do
 
     it "met sensitive_account à false pour les admins de territoires avec peu de RDVs" do
       territory = create(:territory)
-      agent = create(:agent, role_in_territories: [territory], sensitive_account: true)
+      agent = create(:agent, admin_in_territories: [territory], sensitive_account: true)
 
       described_class.perform_now
 
@@ -57,7 +57,7 @@ RSpec.describe CronJob::RefreshAgentsSensitiveAccountJob, type: :job do
       territory = create(:territory)
       organisation_rdv_insertion = create(:organisation, verticale: :rdv_insertion)
       agent = create(:agent,
-                     role_in_territories: [territory],
+                     admin_in_territories: [territory],
                      admin_role_in_organisations: [organisation_rdv_insertion],
                      sensitive_account: false)
 

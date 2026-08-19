@@ -1,7 +1,7 @@
 RSpec.describe "territory admin can manage sectors" do
   let(:territory) { create(:territory, departement_number: "62") }
   let(:agent) do
-    create(:agent, role_in_territories: [territory])
+    create(:agent, admin_in_territories: [territory])
   end
   let!(:sector_arques) { create(:sector, human_id: "arques", territory: territory) }
 

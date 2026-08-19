@@ -2,8 +2,8 @@ RSpec.describe "Admin can configure the organisation" do
   let(:territory) { create(:territory) }
   let(:organisation) { create(:organisation, territory: territory) }
 
-  let(:agent) { create(:agent, basic_role_in_organisations: [organisation], role_in_territories: [territory]) }
-  let(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], role_in_territories: []) }
+  let(:agent) { create(:agent, basic_role_in_organisations: [organisation], admin_in_territories: [territory]) }
+  let(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], admin_in_territories: []) }
   let!(:other_agent_access_right) { create(:agent_territorial_access_right, allow_to_manage_access_rights: false, territory: territory, agent: other_agent) }
 
   before { login_as(agent, scope: :agent) }
