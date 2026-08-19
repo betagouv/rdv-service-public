@@ -5,7 +5,7 @@ class Admin::Territories::AgentTerritorialAccessRightsController < Admin::Territ
 
     authorize(agent_territorial_access_right, policy_class: Agent::AgentTerritorialAccessRightPolicy)
     agent_territorial_access_right.assign_attributes(agent_territorial_access_right_params)
-    authorize(agent_territorial_access_right, policy_class: Agent::AgentTerritorialAccessRightPolicy)
+    authorize(agent_territorial_access_right, :authorized_changes?, policy_class: Agent::AgentTerritorialAccessRightPolicy)
 
     if agent_territorial_access_right.save
       flash[:success] = "Droits d'accès mis à jour"

@@ -36,7 +36,8 @@ RSpec.describe Admin::Territories::AgentTerritorialAccessRightsController, type:
 
       it "does not allow removing the last territory admin" do
         solo_admin_territory = create(:territory)
-        solo_admin = create(:agent, admin_in_territories: [solo_admin_territory])
+        solo_admin_organisation = create(:organisation, territory: solo_admin_territory)
+        solo_admin = create(:agent, admin_role_in_organisations: [solo_admin_organisation], admin_in_territories: [solo_admin_territory])
         sign_in solo_admin
 
         expect do
