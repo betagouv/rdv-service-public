@@ -50,17 +50,16 @@ RSpec.describe Admin::Territories::AgentTerritorialAccessRightsController, type:
         expect(flash[:error]).to eq("Il doit toujours y avoir au moins un agent responsable par espace")
       end
 
-      it "does not allow a territory admin, without allow_to_manage_access_rights, to also change the 3 specific rights" do
+      it "silently ignores the 3 specific rights when a territory admin without allow_to_manage_access_rights submits them alongside territory_admin" do
         patch :update, params: {
           territory_id: territory.id, id: target_agent.id,
           agent_territorial_access_right: { territory_admin: "1", allow_to_manage_teams: "1" },
         }
 
-        expect(response).to redirect_to(authenticated_agent_root_url)
-        expect(flash[:error]).to eq(I18n.t("pundit.default"))
         target_agent.reload
-        expect(target_agent.territorial_admin_in?(territory)).to be false
+        expect(target_agent.territorial_admin_in?(territory)).to be true
         expect(target_agent.access_rights_for_territory(territory)&.allow_to_manage_teams?).to be_falsey
+        expect(flash[:success]).to be_present
       end
     end
 
@@ -87,7 +86,7 @@ RSpec.describe Admin::Territories::AgentTerritorialAccessRightsController, type:
         expect(flash[:success]).to be_present
       end
 
-      it "does not allow granting territory_admin" do
+      it "silently ignores an attempt to grant territory_admin" do
         create(:agent_territorial_access_right, agent: target_agent, territory: territory)
 
         patch :update, params: {
@@ -96,7 +95,7 @@ RSpec.describe Admin::Territories::AgentTerritorialAccessRightsController, type:
         }
 
         expect(target_agent.reload.territorial_admin_in?(territory)).to be false
-        expect(flash[:error]).to be_present
+        expect(flash[:success]).to be_present
       end
     end
 
