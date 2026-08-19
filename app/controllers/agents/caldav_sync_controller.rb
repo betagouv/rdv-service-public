@@ -66,7 +66,7 @@ class Agents::CaldavSyncController < AgentAuthController
   private
 
   def permitted_params
-    params.permit(:caldav_agenda_url, :caldav_username, :caldav_password, :caldav_include_sensitive_data, :caldav_calendar_name)
+    params.permit(:caldav_agenda_url, :caldav_username, :caldav_password, :caldav_include_sensitive_data, :caldav_calendar_name, :caldav_calendar_color)
   end
 
   # Vérifie la configuration CalDAV en 3 étapes : authentification, lecture, écriture.

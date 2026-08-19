@@ -1,7 +1,7 @@
 class Admin::Api::Agenda::ExternalCalendarEventsController < Admin::Api::BaseController
   def index
     agents_with_caldav_config = agents.select(&:caldav_configured?)
-    calendar_names_by_agent_id = agents_with_caldav_config.to_h { |agent| [agent.id, agent.caldav_config.caldav_calendar_name] }
+    caldav_configs_by_agent_id = agents_with_caldav_config.to_h { |agent| [agent.id, agent.caldav_config] }
 
     external_calendar_events = ExternalCalendarEvent
       .within_range(time_range_params)
@@ -9,12 +9,13 @@ class Admin::Api::Agenda::ExternalCalendarEventsController < Admin::Api::BaseCon
 
     external_calendar_occurrences = []
     external_calendar_events.each do |event|
+      caldav_config = caldav_configs_by_agent_id[event.agent_id]
       event.all_occurrences_within(time_range_params).each do |occurrence|
         external_calendar_occurrences << {
-          title: external_event_title(calendar_names_by_agent_id[event.agent_id]),
+          title: external_event_title(caldav_config.caldav_calendar_name),
           start: occurrence.starts_at.as_json,
           end: occurrence.ends_at.as_json,
-          color: AbsencesHelper::CALENDAR_BACKGROUND_COLOR,
+          color: caldav_config.caldav_calendar_color.presence || AbsencesHelper::CALENDAR_BACKGROUND_COLOR,
           resourceIds: [event.agent_id], # https://fullcalendar.io/docs/resources-and-events
         }
       end
