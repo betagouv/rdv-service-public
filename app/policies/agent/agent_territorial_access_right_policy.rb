@@ -11,26 +11,21 @@ class Agent::AgentTerritorialAccessRightPolicy
   end
   alias update? edit?
 
-  # À appeler une fois les nouveaux attributs assignés (pas encore sauvegardés) : vérifie que
-  # chaque champ effectivement modifié reste dans le périmètre de l'agent courant. `edit?`/`update?`
-  # ci-dessus ne fait qu'un contrôle grossier ("a-t-il un droit quelconque ici"), c'est cette méthode
-  # qui empêche par exemple un agent avec seulement `allow_to_manage_teams` de s'octroyer `territory_admin`.
-  def authorized_changes?
-    return false if @agent_territorial_access_right.territory_admin_changed? && !territorial_admin?
-    return false if specific_rights_changed? && !allow_to_manage_access_rights?
-
-    true
-  end
-
   def edit_territory_admin?
     territorial_admin? && agent_in_scope?
   end
 
-  private
-
-  def specific_rights_changed?
-    @agent_territorial_access_right.changes.keys.map(&:to_sym).intersect?(%i[allow_to_manage_teams allow_to_manage_access_rights allow_to_invite_agents])
+  # cf. https://github.com/varvet/pundit#strong-parameters
+  # Chaque champ n'est permis que si l'agent courant a le droit de le modifier ; les autres sont
+  # silencieusement filtrés par `.permit` dans le contrôleur, pas besoin de vérifier après-coup.
+  def permitted_attributes
+    attributes = []
+    attributes += %i[allow_to_manage_teams allow_to_manage_access_rights allow_to_invite_agents] if allow_to_manage_access_rights?
+    attributes << :territory_admin if edit_territory_admin?
+    attributes
   end
+
+  private
 
   def territory_policy
     Agent::TerritoryPolicy.new(@current_agent, @agent_territorial_access_right.territory)
