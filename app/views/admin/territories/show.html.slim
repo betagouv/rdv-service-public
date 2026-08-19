@@ -78,13 +78,13 @@ h1.fr-h2.fr-my-2w.fr-pb-2w =  t("admin.territories.show.title", territory: curre
           .fr-tile__body
             .fr-tile__content
               h2.fr-tile__title
-                = link_to edit_admin_territory_services_path(current_territory) do
+                = link_to edit_admin_territory_calendar_settings_path(current_territory) do
                   | Calendrier
               .fr-tile__desc
-                | Gestion des jours fériés, des dimanches et des fuseaux horaires
+                | Gestion des jours fériés et des dimanches
           .fr-tile__header
             .fr-tile__pictogram
-              = dsfr_svg "artwork/pictograms/digital/search"
+              = dsfr_svg "artwork/pictograms/digital/calendar"
 
 h1.fr-h3.fr-pt-4w.fr-pb-2w Paramètres avancés
 
