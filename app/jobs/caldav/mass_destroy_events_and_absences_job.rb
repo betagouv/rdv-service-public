@@ -20,7 +20,7 @@ module Caldav
     def mass_destroy_events(agent)
       agent.agents_rdvs.where.not(caldav_url: nil).each do |agents_rdv|
         begin
-          agent.caldav_client.events.delete(agents_rdv.caldav_url)
+          agent.caldav_config.caldav_client.events.delete(agents_rdv.caldav_url)
         rescue Calendav::RequestError => e
           # On ignore les erreurs 404 (event déjà supprimé côté Caldav)
           raise unless e.message == "404 Not Found"
