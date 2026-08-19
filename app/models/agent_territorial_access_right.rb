@@ -6,6 +6,8 @@ class AgentTerritorialAccessRight < ApplicationRecord
   belongs_to :agent
   belongs_to :territory
 
+  attr_readonly :agent_id, :territory_id
+
   # Hooks
   before_destroy :prevent_removing_last_territory_admin, if: :territory_admin?
   before_save :prevent_removing_last_territory_admin, if: :losing_territory_admin?
