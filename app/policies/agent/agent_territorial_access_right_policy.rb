@@ -9,7 +9,18 @@ class Agent::AgentTerritorialAccessRightPolicy
   def edit?
     allow_to_manage_access_rights? || edit_territory_admin?
   end
-  alias update? edit?
+
+  def update?
+    if @agent_territorial_access_right.territory_admin_changed?
+      return false unless territorial_admin?
+    end
+
+    if @agent_territorial_access_right.changes.keys.map(&:to_sym).intersect?(%i[allow_to_manage_teams allow_to_manage_access_rights allow_to_invite_agents])
+      return false unless allow_to_manage_access_rights?
+    end
+
+    true
+  end
 
   def edit_territory_admin?
     territorial_admin? && agent_in_scope?
