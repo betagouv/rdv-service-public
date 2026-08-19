@@ -13,4 +13,5 @@
 
     .fr-grid-row.mb-5
       .fr-col.text-right
+        / On met un fr-btn--lg pour que le bouton ai plus de poids visuel que l'accordéon
         = f.submit((motif.new_record? ? "Créer le motif" : "Enregistrer"), class: "fr-btn fr-btn--lg")
