@@ -2,7 +2,7 @@ class Agent::WebhookEndpointPolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
   def allowed_to_manage_webhooks?
-    self.class.allowed_to_manage_webhooks_in?(record.organisation.territory, pundit_user)
+    self.class.allowed_to_manage_webhooks_in?(record.organisation.territory, current_agent)
   end
 
   def self.allowed_to_manage_webhooks_in?(territory, agent)
@@ -10,7 +10,7 @@ class Agent::WebhookEndpointPolicy < ApplicationPolicy
   end
 
   def new?
-    pundit_user.agent_territorial_access_rights.where(territory_admin: true).any?
+    current_agent.agent_territorial_access_rights.where(territory_admin: true).any?
   end
 
   alias create? allowed_to_manage_webhooks?
