@@ -1,7 +1,7 @@
 = territory_navigation(t(".title"))
 
-.row.justify-content-center
-  .col-md-8
+.fr-grid-row.justify-content-center
+  .fr-col-md-8
     .card
       .card-body
         = form_for current_territory, url: admin_territory_rdv_fields_path(current_territory), builder: Dsfr::FormBuilder do |f|
