@@ -1,7 +1,7 @@
 class Agent::WebhookEndpointPolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
-  def territorial_admin?
+  def allowed_to_manage_webhooks?
     self.class.allowed_to_manage_webhooks_in?(record.organisation.territory, pundit_user)
   end
 
@@ -13,11 +13,11 @@ class Agent::WebhookEndpointPolicy < ApplicationPolicy
     pundit_user.agent_territorial_access_rights.where(territory_admin: true).any?
   end
 
-  alias create? territorial_admin?
-  alias edit? territorial_admin?
-  alias update? territorial_admin?
-  alias destroy? territorial_admin?
-  alias versions? territorial_admin?
+  alias create? allowed_to_manage_webhooks?
+  alias edit? allowed_to_manage_webhooks?
+  alias update? allowed_to_manage_webhooks?
+  alias destroy? allowed_to_manage_webhooks?
+  alias versions? allowed_to_manage_webhooks?
 
   class Scope
     def initialize(agent, scope)

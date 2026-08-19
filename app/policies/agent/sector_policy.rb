@@ -4,7 +4,7 @@ class Agent::SectorPolicy
     @sector = sector
   end
 
-  def territorial_admin?
+  def allowed_to_manage_sectors?
     self.class.allowed_to_manage_sectors_in?(@sector.territory, @current_agent)
   end
 
@@ -12,12 +12,12 @@ class Agent::SectorPolicy
     agent.territorial_admin_in?(territory)
   end
 
-  alias new? territorial_admin?
-  alias create? territorial_admin?
-  alias show? territorial_admin?
-  alias edit? territorial_admin?
-  alias update? territorial_admin?
-  alias destroy? territorial_admin?
+  alias new? allowed_to_manage_sectors?
+  alias create? allowed_to_manage_sectors?
+  alias show? allowed_to_manage_sectors?
+  alias edit? allowed_to_manage_sectors?
+  alias update? allowed_to_manage_sectors?
+  alias destroy? allowed_to_manage_sectors?
 
   class Scope
     def initialize(agent, scope)

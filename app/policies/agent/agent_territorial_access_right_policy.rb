@@ -12,7 +12,7 @@ class Agent::AgentTerritorialAccessRightPolicy
   alias update? edit?
 
   def edit_territory_admin?
-    territorial_admin? && visible_agent?
+    territorial_admin? && agent_in_scope?
   end
 
   private
@@ -25,7 +25,7 @@ class Agent::AgentTerritorialAccessRightPolicy
     @current_agent.territorial_admin_in?(@agent_territorial_access_right.territory)
   end
 
-  def visible_agent?
+  def agent_in_scope?
     Agent::AgentPolicy::Scope.new(@current_agent, Agent).resolve.exists?(id: @agent_territorial_access_right.agent_id)
   end
 end
