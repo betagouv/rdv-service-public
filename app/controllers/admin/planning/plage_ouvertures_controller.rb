@@ -68,7 +68,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     @plage_ouverture.organisation = current_organisation
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     if @plage_ouverture.save
-      Notifiers::PlageOuvertureCreated.new(@plage_ouverture).perform
+      Notifiers::Agent::PlageOuverture.new(@plage_ouverture).created!
       flash[:success] = "Plage d'ouverture créée"
       update_online_booking_banner_display
       redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
@@ -80,7 +80,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   def update
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     if @plage_ouverture.update(plage_ouverture_params)
-      Notifiers::PlageOuvertureUpdated.new(@plage_ouverture).perform
+      Notifiers::Agent::PlageOuverture.new(@plage_ouverture).updated!
       flash[:success] = "La plage d'ouverture a été modifiée."
       update_online_booking_banner_display
       redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
@@ -91,9 +91,9 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
   def destroy
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
-    notifier = Notifiers::PlageOuvertureDestroyed.new(@plage_ouverture)
+    notifier = Notifiers::Agent::PlageOuverture.new(@plage_ouverture, serialize: true)
     if @plage_ouverture.destroy
-      notifier.perform
+      notifier.destroyed!
       flash[:notice] = "La plage d'ouverture a été supprimée."
       redirect_to admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)
     else
