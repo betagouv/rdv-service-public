@@ -5,17 +5,10 @@ module Rdv::Updatable
     Rdv.transaction do
       @old_agent_ids = agent_ids.to_a
       assign_attributes(attributes) # this can assign agent_ids and thus persist
-      self.updated_at = Time.zone.now
 
       previous_participations = participations.select(&:persisted?)
       remove_duplicate_participations
       set_created_by_for_new_participations(author)
-
-      if status_changed? && valid?
-        self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
-        change_participation_statuses
-        participations.reload # reload is needed after .persisted? method call
-      end
 
       if block_given?
         unless block.call(self) # yield RDV before saving, can be used to run policy check
@@ -32,53 +25,7 @@ module Rdv::Updatable
     end
   end
 
-  def participation_token(user_id)
-    # For user invited with tokens, nil default for not invited users
-    @notifier&.participations_tokens_by_user_id&.fetch(user_id, nil)
-  end
-
-  def new_cancelled_notifier(author, previous_participations)
-    # Don't notify RDV cancellation to users that had previously cancelled their individual participation
-    available_users_for_notif = previous_participations.select(&:send_lifecycle_notifications?).select(&:not_cancelled?).map(&:user)
-    Notifiers::RdvCancelled.new(self, author, available_users_for_notif)
-  end
-
-  def rdv_status_reloaded_from_cancelled?
-    status_previously_was.in?(Rdv::CANCELLED_STATUSES) && status == "unknown"
-  end
-
-  def lieu_changed?
-    # Rappel :
-    # - si le motif du RDV est de type `public_office`, le lieu est forcément renseigné, sinon il est forcément nil
-    # - il est impossible de changer le motif d'un RDV
-    return false unless lieu
-
-    previous_changes["lieu_id"].present? || lieu.previous_changes.keys.include?("name") || lieu.previous_changes.keys.include?("address")
-  end
-
-  def rdv_cancelled?
-    previous_changes["status"]&.last.in?(Rdv::CANCELLED_STATUSES)
-  end
-
-  def starts_at_changed?
-    previous_changes["starts_at"].present?
-  end
-
-  def rdv_updated?
-    starts_at_changed? || lieu_changed? || visio_url_custom_changed?
-    # || agents_changed? désactivé pour l’instant cf https://github.com/betagouv/rdv-service-public/pull/5399
-  end
-
   private
-
-  def visio_url_custom_changed?
-    collectif? && visio? && previous_changes["visio_url_custom"].present?
-  end
-
-  def agents_changed?
-    # we cannot use ActiveModel::Dirty methods here for this has_many association
-    @old_agent_ids.to_set != agent_ids.to_set
-  end
 
   def remove_duplicate_participations
     existing_participations = Participation.where(rdv_id: id).to_a # pour éviter une requête N+1
@@ -91,40 +38,47 @@ module Rdv::Updatable
     end.uniq!
   end
 
-  def notify!(author, previous_participations)
-    if rdv_cancelled?
-      file_attentes.destroy_all
-      @notifier = new_cancelled_notifier(author, previous_participations)
-    elsif rdv_status_reloaded_from_cancelled?
-      @notifier = Notifiers::RdvCreated.new(self, author)
-    elsif rdv_updated?
-      @notifier = Notifiers::RdvUpdated.new(self, author, old_agent_ids: @old_agent_ids)
-    end
+  def set_created_by_for_new_participations(author) # rubocop:disable Naming/AccessorMethodName
+    participations.select(&:new_record?).each { |participation| participation.created_by = author }
+  end
 
-    @notifier&.perform
+  def notify!(author, previous_participations)
+    if should_notify_of_changes?
+      # Il y a un léger bug: si on ajoute des agents en même temps qu'on change le starts_at,
+      # les nouveaux agents reçoivent un mail qui indique que le rdv est modifié, et pas qu'il est ajouté.
+      Notifiers::RdvUpdated.new(self, author, old_agent_ids: @old_agent_ids).perform
+    elsif agents_changed?
+      Notifiers::Agent::AddedToRdv.new(rdv: self, author:, agent_ids: (agent_ids - @old_agent_ids)).notify_agents
+    end
 
     if collectif? && previous_participations.sort != participations.sort
       Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
     end
   end
 
-  def change_participation_statuses
-    case status
-    when "unknown"
-      # Setting to unknown means resetting the rdv status by agents and reset ALL participations statuses
-      participations.each { _1.update!(status: status) }
-    when "revoked", "excused"
-      # When rdv status is revoked/excused, not cancelled participations are updated to revoked/excused
-      # Collectives RDV status cannot be excused (validations)
-      participations.not_cancelled.each { _1.update!(status: status) }
-    when "seen", "noshow"
-      # When rdv status is seen/noshow, unknowns participations statuses are updated to seen/noshow
-      # Collectives RDV status cannot be noshow (validations)
-      participations.unknown.each { _1.update!(status: status) }
-    end
+  def should_notify_of_changes?
+    starts_at_changed? || lieu_changed? || visio_url_custom_changed?
   end
 
-  def set_created_by_for_new_participations(author) # rubocop:disable Naming/AccessorMethodName
-    participations.select(&:new_record?).each { |participation| participation.created_by = author }
+  def lieu_changed?
+    # Rappel :
+    # - si le motif du RDV est de type `public_office`, le lieu est forcément renseigné, sinon il est forcément nil
+    # - il est impossible de changer le motif d'un RDV
+    return false unless lieu
+
+    previous_changes["lieu_id"].present? || lieu.previous_changes.keys.include?("name") || lieu.previous_changes.keys.include?("address")
+  end
+
+  def starts_at_changed?
+    previous_changes["starts_at"].present?
+  end
+
+  def visio_url_custom_changed?
+    collectif? && visio? && previous_changes["visio_url_custom"].present?
+  end
+
+  def agents_changed?
+    # we cannot use ActiveModel::Dirty methods here for this has_many association
+    @old_agent_ids.to_set != agent_ids.to_set
   end
 end

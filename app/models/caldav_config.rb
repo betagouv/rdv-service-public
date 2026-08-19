@@ -1,9 +1,7 @@
-module Agent::CaldavConfiguration
-  extend ActiveSupport::Concern
+class CaldavConfig < ApplicationRecord
+  encrypts :caldav_password, deterministic: true
 
-  def caldav_configured?
-    caldav_agenda_url.present? || caldav_username.present? || caldav_password.present?
-  end
+  belongs_to :agent
 
   def caldav_client
     @caldav_client ||= Calendav::Client.new(

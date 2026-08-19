@@ -89,7 +89,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     doc.add_screenshot(page, text: "J'ouvre le menu de configuration et je clique sur la Réservation en ligne", wait_for: "Réservation en ligne")
 
-    click_on "Réservation en ligne"
+    within("#main") { click_on "Réservation en ligne" }
 
     doc.add_screenshot(page, text: "Je sélectionne mon motif et je valide", wait_for: "Vous gardez le contrôle")
 

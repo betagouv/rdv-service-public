@@ -42,12 +42,12 @@ class Agents::CaldavSyncController < AgentAuthController
 
   def update
     skip_authorization
-    current_agent.assign_attributes(permitted_params)
+    caldav_config.assign_attributes(permitted_params)
 
     error = caldav_config_error
     if error.nil?
-      flash[:success] = "La synchronisation avec votre agenda CalDAV #{current_agent.caldav_username} est activée."
-      current_agent.save!
+      flash[:success] = "La synchronisation avec votre agenda CalDAV #{caldav_config.caldav_username} est activée."
+      caldav_config.save!
       Caldav::MassExportEventToCaldavJob.perform_later(current_agent)
     else
       flash[:alert] = error
@@ -58,7 +58,7 @@ class Agents::CaldavSyncController < AgentAuthController
 
   def destroy
     skip_authorization
-    current_agent.update!(caldav_disconnect_started_at: Time.current)
+    caldav_config.update!(caldav_disconnect_started_at: Time.current)
     Caldav::MassDestroyEventsAndAbsencesJob.perform_later(current_agent)
     redirect_to agents_calendar_sync_caldav_sync_path
   end
@@ -72,7 +72,7 @@ class Agents::CaldavSyncController < AgentAuthController
   # Vérifie la configuration CalDAV en 3 étapes : authentification, lecture, écriture.
   # Retourne nil si tout est OK, ou un message d’erreur décrivant l’étape qui a échoué.
   def caldav_config_error
-    client = current_agent.caldav_client
+    client = caldav_config.caldav_client
     agenda_url = params[:caldav_agenda_url]
 
     begin
@@ -109,6 +109,10 @@ class Agents::CaldavSyncController < AgentAuthController
       event.summary = "Test de connexion RDV Service Public"
     end
     cal.to_ical
+  end
+
+  def caldav_config
+    @caldav_config ||= current_agent.caldav_config || current_agent.build_caldav_config
   end
 
   def pundit_user

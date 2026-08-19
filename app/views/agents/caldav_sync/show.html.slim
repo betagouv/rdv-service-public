@@ -25,7 +25,7 @@ p
   = external_link_to("contacter le support", new_aide_demande_support_path(role: "agent", sujet: "Synchronisation CalDAV"))
   | .
 
-- if current_agent.caldav_disconnect_started_at.present?
+- if current_agent.caldav_config&.caldav_disconnect_started_at.present?
     p
       |> Les événements qui avaient été importés dans votre agenda sont en cours de suppression. Cela peut prendre quelques minutes.
       | Vous pouvez revenir sur cette page plus tard pour reconfigurer vos identifiants CalDAV.
@@ -34,7 +34,7 @@ p
     .card-body
       .fr-mb-2w
         .fr-badge.fr-badge--success Synchronisation active
-        p.fr-my-2w Votre agenda est synchronisé avec l'agenda CalDAV #{current_agent.caldav_username}.
+        p.fr-my-2w Votre agenda est synchronisé avec l'agenda CalDAV #{current_agent.caldav_config.caldav_username}.
       .fr-btns-group.fr-btns-group--inline
         - if current_agent.organisations.any?
           = link_to("Voir mon agenda", admin_organisation_planning_agenda_path(current_agent.organisations.first), class: "fr-btn fr-btn--secondary")

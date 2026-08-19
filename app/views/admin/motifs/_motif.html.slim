@@ -1,11 +1,13 @@
 - motif_policy = policy(motif, policy_class: Agent::MotifPolicy)
 
 tr
-  td.fr-pr-0.fr-pt-2w.fr-pb-0
+  td.fr-pr-0.fr-py-2w.fr-pb-0
     span.fr-icon-circle-fill style="color: #{motif.color};" &nbsp;
-  td
-    = link_to motif.name, admin_organisation_motif_path(motif.organisation, motif)
-    = motif_badges(motif, only: %i[for_secretariat follow_up collectif])
+  td.fr-p-0
+    / On agrandit la taille du lien pour faciliter le click
+    = link_to admin_organisation_motif_path(motif.organisation, motif), style: "width: 100%; min-height: 48px;", class: "fr-btn fr-btn--tertiary-no-outline fr-m-0" do
+      =  motif.name
+      = motif_badges(motif, only: %i[for_secretariat follow_up collectif])
   td
     = motif_badges(motif, only: %i[bookable_by_everyone bookable_by_agents_and_prescripteurs bookable_by_invited_users])
   - if display_sectorisation_level?
@@ -29,32 +31,29 @@ tr
     .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline
       - if @current_tab != :archived
         - if motif_policy.edit?
-          = link_to "", edit_admin_organisation_motif_path(current_organisation, motif),
-                  class: "fr-btn fr-btn--tertiary fr-icon-edit-fill",
-                  title: t("admin.motifs.actions.edit")
+          = icon_link_to t("admin.motifs.actions.edit"), edit_admin_organisation_motif_path(current_organisation, motif),
+                  class: "fr-btn fr-btn--tertiary fr-icon-edit-fill"
         - if motif_policy.duplicate?
-          = link_to "", new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id),
-                  class: "fr-btn fr-btn--tertiary fr-icon-clipboard-fill",
-                  title: t("admin.motifs.actions.duplicate")
+          = icon_link_to t("admin.motifs.actions.duplicate"), new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id),
+                  class: "fr-btn fr-btn--tertiary fr-icon-clipboard-fill"
 
       - if motif.archived?
         - if motif_policy.unarchive?
-          = link_to "", unarchive_admin_organisation_motif_path(current_organisation, motif),
+          = icon_link_to t("admin.motifs.actions.unarchive"), unarchive_admin_organisation_motif_path(current_organisation, motif),
                   class: "fr-btn fr-btn--tertiary fr-icon-upload-fill",
-                  method: :post,
-                  title: t("admin.motifs.actions.unarchive")
+                  method: :post
         - if motif_policy.destroy?
           - if motif.destroyable?
-            = link_to "", admin_organisation_motif_path(current_organisation, motif),
+            = icon_link_to t("admin.motifs.actions.destroy"), admin_organisation_motif_path(current_organisation, motif),
                     class: "fr-btn fr-btn--tertiary fr-icon-delete-fill",
                     method: :delete,
-                    title: t("admin.motifs.actions.destroy"), data: { confirm: t("admin.motifs.actions.destroy_confirm") }
+                    data: { confirm: t("admin.motifs.actions.destroy_confirm") }
           - else
             button.fr-btn.fr-btn--tertiary.fr-icon-delete-fill [disabled="disabled" title=t("admin.motifs.actions.not_destroyable_explanation")]
+              span.fr-sr-only= t("admin.motifs.actions.not_destroyable_explanation")
       - else
         - if motif_policy.archive?
-          = link_to "", archive_admin_organisation_motif_path(current_organisation, motif),
+          = icon_link_to t("admin.motifs.actions.archive"), archive_admin_organisation_motif_path(current_organisation, motif),
                   class: "fr-btn fr-btn--tertiary fr-icon-archive-fill",
                   method: :post,
-                  title: t("admin.motifs.actions.archive"),
                   data: { confirm: t("admin.motifs.actions.archive_confirm") }

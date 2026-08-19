@@ -90,11 +90,6 @@ Rails.application.configure do
   config.active_record.encryption.deterministic_key = "rdvsp_ar_deterministic_key_12345"
   config.active_record.encryption.key_derivation_salt = "rdvsp_ar_key_derivation_salt_12345"
 
-  # Debug mode disables concatenation and preprocessing of assets.
-  # This option may cause significant delays in view rendering with a large
-  # number of complex assets.
-  config.assets.debug = true
-
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
