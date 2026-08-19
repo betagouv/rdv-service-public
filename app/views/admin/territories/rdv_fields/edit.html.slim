@@ -1,13 +1,13 @@
 = territory_navigation(t(".title"))
 
 .row.justify-content-center
-  .col-md-6
+  .col-md-8
     .card
       .card-body
         = form_for current_territory, url: admin_territory_rdv_fields_path(current_territory), builder: Dsfr::FormBuilder do |f|
           = render "model_errors", model: current_territory
 
-          h1.card-title= t(".card_title")
+          h1.fr-h2= t(".card_title")
           p.fr-text-mention--grey.font-14= t(".hint_1")
           p.fr-text-mention--grey.font-14= t(".hint_2")
 
@@ -21,7 +21,7 @@
         = form_for current_territory, url: admin_territory_rdv_fields_path(current_territory), builder: Dsfr::FormBuilder do |f|
           = render "model_errors", model: current_territory
 
-          h1.card-title= t(".waiting_room_title")
+          h1.fr-h2= t(".waiting_room_title")
           p.fr-text-mention--grey.font-14= t(".waiting_room_config_hint")
 
           - Territory::OPTIONAL_RDV_WAITING_ROOM_FIELD_TOGGLES.each do |toggle, field_name|
