@@ -21,7 +21,7 @@ class Admin::Territories::AgentTerritorialAccessRightsController < Admin::Territ
   def agent_territorial_access_right_params(policy)
     permitted_keys = []
     permitted_keys += %i[allow_to_manage_teams allow_to_manage_access_rights allow_to_invite_agents] if policy.allow_to_manage_access_rights?
-    permitted_keys << :full_rights if policy.edit_full_rights?
+    permitted_keys << :territory_admin if policy.edit_territory_admin?
 
     params.require(:agent_territorial_access_right).permit(*permitted_keys)
   end

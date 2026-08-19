@@ -336,7 +336,7 @@ tables:
       - calculator_rdv_ends_at
   - table_name: agent_territorial_access_rights
     non_anonymized_column_names:
-      - full_rights
+      - territory_admin
       - allow_to_manage_teams
       - created_at
       - updated_at

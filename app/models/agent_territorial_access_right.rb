@@ -7,12 +7,12 @@ class AgentTerritorialAccessRight < ApplicationRecord
   belongs_to :territory
 
   # Hooks
-  before_destroy :prevent_removing_last_full_rights_admin, if: :full_rights?
-  before_save :prevent_removing_last_full_rights_admin, if: :losing_full_rights?
+  before_destroy :prevent_removing_last_territory_admin, if: :territory_admin?
+  before_save :prevent_removing_last_territory_admin, if: :losing_territory_admin?
 
   scope :without_any_rights_allowed, lambda {
     where(
-      full_rights: false,
+      territory_admin: false,
       allow_to_manage_teams: false,
       allow_to_manage_access_rights: false,
       allow_to_invite_agents: false
@@ -22,12 +22,12 @@ class AgentTerritorialAccessRight < ApplicationRecord
 
   private
 
-  def losing_full_rights?
-    full_rights_was && !full_rights
+  def losing_territory_admin?
+    territory_admin_was && !territory_admin
   end
 
-  def prevent_removing_last_full_rights_admin
-    return if territory.agent_territorial_access_rights.where(full_rights: true).where.not(id: id).exists?
+  def prevent_removing_last_territory_admin
+    return if territory.agent_territorial_access_rights.where(territory_admin: true).where.not(id: id).exists?
 
     errors.add(:base, "Il doit toujours y avoir au moins un agent responsable par espace")
     throw :abort

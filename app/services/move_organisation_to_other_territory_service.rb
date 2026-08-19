@@ -114,7 +114,7 @@ class MoveOrganisationToOtherTerritoryService < BaseService
       if access_right_target
         Rails.logger.info("  ⚠️  Droits d'accès existants pour l'agent #{agent.id} - fusion des permissions")
         access_right_target.update!(
-          full_rights: access_right_target.full_rights? || access_right_origin.full_rights?,
+          territory_admin: access_right_target.territory_admin? || access_right_origin.territory_admin?,
           allow_to_manage_teams: access_right_target.allow_to_manage_teams? || access_right_origin.allow_to_manage_teams?,
           allow_to_manage_access_rights: access_right_target.allow_to_manage_access_rights? || access_right_origin.allow_to_manage_access_rights?,
           allow_to_invite_agents: access_right_target.allow_to_invite_agents? || access_right_origin.allow_to_invite_agents?
@@ -143,7 +143,7 @@ class MoveOrganisationToOtherTerritoryService < BaseService
     Rails.logger.info("   Vous devriez envisager de le supprimer ou de transférer ses ressources restantes.")
     remaining_teams = @territory_origin.teams.count
     remaining_sectors = @territory_origin.sectors.count
-    remaining_roles = @territory_origin.agent_territorial_access_rights.where(full_rights: true).count
+    remaining_roles = @territory_origin.agent_territorial_access_rights.where(territory_admin: true).count
     Rails.logger.info("   Ressources restantes: #{remaining_teams} équipes, #{remaining_sectors} secteurs, #{remaining_roles} rôles")
   end
 end

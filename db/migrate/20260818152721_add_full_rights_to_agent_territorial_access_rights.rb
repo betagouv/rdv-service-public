@@ -6,24 +6,24 @@ class AddFullRightsToAgentTerritorialAccessRights < ActiveRecord::Migration[8.0]
   end
 
   def up
-    add_column :agent_territorial_access_rights, :full_rights, :boolean, default: false, null: false
+    add_column :agent_territorial_access_rights, :territory_admin, :boolean, default: false, null: false
 
     # Bascule des lignes agent_territorial_roles (table conservée pour le moment, mais plus
-    # utilisée par l'application) vers la colonne full_rights de AgentTerritorialAccessRight.
+    # utilisée par l'application) vers la colonne territory_admin de AgentTerritorialAccessRight.
     MigrationAgentTerritorialRole.find_each do |role|
       access_right = AgentTerritorialAccessRight.find_or_initialize_by(agent_id: role.agent_id, territory_id: role.territory_id)
-      access_right.full_rights = true
+      access_right.territory_admin = true
       access_right.save!
     end
   end
 
   def down
     # Bascule inverse : recrée les lignes agent_territorial_roles correspondant aux
-    # AgentTerritorialAccessRight ayant full_rights: true.
-    AgentTerritorialAccessRight.where(full_rights: true).find_each do |access_right|
+    # AgentTerritorialAccessRight ayant territory_admin: true.
+    AgentTerritorialAccessRight.where(territory_admin: true).find_each do |access_right|
       MigrationAgentTerritorialRole.find_or_create_by!(agent_id: access_right.agent_id, territory_id: access_right.territory_id)
     end
 
-    remove_column :agent_territorial_access_rights, :full_rights
+    remove_column :agent_territorial_access_rights, :territory_admin
   end
 end

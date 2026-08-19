@@ -35,7 +35,7 @@ class Territory < ApplicationRecord
 
   # Through relations
   has_many :organisations_agents, -> { distinct }, through: :organisations, source: :agents
-  has_many :admin_agents, -> { where(agent_territorial_access_rights: { full_rights: true }) }, through: :agent_territorial_access_rights, source: :agent
+  has_many :admin_agents, -> { where(agent_territorial_access_rights: { territory_admin: true }) }, through: :agent_territorial_access_rights, source: :agent
   has_many :zones, through: :sectors
   has_many :motifs, through: :organisations
   has_many :rdvs, through: :organisations

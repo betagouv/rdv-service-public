@@ -7,11 +7,11 @@ class Agent::AgentTerritorialAccessRightPolicy
   delegate :allow_to_manage_access_rights?, to: :territory_policy
 
   def edit?
-    allow_to_manage_access_rights? || edit_full_rights?
+    allow_to_manage_access_rights? || edit_territory_admin?
   end
   alias update? edit?
 
-  def edit_full_rights?
+  def edit_territory_admin?
     territorial_admin? && visible_agent?
   end
 

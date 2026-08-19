@@ -94,7 +94,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_24_085938) do
     t.datetime "updated_at", null: false
     t.boolean "allow_to_manage_access_rights", default: false, null: false
     t.boolean "allow_to_invite_agents", default: false, null: false
-    t.boolean "full_rights", default: false, null: false
+    t.boolean "territory_admin", default: false, null: false
     t.index ["agent_id", "territory_id"], name: "index_agent_territorial_access_rights_unique_agent_territory", unique: true
     t.index ["territory_id"], name: "index_agent_territorial_access_rights_on_territory_id"
   end

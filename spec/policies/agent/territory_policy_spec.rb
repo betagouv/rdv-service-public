@@ -19,7 +19,7 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
                       :allow_to_manage_teams?
     end
 
-    context "admin access to this territory (full_rights)" do
+    context "admin access to this territory (territory_admin)" do
       let(:territory) { create(:territory) }
       let(:agent) { create(:agent, role_in_territories: [territory]) }
 
@@ -142,8 +142,8 @@ RSpec.describe Agent::TerritoryPolicy::Scope, type: :policy do
       end
 
       let!(:territory_with_role) do
-        create(:territory, name: "Espace ou j'ai le statut administrateur (full_rights)").tap do |territory|
-          agent.agent_territorial_access_rights.create!(territory:, full_rights: true)
+        create(:territory, name: "Espace ou j'ai le statut administrateur (territory_admin)").tap do |territory|
+          agent.agent_territorial_access_rights.create!(territory:, territory_admin: true)
         end
       end
 
@@ -164,8 +164,8 @@ RSpec.describe Agent::TerritoryPolicy::Scope, type: :policy do
       end
 
       let!(:territory_with_role_for_another_agent) do
-        create(:territory, name: "Espace où quelqu'un d'autre a le statut administrateur (full_rights)").tap do |territory|
-          create(:agent).agent_territorial_access_rights.create!(territory:, full_rights: true)
+        create(:territory, name: "Espace où quelqu'un d'autre a le statut administrateur (territory_admin)").tap do |territory|
+          create(:agent).agent_territorial_access_rights.create!(territory:, territory_admin: true)
         end
       end
 
@@ -175,7 +175,7 @@ RSpec.describe Agent::TerritoryPolicy::Scope, type: :policy do
         end
       end
 
-      it "includes any territory where I either have full_rights or any specific right" do
+      it "includes any territory where I either have territory_admin or any specific right" do
         expect(subject).to contain_exactly(
           territory_with_role,
           territory_manage_teams,

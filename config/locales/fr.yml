@@ -220,7 +220,7 @@ fr:
       territory:
         admin_agents: "Admins de l'espace"
       agent_territorial_access_right:
-        full_rights: "Admin d'espace"
+        territory_admin: "Admin d'espace"
         allow_to_manage_teams: "Peut gérer les équipes"
         allow_to_manage_access_rights: "Peut gérer les droits d’accès"
         allow_to_invite_agents: "Peut inviter d’autres agents"

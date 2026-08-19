@@ -392,7 +392,7 @@ agent_org_paris_nord_pmi_martine = Agent.new(
   roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
     territory: territory75,
-    full_rights: true,
+    territory_admin: true,
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
     allow_to_invite_agents: true,
@@ -471,7 +471,7 @@ org_arques_pmi_maya = Agent.new(
   roles_attributes: Organisation.where(territory: territory62).pluck(:id).map { { organisation_id: _1, access_level: AgentRole::ACCESS_LEVEL_ADMIN } },
   agent_territorial_access_rights_attributes: [{
     territory: territory62,
-    full_rights: true,
+    territory_admin: true,
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
     allow_to_invite_agents: true,
@@ -491,7 +491,7 @@ agent_org_bapaume_pmi_bruno = Agent.new(
   roles_attributes: [{ organisation: org_bapaume, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
     territory: territory62,
-    full_rights: true,
+    territory_admin: true,
   }]
 )
 agent_org_bapaume_pmi_bruno.skip_confirmation!

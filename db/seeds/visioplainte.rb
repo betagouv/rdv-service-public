@@ -35,7 +35,7 @@ superviseur_gendarmerie = Agent.new(
 )
 superviseur_gendarmerie.skip_confirmation!
 superviseur_gendarmerie.save!
-AgentTerritorialAccessRight.create(agent: superviseur_gendarmerie, territory: territory, full_rights: true)
+AgentTerritorialAccessRight.create(agent: superviseur_gendarmerie, territory: territory, territory_admin: true)
 
 30.times do |i|
   Agent.create!(

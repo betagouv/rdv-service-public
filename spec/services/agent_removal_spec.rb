@@ -114,7 +114,7 @@ RSpec.describe AgentRemoval, type: :service do
     let!(:territory) { create(:territory) }
     let!(:organisation) { create(:organisation, territory:) }
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-    let!(:territorial_role) { create(:agent_territorial_access_right, :full_rights, agent:, territory:) }
+    let!(:territorial_role) { create(:agent_territorial_access_right, :territory_admin, agent:, territory:) }
 
     it "retire l'agent de l'orga mais ne soft-delete pas l'agent, iel conserve son rôle territorial" do
       service = described_class.new(agent, organisation)
@@ -131,8 +131,8 @@ RSpec.describe AgentRemoval, type: :service do
     let!(:organisation) { create(:organisation, territory:) }
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
     let!(:agent1) { create(:agent) }
-    let!(:territorial_role) { create(:agent_territorial_access_right, :full_rights, agent: agent, territory:) }
-    let!(:territorial_role1) { create(:agent_territorial_access_right, :full_rights, agent: agent1, territory:) }
+    let!(:territorial_role) { create(:agent_territorial_access_right, :territory_admin, agent: agent, territory:) }
+    let!(:territorial_role1) { create(:agent_territorial_access_right, :territory_admin, agent: agent1, territory:) }
 
     it "retire l'agent de l'orga mais ne soft-delete pas l'agent, iel conserve son rôle territorial" do
       service = described_class.new(agent, organisation)
@@ -172,7 +172,7 @@ RSpec.describe AgentRemoval, type: :service do
       let!(:territory) { create(:territory) }
       let!(:organisation) { create(:organisation, territory:) }
       let!(:agent) { create(:agent, organisations: [organisation]) }
-      let!(:territorial_role) { create(:agent_territorial_access_right, :full_rights, agent: agent, territory:) }
+      let!(:territorial_role) { create(:agent_territorial_access_right, :territory_admin, agent: agent, territory:) }
 
       it "retourne false" do
         expect(described_class.new(agent, organisation).should_soft_delete?).to be false

@@ -3,8 +3,8 @@ FactoryBot.define do
     agent
     territory
 
-    trait :full_rights do
-      full_rights { true }
+    trait :territory_admin do
+      territory_admin { true }
     end
   end
 end
