@@ -3,9 +3,10 @@ class Admin::Territories::AgentTerritorialAccessRightsController < Admin::Territ
     agent = Agent.find(params[:id])
     agent_territorial_access_right = AgentTerritorialAccessRight.find_or_initialize_by(agent: agent, territory: current_territory)
     policy = Agent::AgentTerritorialAccessRightPolicy.new(current_agent, agent_territorial_access_right)
-    authorize(agent_territorial_access_right, policy_class: Agent::AgentTerritorialAccessRightPolicy)
 
+    authorize(agent_territorial_access_right, policy_class: Agent::AgentTerritorialAccessRightPolicy)
     agent_territorial_access_right.assign_attributes(agent_territorial_access_right_params(policy))
+    authorize(agent_territorial_access_right, policy_class: Agent::AgentTerritorialAccessRightPolicy)
 
     if agent_territorial_access_right.save
       flash[:success] = "Droits d'accès mis à jour"
