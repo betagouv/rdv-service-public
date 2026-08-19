@@ -269,21 +269,18 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
 
     it_behaves_like "un agent peut créer, consulter, modifier et supprimer une plage d'ouverture"
 
-    describe "PUT #update, en réassignant à un autre agent" do
+    describe "PUT #update, en essayant de réassigner à un autre agent" do
       let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu1, organisation: organisation, agent: agent) }
 
-      it "n'autorise pas la réassignation de la plage d'ouverture à un agent basique hors du périmètre de l'agent connecté" do
+      it "ignore le agent_id envoyé, agent_id n'étant pas un param modifiable via #update" do
         other_service = create(:service)
         other_agent = create(:agent, basic_role_in_organisations: [organisation], service: other_service)
 
-        # `agent` (basic, service `service`) est propriétaire de la plage donc autorisé une première fois,
-        # mais `other_agent` n'est pas un confrère (service différent) : la ré-authorisation après
-        # assign_attributes doit bloquer la réassignation.
         expect do
           put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { agent_id: other_agent.id } }
         end.not_to change { plage_ouverture.reload.agent_id }
 
-        expect(flash[:error]).to be_present
+        expect(flash[:success]).to be_present
       end
     end
   end

@@ -79,10 +79,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
   def update
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
-    @plage_ouverture.assign_attributes(plage_ouverture_params)
-    # `plage_ouverture_params` permet de changer `agent_id` : on revérifie la policy sur l'état
-    # final avant de sauvegarder, pour ne pas autoriser une réassignation vers un agent non couvert
-    # par `same_agent_or_has_access?`.
+    @plage_ouverture.assign_attributes(plage_ouverture_params_for_update)
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     if @plage_ouverture.save
       Notifiers::Agent::PlageOuverture.new(@plage_ouverture).updated!
@@ -124,7 +121,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   end
 
   def build_plage_ouverture
-    @plage_ouverture = PlageOuverture.new(plage_ouverture_params)
+    @plage_ouverture = PlageOuverture.new(plage_ouverture_params_for_create)
   end
 
   def set_agents
@@ -136,10 +133,16 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     end
   end
 
-  def plage_ouverture_params
-    params.require(:plage_ouverture).permit(
-      :title, :agent_id, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :lieu_id, :hex_color, :recurrence, :minutes_after_rdvs, :ignore_benign_errors, motif_ids: []
-    )
+  def plage_ouverture_params_for_create
+    params.require(:plage_ouverture).permit(*common_plage_ouverture_attrs, :agent_id, motif_ids: [])
+  end
+
+  def plage_ouverture_params_for_update
+    params.require(:plage_ouverture).permit(*common_plage_ouverture_attrs, motif_ids: [])
+  end
+
+  def common_plage_ouverture_attrs
+    %i[title first_day start_time end_time secondary_start_time secondary_end_time lieu_id hex_color recurrence minutes_after_rdvs ignore_benign_errors]
   end
 
   def filter_params
