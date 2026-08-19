@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_17_155729) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_19_165403) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -89,7 +89,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_17_155729) do
   create_table "agent_territorial_access_rights", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.bigint "territory_id", null: false
-    t.boolean "allow_to_manage_teams", default: false
+    t.boolean "allow_to_manage_teams", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "allow_to_manage_access_rights", default: false, null: false
