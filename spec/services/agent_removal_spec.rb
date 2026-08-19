@@ -122,7 +122,7 @@ RSpec.describe AgentRemoval, type: :service do
       service.remove!
       expect(agent.organisations).not_to include(organisation)
       expect(agent.reload.deleted_at).to be_nil
-      expect(agent.territories).to include(territory)
+      expect(agent.admin_territories).to include(territory)
     end
   end
 
@@ -140,7 +140,7 @@ RSpec.describe AgentRemoval, type: :service do
       service.remove!
       expect(agent.organisations).not_to include(organisation)
       expect(agent.reload.deleted_at).to be_nil
-      expect(agent.territories).to include(territory)
+      expect(agent.admin_territories).to include(territory)
     end
   end
 
