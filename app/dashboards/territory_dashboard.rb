@@ -17,7 +17,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     admin_agents: Field::HasMany,
     territory_tags: Field::HasMany,
     tags: Field::HasMany,
-    roles: Field::HasMany,
+    agent_territorial_access_rights: Field::HasMany,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     work_on_sunday: Field::Boolean,
@@ -44,7 +44,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     name
     departement_number
     work_on_sunday
-    roles
+    agent_territorial_access_rights
     organisations
     category
     territory_tags

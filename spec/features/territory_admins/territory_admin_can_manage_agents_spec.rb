@@ -123,7 +123,7 @@ RSpec.describe "territory admin can manage agents", type: :feature do
     end
   end
 
-  describe "un agent appartient à un service désactivé" do
+  describe "un agent appartient à un service désactivé" do
     let!(:service_a) { create(:service, name: "Service A", territories: [territory]) }
     let!(:service_b) { create(:service, name: "Service B") }
     let!(:edited_agent) { create(:agent, admin_role_in_organisations: [organisation], services: [service_b]) }

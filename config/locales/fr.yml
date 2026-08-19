@@ -206,7 +206,6 @@ fr:
     label:
       agent:
         territories:  "Espaces administrés"
-        territorial_roles: "Espaces administrés"
         services: "Services de l'agent"
         agent_services: "Services de l'agent"
         roles: "Rôles dans les organisations"
@@ -219,9 +218,9 @@ fr:
       service:
         agent_services: "Agents du service"
       territory:
-        roles: "Admins de l'espace"
         admin_agents: "Admins de l'espace"
       agent_territorial_access_right:
+        full_rights: "Admin d'espace"
         allow_to_manage_teams: "Peut gérer les équipes"
         allow_to_manage_access_rights: "Peut gérer les droits d’accès"
         allow_to_invite_agents: "Peut inviter d’autres agents"
