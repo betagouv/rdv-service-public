@@ -1,5 +1,6 @@
 class Admin::Planning::PlageOuverturesController < AgentAuthController
   include Admin::Planning::PlanningConcern
+
   respond_to :html, :json
 
   before_action :set_plage_ouverture, only: %i[show edit update destroy]
@@ -107,7 +108,9 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
   def update_online_booking_banner_display
     if session["OnlineBookingMotifsForm:completed"]
-      banner = OnlineBookingOnboardingBanner.new(current_organisation)
+      motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif)
+        .available_motifs_for_organisation_and_agent(current_organisation, current_agent)
+      banner = OnlineBookingOnboardingBanner.new(motifs)
       # S'il n'y a plus besoin de la bannière, on arrête de l'afficher
       unless banner.availabilities_needed?
         session.delete("OnlineBookingMotifsForm:completed")

@@ -14,7 +14,7 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
       @open_motifs = @motifs.bookable_by_everyone
       @closed_motifs = @motifs.where.not(bookable_by: :everyone)
 
-      @banner = OnlineBookingOnboardingBanner.new(current_organisation)
+      @banner = OnlineBookingOnboardingBanner.new(@motifs)
     end
   end
 

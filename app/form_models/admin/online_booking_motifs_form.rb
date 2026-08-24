@@ -47,14 +47,14 @@ class Admin::OnlineBookingMotifsForm
   end
 
   def prepare_flash_and_session_for_activation(flash, session)
-    banner = OnlineBookingOnboardingBanner.new(@organisation)
+    banner = OnlineBookingOnboardingBanner.new(motifs)
 
     if banner.availabilities_needed?
       # Si on affiche la bannière, on ne met pas le flash, parce que ça fait doublon d'avoir une confirmation au dessus du titre et un avertissement sous le titre
       session["OnlineBookingMotifsForm:completed"] = true
     else
       motif_names = motifs.bookable_by_everyone.pluck(:name)
-      flash[:success] = if motif_names.count == 1
+      flash[:success] = if motif_names.one?
                           "Le motif #{motif_names.first} est ouvert pour la réservation en ligne."
                         else
                           "Les motifs #{motif_names.to_sentence} sont ouverts pour la réservation en ligne."
