@@ -1,13 +1,11 @@
 class Admin::RdvInvitationsController < AgentAuthController
   def new
     @rdv_invitation = RdvInvitation.new(params.permit(:motif_id, :lieu_id, :user_id).merge(inviting_agent: current_agent))
-
     authorize(@rdv_invitation, policy_class: Agent::RdvInvitationPolicy)
   end
 
   def create
     @rdv_invitation = RdvInvitation.new(create_params.merge(inviting_agent: current_agent))
-
     authorize(@rdv_invitation, policy_class: Agent::RdvInvitationPolicy)
 
     if @rdv_invitation.save

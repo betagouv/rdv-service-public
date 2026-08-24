@@ -28,6 +28,11 @@ class RdvInvitation < ApplicationRecord
   end
 
   def create_rdv_and_notify(starts_at:)
+    if rdv.present?
+      errors.add(:base, "Un rendez-vous a déjà été pris pour cette invitation.")
+      return
+    end
+
     creneau = creneaux_search(starts_at).creneaux.first
 
     if creneau.nil?
