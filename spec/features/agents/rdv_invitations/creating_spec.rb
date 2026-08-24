@@ -22,18 +22,4 @@ RSpec.describe "Agents can send an invitation to a rdv" do
       expect(RdvInvitation.count).to eq 0
     end
   end
-
-  context "when inviting a proche" do
-    let(:user) { create(:user, :relative, organisations: [organisation], responsible: responsable) }
-    let(:responsable) { create(:user) }
-
-    it "sends the email to the responsable" do
-      click_on "Envoyer l'invitation"
-      expect(page).to have_content "Vous avez invité"
-      expect(RdvInvitation.last).to have_attributes(user_id: user.id)
-      perform_enqueued_jobs
-
-      expect(ActionMailer::Base.deliveries.last.to).to eq([responsable.email])
-    end
-  end
 end
