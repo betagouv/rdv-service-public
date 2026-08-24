@@ -6,10 +6,13 @@ RSpec.describe Ami do
     AMI_PARTNER_SECRET: "test-secret"
   )
 
-  let(:participation) { create(:participation) }
-  let(:user) { create(:user, ami_france_connect_hash: "test_ami_fc_hash") }
+  let(:participation) { create(:participation, user: user) }
+  let(:user) { create(:user) }
 
-  before { WebMock.stub_request(:put, "https://ami.test/api/v2/event") }
+  before do
+    AmiFranceConnectHash.create!(user: user, fc_hash: "test_ami_fc_hash")
+    WebMock.stub_request(:put, "https://ami.test/api/v2/event")
+  end
 
   it "permet de faire un appel à l'api d'AMI pour ajouter le rendez-vous à la liste des démarches en cours." do
     described_class.new(participation).create_event
@@ -28,7 +31,7 @@ RSpec.describe Ami do
     described_class.new(participation).send_event_update_notification
 
     expect(WebMock).to(have_requested(:put, "https://ami.test/api/v2/event").with do |request|
-      expect(JSON.parse(request.body)["content_body"]).to eq "Votre rendez-vous a été modifié"
+      expect(JSON.parse(request.body)["content_body"]).to eq "Votre rendez-vous a été modifié."
     end)
   end
 
@@ -36,7 +39,7 @@ RSpec.describe Ami do
     described_class.new(participation).send_reminder
 
     expect(WebMock).to(have_requested(:put, "https://ami.test/api/v2/event").with do |request|
-      expect(JSON.parse(request.body)["content_body"]).to start_with "Vous avez rendez-vous"
+      expect(JSON.parse(request.body)["content_body"]).to start_with "Nous vous rappelons que vous avez rendez-vous"
     end)
   end
 
