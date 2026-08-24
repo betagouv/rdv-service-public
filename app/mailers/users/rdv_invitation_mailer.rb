@@ -4,7 +4,7 @@ class Users::RdvInvitationMailer < ApplicationMailer
   def invitation
     mail(
       subject: "Vous êtes invité.e à prendre rendez-vous",
-      to: @rdv_invitation.user.email
+      to: @rdv_invitation.user.user_to_notify.email
     )
   end
 

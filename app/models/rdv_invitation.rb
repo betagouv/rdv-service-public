@@ -14,6 +14,8 @@ class RdvInvitation < ApplicationRecord
 
   before_create :set_restricted_authentication_token
 
+  validate :user_can_be_notified
+
   def creneaux_search(starts_at)
     # TODO: vérifier si starts_at doit être une Date
     CreneauxSearch::ForUser.new(
@@ -53,6 +55,12 @@ class RdvInvitation < ApplicationRecord
   end
 
   private
+
+  def user_can_be_notified
+    return if user.user_to_notify.email.present?
+
+    errors.add(:base, "#{user.user_to_notify.full_name} n'a pas d'adresse email, et ne peut donc pas recevoir d'invitation.")
+  end
 
   def set_restricted_authentication_token
     # On reprend la même logique que CustomDeviseTokenGenerator
