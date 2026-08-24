@@ -13,7 +13,7 @@ class Notifiers::RdvCreated < Notifiers::RdvBase
     # il n’est donc pas nécessaire d’envoyer ce SMS à la création du RDV.
 
     if self.class.should_send_sms_to_user?(user:, rdv: @rdv, author: @rdv.created_by)
-      Users::RdvSms.rdv_created(@rdv, user, @participations_tokens_by_user_id[user.id]).deliver_later
+      Users::RdvSms.rdv_created(@rdv, user).deliver_later
     end
   end
 

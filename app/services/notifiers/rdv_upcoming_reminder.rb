@@ -10,6 +10,6 @@ class Notifiers::RdvUpcomingReminder < Notifiers::RdvBase
   end
 
   def notify_user_by_sms(user)
-    Users::RdvSms.rdv_upcoming_reminder(@rdv, user, @participations_tokens_by_user_id[user.id]).deliver_later(queue: :latency_5m)
+    Users::RdvSms.rdv_upcoming_reminder(@rdv, user).deliver_later(queue: :latency_5m)
   end
 end
