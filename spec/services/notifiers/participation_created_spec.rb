@@ -14,7 +14,7 @@ RSpec.describe Notifiers::ParticipationCreated, type: :service do
     specify do
       users_rdv_mailer_double = instance_double(Users::RdvMailer)
       allow(Users::RdvMailer).to receive(:with)
-        .with(rdv:, user:, token: instance_of(String))
+        .with(rdv:, user:)
         .and_return(users_rdv_mailer_double)
       mail_double = double
       allow(users_rdv_mailer_double).to receive(:rdv_created).and_return(mail_double)
@@ -34,7 +34,7 @@ RSpec.describe Notifiers::ParticipationCreated, type: :service do
     specify do
       sms_double = double
       allow(Users::RdvSms).to receive(:rdv_created)
-        .with(rdv, user, participation.restricted_auth_token)
+        .with(rdv, user)
         .and_return(sms_double)
       expect(sms_double).to receive(:deliver_later)
       perform_notify
@@ -87,21 +87,6 @@ RSpec.describe Notifiers::ParticipationCreated, type: :service do
 
     it_behaves_like "n’envoie pas d’email à l’usager"
     it_behaves_like "n’envoie pas de SMS à l’usager"
-  end
-
-  context "RDV collectif mais la participation n'a pas encore de token" do
-    let(:author) { agent }
-    let!(:motif) { create(:motif, collectif: true, organisation:) }
-    let!(:rdv) { create(:rdv, starts_at: now + 3.days, motif:, users: [user], organisation:) }
-
-    before { participation.update_column(:restricted_auth_token, nil) } # rubocop:disable Rails/SkipsModelValidations
-
-    it_behaves_like "envoie un email à l’usager"
-
-    it "génère un token" do
-      perform_notify
-      expect(participation.reload.restricted_auth_token).not_to be_nil
-    end
   end
 
   context "RDV non collectif" do

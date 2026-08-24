@@ -2,7 +2,7 @@ class Users::FileAttenteMailer < ApplicationMailer
   before_action do
     @rdv = params[:rdv]
     @user = params[:user]
-    @token = params[:token]
+    @token = @user.participation_for(@rdv).restricted_auth_token
   end
 
   default to: -> { @user.email }
