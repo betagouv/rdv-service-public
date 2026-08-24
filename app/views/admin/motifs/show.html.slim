@@ -112,7 +112,7 @@
                 hint: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone"))
 
             - if !@motif.archived? && @motif_policy.edit?
-            = link_to t("admin.motifs.actions.edit"), edit_advanced_options_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
+              = link_to t("admin.motifs.actions.edit"), edit_advanced_options_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
 
     - if @motif_policy.edit? || @motif_policy.destroy?
       .card.mt-2
