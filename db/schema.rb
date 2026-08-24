@@ -89,7 +89,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_24_085938) do
   create_table "agent_territorial_access_rights", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.bigint "territory_id", null: false
-    t.boolean "allow_to_manage_teams", default: false
+    t.boolean "allow_to_manage_teams", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "allow_to_manage_access_rights", default: false, null: false
