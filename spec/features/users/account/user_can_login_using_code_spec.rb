@@ -89,7 +89,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       fill_in "Adresse email", with: "fc@lolmail.fr"
       expect { click_on "Recevoir un code de connexion" }.not_to change(LoginCode, :count)
       expect(page).not_to have_content("code à 6 chiffres")
-      expect(page).to have_content("Ce compte usager se connecte avec FranceConnect. Merci d’utiliser ce moyen de connexion.")
+      expect(page).to have_content("Ce compte usager a été créé avec FranceConnect. Merci d’utiliser ce moyen de connexion.")
     end
   end
 

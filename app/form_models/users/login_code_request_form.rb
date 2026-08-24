@@ -27,7 +27,7 @@ module Users
       sso_user = User.fiches_for_email(email).with_sso.first
       error =
         if sso_user
-          "Ce compte usager se connecte avec #{sso_user.sso_provider_name}. Merci d’utiliser ce moyen de connexion."
+          "Ce compte usager a été créé avec #{sso_user.sso_provider_name}. Merci d’utiliser ce moyen de connexion."
         elsif Agent.exists?(email:)
           <<~ERROR
             Aucun compte usager n’existe pour cet email.

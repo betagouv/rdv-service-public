@@ -23,7 +23,7 @@ RSpec.describe Users::LoginCodeRequestForm, type: :form_model do
     it "le form est invalide et précise qu'il faut utiliser FranceConnect" do
       form = described_class.new(LoginCode.new(email: "us@ger.fr", first_name: "Jean", last_name: "Dupont", domain_id: "RDV_SERVICE_PUBLIC"))
       expect(form).to be_invalid
-      expect(form.errors[:base]).to include("Ce compte usager se connecte avec FranceConnect. Merci d’utiliser ce moyen de connexion.")
+      expect(form.errors[:base]).to include("Ce compte usager a été créé avec FranceConnect. Merci d’utiliser ce moyen de connexion.")
     end
   end
 
@@ -33,7 +33,7 @@ RSpec.describe Users::LoginCodeRequestForm, type: :form_model do
     it "le form est invalide et précise qu'il faut utiliser ProConnect" do
       form = described_class.new(LoginCode.new(email: "us@ger.fr", first_name: "Jean", last_name: "Dupont", domain_id: "RDV_SERVICE_PUBLIC"))
       expect(form).to be_invalid
-      expect(form.errors[:base]).to include("Ce compte usager se connecte avec ProConnect. Merci d’utiliser ce moyen de connexion.")
+      expect(form.errors[:base]).to include("Ce compte usager a été créé avec ProConnect. Merci d’utiliser ce moyen de connexion.")
     end
   end
 
