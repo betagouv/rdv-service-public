@@ -22,6 +22,7 @@ RSpec.describe RdvInvitation do
       let(:motif) { create(:motif, motif_category:, organisation:) }
 
       it "isn't supported" do
+        expect(rdv_invitation).not_to be_valid
       end
     end
 

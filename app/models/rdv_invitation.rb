@@ -68,6 +68,10 @@ class RdvInvitation < ApplicationRecord
     if motif.collectif?
       errors.add(:base, "Les invitations ne sont pas encore possible pour les motifs collectifs")
     end
+
+    if motif.requires_ants_predemande_number?
+      errors.add(:base, "Les invitations ne sont pas encore possible pour les motifs liés à France Titres")
+    end
   end
 
   def validate_phone_number_present_for_motif_by_phone
