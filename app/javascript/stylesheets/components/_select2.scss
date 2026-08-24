@@ -75,6 +75,26 @@
   @include dsfr-input-style;
 }
 
+// Height override
+// Le thème select2-bootstrap4 vendored (dist) fige la hauteur du champ à la valeur par défaut de
+// Bootstrap (2.25rem), ce qui la rend plus basse que les champs fr-input du DSFR à côté desquels
+// il apparaît désormais (ex: le champ date du même formulaire, dont la hauteur DSFR est fixée à
+// 2.5rem via .fr-input:not(textarea){max-height:2.5rem}). On réaligne donc sur cette même
+// hauteur, et on centre le texte verticalement en flex puisque le contenu ne s'étire pas
+// automatiquement pour occuper la nouvelle hauteur.
+.select2-container--bootstrap4 .select2-selection--single {
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  .select2-selection__rendered {
+    flex: 1;
+    min-width: 0;
+    padding-right: 1.25rem;
+  }
+}
+
 .select2-container--bootstrap4 .select2-selection.form-control {
   @include dsfr-input-style;
 }

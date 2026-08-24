@@ -102,7 +102,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
       click_button("Enregistrer")
 
       expect_page_title("Agents de Organisation n°1")
-      expect(page).to have_content("Administrateur", count: 2)
+      within("table") { expect(page).to have_content("Administrateur", count: 2) }
 
       click_link "PATRICK Tony"
       click_link("Supprimer le compte")

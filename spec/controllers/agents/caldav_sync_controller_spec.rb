@@ -1,4 +1,6 @@
 RSpec.describe Agents::CaldavSyncController, type: :controller do
+  render_views
+
   let(:agent) { create(:agent) }
   let(:caldav_client) { instance_double(Calendav::Client) }
   let(:caldav_events) { instance_double(Calendav::Clients::EventsClient) }
@@ -14,11 +16,11 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
 
   before do
     sign_in agent
-    allow_any_instance_of(Agent).to receive(:caldav_client).and_return(caldav_client) # rubocop:disable RSpec/AnyInstance
+    allow_any_instance_of(CaldavConfig).to receive(:caldav_client).and_return(caldav_client) # rubocop:disable RSpec/AnyInstance
     allow(caldav_client).to receive(:principal_url).and_return("https://caldav.example.fr/dav/principals/user")
     allow(caldav_client).to receive(:events).and_return(caldav_events)
     allow(caldav_client).to receive(:calendars).and_return(caldav_calendars)
-    allow(caldav_calendars).to receive(:find).and_return(double)
+    allow(caldav_calendars).to receive(:find).and_return(instance_double(Calendav::Calendar, sync_token: "some-sync-token"))
     allow(caldav_events).to receive(:create).and_return(instance_double(Calendav::Event, url: "https://caldav.example.fr/dav/calendars/user/default/test.ics"))
     allow(caldav_events).to receive(:delete)
   end
@@ -38,8 +40,8 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
         put :update, params: caldav_params
 
         expect(response).to redirect_to(agents_calendar_sync_caldav_sync_path)
-        expect(agent.reload.caldav_username).to eq("user@example.fr")
-        expect(agent.reload.caldav_agenda_url).to eq("https://caldav.example.fr/dav/calendars/user/default")
+        expect(agent.caldav_config.reload.caldav_username).to eq("user@example.fr")
+        expect(agent.caldav_config.reload.caldav_agenda_url).to eq("https://caldav.example.fr/dav/calendars/user/default")
         expect(flash[:success]).to eq("La synchronisation avec votre agenda CalDAV user@example.fr est activée.")
       end
 
@@ -63,7 +65,7 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
 
       it "ne sauvegarde pas les identifiants" do
         put :update, params: caldav_params
-        expect(agent.reload.caldav_username).to be_nil
+        expect(agent.caldav_config).to be_nil
       end
     end
 
@@ -81,7 +83,28 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
 
       it "ne sauvegarde pas les identifiants" do
         put :update, params: caldav_params
-        expect(agent.reload.caldav_username).to be_nil
+        expect(agent.caldav_config).to be_nil
+      end
+    end
+
+    context "quand le serveur CalDAV ne supporte pas la synchronisation incrémentale (sync-token)" do
+      before do
+        allow(caldav_calendars).to receive(:find).and_return(instance_double(Calendav::Calendar, sync_token: nil))
+      end
+
+      it "affiche un message d’erreur dédié" do
+        put :update, params: caldav_params
+
+        expect(response).to redirect_to(agents_calendar_sync_caldav_sync_path)
+        expect(flash[:alert]).to eq(
+          "Votre serveur CalDAV ne supporte pas la synchronisation incrémentale (sync-token), requise pour connecter " \
+          "votre agenda à RDV Service Public. Veuillez contacter votre fournisseur d’agenda ou utiliser un autre serveur CalDAV."
+        )
+      end
+
+      it "ne sauvegarde pas les identifiants" do
+        put :update, params: caldav_params
+        expect(agent.caldav_config).to be_nil
       end
     end
 
@@ -99,7 +122,7 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
 
       it "ne sauvegarde pas les identifiants" do
         put :update, params: caldav_params
-        expect(agent.reload.caldav_username).to be_nil
+        expect(agent.caldav_config).to be_nil
       end
     end
   end
@@ -113,7 +136,7 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
       delete :destroy
 
       expect(response).to redirect_to(agents_calendar_sync_caldav_sync_path)
-      expect(agent.reload.caldav_disconnect_started_at.present?).to be(true)
+      expect(agent.caldav_config.reload.caldav_disconnect_started_at.present?).to be(true)
     end
   end
 end

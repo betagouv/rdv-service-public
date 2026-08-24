@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_13_125613) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_17_155729) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -213,6 +213,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_13_125613) do
     t.string "categories", default: [], array: true
     t.string "external_url", null: false
     t.datetime "published_at", null: false
+  end
+
+  create_table "caldav_configs", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.string "caldav_agenda_url", null: false
+    t.string "caldav_username", null: false
+    t.string "caldav_password", null: false
+    t.string "caldav_sync_token"
+    t.datetime "caldav_disconnect_started_at"
+    t.boolean "caldav_include_sensitive_data", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_caldav_configs_on_agent_id", unique: true
   end
 
   create_table "export_file_blobs", force: :cascade do |t|
@@ -927,6 +940,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_13_125613) do
   add_foreign_key "annotations", "territories"
   add_foreign_key "annotations", "users"
   add_foreign_key "api_calls", "agents"
+  add_foreign_key "caldav_configs", "agents"
   add_foreign_key "export_file_blobs", "exports"
   add_foreign_key "exports", "agents"
   add_foreign_key "external_calendar_events", "agents"

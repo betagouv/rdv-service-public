@@ -1,12 +1,11 @@
 = territory_navigation(t(".title", name: current_territory.name_for_agent))
 
 .card
-  .card-header
-    h5.card-title Configuration générale
-  = simple_form_for([:admin, @territory]) do |f|
-    .card-body
+  .card-body
+    h1.fr-h2.card-title Nom de votre espace
+    = simple_form_for([:admin, @territory]) do |f|
       = f.input :name
       = f.input :departement_number, disabled: true
 
-    .card-footer.text-right
-      = f.submit class: "fr-btn"
+      .text-right
+        = f.submit class: "fr-btn"

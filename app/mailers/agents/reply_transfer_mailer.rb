@@ -19,9 +19,9 @@ class Agents::ReplyTransferMailer < ApplicationMailer
 
   # @param [Rdv] rdv
   # @param [User, String] author
-  # @param [Organisation] organisation
+  # @param [String] email_address
   # @param [Mail::Message] source_mail
-  def notify_organisation(rdv:, author:, organisation:, reply_body:, source_mail:)
+  def notify_organisation(rdv:, author:, email_address:, reply_body:, source_mail:)
     @rdv = rdv
     @author = author
     @reply_subject = source_mail.subject
@@ -29,7 +29,7 @@ class Agents::ReplyTransferMailer < ApplicationMailer
     @attachment_names = source_mail.attachments.map(&:filename).join(", ")
     @date = relative_date_with_preposition(@rdv.starts_at)
 
-    mail(to: organisation.email, subject: "Message d'usager⋅e au sujet d’un RDV #{@date}")
+    mail(to: email_address, subject: "Message d'usager⋅e au sujet d’un RDV #{@date}")
   end
 
   # @param [String] reply_body

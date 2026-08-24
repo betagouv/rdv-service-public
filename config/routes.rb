@@ -249,6 +249,7 @@ Rails.application.routes.draw do
         end
         resource :user_fields, only: %i[edit update]
         resource :rdv_fields, only: %i[edit update]
+        resource :calendar_settings, only: %i[edit update]
         resource :motif_fields, only: %i[edit update]
         resource :motif_categories, only: %i[update]
         resources :zone_imports, only: %i[new create]
@@ -325,8 +326,7 @@ Rails.application.routes.draw do
         namespace :online_booking do
           resources :motifs, only: %i[show edit update] do
             member do
-              post :open
-              post :close
+              post :update_bookable_by
               get :edit_user_type
               patch :update_user_type
               get :edit_instructions

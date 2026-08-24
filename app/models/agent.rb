@@ -1,11 +1,15 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
-  include Agent::CaldavConfiguration
+  # Ces colonnes ont été déplacées vers la table caldav_configs.
+  # Elles seront supprimées dans une migration ultérieure.
+  self.ignored_columns += %w[
+    caldav_agenda_url caldav_username caldav_password caldav_sync_token
+    caldav_disconnect_started_at caldav_include_sensitive_data
+  ]
+
   include Agent::FeatureFlags
   include Agent::PreloadRoles
-
-  encrypts :caldav_password, deterministic: true
 
   # Mixins
   has_paper_trail(
@@ -85,6 +89,7 @@ class Agent < ApplicationRecord
   has_many :referent_assignations, dependent: :destroy
   has_many :instance_exports, dependent: :destroy
   has_one :territory_creation_request, dependent: :destroy
+  has_one :caldav_config, dependent: :destroy
 
   accepts_nested_attributes_for :roles, :agent_territorial_access_rights
 
@@ -348,5 +353,9 @@ class Agent < ApplicationRecord
 
   def lagaufre_access?
     email.include?(".gouv.fr")
+  end
+
+  def caldav_configured?
+    caldav_config.present?
   end
 end
