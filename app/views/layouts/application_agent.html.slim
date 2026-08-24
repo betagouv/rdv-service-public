@@ -32,7 +32,9 @@ html lang="fr"
               = content_for :onboarding_banner
               - if content_for :title
                 .page-title-box
-                  h1.fr-h2= yield :title
+                  h1.fr-h2
+                    = content_for :title_icon
+                    = yield :title
                   - if content_for :right_of_page_title
                     .page-title-right
                       = yield :right_of_page_title

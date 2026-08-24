@@ -2,6 +2,7 @@
 - title += " (#{@motif.service_short_name})" if @motif.service_short_name
 - title += " (archivé)" if @motif.archived?
 
+- content_for :title_icon, motif_icon(class: "fr-mr-2w")
 - content_for :title, title
 
 = render "admin/motifs/fil_ariane", current_page_title: content_for(:title)
@@ -16,7 +17,7 @@
 .fr-grid-row
   .fr-col-12
     .card.mt-2
-      .card-body
+      .card-body[style="border-radius: 4px; border-left: 6px solid #{@motif.color};"]
         h2.fr-h6 Informations générales
         - if current_territory.services.any? || @motif.service
           = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service_name, margin: false)
@@ -40,10 +41,14 @@
     .card[class="#{"fr-enlarge-link" if current_agent.admin_in_organisation?(current_organisation)}"]
       .card-body
         .d-flex.rdv-align-items-baseline
-          - if current_agent.admin_in_organisation?(current_organisation)
-            h2.fr-h5.fr-mr-2w = link_to "Réservation en ligne", admin_organisation_online_booking_motif_path(current_organisation, @motif)
-          - else
-            h2.fr-h5.fr-mr-2w Réservation en ligne
+          h2.fr-h5.fr-mr-2w
+            - if current_agent.admin_in_organisation?(current_organisation)
+              = link_to admin_organisation_online_booking_motif_path(current_organisation, @motif) do
+                = icon("fr-icon-global-line", class: "fr-mr-1w")
+                | Réservation en ligne
+            - else
+              = icon("fr-icon-global-line", class: "fr-mr-1w")
+              | Réservation en ligne
 
           = render "admin/organisations/online_booking/motifs/availability_badge", motif: @motif, availabilities_count: @motif.upcoming_availabilities.count
 

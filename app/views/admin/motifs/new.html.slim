@@ -1,3 +1,4 @@
+- content_for :title_icon, motif_icon(class: "fr-mr-2w")
 - page_title = @motif.duplicated_from_motif ? %(Duplication du motif "#{@motif.duplicated_from_motif}") : t("motifs.form.title.new")
 - content_for :title, page_title
 
