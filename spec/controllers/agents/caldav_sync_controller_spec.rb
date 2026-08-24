@@ -104,7 +104,7 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
 
       it "ne sauvegarde pas les identifiants" do
         put :update, params: caldav_params
-        expect(agent.reload.caldav_username).to be_nil
+        expect(agent.caldav_config).to be_nil
       end
     end
 
