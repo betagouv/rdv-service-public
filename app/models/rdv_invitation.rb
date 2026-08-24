@@ -12,7 +12,7 @@ class RdvInvitation < ApplicationRecord
 
   delegate :organisation, to: :motif
 
-  before_create :set_restricted_authentication_token
+  before_create :set_token
 
   validate :user_can_be_notified
   validate :validate_phone_number_present_for_motif_by_phone
@@ -82,7 +82,7 @@ class RdvInvitation < ApplicationRecord
     end
   end
 
-  def set_restricted_authentication_token
+  def set_token
     # On reprend la même logique que CustomDeviseTokenGenerator
     self.token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8) until token && self.class.where(token:).none?
   end

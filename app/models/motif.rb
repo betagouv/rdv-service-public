@@ -285,15 +285,6 @@ class Motif < ApplicationRecord
     end
   end
 
-  def default_notifications_settings_for_participations
-    # Un peu dupliqué avec
-    if visible_and_notified?
-      { send_lifecycle_notifications: true, send_reminder_notification: true }
-    else
-      { send_lifecycle_notifications: false, send_reminder_notification: false }
-    end
-  end
-
   private
 
   def booking_delay_validation
