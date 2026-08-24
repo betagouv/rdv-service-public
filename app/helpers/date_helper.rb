@@ -25,13 +25,6 @@ module DateHelper
     end
   end
 
-  # true if the passed date (or time) is today or tomorrow
-  def soon_date?(date)
-    return false unless date.respond_to?(:to_date)
-
-    [Date.current, Date.current + 1].include?(date.to_date)
-  end
-
   def human_date_format(date)
     if date.year == Time.zone.now.year
       I18n.l(date, format: :human_without_year)

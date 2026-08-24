@@ -140,12 +140,25 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       host: request.host,
     }
 
+    param_names = request.query_parameters.keys
+
+    if request.raw_post.present?
+      parsed_params = begin
+        JSON.parse(request.raw_post)
+      rescue StandardError
+        {}
+      end
+
+      param_names += parsed_params.keys
+    end
+
     ApiCall.create!(
       raw_http: raw_http,
       controller_name: controller_name,
       action_name: action_name,
       agent_id: current_agent.id,
-      authentication_type: @authentication_type
+      authentication_type: @authentication_type,
+      param_names: param_names
     )
   rescue StandardError => e
     Sentry.capture_exception(e, extra: {

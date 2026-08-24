@@ -14,7 +14,7 @@ module DefaultJobBehaviour
     # backoff:  1s, 16s, 81s, 4m, 10m, 21m, 40m, 68m,  109m, 166m, 4h,  6h,  8h
     # total:    1s, 17s, 98s, 6m, 16m, 38m, 78m, 146m ,4h,   7h,   11h, 16h, 1d
     # it therefore takes about 24h for a job to be discarded
-    retry_on(StandardError, wait: :polynomially_longer, attempts: 13, priority: PRIORITY_OF_RETRIES)
+    retry_on StandardError, wait: :polynomially_longer, attempts: 13, priority: PRIORITY_OF_RETRIES, queue: :latency_whenever
 
     before_perform :set_sentry_context
   end

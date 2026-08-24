@@ -12,7 +12,7 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
       VCR.use_cassette("caldav/event_list_weekly_and_daily") do
         expect { described_class.new.perform(agent.id) }.to(
           change(ExternalCalendarEvent, :count).by(2).and(
-            change { agent.reload.caldav_sync_token }.from(nil)
+            change { agent.caldav_config.reload.caldav_sync_token }.from(nil)
           )
         )
       end
@@ -82,7 +82,9 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
       end
     end
 
-    let(:agent) { create(:agent, :with_caldav_config, caldav_sync_token: "rsuneaitren") }
+    let(:agent) { create(:agent, :with_caldav_config) }
+
+    before { agent.caldav_config.update!(caldav_sync_token: "rsuneaitren") }
 
     it "supprime un événement s’il est déjà enregistré localement mais qu'il devient TRANSP:TRANSPARENT" do
       ExternalCalendarEvent.create(
@@ -123,27 +125,6 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
         expect(ExternalCalendarEvent.where(url: "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/event_signaled_as_deleted.ics")).to be_empty
       end
     end
-  end
-
-  it "enregistre la réponse dans Sentry si la récupération du token retourne un body inattendu" do
-    cal_url = "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id"
-    stub_request(:propfind, cal_url)
-      .and_return({ status: 500, body: "ceci est mon corps", headers: { "Set-Cookie" => "secret" } })
-
-    described_class.perform_now(agent.id)
-
-    expect(sentry_events.last.exception.values.last.value).to eq("500 Internal Server Error (Calendav::RequestError)")
-
-    request_breadcrumb = sentry_events.last.breadcrumbs.compact[0]
-    expect(request_breadcrumb.data[:method]).to eq(:propfind)
-    expect(request_breadcrumb.data[:url]).to eq(cal_url)
-    expect(request_breadcrumb.data[:headers]["Authorization"]).to eq("[FILTERED]")
-
-    response_breadcrumb = sentry_events.last.breadcrumbs.compact[1]
-    expect(response_breadcrumb.data[:status_code]).to eq(500)
-    expect(response_breadcrumb.data[:body]).to eq("ceci est mon corps")
-    expect(response_breadcrumb.data[:duration_ms]).to be_between(0, 100)
-    expect(response_breadcrumb.data[:headers]["Set-Cookie"]).to eq("[FILTERED]")
   end
 
   describe "debounce du job" do

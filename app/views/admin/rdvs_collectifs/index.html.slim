@@ -5,28 +5,33 @@
 - content_for :right_of_page_title do
   - unless needs_collectif_motif
     .btn-group
-      = link_to "Nouveau RDV collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "fr-btn"
+      = link_to "Nouveau RDV collectif", admin_organisation_rdvs_collectif_motif_selections_path(current_organisation), class: "fr-btn"
 
 .card
   - unless needs_collectif_motif
     .card-header
-      = simple_form_for(@form, as: "", url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :get) do |f|
-        .row
-          .col-md-4
-            = date_input(f, :from_date, label = "À partir du", value: @form.from_date)
-          .col-md-4
-            = f.input :motif_id, \
-              include_blank: true, \
-              collection: @motifs, \
-              as: :select, \
-              label_method: -> { motif_name_and_location_type(_1) }, \
-              input_html: { \
-                data: { placeholder: "Sélectionnez un motif", "allow-clear": true }, \
-                class: "select2-input", \
-              }
-          .col-md-3.mt-4
-            = f.input :with_remaining_seats, as: :boolean, label: "Avec des places disponibles"
-          .col-md-1.d-flex-justify-content-end.mt-3
+      = form_for(@form, as: "", url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :get, builder: Dsfr::FormBuilder) do |f|
+        .fr-grid-row.fr-grid-row--gutters.fr-grid-row--bottom
+          .fr-col-12.fr-col-md-3
+            = f.dsfr_text_field :from_date, \
+              label: "À partir du", \
+              value: @form.from_date.strftime("%d/%m/%Y"), \
+              data: { behaviour: "datepicker" }, \
+              autocomplete: "off", \
+              placeholder: "__/__/___"
+          .fr-col-12.fr-col-md-3
+            .fr-select-group
+              = f.label :motif_id, "Motif", class: "fr-label"
+              = f.select :motif_id, \
+                @motifs.map { |motif| [motif_name_and_location_type(motif), motif.id] }, \
+                { include_blank: true }, \
+                class: "fr-select select2-input", \
+                data: { placeholder: "Sélectionnez un motif", "allow-clear": true }
+          .fr-col-12.fr-col-md-4
+            .fr-checkbox-group
+              = f.check_box :with_remaining_seats
+              = f.label :with_remaining_seats, "Avec des places disponibles", class: "fr-label"
+          .fr-col-12.fr-col-md-2.fr-btns-group--right
             = f.submit "Filtrer", class: "fr-btn fr-btn--secondary"
 
   .card-body

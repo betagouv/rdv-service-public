@@ -7,7 +7,7 @@ RSpec.describe ParticipationsExportJob do
 
       described_class.perform_now(agent: agent, organisation_ids: [organisation.id], options: {})
 
-      expect { perform_enqueued_jobs }.to have_enqueued_mail(Agents::ExportMailer, :participations_export)
+      expect { perform_enqueued_jobs }.to have_enqueued_mail(Agents::ExportMailer, :export_ready)
       expect(Export.last.file_name).to eq("export-rdvs-user-2022-09-14.xls")
     end
 

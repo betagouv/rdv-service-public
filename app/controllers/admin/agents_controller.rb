@@ -7,11 +7,14 @@ class Admin::AgentsController < AgentAuthController
     @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active
 
     @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id })
-    @agents = index_params[:term].present? ? @agents.search_by_text(index_params[:term]) : @agents.ordered_by_last_name
+    @agents = if index_params[:term].present?
+                @agents.search_by_text(index_params[:term])
+              else
+                @agents.order(Arel.sql("(invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL) DESC")).ordered_by_last_name
+              end
 
     @display_services = current_territory.services.any? || current_organisation.agents.joins(:agent_services).any?
 
-    @invited_agents_count = @agents.invitation_not_accepted.where.not(invitation_sent_at: nil).created_by_invite.count
     @agents = @agents.includes(:services, :roles, :organisations)
     @agents = @agents.page(page_number)
   end
@@ -41,6 +44,7 @@ class Admin::AgentsController < AgentAuthController
       flash[:alert] = create_agent.warning_message
       redirect_to admin_organisation_agents_path(current_organisation)
     else
+      @pending_invitation_conflict_organisation = create_agent.pending_invitation_conflict_organisation
       render_new
     end
   end

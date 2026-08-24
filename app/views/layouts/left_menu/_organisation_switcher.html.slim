@@ -1,8 +1,0 @@
-ul.list-unstyled.left-submenu-account.collapse
-  - if current_agent.organisations_count > 10
-    li
-      = link_to "Changer d'organisation", admin_organisations_path, class: "side-menu__item side-menu__item--small pl-4"
-  - else
-    - current_agent.organisations.ordered_by_name.each do |organisation|
-      li
-        = link_to organisation.name, admin_organisation_planning_agenda_path(organisation), class: "side-menu__item side-menu__item--small #{'active' if organisation == current_organisation} pl-4 "

@@ -73,7 +73,7 @@ RSpec.describe "Agent can CRUD intervenants" do
     expect(page).to have_content("INTERVENANT2")
 
     # Change the agent back into an intervenant
-    visit admin_organisation_invitations_path(organisation)
+    visit admin_organisation_agents_path(organisation)
     click_link "FICTIF Bob"
     find("label", text: "Intervenant").click
 

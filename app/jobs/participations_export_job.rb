@@ -22,7 +22,7 @@ class ParticipationsExportJob < ExportJob
       end
     end
 
-    batch.enqueue(on_success: ParticipationsExportSendEmailJob)
+    batch.enqueue(on_success: ExportSendEmailJob)
   end
 
   private

@@ -1,6 +1,7 @@
 class Admin::Organisations::OnlineBooking::MotifsController < AgentAuthController
   before_action :set_organisation
   before_action :set_motif
+  before_action { @current_menu_item = :menu_online_booking }
 
   def show; end
 
@@ -47,19 +48,16 @@ class Admin::Organisations::OnlineBooking::MotifsController < AgentAuthControlle
     end
   end
 
-  def open
-    if @motif.update(bookable_by: :everyone)
-      flash[:success] = "Le motif a été ouvert à la réservation en ligne"
-    else
-      flash[:error] = @motif.errors.full_messages
-    end
+  def update_bookable_by
+    if @motif.update(params.permit(:bookable_by))
 
-    redirect_to admin_organisation_online_booking_motif_path(current_organisation, motif_id: @motif.id)
-  end
+      success_messages = {
+        everyone: "Le motif a été ouvert à la réservation en ligne",
+        agents: "Le motif a été fermé à la réservation en ligne",
+        agents_and_prescripteurs_and_invited_users: "La réservation en ligne pour ce motif est maintenant ouverte uniquement aux usagers invités",
+      }
 
-  def close
-    if @motif.update(bookable_by: :agents)
-      flash[:success] = "Le motif a été fermé à la réservation en ligne"
+      flash[:success] = success_messages.fetch(@motif.bookable_by.to_sym)
     else
       flash[:error] = @motif.errors.full_messages
     end

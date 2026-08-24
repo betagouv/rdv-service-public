@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_10_142439) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_17_155729) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -204,6 +204,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_10_142439) do
     t.string "action_name", null: false
     t.bigint "agent_id", null: false
     t.string "authentication_type"
+    t.string "param_names", default: [], array: true
   end
 
   create_table "blog_posts", force: :cascade do |t|
@@ -212,6 +213,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_10_142439) do
     t.string "categories", default: [], array: true
     t.string "external_url", null: false
     t.datetime "published_at", null: false
+  end
+
+  create_table "caldav_configs", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.string "caldav_agenda_url", null: false
+    t.string "caldav_username", null: false
+    t.string "caldav_password", null: false
+    t.string "caldav_sync_token"
+    t.datetime "caldav_disconnect_started_at"
+    t.boolean "caldav_include_sensitive_data", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_caldav_configs_on_agent_id", unique: true
   end
 
   create_table "export_file_blobs", force: :cascade do |t|
@@ -836,20 +850,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_10_142439) do
     t.date "birth_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
-    t.string "unconfirmed_email"
-    t.string "invitation_token"
-    t.datetime "invitation_created_at"
-    t.datetime "invitation_sent_at"
-    t.datetime "invitation_accepted_at"
-    t.integer "invitation_limit"
-    t.string "invited_by_type"
-    t.bigint "invited_by_id"
     t.integer "caisse_affiliation"
     t.string "affiliation_number"
     t.integer "family_situation"
@@ -873,28 +873,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_10_142439) do
     t.string "ants_pre_demande_number"
     t.string "rdv_invitation_token"
     t.datetime "rdv_invitation_token_updated_at"
-    t.string "notification_email", comment: "Used for notifications only, multiple users can share the same email notification address"
-    t.virtual "text_search_terms_with_notification_email", type: :tsvector, as: "((((((setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(last_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(first_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(birth_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'C'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(notification_email, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(email, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(phone_number_formatted, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE((id)::text, ''::text)), 'D'::\"char\"))", stored: true
     t.string "pro_connect_openid_sub"
     t.datetime "latest_login_at"
+    t.virtual "text_search_terms", type: :tsvector, as: "(((setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(last_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(first_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(birth_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'C'::\"char\")) || setweight(to_tsvector('simple'::regconfig, split_part((COALESCE(email, ''::character varying))::text, '@'::text, 1)), 'D'::\"char\"))", stored: true
     t.index ["ants_pre_demande_number"], name: "index_users_on_ants_pre_demande_number", where: "(ants_pre_demande_number IS NOT NULL)"
     t.index ["birth_date"], name: "index_users_on_birth_date"
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
     t.index ["email"], name: "index_users_on_email", where: "(email IS NOT NULL)"
     t.index ["first_name"], name: "index_users_on_first_name"
     t.index ["franceconnect_openid_sub"], name: "index_users_on_franceconnect_openid_sub", where: "(franceconnect_openid_sub IS NOT NULL)"
-    t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
-    t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
-    t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
     t.index ["last_name"], name: "index_users_on_last_name"
-    t.index ["notification_email"], name: "index_users_on_notification_email", where: "(notification_email IS NOT NULL)"
     t.index ["phone_number_formatted"], name: "index_users_on_phone_number_formatted"
     t.index ["pro_connect_openid_sub"], name: "index_users_on_pro_connect_openid_sub", where: "(pro_connect_openid_sub IS NOT NULL)"
     t.index ["rdv_invitation_token"], name: "index_users_on_rdv_invitation_token", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["responsible_id"], name: "index_users_on_responsible_id"
-    t.index ["text_search_terms_with_notification_email"], name: "index_users_text_search_terms_with_notification_email", using: :gin
+    t.index ["text_search_terms"], name: "index_users_on_text_search_terms", using: :gin
   end
 
   create_table "versions", force: :cascade do |t|
@@ -947,6 +940,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_10_142439) do
   add_foreign_key "annotations", "territories"
   add_foreign_key "annotations", "users"
   add_foreign_key "api_calls", "agents"
+  add_foreign_key "caldav_configs", "agents"
   add_foreign_key "export_file_blobs", "exports"
   add_foreign_key "exports", "agents"
   add_foreign_key "external_calendar_events", "agents"

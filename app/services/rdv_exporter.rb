@@ -35,11 +35,12 @@ module RdvExporter
 
     rows_enum.each do |row|
       sheet_row = sheet.row(row_index)
-      # Apply formatting
-      sheet_row.set_format 3, DateFormat
-      sheet_row.set_format 4, HourFormat
-      sheet_row.set_format 6, DateFormat
-      sheet_row.set_format 7, HourFormat
+
+      # Ces formattages correspondent aux différentes colonnes
+      sheet_row.set_format 3, DateFormat # "date prise rdv"
+      sheet_row.set_format 4, HourFormat # "heure prise rdv"
+      sheet_row.set_format 6, DateFormat # "date rdv"
+      sheet_row.set_format 7, HourFormat # "heure rdv"
 
       sheet_row.concat(row)
       row_index += 1

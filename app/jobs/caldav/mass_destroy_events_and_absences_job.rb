@@ -1,5 +1,5 @@
 module Caldav
-  class MassDestroyEventsAndAbsencesJob < ApplicationJob
+  class MassDestroyEventsAndAbsencesJob < Caldav::BaseJob
     queue_as :latency_5m
     include ExtendedRetryStrategyConcern
 
@@ -12,7 +12,7 @@ module Caldav
 
       ExternalCalendarEvent.where(agent:).delete_all
 
-      agent.update!(caldav_username: nil, caldav_password: nil, caldav_agenda_url: nil, caldav_disconnect_started_at: nil, caldav_sync_token: nil, caldav_include_sensitive_data: false)
+      agent.caldav_config.destroy!
     end
 
     private
@@ -20,7 +20,7 @@ module Caldav
     def mass_destroy_events(agent)
       agent.agents_rdvs.where.not(caldav_url: nil).each do |agents_rdv|
         begin
-          agent.caldav_client.events.delete(agents_rdv.caldav_url)
+          agent.caldav_config.caldav_client.events.delete(agents_rdv.caldav_url)
         rescue Calendav::RequestError => e
           # On ignore les erreurs 404 (event déjà supprimé côté Caldav)
           raise unless e.message == "404 Not Found"

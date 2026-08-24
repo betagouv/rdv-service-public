@@ -42,8 +42,12 @@ module AgentsHelper
 
   def active_menu_item
     case controller_name
-    when "lieux", "agents", "invitations", "motifs", "online_bookings", "configurations", "organisations"
+    when "lieux", "agents", "invitations", "motifs", "configurations", "organisations"
       :menu_settings
+    when "rdvs_collectifs", "motif_selections"
+      :menu_rdv_collectifs
+    when "online_bookings"
+      :menu_online_booking
     when "users", "merge_users", "referent_assignations"
       :menu_users
     when "rdvs"
@@ -57,11 +61,7 @@ module AgentsHelper
     !current_agent.admin_in_organisation?(current_organisation)
   end
 
-  def current_organisation_in_left_menu(&block)
-    if current_agent.organisations_count > 1
-      link_to(".left-submenu-account", "data-toggle" => :collapse, "aria-expanded" => "false", class: "side-menu__item", &block)
-    else
-      tag.div(class: "pt-2 pr-2 pb-2 pl-3", &block)
-    end
+  def organisations_grouped_by_territory_for_switcher
+    current_agent.organisations.includes(:territory).ordered_by_name.group_by(&:territory)
   end
 end

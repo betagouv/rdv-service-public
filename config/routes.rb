@@ -249,6 +249,7 @@ Rails.application.routes.draw do
         end
         resource :user_fields, only: %i[edit update]
         resource :rdv_fields, only: %i[edit update]
+        resource :calendar_settings, only: %i[edit update]
         resource :motif_fields, only: %i[edit update]
         resource :motif_categories, only: %i[update]
         resources :zone_imports, only: %i[new create]
@@ -297,7 +298,7 @@ Rails.application.routes.draw do
       end
       resources :rdvs_collectifs, only: %i[index new create edit update] do
         collection do
-          resources :motifs, only: [:index], as: :rdvs_collectif_motifs, controller: "rdvs_collectifs/motifs"
+          resources :motif_selections, only: [:index], as: :rdvs_collectif_motif_selections, controller: "rdvs_collectifs/motif_selections"
         end
       end
       resources :rdvs, except: [:new] do
@@ -306,6 +307,7 @@ Rails.application.routes.draw do
         member do
           get :download_participants
           post :send_reminder_manually
+          put :update_status
         end
         collection do
           post :participations_export
@@ -324,8 +326,7 @@ Rails.application.routes.draw do
         namespace :online_booking do
           resources :motifs, only: %i[show edit update] do
             member do
-              post :open
-              post :close
+              post :update_bookable_by
               get :edit_user_type
               patch :update_user_type
               get :edit_instructions
@@ -365,7 +366,7 @@ Rails.application.routes.draw do
           end
         end
       end
-      resources :invitations, only: [:index] do
+      resources :invitations, only: [] do
         post :reinvite, on: :member
       end
       resource :merge_users, only: %i[new create]

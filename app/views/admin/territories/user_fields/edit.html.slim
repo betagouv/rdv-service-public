@@ -1,13 +1,13 @@
 = territory_navigation(t(".title"))
 
-.row.justify-content-center
-  .col-md-6
+.fr-grid-row.justify-content-center
+  .fr-col-md-8
     .card
       .card-body
         = form_for current_territory, url: admin_territory_user_fields_path(current_territory), builder: Dsfr::FormBuilder do |f|
           = render "model_errors", model: current_territory
 
-          h5.card-title= t(".card_title")
+          h1.fr-h2= t(".card_title")
 
           p.fr-text-mention--grey.font-14= t(".hint_1")
           p.fr-text-mention--grey.font-14= t(".hint_2")

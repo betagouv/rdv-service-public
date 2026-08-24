@@ -6,7 +6,7 @@ RSpec.describe Caldav::ExportRdvToCaldavJob do
   let(:ics_formatter) { instance_double(Icalendar::Calendar, to_ical: "BEGIN:VCALENDAR...") }
 
   before do
-    allow_any_instance_of(Agent).to receive(:caldav_client).and_return(caldav_client) # rubocop:disable RSpec/AnyInstance
+    allow_any_instance_of(CaldavConfig).to receive(:caldav_client).and_return(caldav_client) # rubocop:disable RSpec/AnyInstance
     allow(IcalFormatters::Ics).to receive(:from_payload).and_return(ics_formatter)
   end
 
@@ -32,7 +32,7 @@ RSpec.describe Caldav::ExportRdvToCaldavJob do
     before { allow(caldav_events).to receive(:create).and_return(created_event) }
 
     it "crée l'événement sur le serveur caldav" do
-      expect(caldav_events).to receive(:create).with(agent.caldav_agenda_url, "#{agents_rdv.rdv.uuid}.ics", "BEGIN:VCALENDAR...")
+      expect(caldav_events).to receive(:create).with(agent.caldav_config.caldav_agenda_url, "#{agents_rdv.rdv.uuid}.ics", "BEGIN:VCALENDAR...")
       described_class.new.perform(agents_rdv.id, agent.id)
     end
 
