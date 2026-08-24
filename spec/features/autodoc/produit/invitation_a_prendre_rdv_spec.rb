@@ -6,7 +6,7 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
   let(:organisation) { create(:organisation, name: "DREETS de l'Ile de France", verticale: :rdv_etat) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [motif.organisation]) }
   let!(:user) { create(:user, organisations: [organisation]) }
-  let(:lieu) { create(:lieu, organisation: organisation, name: "Cabinet vétérinaire", address: "21 rue des Ardennes, 75019 Paris") }
+  let(:lieu) { create(:lieu, organisation: organisation, name: "Bureau départemental", address: "21 rue des Ardennes, 75019 Paris") }
   let(:now) do
     Time.zone.local(2026, 8, 12, 14, 0, 0)
   end
@@ -80,7 +80,7 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
     doc.add_screenshot(
       page,
       text: "J'ai un message de confirmation",
-      wait_for: "Vous avez invité"
+      wait_for: "Invitation envoyée"
     )
 
     logout
@@ -94,6 +94,8 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
     doc.add_screenshot(current_email, text: "Je reçois un email d'invitation")
 
     current_email.click_on "Prendre rendez-vous"
+
+    logout
 
     doc.add_screenshot(
       page,

@@ -1,19 +1,10 @@
 div
   p Bonjour,
 
-  p Vous êtes invité·e à prendre rendez-vous pour le motif <b>#{@rdv_invitation.motif.name}</b>, #{@rdv_invitation.motif.default_duration_in_min} minutes.
+  p #{@rdv_invitation.organisation.name} vous invite à prendre rendez-vous pour le motif <b>#{@rdv_invitation.motif.name}</b>.
 
-  - if @rdv_invitation.lieu
-    p
-      | Le rendez-vous aura lieu à <b>#{@rdv_invitation.lieu.name}</b>, au <b>#{@rdv_invitation.lieu.address}</b>
-  - elsif @rdv_invitation.motif.visio
-    p
-      | Le rendez-vous aura lieu par visioconférence
-  - elsif @rdv_invitation.motif.phone
-    / TODO: garder juste les 2 derniers chiffres
-    p L'agent vous appellera au #{@rdv_invitation.user.humanized_phone_number}
-  - elsif @rdv_invitation.motif.home
-    p L'agent se rendra à votre domicile.
+  p
+    = render "rdv_invitations/details", rdv_invitation: @rdv_invitation
 
   .btn-wrapper
     = link_to "Prendre rendez-vous", rdv_invitations_url(@rdv_invitation.token), class:"btn btn-primary"

@@ -1,21 +1,11 @@
-= render "search/banner", context: OpenStruct.new(public_link_organisation: @rdv_invitation.motif.organisation)
+= render "search/banner", context: OpenStruct.new(public_link_organisation: @rdv_invitation.organisation)
 
 .fr-container
   section.fr-py-3w.fr-col-12.fr-col-lg-10.fr-col-offset-lg-1
-    p.fr-text--lg Vous êtes invité·e à prendre rendez-vous pour le motif <b>#{@rdv_invitation.motif.name}</b>, #{@rdv_invitation.motif.default_duration_in_min} minutes.
+    p.fr-text--lg #{@rdv_invitation.organisation.name} vous invite à prendre rendez-vous pour le motif <b>#{@rdv_invitation.motif.name}</b>.
 
-    - if @rdv_invitation.lieu
-      p.fr-text--lg
-        | Le rendez-vous aura lieu à <b>#{@rdv_invitation.lieu.name}</b>, au <b>#{@rdv_invitation.lieu.address}</b>
-    - elsif @rdv_invitation.motif.visio
-      p.fr-text--lg
-        | Le rendez-vous aura lieu par visioconférence
-    - elsif @rdv_invitation.motif.phone
-      / TODO: garder juste les 2 derniers chiffres
-      p.fr-text--lg L'agent vous appellera au #{@rdv_invitation.user.humanized_phone_number}
-    - elsif @rdv_invitation.motif.home
-      p.fr-text--lg L'agent se rendra à votre domicile.
-
+    p.fr-text--lg
+      = render "details", rdv_invitation: @rdv_invitation
     p.fr-text--lg Choisissez un créneau:
 
     .card
