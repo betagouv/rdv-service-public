@@ -16,13 +16,19 @@ module FranceConnectV2OpenIdClient
         response_type: "code",
         client_id: @client_id,
         redirect_uri: callback_url,
-        scope: "email openid birthdate given_name family_name preferred_username",
+        scope: "email openid birthdate given_name family_name preferred_username#{scopes_for_ami}",
         state: state,
         nonce: nonce,
         acr_values: "eidas1",
       }.compact_blank
 
       "#{ENV['FRANCECONNECT_V2_BASE_URL']}/authorize?#{query_params.to_query}"
+    end
+
+    private
+
+    def scopes_for_ami
+      Ami.enabled? ? " birthdate birthplace birthcountry gender" : ""
     end
   end
 end
