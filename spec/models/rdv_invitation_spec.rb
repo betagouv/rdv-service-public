@@ -35,4 +35,38 @@ RSpec.describe RdvInvitation do
       end
     end
   end
+
+  describe "#create_rdv_and_notify" do
+    let!(:plage_ouverture) do
+      create(:plage_ouverture, :weekdays, motifs: [motif], lieu:, organisation:, first_day: Time.zone.today)
+    end
+
+    describe "niveau de notification" do
+      context "pour un motif normal" do
+        let(:motif) { create(:motif, :visible_and_notified, organisation:) }
+
+        it "crée une participation avec des notifications" do
+          rdv_invitation.create_rdv_and_notify(starts_at: plage_ouverture.starts_at)
+
+          expect(rdv_invitation.reload.rdv.participations.first).to have_attributes(
+            send_lifecycle_notifications: true,
+            send_reminder_notification: true
+          )
+        end
+      end
+
+      context "pour un motif non-notifié" do
+        let(:motif) { create(:motif, :visible_and_not_notified, organisation:) }
+
+        it "crée une participation sans notifications" do
+          rdv_invitation.create_rdv_and_notify(starts_at: plage_ouverture.starts_at)
+
+          expect(rdv_invitation.reload.rdv.participations.first).to have_attributes(
+            send_lifecycle_notifications: false,
+            send_reminder_notification: false
+          )
+        end
+      end
+    end
+  end
 end

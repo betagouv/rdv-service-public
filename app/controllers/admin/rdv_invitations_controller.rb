@@ -20,7 +20,7 @@ class Admin::RdvInvitationsController < AgentAuthController
   end
 
   def show
-    @rdv_invitation = RdvInvitation.find(params[:id])
+    @rdv_invitation = current_organisation.rdv_invitations.find(params[:id])
     authorize(@rdv_invitation, policy_class: Agent::RdvInvitationPolicy)
   end
 

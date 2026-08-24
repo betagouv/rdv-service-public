@@ -19,7 +19,6 @@ class RdvInvitation < ApplicationRecord
   validate :motif_is_supported
 
   def creneaux_search(starts_at)
-    # TODO: vérifier si starts_at doit être une Date
     CreneauxSearch::ForUser.new(
       motif: motif,
       lieu: lieu,
@@ -37,8 +36,6 @@ class RdvInvitation < ApplicationRecord
     end
 
     RdvPlan.transaction do
-      # TODO: vérifier le niveau de notification de la participation
-      # TODO: gérer les erreurs sur le rdv
       rdv = Rdv.create(
         motif:, organisation:, lieu:, starts_at:,
         ends_at: starts_at + motif.default_duration_in_min.minutes,

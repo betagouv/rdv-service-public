@@ -34,7 +34,7 @@ class RdvPlan < ApplicationRecord
     self.location_type, self.lieu_id = modalite.split("-")
   end
 
-  def create_rdv(user_attributes: {}, participation_attributes: {})
+  def create_rdv(user_attributes:, participation_attributes:)
     update_user_before_creating_rdv(user_attributes:)
 
     rdv = Rdv.create(
