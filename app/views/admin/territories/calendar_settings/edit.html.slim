@@ -1,0 +1,18 @@
+= territory_navigation("Paramètres de calendrier")
+
+.fr-grid-row.justify-content-center
+  .fr-col-md-6
+    .card
+      .card-body
+        = form_for current_territory, url: admin_territory_calendar_settings_path(current_territory), builder: Dsfr::FormBuilder do |f|
+          = render "model_errors", model: current_territory
+
+          h1.fr-h2.card-title= "Paramètres de calendrier"
+          p.fr-text-mention--grey.fr-hint-text
+            | Par défaut, les dimanches sont cachés du calendrier et les jours fériés sont automatiquement considérés comme des absences.
+          p.fr-text-mention--grey.fr-hint-text
+            | Cependant, si votre service travaille le dimanche ou certains jours fériés, vous pouvez activer cette option pour permettre la prise de rendez-vous pour ces jours.
+
+          = f.dsfr_check_box :work_on_sunday, label: "Autoriser les rendez-vous le dimanche et les jours fériés"
+          .text-right
+            = f.submit "Enregistrer", class: "fr-btn"

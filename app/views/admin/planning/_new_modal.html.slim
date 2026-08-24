@@ -1,0 +1,41 @@
+/# locals: (agent:)
+
+dialog#planning-new-modal.fr-modal[aria-labelledby="planning-new-modal-title" data-fr-concealing-backdrop="true"]
+  .fr-container.fr-container--fluid.fr-container-md
+    .fr-grid-row.fr-grid-row--center
+      .fr-col-12.fr-col-md-10.fr-col-lg-8
+        .fr-modal__body
+          .fr-modal__header
+            button.fr-btn--close.fr-btn[aria-controls="planning-new-modal" title="Fermer" type="button"]
+              | Fermer
+          .fr-modal__content
+            h2#planning-new-modal-title.fr-modal__title
+              | Que souhaitez-vous créer ?
+
+            ul.fr-raw-list.fr-grid-row.fr-grid-row--gutters
+              li.fr-col-12.fr-col-md-4
+                .fr-tile.fr-tile--sm.fr-tile--horizontal.fr-enlarge-link
+                  .fr-tile__body
+                    .fr-tile__content
+                      h3.fr-tile__title
+                        = link_to "Un rendez-vous", new_admin_organisation_rdv_wizard_step_path(current_organisation, agent_ids: [agent.id])
+                      p.fr-tile__desc
+                        | Prendre un rendez-vous pour un usager
+
+              li.fr-col-12.fr-col-md-4
+                .fr-tile.fr-tile--sm.fr-tile--horizontal.fr-enlarge-link
+                  .fr-tile__body
+                    .fr-tile__content
+                      h3.fr-tile__title
+                        = link_to "Une plage d’ouverture", new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: agent.id)
+                      p.fr-tile__desc
+                        | Ouvrir des créneaux de disponibilité
+
+              li.fr-col-12.fr-col-md-4
+                .fr-tile.fr-tile--sm.fr-tile--horizontal.fr-enlarge-link
+                  .fr-tile__body
+                    .fr-tile__content
+                      h3.fr-tile__title
+                        = link_to "Une indisponibilité", new_admin_organisation_planning_absence_path(current_organisation, agent_id: agent.id)
+                      p.fr-tile__desc
+                        | Bloquer une période (congé, absence…)
