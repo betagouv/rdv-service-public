@@ -84,6 +84,7 @@ class RdvInvitation < ApplicationRecord
 
   def set_token
     # On reprend la même logique que CustomDeviseTokenGenerator
-    self.token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8) until token && self.class.where(token:).none?
+    # En cas de collision de tokens (extrèmement improbable), Postgres lèvera une erreur parce qu'on a un index avec une contrainte d'unicité.
+    self.token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8)
   end
 end
