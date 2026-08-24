@@ -1,7 +1,7 @@
 class AddRdvInvitations < ActiveRecord::Migration[8.0]
   def change
     create_table :rdv_invitations do |t|
-      t.string :token, null: false
+      t.string :token, null: false, index: { unique: true }
       t.references :user, null: false
       t.references :motif, null: false
       t.references :lieu
