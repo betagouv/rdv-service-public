@@ -6,7 +6,7 @@
     |  (#{Service.find(@motif.service_id_was)&.short_name})
 
 - content_for :fil_ariane do
-  - titles_and_paths = [["Configuration", admin_organisation_configuration_path(current_organisation)], ["Motifs de rendez-vous", admin_organisation_motifs_path(current_organisation)], [@motif.name, admin_organisation_motif_path(current_organisation, @motif)]]
+  - titles_and_paths = [["Configuration", admin_organisation_configuration_path(current_organisation)], ["Motifs de rendez-vous", admin_organisation_motifs_path(current_organisation)], [@motif.name_was, admin_organisation_motif_path(current_organisation, @motif)]]
   = render "common/fil_ariane", titles_and_paths: titles_and_paths, current_page_title: "Modifier"
 
 .row
