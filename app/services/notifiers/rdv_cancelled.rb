@@ -10,7 +10,7 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
     return unless @author.is_a?(Agent) || @author.is_a?(Prescripteur)
     return unless notify_cancellation?
 
-    Users::RdvSms.rdv_cancelled(@rdv, user, @participations_tokens_by_user_id[user.id]).deliver_later
+    Users::RdvSms.rdv_cancelled(@rdv, user).deliver_later
   end
 
   protected
