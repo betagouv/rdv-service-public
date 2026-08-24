@@ -11,10 +11,11 @@ RSpec.describe "Prise de rendez-vous par invitation" do
   before { visit rdv_invitations_path(rdv_invitation_token: rdv_invitation.token) }
 
   context "quand l'invitation n'a pas encore été utilisée" do
-    it "connecte l'usager après la prise de rendez-vous", js: true do
+    it "connecte l'usager après la prise de rendez-vous" do
       click_on "8:00", match: :first
 
       expect(page).to have_content "Votre rendez vous a été confirmé."
+      expect(page).to have_content "Ajouter à mon calendrier"
 
       rdv = rdv_invitation.reload.rdv
       expect(rdv).to have_attributes(
