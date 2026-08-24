@@ -15,6 +15,8 @@ class RdvInvitation < ApplicationRecord
   before_create :set_restricted_authentication_token
 
   validate :user_can_be_notified
+  validate :validate_phone_number_present_for_motif_by_phone
+  validate :motif_is_supported
 
   def creneaux_search(starts_at)
     # TODO: vérifier si starts_at doit être une Date
@@ -60,6 +62,18 @@ class RdvInvitation < ApplicationRecord
     return if user.user_to_notify.email.present?
 
     errors.add(:base, "#{user.user_to_notify.full_name} n'a pas d'adresse email, et ne peut donc pas recevoir d'invitation.")
+  end
+
+  def motif_is_supported
+    if motif.collectif?
+      errors.add(:base, "Les invitations ne sont pas encore possible pour les motifs collectifs")
+    end
+  end
+
+  def validate_phone_number_present_for_motif_by_phone
+    if motif.phone? && user.phone_number.blank?
+      errors.add(:base, "Le motif est pas téléphone mais  le numéro de #{user.full_name} n'est pas renseigné.")
+    end
   end
 
   def set_restricted_authentication_token
