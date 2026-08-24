@@ -15,7 +15,7 @@ class Notifiers::RdvUpdated < Notifiers::RdvBase
   end
 
   def notify_user_by_sms(user)
-    Users::RdvSms.rdv_updated(@rdv, user, @participations_tokens_by_user_id[user.id]).deliver_later
+    Users::RdvSms.rdv_updated(@rdv, user).deliver_later
   end
 
   def agents_to_notify

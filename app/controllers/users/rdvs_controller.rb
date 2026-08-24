@@ -31,11 +31,10 @@ class Users::RdvsController < UserAuthController
   def update
     old_agent_ids = @rdv.agent_ids.to_a
     if @rdv.update(starts_at: @creneau.starts_at, ends_at: @creneau.starts_at + @rdv.duration_in_min.minutes, agent_ids: [@creneau.agent.id])
-      notifier = Notifiers::RdvUpdated.new(@rdv, current_user, old_agent_ids: old_agent_ids)
+      Notifiers::RdvUpdated.new(@rdv, current_user, old_agent_ids: old_agent_ids).perform
 
-      notifier.perform
       flash[:success] = "Votre RDV a bien été modifié"
-      redirect_to users_rdv_path(@rdv, invitation_token: notifier.participations_tokens_by_user_id[current_user.id])
+      redirect_to users_rdv_path(@rdv, invitation_token: current_user.participation_for(@rdv).restricted_auth_token)
     else
       flash[:error] = "Le RDV n'a pas pu être modifié"
       redirect_to creneaux_users_rdv_path(@rdv)
@@ -49,7 +48,8 @@ class Users::RdvsController < UserAuthController
     else
       flash[:error] = "Impossible d'annuler le RDV."
     end
-    redirect_to users_rdv_path(@rdv, invitation_token: update_status_and_notify.participation_token_for(current_user.id))
+    restricted_auth_token = current_user.participation_for(@rdv).restricted_auth_token
+    redirect_to users_rdv_path(@rdv, invitation_token: restricted_auth_token)
   end
 
   def ics

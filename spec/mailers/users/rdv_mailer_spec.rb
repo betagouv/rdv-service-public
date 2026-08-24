@@ -2,8 +2,9 @@ RSpec.describe Users::RdvMailer, type: :mailer do
   describe "#rdv_created" do
     let(:rdv) { create(:rdv) }
     let(:user) { rdv.users.first }
-    let(:token) { "12345" }
-    let(:mail) { described_class.with(rdv: rdv, user: user, token: token).rdv_created }
+    let(:mail) { described_class.with(rdv: rdv, user: user).rdv_created }
+
+    before { rdv.participations.first.update(restricted_auth_token: "12345") }
 
     it "renders the headers" do
       expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9\-]+@reply\.rdv-solidarites-test\.localhost>/)
@@ -35,14 +36,14 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     it "contains the link to the rdv for view only without phone" do
       rdv.motif.update(rdvs_editable_by_user: false)
       rdv.motif.update(rdvs_cancellable_by_user: false)
-      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_created
+      mail = described_class.with(rdv: rdv, user: user).rdv_created
       expect(mail.html_part.body.encoded).not_to match("En cas de problème vous pouvez contacter le")
       expect(mail.html_part.body.encoded).to match("Voir le rendez-vous</a>")
     end
 
     it "contains the link to the rdv for cancellation or update with phone" do
       rdv.organisation.update(phone_number: "0601010101")
-      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_created
+      mail = described_class.with(rdv: rdv, user: user).rdv_created
       expect(mail.html_part.body.encoded).to match("<span>Vous pouvez annuler ou modifier votre rendez-vous</span> <strong>jusqu'à 4h avant celui-ci</strong>")
       expect(mail.html_part.body.encoded).to match("<span>en appelant au <a href=\"tel:0601010101\">0601010101</a> ou</span> en cliquant sur le lien ci-dessous")
       expect(mail.html_part.body.encoded).to match("Annuler ou modifier le rendez-vous</a>")
@@ -52,7 +53,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       rdv.organisation.update(phone_number: "0601010101")
       rdv.motif.update(rdvs_editable_by_user: false)
       rdv.motif.update(rdvs_cancellable_by_user: false)
-      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_created
+      mail = described_class.with(rdv: rdv, user: user).rdv_created
       expect(mail.html_part.body.encoded).to match("<span>En cas de problème vous pouvez contacter le <a href=\"tel:0601010101\">0601010101</a>")
       expect(mail.html_part.body.encoded).to match("Voir le rendez-vous</a>")
     end
@@ -60,7 +61,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     it "contains the link to the rdv for edit and cancellation with phone" do
       rdv.organisation.update(phone_number: "0601010101")
       rdv.update(created_by_type: "User")
-      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_created
+      mail = described_class.with(rdv: rdv, user: user).rdv_created
       expect(mail.html_part.body.encoded).to match("<span>Vous pouvez annuler ou modifier votre rendez-vous</span> <strong>jusqu'à 4h avant celui-ci</strong>")
       expect(mail.html_part.body.encoded).to match("<span>en appelant au <a href=\"tel:0601010101\">0601010101</a> ou</span> en cliquant sur le lien ci-dessous")
       expect(mail.html_part.body.encoded).to match("Annuler ou modifier le rendez-vous</a>")
@@ -73,7 +74,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       let(:rdv) { create(:rdv, motif:, organisation:, lieu:) }
 
       it "contient le nom du lieu" do
-        mail = described_class.with(rdv:, user:, token:).rdv_created
+        mail = described_class.with(rdv:, user:).rdv_created
         expect(mail.html_part.body.encoded).to include(/Mairie centrale/)
       end
     end
@@ -84,7 +85,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       let(:rdv) { create(:rdv, motif:, organisation:, visio_url_custom: nil) }
 
       it "contient un lien vers la visio" do
-        mail = described_class.with(rdv:, user:, token:).rdv_created
+        mail = described_class.with(rdv:, user:).rdv_created
         expect(mail.html_part.body.encoded).to include(%r{https://webconf.numerique.gouv.fr/RdvServicePublic})
       end
     end
@@ -95,7 +96,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       let(:rdv) { create(:rdv, motif:, organisation:, visio_url_custom: "https://webinaire.numerique.gouv.fr/test123") }
 
       it "contient un lien vers la visio" do
-        mail = described_class.with(rdv:, user:, token:).rdv_created
+        mail = described_class.with(rdv:, user:).rdv_created
         expect(mail.html_part.body.encoded).not_to include(%r{https://webconf.numerique.gouv.fr/})
         expect(mail.html_part.body.encoded).to include(%r{https://webinaire.numerique.gouv.fr/test123})
       end
@@ -109,19 +110,18 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     let(:previous_lieu) { create(:lieu, name: "MJC Aix", address: "rue du Previous, Paris, 75016") }
     let(:rdv) { create(:rdv, lieu: new_lieu, starts_at: new_starting_time) }
     let(:user) { rdv.users.first }
-    let(:token) { "12345" }
 
     before { travel_to(Time.zone.parse("2022-08-24 09:00:00")) }
 
     it "renders the headers" do
-      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_updated(old_starts_at: previous_starting_time, lieu_id: nil)
+      mail = described_class.with(rdv: rdv, user: user).rdv_updated(old_starts_at: previous_starting_time, lieu_id: nil)
 
       expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9\-]+@reply\.rdv-solidarites-test\.localhost/)
       expect(mail.to).to eq([user.email])
     end
 
     it "indicates the previous and current values" do
-      mail = described_class.with(rdv: rdv, user: user, token: token)
+      mail = described_class.with(rdv: rdv, user: user)
         .rdv_updated(old_starts_at: previous_starting_time, lieu_id: previous_lieu.id)
 
       previous_details = "Votre RDV qui devait avoir lieu le 26 août à 09:00 à l&#39;adresse MJC Aix (rue du Previous, Paris, 75016) a été modifié"
@@ -133,7 +133,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     end
 
     it "works when no lieu_id is passed" do
-      mail = described_class.with(rdv: rdv, user: user, token: token)
+      mail = described_class.with(rdv: rdv, user: user)
         .rdv_updated(old_starts_at: previous_starting_time, lieu_id: nil)
 
       previous_details = "Votre RDV qui devait avoir lieu le 26 août à 09:00 a été modifié"
@@ -144,12 +144,10 @@ RSpec.describe Users::RdvMailer, type: :mailer do
   describe "#rdv_cancelled" do
     before { travel_to Time.zone.parse("2020-06-10 12:30") }
 
-    let(:token) { "12345" }
-
     it "send mail to user" do
       rdv = create(:rdv)
       user = rdv.users.first
-      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_cancelled
+      mail = described_class.with(rdv: rdv, user: user).rdv_cancelled
 
       expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9\-]+@reply\.rdv-solidarites-test\.localhost>/)
       expect(mail.to).to eq([user.email])
@@ -159,7 +157,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_cancelled
+      mail = described_class.with(rdv: rdv, user: user).rdv_cancelled
 
       expect(mail.subject).to eq("RDV annulé le lundi 15 juin 2020 à 12h30 avec Orga du coin")
     end
@@ -168,7 +166,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_cancelled
+      mail = described_class.with(rdv: rdv, user: user).rdv_cancelled
 
       expect(mail.html_part.body).to match("lundi 15 juin 2020 à 12h30")
     end
@@ -177,7 +175,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user], motif: build(:motif, :with_service))
-      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_cancelled
+      mail = described_class.with(rdv: rdv, user: user).rdv_cancelled
 
       expect(mail.html_part.body).to match(rdv.motif.service_name)
     end
@@ -186,9 +184,10 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_cancelled
+      rdv.participations.first.update(restricted_auth_token: "12345")
+      mail = described_class.with(rdv: rdv, user: user).rdv_cancelled
 
-      expected_url = reprendre_rdv_from_participation_invitation_token_short_url(tkn: token, host: Domain::RDV_SOLIDARITES.host_name)
+      expected_url = reprendre_rdv_from_participation_invitation_token_short_url(tkn: "12345", host: Domain::RDV_SOLIDARITES.host_name)
 
       expect(mail.html_part.body).to have_link("Reprendre RDV", href: expected_url)
     end
@@ -197,14 +196,13 @@ RSpec.describe Users::RdvMailer, type: :mailer do
   describe "#participation_cancelled" do
     before { travel_to Time.zone.parse("2020-06-10 12:30") }
 
-    let(:token) { "12345" }
     let(:organisation) { build(:organisation, name: "Orga du coin") }
     let(:user) { create(:user) }
     let(:motif) { create(:motif, :collectif, organisation:) }
     let(:rdv) { create(:rdv, :collectif, :without_users, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation:, motif:) }
     let(:participation_status) { "unknown" }
-    let(:participation) { create(:participation, rdv:, user:, status: participation_status) }
-    let(:mail) { described_class.with(rdv:, user:, token:, participation:).participation_cancelled }
+    let(:participation) { create(:participation, rdv:, user:, status: participation_status, restricted_auth_token: "12345") }
+    let(:mail) { described_class.with(rdv:, user:, participation:).participation_cancelled }
 
     it "envoie le mail à l'usager" do
       expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9\-]+@reply\.rdv-solidarites-test\.localhost>/)
@@ -235,7 +233,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       let(:motif) { create(:motif, :collectif, organisation:, bookable_by: :everyone) }
 
       it "le corps contient un lien pour reprendre RDV" do
-        expected_url = reprendre_rdv_from_participation_invitation_token_short_url(tkn: token, host: Domain::RDV_SOLIDARITES.host_name)
+        expected_url = reprendre_rdv_from_participation_invitation_token_short_url(tkn: "12345", host: Domain::RDV_SOLIDARITES.host_name)
 
         expect(mail.body).to have_link("Reprendre RDV", href: expected_url)
       end
@@ -243,12 +241,13 @@ RSpec.describe Users::RdvMailer, type: :mailer do
   end
 
   describe "#rdv_upcoming_reminder" do
-    let(:token) { "12345" }
     let!(:rdv) { create(:rdv, users: [user]) }
     let!(:user) { create(:user) }
 
+    before { rdv.participations.first.update(restricted_auth_token: "12345") }
+
     it "send mail to user" do
-      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_upcoming_reminder
+      mail = described_class.with(rdv: rdv, user: user).rdv_upcoming_reminder
       expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9\-]+@reply\.rdv-solidarites-test\.localhost>/)
       expect(mail.to).to eq([user.email])
       expect(mail.html_part.body).to include("Nous vous rappellons que vous avez un RDV prévu")
@@ -267,7 +266,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
         let(:organisation) { create(:organisation, verticale: :rdv_solidarites) }
 
         it "works" do
-          mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
+          mail = described_class.with(rdv: rdv, user: rdv.users.first).send(action)
           expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9\-]+@reply\.rdv-solidarites-test\.localhost>/)
           expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
           expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost))
@@ -279,7 +278,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
         let(:organisation) { create(:organisation, verticale: :rdv_insertion) }
 
         it "works" do
-          mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
+          mail = described_class.with(rdv: rdv, user: rdv.users.first).send(action)
           expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9\-]+@reply\.rdv-solidarites-test\.localhost/)
           expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
           expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost))
@@ -291,7 +290,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
         let(:organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
 
         it "works" do
-          mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
+          mail = described_class.with(rdv: rdv, user: rdv.users.first).send(action)
           expect(mail[:from].to_s).to match(/"RDV Aide Numérique" <rdv\+[a-z0-9\-]+@reply\.rdv-aide-numerique-test\.localhost>/)
           expect(mail.html_part.body.to_s).to include(%(src="/logo_aide_numerique.png))
           expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-aide-numerique-test.localhost))
@@ -303,7 +302,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
         let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
 
         it "works" do
-          mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
+          mail = described_class.with(rdv: rdv, user: rdv.users.first).send(action)
           expect(mail[:from].to_s).to match(/RDV Service Public <rdv\+[a-z0-9\-]+@reply\.rdv-service-public-test\.localhost>/)
           # les guillemets autour de "RDV Service Public" disparaissent probablement ici car il n’y a que des caractères ASCII
           expect(mail.html_part.body.to_s).to include(%(src="/logo_rdv_service_public.png))

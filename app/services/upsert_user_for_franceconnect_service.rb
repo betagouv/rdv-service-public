@@ -10,31 +10,30 @@ class UpsertUserForFranceconnectService < BaseService
     @user = User.find_by(franceconnect_openid_sub: omniauth_info.sub)
     @new_user = @user.nil?
     if @user.nil?
-      create_new_user
+      build_new_user
     else
-      update_existing_user
+      set_email_on_existing_user
     end
+    @user.assign_attributes(user_attribute_values_from_fc)
+    @user.save!(context: :france_connect_login)
+
+    save_ami_france_connect_hash(omniauth_info) if Ami.enabled?
+
     self
   end
 
   private
 
-  def update_existing_user
-    @user.assign_attributes(user_attribute_values_from_fc)
-    email_from_fc = omniauth_info.email.presence&.downcase
+  def set_email_on_existing_user
+    email_from_fc = omniauth_info.email.presence
     @user.email = email_from_fc if email_from_fc
-    @user.save!(context: :france_connect_login)
   end
 
-  def create_new_user
+  def build_new_user
     @user = User.new(
-      user_attribute_values_from_fc.merge(
-        email: omniauth_info.email&.downcase,
-        created_through: "franceconnect_sign_up"
-      )
+      created_through: "franceconnect_sign_up",
+      email: omniauth_info.email
     )
-    @user.save!(context: :france_connect_login)
-    @user
   end
 
   def user_attribute_values_from_fc
@@ -47,5 +46,22 @@ class UpsertUserForFranceconnectService < BaseService
       logged_once_with_franceconnect: true,
       latest_login_at: Time.zone.now,
     }.compact # do not fill with missing values
+  end
+
+  def save_ami_france_connect_hash(omniauth_info)
+    AmiFranceConnectHash.find_or_initialize_by(user_id: @user.id).update(fc_hash: ami_france_connect_hash(omniauth_info))
+  end
+
+  def ami_france_connect_hash(omniauth_info)
+    attributes = [
+      omniauth_info.given_name,
+      omniauth_info.family_name,
+      omniauth_info.birthdate,
+      omniauth_info.gender,
+      omniauth_info.birthplace,
+      omniauth_info.birthcountry,
+    ]
+
+    Digest::SHA256.hexdigest(attributes.join)
   end
 end

@@ -59,10 +59,16 @@
   },
   "addons": [
     {
-      "plan": "postgresql:postgresql-starter-512"
+      "plan": "postgresql:postgresql-starter-512",
+      "options": {
+        "version": "16"
+      }
     },
     {
-      "plan": "redis:redis-starter-256"
+      "plan": "redis:redis-starter-256",
+      "options": {
+        "version": "7"
+      }
     }
   ],
   "formation": {

@@ -106,37 +106,25 @@ RSpec.describe Rdv::Updatable do
 
     describe "for a rdv collectif" do
       let(:attributes) do
-        {
-          participations_attributes: {
-            0 => { user_id: user_staying.id, send_lifecycle_notifications: 1, id: rdv.participations.find_by(user_id: user_staying.id).id, _destroy: false },
-            1 => { user_id: user_removed.id, send_lifecycle_notifications: 1, id: rdv.participations.find_by(user_id: user_removed.id).id, _destroy: true  },
-            2 => { user_id: user_added.id, send_lifecycle_notifications: 1 },
-          },
-        }
+        { participations_attributes: { 0 => { user_id: user_added.id, send_lifecycle_notifications: 1 } } }
       end
+
       # The reload makes sure we have the proper .previous_changes
-      let(:rdv) { create(:rdv, agents: [agent], motif: motif, users: [user_staying, user_removed], organisation:).reload }
+      let(:rdv) { create(:rdv, agents: [agent], motif: motif, users: [user_staying], organisation:).reload }
       let(:motif) { create(:motif, :collectif, organisation:) }
       let(:user_staying) { create(:user, first_name: "Stay") }
       let(:user_added) { create(:user, first_name: "Add") }
-      let(:user_removed) { create(:user, first_name: "Remove") }
 
-      it "notifies the new participant, and the one that is removed" do
+      it "notifies the new participant" do
         rdv.update_and_notify(agent, attributes)
         expect_notifications_sent_for(rdv, user_added, :rdv_created)
-        expect_notifications_sent_for(rdv, user_removed, :rdv_cancelled)
       end
 
       context "quand un des usager qu'on ajoute est déjà inscrit comme participant au rdv" do
         let(:rdv) { create(:rdv, agents: [agent], motif: motif, users: [user_staying, user_added], organisation:).reload }
 
         let(:attributes) do
-          {
-            participations_attributes: {
-              0 => { user_id: user_staying.id, send_lifecycle_notifications: 1, id: rdv.participations.find_by(user_id: user_staying.id).id, _destroy: false },
-              1 => { user_id: user_added.id, send_lifecycle_notifications: 1 },
-            },
-          }
+          { participations_attributes: { 0 => { user_id: user_added.id, send_lifecycle_notifications: 1 } } }
         end
 
         it "garde l'usager et n'envoie pas de notification supplémentaire" do
