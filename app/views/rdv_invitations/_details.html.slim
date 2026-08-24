@@ -1,0 +1,11 @@
+/# locals: (rdv_invitation:)
+
+|> Le rendez-vous durera <b>#{@rdv_invitation.motif.default_duration_in_min} minutes</b>.
+- if @rdv_invitation.lieu
+  | Il aura lieu à <b>#{@rdv_invitation.lieu.name}</b>, au <b>#{@rdv_invitation.lieu.address}</b>.
+- elsif @rdv_invitation.motif.visio
+  | Il sera en visioconférence.
+- elsif @rdv_invitation.motif.phone
+  | L'agent vous appellera sur votre numéro de téléphone.
+- elsif @rdv_invitation.motif.home
+  | L'agent se rendra à votre domicile.
