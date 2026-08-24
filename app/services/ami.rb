@@ -1,4 +1,6 @@
 # Ce service est le point d'entrée principal pour l'intégration avec AMI
+# Documentation technique d'AMI : https://pad.numerique.gouv.fr/s/9L5vb77qA
+# Les identifiants pour tester en local sont disponibles sur Vaulwarden
 class Ami
   def self.enabled?
     ENV["AMI_ENABLED"] == "true"
