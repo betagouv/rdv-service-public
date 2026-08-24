@@ -187,14 +187,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_17_155729) do
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
   end
 
-  create_table "ami_france_connect_hashes", force: :cascade do |t|
-    t.string "fc_hash", null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_ami_france_connect_hashes_on_user_id", unique: true
-  end
-
   create_table "annotations", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "territory_id", null: false
@@ -962,7 +954,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_17_155729) do
   add_foreign_key "agent_territorial_roles", "territories"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
-  add_foreign_key "ami_france_connect_hashes", "users"
   add_foreign_key "annotations", "territories"
   add_foreign_key "annotations", "users"
   add_foreign_key "api_calls", "agents"

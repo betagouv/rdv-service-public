@@ -5,9 +5,9 @@
   .fr-col-md-12.col-lg-8
     .card.card-body
       = form_for [:admin, current_organisation, @rdv_invitation], builder: Dsfr::FormBuilder do |f|
+        = f.hidden_field :user_id
         = f.hidden_field :motif_id
         = f.hidden_field :lieu_id
-        = f.hidden_field :user_id
         = render "model_errors", model: @rdv_invitation, f: f
         p Vous allez inviter #{@rdv_invitation.user.full_name} à prendre rendez-vous pour #{@rdv_invitation.motif.name}.
 
