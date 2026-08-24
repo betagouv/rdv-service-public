@@ -27,9 +27,9 @@ aside.left-side-menu-wrapper
         - if current_agent.admin_in_organisation?(current_organisation)
           - menu.with_item(title: safe_join([icon("fr-icon-global-line", class: "fr-icon--sm fr-mr-1w"), "Réservation en ligne"]), path: admin_organisation_online_booking_path(current_organisation), current_page: active_item == :menu_online_booking)
         ruby:
+          menu.with_item(title: safe_join([icon("fr-icon-team-line", class: "fr-icon--sm fr-mr-1w"), "RDV collectifs"]), path: admin_organisation_rdvs_collectifs_path(current_organisation), current_page: active_item == :menu_rdv_collectifs)
           menu.with_item(title: safe_join([icon("fr-icon-group-line", class: "fr-icon--sm fr-mr-1w"), "Usagers"]), path: admin_organisation_users_path(current_organisation), current_page: active_item == :menu_users)
           menu.with_item(title: safe_join([icon("fr-icon-survey-line", class: "fr-icon--sm fr-mr-1w"), "Liste des RDV"]), path: admin_organisation_rdvs_path(current_organisation), current_page: active_item == :menu_liste_rdvs)
-          menu.with_item(title: safe_join([icon("fr-icon-team-line", class: "fr-icon--sm fr-mr-1w"), "RDV collectifs"]), path: admin_organisation_rdvs_collectifs_path(current_organisation), current_page: active_item == :menu_rdv_collectifs)
           menu.with_item(title: safe_join([icon("fr-icon-bar-chart-box-line", class: "fr-icon--sm fr-mr-1w"), "Statistiques"]), path: admin_organisation_stats_path(current_organisation), current_page: current_page?(admin_organisation_stats_path(current_organisation)))
         - if current_agent.admin_in_organisation?(current_organisation)
           ruby:
