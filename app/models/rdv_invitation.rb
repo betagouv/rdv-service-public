@@ -15,6 +15,7 @@ class RdvInvitation < ApplicationRecord
   before_create :set_token
 
   validate :user_can_be_notified
+  validate :user_cannot_be_relative
   validate :validate_phone_number_present_for_motif_by_phone
   validate :motif_is_supported
 
@@ -61,9 +62,15 @@ class RdvInvitation < ApplicationRecord
   private
 
   def user_can_be_notified
-    return if user.user_to_notify.email.present?
+    return if user.email.present?
 
-    errors.add(:base, "#{user.user_to_notify.full_name} n'a pas d'adresse email, et ne peut donc pas recevoir d'invitation.")
+    errors.add(:base, "#{user.full_name} n'a pas d'adresse email, et ne peut donc pas recevoir d'invitation.")
+  end
+
+  def user_cannot_be_relative
+    if user.relative?
+      errors.add(:base, "Les invitations ne sont pas encore possible pour les proches.")
+    end
   end
 
   def motif_is_supported

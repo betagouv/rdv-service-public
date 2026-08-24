@@ -34,6 +34,14 @@ RSpec.describe RdvInvitation do
         expect(rdv_invitation).not_to be_valid
       end
     end
+
+    context "when the user is a relative" do
+      let(:user) { create(:user, :relative, organisations: [organisation]) }
+
+      it "isn't supported" do
+        expect(rdv_invitation).not_to be_valid
+      end
+    end
   end
 
   describe "#create_rdv_and_notify" do
