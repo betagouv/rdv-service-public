@@ -2,53 +2,54 @@ class Users::RdvSms < Users::BaseSms
   include Rails.application.routes.url_helpers
   extend ActionView::Helpers::TextHelper
 
-  def rdv_title(rdv)
-    if rdv.collectif? && rdv.name.present?
-      [rdv.service_short_name, truncated_rdv_name].compact.join(" : ")
-    else
-      rdv.service_short_name
-    end
-  end
-
-  def rdv_created(rdv, user, token)
+  def rdv_created(rdv, user)
     address_format = if @rdv.starts_at < 2.days.from_now
                        :full
                      else
                        :short
                      end
 
-    @content = "RDV #{rdv_title(rdv)} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, token, address_format:)}"
+    @content = "RDV #{rdv_title(rdv)} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, address_format:)}"
   end
 
-  def rdv_updated(rdv, user, token)
+  def rdv_updated(rdv, user)
     address_format = if @rdv.starts_at < 2.days.from_now
                        :full
                      else
                        :short
                      end
 
-    @content = "RDV modifié: #{rdv_title(rdv)} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, token, address_format:)}"
+    @content = "RDV modifié: #{rdv_title(rdv)} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, address_format:)}"
   end
 
-  def rdv_upcoming_reminder(rdv, user, token)
-    @content = "RDV #{rdv_title(rdv)} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, token, address_format: :full)}"
+  def rdv_upcoming_reminder(rdv, user)
+    @content = "RDV #{rdv_title(rdv)} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, address_format: :full)}"
   end
 
-  def rdv_cancelled(rdv, _user, token)
+  def rdv_cancelled(rdv, _user)
     base_message = "RDV #{rdv_title(rdv)} #{I18n.l(rdv.starts_at, format: :short)} a été annulé."
 
-    @content = "#{base_message}\n#{cancellation_footer(rdv, token)}"
+    @content = "#{base_message}\n#{cancellation_footer(rdv)}"
   end
 
-  def participation_cancelled(rdv, _user, token)
+  def participation_cancelled(rdv, _user)
     base_message = "Votre participation au RDV #{rdv_title(rdv)} #{I18n.l(rdv.starts_at, format: :short)} a été annulée."
 
-    @content = "#{base_message}\n#{cancellation_footer(rdv, token)}"
+    @content = "#{base_message}\n#{cancellation_footer(rdv)}"
   end
 
-  def cancellation_footer(rdv, token)
+  MAX_RDV_NAME_LENGTH = 50
+
+  def self.truncated_rdv_name(name)
+    omission_length = "...".length
+    truncate(name, length: (MAX_RDV_NAME_LENGTH + omission_length))
+  end
+
+  private
+
+  def cancellation_footer(rdv)
     if rdv.motif.bookable_by_everyone?
-      url = reprendre_rdv_from_participation_invitation_token_short_url(host: domain_host, tkn: token)
+      url = reprendre_rdv_from_participation_invitation_token_short_url(host: domain_host, tkn: restricted_auth_token)
       if rdv.phone_number.present?
         "Appelez le #{rdv.phone_number} ou allez sur #{url} pour reprendre RDV."
       else
@@ -59,24 +60,23 @@ class Users::RdvSms < Users::BaseSms
     end
   end
 
-  MAX_RDV_NAME_LENGTH = 50
-
   def truncated_rdv_name
     "#{self.class.truncated_rdv_name(@rdv.name)},"
   end
 
-  def self.truncated_rdv_name(name)
-    omission_length = "...".length
-    truncate(name, length: (MAX_RDV_NAME_LENGTH + omission_length))
+  def rdv_title(rdv)
+    if rdv.collectif? && rdv.name.present?
+      [rdv.service_short_name, truncated_rdv_name].compact.join(" : ")
+    else
+      rdv.service_short_name
+    end
   end
-
-  private
 
   def starts_at(rdv)
     I18n.l(rdv.starts_at, format: rdv.home? ? :short_sms_approx : :short_sms)
   end
 
-  def rdv_footer(rdv, user, token, address_format: :short)
+  def rdv_footer(rdv, user, address_format: :short)
     details = rdv_location(rdv, address_format:)
 
     if user.relatives.present? && !rdv.collectif?
@@ -89,7 +89,7 @@ class Users::RdvSms < Users::BaseSms
 
     details += "\n\n"
 
-    url = rdv_short_from_token_url(token, host: domain_host).sub(%r{https?://}, "")
+    url = rdv_short_from_token_url(restricted_auth_token, host: domain_host).sub(%r{https?://}, "")
     links = "Gérer mon RDV: #{url}"
 
     links += "\n#{rdv.phone_number}" if rdv.phone_number.present?

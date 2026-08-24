@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_17_155729) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_24_085938) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -185,6 +185,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_17_155729) do
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["caldav_url"], name: "index_agents_rdvs_on_caldav_url", where: "(caldav_url IS NOT NULL)"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
+  end
+
+  create_table "ami_france_connect_hashes", force: :cascade do |t|
+    t.string "fc_hash", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_ami_france_connect_hashes_on_user_id", unique: true
   end
 
   create_table "annotations", force: :cascade do |t|
@@ -937,6 +945,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_17_155729) do
   add_foreign_key "agent_territorial_roles", "territories"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
+  add_foreign_key "ami_france_connect_hashes", "users"
   add_foreign_key "annotations", "territories"
   add_foreign_key "annotations", "users"
   add_foreign_key "api_calls", "agents"
