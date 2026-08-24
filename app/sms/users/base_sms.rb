@@ -1,10 +1,9 @@
 # Base class for all Sms sent to Users
 class Users::BaseSms < ApplicationSms
-  def initialize(rdv, user, token)
+  def initialize(rdv, user)
     super
     @rdv = rdv
     @user = user
-    @token = token
 
     @receipt_params[:rdv] = rdv
     @receipt_params[:user] = user
@@ -23,6 +22,10 @@ class Users::BaseSms < ApplicationSms
   end
 
   private
+
+  def restricted_auth_token
+    @restricted_auth_token ||= @user.participation_for(@rdv).restricted_auth_token
+  end
 
   def domain_host
     @rdv.domain.host_name
