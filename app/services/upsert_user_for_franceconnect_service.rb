@@ -17,7 +17,7 @@ class UpsertUserForFranceconnectService < BaseService
     @user.assign_attributes(user_attribute_values_from_fc)
     @user.save!(context: :france_connect_login)
 
-    save_ami_france_connect_hash if Ami.enabled?
+    save_ami_france_connect_hash(omniauth_info) if Ami.enabled?
 
     self
   end
