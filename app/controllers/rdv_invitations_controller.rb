@@ -23,10 +23,7 @@ class RdvInvitationsController < ApplicationController
 
       rdv = @rdv_invitation.rdv
 
-      # TODO: remettre ça en commun avec UserAuthController
-      cookies.encrypted[:"user_name_initials_verified_#{@rdv_invitation.user_id}"] = {
-        value: true, expires: 10.minutes.from_now,
-      }
+      UserAuthController.set_user_name_initials_verified(cookies, @rdv_invitation.user)
 
       redirect_to users_rdv_path(@rdv_invitation.rdv, invitation_token: rdv.participations.find_by(user_id: @rdv_invitation.user_id).restricted_auth_token)
     else
