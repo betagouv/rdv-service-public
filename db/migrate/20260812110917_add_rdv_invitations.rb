@@ -12,6 +12,7 @@ class AddRdvInvitations < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
+    add_foreign_key :rdv_invitations, :rdvs, validate: false
     add_foreign_key :rdv_invitations, :users, validate: false
     add_foreign_key :rdv_invitations, :motifs, validate: false
     add_foreign_key :rdv_invitations, :lieux, validate: false

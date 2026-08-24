@@ -562,3 +562,9 @@ tables:
       - used_at
       - created_at
       - domain_id
+  - table_name: rdv_invitations
+    anonymized_column_names:
+      - token
+    non_anonymized_column_names:
+      - created_at
+      - updated_at
