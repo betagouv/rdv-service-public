@@ -1,4 +1,4 @@
 Contact: mailto:contact@rdv-solidarites.fr
-Policy: https://incubateur.anct.gouv.fr/security-policy
+Policy: https://vdp.numerique.gouv.fr/p/Policy
 Preferred-Languages: fr, en
-Expires: 2025-12-01T00:00:00.000Z
+Expires: 2028-01-01T00:00:00.000Z
