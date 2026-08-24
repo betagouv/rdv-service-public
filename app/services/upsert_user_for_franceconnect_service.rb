@@ -16,6 +16,9 @@ class UpsertUserForFranceconnectService < BaseService
     end
     @user.assign_attributes(user_attribute_values_from_fc)
     @user.save!(context: :france_connect_login)
+
+    save_ami_france_connect_hash if Ami.enabled?
+
     self
   end
 
@@ -42,13 +45,14 @@ class UpsertUserForFranceconnectService < BaseService
       last_name: omniauth_info.preferred_username.presence || omniauth_info.family_name, # nom d'usage (optionnel),
       logged_once_with_franceconnect: true,
       latest_login_at: Time.zone.now,
-      ami_france_connect_hash: ami_france_connect_hash(omniauth_info),
     }.compact # do not fill with missing values
   end
 
-  def ami_france_connect_hash(omniauth_info)
-    return nil unless Ami.enabled?
+  def save_ami_france_connect_hash(omniauth_info)
+    AmiFranceConnectHash.find_or_initialize_by(user_id: @user.id).update(fc_hash: ami_france_connect_hash(omniauth_info))
+  end
 
+  def ami_france_connect_hash(omniauth_info)
     attributes = [
       omniauth_info.given_name,
       omniauth_info.family_name,

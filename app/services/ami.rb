@@ -66,7 +66,7 @@ class Ami
   def default_payload
     {
       content_title: "Rendez-vous en France Service",
-      recipient_fc_hash: @participation.user.ami_france_connect_hash,
+      recipient_fc_hash: AmiFranceConnectHash.find_by(user: @participation.user).fc_hash,
       event_date: Time.zone.now,
       content_icon: "fr-icon-calendar-event-line",
       item_type: "RDV",
