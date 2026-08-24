@@ -9,9 +9,6 @@ header {
 }
 
 .header-brand {
-  .logo-dsfr {
-    width: 10rem;
-  }
   &:hover {
     background-color: rgb(246, 246, 246);
   }
@@ -26,11 +23,6 @@ header {
   align-items: center;
   flex-grow: inherit;
   padding: 0.2rem 0 0 0;
-
-  .logo-dsfr.logo-dsfr--compactable {
-    width: 8rem;
-    padding: 0.7rem;
-  }
 
   .link-connect {
     font-size: 0.875rem;
