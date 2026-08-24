@@ -73,6 +73,8 @@ class Ami
       item_id: @participation.rdv.uuid, # Ce champs est affiché en tant que "référence dossier" dans l'interface d'AMI, il faudrait peut-être mettre autre chose
       content_link: Rails.application.routes.url_helpers.rdv_short_from_token_url(@participation.restricted_auth_token, host: domain_host).gsub("localhost", "localhost:3000"),
       valid_until: @participation.rdv.ends_at.iso8601,
+      item_milestone_start_date: @participation.rdv.starts_at.iso8601,
+      item_milestone_end_date: @participation.rdv.ends_at.iso8601,
     }
   end
 
