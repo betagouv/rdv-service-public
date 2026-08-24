@@ -40,7 +40,7 @@ class Users::UsersController < UserAuthController
       notify_by_sms
       address_details
     ]
-    keys << :email if @user.email_editable?
+    keys << :email if @user.can_change_email_without_confirmation?
     keys
   end
 
