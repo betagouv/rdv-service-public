@@ -18,8 +18,6 @@ class RdvInvitationsController < ApplicationController
   def create_rdv
     @rdv_invitation = RdvInvitation.find_by(token: params[:rdv_invitation_token])
 
-    # TODO: décider de ce qu'on fait des motifs ants, puisqu'on ne va pas gérer le multi-participant ici
-    # TODO: vérifier qu'on ne permet pas les rendez-vous collectifs
     if @rdv_invitation.create_rdv_and_notify(starts_at: Time.zone.parse(params[:starts_at]))
       flash[:success] = t("users.rdvs.create.rdv_confirmed")
 

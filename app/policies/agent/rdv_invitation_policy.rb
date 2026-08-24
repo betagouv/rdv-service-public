@@ -8,10 +8,4 @@ class Agent::RdvInvitationPolicy < ApplicationPolicy
 
   alias new? create?
   alias show? create?
-
-  class Scope < Scope
-    def resolve
-      scope.where(inviting_agent: pundit_user)
-    end
-  end
 end
