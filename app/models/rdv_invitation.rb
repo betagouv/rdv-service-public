@@ -15,8 +15,10 @@ class RdvInvitation < ApplicationRecord
   before_create :set_token
 
   validate :user_can_be_notified
-  validate :user_cannot_be_relative
   validate :validate_phone_number_present_for_motif_by_phone
+
+  # Not yet supported
+  validate :user_cannot_be_relative
   validate :motif_is_supported
 
   def creneaux_search(starts_at)
@@ -67,6 +69,12 @@ class RdvInvitation < ApplicationRecord
     errors.add(:base, "#{user.full_name} n'a pas d'adresse email, et ne peut donc pas recevoir d'invitation.")
   end
 
+  def validate_phone_number_present_for_motif_by_phone
+    if motif.phone? && user.phone_number.blank?
+      errors.add(:base, "Le motif est pas téléphone mais  le numéro de #{user.full_name} n'est pas renseigné.")
+    end
+  end
+
   def user_cannot_be_relative
     if user.relative?
       errors.add(:base, "Les invitations ne sont pas encore possible pour les proches.")
@@ -83,15 +91,9 @@ class RdvInvitation < ApplicationRecord
     end
   end
 
-  def validate_phone_number_present_for_motif_by_phone
-    if motif.phone? && user.phone_number.blank?
-      errors.add(:base, "Le motif est pas téléphone mais  le numéro de #{user.full_name} n'est pas renseigné.")
-    end
-  end
-
   def set_token
     # On reprend la même logique que CustomDeviseTokenGenerator
     # En cas de collision de tokens (extrèmement improbable), Postgres lèvera une erreur parce qu'on a un index avec une contrainte d'unicité.
-    self.token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8)
+    self.token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 12)
   end
 end
