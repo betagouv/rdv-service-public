@@ -1,0 +1,21 @@
+- content_for :title do
+  | Modifier les consignes du motif "#{@motif.name_was}"
+
+- content_for :fil_ariane do
+  - titles_and_paths = [["Configuration", admin_organisation_configuration_path(current_organisation)], ["Motifs de rendez-vous", admin_organisation_motifs_path(current_organisation)], [@motif.name, admin_organisation_motif_path(current_organisation, @motif)]]
+  = render "common/fil_ariane", titles_and_paths: titles_and_paths, current_page_title: "Modifier les consignes"
+
+.fr-grid-row
+  .fr-col-md-12
+    = form_for @motif, url: update_consignes_admin_organisation_motif_path, builder: Dsfr::FormBuilder, html: { "data-controller": "motif-form" } do |f|
+      = render "model_errors", model: @motif, f: f
+
+      .fr-grid-row.justify-content-center
+        .fr-col-md-12.fr-col-lg-8
+          .card
+            .card-body
+              = render "admin/motifs/form/consignes", f: f, motif: @motif, rdvi_mode: current_organisation.rdv_insertion?
+
+              .d-flex.rdv-justify-content-space-between
+                = link_to("Annuler", admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--tertiary-no-outline")
+                = f.submit("Enregistrer", class: "fr-btn")

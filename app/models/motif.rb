@@ -284,6 +284,10 @@ class Motif < ApplicationRecord
     end
   end
 
+  def prescription?
+    bookable_by.to_sym.in?(%i[agents_and_prescripteurs agents_and_prescripteurs_and_invited_users everyone])
+  end
+
   private
 
   def booking_delay_validation
