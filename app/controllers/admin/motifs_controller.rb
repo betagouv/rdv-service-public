@@ -1,7 +1,20 @@
 class Admin::MotifsController < AgentAuthController
   respond_to :html, :json
 
-  FORM_ATTRIBUTES = %i[
+  CONSIGNE_FORM_ATTRIBUTES = %i[
+    restriction_for_rdv
+    instruction_for_rdv
+    custom_cancel_warning_message
+  ].freeze
+
+  ADVANCED_OPTIONS_FORM_ATTRIBUTES = %i[
+    follow_up
+    prescription
+    visibility_type
+    for_secretariat
+  ].freeze
+
+  FORM_ATTRIBUTES = (%i[
     name
     service_id
     organisation_id
@@ -9,19 +22,12 @@ class Admin::MotifsController < AgentAuthController
     motif_category_id
     default_duration_in_min
     location_type
-    visibility_type
-    restriction_for_rdv
-    instruction_for_rdv
-    custom_cancel_warning_message
-    for_secretariat
-    follow_up
     collectif
     duplicated_from_motif_id
-    prescription
-  ].freeze
+  ] + CONSIGNE_FORM_ATTRIBUTES + ADVANCED_OPTIONS_FORM_ATTRIBUTES).freeze
 
   before_action :set_organisation, only: %i[new create]
-  before_action :set_motif, only: %i[show edit update archive unarchive destroy edit_consignes edit_advanced_options]
+  before_action :set_motif, only: %i[show edit update archive unarchive destroy edit_consignes update_consignes edit_advanced_options update_advanced_options]
 
   def index
     @current_tab = params[:current_tab] == "archived" ? :archived : :active
@@ -98,8 +104,41 @@ class Admin::MotifsController < AgentAuthController
     authorize(@motif, :edit?, policy_class: Agent::MotifPolicy)
   end
 
+  def update_consignes
+    authorize(@motif, :update?, policy_class: Agent::MotifPolicy)
+
+    @motif.assign_attributes(params.require(:motif).permit(CONSIGNE_FORM_ATTRIBUTES))
+
+    authorize(@motif, :update?, policy_class: Agent::MotifPolicy)
+
+    if @motif.save
+      flash[:success] = "Les consignes du motif #{@motif.name} ont été modifiées."
+      redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
+    else
+      render :edit_consignes
+    end
+  end
+
   def edit_advanced_options
     authorize(@motif, :edit?, policy_class: Agent::MotifPolicy)
+  end
+
+  def update_advanced_options
+    authorize(@motif, :update?, policy_class: Agent::MotifPolicy)
+
+    update_advanced_options_params = params.require(:motif).permit(ADVANCED_OPTIONS_FORM_ATTRIBUTES).tap do |form_params|
+      self.class.normalize_prescription_form_param(form_params)
+    end
+    @motif.assign_attributes(update_advanced_options_params)
+
+    authorize(@motif, :update?, policy_class: Agent::MotifPolicy)
+
+    if @motif.save
+      flash[:success] = "Les options avancées du motif #{@motif.name} ont été modifiées."
+      redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
+    else
+      render :edit_consignes
+    end
   end
 
   def archive
@@ -131,14 +170,18 @@ class Admin::MotifsController < AgentAuthController
     end
   end
 
+  def self.normalize_prescription_form_param(form_params)
+    if form_params.key?("prescription")
+      prescription = form_params.delete("prescription").to_boolean
+      form_params[:bookable_by] = prescription ? :agents_and_prescripteurs : :agents
+    end
+  end
+
   private
 
   def motif_params
     params.require(:motif).permit(*FORM_ATTRIBUTES).tap do |form_params|
-      if form_params.key?("prescription")
-        prescription = form_params.delete("prescription").to_boolean
-        form_params[:bookable_by] = prescription ? :agents_and_prescripteurs : :agents
-      end
+      self.class.normalize_prescription_form_param(form_params)
     end
   end
 

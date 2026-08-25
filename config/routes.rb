@@ -294,7 +294,9 @@ Rails.application.routes.draw do
           post :archive
           post :unarchive
           get :edit_consignes
+          patch :update_consignes
           get :edit_advanced_options
+          patch :update_advanced_options
         end
       end
       resources :rdvs_collectifs, only: %i[index new create edit update] do
