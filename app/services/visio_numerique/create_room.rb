@@ -26,6 +26,7 @@ module VisioNumerique
         f.response :json
         f.options.timeout = 5
         f.options.open_timeout = 2
+        f.use :sentry_breadcrumbs, scrub_request_body: true
       end
     end
 
