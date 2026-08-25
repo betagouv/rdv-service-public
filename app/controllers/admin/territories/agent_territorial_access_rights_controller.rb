@@ -15,6 +15,11 @@ class Admin::Territories::AgentTerritorialAccessRightsController < Admin::Territ
     else
       flash[:error] = agent_territorial_access_right.errors.full_messages.to_sentence
     end
-    redirect_to edit_admin_territory_agent_path(current_territory, agent)
+    redirect_to edit_admin_territory_agent_path(territory_id: current_territory.id, id: agent.id)
+
+  # rescue ActiveRecord::RecordNotFound
+  #   skip_authorization
+  #   flash[:error] = "Agent introuvable"
+  #   redirect_to admin_territory_path(id: current_territory.id)
   end
 end

@@ -157,7 +157,7 @@ RSpec.describe "territory admin can manage agents", type: :feature do
 
     it "allows modifying them" do
       login_as(current_agent, scope: :agent)
-      create(:agent_territorial_access_right, agent: current_agent, territory: territory, allow_to_manage_access_rights: true)
+      create(:agent_territorial_access_right, :territory_admin, agent: current_agent, territory: territory, allow_to_manage_access_rights: true)
 
       agent = create(:agent, basic_role_in_organisations: [organisation])
       create(:agent_territorial_access_right, agent: agent, territory: territory)
