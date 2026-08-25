@@ -16,7 +16,7 @@
 .fr-grid-row
   .fr-col-12
     .card.mt-2
-      .card-body
+      .card-body[style="border-radius: 4px; border-left: 6px solid #{sanitize(@motif.color)};"]
         h2.fr-h6 Informations générales
         - if current_territory.services.any? || @motif.service
           = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service_name, margin: false)
