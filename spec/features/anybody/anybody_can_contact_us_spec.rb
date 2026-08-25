@@ -45,8 +45,11 @@ RSpec.describe "Tout le monde peut nous contacter" do
       find(:label, text: /Vous êtes un·e agent du service public/).click
       click_on "Valider"
 
+      expect(page).to have_content("Veuillez sélectionner la raison qui correspond le mieux à votre besoin d’aide")
+      find(:label, text: /Autre raison/).click
+      click_on "Valider"
+
       expect(page).to have_content("Formulaire de contact")
-      fill_in "La raison de votre message", with: "Connexion"
       fill_in "Votre prénom", with: "Inès"
       fill_in "Votre nom de famille", with: "Erdo"
       fill_in "Votre email", with: "ines.erdo@aude.fr"
@@ -54,6 +57,35 @@ RSpec.describe "Tout le monde peut nous contacter" do
       click_on "Envoyer votre demande"
       expect(page).to have_content("Votre demande de support a bien été envoyée")
       expect(CreateZammadTicketJob).to have_been_enqueued
+    end
+  end
+
+  context "un agent non connecté sélectionne une raison gérée par l’administrateur de son organisation" do
+    it "l’invite à se connecter plutôt que de lui montrer les administrateurs" do
+      visit "/aide/aiguillage_agent"
+
+      expect(page).to have_content("Veuillez sélectionner la raison qui correspond le mieux à votre besoin d’aide")
+      find(:label, text: /Gérer les agents de mon organisation/).click
+      click_on "Valider"
+
+      expect(page).to have_content("Connectez-vous pour accéder à vos organisations et contacter un admin")
+      expect(page).to have_link("Se connecter")
+    end
+  end
+
+  context "un agent connecté sélectionne une raison gérée par l’administrateur de son organisation" do
+    let!(:organisation) { create(:organisation, name: "MDS Montreuil") }
+    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
+    it "lui montre les administrateurs de son organisation" do
+      login_as(agent, scope: :agent)
+      visit "/aide/aiguillage_agent"
+
+      expect(page).to have_content("Veuillez sélectionner la raison qui correspond le mieux à votre besoin d’aide")
+      find(:label, text: /Gérer les agents de mon organisation/).click
+      click_on "Valider"
+
+      expect(page).to have_link("Contacter un admin de MDS Montreuil")
     end
   end
 
