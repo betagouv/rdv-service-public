@@ -7,7 +7,7 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
   let!(:motif) { create(:motif, organisation: organisation, service: service) }
   let!(:lieu1) { create(:lieu, organisation: organisation, name: "MDS Sud", address: "10 rue Belsunce, Paris, 75016") }
 
-  shared_examples "agent can CRUD plage ouverture" do
+  shared_examples "un agent peut créer, consulter, modifier et supprimer une plage d'ouverture" do
     describe "GET #show" do
       let!(:plage_ouverture) do
         create(
@@ -23,7 +23,7 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
         )
       end
 
-      it "displays the PO" do
+      it "affiche la plage d'ouverture" do
         get :show, params: { organisation_id: organisation.id, id: plage_ouverture.id }
         expect(response).to be_successful
         expect(assigns(:plage_ouverture)).to eq(plage_ouverture)
@@ -31,7 +31,7 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
     end
 
     describe "GET #index" do
-      it "returns a success responses" do
+      it "renvoie une réponse de succès" do
         now = Time.zone.parse("2020-11-23 13h30")
         travel_to(now)
         plage_ouverture = create(:plage_ouverture, organisation: organisation, agent: agent, first_day: now + 3.days)
@@ -41,7 +41,7 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
         expect(assigns(:plage_ouvertures)).to eq([plage_ouverture])
       end
 
-      it "assigns plage_ouverture" do
+      it "assigne les plages d'ouverture" do
         now = Time.zone.parse("2020-11-23 13h30")
         travel_to(now)
         plage_ouverture = create(:plage_ouverture, organisation: organisation, agent: agent, first_day: now + 3.days)
@@ -50,7 +50,7 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
         expect(assigns(:plage_ouvertures)).to eq([plage_ouverture])
       end
 
-      it "display tab when any expired plage" do
+      it "affiche l'onglet quand une plage est expirée" do
         now = Time.zone.parse("2020-11-23 13h30")
         travel_to(now)
         create(:plage_ouverture, organisation: organisation, agent: agent, first_day: now + 3.days)
@@ -60,7 +60,7 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
         expect(assigns(:display_tabs)).to be true
       end
 
-      it "assigns plage_ouvertures expired when current_tab expired" do
+      it "assigne les plages d'ouverture expirées quand l'onglet courant est \"expired\"" do
         now = Time.zone.parse("2020-11-23 13h30")
         travel_to(now)
         create(:plage_ouverture, organisation: organisation, agent: agent, first_day: now + 3.days)
@@ -72,14 +72,14 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
     end
 
     describe "GET #new" do
-      it "returns a success response" do
+      it "renvoie une réponse de succès" do
         get :new, params: { organisation_id: organisation.id, agent_id: agent.id }
         expect(response).to be_successful
       end
     end
 
     describe "GET #edit" do
-      it "returns a success response" do
+      it "renvoie une réponse de succès" do
         plage_ouverture = create(:plage_ouverture, organisation: organisation, agent: agent)
         get :edit, params: { organisation_id: organisation.id, id: plage_ouverture.to_param }
         expect(response).to be_successful
@@ -101,7 +101,7 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
         )
       end
 
-      context "with valid params for non-overlapping exceptional PO" do
+      context "avec des paramètres valides pour une PO exceptionnelle non chevauchante" do
         let(:valid_params) do
           {
             organisation_id: organisation.id,
@@ -119,13 +119,13 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
           }
         end
 
-        it "creates it and redirects to the index" do
+        it "la crée et redirige vers l'index" do
           expect { post(:create, params: valid_params) }.to change { agent.plage_ouvertures.count }.by(1)
           created_plage = PlageOuverture.last
           expect(response).to redirect_to(admin_organisation_planning_plage_ouvertures_path(organisation_id: created_plage.organisation, agent_id: created_plage.agent_id))
         end
 
-        it "uses the provided params" do
+        it "utilise les paramètres fournis" do
           expect { post(:create, params: valid_params) }.to change { agent.plage_ouvertures.count }.by(1)
           expected_attrs = {
             title: "Permanence ecole",
@@ -141,21 +141,21 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
           expect(PlageOuverture.last).to have_attributes(expected_attrs)
         end
 
-        it "send notification after create" do
+        it "envoie une notification après la création" do
           perform_enqueued_jobs do
             expect { post(:create, params: valid_params) }.to change { ActionMailer::Base.deliveries.size }.by(1)
           end
           expect(ActionMailer::Base.deliveries.last.subject).to eq("RDV Service Public - Plage d’ouverture créée - Permanence ecole")
         end
 
-        it "skips notification after create when agent has disabled it" do
+        it "n'envoie pas de notification après la création quand l'agent l'a désactivée" do
           agent.update_columns(absence_notification_level: "none") # rubocop:disable Rails/SkipsModelValidations
           expect { post(:create, params: valid_params) }.not_to change { ActionMailer::Base.deliveries.size }
         end
       end
 
-      context "with invalid params" do
-        it "does not create a new plage ouverture" do
+      context "avec des paramètres invalides" do
+        it "ne crée pas de nouvelle plage d'ouverture" do
           post(
             :create,
             params: {
@@ -165,7 +165,7 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
                 lieu_id: lieu1.id,
                 organisation_id: organisation.id,
                 agent_id: agent.id,
-                # missing fields
+                # champs manquants
               },
             }
           )
@@ -190,13 +190,13 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
         )
       end
 
-      context "with valid params" do
-        it "updates the requested plage_ouverture" do
+      context "avec des paramètres valides" do
+        it "met à jour la plage d'ouverture demandée" do
           put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { title: "Le nouveau nom" } }
           expect(response).to redirect_to(admin_organisation_planning_plage_ouvertures_path(organisation_id: plage_ouverture.organisation, agent_id: plage_ouverture.agent_id))
         end
 
-        it "send notification after update" do
+        it "envoie une notification après la modification" do
           ActionMailer::Base.deliveries.clear
           put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { title: "Le nouveau nom" } }
           perform_enqueued_jobs
@@ -204,7 +204,7 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
           expect(ActionMailer::Base.deliveries.last.subject).to eq("RDV Service Public - Plage d’ouverture modifiée - Le nouveau nom")
         end
 
-        it "skips notification after update when agent has disabled it" do
+        it "n'envoie pas de notification après la modification quand l'agent l'a désactivée" do
           ActionMailer::Base.deliveries.clear
           agent.update_columns(absence_notification_level: "none") # rubocop:disable Rails/SkipsModelValidations
           put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { title: "Le nouveau nom" } }
@@ -212,8 +212,8 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
         end
       end
 
-      context "with invalid params (end_time before start_time)" do
-        it "returns a success response (i.e. to display the 'edit' template) and does not update" do
+      context "avec des paramètres invalides (end_time avant start_time)" do
+        it "renvoie une réponse de succès (pour afficher le template 'edit') et ne met pas à jour" do
           put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { start_time: "10:00", end_time: "07:00" } }
           expect(response).to be_successful
           plage_ouverture.reload
@@ -237,25 +237,25 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
         )
       end
 
-      it "destroys the requested plage_ouverture" do
+      it "détruit la plage d'ouverture demandée" do
         expect do
           delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
         end.to change(PlageOuverture, :count).from(1).to(0)
       end
 
-      it "redirect to plages ouverture index" do
+      it "redirige vers l'index des plages d'ouverture" do
         delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
         expect(response).to redirect_to(admin_organisation_planning_plage_ouvertures_path(organisation, agent_id: plage_ouverture.agent_id))
       end
 
-      it "send notification after destroy" do
+      it "envoie une notification après la suppression" do
         ActionMailer::Base.deliveries.clear
         delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
         expect { perform_enqueued_jobs }.to change { ActionMailer::Base.deliveries.size }.by(1)
         expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Service Public - Plage d’ouverture supprimée")
       end
 
-      it "skips notification after destroy when agent has disabled it" do
+      it "n'envoie pas de notification après la suppression quand l'agent l'a désactivée" do
         agent.update_columns(absence_notification_level: "none") # rubocop:disable Rails/SkipsModelValidations
         ActionMailer::Base.deliveries.clear
         delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
@@ -264,17 +264,32 @@ RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
     end
   end
 
-  context "CRUD on his plage ouverture" do
+  context "CRUD sur sa propre plage d'ouverture" do
     before { sign_in agent }
 
-    it_behaves_like "agent can CRUD plage ouverture"
+    it_behaves_like "un agent peut créer, consulter, modifier et supprimer une plage d'ouverture"
+
+    describe "PUT #update, en essayant de réassigner à un autre agent" do
+      let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu1, organisation: organisation, agent: agent) }
+
+      it "ignore le agent_id envoyé, agent_id n'étant pas un param modifiable via #update" do
+        other_service = create(:service)
+        other_agent = create(:agent, basic_role_in_organisations: [organisation], service: other_service)
+
+        expect do
+          put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { agent_id: other_agent.id } }
+        end.not_to change { plage_ouverture.reload.agent_id }
+
+        expect(flash[:success]).to be_present
+      end
+    end
   end
 
-  context "admin CRUD on an agent's plage ouverture" do
+  context "CRUD d'un admin sur la plage d'ouverture d'un agent" do
     let(:admin) { create(:agent, admin_role_in_organisations: [organisation]) }
 
     before { sign_in admin }
 
-    it_behaves_like "agent can CRUD plage ouverture"
+    it_behaves_like "un agent peut créer, consulter, modifier et supprimer une plage d'ouverture"
   end
 end

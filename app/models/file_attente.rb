@@ -49,15 +49,13 @@ class FileAttente < ApplicationRecord
     rdv.users.map(&:user_to_notify).uniq.each do |user|
       next unless user.notifiable_by_sms? || user.notifiable_by_email?
 
-      invitation_token = invitation_token_for(rdv, user)
-
       ActiveRecord::Base.transaction do
         if user.notifiable_by_sms?
-          Users::FileAttenteSms.new_creneau_available(rdv, user, invitation_token).deliver_later
+          Users::FileAttenteSms.new_creneau_available(rdv, user).deliver_later
         end
 
         if user.notifiable_by_email?
-          Users::FileAttenteMailer.with(rdv: rdv, user: user, token: invitation_token).new_creneau_available.deliver_later
+          Users::FileAttenteMailer.with(rdv:, user:).new_creneau_available.deliver_later
 
           Receipt.create!(
             rdv: rdv,
@@ -72,18 +70,5 @@ class FileAttente < ApplicationRecord
         update!(notifications_sent: notifications_sent + 1, last_creneau_sent_at: Time.zone.now)
       end
     end
-  end
-
-  def invitation_token_for(rdv, user)
-    participation = user.participation_for(rdv)
-    return nil unless participation
-
-    # TODO: Supprimer ce if une fois que toutes les participations ont des restricted_auth_token
-    if participation.restricted_auth_token.nil?
-      participation.set_restricted_authentication_token
-      participation.save
-    end
-
-    participation.restricted_auth_token
   end
 end

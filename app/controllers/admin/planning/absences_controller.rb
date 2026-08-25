@@ -50,7 +50,7 @@ class Admin::Planning::AbsencesController < AgentAuthController
   def create
     authorize(@absence, policy_class: Agent::AbsencePolicy)
     if @absence.save
-      Notifiers::AbsenceCreated.new(@absence).perform
+      Notifiers::Agent::Absence.new(@absence).created!
       flash[:success] = t(".absence_created")
       redirect_to admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent_id)
     else
@@ -70,7 +70,7 @@ class Admin::Planning::AbsencesController < AgentAuthController
     authorize(@absence, policy_class: Agent::AbsencePolicy)
 
     if @absence.save
-      Notifiers::AbsenceUpdated.new(@absence).perform
+      Notifiers::Agent::Absence.new(@absence).updated!
       flash[:success] = t(".absence_updated")
       redirect_to admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent_id)
     else
@@ -81,7 +81,7 @@ class Admin::Planning::AbsencesController < AgentAuthController
   def destroy
     authorize(@absence, policy_class: Agent::AbsencePolicy)
     if @absence.destroy
-      Notifiers::AbsenceDestroyed.new(@absence).perform
+      Notifiers::Agent::Absence.new(@absence).destroyed!
       flash[:notice] = t(".absence_deleted")
       redirect_to admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent_id)
     else

@@ -111,24 +111,44 @@ jobs:
           POSTGRES_USER: lapin_development
           POSTGRES_PASSWORD: lapin_development
           POSTGRES_DB: lapin_development
+  restore_runtime_log: # nécessaire pour que les jobs parallèles de specs utilisent le même fichier
+    name: Restaure le dernier runtime log fusionné
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore latest merged runtime log
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          key: specs-runtime-log-merged-${{ github.run_id }}-${{ github.run_attempt }}
+          # will match the most recently cached runtime log cf
+          # https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching#cache-key-matching
+          restore-keys: |
+            specs-runtime-log-merged-
+          path: tmp/rspec-runtime-merged.log
+      - name: Upload runtime log for shards
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: runtime-log-for-shards # l'upload d'artifact est scopé au run, pas besoin de clé unique
+          path: tmp/rspec-runtime-merged.log
+          if-no-files-found: ignore
   tests:
     name: Tests
     runs-on: ubuntu-latest
+    needs: [restore_runtime_log]
     strategy:
       fail-fast: false
       matrix:
-        # cette strategy permet de lancer deux jobs de feature specs en parallèle pour accélérer l’exécution
-        name: [unit, feature_agents, feature_rest]
+        # 4 shards (specs_1, 2, 3, 4) lancés en parallèle sur GH Actions qui ont 4vCPU chacun
+        # les 4*4 groupes découpés par `parallel` correspondent aux unités de travail de chaque vCPU
+        name: [specs_1, specs_2, specs_3, specs_4]
         include:
-          - dirname: "**"
-            command: "parallel:spec['spec/(?!features)']"
-            name: unit
-          - dirname: features/agents
-            command: "parallel:spec[spec/features/agents]"
-            name: feature_agents
-          - dirname: features
-            command: "parallel:spec['spec/features/(?!(agents|autodoc))']"
-            name: feature_rest
+          - only_group: "1,2,3,4"
+            name: specs_1
+          - only_group: "5,6,7,8"
+            name: specs_2
+          - only_group: "9,10,11,12"
+            name: specs_3
+          - only_group: "13,14,15,16"
+            name: specs_4
     services:
       postgres:
         image: postgres
@@ -185,18 +205,24 @@ jobs:
       - name: Precompile assets
         if: steps.cache-precompiled-assets.outputs.cache-hit != 'true' # Skip if cache was restored
         run: RAILS_ENV=test bundle exec rails assets:precompile
-      - name: Prepare runtime log cache key
-        run: "ls spec/${{ matrix.dirname }}/**/*.rb > tmp/spec_${{ matrix.name }}_files.txt"
-      - name: Cache parallel test feature spec runtime log
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      - name: Download runtime log
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        continue-on-error: true
         with:
-          key: specs-runtime-log-${{ hashFiles(format('tmp/spec_{0}_files.txt', matrix.name)) }}
-          path: tmp/parallel_runtime_rspec.log
-        # By setting up and running in the same call, we save the app boot time
+          name: runtime-log-for-shards
+          path: tmp
       - name: Setup parallel tests and run feature specs
-        run: "RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema ${{ matrix.command }}"
+        run: |
+          RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema
+          if [ -s tmp/rspec-runtime-merged.log ]; then
+            RUNTIME_LOG_ARGS="--group-by runtime --runtime-log tmp/rspec-runtime-merged.log --allowed-missing 100"
+          else
+            RUNTIME_LOG_ARGS="--group-by filesize"
+          fi
+          RAILS_ENV=test bundle exec parallel_test spec --type rspec --pattern 'spec/(?!features/autodoc)' -n 16 --only-group ${{ matrix.only_group }} $RUNTIME_LOG_ARGS
         env:
           HOST: http://example.com
+          CI_SHARD_NAME: ${{ matrix.name }}
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
           POSTGRES_USER: lapin_test
@@ -210,6 +236,27 @@ jobs:
             tmp/capybara
             tmp/rspec-*
           if-no-files-found: ignore
+  merge_runtime_logs:
+    name: Fusionne les runtime logs des shards pour le prochain run
+    runs-on: ubuntu-latest
+    needs: [tests]
+    if: always()
+    steps:
+      - name: Download shard runtime logs
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        continue-on-error: true # si un shard n'a produit aucun artefact (ex. échec avant l'upload)
+        with:
+          pattern: tests-results-*
+          path: artifacts
+      - name: Merge runtime logs
+        run: |
+          mkdir -p tmp
+          cat artifacts/*/rspec-runtime-*.log > tmp/rspec-runtime-merged.log 2>/dev/null || true
+      - name: Save merged runtime log for the next runs
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          key: specs-runtime-log-merged-${{ github.run_id }}-${{ github.run_attempt }}
+          path: tmp/rspec-runtime-merged.log
   test_features_autodoc:
     name: Feature Tests using Autodoc
     runs-on: ubuntu-latest

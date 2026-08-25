@@ -82,9 +82,14 @@ class Agents::CaldavSyncController < AgentAuthController
     end
 
     begin
-      client.calendars.find(agenda_url)
+      calendar = client.calendars.find(agenda_url, sync: true)
     rescue StandardError
       return "L’accès en lecture au calendrier a échoué. Veuillez vérifier l’URL de l’agenda."
+    end
+
+    if calendar.sync_token.blank?
+      return "Votre serveur CalDAV ne supporte pas la synchronisation incrémentale (sync-token), requise pour connecter " \
+             "votre agenda à RDV Service Public. Veuillez contacter votre fournisseur d’agenda ou utiliser un autre serveur CalDAV."
     end
 
     begin

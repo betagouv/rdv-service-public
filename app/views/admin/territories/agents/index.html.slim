@@ -27,8 +27,7 @@
 
             td
               .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline
-                = link_to "", edit_admin_territory_agent_path(current_territory, agent),
-                        title: t(".edit_agents"),
+                = icon_link_to t(".edit_agents"), edit_admin_territory_agent_path(current_territory, agent),
                         class: "fr-btn fr-btn--tertiary fr-icon-edit-line"
     .d-flex.justify-content-center
       = paginate @agents, theme: "dsfr"

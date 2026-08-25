@@ -19,6 +19,7 @@ div id=element_id
         ), \
         data: { modal: "true" }, title: t("helpers.edit") do
         = icon("fr-icon-edit-line", class: "fr-icon--sm")
+        span.fr-sr-only= t("helpers.edit")
   .ml-3
     = render "admin/users/notifications_preferences", user: user.user_to_notify
     - if participation.user.user_to_notify.valid_email? || participation.user.user_to_notify.phone_number.present?

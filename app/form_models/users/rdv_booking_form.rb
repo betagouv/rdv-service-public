@@ -111,9 +111,10 @@ class Users::RdvBookingForm
     @rdv = rdv_builder.creneau.build_rdv # TODO: ce comportement est extrêmement surprenant, à refacto avec le RdvBuilder
     @rdv.assign_attributes(users: selected_users_records, created_by: @user)
     @rdv.save!
-    notifier = Notifiers::RdvCreated.new(@rdv, @user)
-    notifier.perform
-    @invitation_token = notifier.participations_tokens_by_user_id[@user.id]
+
+    Notifiers::RdvCreated.new(@rdv, @user).perform
+
+    @invitation_token = @user.participation_for(@rdv).restricted_auth_token
   end
 
   def create_participation

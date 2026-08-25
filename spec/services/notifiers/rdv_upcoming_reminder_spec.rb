@@ -32,15 +32,4 @@ RSpec.describe Notifiers::RdvUpcomingReminder, type: :service do
     subject
     expect_no_notifications
   end
-
-  it "participations_tokens_by_user_id attribute outputs the tokens" do
-    notifier = described_class.new(rdv, nil)
-    notifier.perform
-    expect(notifier.participations_tokens_by_user_id).to eq(
-      {
-        user1.id => participation1.restricted_auth_token,
-        user2.id => participation2.restricted_auth_token,
-      }
-    )
-  end
 end

@@ -68,7 +68,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     @plage_ouverture.organisation = current_organisation
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     if @plage_ouverture.save
-      Notifiers::PlageOuvertureCreated.new(@plage_ouverture).perform
+      Notifiers::Agent::PlageOuverture.new(@plage_ouverture).created!
       flash[:success] = "Plage d'ouverture créée"
       update_online_booking_banner_display
       redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
@@ -79,8 +79,10 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
   def update
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
-    if @plage_ouverture.update(plage_ouverture_params)
-      Notifiers::PlageOuvertureUpdated.new(@plage_ouverture).perform
+    @plage_ouverture.assign_attributes(plage_ouverture_params_for_update)
+    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
+    if @plage_ouverture.save
+      Notifiers::Agent::PlageOuverture.new(@plage_ouverture).updated!
       flash[:success] = "La plage d'ouverture a été modifiée."
       update_online_booking_banner_display
       redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
@@ -91,9 +93,9 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
   def destroy
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
-    notifier = Notifiers::PlageOuvertureDestroyed.new(@plage_ouverture)
+    notifier = Notifiers::Agent::PlageOuverture.new(@plage_ouverture, serialize: true)
     if @plage_ouverture.destroy
-      notifier.perform
+      notifier.destroyed!
       flash[:notice] = "La plage d'ouverture a été supprimée."
       redirect_to admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)
     else
@@ -119,7 +121,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   end
 
   def build_plage_ouverture
-    @plage_ouverture = PlageOuverture.new(plage_ouverture_params)
+    @plage_ouverture = PlageOuverture.new(plage_ouverture_params_for_create)
   end
 
   def set_agents
@@ -131,10 +133,16 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     end
   end
 
-  def plage_ouverture_params
-    params.require(:plage_ouverture).permit(
-      :title, :agent_id, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :lieu_id, :hex_color, :recurrence, :minutes_after_rdvs, :ignore_benign_errors, motif_ids: []
-    )
+  def plage_ouverture_params_for_create
+    params.require(:plage_ouverture).permit(*common_plage_ouverture_attrs, :agent_id, motif_ids: [])
+  end
+
+  def plage_ouverture_params_for_update
+    params.require(:plage_ouverture).permit(*common_plage_ouverture_attrs, motif_ids: [])
+  end
+
+  def common_plage_ouverture_attrs
+    %i[title first_day start_time end_time secondary_start_time secondary_end_time lieu_id hex_color recurrence minutes_after_rdvs ignore_benign_errors]
   end
 
   def filter_params
