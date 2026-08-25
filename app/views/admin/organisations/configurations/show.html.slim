@@ -82,13 +82,13 @@
               - else
                 i.fr-text-mention--grey Pas d'informations de contact
 
-    - if current_domain == Domain::RDV_AIDE_NUMERIQUE
-      .fr-col-12.fr-col-md-4.fr-mb-2w
-        .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
-          .fr-tile__body
-            .fr-tile__content
-              h2.fr-tile__title
-                = link_to("Migration vers RDV Service Public", admin_organisation_instance_exports_path(current_organisation))
+      - if current_domain == Domain::RDV_AIDE_NUMERIQUE
+        .fr-col-12.fr-col-md-4.fr-mb-2w
+          .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
+            .fr-tile__body
+              .fr-tile__content
+                h2.fr-tile__title
+                  = link_to("Migration vers RDV Service Public", admin_organisation_instance_exports_path(current_organisation))
 
   / Un bricolage pour éviter que le footer déborde sur les tuiles
   br.fr-my-2w
