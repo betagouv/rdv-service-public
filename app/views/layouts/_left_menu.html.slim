@@ -29,12 +29,8 @@ aside.left-side-menu-wrapper
           menu.with_item(title: safe_join([icon("fr-icon-group-line", class: "fr-icon--sm fr-mr-1w"), "Usagers"]), path: admin_organisation_users_path(current_organisation), current_page: active_item == :menu_users)
           menu.with_item(title: safe_join([icon("fr-icon-survey-line", class: "fr-icon--sm fr-mr-1w"), "Liste des RDV"]), path: admin_organisation_rdvs_path(current_organisation), current_page: active_item == :menu_liste_rdvs)
           menu.with_item(title: safe_join([icon("fr-icon-bar-chart-box-line", class: "fr-icon--sm fr-mr-1w"), "Statistiques"]), path: admin_organisation_stats_path(current_organisation), current_page: current_page?(admin_organisation_stats_path(current_organisation)))
-        - if current_agent.admin_in_organisation?(current_organisation)
-          ruby:
-            config_badge = active_item != :menu_settings && current_organisation.created_at > 30.days.ago && needs_configuration(current_organisation)
-            config_badge_html = config_badge ? tag.span(class: "fr-ml-1w rdv-pastille") : "".html_safe
-            menu.with_item(title: safe_join([icon("fr-icon-settings-5-line", class: "fr-icon--sm fr-mr-1w"), "Configuration", config_badge_html]), path: admin_organisation_configuration_path(current_organisation), current_page: active_item == :menu_settings)
-        - else
-          - menu.with_item(title: safe_join([icon("fr-icon-building-line", class: "fr-icon--sm fr-mr-1w"), "Lieux"]), path: admin_organisation_lieux_path(current_organisation), current_page: current_page?(admin_organisation_lieux_path(current_organisation)))
-          - menu.with_item(title: safe_join([icon("fr-icon-draft-line", class: "fr-icon--sm fr-mr-1w"), "Motifs"]), path: admin_organisation_motifs_path(current_organisation), current_page: current_page?(admin_organisation_motifs_path(current_organisation)))
+        ruby:
+          config_badge = active_item != :menu_settings && current_organisation.created_at > 30.days.ago && needs_configuration(current_organisation)
+          config_badge_html = config_badge ? tag.span(class: "fr-ml-1w rdv-pastille") : "".html_safe
+          menu.with_item(title: safe_join([icon("fr-icon-settings-5-line", class: "fr-icon--sm fr-mr-1w"), "Configuration", config_badge_html]), path: admin_organisation_configuration_path(current_organisation), current_page: active_item == :menu_settings)
         - menu.with_item(title: safe_join([icon("fr-icon-question-line", class: "fr-icon--sm fr-mr-1w"), "Aide et support"]), path: admin_organisation_support_path(current_organisation), current_page: current_page?(admin_organisation_support_path(current_organisation)))
