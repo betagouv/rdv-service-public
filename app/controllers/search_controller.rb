@@ -117,6 +117,11 @@ class SearchController < ApplicationController
     User.find_by(rdv_invitation_token: session[:restricted_auth].with_indifferent_access["invitation_token"])
   end
 
+  # Les clés du hash renvoyé par cette méthode devraient correspondre à InvitationSearchContext::INVITATION_PARAMS
+  def rdv_insertion_invitation_query_params
+    session[:rdv_insertion_invitation].symbolize_keys
+  end
+
   def search_on_migrated_organisation
     return false unless current_domain == Domain::RDV_AIDE_NUMERIQUE && params[:public_link_organisation_id]
 
