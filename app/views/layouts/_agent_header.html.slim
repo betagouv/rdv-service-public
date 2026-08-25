@@ -14,6 +14,8 @@ header.header.bg-white
           = render "layouts/blog_posts_modal"
         li#rdv-account-dropdown.list-inline-item.dropdown.mr-2
           button.link-dsfr.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false"
+            - if defined?(current_organisation) && current_organisation && current_agent.admin_in_organisation?(current_organisation)
+              = icon("fr-icon-user-setting-line", class: "fr-icon--sm fr-mr-1w", title: "Administrateur")
             = current_agent.full_name
           ul.dropdown-menu.dropdown-menu-right
             li = link_to edit_agent_registration_path, class: "dropdown-item-dsfr dropdown-item" do
