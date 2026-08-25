@@ -39,7 +39,7 @@ class Admin::Api::Agenda::ExternalCalendarEventsController < Admin::Api::BaseCon
       # La scope de policy pour ExternalCalendarEvent délèguent à Agent::AgentPolicy::Scope.
       # Afin d'améliorer les perfs ici, il est préférable de simplement charger les agents via Agent::AgentPolicy::Scope
       # puis de passer cette liste d'agents en WHERE aux requêtes d'Absence et ExternalCalendarEvent.
-      Agent::AgentPolicy::Scope.new(pundit_user, Agent.all).resolve.where(id: params[:agent_id]).load
+      Agent::AgentPolicy::Scope.new(pundit_user, Agent.includes(:caldav_config)).resolve.where(id: params[:agent_id]).load
     end
   end
 end
