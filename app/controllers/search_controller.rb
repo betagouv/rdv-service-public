@@ -5,7 +5,7 @@ class SearchController < ApplicationController
   include Search::LogParamsConcern
 
   prepend_before_action(only: %i[search_rdv]) do
-    store_restricted_auth_token_in_session_and_redirect(store_rdv_insertion_invitation: true)
+    store_rdv_insertion_invitation_and_restricted_auth_in_session_and_redirect
   end
 
   def home
@@ -179,5 +179,20 @@ class SearchController < ApplicationController
 
   def agent_search_params
     params.permit(AgentPrescriptionSearchContext::STRONG_PARAMS_LIST)
+  end
+
+  def store_rdv_insertion_invitation_and_restricted_auth_in_session_and_redirect
+    return if params[:invitation_token].blank?
+
+    invited_user = User.find_by(rdv_invitation_token: params[:invitation_token])
+
+    return redirect_with_error(t("devise.invitations.invitation_token_invalid")) if invited_user.blank?
+    return redirect_with_error(t("devise.invitations.current_user_mismatch")) if current_user.present? && current_user != invited_user
+
+    session[:restricted_auth] = { invitation_token: params[:invitation_token], expires_at: 10.minutes.from_now }
+
+    session[:rdv_insertion_invitation] = current_url_params.except(:invitation_token)
+
+    redirect_to current_path_without_token
   end
 end
