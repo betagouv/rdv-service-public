@@ -6,7 +6,7 @@ module RestrictedAuthConcern
 
   included do
     # :store_restricted_auth_token_in_session_and_redirect is called first, :sign_in_with_session_token after it
-    prepend_before_action :sign_in_with_session_token, if: -> { session[:restricted_auth].present? }
+    prepend_before_action :sign_in_with_session_token
   end
 
   private
@@ -37,6 +37,8 @@ module RestrictedAuthConcern
   end
 
   def sign_in_with_session_token
+    return true if session[:restricted_auth].blank?
+
     return delete_invitation_from_session_and_redirect(t("devise.invitations.invitation_token_invalid")) unless restricted_auth.token_valid?
     return delete_invitation_from_session_and_redirect(t("devise.invitations.current_user_mismatch")) if current_user_mismatch?(restricted_auth.user)
     return delete_invitation_from_session_and_redirect(t("devise.invitations.session_expired")) if restricted_auth.expired?
@@ -63,12 +65,6 @@ module RestrictedAuthConcern
 
   def restricted_auth
     @restricted_auth ||= (session[:restricted_auth].present? ? RestrictedAuth.new(**session[:restricted_auth].symbolize_keys) : nil)
-  end
-
-  def invitation_to_take_rdv?
-    return false unless session[:restricted_auth]
-
-    User.find_by(rdv_invitation_token: session[:restricted_auth].with_indifferent_access["invitation_token"])
   end
 
   # Les clés du hash renvoyé par cette méthode devraient correspondre à InvitationSearchContext::INVITATION_PARAMS

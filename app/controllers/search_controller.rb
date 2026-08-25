@@ -111,6 +111,12 @@ class SearchController < ApplicationController
 
   private
 
+  def invitation_to_take_rdv?
+    return false unless session[:restricted_auth]
+
+    User.find_by(rdv_invitation_token: session[:restricted_auth].with_indifferent_access["invitation_token"])
+  end
+
   def search_on_migrated_organisation
     return false unless current_domain == Domain::RDV_AIDE_NUMERIQUE && params[:public_link_organisation_id]
 
