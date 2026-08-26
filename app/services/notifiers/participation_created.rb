@@ -29,6 +29,10 @@ class Notifiers::ParticipationCreated < BaseService
     if user.notifiable_by_sms? && Notifiers::RdvCreated.should_send_sms_to_user?(user:, rdv:, author:)
       Users::RdvSms.rdv_created(rdv, user).deliver_later
     end
+
+    if AmiFranceConnectHash.find_by(user: user)&.notify_by_ami?
+      Ami.new(participation).create_event
+    end
   end
 
   def notify_agent(agent)

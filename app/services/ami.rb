@@ -53,10 +53,12 @@ class Ami
     )
   end
 
+  # TODO: ajouter une notification pour les annulations
+
   # On garde cette méthode publique pour faciliter les tests en console.
   def send_event(payload)
-    # Quand on fera les vrais appels il faudra mettre tous les jobs en perform_later avec la bonne queue
-    Ami::SendEventJob.new.perform(default_payload.merge(payload))
+    # TODO: voir s'il faut préciser une queue
+    Ami::SendEventJob.perform_later(default_payload.merge(payload))
   end
 
   private
