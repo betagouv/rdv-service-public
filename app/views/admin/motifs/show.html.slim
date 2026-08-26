@@ -81,38 +81,35 @@
             = @motif.custom_cancel_warning_message
 
     .card.mt-2
-      .rdv-accordion-card.fr-accordion
-        h2.fr-accordion__title
-          button.fr-h5.fr-accordion__btn aria-expanded="false" aria-controls="options-avancees"
-            | Options avancées
-        .fr-collapse id="options-avancees"
-          .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
-            div
-              b= @motif.human_attribute_value(:visibility_type, context: :html)
+      .card-body
+        .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+          h2.fr-h5 Options avancées
 
-              .fr-text-mention--grey
-                = @motif.human_attribute_value(:visibility_type, context: :hint)
-                - if current_organisation.rdv_insertion?
-                  br
-                  span= @motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
+          - if !@motif.archived? && @motif_policy.edit?
+            = link_to t("admin.motifs.actions.edit"), edit_advanced_options_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
 
-              = motif_attribute_row \
-                Motif.human_attribute_name(:follow_up_short), \
-                motif_option_activated(@motif, :follow_up), \
-                hint: Motif.human_attribute_name(:follow_up_hint)
+        b= @motif.human_attribute_value(:visibility_type, context: :html)
 
-              = motif_attribute_row \
-                Motif.human_attribute_name(:for_secretariat_short), \
-                motif_option_activated(@motif, :for_secretariat), \
-                hint: Motif.human_attribute_name(:for_secretariat_hint)
+        .fr-text-mention--grey
+          = @motif.human_attribute_value(:visibility_type, context: :hint)
+          - if current_organisation.rdv_insertion?
+            br
+            span= @motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
 
-              = motif_attribute_row \
-                "Ouverture aux prescripteurs", \
-                motif_option_activated(@motif, :prescription), \
-                hint: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone"))
+        = motif_attribute_row \
+          Motif.human_attribute_name(:follow_up_short), \
+          motif_option_activated(@motif, :follow_up), \
+          hint: Motif.human_attribute_name(:follow_up_hint)
 
-            - if !@motif.archived? && @motif_policy.edit?
-              = link_to t("admin.motifs.actions.edit"), edit_advanced_options_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
+        = motif_attribute_row \
+          Motif.human_attribute_name(:for_secretariat_short), \
+          motif_option_activated(@motif, :for_secretariat), \
+          hint: Motif.human_attribute_name(:for_secretariat_hint)
+
+        = motif_attribute_row \
+          "Ouverture aux prescripteurs", \
+          motif_option_activated(@motif, :prescription), \
+          hint: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone"))
 
     - if @motif_policy.edit? || @motif_policy.destroy?
       .card.mt-2
