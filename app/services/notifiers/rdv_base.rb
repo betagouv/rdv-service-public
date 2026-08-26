@@ -42,16 +42,12 @@ class Notifiers::RdvBase < BaseService
   private
 
   def notify_users_by_mail
-    return unless methods.include?(:notify_user_by_mail)
-
     users_to_notify
       .select(&:notifiable_by_email?)
       .each { notify_user_by_mail(_1) }
   end
 
   def notify_users_by_sms
-    return unless methods.include?(:notify_user_by_sms)
-
     users_to_notify
       .select(&:notifiable_by_sms?)
       .each { notify_user_by_sms(_1) }
