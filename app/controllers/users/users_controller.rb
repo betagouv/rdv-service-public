@@ -50,6 +50,6 @@ class Users::UsersController < UserAuthController
   end
 
   def update_ami_preferences
-    AmiFranceConnectHash.find_by(user: @user)&.update(notify_by_ami: params.dig(:user, :notify_by_ami).to_boolean)
+    AmiFranceConnectHash.update_notify_by_ami(@user, params.dig(:user, :notify_by_ami).to_boolean)
   end
 end

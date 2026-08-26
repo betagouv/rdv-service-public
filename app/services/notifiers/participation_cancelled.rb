@@ -28,7 +28,9 @@ class Notifiers::ParticipationCancelled < BaseService
       Users::RdvSms.participation_cancelled(rdv, user).deliver_later
     end
 
-    # TODO: notifier ami
+    if AmiFranceConnectHash.find_by(user: user)&.notify_by_ami?
+      Ami.new(participation).cancel_event
+    end
   end
 
   def notify_agent(agent)

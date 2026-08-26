@@ -1,6 +1,4 @@
 class Notifiers::RdvCancelled < Notifiers::RdvBase
-  protected
-
   def notify_user_by_mail(user)
     return unless notify_cancellation?
 
@@ -15,8 +13,11 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
     Users::RdvSms.rdv_cancelled(@rdv, user).deliver_later
   end
 
+  protected
+
   def notify_user_by_ami(user)
-    # TODO: implement this
+    participation = user.participation_for(@rdv)
+    Ami.new(participation).create_event
   end
 
   def notify_cancellation?

@@ -1,10 +1,4 @@
 class Notifiers::RdvCreated < Notifiers::RdvBase
-  def self.should_send_sms_to_user?(user:, rdv:, author:)
-    author != user || !user.already_logged_in? || rdv.starts_at < 2.days.from_now
-  end
-
-  protected
-
   def notify_user_by_mail(user)
     user_mailer(user).rdv_created.deliver_later
   end
@@ -22,6 +16,12 @@ class Notifiers::RdvCreated < Notifiers::RdvBase
       Users::RdvSms.rdv_created(@rdv, user).deliver_later
     end
   end
+
+  def self.should_send_sms_to_user?(user:, rdv:, author:)
+    author != user || !user.already_logged_in? || rdv.starts_at < 2.days.from_now
+  end
+
+  protected
 
   def participations_to_notify
     # Rdv_created with cancelled status is not supposed to happen

@@ -55,7 +55,14 @@ class Ami
     )
   end
 
-  # TODO: ajouter une notification pour les annulations
+  def cancel_event
+    send_event(
+      content_body: "Votre rendez-vous #{I18n.l(rdv.starts_at, format: :short_sms)} a été annulé.", # Ce champs est visible pour Apple/Google
+      item_generic_status: "closed",
+      item_status_label: "Annulé",
+      try_push: true
+    )
+  end
 
   # On garde cette méthode publique pour faciliter les tests en console.
   def send_event(payload)
@@ -68,7 +75,7 @@ class Ami
 
   def default_payload
     {
-      content_title: "Rendez-vous en France Service",
+      content_title: "Rendez-vous avec #{participation.rdv.organisation.name}",
       recipient_fc_hash: AmiFranceConnectHash.find_by(user: @participation.user).fc_hash,
       event_date: Time.zone.now,
       content_icon: "fr-icon-calendar-event-line",
