@@ -118,7 +118,7 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def index_params
-    @index_params ||= params.permit(:term, :intervenant_term)
+    @index_params ||= params.permit(:term)
   end
 
   def access_levels_collection
