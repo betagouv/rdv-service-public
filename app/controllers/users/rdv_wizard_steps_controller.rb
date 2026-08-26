@@ -38,7 +38,7 @@ class Users::RdvWizardStepsController < UserAuthController
 
     authorize(@rdv_booking_form, policy_class: User::RdvBookingPolicy)
 
-    AmiFranceConnectHash.update_notify_by_ami(current_user, params.dig(:user, :notify_by_ami).to_boolean)
+    UserAmiProfile.update_notify_by_ami(current_user, params.dig(:user, :notify_by_ami).to_boolean)
     if @rdv_booking_form.save
       flash[:success] = (@rdv_booking_form.collectif? ? "Participation confirmée" : t("users.rdvs.create.rdv_confirmed"))
 

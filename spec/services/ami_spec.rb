@@ -10,7 +10,7 @@ RSpec.describe Ami do
   let(:user) { create(:user) }
 
   before do
-    AmiFranceConnectHash.create!(user: user, fc_hash: "test_ami_fc_hash")
+    UserAmiProfile.create!(user: user, fc_hash: "test_ami_fc_hash")
     WebMock.stub_request(:put, "https://ami.test/api/v2/event")
   end
 

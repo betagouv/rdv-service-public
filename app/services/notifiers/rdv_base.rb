@@ -61,7 +61,7 @@ class Notifiers::RdvBase < BaseService
 
   def notify_users_by_ami
     users_to_notify.select do |user|
-      AmiFranceConnectHash.find_by(user: user)&.notify_by_ami?
+      UserAmiProfile.find_by(user: user)&.notify_by_ami?
     end.each do |user|
       notify_user_by_ami(user)
     end

@@ -30,7 +30,7 @@
   .fr-alert.fr-alert--warning.fr-mb-1w Vous ne recevrez pas de SMS avec ce numéro non-mobile
 
 - if Ami.enabled? && !Rails.env.production?
-  - hash = AmiFranceConnectHash.find_by(user: f.object.user)
+  - hash = UserAmiProfile.find_by(user: f.object.user)
   - if hash
     = f.dsfr_check_box :notify_by_ami, checked: hash.notify_by_ami, label: "J’accepte les notifications via l’application mobile officielle et gratuite de l’administration française"
 

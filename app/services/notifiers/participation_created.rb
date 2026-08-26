@@ -30,7 +30,7 @@ class Notifiers::ParticipationCreated < BaseService
       Users::RdvSms.rdv_created(rdv, user).deliver_later
     end
 
-    if AmiFranceConnectHash.find_by(user: user)&.notify_by_ami?
+    if UserAmiProfile.find_by(user: user)&.notify_by_ami?
       Ami.new(participation).create_event
     end
   end
