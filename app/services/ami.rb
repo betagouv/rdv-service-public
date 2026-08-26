@@ -34,13 +34,15 @@ class Ami
   # On ajoutera cet appel dans Notifiers::RdvUpcomingReminder
   def send_reminder
     # Cette notif devrait peut-être être juste une notif toute seule, pas dans le cadre d'une démarche.
-    send_event(
+    payload = {
       content_body: "Nous vous rappelons que vous avez rendez-vous #{I18n.l(rdv.starts_at, format: :short_sms)}.", # Ce champs est visible pour Apple/Google
       content_private_body: "Le rendez-vous aura lieu au #{rdv.address} pour #{rdv.motif.name}",
       item_generic_status: "wip",
       item_status_label: "À venir",
-      try_push: true
-    )
+      try_push: true,
+    }
+
+    Ami::SendEventJob.set(queue: :latency_5m).perform_later(default_payload.merge(payload))
   end
 
   def close_event
@@ -57,7 +59,6 @@ class Ami
 
   # On garde cette méthode publique pour faciliter les tests en console.
   def send_event(payload)
-    # TODO: voir s'il faut préciser une queue
     Ami::SendEventJob.perform_later(default_payload.merge(payload))
   end
 
