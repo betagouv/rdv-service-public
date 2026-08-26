@@ -31,7 +31,7 @@ class Ami
     )
   end
 
-  # On ajoutera cet appel dans Notifiers::RdvUpcomingReminder
+  # On ajoutera cet appel dans Notifiers::Users::RdvUpcomingReminder
   def send_reminder
     # Cette notif devrait peut-être être juste une notif toute seule, pas dans le cadre d'une démarche.
     send_event(

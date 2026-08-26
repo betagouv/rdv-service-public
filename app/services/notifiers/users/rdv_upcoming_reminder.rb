@@ -1,4 +1,4 @@
-class Notifiers::RdvUpcomingReminder < Notifiers::RdvBase
+class Notifiers::Users::RdvUpcomingReminder < Notifiers::RdvBase
   protected
 
   def participations_to_notify

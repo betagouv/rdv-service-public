@@ -122,7 +122,7 @@ class Admin::RdvsController < AgentAuthController
   def send_reminder_manually
     authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
 
-    Notifiers::RdvUpcomingReminder.perform_with(@rdv, nil)
+    Notifiers::Users::RdvUpcomingReminder.perform_with(@rdv, nil)
 
     redirect_to admin_organisation_rdv_path, flash: { success: I18n.t("admin.receipts.reminder_manually_sent") }
   end
