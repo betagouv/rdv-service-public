@@ -11,6 +11,12 @@
 
 .row
   .col-md-12
+    / Le 25/8/2026 est la date de mise en ligne du changement d'interface.
+    - if current_agent.created_at < Date.new(2026, 8, 25) && Time.zone.now < Date.new(2026, 11, 25)
+      p.fr-hint-text.fr-text--sm
+        = icon("fr-icon-information-line", class:"fr-mr-1w" )
+        | La gestion de la réservation en ligne se fait maintenant depuis la page de détails du motif ou depuis le menu de gauche.
+
     = form_for @motif, url: admin_organisation_motif_path, builder: Dsfr::FormBuilder, html: { "data-controller": "motif-form" } do |f|
       = render "model_errors", model: @motif, f: f
       = render "admin/motifs/form", motif: @motif, f: f, rdvi_mode: current_organisation.rdv_insertion?
