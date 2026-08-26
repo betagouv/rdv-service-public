@@ -43,7 +43,7 @@ class RdvInvitation < ApplicationRecord
       return
     end
 
-    RdvPlan.transaction do
+    RdvInvitation.transaction do
       rdv = Rdv.create(
         motif:, organisation:, lieu:, starts_at:,
         ends_at: starts_at + motif.default_duration_in_min.minutes,
