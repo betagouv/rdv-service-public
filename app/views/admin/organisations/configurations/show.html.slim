@@ -2,7 +2,17 @@
   = settings_icon(class: "fr-mr-1w")
   | Configuration
 
+- unless current_agent.admin_in_organisation?(current_organisation)
+  = dsfr_callout(title: "Besoin de modifier un paramètre ?", icon_name: "question-line") do
+    |> Pour modifier les motifs, les lieux, la réservation en ligne, inviter des agents etc… contactez une personne admin de l'organisation.
+    br
+    = link_to "voir la liste des admin", admin_organisation_agents_path(current_organisation, search: { role: "admin" }), class: "fr-btn fr-btn--secondary"
+
 = render "admin/onboarding/banner"
+
+h2.fr-text--lead
+  |> Paramètres de l'organisation
+  b= current_organisation.name
 
 .fr-container-fluid
   .fr-grid-row.fr-grid-row--gutters
