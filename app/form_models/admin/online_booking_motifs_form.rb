@@ -47,7 +47,7 @@ class Admin::OnlineBookingMotifsForm
   end
 
   def prepare_flash_and_session_for_activation(flash, session)
-    banner = OnlineBookingOnboardingBanner.new(motifs)
+    banner = OnlineBookingOnboardingBanner.new(@organisation)
 
     if banner.availabilities_needed?
       # Si on affiche la bannière, on ne met pas le flash, parce que ça fait doublon d'avoir une confirmation au dessus du titre et un avertissement sous le titre

@@ -4,7 +4,7 @@
   | Réservation en ligne
 
 - content_for :onboarding_banner do
-  - if @banner.availabilities_needed? && session["OnlineBookingMotifsForm:completed"]
+  - if @banner&.availabilities_needed? && session["OnlineBookingMotifsForm:completed"]
     .fr-callout.fr-pb-2w
       h2.fr-h6 🎉 Vous y êtes presque !
 

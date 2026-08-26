@@ -107,10 +107,8 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   private
 
   def update_online_booking_banner_display
-    if session["OnlineBookingMotifsForm:completed"]
-      motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif)
-        .available_motifs_for_organisation_and_agent(current_organisation, current_agent)
-      banner = OnlineBookingOnboardingBanner.new(motifs)
+    if session["OnlineBookingMotifsForm:completed"] && current_agent.admin_in_organisation?(current_organisation)
+      banner = OnlineBookingOnboardingBanner.new(current_organisation)
       # S'il n'y a plus besoin de la bannière, on arrête de l'afficher
       unless banner.availabilities_needed?
         session.delete("OnlineBookingMotifsForm:completed")
