@@ -9,17 +9,17 @@
 .card
   .card-body
     - if needs_agent_search?
-      = form_with url: admin_organisation_agents_path(current_organisation), method: :get, scope: :agents_search do |f|
-        .fr-table__header.rdv-justify-content-flex-end.rdv-width-100
-          ul.fr-btns-group.fr-btns-group--right.fr-btns-group--inline-md.fr-btns-group--icon-left.fr-mb-0
-            li
-              - if agents_search_params[:query].present?
-                = link_to t("helpers.reset"), admin_organisation_agents_path(current_organisation), class: "fr-btn fr-btn--tertiary-no-outline"
-              .fr-search-bar
-                = f.label :query, "Prénom, Nom, Email", class: "fr-label fr-sr-only"
-                = f.search_field :query, placeholder: "Prénom, Nom, Email", autocomplete: "off", class: "fr-input", value: agents_search_params[:query]
-            li
+      = form_for @agents_search_form, url: admin_organisation_agents_path(current_organisation), method: :get, scope: :agents_search, builder: Dsfr::FormBuilder, as: "search" do |f|
+        fieldset.fr-fieldset.rdv-gap-1rem.rdv-justify-content-flex-end.rdv-align-items-first-baseline
+          .fr-fieldset__element--inline
+              = f.dsfr_check_box :admin_only, checked: @agents_search_form.admin_only?, label: "Uniquement les admin", class: "fr-mb-0"
+          .fr-fieldset__element--inline
+              = f.dsfr_text_field :query, placeholder: "Prénom, Nom, Email", autocomplete: "off", label: ""
+          .fr-fieldset__element--inline
               = f.submit "Filtrer", class: "fr-btn"
+              - if @agents_search_form.resettable?
+                .fr-mt-1w
+                  = link_to "Réinitialiser", admin_organisation_agents_path(current_organisation), class: "fr-btn fr-btn--tertiary fr-btn--sm"
     table.table
       thead
         tr

@@ -5,19 +5,12 @@ class Admin::AgentsController < AgentAuthController
   helper_method :agents_search_params
 
   def index
+    @agents_search_form = Admin::AgentsSearchForm.new(current_organisation:, admin_only: search_params[:admin_only] == "1", query: search_params[:query])
     @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active
-
-    @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id })
-    @agents = if agents_search_params[:query].present?
-                @agents.search_by_text(agents_search_params[:query])
-              else
-                @agents.order(Arel.sql("(invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL) DESC")).ordered_by_last_name
-              end
-
-    @display_services = current_territory.services.any? || current_organisation.agents.joins(:agent_services).any?
-
+    @agents = @agents_search_form.filter_agents(@agents)
     @agents = @agents.includes(:services, :roles, :organisations)
     @agents = @agents.page(page_number)
+    @display_services = current_territory.services.any? || current_organisation.agents.joins(:agent_services).any?
   end
 
   def new
@@ -118,12 +111,8 @@ class Admin::AgentsController < AgentAuthController
     render :edit
   end
 
-  def index_params
-    @index_params ||= params.permit(agents_search: [:query])
-  end
-
-  def agents_search_params
-    index_params[:agents_search] || {}
+  def search_params
+    (params.permit(search: %i[query admin_only]) || {})[:search] || {}
   end
 
   def access_levels_collection
