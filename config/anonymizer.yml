@@ -562,7 +562,7 @@ tables:
       - used_at
       - created_at
       - domain_id
-  - table_name: ami_france_connect_hashes
+  - table_name: user_ami_profiles
     anonymized_column_names:
       - fc_hash
     non_anonymized_column_names:
