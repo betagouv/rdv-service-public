@@ -2,13 +2,14 @@ class Admin::AgentsController < AgentAuthController
   respond_to :html
 
   before_action :ensure_agent_is_admin, except: :index
+  helper_method :agents_search_params
 
   def index
     @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active
 
     @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id })
-    @agents = if index_params[:term].present?
-                @agents.search_by_text(index_params[:term])
+    @agents = if agents_search_params[:query].present?
+                @agents.search_by_text(agents_search_params[:query])
               else
                 @agents.order(Arel.sql("(invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL) DESC")).ordered_by_last_name
               end
@@ -118,7 +119,11 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def index_params
-    @index_params ||= params.permit(:term)
+    @index_params ||= params.permit(agents_search: [:query])
+  end
+
+  def agents_search_params
+    index_params[:agents_search] || {}
   end
 
   def access_levels_collection

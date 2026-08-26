@@ -9,12 +9,17 @@
 .card
   .card-body
     - if needs_agent_search?
-      .fr-mb-2w.d-flex.justify-content-end
-        - search = params[:term].blank? && "d-none"
-        div= link_to t("helpers.reset"), admin_organisation_agents_path(current_organisation), class: "fr-btn fr-btn--tertiary-no-outline #{search}"
-        = simple_form_for "", url: admin_organisation_agents_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
-          = f.input :term, placeholder: "Prénom, Nom, Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:term] }, required: false
-          = f.submit t("helpers.search"), class: "fr-btn"
+      = form_with url: admin_organisation_agents_path(current_organisation), method: :get, scope: :agents_search do |f|
+        .fr-table__header.rdv-justify-content-flex-end.rdv-width-100
+          ul.fr-btns-group.fr-btns-group--right.fr-btns-group--inline-md.fr-btns-group--icon-left.fr-mb-0
+            li
+              - if agents_search_params[:query].present?
+                = link_to t("helpers.reset"), admin_organisation_agents_path(current_organisation), class: "fr-btn fr-btn--tertiary-no-outline"
+              .fr-search-bar
+                = f.label :query, "Prénom, Nom, Email", class: "fr-label fr-sr-only"
+                = f.search_field :query, placeholder: "Prénom, Nom, Email", autocomplete: "off", class: "fr-input", value: agents_search_params[:query]
+            li
+              = f.submit "Filtrer", class: "fr-btn"
     table.table
       thead
         tr
