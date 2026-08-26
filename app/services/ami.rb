@@ -75,7 +75,7 @@ class Ami
 
   def default_payload
     {
-      content_title: "Rendez-vous avec #{participation.rdv.organisation.name}",
+      content_title: "Rendez-vous avec #{@participation.rdv.organisation.name}",
       recipient_fc_hash: AmiFranceConnectHash.find_by(user: @participation.user).fc_hash,
       event_date: Time.zone.now,
       content_icon: "fr-icon-calendar-event-line",
