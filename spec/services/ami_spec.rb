@@ -14,6 +14,8 @@ RSpec.describe Ami do
     WebMock.stub_request(:put, "https://ami.test/api/v2/event")
   end
 
+  around { |example| perform_enqueued_jobs { example.run } }
+
   it "permet de faire un appel à l'api d'AMI pour ajouter le rendez-vous à la liste des démarches en cours." do
     described_class.new(participation).create_event
 

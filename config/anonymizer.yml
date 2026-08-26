@@ -566,5 +566,6 @@ tables:
     anonymized_column_names:
       - fc_hash
     non_anonymized_column_names:
+      - notify_by_ami
       - created_at
       - updated_at

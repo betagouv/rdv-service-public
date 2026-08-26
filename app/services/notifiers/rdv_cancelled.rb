@@ -17,7 +17,7 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
 
   def notify_user_by_ami(user)
     participation = user.participation_for(@rdv)
-    Ami.new(participation).create_event
+    Ami.new(participation).cancel_event
   end
 
   def notify_cancellation?
