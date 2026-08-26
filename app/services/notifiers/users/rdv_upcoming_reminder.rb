@@ -10,15 +10,7 @@ class Notifiers::Users::RdvUpcomingReminder < BaseService
     notify_users_by_sms
   end
 
-  protected
-
-  def users_to_notify
-    participations_to_notify.map(&:user).map(&:user_to_notify).uniq
-  end
-
-  def participations_to_notify
-    @rdv.participations.not_cancelled.where(send_reminder_notification: true)
-  end
+  private
 
   def notify_users_by_mail
     users_to_notify.select(&:notifiable_by_email?).each do |user|
@@ -30,5 +22,13 @@ class Notifiers::Users::RdvUpcomingReminder < BaseService
     users_to_notify.select(&:notifiable_by_sms?).each do |user|
       Users::RdvSms.rdv_upcoming_reminder(@rdv, user).deliver_later(queue: :latency_5m)
     end
+  end
+
+  def users_to_notify
+    participations_to_notify.map(&:user).map(&:user_to_notify).uniq
+  end
+
+  def participations_to_notify
+    @rdv.participations.not_cancelled.where(send_reminder_notification: true)
   end
 end

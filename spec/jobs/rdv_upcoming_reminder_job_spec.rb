@@ -2,7 +2,7 @@ RSpec.describe RdvUpcomingReminderJob do
   it "runs a Notifiers::RdvUpcomingReminder job" do
     rdv = build(:rdv, starts_at: 6.hours.from_now)
 
-    expect(Notifiers::RdvUpcomingReminder).to receive(:perform_with).with(rdv, nil)
+    expect(Notifiers::Users::RdvUpcomingReminder).to receive(:perform_with).with(rdv)
     described_class.perform_now(rdv)
     expect(sentry_events).to be_empty
   end

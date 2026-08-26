@@ -30,6 +30,6 @@ class RdvUpcomingReminderJob < ApplicationJob
       raise TooLateError, "Reminder not sent: RDV in the past"
     end
 
-    Notifiers::Users::RdvUpcomingReminder.perform_with(rdv, nil)
+    Notifiers::Users::RdvUpcomingReminder.perform_with(rdv)
   end
 end
