@@ -24,6 +24,8 @@ class Notifiers::RdvBase < BaseService
     notify_users
   end
 
+  private
+
   def notify_users
     notify_users_by_mail
     notify_users_by_sms
@@ -38,8 +40,6 @@ class Notifiers::RdvBase < BaseService
   def agent_mailer(agent)
     Agents::RdvMailer.with(rdv: @rdv, agent: agent, author: @author)
   end
-
-  private
 
   def notify_users_by_mail
     users_to_notify
