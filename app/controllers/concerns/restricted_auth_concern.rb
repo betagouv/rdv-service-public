@@ -11,15 +11,18 @@ module RestrictedAuthConcern
 
   private
 
-  def store_restricted_auth_token_in_session_and_redirect
+  def store_restricted_auth_token_in_session_and_redirect(store_rdv_insertion_invitation: false)
     return if params[:invitation_token].blank?
 
     restricted_auth = RestrictedAuth.new(invitation_token: params[:invitation_token])
-
     return redirect_with_error(t("devise.invitations.invitation_token_invalid")) unless restricted_auth.token_valid?
     return redirect_with_error(t("devise.invitations.current_user_mismatch")) if current_user_mismatch?(restricted_auth.user)
 
     session[:restricted_auth] = { invitation_token: params[:invitation_token], expires_at: 10.minutes.from_now }
+
+    if store_rdv_insertion_invitation
+      session[:rdv_insertion_invitation] = current_url_params.except(:invitation_token)
+    end
 
     redirect_to current_path_without_token
   end
