@@ -48,8 +48,7 @@ class Users::RdvsController < UserAuthController
     else
       flash[:error] = "Impossible d'annuler le RDV."
     end
-    restricted_auth_token = current_user.participation_for(@rdv).restricted_auth_token
-    redirect_to users_rdv_path(@rdv, invitation_token: restricted_auth_token)
+    redirect_to users_rdv_path(@rdv)
   end
 
   def ics

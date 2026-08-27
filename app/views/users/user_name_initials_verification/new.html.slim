@@ -5,7 +5,8 @@ p.fr-mt-2w
   b> nom de famille.
 
 .fr-my-4w.rdv-legible-code-form.rdv-three-letters-form
-   = form_for @form, url: users_user_name_initials_verification_path, builder: Dsfr::FormBuilder, as: "", display_required_tags: false do |f|
+  / On passe le restricted_auth_token dans l'url aussi pour éviter une erreur si on refresh le formulaire après un échec
+  = form_for @form, url: users_user_name_initials_verification_path(restricted_auth_token: params[:restricted_auth_token]), builder: Dsfr::FormBuilder, as: "", display_required_tags: false do |f|
     = f.hidden_field :restricted_auth_token, value: params[:restricted_auth_token]
     .fr-input-group
       = f.dsfr_text_field :letters,
