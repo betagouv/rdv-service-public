@@ -18,13 +18,21 @@ module RestrictedAuthConcern
     return redirect_with_error(t("devise.invitations.invitation_token_invalid")) unless restricted_auth.token_valid?
     return redirect_with_error(t("devise.invitations.current_user_mismatch")) if current_user_mismatch?(restricted_auth.user)
 
-    session[:restricted_auth] = { invitation_token: params[:invitation_token], expires_at: 10.minutes.from_now }
+    if User.find_by(rdv_invitation_token: params[:invitation_token])
+      # On connecte un usager invité via RDV Insertion
 
-    if store_rdv_insertion_invitation
-      session[:rdv_insertion_invitation] = current_url_params.except(:invitation_token)
+      if store_rdv_insertion_invitation
+        session[:rdv_insertion_invitation] = current_url_params.except(:invitation_token)
+      end
+
+      session[:restricted_auth] = { invitation_token: params[:invitation_token], expires_at: 10.minutes.from_now }
+
+      redirect_to current_path_without_token
+    elsif !cookies.encrypted[:"user_name_initials_verified_#{restricted_auth.user.id}"]
+      # On fait vérifier le début du nom
+      session[:return_to_after_verification] = request.fullpath
+      redirect_to new_users_user_name_initials_verification_path(restricted_auth_token: params[:invitation_token])
     end
-
-    redirect_to current_path_without_token
   end
 
   def current_path_without_token
@@ -54,9 +62,6 @@ module RestrictedAuthConcern
       user = restricted_auth.user
       user.signed_in_with_invitation_token!(rdv: restricted_auth.rdv)
       sign_in(user, store: false)
-    else
-      session[:return_to_after_verification] = request.fullpath
-      redirect_to new_users_user_name_initials_verification_path
     end
   end
 

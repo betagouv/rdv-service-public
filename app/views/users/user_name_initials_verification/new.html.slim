@@ -6,6 +6,7 @@ p.fr-mt-2w
 
 .fr-my-4w.rdv-legible-code-form.rdv-three-letters-form
    = form_for @form, url: users_user_name_initials_verification_path, builder: Dsfr::FormBuilder, as: "", display_required_tags: false do |f|
+    = f.hidden_field :restricted_auth_token, value: params[:restricted_auth_token]
     .fr-input-group
       = f.dsfr_text_field :letters,
         label: "3 premières lettres de votre nom",

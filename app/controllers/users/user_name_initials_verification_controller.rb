@@ -6,11 +6,12 @@ class Users::UserNameInitialsVerificationController < ApplicationController
   end
 
   def create
-    @form = Form.new(letters: params[:letters]&.strip&.upcase, user: restricted_auth.user)
+    @form = Form.new(letters: params[:letters]&.strip&.upcase, restricted_auth_token: params[:restricted_auth_token])
     if @form.valid?
-      cookies.encrypted[:"user_name_initials_verified_#{restricted_auth.user.id}"] = {
+      cookies.encrypted[:"user_name_initials_verified_#{@form.user.id}"] = {
         value: true, expires: 10.minutes.from_now,
       }
+      session[:restricted_auth] = { invitation_token: params[:restricted_auth_token], expires_at: 10.minutes.from_now }
       redirect_to after_success_redirect_path
     else
       flash.now[:error] = I18n.t("users.user_name_initials_mismatch")
@@ -19,10 +20,6 @@ class Users::UserNameInitialsVerificationController < ApplicationController
   end
 
   private
-
-  def restricted_auth
-    @restricted_auth ||= (session[:restricted_auth].present? ? RestrictedAuth.new(**session[:restricted_auth].symbolize_keys) : nil)
-  end
 
   def after_success_redirect_path
     if session[:return_to_after_verification]
@@ -38,15 +35,10 @@ class Users::UserNameInitialsVerificationController < ApplicationController
     include ActiveModel::Model
     include ActiveModel::Attributes
     attribute :letters, :string
-    attribute :user
+    attribute :restricted_auth_token, :string
 
+    validates :user, presence: true
     validate :letters_match_last_name
-
-    def letters_match_last_name
-      return if letters == user.last_name.gsub(/\s+/, "").first(3).upcase
-
-      errors.add(:letters, "ne correspondent pas")
-    end
 
     def self.human_attribute_name(attr, _options = {})
       if attr.to_sym == :letters
@@ -54,6 +46,18 @@ class Users::UserNameInitialsVerificationController < ApplicationController
       else
         attr
       end
+    end
+
+    def user
+      RestrictedAuth.new(invitation_token: restricted_auth_token).user
+    end
+
+    private
+
+    def letters_match_last_name
+      return if letters == user.last_name.gsub(/\s+/, "").first(3).upcase
+
+      errors.add(:letters, "ne correspondent pas")
     end
   end
 end
