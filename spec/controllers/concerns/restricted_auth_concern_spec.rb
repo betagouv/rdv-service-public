@@ -3,7 +3,7 @@ RSpec.describe RestrictedAuthConcern do
     include RestrictedAuthConcern # rubocop:disable RSpec/DescribedClass
 
     prepend_before_action do
-      store_restricted_auth_token_in_session_and_redirect(store_rdv_insertion_invitation: true)
+      store_restricted_auth_token_in_session_and_redirect
     end
 
     def fake_action
