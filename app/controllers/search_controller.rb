@@ -5,7 +5,9 @@ class SearchController < ApplicationController
   include Search::LogParamsConcern
 
   # Peut être utilisé soit pour une invitation de RDV insertion ou pour une invitation à reprendre rendez-vous suite à une annulation
-  prepend_before_action :store_restricted_auth_token_in_session_and_redirect, only: %i[search_rdv]
+  prepend_before_action only: %i[search_rdv] do
+    store_restricted_auth_token_in_session_and_redirect(allow_rdv_invitation: true)
+  end
 
   def home
     # Si l'agent est redirigé vers le root_path depuis ProConnect, et qu'on veut le rediriger vers

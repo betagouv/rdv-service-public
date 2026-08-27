@@ -6,11 +6,14 @@ class Users::UserNameInitialsVerificationController < ApplicationController
   end
 
   def create
-    @form = Form.new(letters: params[:letters]&.strip&.upcase, restricted_auth_token: session[:restricted_auth_token_for_name_verification])
+    if session[:information_for_name_verification].blank?
+      flash[:error] = t("devise.invitations.session_expired")
+      redirect_to root_path
+    end
+
+    @form = Form.new(letters: params[:letters]&.strip&.upcase, user: RestrictedAuthConcern.user_to_verify(session))
     if @form.valid?
-      restricted_auth_token = session.delete(:restricted_auth_token_for_name_verification)
-      # Cette session sera ensuite utilisée par RestrictedAuthConcern pour connecter l'usager
-      session[:restricted_auth] = { invitation_token: restricted_auth_token, expires_at: 10.minutes.from_now }
+      RestrictedAuthConcern.user_name_verification_successful!(session)
 
       redirect_to after_success_redirect_path
     else
@@ -22,20 +25,15 @@ class Users::UserNameInitialsVerificationController < ApplicationController
   private
 
   def after_success_redirect_path
-    if session[:return_to_after_verification]
-      session.delete(:return_to_after_verification)
-    else
-      root_path
-    end
+    session.delete(:return_to_after_verification) || root_path
   end
 
   class Form
     include ActiveModel::Model
     include ActiveModel::Attributes
     attribute :letters, :string
-    attribute :restricted_auth_token, :string
+    attribute :user
 
-    validates :user, presence: true
     validate :letters_match_last_name
 
     def self.human_attribute_name(attr, _options = {})
@@ -50,10 +48,6 @@ class Users::UserNameInitialsVerificationController < ApplicationController
       return if letters == user.last_name.gsub(/\s+/, "").first(3).upcase
 
       errors.add(:letters, "ne correspondent pas")
-    end
-
-    def user
-      RestrictedAuth.new(invitation_token: restricted_auth_token).user
     end
   end
 end
