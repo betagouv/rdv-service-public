@@ -24,7 +24,7 @@ class UserAuthController < ApplicationController
   end
 
   def should_verify_user_name_initials?
-    current_user.signed_in_with_invitation_token? && !cookies.encrypted[user_name_initials_cookie_name]
+    restricted_auth.user && !cookies.encrypted[user_name_initials_cookie_name]
   end
 
   def verify_user_name_initials

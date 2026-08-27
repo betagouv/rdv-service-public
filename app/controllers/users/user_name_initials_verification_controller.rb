@@ -1,18 +1,16 @@
-class Users::UserNameInitialsVerificationController < UserAuthController
+class Users::UserNameInitialsVerificationController < ApplicationController
   layout "application_narrow"
-
-  skip_after_action :verify_authorized
-
-  include RestrictedAuthConcern
 
   def new
     @form = Form.new
   end
 
   def create
-    @form = Form.new(letters: params[:letters]&.strip&.upcase, current_user:)
+    @form = Form.new(letters: params[:letters]&.strip&.upcase, user: restricted_auth.user)
     if @form.valid?
-      set_user_name_initials_verified
+      cookies.encrypted[:"user_name_initials_verified_#{restricted_auth.user.id}"] = {
+        value: true, expires: 10.minutes.from_now,
+      }
       redirect_to after_success_redirect_path
     else
       flash.now[:error] = I18n.t("users.user_name_initials_mismatch")
@@ -21,6 +19,10 @@ class Users::UserNameInitialsVerificationController < UserAuthController
   end
 
   private
+
+  def restricted_auth
+    @restricted_auth ||= (session[:restricted_auth].present? ? RestrictedAuth.new(**session[:restricted_auth].symbolize_keys) : nil)
+  end
 
   def after_success_redirect_path
     if session[:return_to_after_verification]
@@ -36,12 +38,12 @@ class Users::UserNameInitialsVerificationController < UserAuthController
     include ActiveModel::Model
     include ActiveModel::Attributes
     attribute :letters, :string
-    attribute :current_user
+    attribute :user
 
     validate :letters_match_last_name
 
     def letters_match_last_name
-      return if letters == current_user.last_name.gsub(/\s+/, "").first(3).upcase
+      return if letters == user.last_name.gsub(/\s+/, "").first(3).upcase
 
       errors.add(:letters, "ne correspondent pas")
     end

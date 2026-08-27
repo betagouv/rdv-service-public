@@ -1,5 +1,5 @@
 class Users::RdvsController < UserAuthController
-  before_action :verify_user_name_initials, :set_rdv, :set_can_see_rdv_motif, only: %i[show creneaux ics edit cancel update]
+  before_action :set_rdv, :set_can_see_rdv_motif, only: %i[show creneaux ics edit cancel update]
   before_action :set_can_see_rdv_motif, only: %i[show edit index]
   before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
 
