@@ -6,14 +6,16 @@ class Users::UserNameInitialsVerificationController < ApplicationController
   end
 
   def create
-    if session[:information_for_name_verification].blank?
+    auth_state = RestrictedAuthSessionState.new(session)
+
+    if auth_state.user.blank?
       flash[:error] = t("devise.invitations.session_expired")
       redirect_to root_path
     end
 
-    @form = Form.new(letters: params[:letters]&.strip&.upcase, user: RestrictedAuthSessionState.user_to_verify(session))
+    @form = Form.new(letters: params[:letters]&.strip&.upcase, user: auth_state.user)
     if @form.valid?
-      RestrictedAuthSessionState.user_name_verification_successful!(session)
+      auth_state.user_name_verification_successful!
 
       redirect_to after_success_redirect_path
     else
