@@ -31,7 +31,7 @@ module RestrictedAuthConcern
   def store_restricted_auth_token_in_session_and_redirect(allow_rdv_insertion_invitation: false)
     return if params[:invitation_token].blank?
 
-    participation = Participation.find_by(restricted_auth_token: token)
+    participation = Participation.find_by(restricted_auth_token: params[:invitation_token])
 
     # Avant mai 2025, on envoyait des notifications avec le contenu de la colonne participations.invitation_token
     # Cette colonne est chiffrée de manière non-réversible (hachée).
