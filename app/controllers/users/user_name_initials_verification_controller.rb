@@ -44,16 +44,14 @@ class Users::UserNameInitialsVerificationController < ApplicationController
       end
     end
 
-    def user
-      RestrictedAuth.new(invitation_token: restricted_auth_token).user
-    end
-
-    private
-
     def letters_match_last_name
       return if letters == user.last_name.gsub(/\s+/, "").first(3).upcase
 
       errors.add(:letters, "ne correspondent pas")
+    end
+
+    def user
+      RestrictedAuth.new(invitation_token: restricted_auth_token).user
     end
   end
 end
