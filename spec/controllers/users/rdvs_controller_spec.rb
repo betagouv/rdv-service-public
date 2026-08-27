@@ -215,7 +215,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         it "redirects to the identity verification form" do
           get :show, params: { id: rdv.id, invitation_token: rdv.participations.first.restricted_auth_token }
 
-          expect(response).to redirect_to(new_users_user_name_initials_verification_path(restricted_auth_token: rdv.participations.first.restricted_auth_token))
+          expect(response).to redirect_to(new_users_user_name_initials_verification_path)
         end
       end
     end

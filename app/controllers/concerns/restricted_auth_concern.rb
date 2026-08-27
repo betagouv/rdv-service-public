@@ -28,7 +28,10 @@ module RestrictedAuthConcern
     else
       # On fait vérifier le début du nom
       session[:return_to_after_verification] = current_path_without_token
-      redirect_to new_users_user_name_initials_verification_path(restricted_auth_token: params[:invitation_token])
+
+      # On met le token dans la session plutôt que dans l'url pour éviter qu'il ne soit partagé par inadvertance.
+      session[:restricted_auth_token_for_name_verification] = params[:invitation_token]
+      redirect_to new_users_user_name_initials_verification_path
     end
   end
 

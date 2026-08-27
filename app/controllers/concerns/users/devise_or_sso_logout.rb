@@ -11,6 +11,8 @@ module Users::DeviseOrSsoLogout
 
     session.delete(:restricted_auth) # créé par RestrictedAuthConcern
     session.delete(:rdv_insertion_invitation) # créé par RestrictedAuthConcern
+    session.delete(:restricted_auth_token_for_name_verification) # créé par RestrictedAuthConcern
+
     sign_out(:user)
     set_flash_message!(:notice, flash_message_key)
 

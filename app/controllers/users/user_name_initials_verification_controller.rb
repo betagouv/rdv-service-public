@@ -6,7 +6,7 @@ class Users::UserNameInitialsVerificationController < ApplicationController
   end
 
   def create
-    @form = Form.new(letters: params[:letters]&.strip&.upcase, restricted_auth_token: params[:restricted_auth_token])
+    @form = Form.new(letters: params[:letters]&.strip&.upcase, restricted_auth_token: session[:restricted_auth_token_for_name_verification])
     if @form.valid?
       # Cette session sera ensuite utilisée par RestrictedAuthConcern pour connecter l'usager
       session[:restricted_auth] = { invitation_token: params[:restricted_auth_token], expires_at: 10.minutes.from_now }
