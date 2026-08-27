@@ -11,9 +11,9 @@ class Users::UserNameInitialsVerificationController < ApplicationController
       redirect_to root_path
     end
 
-    @form = Form.new(letters: params[:letters]&.strip&.upcase, user: RestrictedAuthConcern.user_to_verify(session))
+    @form = Form.new(letters: params[:letters]&.strip&.upcase, user: RestrictedAuthSessionState.user_to_verify(session))
     if @form.valid?
-      RestrictedAuthConcern.user_name_verification_successful!(session)
+      RestrictedAuthSessionState.user_name_verification_successful!(session)
 
       redirect_to after_success_redirect_path
     else

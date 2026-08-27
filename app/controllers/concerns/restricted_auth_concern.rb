@@ -11,19 +11,10 @@ module RestrictedAuthConcern
     prepend_before_action :sign_in_with_restricted_auth
   end
 
-  def self.user_name_verification_successful!(session)
-    session[:restricted_auth] = session.delete(:information_for_name_verification).merge(expires_at: 10.minutes.from_now)
-  end
-
   def self.clean_session(session)
-    session.delete(:information_for_name_verification)
-    session.delete(:restricted_auth)
+    RestrictedAuthSessionState.clean_session!(session)
     session.delete(:rdv_insertion_invitation)
     session.delete(:return_to_after_verification)
-  end
-
-  def self.user_to_verify(session)
-    User.find(session.dig(:information_for_name_verification, "user_id"))
   end
 
   private
@@ -62,17 +53,17 @@ module RestrictedAuthConcern
     if invited_user
       session[:rdv_insertion_invitation] = current_url_params.except(:invitation_token)
 
-      session[:restricted_auth] = { user_id: invited_user.id, expires_at: 10.minutes.from_now }
+      RestrictedAuthSessionState.authenticate!(session, user: invited_user)
 
       redirect_to current_path_without_token
     else
       # L'usager a utilisé un lien avec un token envoyé dans une notification
       # On fait vérifier le début du nom
-      session[:information_for_name_verification] = {
+      RestrictedAuthSessionState.prepare_for_name_verification!(
+        session,
         user_id: user.id,
-        rdv_id: participation.rdv_id,
-      }
-
+        rdv_id: participation.rdv_id
+      )
       session[:return_to_after_verification] = current_path_without_token
 
       redirect_to new_users_user_name_initials_verification_path
@@ -89,16 +80,18 @@ module RestrictedAuthConcern
   end
 
   def sign_in_with_restricted_auth
-    return if session[:restricted_auth].blank?
+    auth_state = RestrictedAuthSessionState.new(session)
 
-    user = User.find_by(id: session.dig(:restricted_auth, "user_id"))
+    return unless auth_state.authenticated?
+
+    user = auth_state.user
 
     return delete_invitation_from_session_and_redirect(t("devise.invitations.invitation_token_invalid")) if user.blank?
     return delete_invitation_from_session_and_redirect(t("devise.invitations.current_user_mismatch")) if current_user_mismatch?(user)
-    return delete_invitation_from_session_and_redirect(t("devise.invitations.session_expired")) if session.dig(:restricted_auth, "expires_at") < Time.zone.now
+    return delete_invitation_from_session_and_redirect(t("devise.invitations.session_expired")) if auth_state.expired?
     return if current_user.present? # no need to sign in if the user is already connected
 
-    user.signed_in_with_invitation_token!(rdv: Rdv.find_by(id: session.dig(:restricted_auth, "rdv_id")))
+    user.signed_in_with_invitation_token!(rdv: auth_state.rdv)
     sign_in(user, store: false)
   end
 
@@ -107,7 +100,7 @@ module RestrictedAuthConcern
   end
 
   def delete_invitation_from_session_and_redirect(error_msg)
-    session.delete(:restricted_auth)
+    RestrictedAuthSessionState.clean_session!(session)
     redirect_with_error(error_msg)
   end
 
