@@ -23,7 +23,7 @@ module RestrictedAuthConcern
   end
 
   def self.user_to_verify(session)
-    User.find(session.dig(:information_for_name_verification, :user_id))
+    User.find(session.dig(:information_for_name_verification, "user_id"))
   end
 
   private
@@ -91,14 +91,14 @@ module RestrictedAuthConcern
   def sign_in_with_restricted_auth
     return if session[:restricted_auth].blank?
 
-    user = User.find_by(id: session.dig(:restricted_auth, :user_id))
+    user = User.find_by(id: session.dig(:restricted_auth, "user_id"))
 
     return delete_invitation_from_session_and_redirect(t("devise.invitations.invitation_token_invalid")) if user.blank?
     return delete_invitation_from_session_and_redirect(t("devise.invitations.current_user_mismatch")) if current_user_mismatch?(user)
-    return delete_invitation_from_session_and_redirect(t("devise.invitations.session_expired")) if session.dig(:restricted_auth, :expires_at) < Time.zone.now
+    return delete_invitation_from_session_and_redirect(t("devise.invitations.session_expired")) if session.dig(:restricted_auth, "expires_at") < Time.zone.now
     return if current_user.present? # no need to sign in if the user is already connected
 
-    user.signed_in_with_invitation_token!(rdv: Rdv.find_by(id: session.dig(:restricted_auth, :rdv_id)))
+    user.signed_in_with_invitation_token!(rdv: Rdv.find_by(id: session.dig(:restricted_auth, "rdv_id")))
     sign_in(user, store: false)
   end
 
