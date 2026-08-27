@@ -9,6 +9,8 @@ class User::UserPolicy < ApplicationPolicy
   alias create? user_is_responsible?
 
   def current_user_or_responsible?
+    return false if current_user.signed_in_with_invitation_token?
+
     record.id == current_user.id || user_is_responsible?
   end
 
