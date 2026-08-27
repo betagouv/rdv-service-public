@@ -12,7 +12,7 @@ module RestrictedAuthConcern
   end
 
   def self.user_name_verification_successful!(session)
-    session[:restricted_auth] = session.delete(information_for_name_verification).merge(expires_at: 10.minutes.from_now)
+    session[:restricted_auth] = session.delete(:information_for_name_verification).merge(expires_at: 10.minutes.from_now)
   end
 
   def self.clean_session(session)

@@ -4,7 +4,10 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
   let!(:participation) { create(:participation, user:) }
 
   before do
-    session[:restricted_auth_token_for_name_verification] = participation.restricted_auth_token
+    session[:information_for_name_verification] = {
+      user_id: participation.user_id,
+      rdv_id: participation.rdv_id,
+    }
   end
 
   describe "GET #new" do
@@ -23,7 +26,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
       it "sets the user as verified" do
         post :create, params: { letters: "DYL" }
 
-        expect(session[:restricted_auth][:invitation_token]).to eq participation.restricted_auth_token
+        expect(session[:restricted_auth]).to include(user_id: participation.user_id, rdv_id: participation.rdv_id)
       end
 
       it "redirect to the path stored in session" do
@@ -38,7 +41,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
         it "works" do
           post :create, params: { letters: "BO" }
 
-          expect(session[:restricted_auth][:invitation_token]).to eq participation.restricted_auth_token
+          expect(session[:restricted_auth]).to include(user_id: participation.user_id, rdv_id: participation.rdv_id)
           expect(response).to redirect_to(redirect_path)
         end
       end
@@ -49,7 +52,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
         it "works" do
           post :create, params: { letters: "DEL" }
 
-          expect(session[:restricted_auth][:invitation_token]).to eq participation.restricted_auth_token
+          expect(session[:restricted_auth]).to include(user_id: participation.user_id, rdv_id: participation.rdv_id)
           expect(response).to redirect_to(redirect_path)
         end
       end

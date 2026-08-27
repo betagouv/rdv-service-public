@@ -36,18 +36,18 @@ class Users::UserNameInitialsVerificationController < ApplicationController
 
     validate :letters_match_last_name
 
+    def letters_match_last_name
+      return if letters == user.last_name.gsub(/\s+/, "").first(3).upcase
+
+      errors.add(:letters, "ne correspondent pas")
+    end
+
     def self.human_attribute_name(attr, _options = {})
       if attr.to_sym == :letters
         "3 premières lettres"
       else
         attr
       end
-    end
-
-    def letters_match_last_name
-      return if letters == user.last_name.gsub(/\s+/, "").first(3).upcase
-
-      errors.add(:letters, "ne correspondent pas")
     end
   end
 end
