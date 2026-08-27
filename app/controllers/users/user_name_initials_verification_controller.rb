@@ -22,8 +22,6 @@ class Users::UserNameInitialsVerificationController < ApplicationController
   def after_success_redirect_path
     if session[:return_to_after_verification]
       session.delete(:return_to_after_verification)
-    elsif restricted_auth&.rdv
-      users_rdv_path(restricted_auth.rdv)
     else
       root_path
     end
