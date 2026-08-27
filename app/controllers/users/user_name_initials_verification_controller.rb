@@ -8,8 +8,10 @@ class Users::UserNameInitialsVerificationController < ApplicationController
   def create
     @form = Form.new(letters: params[:letters]&.strip&.upcase, restricted_auth_token: session[:restricted_auth_token_for_name_verification])
     if @form.valid?
+      restricted_auth_token = session.delete(:restricted_auth_token_for_name_verification)
       # Cette session sera ensuite utilisée par RestrictedAuthConcern pour connecter l'usager
-      session[:restricted_auth] = { invitation_token: params[:restricted_auth_token], expires_at: 10.minutes.from_now }
+      session[:restricted_auth] = { invitation_token: restricted_auth_token, expires_at: 10.minutes.from_now }
+
       redirect_to after_success_redirect_path
     else
       flash.now[:error] = I18n.t("users.user_name_initials_mismatch")
