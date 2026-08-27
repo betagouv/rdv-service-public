@@ -272,10 +272,8 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       context "with a valid invitation token" do
-        let!(:invitation_token) { user.set_rdv_invitation_token! }
-
         before do
-          request.session[:restricted_auth] = { invitation_token: invitation_token, expires_at: 1.hour.from_now }
+          RestrictedAuthSessionState.authenticate!(request.session, user_id: user.id)
         end
 
         it "is not authorized" do
