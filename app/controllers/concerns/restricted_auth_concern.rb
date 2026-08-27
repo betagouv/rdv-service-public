@@ -11,7 +11,7 @@ module RestrictedAuthConcern
 
   private
 
-  def store_restricted_auth_token_in_session_and_redirect(store_rdv_insertion_invitation: false)
+  def store_restricted_auth_token_in_session_and_redirect
     return if params[:invitation_token].blank?
 
     restricted_auth = RestrictedAuth.new(invitation_token: params[:invitation_token])
@@ -20,11 +20,8 @@ module RestrictedAuthConcern
 
     if User.find_by(rdv_invitation_token: params[:invitation_token])
       # On connecte un usager invité via RDV Insertion
-
-      if store_rdv_insertion_invitation
-        session[:rdv_insertion_invitation] = current_url_params.except(:invitation_token)
-      end
-
+      # On sera dans ce cas uniquement pour la prise de rdv dans le SearchController
+      session[:rdv_insertion_invitation] = current_url_params.except(:invitation_token)
       session[:restricted_auth] = { invitation_token: params[:invitation_token], expires_at: 10.minutes.from_now }
 
       redirect_to current_path_without_token

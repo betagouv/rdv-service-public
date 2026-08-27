@@ -4,9 +4,8 @@ class SearchController < ApplicationController
   include RestrictedAuthConcern
   include Search::LogParamsConcern
 
-  prepend_before_action(only: %i[search_rdv]) do
-    store_restricted_auth_token_in_session_and_redirect(store_rdv_insertion_invitation: true)
-  end
+  # Peut être utilisé soit pour une invitation de RDV insertion ou pour une invitation à reprendre rendez-vous suite à une annulation
+  prepend_before_action :store_restricted_auth_token_in_session_and_redirect, only: %i[search_rdv]
 
   def home
     # Si l'agent est redirigé vers le root_path depuis ProConnect, et qu'on veut le rediriger vers
@@ -36,7 +35,7 @@ class SearchController < ApplicationController
     elsif current_agent && params[:prescripteur] == Prescripteur::INTERNE && params[:current_organisation]
       redirect_to search_creneau_admin_organisation_prescription_path(params[:current_organisation], agent_search_params)
     else
-      @context = if invitation_to_take_rdv?
+      @context = if rdv_insertion_invitation_query_params.present?
                    WebInvitationSearchContext.new(user: current_user, query_params: search_params.merge(rdv_insertion_invitation_query_params))
                  else
                    WebSearchContext.new(user: current_user, query_params: search_params)
@@ -111,15 +110,9 @@ class SearchController < ApplicationController
 
   private
 
-  def invitation_to_take_rdv?
-    return false unless session[:restricted_auth]
-
-    User.find_by(rdv_invitation_token: session[:restricted_auth].with_indifferent_access["invitation_token"])
-  end
-
   # Les clés du hash renvoyé par cette méthode devraient correspondre à InvitationSearchContext::INVITATION_PARAMS
   def rdv_insertion_invitation_query_params
-    session[:rdv_insertion_invitation].symbolize_keys
+    session[:rdv_insertion_invitation]&.symbolize_keys
   end
 
   def search_on_migrated_organisation
