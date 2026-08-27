@@ -28,7 +28,7 @@ module RestrictedAuthConcern
 
   private
 
-  def store_restricted_auth_token_in_session_and_redirect(allow_rdv_invitation: false)
+  def store_restricted_auth_token_in_session_and_redirect(allow_rdv_insertion_invitation: false)
     return if params[:invitation_token].blank?
 
     participation = Participation.find_by(restricted_auth_token: token)
@@ -51,7 +51,7 @@ module RestrictedAuthConcern
     user = participation&.user&.user_to_notify
 
     # Si on a un token qui vient d'une invitation de RDV Insertion, on cherche dans la table user
-    if allow_rdv_invitation
+    if allow_rdv_insertion_invitation
       invited_user = User.find_by(rdv_invitation_token: params[:invitation_token])
       user ||= invited_user
     end

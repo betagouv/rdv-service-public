@@ -6,7 +6,7 @@ class SearchController < ApplicationController
 
   # Peut être utilisé soit pour une invitation de RDV insertion ou pour une invitation à reprendre rendez-vous suite à une annulation
   prepend_before_action only: %i[search_rdv] do
-    store_restricted_auth_token_in_session_and_redirect(allow_rdv_invitation: true)
+    store_restricted_auth_token_in_session_and_redirect(allow_rdv_insertion_invitation: true)
   end
 
   def home
