@@ -30,7 +30,7 @@ module RestrictedAuthConcern
     #
     # Vers mai 2027, on pourra donc supprimer cette ligne, puisque toutes les notifications utilisant
     # la colonne participations.invitation_token seront pour des rdvs qui auront été supprimés.
-    participation ||= Participation.find_by_invitation_token(token, true)
+    participation ||= Participation.find_by_invitation_token(params[:invitation_token], true)
 
     # On vérifie que le token de participation correpond à l'id du rdv dans les params
     # Ça évite qu'un attaquant devine un token de participation puis accède à un rdv sans en connaitre l'id.
@@ -53,7 +53,7 @@ module RestrictedAuthConcern
     if invited_user
       session[:rdv_insertion_invitation] = current_url_params.except(:invitation_token)
 
-      RestrictedAuthSessionState.authenticate!(session, user: invited_user)
+      RestrictedAuthSessionState.authenticate!(session, user_id: invited_user.id)
 
       redirect_to current_path_without_token
     else
