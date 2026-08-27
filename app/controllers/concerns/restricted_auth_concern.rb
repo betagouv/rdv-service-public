@@ -28,9 +28,9 @@ module RestrictedAuthConcern
       session[:restricted_auth] = { invitation_token: params[:invitation_token], expires_at: 10.minutes.from_now }
 
       redirect_to current_path_without_token
-    elsif !cookies.encrypted[:"user_name_initials_verified_#{restricted_auth.user.id}"]
+    else
       # On fait vérifier le début du nom
-      session[:return_to_after_verification] = request.fullpath
+      session[:return_to_after_verification] = current_path_without_token
       redirect_to new_users_user_name_initials_verification_path(restricted_auth_token: params[:invitation_token])
     end
   end
@@ -52,25 +52,9 @@ module RestrictedAuthConcern
     return delete_invitation_from_session_and_redirect(t("devise.invitations.session_expired")) if restricted_auth.expired?
     return if current_user.present? # no need to sign in if the user is already connected
 
-    if User.find_by(rdv_invitation_token: session[:restricted_auth].with_indifferent_access["invitation_token"])
-      # On connecte un usager invité via RDV Insertion
-      user = restricted_auth.user
-      user.signed_in_with_invitation_token!(rdv: restricted_auth.rdv)
-      sign_in(user, store: false)
-    elsif cookies.encrypted[:"user_name_initials_verified_#{restricted_auth.user.id}"] # rubocop:disable Lint/DuplicateBranch
-      # On connecte un usager qui a suivi un lien avec un token et vérifié les trois premières lettres de son nom
-      user = restricted_auth.user
-      user.signed_in_with_invitation_token!(rdv: restricted_auth.rdv)
-      sign_in(user, store: false)
-    end
-  end
-
-  # Cette méthode est appelée quand l'usager vérifie ses initiales au moment d'une première "connexion"
-  # ou s'il fait une action d'écriture sur une participation (dont une création de rdv)
-  def set_user_name_initials_verified
-    cookies.encrypted[:"user_name_initials_verified_#{current_user.id}"] = {
-      value: true, expires: 10.minutes.from_now,
-    }
+    user = restricted_auth.user
+    user.signed_in_with_invitation_token!(rdv: restricted_auth.rdv)
+    sign_in(user, store: false)
   end
 
   def current_user_mismatch?(invited_user)

@@ -65,7 +65,6 @@ class Users::ParticipationsController < UserAuthController
       return redirect_to prendre_rdv_path_for_current_rdv
     end
     existing_participation.change_status_and_notify(current_user, status)
-    set_user_name_initials_verified
     flash[:success] = "Participation confirmée" if existing_participation.status == "unknown"
     flash[:notice] = "Participation annulée" if existing_participation.status == "excused"
     redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.restricted_auth_token)
@@ -81,7 +80,6 @@ class Users::ParticipationsController < UserAuthController
       return redirect_to prendre_rdv_path_for_current_rdv
     end
     new_participation.create_and_notify!(current_user)
-    set_user_name_initials_verified
     flash[:success] = "Participation confirmée"
     redirect_to users_rdv_path(@rdv, invitation_token: new_participation.restricted_auth_token)
   end

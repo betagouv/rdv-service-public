@@ -8,9 +8,7 @@ class Users::UserNameInitialsVerificationController < ApplicationController
   def create
     @form = Form.new(letters: params[:letters]&.strip&.upcase, restricted_auth_token: params[:restricted_auth_token])
     if @form.valid?
-      cookies.encrypted[:"user_name_initials_verified_#{@form.user.id}"] = {
-        value: true, expires: 10.minutes.from_now,
-      }
+      # Cette session sera ensuite utilisée par RestrictedAuthConcern pour connecter l'usager
       session[:restricted_auth] = { invitation_token: params[:restricted_auth_token], expires_at: 10.minutes.from_now }
       redirect_to after_success_redirect_path
     else
