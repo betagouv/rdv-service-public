@@ -60,6 +60,14 @@ module RestrictedAuthConcern
     end
   end
 
+  # Cette méthode est appelée quand l'usager vérifie ses initiales au moment d'une première "connexion"
+  # ou s'il fait une action d'écriture sur une participation (dont une création de rdv)
+  def set_user_name_initials_verified
+    cookies.encrypted[:"user_name_initials_verified_#{current_user.id}"] = {
+      value: true, expires: 10.minutes.from_now,
+    }
+  end
+
   def current_user_mismatch?(invited_user)
     current_user.present? && current_user != invited_user
   end

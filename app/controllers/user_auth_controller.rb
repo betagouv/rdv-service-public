@@ -22,27 +22,4 @@ class UserAuthController < ApplicationController
   def authenticated_user_root_path
     current_user.signed_in_with_invitation_token? ? root_path : users_rdvs_path
   end
-
-  def should_verify_user_name_initials?
-    restricted_auth.user && !cookies.encrypted[user_name_initials_cookie_name]
-  end
-
-  def verify_user_name_initials
-    return unless should_verify_user_name_initials?
-
-    session[:return_to_after_verification] = request.fullpath
-    redirect_to new_users_user_name_initials_verification_path
-  end
-
-  # Cette méthode est appelée quand l'usager vérifie ses initiales au moment d'une première "connexion"
-  # ou s'il fait une action d'écriture sur une participation (dont une création de rdv)
-  def set_user_name_initials_verified
-    cookies.encrypted[user_name_initials_cookie_name] = {
-      value: true, expires: 10.minutes.from_now,
-    }
-  end
-
-  def user_name_initials_cookie_name
-    :"user_name_initials_verified_#{current_user.id}"
-  end
 end
