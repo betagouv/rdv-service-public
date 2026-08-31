@@ -18,7 +18,7 @@ class RestrictedAuthSessionState
   end
 
   def user_name_verification_successful!
-    session[:restricted_auth] = @session[:restricted_auth].merge(expires_at: 10.minutes.from_now, authenticated: true)
+    @session[:restricted_auth] = @session[:restricted_auth].merge(expires_at: 10.minutes.from_now, authenticated: true)
   end
 
   def authenticated?
