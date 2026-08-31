@@ -20,9 +20,10 @@ class RdvInvitationsController < ApplicationController
     if @rdv_invitation.create_rdv_and_notify(starts_at: Time.zone.parse(params[:starts_at]))
       flash[:success] = t("users.rdvs.create.rdv_confirmed")
 
-      UserAuthController.set_user_name_initials_verified(cookies, @rdv_invitation.user)
+      RestrictedAuthSessionState.authenticate!(session, user_id: @rdv_invitation.user_id)
+      RestrictedAuthSessionState.allow_access_to_rdv!(session, rdv_id: @rdv_invitation.rdv.id)
 
-      redirect_to users_rdv_path(@rdv_invitation.rdv, invitation_token: restricted_auth_token)
+      redirect_to users_rdv_path(@rdv_invitation.rdv)
     else
 
       flash[:error] = @rdv_invitation.errors.full_messages
