@@ -1,4 +1,6 @@
 RSpec.describe "L'usager peut changer son email" do
+  include_context "enable rack-attack" # en l’activant ici on teste que le cas normal fonctionne aussi
+
   let!(:organisation) { create(:organisation, territory: create(:territory)) }
   let(:user) { create(:user, email: "ancienne@adresse.fr", organisations: [organisation]) }
 
@@ -37,6 +39,29 @@ RSpec.describe "L'usager peut changer son email" do
 
       expect(page).to have_content "Vous ne pouvez pas modifier votre adresse email."
       expect(user.reload.email).not_to eq "nouvelle@adresse.fr"
+    end
+  end
+
+  context "tentatives d’innondations sur la page de saisie de code" do
+    it "lève une erreur Rack Attack" do
+      visit users_informations_path
+      click_link "Changer d’adresse email"
+
+      expect(page).to have_content "Changer d’adresse email"
+      fill_in "Nouvelle adresse email", with: "nouvelle@adresse.fr"
+      click_on "Recevoir un code de confirmation"
+
+      2.times do
+        visit users_email_change_confirmation_path
+        fill_in("Code à 6 chiffres", with: "123456")
+        click_on "Confirmer"
+      end
+      visit users_email_change_confirmation_path
+      fill_in("Code à 6 chiffres", with: "123456")
+      click_on "Confirmer"
+      expect(page).to have_content("erreur")
+      expect(sentry_events.last.level).to eq(:warning)
+      expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
     end
   end
 end
