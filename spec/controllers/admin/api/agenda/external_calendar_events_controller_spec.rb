@@ -40,7 +40,7 @@ RSpec.describe Admin::Api::Agenda::ExternalCalendarEventsController, type: :cont
     current_week = Time.zone.now.beginning_of_week.beginning_of_day..Time.zone.now.end_of_week.end_of_day
     get :index, params: { agent_id: agent.id, start: current_week.begin, end: current_week.end, format: :json }
 
-    expect(response.parsed_body).to contain_exactly(hash_including("title" => "Indisponibilité provenant de Agenda perso"))
+    expect(response.parsed_body).to contain_exactly(hash_including("title" => "Agenda perso - Indisponibilité synchronisée"))
   end
 
   it "uses the caldav calendar color when present" do
