@@ -200,15 +200,15 @@ class User < ApplicationRecord
 
   def signed_in_with_restricted_auth_token!(rdv: nil)
     @signed_in_with_restricted_auth_token = true
-    @invitation_rdv = rdv
+    @authorized_rdv = rdv
   end
 
   def signed_in_with_restricted_auth_token?
     @signed_in_with_restricted_auth_token
   end
 
-  def invited_for_rdv?(rdv)
-    rdv.id == @invitation_rdv&.id
+  def signed_in_for_rdv?(rdv)
+    rdv.id == @authorized_rdv&.id
   end
 
   def domain

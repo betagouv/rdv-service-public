@@ -18,7 +18,7 @@ class User::RdvPolicy < ApplicationPolicy
       rdv_belongs_to_user_or_relatives? && (
       (record.collectif? && record.bookable_by_everyone_or_bookable_by_invited_users?) ||
       !current_user.signed_in_with_restricted_auth_token? ||
-      current_user.invited_for_rdv?(record)
+      current_user.signed_in_for_rdv?(record)
     )
   end
 
