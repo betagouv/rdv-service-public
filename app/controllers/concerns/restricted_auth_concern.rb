@@ -34,7 +34,7 @@ module RestrictedAuthConcern
 
     # On vérifie que le token de participation correpond à l'id du rdv dans les params
     # Ça évite qu'un attaquant devine un token de participation puis accède à un rdv sans en connaitre l'id.
-    if participation && !ActiveSupport::SecurityUtils.secure_compare(params[:id], participation.rdv_id.to_s)
+    if participation && params[:id].present? && !ActiveSupport::SecurityUtils.secure_compare(params[:id], participation.rdv_id.to_s)
       return redirect_with_error(t("devise.invitations.invitation_token_invalid"))
     end
 
