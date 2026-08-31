@@ -107,7 +107,7 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
 
     doc.add_screenshot(
       page,
-      text: "Le rendez-vous est confirmé. Normalement on affiche directement la page de détails du rendez-vous, mais un bug dans cette spec fait qu'on montre une autre page.",
+      text: "Le rendez-vous est confirmé, on affiche le récapitulatif",
       wait_for: "confirmé"
     )
   end
