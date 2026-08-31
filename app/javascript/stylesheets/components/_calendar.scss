@@ -86,23 +86,52 @@
     display: block;
   }
 
+  // La flèche est un triangle CSS pur (bordures), entièrement positionné hors de la bulle :
+  // le `::before` (couleur de bordure) est 1px plus grand que le `::after` (couleur de fond)
+  // posé par-dessus, ce qui ne laisse dépasser qu'un liseré gris d'1px autour de la pointe,
+  // sans jamais chevaucher l'intérieur de la bulle.
+  &::before,
   &::after {
     content: "";
     position: absolute;
     left: 50%;
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 0;
+    height: 0;
     margin-left: -0.25rem;
-    background-color: var(--background-overlap-grey);
+    border: 0.25rem solid transparent;
   }
 
-  &.rdv-calendar-tooltip--top::after {
-    bottom: -0.25rem;
-    clip-path: polygon(0 0, 100% 0, 50% 100%);
+  &.rdv-calendar-tooltip--top {
+    &::before,
+    &::after {
+      border-bottom-width: 0;
+    }
+
+    &::before {
+      bottom: -0.3125rem;
+      border-top-color: var(--border-default-grey);
+    }
+
+    &::after {
+      bottom: -0.25rem;
+      border-top-color: var(--background-overlap-grey);
+    }
   }
 
-  &.rdv-calendar-tooltip--bottom::after {
-    top: -0.25rem;
-    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  &.rdv-calendar-tooltip--bottom {
+    &::before,
+    &::after {
+      border-top-width: 0;
+    }
+
+    &::before {
+      top: -0.3125rem;
+      border-bottom-color: var(--border-default-grey);
+    }
+
+    &::after {
+      top: -0.25rem;
+      border-bottom-color: var(--background-overlap-grey);
+    }
   }
 }
