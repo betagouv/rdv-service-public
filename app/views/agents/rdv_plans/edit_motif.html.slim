@@ -1,26 +1,27 @@
-/# locals: (event_sources:)
-
-.fr-row
+.fr-row.fr-mb-16w
   .fr-col-12
-    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 2, step_title: "Motif", next_step_title: "Usager"
-.fr-grid-row.fr-mb-16w[data-controller="rdv-plan"]
-  .fr-col-4.fr-mt-4w
-    = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, event_sources:, single_day: true
-    = link_to edit_modalites_agents_rdv_plan_path(@rdv_plan) do
-      = back_icon(class: "fr-mr-1w")
-      = "retour"
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Motif", next_step_title: "Créneau"
 
-  .fr-col-12.fr-col-md-8.fr-px-2w
-    = render "agents/rdv_plans/summary/agent", rdv_plan: @rdv_plan
-    = render "agents/rdv_plans/summary/starts_at", rdv_plan: @rdv_plan
-    = render "agents/rdv_plans/summary/location_type", rdv_plan: @rdv_plan
-    hr.fr-mt-2w.fr-mb-4w
+    p Pour quel motif souhaitez-vous prendre rendez-vous ?
 
-    = simple_form_for @rdv_plan, url: update_motif_agents_rdv_plan_path(@rdv_plan) do |f|
-      = render "model_errors", model: @rdv_plan
+    - if @motifs.empty?
+      / TODO: mettre un formulaire de motif
+    - else
+      ul.fr-raw-list
+        - @motifs.each do |motif|
+          li.fr-card.fr-enlarge-link.fr-enlarge-link.fr-mb-2w
+            .fr-card__body
+              .fr-card__content
+                .fr-card__title
+                  = link_to motif.name, "#"
+                .fr-card__end
+                  .fr-card__detail
+                    = location_type_icon(motif.location_type, class: "fr-mr-1w")
+                    = motif.human_attribute_value(:location_type)
+                    = " · "
+                    = "#{motif.default_duration_in_min} mn"
 
-      .input-group.fr-mb-3w
-        = f.input :motif_id, label: "Motif du rendez-vous", required: true, collection: @motifs, label_method: :name, label_html: { class: "fr-mr-2w" }, include_blank: true
-
-      = f.input :duration_in_minutes, label: "Durée en minutes"
-      = f.submit "Continuer", class: "fr-btn float-right"
+    - if @rdv_plan.return_url
+      = link_to @rdv_plan.return_url do
+        = back_icon(class: "fr-mr-1w")
+        = "Retour sur #{@rdv_plan.oauth_application.name}"
