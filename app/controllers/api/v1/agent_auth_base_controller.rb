@@ -4,8 +4,8 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
 
   skip_before_action :verify_authenticity_token
   before_action :authenticate_agent
-  before_action :detect_param_injection
   before_action :log_api_call_in_database
+  before_action :detect_param_injection
   before_action :set_paper_trail_whodunnit
   before_action :set_sentry_context
 

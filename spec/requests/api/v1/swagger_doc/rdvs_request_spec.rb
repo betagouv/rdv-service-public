@@ -150,12 +150,12 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
         end
       end
 
-      response 200, "returns empty results when organisation is not found", document: false do
-        let(:organisation_id) { "false" }
+      response 403, "returns an error when organisation is not found", document: false do
+        let(:organisation_id) { create(:organisation).id }
 
         run_test!
 
-        it { expect(response.parsed_body["rdvs"]).to eq([]) }
+        it { expect(response.parsed_body["error_messages"]).to include("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action") }
 
         it "logs the API call" do
           expect(ApiCall.first.attributes.symbolize_keys).to include(
