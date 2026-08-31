@@ -106,7 +106,7 @@ RSpec.describe "Agent can see RDV details correctly" do
 
       it "allows editing the RDV status", js: true do
         visit admin_organisation_rdv_path(organisation, rdv)
-        find(".btn", text: "À renseigner").click
+        find(".rdv-status-toggle", text: "À renseigner").click
         find("span", text: "Rendez-vous honoré").click
         expect(page).to have_content("Rendez-vous mis à jour")
         expect(rdv.reload.status).to eq("seen")
