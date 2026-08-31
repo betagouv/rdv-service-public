@@ -87,7 +87,7 @@
           = render "admin/motifs/restriction_for_rdv_recap", motif: @motif
           = render "admin/motifs/instruction_for_rdv_recap", motif: @motif
 
-    - if current_territory.sectors.any? && @motif.bookable_by_everyone_or_bookable_by_invited_users?
+    - if current_territory.sectors.any? && @motif.bookable_outside_of_organisation?
       .card.card-body
         .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
           h2.fr-h4 Sectorisation
