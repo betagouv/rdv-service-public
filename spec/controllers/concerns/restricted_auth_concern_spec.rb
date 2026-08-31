@@ -3,7 +3,7 @@ RSpec.describe RestrictedAuthConcern do
     include RestrictedAuthConcern # rubocop:disable RSpec/DescribedClass
 
     prepend_before_action do
-      store_restricted_auth_token_in_session_and_redirect(store_rdv_insertion_invitation: true)
+      store_restricted_auth_token_in_session_and_redirect(allow_rdv_insertion_invitation: true)
     end
 
     def fake_action
@@ -67,7 +67,14 @@ RSpec.describe RestrictedAuthConcern do
 
       it "stores the token and the invitation params in session" do
         subject
-        expect(request.session[:restricted_auth]).to eq(invitation_token: token, expires_at: Time.zone.parse("2022-08-03 10:32:00"))
+
+        session_state = RestrictedAuthSessionState.new(request.session)
+        expect(session_state).to have_attributes(
+          authenticated?: true,
+          user: user,
+          rdv: nil
+        )
+
         expect(request.session[:rdv_insertion_invitation]).to eq(motif_category_short_name: "rsa_orientation")
       end
 
@@ -84,7 +91,15 @@ RSpec.describe RestrictedAuthConcern do
         context "when it is the user linked to the invitation" do
           it "does stores the invitation in session and redirect" do
             subject
-            expect(request.session[:restricted_auth]).to eq(invitation_token: token, expires_at: Time.zone.parse("2022-08-03 10:32:00"))
+
+            session_state = RestrictedAuthSessionState.new(request.session)
+            expect(session_state).to have_attributes(
+              authenticated?: true,
+              user: user,
+              rdv: nil,
+              expired?: false
+            )
+
             expect(request.session[:rdv_insertion_invitation]).to eq(motif_category_short_name: "rsa_orientation")
             expect(response).to redirect_to("/fake_action?motif_category_short_name=rsa_orientation")
           end
@@ -111,7 +126,7 @@ RSpec.describe RestrictedAuthConcern do
     let!(:token) { user.set_rdv_invitation_token! }
 
     before do
-      request.session[:restricted_auth] = { invitation_token: token, expires_at: Time.zone.parse("2022-08-03 10:32:00") }
+      RestrictedAuthSessionState.authenticate!(request.session, user_id: user.id)
       request.session[:rdv_insertion_invitation] = { motif_category_short_name: "rsa_orientation" }
     end
 
@@ -119,23 +134,13 @@ RSpec.describe RestrictedAuthConcern do
       subject
       expect(response).to be_successful
       expect(assigns(:current_user)).to eq(user)
-      expect(assigns(:current_user).signed_in_with_invitation_token?).to be(true)
-    end
-
-    context "when the token is invalid" do
-      let!(:token) { "some random token" }
-
-      it "deletes the invitation and redirects to root path with a message" do
-        subject
-        expect(request.session[:restricted_auth]).to be_nil
-        expect(response).to redirect_to(root_path)
-        expect(flash[:error]).to eq("Votre invitation n'est pas valide.")
-      end
+      expect(assigns(:current_user).signed_in_with_restricted_auth_token?).to be(true)
     end
 
     context "when the session expired" do
       before do
-        request.session[:restricted_auth] = { invitation_token: token, expires_at: 5.minutes.ago }
+        RestrictedAuthSessionState.authenticate!(request.session, user_id: user.id)
+        request.session[:restricted_auth][:expires_at] = 5.minutes.ago
       end
 
       it "deletes the invitation and redirects to root path with a message" do
@@ -154,7 +159,7 @@ RSpec.describe RestrictedAuthConcern do
           subject
           expect(response).to be_successful
           expect(assigns(:current_user)).to eq(user)
-          expect(assigns(:current_user)).not_to(be_signed_in_with_invitation_token)
+          expect(assigns(:current_user)).not_to(be_signed_in_with_restricted_auth_token)
         end
       end
 

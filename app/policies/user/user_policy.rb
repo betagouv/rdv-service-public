@@ -9,6 +9,9 @@ class User::UserPolicy < ApplicationPolicy
   alias create? user_is_responsible?
 
   def current_user_or_responsible?
+    # On ne permet les modifications que si l'usager est réellement connecté, pas juste s'il utilise un token d'authentification restreinte
+    return false if current_user.signed_in_with_restricted_auth_token?
+
     record.id == current_user.id || user_is_responsible?
   end
 

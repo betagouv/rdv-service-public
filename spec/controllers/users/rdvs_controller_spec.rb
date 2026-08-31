@@ -17,7 +17,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       it "redirects to the rdv" do
         sign_in rdv.users.first
         put :cancel, params: { id: rdv.id }
-        expect(response).to redirect_to users_rdv_path(rdv, invitation_token: token)
+        expect(response).to redirect_to users_rdv_path(rdv)
       end
 
       context "when the motif is by phone and lieu is missing" do
@@ -33,7 +33,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
         it "redirects to the rdv" do
           put :cancel, params: { id: rdv.id }
-          expect(response).to redirect_to users_rdv_path(rdv, invitation_token: token)
+          expect(response).to redirect_to users_rdv_path(rdv)
         end
       end
 
@@ -212,14 +212,8 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       context "with a valid invitation token" do
-        let!(:invitation_token) { user.set_rdv_invitation_token! }
-
-        before do
-          request.session[:restricted_auth] = { invitation_token:, expires_at: 1.hour.from_now }
-        end
-
         it "redirects to the identity verification form" do
-          get :show, params: { id: rdv.id }
+          get :show, params: { id: rdv.id, invitation_token: rdv.participations.first.restricted_auth_token }
 
           expect(response).to redirect_to(new_users_user_name_initials_verification_path)
         end
@@ -278,10 +272,8 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       context "with a valid invitation token" do
-        let!(:invitation_token) { user.set_rdv_invitation_token! }
-
         before do
-          request.session[:restricted_auth] = { invitation_token: invitation_token, expires_at: 1.hour.from_now }
+          RestrictedAuthSessionState.authenticate!(request.session, user_id: user.id)
         end
 
         it "is not authorized" do
@@ -444,7 +436,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       it "respond success and update RDV" do
         put :update, params: { id: rdv.id, starts_at: starts_at, agent_id: agent.id }
-        expect(response).to redirect_to(users_rdv_path(rdv, invitation_token: token))
+        expect(response).to redirect_to(users_rdv_path(rdv))
         expect(flash[:success]).to eq("Votre RDV a bien été modifié")
         expect(rdv.reload.starts_at).to eq(starts_at)
         expect(rdv.reload.agent_ids).to eq([agent.id])
@@ -456,7 +448,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
         it "respond success and update RDV" do
           put :update, params: { id: rdv.id, starts_at: starts_at, agent_id: agent.id }
-          expect(response).to redirect_to(users_rdv_path(rdv, invitation_token: token))
+          expect(response).to redirect_to(users_rdv_path(rdv))
           expect(flash[:success]).to eq("Votre RDV a bien été modifié")
           expect(rdv.reload.starts_at).to eq(starts_at)
           expect(rdv.reload.agent_ids).to eq([agent.id])
