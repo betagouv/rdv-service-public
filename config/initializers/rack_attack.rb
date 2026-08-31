@@ -7,6 +7,12 @@ class Rack::Attack
     end
   end
 
+  throttle("saisie de code de confirmation de changement d'email usager - throttling par email de destination", limit: Rails.env.test? ? 2 : 60, period: 10.minutes) do |request|
+    if request.path.match(%r{/users/email_change/confirmation}) && request.post? && request.params.dig("login_code", "email").present?
+      request.params.dig("login_code", "email")
+    end
+  end
+
   throttle("saisie de code de connexion usager - throttling par email", limit: Rails.env.test? ? 2 : 60, period: 10.minutes) do |request|
     if request.path.match(%r{users/sessions_by_code}) && request.post? && request.params.dig("login_code", "email").present?
       request.params.dig("login_code", "email")
