@@ -9,6 +9,10 @@
         = f.hidden_field :motif_id
         = f.hidden_field :lieu_id
         = render "model_errors", model: @rdv_invitation, f: f
-        p Vous allez inviter #{@rdv_invitation.user.full_name} à prendre rendez-vous pour #{@rdv_invitation.motif.name}.
+
+        - if @rdv_invitation.lieu
+          p Vous allez inviter <b>#{@rdv_invitation.user.full_name}</b> à prendre rendez-vous pour #{@rdv_invitation.motif.name}</b> à <b>#{@rdv_invitation.lieu.name}</b>.
+        - else
+          p Vous allez inviter <b>#{@rdv_invitation.user.full_name}</b> à prendre rendez-vous pour #{@rdv_invitation.motif.name}</b>.
 
         = f.submit "Envoyer l'invitation", class: "fr-btn"
