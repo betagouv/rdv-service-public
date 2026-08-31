@@ -26,7 +26,7 @@
 
   - if local_assigns[:display_change_email_link] && !f.object.can_change_email_without_confirmation? && f.object.can_change_email?
     p.fr-mt-1w
-      = link_to "Changer d’adresse email", new_email_change_request_path, class: "fr-link"
+      = link_to "Changer d’adresse email", new_email_change_request_path, class: "fr-btn fr-btn--tertiary"
 
 = f.dsfr_phone_field :phone_number, as: :tel, required: f.object.phone_required?, autocomplete: "tel"
 = f.dsfr_check_box :notify_by_sms, label: "J’accepte les notifications par SMS"

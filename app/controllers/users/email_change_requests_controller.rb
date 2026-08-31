@@ -14,7 +14,7 @@ class Users::EmailChangeRequestsController < UserAuthController
     if @email_change_request_form.save
       session[:user_new_email_pending_confirmation] = email
       # stocker l’email en session permet de supporter le refresh après soumission échouée du code de confirmation
-      redirect_to new_email_change_confirmation_path(email:)
+      redirect_to new_email_change_confirmation_path
     else
       render :new
     end

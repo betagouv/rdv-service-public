@@ -5,7 +5,7 @@ class Users::EmailChangeConfirmationsController < UserAuthController
   before_action { authorize(current_user, :update?, policy_class: User::UserPolicy) }
 
   def new
-    @email = params[:email] || session[:user_new_email_pending_confirmation]
+    @email = session[:user_new_email_pending_confirmation]
     return redirect_to new_email_change_request_path if @email.blank?
 
     @existing_login_code = LoginCode.most_recent_usable_for(email: @email)
