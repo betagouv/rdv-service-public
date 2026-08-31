@@ -5,11 +5,17 @@ class Agents::RdvPlansController < AgentAuthController
 
   def show
     if current_agent.organisations.any?
-      redirect_to edit_starts_at_agents_rdv_plan_path(@rdv_plan)
+      redirect_to edit_motif_agents_rdv_plan_path(@rdv_plan)
     else
       redirect_to authenticated_agent_root_path
     end
   end
+
+  def edit_motif
+    @motifs = available_motifs(@rdv_plan).ordered_by_name
+  end
+
+  def update_motif; end
 
   def update_agent
     rdv_plan_params = params.require(:rdv_plan).permit(:rdv_agent_id)
@@ -51,16 +57,6 @@ class Agents::RdvPlansController < AgentAuthController
     else
       render "edit_modalites", locals: { event_sources: }
     end
-  end
-
-  def edit_motif
-    @motifs = available_motifs(@rdv_plan).where(location_type: @rdv_plan.location_type).ordered_by_name
-    if @motifs.count == 1
-      @rdv_plan.motif_id ||= @motifs.first.id
-    end
-    @rdv_plan.duration_in_minutes ||= @motifs.first.default_duration_in_min
-
-    render locals: { event_sources: }
   end
 
   def update_motif
