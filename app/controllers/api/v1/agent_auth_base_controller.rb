@@ -144,8 +144,9 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
     organisation_ids = (Array(params[:organisation_id]) + Array(params[:organisation_ids])).compact_blank.map(&:to_i)
     territory_ids = (Array(params[:territory_id]) + Array(params[:territory_ids])).compact_blank.map(&:to_i)
 
-    agent_orgs = current_agent.roles.pluck(:organisation_id)
     agent_territories = current_agent.agent_territorial_access_rights.pluck(:territory_id)
+    agent_territories += current_agent.territorial_roles.pluck(:territory_id)
+    agent_orgs = current_agent.roles.pluck(:organisation_id) + Organisation.where(territory_id: agent_territories).ids
 
     external_orgs = organisation_ids.difference(agent_orgs)
     external_territories = territory_ids.difference(agent_territories)

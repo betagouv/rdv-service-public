@@ -125,7 +125,8 @@ RSpec.describe "User Profile authentified API", swagger_doc: "v1/api.json" do
       it_behaves_like "an endpoint that returns 401 - unauthorized"
 
       response 404, "le profil utilisateur n'existe pas" do
-        let!(:organisation_id) { "inconnu" }
+        let!(:organisation_id) { organisation.id }
+        let(:user_id) { nil }
 
         run_test!
       end
