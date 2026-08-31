@@ -1,8 +1,15 @@
 RSpec.describe Users::UserNameInitialsVerificationController, type: :controller do
   render_views
   let!(:user) { create(:user, last_name: "Dylan") }
+  let!(:participation) { create(:participation, user:) }
 
-  before { sign_in(user) }
+  before do
+    RestrictedAuthSessionState.prepare_for_name_verification!(
+      session,
+      user_id: participation.user_id,
+      rdv_id: participation.rdv_id
+    )
+  end
 
   describe "GET #new" do
     it "asks for the last name first three letters" do
@@ -20,8 +27,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
       it "sets the user as verified" do
         post :create, params: { letters: "DYL" }
 
-        jar = ActionDispatch::Cookies::CookieJar.build(request, cookies.to_hash)
-        expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to be(true)
+        expect(session[:restricted_auth]).to include(user_id: participation.user_id, rdv_id: participation.rdv_id)
       end
 
       it "redirect to the path stored in session" do
@@ -36,8 +42,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
         it "works" do
           post :create, params: { letters: "BO" }
 
-          jar = ActionDispatch::Cookies::CookieJar.build(request, cookies.to_hash)
-          expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to be(true)
+          expect(session[:restricted_auth]).to include(user_id: participation.user_id, rdv_id: participation.rdv_id)
           expect(response).to redirect_to(redirect_path)
         end
       end
@@ -48,8 +53,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
         it "works" do
           post :create, params: { letters: "DEL" }
 
-          jar = ActionDispatch::Cookies::CookieJar.build(request, cookies.to_hash)
-          expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to be(true)
+          expect(session[:restricted_auth]).to include(user_id: participation.user_id, rdv_id: participation.rdv_id)
           expect(response).to redirect_to(redirect_path)
         end
       end
@@ -62,20 +66,6 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
 
           expect(response).to redirect_to(root_path)
         end
-
-        context "when a rdv can be found through the invitation token" do
-          let!(:rdv) { create(:rdv, users: [user]) }
-
-          before do
-            request.session[:restricted_auth] = { invitation_token: rdv.participations.first.restricted_auth_token, expires_at: 10.minutes.from_now }
-          end
-
-          it "redirects to the rdv path" do
-            post :create, params: { letters: "DYL" }
-
-            expect(response).to redirect_to(users_rdv_path(rdv))
-          end
-        end
       end
     end
 
@@ -83,8 +73,9 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
       it "does not set the user as verified" do
         post :create, params: { letters: "DYO" }
 
-        jar = ActionDispatch::Cookies::CookieJar.build(request, cookies.to_hash)
-        expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to be_nil
+        session_state = RestrictedAuthSessionState.new(session)
+
+        expect(session_state).not_to be_authenticated
       end
 
       it "renders new with an error message" do
