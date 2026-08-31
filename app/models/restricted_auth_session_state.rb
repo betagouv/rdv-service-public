@@ -8,6 +8,13 @@ class RestrictedAuthSessionState
     session[:restricted_auth] = { user_id:, rdv_id:, authenticated: false }
   end
 
+  def self.allow_access_to_rdv!(session, rdv_id:)
+    state = new(session)
+    return unless state.authenticated?
+
+    session[:restricted_auth][:rdv_id] = rdv_id
+  end
+
   def self.clean_session!(session)
     session.delete(:restricted_auth)
     session.delete(:return_to_after_verification)

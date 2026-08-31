@@ -40,6 +40,8 @@ class Users::RdvWizardStepsController < UserAuthController
 
     if @rdv_booking_form.save
       flash[:success] = (@rdv_booking_form.collectif? ? "Participation confirmée" : t("users.rdvs.create.rdv_confirmed"))
+
+      RestrictedAuthSessionState.allow_access_to_rdv!(session, rdv_id: @rdv_booking_form.rdv.id)
       redirect_to users_rdv_path(@rdv_booking_form.rdv)
     else
       flash[:error] = "Une erreur a empêché la confirmation de votre RDV"

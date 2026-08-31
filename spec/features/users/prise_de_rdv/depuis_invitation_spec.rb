@@ -263,8 +263,10 @@ RSpec.describe "Prise de RDV depuis une invitation" do
       it "does not show the motifs that can be booked through invitation only" do
         visit prendre_rdv_path(
           departement: departement_number, city_code: city_code, invitation_token: participation.restricted_auth_token,
-          address: "16 rue de la résistance, Paris, 75016", motif_category_short_name: "rsa_orientation"
+          address: "16 rue de la résistance, Paris, 75016"
         )
+        fill_in "3 premières lettres de votre nom", with: "DOE"
+        click_on "Valider"
 
         expect(page).to have_content(motif2.name)
         expect(page).not_to have_content(motif.name)
