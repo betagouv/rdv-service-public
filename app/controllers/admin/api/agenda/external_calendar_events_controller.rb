@@ -29,7 +29,7 @@ class Admin::Api::Agenda::ExternalCalendarEventsController < Admin::Api::BaseCon
   def external_event_title(calendar_name)
     return "Indisponibilité provenant d’un agenda externe" if calendar_name.blank?
 
-    "Indisponibilité provenant de #{calendar_name}"
+    "#{calendar_name} - Indisponibilité synchronisée"
   end
 
   def agents
