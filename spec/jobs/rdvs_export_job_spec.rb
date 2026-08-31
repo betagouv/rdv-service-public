@@ -38,7 +38,7 @@ RSpec.describe RdvsExportJob do
     _rdv2 = create(:rdv, organisation:, motif: motif2, agents: [agent2], users: [user])
 
     expect(RdvsExportPageJob).to receive(:perform_later).with(
-      a_collection_containing_exactly(rdv.participations.first.id), # only rdv, not rdv2
+      a_collection_containing_exactly(rdv.id), # seulement rdv, pas rdv2
       any_args
     )
     described_class.perform_now(agent:, organisation_ids: [organisation.id], options: {})
