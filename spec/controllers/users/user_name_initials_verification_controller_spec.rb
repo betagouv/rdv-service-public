@@ -67,22 +67,33 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
           expect(response).to redirect_to(root_path)
         end
       end
-    end
 
-    context "when the letters don't match" do
-      it "does not set the user as verified" do
-        post :create, params: { letters: "DYO" }
+      context "when there is no restricted auth information in the session" do
+        before do
+          RestrictedAuthSessionState.clean_session!(session)
+        end
 
-        session_state = RestrictedAuthSessionState.new(session)
-
-        expect(session_state).not_to be_authenticated
+        it "redirects" do
+          post :create, params: { letters: "DYL" }
+          expect(response).to redirect_to(root_path)
+        end
       end
 
-      it "renders new with an error message" do
-        post :create, params: { letters: "DYO" }
+      context "when the letters don't match" do
+        it "does not set the user as verified" do
+          post :create, params: { letters: "DYO" }
 
-        expect(response.body).to match(/Les 3 lettres ne correspondent pas au nom de famille./)
-        expect(response.body).to match(/3 premières lettres de votre nom/)
+          session_state = RestrictedAuthSessionState.new(session)
+
+          expect(session_state).not_to be_authenticated
+        end
+
+        it "renders new with an error message" do
+          post :create, params: { letters: "DYO" }
+
+          expect(response.body).to match(/Les 3 lettres ne correspondent pas au nom de famille./)
+          expect(response.body).to match(/3 premières lettres de votre nom/)
+        end
       end
     end
   end

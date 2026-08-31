@@ -9,8 +9,8 @@ class Users::UserNameInitialsVerificationController < ApplicationController
     auth_state = RestrictedAuthSessionState.new(session)
 
     if auth_state.user.blank?
-      flash[:error] = t("devise.invitations.session_expired")
-      redirect_to root_path
+      flash[:error] = t("devise.invitations.session_expired") # rubocop:disable Rails/ActionControllerFlashBeforeRender
+      redirect_to root_path and return
     end
 
     @form = Form.new(letters: params[:letters]&.strip&.upcase, user: auth_state.user)
