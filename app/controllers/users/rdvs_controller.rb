@@ -105,7 +105,7 @@ class Users::RdvsController < UserAuthController
   end
 
   def set_can_see_rdv_motif
-    @can_see_rdv_motif = !current_user.signed_in_with_invitation_token?
+    @can_see_rdv_motif = !current_user.signed_in_with_restricted_auth_token?
   end
 
   def redirect_if_creneau_not_available

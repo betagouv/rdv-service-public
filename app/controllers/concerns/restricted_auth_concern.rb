@@ -91,7 +91,7 @@ module RestrictedAuthConcern
     return delete_invitation_from_session_and_redirect(t("devise.invitations.session_expired")) if auth_state.expired?
     return if current_user.present? # no need to sign in if the user is already connected
 
-    user.signed_in_with_invitation_token!(rdv: auth_state.rdv)
+    user.signed_in_with_restricted_auth_token!(rdv: auth_state.rdv)
     sign_in(user, store: false)
   end
 

@@ -20,6 +20,6 @@ class UserAuthController < ApplicationController
   end
 
   def authenticated_user_root_path
-    current_user.signed_in_with_invitation_token? ? root_path : users_rdvs_path
+    current_user.signed_in_with_restricted_auth_token? ? root_path : users_rdvs_path
   end
 end

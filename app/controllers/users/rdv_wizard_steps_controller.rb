@@ -66,7 +66,7 @@ class Users::RdvWizardStepsController < UserAuthController
   # - l'usager est invité (c'est lui qui est concerné)
   # - l'usager est connecté via ProConnect (professionnel)
   def set_skip_proches_step
-    @skip_proches_step = current_user.signed_in_with_invitation_token? || current_user.pro_connect_openid_sub
+    @skip_proches_step = current_user.signed_in_with_restricted_auth_token? || current_user.pro_connect_openid_sub
   end
 
   def rdv_params

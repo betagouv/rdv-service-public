@@ -134,7 +134,7 @@ RSpec.describe RestrictedAuthConcern do
       subject
       expect(response).to be_successful
       expect(assigns(:current_user)).to eq(user)
-      expect(assigns(:current_user).signed_in_with_invitation_token?).to be(true)
+      expect(assigns(:current_user).signed_in_with_restricted_auth_token?).to be(true)
     end
 
     context "when the session expired" do
@@ -159,7 +159,7 @@ RSpec.describe RestrictedAuthConcern do
           subject
           expect(response).to be_successful
           expect(assigns(:current_user)).to eq(user)
-          expect(assigns(:current_user)).not_to(be_signed_in_with_invitation_token)
+          expect(assigns(:current_user)).not_to(be_signed_in_with_restricted_auth_token)
         end
       end
 

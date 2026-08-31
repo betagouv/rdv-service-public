@@ -198,13 +198,13 @@ class User < ApplicationRecord
     nil
   end
 
-  def signed_in_with_invitation_token!(rdv: nil)
-    @signed_in_with_invitation_token = true
+  def signed_in_with_restricted_auth_token!(rdv: nil)
+    @signed_in_with_restricted_auth_token = true
     @invitation_rdv = rdv
   end
 
-  def signed_in_with_invitation_token?
-    @signed_in_with_invitation_token
+  def signed_in_with_restricted_auth_token?
+    @signed_in_with_restricted_auth_token
   end
 
   def invited_for_rdv?(rdv)
@@ -270,7 +270,7 @@ class User < ApplicationRecord
   # Seul un usager invité via token, qui n'a pas encore d'email confirmé par une précédente connexion,
   # peut modifier son email. Dans tous les autres cas (SSO, usager déjà connecté, usager connecté via code…) il est figé.
   def email_editable?
-    signed_in_with_invitation_token? && !(email.present? && already_logged_in?)
+    signed_in_with_restricted_auth_token? && !(email.present? && already_logged_in?)
   end
 
   protected
