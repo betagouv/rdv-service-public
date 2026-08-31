@@ -141,11 +141,8 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   # ** Cette vérification ne se substitue pas à un usage rigoureux des policies. **
   #
   def detect_param_injection
-    params.extend Hashie::Extensions::DeepFind
-    params_deep_find = proc { |key| params.deep_find_all(key).map { Array(_1).compact_blank.map(&:to_i) }.flatten }
-
-    organisation_ids = params_deep_find.call(:organisation_id) + params_deep_find.call(:organisation_ids)
-    territory_ids = params_deep_find.call(:territory_id) + params_deep_find.call(:territory_ids)
+    organisation_ids = (Array(params[:organisation_id]) + Array(params[:organisation_ids])).compact_blank.map(&:to_i)
+    territory_ids = (Array(params[:territory_id]) + Array(params[:territory_ids])).compact_blank.map(&:to_i)
     return if organisation_ids.blank? && territory_ids.blank?
 
     agent_territories = current_agent.agent_territorial_access_rights.pluck(:territory_id)

@@ -812,7 +812,6 @@ DEPENDENCIES
   faker
   good_job (= 3.27.4)
   groupdate (~> 6.1)
-  hashie
   hirb
   hotwire-rails
   icalendar (~> 2.12)

@@ -172,9 +172,6 @@ gem "benchmark-ips", require: false
 # Pour faire des comparaisons d'ensemble d'intervalles de datetime dans la recherche de créneaux
 gem "multi_range"
 
-# Hashie is a collection of classes and mixins that make Ruby hashes more powerful.
-gem "hashie"
-
 group :development do
   # Autoload dotenv in Rails in development (production, staging and demo envs already have env vars setup by the hosting provider)
   gem "dotenv-rails" # dotenv should always be loaded before rails
