@@ -143,20 +143,21 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   def detect_param_injection
     organisation_ids = (Array(params[:organisation_id]) + Array(params[:organisation_ids])).compact_blank.map(&:to_i)
     territory_ids = (Array(params[:territory_id]) + Array(params[:territory_ids])).compact_blank.map(&:to_i)
+    return if organisation_ids.blank? && territory_ids.blank?
 
     agent_territories = current_agent.agent_territorial_access_rights.pluck(:territory_id)
-    agent_territories += current_agent.territorial_roles.pluck(:territory_id)
-    agent_orgs = current_agent.roles.pluck(:organisation_id) + Organisation.where(territory_id: agent_territories).ids
-
-    external_orgs = organisation_ids.difference(agent_orgs)
+    agent_territories += current_agent.territorial_roles.pluck(:territory_id) # TODO: À supprimer après #6616
     external_territories = territory_ids.difference(agent_territories)
-
-    if external_orgs.any?
-      raise Pundit::NotAuthorizedError, query: :show?, record: external_orgs.first, policy: Agent::OrganisationPolicy
-    end
 
     if external_territories.any?
       raise Pundit::NotAuthorizedError, query: :show?, record: external_territories.first, policy: Agent::TerritoryPolicy
+    end
+
+    agent_orgs = current_agent.roles.pluck(:organisation_id) + Organisation.where(territory_id: agent_territories).ids
+    external_orgs = organisation_ids.difference(agent_orgs)
+
+    if external_orgs.any?
+      raise Pundit::NotAuthorizedError, query: :show?, record: external_orgs.first, policy: Agent::OrganisationPolicy
     end
   end
 
