@@ -4,10 +4,11 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
   let!(:participation) { create(:participation, user:) }
 
   before do
-    session[:information_for_name_verification] = {
+    RestrictedAuthSessionState.prepare_for_name_verification!(
+      session,
       user_id: participation.user_id,
-      rdv_id: participation.rdv_id,
-    }
+      rdv_id: participation.rdv_id
+    )
   end
 
   describe "GET #new" do
@@ -72,7 +73,9 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
       it "does not set the user as verified" do
         post :create, params: { letters: "DYO" }
 
-        expect(session[:restricted_auth]).to be_nil
+        session_state = RestrictedAuthSessionState.new(session)
+
+        expect(session_state).not_to be_authenticated
       end
 
       it "renders new with an error message" do
