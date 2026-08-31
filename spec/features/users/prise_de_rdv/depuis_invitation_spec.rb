@@ -1,14 +1,9 @@
 RSpec.describe "Prise de RDV depuis une invitation" do
   around { |example| perform_enqueued_jobs { example.run } }
 
-  # needed for encrypted cookies
   before do
     travel_to(now)
     stub_netsize_ok
-    # rubocop:disable RSpec/AnyInstance
-    allow_any_instance_of(ActionDispatch::Request).to receive(:cookie_jar).and_return(page.cookies)
-    allow_any_instance_of(ActionDispatch::Request).to receive(:cookies).and_return(page.cookies)
-    # rubocop:enable RSpec/AnyInstance
   end
 
   let(:now) { Time.zone.parse("2021-12-13 10:30") }
@@ -41,10 +36,6 @@ RSpec.describe "Prise de RDV depuis une invitation" do
     before do
       travel_to(now)
       allow(Users::GeoSearch).to receive(:new).and_return(geo_search)
-      # rubocop:disable RSpec/AnyInstance
-      allow_any_instance_of(ActionDispatch::Request).to receive(:cookie_jar).and_return(page.cookies)
-      allow_any_instance_of(ActionDispatch::Request).to receive(:cookies).and_return(page.cookies)
-      # rubocop:enable RSpec/AnyInstance
     end
 
     it "full path, shows the available lieux to take a rdv", js: true do
