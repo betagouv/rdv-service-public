@@ -20,11 +20,6 @@ p
   = external_link_to "documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#synchronisation-avec-la-suite-numerique-caldav"
   | .
 
-= dsfr_callout(icon_name: :none) do
-  |> Pour le moment, cette fonctionnalité est en version bêta. Pour toute question ou remontée de bug, merci de
-  = external_link_to("contacter le support", new_aide_demande_support_path(role: "agent", sujet: "Synchronisation CalDAV"))
-  | .
-
 - if current_agent.caldav_config&.caldav_disconnect_started_at.present?
     p
       |> Les événements qui avaient été importés dans votre agenda sont en cours de suppression. Cela peut prendre quelques minutes.
