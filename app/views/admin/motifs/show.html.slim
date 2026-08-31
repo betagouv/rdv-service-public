@@ -37,13 +37,10 @@
         .fr-hint-text
           = sanitize(@motif.human_attribute_value(:location_type, context: :hint), scrubber: :prune)
 
-    .card[class="#{"fr-enlarge-link" if current_agent.admin_in_organisation?(current_organisation)}"]
+    .card.fr-enlarge-link
       .card-body
         .d-flex.rdv-align-items-baseline
-          - if current_agent.admin_in_organisation?(current_organisation)
-            h2.fr-h5.fr-mr-2w = link_to "Réservation en ligne", admin_organisation_online_booking_motif_path(current_organisation, @motif)
-          - else
-            h2.fr-h5.fr-mr-2w Réservation en ligne
+          h2.fr-h5.fr-mr-2w = link_to "Réservation en ligne", admin_organisation_online_booking_motif_path(current_organisation, @motif)
 
           = render "admin/organisations/online_booking/motifs/availability_badge", motif: @motif, availabilities_count: @motif.upcoming_availabilities.count
 
@@ -53,8 +50,7 @@
           - else
             = render "admin/organisations/online_booking/motifs/bookable_by_text", motif: @motif
 
-          - if current_agent.admin_in_organisation?(current_organisation)
-            = icon("fr-icon-arrow-right-line", class: "rdv-color-text-action-high-blue-france")
+          = icon("fr-icon-arrow-right-line", class: "rdv-color-text-action-high-blue-france")
 
     .card.mt-2
       .card-body
