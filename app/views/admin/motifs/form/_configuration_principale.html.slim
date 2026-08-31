@@ -21,7 +21,7 @@
           = f.dsfr_select :service_id, available_services.collect { |service| [service.name, service.id] }, { include_blank: "Aucun" }, label: "Service associé", hint: "Facultatif"
       .fr-col-md-6= f.dsfr_number_field :default_duration_in_min, label: "Durée du RDV (en minutes)"
       // Le DSFR ne propose pas d’input color, on utilise donc le champ classique avec le style DSFR pour lequel on fixe la hauteur.
-      .fr-col-md-6= f.dsfr_input_field :color, :color_field, label: "Couleur associée", style: "height: 2.5rem"
+      .fr-col-md-6= f.dsfr_input_field :color, :color_field, label: "Couleur associée"
 
 .card
   .card-body.fr-pb-0
