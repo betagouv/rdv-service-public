@@ -55,6 +55,7 @@ class User < ApplicationRecord
   has_many :receipts, dependent: :destroy
   has_many :annotations, dependent: :destroy
   has_many :external_references, as: :item, dependent: :destroy
+  has_one :ami_france_connect_hash, dependent: :destroy
 
   # Through relations
   # we specify dependent: :destroy because by default user_profiles and referent_assignations
@@ -197,17 +198,17 @@ class User < ApplicationRecord
     nil
   end
 
-  def signed_in_with_invitation_token!(rdv: nil)
-    @signed_in_with_invitation_token = true
-    @invitation_rdv = rdv
+  def signed_in_with_restricted_auth_token!(rdv: nil)
+    @signed_in_with_restricted_auth_token = true
+    @authorized_rdv = rdv
   end
 
-  def signed_in_with_invitation_token?
-    @signed_in_with_invitation_token
+  def signed_in_with_restricted_auth_token?
+    @signed_in_with_restricted_auth_token
   end
 
-  def invited_for_rdv?(rdv)
-    rdv.id == @invitation_rdv&.id
+  def signed_in_for_rdv?(rdv)
+    rdv.id == @authorized_rdv&.id
   end
 
   def domain
@@ -269,7 +270,7 @@ class User < ApplicationRecord
   # Seul un usager invité via token, qui n'a pas encore d'email confirmé par une précédente connexion,
   # peut modifier son email. Dans tous les autres cas (SSO, usager déjà connecté, usager connecté via code…) il est figé.
   def email_editable?
-    signed_in_with_invitation_token? && !(email.present? && already_logged_in?)
+    signed_in_with_restricted_auth_token? && !(email.present? && already_logged_in?)
   end
 
   protected

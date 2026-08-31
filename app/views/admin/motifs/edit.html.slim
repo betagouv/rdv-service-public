@@ -5,10 +5,18 @@
   - if @motif.service_id_was.present?
     |  (#{Service.find(@motif.service_id_was)&.short_name})
 
-= render "admin/motifs/fil_ariane", current_page_title: content_for(:title)
+- content_for :fil_ariane do
+  - titles_and_paths = [["Configuration", admin_organisation_configuration_path(current_organisation)], ["Motifs de rendez-vous", admin_organisation_motifs_path(current_organisation)], [@motif.name_was, admin_organisation_motif_path(current_organisation, @motif)]]
+  = render "common/fil_ariane", titles_and_paths: titles_and_paths, current_page_title: "Modifier"
 
 .row
   .col-md-12
+    / Le 25/8/2026 est la date de mise en ligne du changement d'interface.
+    - if current_agent.created_at < Date.new(2026, 8, 25) && Time.zone.now < Date.new(2026, 11, 25)
+      p.fr-hint-text.fr-text--sm
+        = icon("fr-icon-information-line", class:"fr-mr-1w" )
+        | La gestion de la réservation en ligne se fait maintenant depuis la page de détails du motif ou depuis le menu de gauche.
+
     = form_for @motif, url: admin_organisation_motif_path, builder: Dsfr::FormBuilder, html: { "data-controller": "motif-form" } do |f|
       = render "model_errors", model: @motif, f: f
       = render "admin/motifs/form", motif: @motif, f: f, rdvi_mode: current_organisation.rdv_insertion?

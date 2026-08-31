@@ -154,6 +154,8 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
   end
 
   def motif_params
-    params.require(:motif).permit(*Admin::MotifsController::FORM_ATTRIBUTES)
+    params.require(:motif).permit(*Admin::MotifsController::FORM_ATTRIBUTES).tap do |form_params|
+      Admin::MotifsController.normalize_prescription_form_param(form_params)
+    end
   end
 end

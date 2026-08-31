@@ -9,20 +9,19 @@
 p.fr-badge.fr-badge--pink-tuile Beta
 
 p
-  |> Vos rendez-vous pris via RDV Service Public s’ajoutent automatiquement à votre agenda professionnel.
-  |> À l’inverse, vos événements existants rendent automatiquement les créneaux correspondants indisponibles dans RDV Service Public.
-  |> Pour utiliser cette fonctionnalité, vous devez disposer d’un agenda compatible CalDAV (comme celui de
+  |> Synchronisez RDV Service Public et votre agenda professionnel dans les deux sens :
+  ul
+    li
+      |> vos rendez-vous RDV Service Public sont automatiquement ajoutés à votre agenda ;
+    li
+      |> les événements de votre agenda rendent les créneaux correspondants indisponibles dans RDV Service Public.
+  |> Vous devez disposer d’un agenda compatible CalDAV (comme celui de
   = link_to "LaSuite", "https://lasuite.numerique.gouv.fr/"
   | ).
 
 p
   |> Pour en savoir plus sur la synchronisation CalDAV, consultez notre
   = external_link_to "documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#synchronisation-avec-la-suite-numerique-caldav"
-  | .
-
-= dsfr_callout(icon_name: :none) do
-  |> Pour le moment, cette fonctionnalité est en version bêta. Pour toute question ou remontée de bug, merci de
-  = external_link_to("contacter le support", new_aide_demande_support_path(role: "agent", sujet: "Synchronisation CalDAV"))
   | .
 
 - if current_agent.caldav_config&.caldav_disconnect_started_at.present?
@@ -35,6 +34,12 @@ p
       .fr-mb-2w
         .fr-badge.fr-badge--success Synchronisation active
         p.fr-my-2w Votre agenda est synchronisé avec l'agenda CalDAV #{current_agent.caldav_config.caldav_username}.
+        - if current_agent.caldav_config.caldav_calendar_name.present?
+          p.fr-my-2w Nom d’affichage : #{current_agent.caldav_config.caldav_calendar_name}.
+        - if current_agent.caldav_config.caldav_calendar_color.present?
+          p.fr-my-2w
+            | Couleur d’affichage :
+            span.fr-icon-circle-fill[style="color: #{current_agent.caldav_config.caldav_calendar_color}" aria-hidden="true"]
       .fr-btns-group.fr-btns-group--inline
         - if current_agent.organisations.any?
           = link_to("Voir mon agenda", admin_organisation_planning_agenda_path(current_agent.organisations.first), class: "fr-btn fr-btn--secondary")
@@ -42,36 +47,57 @@ p
           = submit_tag "Supprimer la configuration CalDAV", class: "fr-btn fr-btn--tertiary", data: { confirm: "Êtes-vous sûr de vouloir supprimer vos identifiants CalDAV ?" }
 - else
   = form_tag calendar_selection_agents_calendar_sync_caldav_sync_path, method: :post do
-    .fr-input-group
-      label.fr-label for="caldav_username"
-        | Identifiant de l’agenda CalDAV
-        span.fr-hint-text
-          = external_link_to "voir la documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#synchronisation-avec-la-suite-numerique-caldav"
-      input#caldav_username.fr-input[type="text" name="caldav_username" required]
-    .fr-input-group
-      label.fr-label for="caldav_password"
-        | Mot de passe de l’agenda CalDAV
-        span.fr-hint-text
-          = external_link_to "voir la documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#synchronisation-avec-la-suite-numerique-caldav"
-      input#caldav_password.fr-input[type="password" name="caldav_password" required]
-    .fr-input-group
-      label.fr-label for="caldav_agenda_url" URL du serveur ou de l’agenda CalDAV
-      input#caldav_agenda_url.fr-input[type="text" name="caldav_agenda_url" required]
-    fieldset.fr-fieldset
-      legend.fr-fieldset__legend--regular.fr-fieldset__legend
-        | Données personnelles dans l'agenda externe
-      .fr-fieldset__element
-        .fr-radio-group
-          input#caldav_include_sensitive_data_false type="radio" name="caldav_include_sensitive_data" value="false" checked="checked"
-          label.fr-label for="caldav_include_sensitive_data_false"
-            | Anonymiser les informations du rendez-vous
+    .card.fr-mb-3w
+      .card-body
+        h5.card-title Informations de connexion
+        .fr-input-group
+          label.fr-label for="caldav_username"
+            | Identifiant de l’agenda CalDAV
             span.fr-hint-text
-              | Cette option vous permet de ne pas transmettre de données personnelles liées aux rendez-vous à votre agenda externe.
-      .fr-fieldset__element
-        .fr-radio-group
-          input#caldav_include_sensitive_data_true type="radio" name="caldav_include_sensitive_data" value="true"
-          label.fr-label for="caldav_include_sensitive_data_true"
-            | Inclure les données personnelles liées au rendez-vous dans mon agenda externe
+              = external_link_to "voir la documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#synchronisation-avec-la-suite-numerique-caldav"
+          input#caldav_username.fr-input[type="text" name="caldav_username" required]
+        .fr-input-group
+          label.fr-label for="caldav_password"
+            | Mot de passe de l’agenda CalDAV
             span.fr-hint-text
-              | Cette option est plus pratique, mais les autres personnes qui ont accès à votre agenda externe auront accès aux données personnelles liées au rendez-vous.
+              = external_link_to "voir la documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#synchronisation-avec-la-suite-numerique-caldav"
+          input#caldav_password.fr-input[type="password" name="caldav_password" required]
+        .fr-input-group
+          label.fr-label for="caldav_agenda_url" URL du serveur ou de l’agenda CalDAV
+          input#caldav_agenda_url.fr-input[type="text" name="caldav_agenda_url" required]
+    .card.fr-mb-3w
+      .card-body
+        h5.card-title Confidentialité des données
+        fieldset.fr-fieldset
+          legend.fr-fieldset__legend--regular.fr-fieldset__legend
+            | Données personnelles dans l'agenda externe
+          .fr-fieldset__element
+            .fr-radio-group
+              input#caldav_include_sensitive_data_false type="radio" name="caldav_include_sensitive_data" value="false" checked="checked"
+              label.fr-label for="caldav_include_sensitive_data_false"
+                | Anonymiser les informations du rendez-vous
+                span.fr-hint-text
+                  | Cette option vous permet de ne pas transmettre de données personnelles liées aux rendez-vous à votre agenda externe.
+          .fr-fieldset__element
+            .fr-radio-group
+              input#caldav_include_sensitive_data_true type="radio" name="caldav_include_sensitive_data" value="true"
+              label.fr-label for="caldav_include_sensitive_data_true"
+                | Inclure les données personnelles liées au rendez-vous dans mon agenda externe
+                span.fr-hint-text
+                  | Cette option est plus pratique, mais les autres personnes qui ont accès à votre agenda externe auront accès aux données personnelles liées au rendez-vous.
+    .card.fr-mb-3w
+      .card-body
+        h5.card-title Personnalisation (optionnelle)
+        .fr-input-group
+          label.fr-label for="caldav_calendar_name"
+            | Nom d’affichage de l’agenda
+            span.fr-hint-text
+              | Optionnel. Ce nom sera utilisé dans le planning pour vous indiquer les indisponibilités provenant de votre agenda externe.
+          input#caldav_calendar_name.fr-input[type="text" name="caldav_calendar_name"]
+        .fr-input-group
+          label.fr-label for="caldav_calendar_color"
+            | Couleur d’affichage de l’agenda
+            span.fr-hint-text
+              | Optionnel. Cette couleur sera utilisée dans le planning pour vous indiquer les indisponibilités provenant de votre agenda externe.
+          input#caldav_calendar_color.fr-input[type="color" name="caldav_calendar_color" value=AbsencesHelper::CALENDAR_BACKGROUND_COLOR_HEX]
     = submit_tag "Enregistrer", class: "fr-btn"

@@ -89,7 +89,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_24_141913) do
   create_table "agent_territorial_access_rights", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.bigint "territory_id", null: false
-    t.boolean "allow_to_manage_teams", default: false
+    t.boolean "allow_to_manage_teams", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "allow_to_manage_access_rights", default: false, null: false
@@ -187,6 +187,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_24_141913) do
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
   end
 
+  create_table "ami_france_connect_hashes", force: :cascade do |t|
+    t.string "fc_hash", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_ami_france_connect_hashes_on_user_id", unique: true
+  end
+
   create_table "annotations", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "territory_id", null: false
@@ -225,6 +233,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_24_141913) do
     t.boolean "caldav_include_sensitive_data", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "caldav_calendar_name"
+    t.string "caldav_calendar_color", limit: 7
     t.index ["agent_id"], name: "index_caldav_configs_on_agent_id", unique: true
   end
 
@@ -954,6 +964,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_24_141913) do
   add_foreign_key "agent_territorial_roles", "territories"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
+  add_foreign_key "ami_france_connect_hashes", "users"
   add_foreign_key "annotations", "territories"
   add_foreign_key "annotations", "users"
   add_foreign_key "api_calls", "agents"

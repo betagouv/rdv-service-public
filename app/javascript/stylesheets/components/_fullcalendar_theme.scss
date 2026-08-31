@@ -72,6 +72,14 @@
   max-width: 100%;
 }
 
+// Le DSFR souligne les liens via background-image (plutôt que text-decoration), ce qui casse
+// le rendu des évènements du calendrier. On neutralise ce soulignement pour les liens internes
+// au calendrier, indépendamment du bundle CSS chargé.
+// .rdv-fc-event-waiting est exclu car il utilise lui-même background-image pour ses hachures.
+.fc-classic-n5m a[href]:not(.rdv-fc-event-waiting) {
+  background-image: none;
+}
+
 // Vue mois et planning : gris subtil DSFR
 .fc-classic-n5m a[href]:hover {
   background-color: var(--background-contrast-grey) !important;

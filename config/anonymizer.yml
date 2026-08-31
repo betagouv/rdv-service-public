@@ -568,3 +568,9 @@ tables:
     non_anonymized_column_names:
       - created_at
       - updated_at
+  - table_name: ami_france_connect_hashes
+    anonymized_column_names:
+      - fc_hash
+    non_anonymized_column_names:
+      - created_at
+      - updated_at

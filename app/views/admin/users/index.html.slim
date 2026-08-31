@@ -2,8 +2,8 @@
   | Usagers
 
 - content_for :right_of_page_title do
-  .btn-group
-    = link_to "Fusionner deux usagers", new_admin_organisation_merge_users_path(current_organisation), class: "fr-btn fr-btn--secondary mr-1"
+  .fr-btns-group.fr-btns-group--inline
+    = link_to "Fusionner deux usagers", new_admin_organisation_merge_users_path(current_organisation), class: "fr-btn fr-btn--secondary"
     = link_to "Ajouter un usager", new_admin_organisation_user_path(current_organisation), class: "fr-btn"
 
 .card[class="#{"fr-mt-6w" if @search_needed}"]
