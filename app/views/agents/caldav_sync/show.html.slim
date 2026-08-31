@@ -94,6 +94,6 @@ p
           label.fr-label for="caldav_calendar_color"
             | Couleur d’affichage de l’agenda
             span.fr-hint-text
-              | Optionnel. Cette couleur sera utilisée pour afficher les indisponibilités dans le planning.
+              | Optionnel. Cette couleur sera utilisée dans le planning pour vous indiquer les indisponibilités provenant de votre agenda externe.
           input#caldav_calendar_color.fr-input[type="color" name="caldav_calendar_color" value=AbsencesHelper::CALENDAR_BACKGROUND_COLOR_HEX]
     = submit_tag "Enregistrer", class: "fr-btn"
