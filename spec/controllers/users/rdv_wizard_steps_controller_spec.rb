@@ -74,7 +74,7 @@ RSpec.describe Users::RdvWizardStepsController, type: :controller do
       let!(:user) { create(:user, email: "original@exemple.fr", latest_login_at: nil) }
       let!(:invitation_token) { user.set_rdv_invitation_token! }
 
-      before { request.session[:restricted_auth] = { invitation_token:, expires_at: 1.hour.from_now } }
+      before { RestrictedAuthSessionState.authenticate!(request.session, user_id: user.id) }
 
       it "autorise la modification de l'email" do
         post :create, params: {

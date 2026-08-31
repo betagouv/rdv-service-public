@@ -8,6 +8,11 @@ class RestrictedAuthSessionState
     session[:restricted_auth] = { user_id:, rdv_id:, authenticated: false }
   end
 
+  def self.clean_session!(session)
+    session.delete(:restricted_auth)
+    session.delete(:return_to_after_verification)
+  end
+
   def initialize(session)
     @session = session
   end
@@ -17,23 +22,25 @@ class RestrictedAuthSessionState
   end
 
   def authenticated?
-    @session.dig(:restricted_auth, "authenticated")
+    restricted_auth_hash[:authenticated]
   end
 
   def user
-    User.find_by(id: @session.dig(:restricted_auth, "user_id"))
+    User.find_by(id: restricted_auth_hash[:user_id])
   end
 
   def rdv
-    Rdv.find_by(id: @session.dig(:restricted_auth, "rdv_id"))
+    Rdv.find_by(id: restricted_auth_hash[:rdv_id])
   end
 
   def expired?
-    @session.dig(:restricted_auth, "expires_at") < Time.zone.now
+    restricted_auth_hash[:expires_at] < Time.zone.now
   end
 
-  def self.clean_session!(session)
-    session.delete(:restricted_auth)
-    session.delete(:return_to_after_verification)
+  private
+
+  def restricted_auth_hash
+    # Quand on déserialise la session, les clés deviennent des strings alors qu'on utilise des symboles pour les écrire
+    @session[:restricted_auth]&.with_indifferent_access || {}
   end
 end
