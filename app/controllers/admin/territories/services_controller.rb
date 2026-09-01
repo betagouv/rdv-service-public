@@ -43,18 +43,4 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
     end
     render partial: "admin/territories/services/service_toggle", locals: { service:, flash_message: }
   end
-
-  private
-
-  helper_method :format_for_checkboxes
-  def format_for_checkboxes(service)
-    label = service.name
-
-    agents_count = service.agents.active.merge(current_territory.organisations_agents).count
-    if agents_count > 0
-      label += " (#{agents_count} #{'agent'.pluralize(agents_count)})"
-    end
-
-    label
-  end
 end

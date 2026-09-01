@@ -13,7 +13,10 @@ turbo-frame[id="service-toggle-turbo-frame-#{service.id}"]
         checked=current_territory.services.to_a.include?(service)
       ]
       label.fr-toggle__label[for=input_id]
-        = format_for_checkboxes(service)
+        = service.name
+        - agents_count = service.agents.active.merge(current_territory.organisations_agents).count
+        - if agents_count > 0
+          = " (#{agents_count} #{'agent'.pluralize(agents_count)})"
         - if flash_message
           em.fr-mx-1w.fr-text-mention--grey.fading-out
             =< flash_message
