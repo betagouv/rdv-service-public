@@ -7,6 +7,18 @@ RSpec.describe "territory admin can manage services", type: :feature do
   end
 
   describe "Activating/Deactivating services" do
+    def check_toggle(service)
+      label_selector = %(label[for="service-toggle-#{service.id}"])
+      find(label_selector).click
+      within(label_selector) { expect(page).to have_content("Service activé") }
+    end
+
+    def uncheck_toggle(service)
+      label_selector = %(label[for="service-toggle-#{service.id}"])
+      find(label_selector).click
+      within(label_selector) { expect(page).to have_content("Service désactivé") }
+    end
+
     it "works", js: true do
       pmi = create(:service, :pmi)
       social = create(:service, :social)
@@ -14,13 +26,11 @@ RSpec.describe "territory admin can manage services", type: :feature do
       expect(territory.reload.services).to be_empty
 
       # Lier un service existant
-      check pmi.name
-      # click_on "Valider la sélection"
+      check_toggle(pmi)
       expect(territory.reload.services).to eq([pmi])
 
       # Dé-lier un service
-      uncheck pmi.name
-      # click_on "Valider la sélection"
+      uncheck_toggle(pmi)
       expect(territory.reload.services).to eq([])
 
       # Filtrage puis ajout
@@ -28,14 +38,14 @@ RSpec.describe "territory admin can manage services", type: :feature do
       click_on "Filtrer"
       expect(page).to have_content(social.name)
       expect(page).not_to have_content(pmi.name)
-      check social.name
+      check_toggle(social)
       # click_on "Valider la sélection"
       expect(territory.reload.services).to eq([social])
       fill_in "Trouvez un service par nom", with: "pmi"
       click_on "Filtrer"
       expect(page).to have_content(pmi.name)
       expect(page).not_to have_content(social.name)
-      check pmi.name
+      check_toggle(pmi)
       # click_on "Valider la sélection"
       expect(territory.reload.services).to contain_exactly(social, pmi)
     end

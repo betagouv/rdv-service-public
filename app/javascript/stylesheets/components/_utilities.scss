@@ -17,6 +17,15 @@
   pointer-events: none;
 }
 
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+.fading-out {
+  opacity: 0;
+  animation: fadeOut 2s ease-in;
+}
+
 // TEXT
 
 .strikethrough {
