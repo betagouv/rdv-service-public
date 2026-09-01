@@ -155,9 +155,13 @@ Rails.application.routes.draw do
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end
       resources :rdvs, only: %i[show]
+
       resources :rdv_plans, only: %i[show] do
-        resources :motifs, only: %i[create]
         member do
+          namespace :rdv_plans do
+            resources :motifs, only: %i[create]
+            resources :lieux, only: %i[create]
+          end
           get :edit_motif
           patch :update_motif
 

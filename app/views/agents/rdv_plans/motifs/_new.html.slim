@@ -1,9 +1,11 @@
 /# locals: (rdv_plan:)
-- @motif ||=Motif.new
-= form_for @motif, url: agents_rdv_plan_motifs_path(rdv_plan), builder: Dsfr::FormBuilder, html: { "data-controller": "motif-form" } do |f|
+- @motif ||= Motif.new
+= form_for @motif, url: agents_rdv_plans_motifs_path(rdv_plan), builder: Dsfr::FormBuilder, html: { "data-controller": "motif-form" } do |f|
   = render "model_errors", model: @motif, f: f
 
-  = f.dsfr_text_field :name, label: "Motif du rendez-vous", hint: "Par exemple: Suivi de dossier"
-  = f.dsfr_number_field :default_duration_in_min, label: "Durée du RDV (en minutes)"
+  = f.dsfr_text_field :name, label: "Motif du rendez-vous", hint: "Par exemple \"Suivi de dossier\". Cet intitulé sera visible dans la notification envoyée à #{rdv_plan.user.full_name}"
+  = f.dsfr_number_field :default_duration_in_min, label: "Durée du rendez-vous", hint: "en minutes"
 
   = render partial: "admin/motifs/form/location_types", locals: { f: f, disabled: false }
+
+  = f.submit "Continuer", class: "fr-btn"
