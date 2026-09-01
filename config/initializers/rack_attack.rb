@@ -19,7 +19,7 @@ class Rack::Attack
     end
   end
 
-  throttle("connexion via token d'auth restreinte - throttling par IP", limit: Rails.env.test? ? 2 : 10, period: 1.minute) do |request|
+  throttle("connexion via token d'auth restreinte - throttling par IP", limit: Rails.env.test? ? 2 : 600, period: 1.hour) do |request|
     next unless request.get?
 
     request.ip if request.path.start_with?("/r/") || # redirect#rdv_short_from_token
