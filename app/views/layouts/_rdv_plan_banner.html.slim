@@ -1,0 +1,7 @@
+- rdv_plan = current_agent.rdvs_plans.order("created_at desc").first
+
+.fr-notice.fr-notice--info
+  .fr-notice__body
+    p.fr-mb-0.fr-ml-6w
+      span.fr-notice__desc
+        | Prise de rdv en cours pour #{rdv_plan.user.full_name}

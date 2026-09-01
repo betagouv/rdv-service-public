@@ -56,7 +56,7 @@ class Agents::RdvPlansController < AgentAuthController
 
   def edit_lieu
     render locals: {
-      available_location_types: available_motifs(@rdv_plan).pluck(:location_type),
+      lieux: policy_scope(Lieu.enabled, policy_scope_class: Agent::LieuPolicy::Scope),
       event_sources:,
     }
   end

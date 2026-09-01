@@ -5,6 +5,7 @@
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 2, step_title: "Créneau", next_step_title: "Usager"
 .fr-grid-row.fr-mb-16w[data-controller="rdv-plan"]
   - if lieux.none?
+    / TODO: mettre un formulaire de lieu
     .fr-col-12.fr-mt-2w
       = dsfr_alert type: :error, size: :sm, close_button: false, html_attributes: { class: "fr-pb-1w fr-my-2w", role: "alert" } do
         - if @rdv_plan.rdv_agent.organisations.count == 1
