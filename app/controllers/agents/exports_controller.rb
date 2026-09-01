@@ -1,7 +1,10 @@
 class Agents::ExportsController < AgentAuthController
+  include Agents::TwoFactorFreshnessConcern
+
   layout "application_agent_config"
 
   before_action { @active_agent_preferences_menu_item = :exports }
+  before_action :require_recent_two_factor_authentication!, only: :download
 
   def index
     @exports = policy_scope(Export, policy_scope_class: Agent::ExportPolicy::Scope)
