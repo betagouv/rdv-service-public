@@ -7,6 +7,12 @@ RSpec.describe "agent can export RDVs" do
     login_as(agent, scope: :agent)
   end
 
+  def complete_export_two_factor_step_up!
+    expect(page).to have_current_path(new_agents_two_factor_verification_path)
+    fill_in("Code à 6 chiffres", with: LoginCode.last.code)
+    click_on "Valider"
+  end
+
   it "displays export list" do
     create(:rdv, organisation: organisation)
     visit admin_organisation_rdvs_url(organisation)
@@ -40,6 +46,7 @@ RSpec.describe "agent can export RDVs" do
     current_email.click_link("la page des exports")
     expect(page).to have_current_path("/agents/exports")
     click_on "Télécharger"
+    complete_export_two_factor_step_up!
 
     expected_file_name = "export-rdv-2022-09-14-org-#{organisation.id.to_s.rjust(6, '0')}.xls"
     expect(response_headers["Content-Disposition"]).to include(expected_file_name)
@@ -69,6 +76,7 @@ RSpec.describe "agent can export RDVs" do
     current_email.click_link("la page des exports")
     expect(page).to have_current_path("/agents/exports")
     click_on "Télécharger"
+    complete_export_two_factor_step_up!
 
     expect(response_headers["Content-Disposition"]).to include("export-rdvs-user-2022-09-14.xls")
 

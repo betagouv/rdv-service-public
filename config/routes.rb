@@ -155,6 +155,9 @@ Rails.application.routes.draw do
       end
       resource :pro_connect_step_up, only: %i[new create], controller: "pro_connect_step_up"
       resource :pro_connect_linking, only: %i[show create], controller: "pro_connect_linking"
+      resource :two_factor_verification, only: %i[new create], controller: "two_factor_verifications" do
+        post :resend, on: :collection
+      end
       resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
         resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync do
