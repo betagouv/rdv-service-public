@@ -11,6 +11,12 @@ RSpec.describe "agent can export RDVs" do
     expect(page).to have_current_path(new_agents_two_factor_verification_path)
     fill_in("Code à 6 chiffres", with: LoginCode.last.code)
     click_on "Valider"
+
+    # En conditions réelles, le contrôleur Stimulus `auto-download` relance le téléchargement dès
+    # le retour sur la liste des exports ; le pilote de test (rack_test) n'exécute pas de JS, donc
+    # on simule ce second clic explicitement.
+    expect(page).to have_current_path(%r{\A/agents/exports})
+    click_on "Télécharger"
   end
 
   it "displays export list" do
