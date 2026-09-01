@@ -8,7 +8,7 @@
 
 .card
   .card-body
-    - if needs_agent_search?
+    - if @agents_search_form.should_display?
       = form_for @agents_search_form, url: admin_organisation_agents_path(current_organisation), method: :get, scope: :agents_search, builder: Dsfr::FormBuilder, as: "search" do |f|
         fieldset.fr-fieldset.rdv-gap-1rem.rdv-justify-content-flex-end.rdv-align-items-first-baseline
           .fr-fieldset__element--inline
@@ -17,7 +17,7 @@
               = f.dsfr_text_field :query, placeholder: "Prénom, Nom, Email", autocomplete: "off", label: ""
           .fr-fieldset__element--inline
               = f.submit "Filtrer", class: "fr-btn"
-              - if @agents_search_form.resettable?
+              - if @agents_search_form.active_filters?
                 .fr-mt-1w
                   = link_to "Réinitialiser", admin_organisation_agents_path(current_organisation), class: "fr-btn fr-btn--tertiary fr-btn--sm"
     table.table

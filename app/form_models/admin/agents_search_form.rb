@@ -23,5 +23,11 @@ class Admin::AgentsSearchForm
     agents_ar
   end
 
-  def resettable? = role.present? || query.present?
+  def active_filters? = role.present? || query.present?
+
+  def should_display?
+    current_organisation.agents.active.limit(10).count == 10 ||
+      (current_organisation.agent_roles.basic.any? && current_organisation.agent_roles.admin.any?) ||
+      active_filters?
+  end
 end

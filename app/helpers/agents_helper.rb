@@ -9,11 +9,6 @@ module AgentsHelper
     end
   end
 
-  def needs_agent_search?
-    current_organisation.agents.active.limit(10).count == 10 ||
-      (current_organisation.agent_roles.basic.any? && current_organisation.agent_roles.admin.any?)
-  end
-
   def current_agent?(agent)
     agent.id == current_agent.id
   end
