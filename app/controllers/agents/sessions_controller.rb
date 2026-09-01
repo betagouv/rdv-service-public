@@ -1,6 +1,7 @@
 class Agents::SessionsController < Devise::SessionsController
   include Admin::WeakPasswordControllerConcern
   include DomainRedirectionAfterLogin
+  include Agents::DeviseOrSsoLogout
 
   # Lorsqu'un agent est connecté à une application Oauth via notre application,
   # Il est possible qu'il cherche à se déconnecter alors que sa session a déjà expiré.
@@ -30,7 +31,7 @@ class Agents::SessionsController < Devise::SessionsController
     self.resource = warden.authenticate!(auth_options)
 
     if resource.pro_connect_openid_sub.present?
-      sign_out(resource)
+      sign_out_agent!(resource)
       redirect_to new_agent_session_path(pro_connect_required: resource.email)
       return
     end
@@ -38,7 +39,7 @@ class Agents::SessionsController < Devise::SessionsController
     return if reset_current_agent_password_if_weak!(params[:agent][:password])
 
     if resource.sensitive_account?
-      sign_out(resource)
+      sign_out_agent!(resource)
       session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = resource.id
       Agents::LoginCodeSender.perform(email: resource.email, domain_id: current_domain.id)
       redirect_to new_agents_sessions_by_code_path
@@ -46,7 +47,7 @@ class Agents::SessionsController < Devise::SessionsController
     end
 
     if should_redirect_to_domain_anct?(current_domain, resource)
-      sign_out(resource)
+      sign_out_agent!(resource)
       redirect_to redirect_target_url_in_domain(Domain::RDV_SERVICE_PUBLIC), allow_other_host: true
       return
     end
@@ -70,13 +71,10 @@ class Agents::SessionsController < Devise::SessionsController
       @oauth_client_app_post_logout_redirect_url = oauth_app.post_logout_redirect_uri
     end
 
-    pro_connect_id_token = session.delete(:pro_connect_id_token)
-
-    sign_out(:agent)
+    pro_connect_id_token = sign_out_agent!(:agent)
 
     # Si on redirige vers l'app cliente, on n'aura pas de render pendant lequel le flash s'affichera, donc on ne l'ajoute pas.
     if @oauth_client_app_post_logout_redirect_url
-      # On est obligés de modifier la session ici puisque l'appel à `sign_out(:agent)` a effacé la session
       session[:post_logout_redirect_url] = @oauth_client_app_post_logout_redirect_url
     else
       set_flash_message!(:notice, :signed_out)

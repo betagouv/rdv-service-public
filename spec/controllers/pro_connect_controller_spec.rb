@@ -358,6 +358,19 @@ RSpec.describe ProConnectController do
           end
         end
       end
+
+      context "quand l'agent est redirigé vers un autre domaine juste après sa connexion" do
+        before { allow(controller).to receive(:should_redirect_to_domain_etat?).and_return(true) }
+
+        it "efface les jetons ProConnect de la session avant la redirection" do
+          create(:agent, email: user_info["email"])
+          get :callback, params: { state:, code: }
+
+          expect(response).to redirect_to(start_with("http://"))
+          expect(session[:pro_connect_access_token]).to be_nil
+          expect(session[:pro_connect_id_token]).to be_nil
+        end
+      end
     end
 
     context "when logging in a user" do

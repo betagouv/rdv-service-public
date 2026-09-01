@@ -2,6 +2,7 @@
 
 class ProConnectController < ApplicationController
   include DomainRedirectionAfterLogin
+  include Agents::DeviseOrSsoLogout
 
   # IDP ProConnect nécessitant une double authentification pour les agents qui ont des comptes sensibles.
   # Configurable via la variable d'environnement IDP_PRO_CONNECT_FORCE_2FA_ENABLED (liste séparée par des virgules).
@@ -229,13 +230,13 @@ class ProConnectController < ApplicationController
     end
 
     if should_redirect_to_domain_etat?(current_domain, agent)
-      sign_out(agent)
+      sign_out_agent!(agent)
       redirect_to redirect_target_url_in_domain(Domain::RDV_SERVICE_PUBLIC_ETAT), allow_other_host: true
       return
     end
 
     if should_redirect_to_domain_anct?(current_domain, agent)
-      sign_out(agent)
+      sign_out_agent!(agent)
       redirect_to redirect_target_url_in_domain(Domain::RDV_SERVICE_PUBLIC), allow_other_host: true
       return
     end

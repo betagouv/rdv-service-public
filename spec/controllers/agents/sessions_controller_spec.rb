@@ -15,6 +15,14 @@ RSpec.describe Agents::SessionsController do
         expect(response).to redirect_to(new_agent_session_path(pro_connect_required: agent.email))
         expect(session["warden.agent.key"]).to be_nil
       end
+
+      it "efface les jetons ProConnect de la session" do
+        session[:pro_connect_access_token] = "fake_access_token"
+        session[:pro_connect_id_token] = "fake_id_token"
+        post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
+        expect(session[:pro_connect_access_token]).to be_nil
+        expect(session[:pro_connect_id_token]).to be_nil
+      end
     end
 
     context "when the agent does not have a pro_connect_openid_sub" do
@@ -51,11 +59,25 @@ RSpec.describe Agents::SessionsController do
           .and have_enqueued_mail(Agents::LoginCodeMailer, :login_code)
         expect(LoginCode.last.email).to eq(agent.email)
       end
+
+      it "efface les jetons ProConnect de la session" do
+        session[:pro_connect_access_token] = "fake_access_token"
+        session[:pro_connect_id_token] = "fake_id_token"
+        post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
+        expect(session[:pro_connect_access_token]).to be_nil
+        expect(session[:pro_connect_id_token]).to be_nil
+      end
     end
   end
 
   describe "#destroy" do
     before { sign_in agent }
+
+    it "efface le jeton d'accès ProConnect de la session" do
+      session[:pro_connect_access_token] = "fake_access_token"
+      get :destroy
+      expect(session[:pro_connect_access_token]).to be_nil
+    end
 
     context "when the agent was logged in with ProConnect" do
       stub_env_with(PRO_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2")
