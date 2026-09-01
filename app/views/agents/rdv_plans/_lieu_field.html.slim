@@ -1,0 +1,18 @@
+/# locals: (rdv_plan:, available_location_types:)
+
+fieldset[class="fr-fieldset" id="rdv_plan[modalite]" aria-labelledby="radio-rich-no-pictogram-inline-legend radio-rich-no-pictogram-inline-messages"]
+  legend[class="fr-fieldset__legend--regular fr-fieldset__legend" id="radio-rich-no-pictogram-inline-legend"]
+    | Où souhaitez-vous faire le rendez-vous ?
+
+  - lieux = policy_scope(Lieu.enabled, policy_scope_class: Agent::LieuPolicy::Scope)
+  - lieux.each do |lieu|
+    .fr-fieldset__element
+      .fr-radio-group.fr-radio-rich
+        input[value="public_office-#{lieu.id}" type="radio" id="public_office-#{lieu.id}" name="rdv_plan[modalite]" required]
+        label.fr-label[for="public_office-#{lieu.id}"]
+          span
+            = lieu_icon
+            = " Sur place à #{lieu.name}"
+          span.fr-hint-text = lieu.address
+
+  div[class="fr-messages-group" id="radio-rich-no-pictogram-inline-messages" aria-live="polite"]
