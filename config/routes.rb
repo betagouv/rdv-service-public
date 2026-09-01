@@ -168,8 +168,8 @@ Rails.application.routes.draw do
           get :edit_starts_at
           patch :update_starts_at
 
-          get :edit_modalites
-          patch :update_modalites
+          get :edit_lieu
+          patch :update_lieu
 
           get :edit_motif
           patch :update_motif

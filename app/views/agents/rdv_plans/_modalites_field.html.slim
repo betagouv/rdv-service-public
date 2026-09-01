@@ -4,7 +4,6 @@ fieldset[class="fr-fieldset" id="rdv_plan[modalite]" aria-labelledby="radio-rich
   legend[class="fr-fieldset__legend--regular fr-fieldset__legend" id="radio-rich-no-pictogram-inline-legend"]
     | Comment souhaitez-vous faire le rendez-vous ?
 
-  - if available_location_types.include?("public_office")
     - lieux = policy_scope(Lieu.enabled, policy_scope_class: Agent::LieuPolicy::Scope)
     - lieux.each do |lieu|
       .fr-fieldset__element

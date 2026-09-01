@@ -209,7 +209,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     end
 
     it "filtre les motifs par location type" do
-      visit edit_modalites_agents_rdv_plan_path(rdv_plan.id)
+      visit edit_lieu_agents_rdv_plan_path(rdv_plan.id)
 
       find("label", text: "Sur place").click
       click_on "Continuer"
@@ -224,7 +224,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     before { motif.archive }
 
     it "affiche un message qui explique le blocage" do
-      visit edit_modalites_agents_rdv_plan_path(rdv_plan.id)
+      visit edit_lieu_agents_rdv_plan_path(rdv_plan.id)
 
       expect(page).not_to have_content("Continuer")
 
