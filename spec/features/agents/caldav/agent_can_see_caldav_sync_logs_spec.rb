@@ -14,7 +14,6 @@ RSpec.describe "Agent can see CalDAV sync logs" do
   end
 
   it "lists the logs" do
-    #   see app/controllers/agents/caldav_sync_controller.rb and app/views/agents/caldav_sync/calendar_sync_logs.html.slim
     successful_log = create(
       :external_calendar_sync_log,
       agent: agent,
