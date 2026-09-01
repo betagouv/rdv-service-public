@@ -156,6 +156,7 @@ Rails.application.routes.draw do
       end
       resources :rdvs, only: %i[show]
       resources :rdv_plans, only: %i[show] do
+        resources :motifs, only: %i[create]
         member do
           get :edit_motif
           patch :update_motif
