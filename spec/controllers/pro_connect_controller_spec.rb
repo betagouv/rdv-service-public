@@ -524,6 +524,54 @@ RSpec.describe ProConnectController do
       end
     end
 
+    context "quand il s'agit d'une revérification du 2FA avant le téléchargement d'un export (agent_step_up)" do
+      let!(:agent) { create(:agent, email: user_info["email"], pro_connect_openid_sub: user_info["sub"]) }
+
+      before do
+        sign_in agent
+        session[:pro_connect] = { state:, connection_for: "agent_step_up" }
+        session[:two_factor_step_up_return_to] = "/agents/exports/42/download"
+      end
+
+      context "quand la double authentification a bien eu lieu" do
+        before { ProConnectStubs.stub_callback_requests(code, user_info, with_2fa: true) }
+
+        it "marque la double authentification comme vérifiée et redirige vers la page demandée" do
+          get :callback, params: { state:, code: }
+
+          expect(session[:agent_2fa_verified_at]).to be_present
+          expect(response).to redirect_to("/agents/exports/42/download")
+        end
+
+        it "ne modifie pas l'agent" do
+          expect { get :callback, params: { state:, code: } }.not_to change { agent.reload.updated_at }
+        end
+      end
+
+      context "quand la double authentification n'a pas eu lieu" do
+        it "affiche une erreur et redirige vers le formulaire de vérification" do
+          get :callback, params: { state:, code: }
+
+          expect(session[:agent_2fa_verified_at]).to be_nil
+          expect(flash[:error]).to be_present
+          expect(response).to redirect_to(new_agents_two_factor_verification_path)
+        end
+      end
+
+      context "quand le sub ProConnect ne correspond pas à celui de l'agent connecté" do
+        before do
+          ProConnectStubs.stub_callback_requests(code, user_info.merge("sub" => "autre_sub"), with_2fa: true)
+        end
+
+        it "n'accorde pas la fraîcheur du 2FA" do
+          get :callback, params: { state:, code: }
+
+          expect(session[:agent_2fa_verified_at]).to be_nil
+          expect(response).to redirect_to(new_agents_two_factor_verification_path)
+        end
+      end
+    end
+
     context "when the authentication process is aborted" do
       it "displays an error message" do
         # Nous avons observé des callbacks avec ces paramètres, il faut donc gérer ce cas d'erreur.
