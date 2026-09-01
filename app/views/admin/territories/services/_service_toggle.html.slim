@@ -13,7 +13,7 @@ turbo-frame[id="service-toggle-turbo-frame-#{service.id}"]
         checked=current_territory.services.to_a.include?(service)
       ]
       label.fr-toggle__label[for=input_id]
-        = service.name
+        = format_for_checkboxes(service)
         - if flash_message
           em.fr-mx-1w.fr-text-mention--grey.fading-out
             =< flash_message

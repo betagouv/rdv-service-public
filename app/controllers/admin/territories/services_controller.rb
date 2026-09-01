@@ -47,16 +47,14 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
   private
 
   helper_method :format_for_checkboxes
-  def format_for_checkboxes(services)
-    services.map do |service|
-      label = service.name
+  def format_for_checkboxes(service)
+    label = service.name
 
-      agents_count = service.agents.active.merge(current_territory.organisations_agents).count
-      if agents_count > 0
-        label += " (#{agents_count} #{'agent'.pluralize(agents_count)})"
-      end
-
-      [label, service.id]
+    agents_count = service.agents.active.merge(current_territory.organisations_agents).count
+    if agents_count > 0
+      label += " (#{agents_count} #{'agent'.pluralize(agents_count)})"
     end
+
+    label
   end
 end
