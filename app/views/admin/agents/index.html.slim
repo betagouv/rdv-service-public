@@ -12,7 +12,7 @@
       = form_for @agents_search_form, url: admin_organisation_agents_path(current_organisation), method: :get, scope: :agents_search, builder: Dsfr::FormBuilder, as: "search" do |f|
         fieldset.fr-fieldset.rdv-gap-1rem.rdv-justify-content-flex-end.rdv-align-items-first-baseline
           .fr-fieldset__element--inline
-              = f.dsfr_check_box :admin_only, checked: @agents_search_form.admin_only?, label: "Uniquement les admin", class: "fr-mb-0"
+            = f.dsfr_check_box :role, { label: "Uniquement les admin", class: "fr-mb-0" }, "admin", ""
           .fr-fieldset__element--inline
               = f.dsfr_text_field :query, placeholder: "Prénom, Nom, Email", autocomplete: "off", label: ""
           .fr-fieldset__element--inline

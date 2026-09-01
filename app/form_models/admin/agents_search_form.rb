@@ -1,11 +1,11 @@
 class Admin::AgentsSearchForm
   include ActiveModel::Validations
 
-  attr_reader :admin_only, :query, :current_organisation
+  attr_reader :role, :query, :current_organisation
 
-  def initialize(current_organisation:, admin_only: false, query: nil)
+  def initialize(current_organisation:, role: nil, query: nil)
     @current_organisation = current_organisation
-    @admin_only = admin_only
+    @role = role
     @query = query
   end
 
@@ -14,7 +14,7 @@ class Admin::AgentsSearchForm
     agents_ar = agents_ar.search_by_text(query) if query.present?
     agents_ar = agents_ar.order(Arel.sql("(invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL) DESC")).ordered_by_last_name
 
-    if admin_only?
+    if role == "admin"
       agents_ar = agents_ar.where(
         id: AgentRole.where(organisation_id: current_organisation.id, access_level: AgentRole::ACCESS_LEVEL_ADMIN).select(:agent_id)
       )
@@ -23,7 +23,5 @@ class Admin::AgentsSearchForm
     agents_ar
   end
 
-  def admin_only? = admin_only
-
-  def resettable? = admin_only? || query.present?
+  def resettable? = role.present? || query.present?
 end

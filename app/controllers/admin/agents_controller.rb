@@ -5,7 +5,7 @@ class Admin::AgentsController < AgentAuthController
   helper_method :agents_search_params
 
   def index
-    @agents_search_form = Admin::AgentsSearchForm.new(current_organisation:, admin_only: search_params[:admin_only] == "1", query: search_params[:query])
+    @agents_search_form = Admin::AgentsSearchForm.new(current_organisation:, query: params.dig(:search, :query), role: params.dig(:search, :role))
     @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active
     @agents = @agents_search_form.filter_agents(@agents)
     @agents = @agents.includes(:services, :roles, :organisations)
@@ -109,10 +109,6 @@ class Admin::AgentsController < AgentAuthController
     @roles = access_levels_collection
 
     render :edit
-  end
-
-  def search_params
-    (params.permit(search: %i[query admin_only]) || {})[:search] || {}
   end
 
   def access_levels_collection
