@@ -62,7 +62,7 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def update_lieu
-    rdv_plan_params = params.require(:rdv_plan).permit(:starts_at, :modalite)
+    rdv_plan_params = params.require(:rdv_plan).permit(:starts_at, :lieu_id)
 
     if @rdv_plan.update(rdv_plan_params)
       redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)

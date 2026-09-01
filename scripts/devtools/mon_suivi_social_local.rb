@@ -74,6 +74,7 @@ class MonSuiviSocial < Sinatra::Base
           last_name: "Factice",
         },
         dossier_url: "http://localhost:3010/francis_factice",
+        return_url: "http://localhost:3010/",
       }.to_json,
       {
         "Content-Type": "application/json",

@@ -1,35 +1,33 @@
-/# locals: (event_sources:)
-
-.row.justify-content-md-center
-  .col-12
+.fr-grid-row
+  .fr-col-12
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 3, step_title: "Usager", next_step_title: ""
+
 .fr-grid-row.fr-mb-16w[data-controller="rdv-plan"]
-  .fr-col-12.fr-col-md-4
-    .fr-mt-4w
-      = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, event_sources:, single_day: true
-    = link_to edit_motif_agents_rdv_plan_path(@rdv_plan) do
-      = back_icon(class: "fr-mr-1w")
-      = "retour"
-  .fr-col-12.fr-col-md-8.fr-px-2w
+  .fr-col-12
+    = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
     = render "agents/rdv_plans/summary/agent", rdv_plan: @rdv_plan
     = render "agents/rdv_plans/summary/starts_at", rdv_plan: @rdv_plan
     = render "agents/rdv_plans/summary/location_type", rdv_plan: @rdv_plan
-    = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
 
     hr.fr-mt-2w
     h3 Coordonnées de #{@rdv_plan.user.full_name}
     p Des notifications seront envoyées par email et/ou par sms
-    = simple_form_for @rdv_plan, url: create_rdv_agents_rdv_plan_path(@rdv_plan), method: :post do |f|
+    = form_for @rdv_plan, url: create_rdv_agents_rdv_plan_path(@rdv_plan), method: :post, builder: Dsfr::FormBuilder do |f|
       = f.fields_for :user, @rdv_plan.user do |ff|
-        .row
-          .col-6
-            = ff.input :email, hint: ("Cet usager utilise cette adresse email pour se connecter." if @rdv_plan.user.already_logged_in?)
-          .col-6
-            = ff.input :phone_number
+        .fr-grid-row.fr-grid-row--gutters
+          .fr-col-6
+            = ff.dsfr_email_field :email, autocomplete: "off", hint: ("Cet usager utilise cette adresse email pour se connecter." if @rdv_plan.user.already_logged_in?)
+          .fr-col-6
+            = ff.dsfr_phone_field :phone_number, as: :tel
       - if @rdv_plan.motif.visible_and_notified?
-        = f.fields_for :participation, (Participation.new(send_lifecycle_notifications: true, send_reminder_notification: true)) do |ff|
-          = ff.input :send_lifecycle_notifications, label: "Envoyer une notification de confirmation"
-          = ff.input :send_reminder_notification, label: "Envoyer une notification de rappel 48h avant le rendez-vous"
+        .fr-grid-row.fr-grid-row--gutters
+          .fr-col-12
+            = f.fields_for :participation, (Participation.new(send_lifecycle_notifications: true, send_reminder_notification: true)) do |ff|
+              = ff.dsfr_check_box :send_lifecycle_notifications, label: "Envoyer une notification de confirmation"
+              = ff.dsfr_check_box :send_reminder_notification, label: "Envoyer une notification de rappel 48h avant le rendez-vous"
       - else
         | Les notifications ne sont pas envoyées pour ce motif de rendez-vous.
       = f.submit "Confirmer le rendez-vous", class: "fr-btn float-right fr-btn--lg"
+
+      - return_path =  @rdv_plan.motif.requires_lieu? ? edit_lieu_agents_rdv_plan_path(@rdv_plan) : edit_starts_at_agents_rdv_plan_path(@rdv_plan)
+      = link_to "Retour", return_path, class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
