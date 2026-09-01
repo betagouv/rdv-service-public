@@ -49,6 +49,10 @@ fr:
             Vous ne pouvez pas supprimer l'enregistrement parce que des %{record}
             dépendant·e·s existent
       models:
+        external_calendar_sync_log:
+          attributes:
+            ended_at:
+              must_be_after_started_at: doit être postérieure à la date de début
         team:
           attributes:
             agents:

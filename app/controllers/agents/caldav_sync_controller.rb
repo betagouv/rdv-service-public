@@ -44,7 +44,7 @@ class Agents::CaldavSyncController < AgentAuthController
     skip_authorization
     @sync_logs = ExternalCalendarSyncLog
       .where(agent_id: current_agent.id)
-      .where(calendar_url: current_agent.caldav_agenda_url)
+      .where(calendar_url: current_agent.caldav_config.caldav_agenda_url)
       .order(started_at: :desc)
       .page(page_number)
       .per(10)

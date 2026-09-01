@@ -277,7 +277,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_24_085938) do
     t.text "text_logs", default: [], array: true
     t.datetime "started_at", null: false
     t.datetime "ended_at"
-    t.index ["agent_id"], name: "index_external_calendar_sync_logs_on_agent_id", unique: true
+    t.index ["agent_id"], name: "index_external_calendar_sync_logs_on_agent_id"
   end
 
   create_table "external_references", force: :cascade do |t|

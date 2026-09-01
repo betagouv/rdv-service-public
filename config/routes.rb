@@ -60,8 +60,12 @@ Rails.application.routes.draw do
     resources :tags
     root to: "agents#index"
 
-    authenticate :super_admin do
+    if Rails.env.local?
       mount GoodJob::Engine => "good_job"
+    else
+      authenticate :super_admin do
+        mount GoodJob::Engine => "good_job"
+      end
     end
   end
   get "super_admin", to: redirect("super_admins", status: 301)

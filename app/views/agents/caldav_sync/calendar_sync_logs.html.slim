@@ -19,7 +19,7 @@
               th Logs
           tbody
             - @sync_logs.each do |log|
-              tr
+              tr id="external_calendar_sync_log_#{log.id}"
                 td = I18n.l(log.started_at, format: :human)
                 td = log.status
                 td = "#{log.duration.in_milliseconds.to_i} ms" if log.ended_at?

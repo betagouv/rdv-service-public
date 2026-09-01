@@ -33,16 +33,15 @@ p
     .card-body
       .fr-mb-2w
         .fr-badge.fr-badge--success Synchronisation active
-        p.fr-my-2w Votre agenda est synchronisé avec l'agenda CalDAV #{current_agent.caldav_config.caldav_username}.
+        p.fr-my-2w
+          | Votre agenda est synchronisé avec l'agenda CalDAV #{current_agent.caldav_config.caldav_username}.
+          |< (voir #{link_to("l'historique de synchro", calendar_sync_logs_agents_calendar_sync_caldav_sync_path)})
         - if current_agent.caldav_config.caldav_calendar_name.present?
           p.fr-my-2w Nom d’affichage : #{current_agent.caldav_config.caldav_calendar_name}.
         - if current_agent.caldav_config.caldav_calendar_color.present?
           p.fr-my-2w
             | Couleur d’affichage :
             span.fr-icon-circle-fill[style="color: #{current_agent.caldav_config.caldav_calendar_color}" aria-hidden="true"]
-        p.fr-my-2w
-          | Votre agenda est synchronisé avec l'agenda CalDAV #{current_agent.caldav_username}.
-          |< (voir #{link_to("l'historique de synchro", calendar_sync_logs_agents_calendar_sync_caldav_sync_path)})
       .fr-btns-group.fr-btns-group--inline
         - if current_agent.organisations.any?
           = link_to("Voir mon agenda", admin_organisation_planning_agenda_path(current_agent.organisations.first), class: "fr-btn fr-btn--secondary")
