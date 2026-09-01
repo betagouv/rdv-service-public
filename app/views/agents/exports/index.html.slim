@@ -1,5 +1,10 @@
 - content_for :title, t(".title")
 
+- if @auto_download_export
+  / Relance automatiquement le téléchargement, sans JS, une fois revenu sur cette page après la
+  / vérification du 2FA (voir Agents::TwoFactorFreshnessConcern#redirect_after_two_factor_verification!)
+  meta http-equiv="refresh" content="0; url=#{agents_export_download_path(@auto_download_export.id)}"
+
 - if @exports.any?
   .row.my-4
     .col-md-12

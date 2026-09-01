@@ -1,6 +1,7 @@
 class Agents::SessionsController < Devise::SessionsController
   include Admin::WeakPasswordControllerConcern
   include DomainRedirectionAfterLogin
+  include Agents::TwoFactorFreshnessConcern
 
   # Lorsqu'un agent est connecté à une application Oauth via notre application,
   # Il est possible qu'il cherche à se déconnecter alors que sa session a déjà expiré.
@@ -31,6 +32,7 @@ class Agents::SessionsController < Devise::SessionsController
 
     if resource.pro_connect_openid_sub.present?
       sign_out(resource)
+      clear_two_factor_freshness!
       redirect_to new_agent_session_path(pro_connect_required: resource.email)
       return
     end
@@ -39,6 +41,7 @@ class Agents::SessionsController < Devise::SessionsController
 
     if resource.sensitive_account? && !AgentTrustedDevice.trusted_by_cookie?(resource, cookies)
       sign_out(resource)
+      clear_two_factor_freshness!
       session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = resource.id
       Agents::LoginCodeSender.perform(email: resource.email, domain_id: current_domain.id)
       redirect_to new_agents_sessions_by_code_path
@@ -47,6 +50,7 @@ class Agents::SessionsController < Devise::SessionsController
 
     if should_redirect_to_domain_anct?(current_domain, resource)
       sign_out(resource)
+      clear_two_factor_freshness!
       redirect_to redirect_target_url_in_domain(Domain::RDV_SERVICE_PUBLIC), allow_other_host: true
       return
     end
@@ -73,6 +77,7 @@ class Agents::SessionsController < Devise::SessionsController
     pro_connect_id_token = session.delete(:pro_connect_id_token)
 
     sign_out(:agent)
+    clear_two_factor_freshness!
 
     # `sign_out` ne vide que les clés Warden internes de la session : les données applicatives qui y
     # auraient été stockées (jetons ProConnect, etc.) survivraient sinon à la déconnexion, avec un

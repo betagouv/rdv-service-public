@@ -237,12 +237,14 @@ class ProConnectController < ApplicationController
 
     if should_redirect_to_domain_etat?(current_domain, agent)
       sign_out(agent)
+      clear_two_factor_freshness!
       redirect_to redirect_target_url_in_domain(Domain::RDV_SERVICE_PUBLIC_ETAT), allow_other_host: true
       return
     end
 
     if should_redirect_to_domain_anct?(current_domain, agent)
       sign_out(agent)
+      clear_two_factor_freshness!
       redirect_to redirect_target_url_in_domain(Domain::RDV_SERVICE_PUBLIC), allow_other_host: true
       return
     end
@@ -251,7 +253,7 @@ class ProConnectController < ApplicationController
   end
 
   def step_up_agent(callback_client)
-    return_to = session.delete(:two_factor_step_up_return_to) || agents_exports_path
+    return_to = session.delete(:two_factor_step_up_return_to)
 
     unless agent_signed_in? && callback_client.went_through_2fa? && callback_client.openid_sub == current_agent.pro_connect_openid_sub
       flash[:error] = "La double authentification n'a pas pu être vérifiée. Merci de réessayer."
@@ -259,7 +261,7 @@ class ProConnectController < ApplicationController
     end
 
     mark_two_factor_verified!
-    redirect_to return_to
+    redirect_after_two_factor_verification!(return_to)
   end
 
   def require_2fa_for_sensitive_agent(callback_client)
