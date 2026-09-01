@@ -142,22 +142,21 @@ RSpec.describe "Agents can be managed by organisation admins" do
       create(:agent_territorial_role, agent: organisation_admin, territory: territory)
     end
 
-    it "requires the territory admin to activate the new service" do
+    it "requires the territory admin to activate the new service", js: true do
       login_as(organisation_admin, scope: :agent)
       visit new_admin_organisation_agent_path(organisation1)
       expect(page).not_to(have_content("CSS"))
 
       click_link("activer des services supplémentaires")
 
-      check("CSS")
-      click_button("Valider la sélection")
-      expect(page).to have_content("Liste des services disponibles mise à jour")
+      find(%(label[for="service-toggle-#{new_service.id}"])).click
+      click_on("Retour à la création d'agent")
 
       fill_in "Email", with: "jean@paul.com"
-      check("CSS")
+      find(%(label[for="agent_service_ids_#{new_service.id}"])).click
       click_button "Enregistrer"
 
-      expect(Agent.last.services.first).to eq(new_service)
+      expect(Agent.last.services.sole).to eq(new_service)
     end
   end
 

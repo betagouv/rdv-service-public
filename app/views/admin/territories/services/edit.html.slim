@@ -4,7 +4,10 @@
   .fr-col-md-10
     .card
       .card-body
+        = link_to("Retour à la création d'agent", new_admin_organisation_agent_path(params[:redirect_to_organisation_id]), class: "fr-btn fr-btn--tertiary fr-icon-arrow-left-line fr-btn--icon-left fr-mb-2w") if params[:redirect_to_organisation_id].present?
+
         h1.fr-h2 Services
+
         p Les services vous permettent de classifier vos motifs pour éviter que tous les agents aient accès à tous les rendez-vous.
 
         p Par exemple, si vous créez un motif « Entretien annuel » pour le service « Ressources Humaines », seuls les agents du service « Ressources Humaines » pourront assurer des rendez-vous pour ce motif. Les agents des autres services ne pourront pas les voir ni les modifier, sauf s'ils sont secrétaires ou admin.
