@@ -5,7 +5,6 @@
   .fr-col-12.fr-col-md-8
     - if @motifs.empty?
       = render "agents/rdv_plans/motifs/new", rdv_plan: @rdv_plan
-
     - else
       p Pour quel motif souhaitez-vous prendre rendez-vous ?
       ul.fr-raw-list

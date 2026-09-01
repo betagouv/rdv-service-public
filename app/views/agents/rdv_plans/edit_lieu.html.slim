@@ -10,7 +10,9 @@
     hr.fr-mt-2w.fr-mb-2w
 .fr-grid-row.fr-mb-16w[data-controller="rdv-plan"]
   - if lieux.none?
-    / TODO: mettre un formulaire de lieu
+    .fr-col-12
+      p Où souhaitez-vous faire le rendez-vous ?
+      = render "agents/rdv_plans/lieux/new", rdv_plan: @rdv_plan
   - else
     .fr-col-12.fr-col-md-4
       = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, event_sources:, single_day: true

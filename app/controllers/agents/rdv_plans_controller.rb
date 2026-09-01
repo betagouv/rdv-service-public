@@ -21,7 +21,7 @@ class Agents::RdvPlansController < AgentAuthController
     if @rdv_plan.update(rdv_plan_params)
       redirect_to edit_starts_at_agents_rdv_plan_path(@rdv_plan)
     else
-      render "edit_motif_from_calendar", locals: { event_sources: }
+      render "edit_motif", locals: { event_sources: }
     end
   end
 

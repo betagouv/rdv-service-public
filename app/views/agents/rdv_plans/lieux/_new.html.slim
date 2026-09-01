@@ -1,0 +1,14 @@
+/# locals: (rdv_plan:)
+- @lieu ||= Lieu.new
+= form_for @lieu, url: agents_rdv_plans_lieux_path(rdv_plan), builder: Dsfr::FormBuilder, html: { "data-controller": "motif-form" } do |f|
+  = render "model_errors", model: @lieu, f: f
+  = f.dsfr_text_field :name, label: "Nom du lieu", required: true, hint: "Ce nom apparaitra dans les notifications envoyées à #{rdv_plan.user.full_name}"
+
+  = f.dsfr_text_field :address, label: Lieu.human_attribute_name(:address), data: { "address-autocomplete": "on" }, required: true, hint: "L'adresse apparaît dans les notifications par email et SMS aux usagers."
+  = f.hidden_field :latitude
+  = f.hidden_field :longitude
+
+  - if current_domain.accept_lieu_address_without_geocoding?
+    = f.hidden_field :address_without_geocoding
+
+  = f.submit "Continuer", class: "fr-btn"
