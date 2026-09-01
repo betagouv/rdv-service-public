@@ -267,10 +267,18 @@ class User < ApplicationRecord
     latest_login_at?
   end
 
-  # Seul un usager invité via token, qui n'a pas encore d'email confirmé par une précédente connexion,
-  # peut modifier son email. Dans tous les autres cas (SSO, usager déjà connecté, usager connecté via code…) il est figé.
-  def email_editable?
+  # pour modifier son email sans avoir à confirmer la nouvelle adresse, le seul cas possible est
+  # - un usager connecté via un token d'authentification restreinte
+  # - qui n'a pas encore d'email confirmé par une précédente connexion
+  # (c'est dans le cas des invitations RDVI)
+  def can_change_email_without_confirmation?
     signed_in_with_restricted_auth_token? && !(email.present? && already_logged_in?)
+  end
+
+  # Un usager déjà connecté peut demander à changer son email via le parcours à code de confirmation,
+  # sauf s'il s'est connecté avec FranceConnect
+  def can_change_email?
+    franceconnect_openid_sub.blank?
   end
 
   protected

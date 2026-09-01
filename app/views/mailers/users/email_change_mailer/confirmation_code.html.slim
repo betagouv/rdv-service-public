@@ -1,0 +1,10 @@
+p
+  |> Vous avez demandé à changer l’adresse email de votre compte #{domain.name}.
+  | Voici votre code de confirmation :
+
+= render "mailers/common/login_code", login_code: @login_code
+
+hr{style="margin: 1rem 0;"}
+p
+  |> Si vous n’avez pas demandé ce changement d’adresse email, vous pouvez ignorer cet email.
+  | Votre adresse actuelle restera inchangée.

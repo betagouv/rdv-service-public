@@ -96,7 +96,7 @@ class Users::RdvWizardStepsController < UserAuthController
       { user_profiles_attributes: %i[logement id organisation_id] },
       { relatives_attributes: %i[id first_name last_name birth_date ants_pre_demande_number] },
     ]
-    keys << :email if current_user.email_editable?
+    keys << :email if current_user.can_change_email_without_confirmation?
     keys
   end
 
