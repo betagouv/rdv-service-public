@@ -2,6 +2,7 @@
 
 class ProConnectController < ApplicationController
   include DomainRedirectionAfterLogin
+  include Agents::TwoFactorFreshnessConcern
 
   # IDP ProConnect nécessitant une double authentification pour les agents qui ont des comptes sensibles.
   # Configurable via la variable d'environnement IDP_PRO_CONNECT_FORCE_2FA_ENABLED (liste séparée par des virgules).
@@ -76,6 +77,8 @@ class ProConnectController < ApplicationController
         end
       when "agent"
         connect_agent(callback_client, pro_connect_session)
+      when "agent_step_up"
+        step_up_agent(callback_client)
       else
         Sentry.capture_message("Unknown connection_for: #{pro_connect_session[:connection_for].inspect}", extra: { session: session.to_h, pro_connect_session: })
         flash[:error] = generic_error_message
@@ -245,6 +248,18 @@ class ProConnectController < ApplicationController
     end
 
     redirect_to after_sign_in_path_for(agent)
+  end
+
+  def step_up_agent(callback_client)
+    return_to = session.delete(:two_factor_step_up_return_to) || agents_exports_path
+
+    unless agent_signed_in? && callback_client.went_through_2fa? && callback_client.openid_sub == current_agent.pro_connect_openid_sub
+      flash[:error] = "La double authentification n'a pas pu être vérifiée. Merci de réessayer."
+      redirect_to(new_agents_two_factor_verification_path) and return
+    end
+
+    mark_two_factor_verified!
+    redirect_to return_to
   end
 
   def require_2fa_for_sensitive_agent(callback_client)

@@ -43,6 +43,12 @@ class Rack::Attack
     request.ip if request.path_without_format == "/agents/sign_in" && request.post?
   end
 
+  throttle("saisie de code de vérification 2FA agent - throttling par email", limit: Rails.env.test? ? 2 : 60, period: 10.minutes) do |request|
+    if request.path.match(%r{agents/two_factor_verification}) && request.post? && request.params.dig("login_code", "email").present?
+      request.params.dig("login_code", "email")
+    end
+  end
+
   throttle("connexion via token d'auth restreinte - throttling par IP", limit: Rails.env.test? ? 2 : 600, period: 1.hour) do |request|
     next unless request.get?
 
