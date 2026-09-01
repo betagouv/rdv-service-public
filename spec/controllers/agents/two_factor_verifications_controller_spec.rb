@@ -54,13 +54,21 @@ RSpec.describe Agents::TwoFactorVerificationsController, type: :controller do
 
     context "avec un code valide" do
       it "marque la double authentification comme vérifiée et redirige vers la page demandée" do
-        session[:two_factor_step_up_return_to] = "/agents/exports/42/download"
+        session[:two_factor_step_up_return_to] = "/agents/edit"
 
         post :create, params: { login_code: { code: login_code.code } }
 
         expect(session[:agent_2fa_verified_at]).to be_present
-        expect(response).to redirect_to("/agents/exports/42/download")
+        expect(response).to redirect_to("/agents/edit")
         expect(session[:two_factor_step_up_return_to]).to be_nil
+      end
+
+      it "redirige vers la liste des exports avec relance automatique quand la page demandée était un téléchargement d'export" do
+        session[:two_factor_step_up_return_to] = "/agents/exports/42/download"
+
+        post :create, params: { login_code: { code: login_code.code } }
+
+        expect(response).to redirect_to(agents_exports_path(auto_download_export_id: "42"))
       end
 
       it "marque le code comme utilisé" do
