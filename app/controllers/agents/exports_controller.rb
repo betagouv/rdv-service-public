@@ -10,6 +10,10 @@ class Agents::ExportsController < AgentAuthController
     @exports = policy_scope(Export, policy_scope_class: Agent::ExportPolicy::Scope)
       .recent
       .order(created_at: :desc)
+
+    # Après une revérification du 2FA avant un téléchargement, on relance celui-ci automatiquement
+    # une fois revenu sur cette page (voir Agents::TwoFactorFreshnessConcern#redirect_after_two_factor_verification!).
+    @auto_download_export = @exports.find_by(id: params[:auto_download_export_id]) if params[:auto_download_export_id].present?
   end
 
   def download

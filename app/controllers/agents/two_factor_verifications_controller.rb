@@ -25,7 +25,7 @@ class Agents::TwoFactorVerificationsController < ApplicationController
     if validator.valid?
       validator.valid_login_code.update!(used_at: Time.zone.now)
       mark_two_factor_verified!
-      redirect_to session.delete(RETURN_TO_SESSION_KEY) || agents_exports_path
+      redirect_after_two_factor_verification!(session.delete(RETURN_TO_SESSION_KEY))
     else
       @email = current_agent.email
       @existing_login_code = LoginCode.most_recent_usable_for(email: @email)

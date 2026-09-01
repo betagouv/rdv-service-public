@@ -15,6 +15,12 @@ RSpec.describe Agents::SessionsController do
         expect(response).to redirect_to(new_agent_session_path(pro_connect_required: agent.email))
         expect(session["warden.agent.key"]).to be_nil
       end
+
+      it "efface la fraîcheur de la double authentification" do
+        session[:agent_2fa_verified_at] = Time.zone.now.iso8601
+        post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
+        expect(session[:agent_2fa_verified_at]).to be_nil
+      end
     end
 
     context "when the agent does not have a pro_connect_openid_sub" do
@@ -50,6 +56,12 @@ RSpec.describe Agents::SessionsController do
           .to change(LoginCode, :count).by(1)
           .and have_enqueued_mail(Agents::LoginCodeMailer, :login_code)
         expect(LoginCode.last.email).to eq(agent.email)
+      end
+
+      it "efface la fraîcheur de la double authentification" do
+        session[:agent_2fa_verified_at] = Time.zone.now.iso8601
+        post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
+        expect(session[:agent_2fa_verified_at]).to be_nil
       end
 
       context "et que l'appareil est de confiance" do
@@ -90,6 +102,12 @@ RSpec.describe Agents::SessionsController do
 
   describe "#destroy" do
     before { sign_in agent }
+
+    it "efface la fraîcheur de la double authentification" do
+      session[:agent_2fa_verified_at] = Time.zone.now.iso8601
+      get :destroy
+      expect(session[:agent_2fa_verified_at]).to be_nil
+    end
 
     it "vide la session dans son intégralité" do
       session[:some_unrelated_key] = "devrait disparaître"

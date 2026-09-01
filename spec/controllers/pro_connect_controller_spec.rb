@@ -536,11 +536,11 @@ RSpec.describe ProConnectController do
       context "quand la double authentification a bien eu lieu" do
         before { ProConnectStubs.stub_callback_requests(code, user_info, with_2fa: true) }
 
-        it "marque la double authentification comme vérifiée et redirige vers la page demandée" do
+        it "marque la double authentification comme vérifiée et redirige vers la liste des exports avec relance automatique" do
           get :callback, params: { state:, code: }
 
           expect(session[:agent_2fa_verified_at]).to be_present
-          expect(response).to redirect_to("/agents/exports/42/download")
+          expect(response).to redirect_to(agents_exports_path(auto_download_export_id: "42"))
         end
 
         it "ne modifie pas l'agent" do
