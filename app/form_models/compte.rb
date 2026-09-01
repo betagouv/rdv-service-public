@@ -41,9 +41,6 @@ class Compte
       if organisation.ants_connectable
         create_mairie_motifs!
         organisation.territory.add_ants_motif_categories
-      elsif OauthApplication.agent_is_verified_by_an_application?(agent)
-        # On ne propose pas encore la création de motifs depuis les intégrations, donc on continue de créer des motifs par défaut dans ce cas
-        create_example_motifs!
       end
 
       AgentTerritorialRole.create!(agent: agent, territory: territory)
