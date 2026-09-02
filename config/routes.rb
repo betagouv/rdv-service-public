@@ -60,12 +60,8 @@ Rails.application.routes.draw do
     resources :tags
     root to: "agents#index"
 
-    if Rails.env.local?
+    authenticate :super_admin do
       mount GoodJob::Engine => "good_job"
-    else
-      authenticate :super_admin do
-        mount GoodJob::Engine => "good_job"
-      end
     end
   end
   get "super_admin", to: redirect("super_admins", status: 301)
@@ -157,8 +153,8 @@ Rails.application.routes.draw do
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
         resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync do
           post :calendar_selection
-          get :calendar_sync_logs
         end
+        resources :logs, only: %i[index], controller: :external_calendar_sync_logs
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end

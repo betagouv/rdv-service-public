@@ -40,16 +40,6 @@ class Agents::CaldavSyncController < AgentAuthController
     end
   end
 
-  def calendar_sync_logs
-    skip_authorization
-    @sync_logs = ExternalCalendarSyncLog
-      .where(agent_id: current_agent.id)
-      .where(calendar_url: current_agent.caldav_config.caldav_agenda_url)
-      .order(started_at: :desc)
-      .page(page_number)
-      .per(10)
-  end
-
   def update
     skip_authorization
     caldav_config.assign_attributes(permitted_params)

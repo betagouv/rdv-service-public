@@ -9,7 +9,7 @@ RSpec.describe "Agent can see CalDAV sync logs" do
 
     click_on "l'historique de synchro"
 
-    expect(page).to have_current_path(calendar_sync_logs_agents_calendar_sync_caldav_sync_path)
+    expect(page).to have_current_path(agents_calendar_sync_logs_path)
     expect(page).to have_content("Historique des synchronisations")
   end
 
@@ -38,7 +38,7 @@ RSpec.describe "Agent can see CalDAV sync logs" do
     create(:external_calendar_sync_log, agent: agent, calendar_url: "https://old-calendar.example.com")
 
     login_as(agent, scope: :agent)
-    visit calendar_sync_logs_agents_calendar_sync_caldav_sync_path
+    visit agents_calendar_sync_logs_path
 
     expect(page).to have_css("table tbody tr", count: 2)
 
