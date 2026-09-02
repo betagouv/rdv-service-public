@@ -9,7 +9,7 @@ class Admin::RdvInvitationsController < AgentAuthController
     authorize(@rdv_invitation, policy_class: Agent::RdvInvitationPolicy)
 
     if @rdv_invitation.save
-      Users::RdvInvitationMailer.with(rdv_invitation: @rdv_invitation).invitation.deliver_later
+      Users::RdvInvitationMailer.with(rdv_invitation: @rdv_invitation).new_invitation.deliver_later
 
       redirect_to admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation)
     else
