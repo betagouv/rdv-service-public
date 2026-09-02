@@ -1,5 +1,6 @@
 class AgentAuthController < ApplicationController
   include Admin::AuthenticatedControllerConcern
+  include Agents::SessionConcern
 
   layout "application_agent"
 
@@ -33,7 +34,7 @@ class AgentAuthController < ApplicationController
     return unless path_org_id
 
     @current_organisation = Organisation.find(path_org_id).tap do |found_org|
-      session[:latest_used_organisation_id] = found_org.id if found_org
+      agent_session[:latest_used_organisation_id] = found_org.id if found_org
     end
   end
 

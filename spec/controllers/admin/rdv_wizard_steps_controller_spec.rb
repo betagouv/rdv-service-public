@@ -89,7 +89,7 @@ RSpec.describe Admin::RdvWizardStepsController, type: :controller do
 
     it "creates the rdv and flashes success" do
       expect { create_request }.to change(Rdv, :count).by(1)
-      expect(flash[:success]).to match(/Le rendez-vous a été créé/)
+      expect(flash[:success]).to include("Le rendez-vous a été créé")
     end
 
     context "when the rdv is in the past" do
@@ -104,7 +104,7 @@ RSpec.describe Admin::RdvWizardStepsController, type: :controller do
     context "with a visio motif and a ProConnect access_token in session" do
       let(:motif) { create(:motif, location_type: :visio) }
 
-      before { session[:pro_connect_access_token] = "un-token" }
+      before { session[:agent] = { pro_connect_access_token: "un-token" } }
 
       it "creates a Visio Numérique room and assigns its url" do
         stub_request(:post, "#{VisioNumerique::CreateRoom::DEFAULT_API_URL}/rooms/")

@@ -1,4 +1,6 @@
 class Agents::SessionsByCodeController < ApplicationController
+  include Agents::SessionConcern
+
   SESSION_AGENT_ID_KEY = :pending_agent_login_id
   SESSION_PRO_CONNECT_ID_TOKEN_KEY = :pending_pro_connect_id_token
 
@@ -23,7 +25,7 @@ class Agents::SessionsByCodeController < ApplicationController
       validator.valid_login_code.update!(used_at: Time.zone.now)
       session.delete(SESSION_AGENT_ID_KEY)
       if session[SESSION_PRO_CONNECT_ID_TOKEN_KEY]
-        session[:pro_connect_id_token] = session.delete(SESSION_PRO_CONNECT_ID_TOKEN_KEY)
+        agent_session[:pro_connect_id_token] = session.delete(SESSION_PRO_CONNECT_ID_TOKEN_KEY)
       end
       sign_in(agent, scope: :agent)
       redirect_to after_sign_in_path_for(agent)

@@ -8,7 +8,7 @@ class Admin::OnlineBookingMotifsForm
     @motif_ids = motifs.bookable_by_everyone.pluck(:id)
   end
 
-  def submit(new_motif_ids, flash, session)
+  def submit(new_motif_ids, flash, agent_session)
     new_motif_ids ||= []
 
     motifs_open_before_update = motifs.bookable_by_everyone.any?
@@ -23,7 +23,7 @@ class Admin::OnlineBookingMotifsForm
 
     motifs_open_after_update = motifs.bookable_by_everyone.any?
 
-    prepare_flash_and_session(flash, session, motifs_open_before_update, motifs_open_after_update)
+    prepare_flash_and_session(flash, agent_session, motifs_open_before_update, motifs_open_after_update)
   end
 
   private
@@ -32,7 +32,7 @@ class Admin::OnlineBookingMotifsForm
     @motifs ||= @organisation.motifs.active
   end
 
-  def prepare_flash_and_session(flash, session, motifs_open_before_update, motifs_open_after_update)
+  def prepare_flash_and_session(flash, agent_session, motifs_open_before_update, motifs_open_after_update)
     if motifs_open_before_update
       if motifs_open_after_update
         flash[:success] = "La liste des motifs ouverts à la réservation en ligne a été mise à jour."
@@ -40,21 +40,21 @@ class Admin::OnlineBookingMotifsForm
         flash[:notice] = "La réservation en ligne a été fermée"
       end
     elsif motifs_open_after_update
-      prepare_flash_and_session_for_activation(flash, session)
+      prepare_flash_and_session_for_activation(flash, agent_session)
     else
       flash[:error] = "Vous devez choisir au moins un motif pour ouvrir la réservation en ligne"
     end
   end
 
-  def prepare_flash_and_session_for_activation(flash, session)
+  def prepare_flash_and_session_for_activation(flash, agent_session)
     banner = OnlineBookingOnboardingBanner.new(@organisation)
 
     if banner.availabilities_needed?
       # Si on affiche la bannière, on ne met pas le flash, parce que ça fait doublon d'avoir une confirmation au dessus du titre et un avertissement sous le titre
-      session["OnlineBookingMotifsForm:completed"] = true
+      agent_session["OnlineBookingMotifsForm:completed"] = true
     else
       motif_names = motifs.bookable_by_everyone.pluck(:name)
-      flash[:success] = if motif_names.count == 1
+      flash[:success] = if motif_names.one?
                           "Le motif #{motif_names.first} est ouvert pour la réservation en ligne."
                         else
                           "Les motifs #{motif_names.to_sentence} sont ouverts pour la réservation en ligne."

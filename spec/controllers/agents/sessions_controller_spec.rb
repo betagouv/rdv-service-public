@@ -16,12 +16,10 @@ RSpec.describe Agents::SessionsController do
         expect(session["warden.agent.key"]).to be_nil
       end
 
-      it "efface les jetons ProConnect de la session" do
-        session[:pro_connect_access_token] = "fake_access_token"
-        session[:pro_connect_id_token] = "fake_id_token"
+      it "efface la session propre à l'agent (jetons ProConnect inclus)" do
+        session[:agent] = { pro_connect_access_token: "fake_access_token", pro_connect_id_token: "fake_id_token" }
         post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
-        expect(session[:pro_connect_access_token]).to be_nil
-        expect(session[:pro_connect_id_token]).to be_nil
+        expect(session[:agent]).to be_nil
       end
     end
 
@@ -60,12 +58,10 @@ RSpec.describe Agents::SessionsController do
         expect(LoginCode.last.email).to eq(agent.email)
       end
 
-      it "efface les jetons ProConnect de la session" do
-        session[:pro_connect_access_token] = "fake_access_token"
-        session[:pro_connect_id_token] = "fake_id_token"
+      it "efface la session propre à l'agent (jetons ProConnect inclus)" do
+        session[:agent] = { pro_connect_access_token: "fake_access_token", pro_connect_id_token: "fake_id_token" }
         post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
-        expect(session[:pro_connect_access_token]).to be_nil
-        expect(session[:pro_connect_id_token]).to be_nil
+        expect(session[:agent]).to be_nil
       end
     end
   end
@@ -73,10 +69,10 @@ RSpec.describe Agents::SessionsController do
   describe "#destroy" do
     before { sign_in agent }
 
-    it "efface le jeton d'accès ProConnect de la session" do
-      session[:pro_connect_access_token] = "fake_access_token"
+    it "efface la session propre à l'agent (jetons ProConnect inclus)" do
+      session[:agent] = { pro_connect_access_token: "fake_access_token" }
       get :destroy
-      expect(session[:pro_connect_access_token]).to be_nil
+      expect(session[:agent]).to be_nil
     end
 
     context "when the agent was logged in with ProConnect" do
@@ -85,12 +81,12 @@ RSpec.describe Agents::SessionsController do
       before do
         ProConnectStubs.stub_and_run_discover_request
         # C'est compliqué de manipuler la session dans une feature spec, c'est pour ça qu'on utilise une spec de controller ici
-        session[:pro_connect_id_token] = "fake_pro_connect_id_token"
+        session[:agent] = { pro_connect_id_token: "fake_pro_connect_id_token" }
       end
 
       it "signs out the agent and redirects them to the ProConnect logout url with the right params" do
         get :destroy
-        expect(session[:pro_connect_id_token]).to be_nil
+        expect(session[:agent]).to be_nil
 
         redirect_url = response.headers["Location"]
 

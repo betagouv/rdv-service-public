@@ -132,7 +132,7 @@ RSpec.describe ProConnectController do
         }
         expect(agent).to have_attributes(expected_attrs)
         expect(current_agent_id).to eq(agent.id)
-        expect(session["pro_connect_id_token"]).to be_present
+        expect(session[:agent][:pro_connect_id_token]).to be_present
         expect(response).to redirect_to("/agents/edit")
       end
 
@@ -162,7 +162,7 @@ RSpec.describe ProConnectController do
           }
           expect(agent).to have_attributes(expected_attrs)
           expect(current_agent_id).to eq(agent.id)
-          expect(session["pro_connect_id_token"]).to be_present
+          expect(session[:agent][:pro_connect_id_token]).to be_present
           expect(response).to redirect_to("/agents/edit") # stored location via after_sign_in_path_for
         end
       end
@@ -362,13 +362,12 @@ RSpec.describe ProConnectController do
       context "quand l'agent est redirigé vers un autre domaine juste après sa connexion" do
         before { allow(controller).to receive(:should_redirect_to_domain_etat?).and_return(true) }
 
-        it "efface les jetons ProConnect de la session avant la redirection" do
+        it "efface la session propre à l'agent (jetons ProConnect inclus) avant la redirection" do
           create(:agent, email: user_info["email"])
           get :callback, params: { state:, code: }
 
           expect(response).to redirect_to(start_with("http://"))
-          expect(session[:pro_connect_access_token]).to be_nil
-          expect(session[:pro_connect_id_token]).to be_nil
+          expect(session[:agent]).to be_nil
         end
       end
     end

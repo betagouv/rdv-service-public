@@ -87,7 +87,7 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
 
           it "transfère le token vers pro_connect_id_token et supprime le pending" do
             post :create, params: { login_code: { code: login_code.code } }
-            expect(session[:pro_connect_id_token]).to eq("fake_pro_connect_token")
+            expect(session[:agent][:pro_connect_id_token]).to eq("fake_pro_connect_token")
             expect(session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY]).to be_nil
           end
         end

@@ -70,7 +70,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
   def set_services_and_motifs
     @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif).available_motifs_for_organisation_and_agent(current_organisation, @agent)
     @services = Service.where(id: @motifs.pluck(:service_id).uniq)
-    @rdv_wizard.service_id = @services.first.id if @services.count == 1
+    @rdv_wizard.service_id = @services.first.id if @services.one?
   end
 
   # Cette méthode est dans le controller plutôt que dans le visio_concern car la création du salon
@@ -81,9 +81,9 @@ class Admin::RdvWizardStepsController < AgentAuthController
     return unless current_step == "step4"
     return unless @rdv.motif&.visio?
     return if ENV["VISIO_NUMERIQUE_DISABLED"]
-    return if session[:pro_connect_access_token].blank?
+    return if agent_session[:pro_connect_access_token].blank?
 
-    result = VisioNumerique::CreateRoom.new(access_token: session[:pro_connect_access_token]).call
+    result = VisioNumerique::CreateRoom.new(access_token: agent_session[:pro_connect_access_token]).call
     @rdv.visio_url_custom = result["url"]
   rescue VisioNumerique::CreateRoom::ApiError => e
     Rails.logger.error("Visio Numerique API error: #{e.message}")

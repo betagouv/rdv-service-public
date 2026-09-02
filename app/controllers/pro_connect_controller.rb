@@ -222,8 +222,8 @@ class ProConnectController < ApplicationController
     agent.save!
 
     bypass_sign_in agent, scope: :agent
-    session[:pro_connect_id_token] = callback_client.id_token_for_logout
-    session[:pro_connect_access_token] = callback_client.access_token
+    agent_session[:pro_connect_id_token] = callback_client.id_token_for_logout
+    agent_session[:pro_connect_access_token] = callback_client.access_token
 
     if pro_connect_session[:silent_login]
       flash[:login] = "Vous avez été connecté automatiquement par ProConnect avec l'adresse email #{agent.email}."
