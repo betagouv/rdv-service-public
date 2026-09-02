@@ -23,9 +23,9 @@
         .fr-mt-2w
           - if @rdv.lieu
             = lieu_icon(class: "fr-mr-1w")
-            = @rdv.lieu.name
+            | Lieu : #{@rdv.lieu.name}
             br
-            .fr-ml-4w= @rdv.lieu.address
+            .fr-ml-4w = @rdv.lieu.address
           / TODO: gérer les autres location types
 
         .fr-mt-2w
