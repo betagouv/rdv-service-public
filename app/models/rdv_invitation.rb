@@ -1,19 +1,22 @@
 class RdvInvitation < ApplicationRecord
-  encrypts :token, deterministic: true
-
   has_paper_trail
 
+  encrypts :token, deterministic: true
+
+  # Relations
   belongs_to :inviting_agent, class_name: "Agent"
   belongs_to :user
-
   belongs_to :motif
   belongs_to :lieu, optional: true
   belongs_to :rdv, optional: true
 
+  # Delegates
   delegate :organisation, to: :motif
 
+  # Hooks
   before_create :set_token
 
+  # Validation
   validate :user_can_be_notified
   validate :validate_phone_number_present_for_motif_by_phone
 
