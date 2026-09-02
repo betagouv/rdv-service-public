@@ -41,14 +41,14 @@ RSpec.describe Agent, type: :model do
 
     it "delete associations" do
       territory = create(:territory)
-      create(:agent_territorial_role, territory: territory, agent: create(:agent)) # le territory doit avoir au moins un admin
+      create(:agent_territorial_access_right, :territory_admin, territory: territory, agent: create(:agent)) # le territory doit avoir au moins un admin
       agent = create(:agent, basic_role_in_organisations: [])
 
       create(:absence, agent: agent)
       create(:plage_ouverture, agent: agent)
       agent.services << create(:service)
       create(:agent_territorial_access_right, agent: agent)
-      create(:agent_territorial_role, agent: agent, territory: territory)
+      create(:agent_territorial_access_right, :territory_admin, agent: agent, territory: territory)
       agent.teams << create(:team)
       create(:referent_assignation, agent: agent)
       create(:sector_attribution, :level_agent, agent: agent)
@@ -60,7 +60,6 @@ RSpec.describe Agent, type: :model do
       expect(agent.plage_ouvertures).to be_empty
       expect(agent.services).to be_empty
       expect(agent.agent_territorial_access_rights).to be_empty
-      expect(agent.territorial_roles).to be_empty
       expect(agent.teams).to be_empty
       expect(agent.referent_assignations).to be_empty
       expect(agent.sector_attributions).to be_empty

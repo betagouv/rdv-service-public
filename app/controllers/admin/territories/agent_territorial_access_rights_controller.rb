@@ -1,16 +1,20 @@
 class Admin::Territories::AgentTerritorialAccessRightsController < Admin::Territories::BaseController
   def update
-    agent = Agent.find(params[:id])
+    agent = Agent::AgentPolicy::Scope.new(current_agent, Agent.all).resolve.find(params[:id])
     agent_territorial_access_right = AgentTerritorialAccessRight.find_by(agent: agent, territory: current_territory)
-    agent_territorial_access_right.assign_attributes(agent_territorial_access_right_params)
     authorize(agent_territorial_access_right, policy_class: Agent::AgentTerritorialAccessRightPolicy)
 
-    agent_territorial_access_right.save!
-    flash[:success] = "Droits d'accès mis à jour"
-    redirect_to edit_admin_territory_agent_path(current_territory, agent)
-  end
+    policy = Agent::AgentTerritorialAccessRightPolicy.new(current_agent, agent_territorial_access_right)
+    permitted_params = params.require(:agent_territorial_access_right).permit(*policy.permitted_attributes)
 
-  def agent_territorial_access_right_params
-    params.require(:agent_territorial_access_right).permit(:allow_to_manage_teams, :allow_to_manage_access_rights, :allow_to_invite_agents)
+    agent_territorial_access_right.assign_attributes(permitted_params)
+    authorize(agent_territorial_access_right, policy_class: Agent::AgentTerritorialAccessRightPolicy)
+
+    if agent_territorial_access_right.save
+      flash[:success] = "Droits d'accès mis à jour"
+    else
+      flash[:error] = agent_territorial_access_right.errors.full_messages.to_sentence
+    end
+    redirect_to edit_admin_territory_agent_path(current_territory, agent)
   end
 end

@@ -49,7 +49,7 @@ RSpec.describe WebhookEndpoint, type: :model do
   describe "sending notifications for a new URL" do
     let!(:territory) { create(:territory) }
     let!(:organisation) { create(:organisation, territory: territory) }
-    let!(:territory_admins) { create_list(:agent, 2, admin_role_in_organisations: [organisation], role_in_territories: [territory]) }
+    let!(:territory_admins) { create_list(:agent, 2, admin_role_in_organisations: [organisation], admin_in_territories: [territory]) }
 
     around do |example|
       perform_enqueued_jobs { example.run }

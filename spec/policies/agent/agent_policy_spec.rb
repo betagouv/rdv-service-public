@@ -100,7 +100,7 @@ RSpec.describe Agent::AgentPolicy::Scope, type: :policy do
         let!(:other_organisation_in_territory) { create(:organisation, territory: territory) }
         let!(:agent_in_other_org_in_territory) { create(:agent, organisations: [other_organisation_in_territory]) }
 
-        before { agent.territories << territory }
+        before { create(:agent_territorial_access_right, :territory_admin, agent: agent, territory: territory) }
 
         it { is_expected.to contain_exactly(agent, other_agent_same_orgas, agent_in_other_org_in_territory) }
       end
@@ -136,7 +136,7 @@ RSpec.describe Agent::AgentPolicy::Scope, type: :policy do
           :agent, :with_service,
           basic_role_in_organisations: [same_territory_organisations[0], other_territory_organisations[0]],
           admin_role_in_organisations: [same_territory_organisations[1], other_territory_organisations[1]],
-          role_in_territories: [territories[0]]
+          admin_in_territories: [territories[0]]
         )
       end
       let!(:other_agent_same_territory1) { create(:agent, basic_role_in_organisations: [same_territory_organisations[0]]) }

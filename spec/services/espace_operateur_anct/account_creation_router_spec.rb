@@ -56,15 +56,14 @@ RSpec.describe EspaceOperateurANCT::AccountCreationRouter do
           it "rattache l'agent à l'organisation et au territoire existants sans créer de nouveaux records" do
             expect { handler.call }
               .to change(AgentRole, :count).by(1)
-              .and change(AgentTerritorialRole, :count).by(1)
               .and change(AgentTerritorialAccessRight, :count).by(1)
 
             expect(Territory.count).to eq(1)
             expect(Organisation.count).to eq(1)
             expect(AgentRole.last).to have_attributes(agent: agent, organisation: organisation, access_level: "admin")
-            expect(AgentTerritorialRole.last).to have_attributes(agent: agent, territory: territory)
             expect(AgentTerritorialAccessRight.last).to have_attributes(
               agent: agent, territory: territory,
+              territory_admin: true,
               allow_to_manage_access_rights: true,
               allow_to_invite_agents: true
             )

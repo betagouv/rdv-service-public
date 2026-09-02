@@ -28,8 +28,8 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
       @organisation.save!
 
       AgentRole.create!(agent: current_agent, access_level: :admin, organisation: @organisation)
-      AgentTerritorialRole.create!(agent: current_agent, territory: @organisation.territory)
       AgentTerritorialAccessRight.create!(agent: current_agent, territory: @organisation.territory,
+                                          territory_admin: true,
                                           allow_to_manage_access_rights: true,
                                           allow_to_invite_agents: true)
 

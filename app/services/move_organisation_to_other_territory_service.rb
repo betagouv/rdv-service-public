@@ -22,7 +22,6 @@ class MoveOrganisationToOtherTerritoryService < BaseService
       copy_services
       copy_teams
       copy_access_rights
-      copy_territorial_roles
       move_organisation_record
       suggest_cleanup_origin_territory
 
@@ -115,9 +114,10 @@ class MoveOrganisationToOtherTerritoryService < BaseService
       if access_right_target
         Rails.logger.info("  ⚠️  Droits d'accès existants pour l'agent #{agent.id} - fusion des permissions")
         access_right_target.update!(
-          allow_to_manage_teams: access_right_target.allow_to_manage_teams || access_right_origin.allow_to_manage_teams,
-          allow_to_manage_access_rights: access_right_target.allow_to_manage_access_rights || access_right_origin.allow_to_manage_access_rights,
-          allow_to_invite_agents: access_right_target.allow_to_invite_agents || access_right_origin.allow_to_invite_agents
+          territory_admin: access_right_target.territory_admin? || access_right_origin.territory_admin?,
+          allow_to_manage_teams: access_right_target.allow_to_manage_teams? || access_right_origin.allow_to_manage_teams?,
+          allow_to_manage_access_rights: access_right_target.allow_to_manage_access_rights? || access_right_origin.allow_to_manage_access_rights?,
+          allow_to_invite_agents: access_right_target.allow_to_invite_agents? || access_right_origin.allow_to_invite_agents?
         )
         counters[:access_rights_merges] += 1
       else
@@ -128,25 +128,6 @@ class MoveOrganisationToOtherTerritoryService < BaseService
       end
     end
     Rails.logger.info("  ✅ #{counters[:access_rights_copies]} droits copiés, #{counters[:access_rights_merges]} fusions effectuées")
-  end
-
-  def copy_territorial_roles
-    Rails.logger.info("🔄 Copie des rôles territoriaux d'agents…")
-    AgentTerritorialRole
-      .where(territory: @territory_origin, agent_id: @origin_organisation.agent_ids)
-      .each do |role_origin|
-      agent = role_origin.agent
-      if agent.territorial_roles.exists?(territory: @territory_target)
-        Rails.logger.info("  ℹ️  Agent #{agent.id} a déjà un rôle territorial dans le territoire cible")
-      else
-        new_role = role_origin.dup
-        new_role.territory = @territory_target
-        new_role.save!
-        Rails.logger.info("  ➕ Rôle territorial copié pour l'agent #{agent.id}")
-        counters[:territorial_roles_copies] += 1
-      end
-    end
-    Rails.logger.info("  ✅ #{counters[:territorial_roles_copies]} nouveaux rôles territoriaux copiés")
   end
 
   def move_organisation_record
@@ -162,7 +143,7 @@ class MoveOrganisationToOtherTerritoryService < BaseService
     Rails.logger.info("   Vous devriez envisager de le supprimer ou de transférer ses ressources restantes.")
     remaining_teams = @territory_origin.teams.count
     remaining_sectors = @territory_origin.sectors.count
-    remaining_roles = @territory_origin.roles.count
+    remaining_roles = @territory_origin.agent_territorial_access_rights.where(territory_admin: true).count
     Rails.logger.info("   Ressources restantes: #{remaining_teams} équipes, #{remaining_sectors} secteurs, #{remaining_roles} rôles")
   end
 end

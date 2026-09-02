@@ -83,7 +83,6 @@ class Agent < ApplicationRecord
   has_many :absences, dependent: :destroy
   has_many :agents_rdvs, dependent: :restrict_with_error
   has_many :roles, class_name: "AgentRole", dependent: :destroy
-  has_many :territorial_roles, class_name: "AgentTerritorialRole", dependent: :destroy
   has_many :sector_attributions, dependent: :destroy
   has_many :agent_teams, dependent: :destroy
   has_many :referent_assignations, dependent: :destroy
@@ -98,8 +97,8 @@ class Agent < ApplicationRecord
   has_many :teams, through: :agent_teams
   has_many :lieux, through: :plage_ouvertures
   has_many :rdvs, dependent: :restrict_with_error, through: :agents_rdvs
-  has_many :territories, through: :territorial_roles
-  has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
+  has_many :admin_territories, -> { where(agent_territorial_access_rights: { territory_admin: true }) }, through: :agent_territorial_access_rights, source: :territory
+  has_many :organisations_of_admin_territories, source: :organisations, through: :admin_territories
   # we specify dependent: :destroy because by default it will be deleted (dependent: :delete)
   # and we need to destroy to trigger the callbacks on the model
   has_many :users, through: :referent_assignations, dependent: :destroy
@@ -174,7 +173,6 @@ class Agent < ApplicationRecord
       plage_ouvertures.destroy_all
       agent_services.destroy_all
       agent_territorial_access_rights.destroy_all
-      territorial_roles.destroy_all
       agent_teams.destroy_all
       referent_assignations.destroy_all
       sector_attributions.destroy_all
@@ -264,7 +262,7 @@ class Agent < ApplicationRecord
   end
 
   def territorial_admin_in?(territory)
-    territorial_roles.exists?(territory: territory)
+    agent_territorial_access_rights.exists?(territory: territory, territory_admin: true)
   end
 
   def participates_in?(rdv)

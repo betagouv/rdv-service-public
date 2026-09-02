@@ -28,41 +28,28 @@ h1
               .fr-mb-0.fr-text--sm.fr-text-mention--grey
                 | Vous n’avez pas les droits nécessaires pour modifier les services des agents
 
-  - can_edit_access_rights = Agent::AgentTerritorialAccessRightPolicy.new(current_agent, @agent.agent_territorial_access_rights.find_by(territory: current_territory)).edit?
+  ruby:
+    target_access_right = @agent.agent_territorial_access_rights.find_or_initialize_by(territory: current_territory)
+    access_right_policy = Agent::AgentTerritorialAccessRightPolicy.new(current_agent, target_access_right)
+    can_edit_access_rights = access_right_policy.allow_to_manage_access_rights?
+    can_edit_territory_admin = access_right_policy.edit_territory_admin?
   .card.m-2.rounded
     h2.card-header
       = t(".agent_access_rights_legend")
-    = simple_form_for @agent.agent_territorial_access_rights.find_by(territory: current_territory), url: admin_territory_agent_territorial_access_right_path do |f|
+    = simple_form_for target_access_right, url: admin_territory_agent_territorial_access_right_path do |f|
       .card-body
+        = f.input :territory_admin, as: :boolean, label: "Administrateur de #{current_territory.name_for_agent}", hint: "Ce statut d'agent ouvre un large accès à la création d'organisation, la gestion de la sectorisation, la gestion des webhook, la configuration de ce qui est visible dans une fiche usager, une fiche RDV, la visiblité des catégories de motif, …", disabled: !can_edit_territory_admin
         = f.input :allow_to_manage_teams, as: :boolean, hint: "Créer, supprimer, modifier toutes les équipes de #{current_territory.name_for_agent}", disabled: !can_edit_access_rights
         = f.input :allow_to_manage_access_rights, as: :boolean, hint: "Modifier les droits d'accès et les services de tous les agents de #{current_territory.name_for_agent}", disabled: !can_edit_access_rights
         = f.input :allow_to_invite_agents, as: :boolean, hint: "Inviter d'autre personne sur l'espace, les affecter ou retirer de chacune des organisations de #{current_territory.name_for_agent}", disabled: !can_edit_access_rights
       .card-footer
         .row
           .col.text-right
-            - if can_edit_access_rights
+            - if can_edit_access_rights || can_edit_territory_admin
               = f.submit class: "fr-btn", value: "Enregistrer les droits d'accès"
             - else
               .fr-mb-0.fr-text--sm.fr-text-mention--grey
                 | Vous n’avez pas les droits nécessaires pour modifier les droits d’accès des agents
-
-  - if Agent::AgentTerritorialRolePolicy.new(current_agent, AgentTerritorialRole.new(agent: @agent, territory: current_territory)).create_or_destroy?
-    .card.m-2.rounded.agent-territorial
-      h2.card-header
-        = t(".agent_territorial_role_caption")
-
-      = simple_form_for @agent, url: create_or_destroy_admin_territory_agent_territorial_roles_path(current_territory, agent_id: @agent), method: :put do |f|
-        .card-body
-          = check_box_tag :territorial_admin, 1, @agent.territorial_admin_in?(current_territory)
-          span>
-          = label_tag :territorial_admin, "Administrateur de #{current_territory.name_for_agent}"
-          small.form-text.fr-text-mention--grey
-            | Ce status d'agent ouvre un large accès à la création d'organisation, la gestion de la sectorisation, la gestion des webhook, la configuration de ce qui est visible dans une fiche usager, une fiche RDV, la visiblité des catégories de motif, …
-
-        .card-footer
-          .row
-            .col.text-right
-              = f.submit class: "fr-btn"
 
   - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_teams?
     .card.m-2.rounded

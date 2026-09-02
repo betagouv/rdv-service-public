@@ -1,11 +1,12 @@
+# Ces feature specs sont complétées par des specs sur les permissions dans spec/controllers/admin/territories/agent_territorial_access_rights_controller_spec.rb
+
 RSpec.describe "territory admin can manage agents", type: :feature do
   let(:territory) { create(:territory, departement_number: "62") }
   let(:organisation) { create(:organisation, territory: territory) }
 
   describe "listing agents" do
     it "works" do
-      zarg = create(:agent, last_name: "Zarg", admin_role_in_organisations: [organisation], role_in_territories: [territory])
-      create(:agent_territorial_access_right, agent: zarg, territory: territory)
+      zarg = create(:agent, last_name: "Zarg", admin_role_in_organisations: [organisation], admin_in_territories: [territory])
       blot = create(:agent, last_name: "Blot", basic_role_in_organisations: [organisation])
       create(:agent_territorial_access_right, agent: blot, territory: territory)
       login_as(zarg, scope: :agent)
@@ -28,7 +29,7 @@ RSpec.describe "territory admin can manage agents", type: :feature do
 
   describe "inviting an agent" do
     let(:admin) do
-      create(:agent, role_in_territories: [territory], admin_role_in_organisations: [organisation, other_organisation])
+      create(:agent, admin_in_territories: [territory], admin_role_in_organisations: [organisation, other_organisation])
     end
     let!(:organisation) { create(:organisation, name: "MDS de Valence", territory: territory) }
     let!(:other_organisation) { create(:organisation, name: "MDS de Chambéry", territory: territory) }
@@ -79,8 +80,8 @@ RSpec.describe "territory admin can manage agents", type: :feature do
     it "works" do
       team_a = create(:team, name: "A", territory: territory)
       team_b = create(:team, name: "B", territory: territory)
-      current_agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [], teams: [team_a])
-      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [], teams: [team_a, team_b])
+      current_agent = create(:agent, admin_role_in_organisations: [organisation], admin_in_territories: [], teams: [team_a])
+      agent = create(:agent, admin_role_in_organisations: [organisation], admin_in_territories: [], teams: [team_a, team_b])
       create(:agent_territorial_access_right, agent: current_agent, territory: territory, allow_to_manage_teams: true)
       create(:agent_territorial_access_right, agent: agent, territory: territory)
       login_as(current_agent, scope: :agent)
@@ -98,7 +99,7 @@ RSpec.describe "territory admin can manage agents", type: :feature do
     let!(:edited_agent) { create(:agent, admin_role_in_organisations: [organisation], services: [service_a, service_b]) }
 
     before do
-      current_agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory], services: [service_c])
+      current_agent = create(:agent, admin_role_in_organisations: [organisation], services: [service_c])
       # l'agent qui édite doit avoir les droits d'édition
       create(:agent_territorial_access_right, agent: current_agent, territory: territory, allow_to_manage_access_rights: true)
       # l'agent édité doit avoir un agent_territorial_access_right car sinon le formulaire plante
@@ -124,13 +125,13 @@ RSpec.describe "territory admin can manage agents", type: :feature do
     end
   end
 
-  describe "un agent appartient à un service désactivé" do
+  describe "un agent appartient à un service désactivé" do
     let!(:service_a) { create(:service, name: "Service A", territories: [territory]) }
     let!(:service_b) { create(:service, name: "Service B") }
     let!(:edited_agent) { create(:agent, admin_role_in_organisations: [organisation], services: [service_b]) }
 
     before do
-      current_agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory], services: [service_a])
+      current_agent = create(:agent, admin_role_in_organisations: [organisation], services: [service_a])
       # l'agent qui édite doit avoir les droits d'édition
       create(:agent_territorial_access_right, agent: current_agent, territory: territory, allow_to_manage_access_rights: true)
       # l'agent édité doit avoir un agent_territorial_access_right car sinon le formulaire plante
@@ -151,7 +152,7 @@ RSpec.describe "territory admin can manage agents", type: :feature do
 
   describe "setting access rights" do
     let(:current_agent) do
-      create(:agent, role_in_territories: [territory])
+      create(:agent)
     end
 
     it "allows modifying them" do

@@ -139,7 +139,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
     let!(:new_service) { create(:service, name: "CSS", territories: []) }
 
     before do
-      create(:agent_territorial_role, agent: organisation_admin, territory: territory)
+      create(:agent_territorial_access_right, :territory_admin, agent: organisation_admin, territory: territory)
     end
 
     it "requires the territory admin to activate the new service" do

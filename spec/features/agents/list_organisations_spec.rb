@@ -1,7 +1,7 @@
 RSpec.describe "Lister les organisations et y naviguer" do
   context "quand l'agent a une seule organisation" do
     let!(:organisation) { create(:organisation, name: "Mon unique orga") }
-    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [organisation.territory]) }
+    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation], admin_in_territories: [organisation.territory]) }
 
     before { login_as(agent, scope: :agent) }
 
@@ -29,7 +29,7 @@ RSpec.describe "Lister les organisations et y naviguer" do
     let!(:territory) { create(:territory) }
     let!(:organisation1) { create(:organisation, territory: territory, name: "MDS de Paris Nord") }
     let!(:organisation2) { create(:organisation, territory: territory, name: "MDS de Paris Sud") }
-    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation1, organisation2], role_in_territories: [territory]) }
+    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation1, organisation2], admin_in_territories: [territory]) }
 
     before { login_as(agent, scope: :agent) }
 

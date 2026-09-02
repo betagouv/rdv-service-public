@@ -392,6 +392,7 @@ agent_org_paris_nord_pmi_martine = Agent.new(
   roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
     territory: territory75,
+    territory_admin: true,
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
     allow_to_invite_agents: true,
@@ -399,7 +400,6 @@ agent_org_paris_nord_pmi_martine = Agent.new(
 )
 agent_org_paris_nord_pmi_martine.skip_confirmation!
 agent_org_paris_nord_pmi_martine.save!
-agent_org_paris_nord_pmi_martine.territorial_roles.create!(territory: territory75)
 
 agent_org_paris_nord_pmi_marco = Agent.new(
   email: "marco@demo.rdv-solidarites.fr",
@@ -471,6 +471,7 @@ org_arques_pmi_maya = Agent.new(
   roles_attributes: Organisation.where(territory: territory62).pluck(:id).map { { organisation_id: _1, access_level: AgentRole::ACCESS_LEVEL_ADMIN } },
   agent_territorial_access_rights_attributes: [{
     territory: territory62,
+    territory_admin: true,
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
     allow_to_invite_agents: true,
@@ -478,7 +479,6 @@ org_arques_pmi_maya = Agent.new(
 )
 org_arques_pmi_maya.skip_confirmation!
 org_arques_pmi_maya.save!
-org_arques_pmi_maya.territorial_roles.create!(territory: territory62)
 
 agent_org_bapaume_pmi_bruno = Agent.new(
   email: "bruno@demo.rdv-solidarites.fr",
@@ -491,14 +491,11 @@ agent_org_bapaume_pmi_bruno = Agent.new(
   roles_attributes: [{ organisation: org_bapaume, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
     territory: territory62,
-    allow_to_manage_teams: false,
-    allow_to_manage_access_rights: false,
-    allow_to_invite_agents: false,
+    territory_admin: true,
   }]
 )
 agent_org_bapaume_pmi_bruno.skip_confirmation!
 agent_org_bapaume_pmi_bruno.save!
-AgentTerritorialRole.create!(agent: agent_org_bapaume_pmi_bruno, territory: territory62)
 
 agent_org_bapaume_pmi_gina = Agent.new(
   email: "gina@demo.rdv-solidarites.fr",

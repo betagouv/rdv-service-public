@@ -19,7 +19,7 @@ RSpec.describe Agent::ZonePolicy do
     let(:territory) { create(:territory) }
     let(:sector) { create(:sector, territory:) }
     let(:zone) { create(:zone, sector:) }
-    let(:agent) { create(:agent, role_in_territories: [territory]) }
+    let(:agent) { create(:agent, admin_in_territories: [territory]) }
 
     it_behaves_like "permit actions", :zone,
                     :new?,
@@ -32,7 +32,7 @@ RSpec.describe Agent::ZonePolicy do
     let(:territory_agent) { create(:territory) }
     let(:sector) { create(:sector, territory: territory_zone) }
     let(:zone) { create(:zone, sector:) }
-    let(:agent) { create(:agent, role_in_territories: [territory_agent]) }
+    let(:agent) { create(:agent, admin_in_territories: [territory_agent]) }
 
     it_behaves_like "not permit actions", :zone,
                     :new?,
@@ -60,7 +60,7 @@ RSpec.describe Agent::ZonePolicy do
     let!(:zone_partdieu) { create(:zone, city_name: "Lyon", sector: sector_partdieu) }
 
     context "agent has territorial roles in multiple territories" do
-      let(:agent) { create(:agent, role_in_territories: [territory_paris, territory_marseille]) }
+      let(:agent) { create(:agent, admin_in_territories: [territory_paris, territory_marseille]) }
 
       context "returns only zones in the territory used as scope" do
         subject do
@@ -75,7 +75,7 @@ RSpec.describe Agent::ZonePolicy do
     end
 
     context "agent has single territorial role in Paris" do
-      let(:agent) { create(:agent, role_in_territories: [territory_paris]) }
+      let(:agent) { create(:agent, admin_in_territories: [territory_paris]) }
 
       context "doesn't find zones in other espaces" do
         subject do
@@ -90,7 +90,7 @@ RSpec.describe Agent::ZonePolicy do
     end
 
     context "agent has no territorial roles at all" do
-      let(:agent) { create(:agent, role_in_territories: []) }
+      let(:agent) { create(:agent, admin_in_territories: []) }
 
       context "doesn't return any zones" do
         subject { described_class.new(agent, Zone.all).resolve }

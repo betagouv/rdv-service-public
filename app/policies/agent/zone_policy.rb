@@ -21,7 +21,7 @@ class Agent::ZonePolicy
     def resolve
       @scope
         .joins(:sector)
-        .where(sectors: { territory_id: @current_agent.territorial_roles.pluck(:territory_id) })
+        .where(sectors: { territory_id: @current_agent.agent_territorial_access_rights.where(territory_admin: true).pluck(:territory_id) })
     end
   end
 end

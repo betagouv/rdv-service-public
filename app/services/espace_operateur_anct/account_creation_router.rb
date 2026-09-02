@@ -80,9 +80,9 @@ class EspaceOperateurANCT::AccountCreationRouter
       capture_attach_sentry_message(matching_operator, territory, organisation, new_account: existing_territory.nil? || existing_organisation.nil?)
 
       AgentRole.create!(agent: @agent, organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
-      AgentTerritorialRole.create!(agent: @agent, territory: territory)
       AgentTerritorialAccessRight.create!(
         agent: @agent, territory: territory,
+        territory_admin: true,
         allow_to_manage_access_rights: true,
         allow_to_invite_agents: true
       )
