@@ -6,11 +6,12 @@ class Admin::AgentsController < AgentAuthController
 
   def index
     @agents_search_form = Admin::AgentsSearchForm.new(current_organisation:, query: params.dig(:search, :query), role: params.dig(:search, :role))
-    @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active
-    @agents = @agents_search_form.filter_agents(@agents)
+    agents_scope = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active
+    @agents = @agents_search_form.filter_agents(agents_scope)
     @agents = @agents.includes(:services, :roles, :organisations)
     @agents = @agents.page(page_number)
     @display_services = current_territory.services.any? || current_organisation.agents.joins(:agent_services).any?
+    @agents_filtered_out_count = @agents_search_form.organisation_scope(agents_scope).count - @agents.total_count
   end
 
   def new
