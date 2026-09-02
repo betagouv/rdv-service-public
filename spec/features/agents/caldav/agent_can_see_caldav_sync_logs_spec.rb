@@ -22,8 +22,8 @@ RSpec.describe "Agent can see CalDAV sync logs" do
       ended_at: Time.zone.parse("2026-08-20 10:00:02"),
       successful: true
     )
-    create(:external_calendar_sync_execution_log, external_calendar_sync_execution: successful_execution, message: "Récupération de 3 événements")
-    create(:external_calendar_sync_execution_log, external_calendar_sync_execution: successful_execution, message: "Synchronisation terminée")
+    create(:external_calendar_sync_executions_log, external_calendar_sync_execution: successful_execution, message: "Récupération de 3 événements")
+    create(:external_calendar_sync_executions_log, external_calendar_sync_execution: successful_execution, message: "Synchronisation terminée")
 
     failed_execution = create(
       :external_calendar_sync_execution,
@@ -33,7 +33,7 @@ RSpec.describe "Agent can see CalDAV sync logs" do
       ended_at: Time.zone.parse("2026-08-21 10:00:01"),
       successful: false
     )
-    create(:external_calendar_sync_execution_log, external_calendar_sync_execution: failed_execution, message: "Erreur d'authentification")
+    create(:external_calendar_sync_executions_log, external_calendar_sync_execution: failed_execution, message: "Erreur d'authentification")
 
     # belongs to another agent: must not be displayed
     create(:external_calendar_sync_execution, calendar_url: caldav_config.caldav_agenda_url)

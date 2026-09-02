@@ -24,9 +24,9 @@
                 td = execution.status
                 td = "#{execution.duration.in_milliseconds.to_i} ms" if execution.ended_at?
                 td
-                  ol
+                  ul
                     - execution.logs.each do |entry|
-                      li = entry.message
+                      li = "+#{(entry.emitted_at - execution.started_at).in_milliseconds.to_i} ms: #{entry.message}"
   .fr-table__footer
     .fr-table__footer--middle
       = paginate @sync_executions, theme: "dsfr"
