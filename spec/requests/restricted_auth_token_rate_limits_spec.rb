@@ -3,126 +3,71 @@ RSpec.describe "rate limiting des endpoints qui acceptent un token de connexion 
 
   let!(:participation) { create(:participation) }
   let(:token) { participation.restricted_auth_token }
+  let(:rdv_id) { participation.rdv_id }
 
-  specify "GET /r/:tkn est rate-limité" do
-    2.times do
-      get rdv_short_from_token_path(token)
-      expect(response).not_to redirect_to("/500.html")
+  # Chaque endpoint qui accepte un token de connexion restreinte doit être rate-limité par IP.
+  # Rails ajoute un segment de format optionnel `(.:format)` à chaque route et tolère le slash final
+  {
+    "GET /r/:tkn" => "/r/%<token>s",
+    "GET /r/:tkn avec un suffixe .json" => "/r/%<token>s.json",
+    "GET /r/:id/cr" => "/r/%<rdv_id>s/cr",
+    "GET /r/:id/:tkn" => "/r/%<rdv_id>s/%<token>s",
+    "GET /users/file_attente/unsubscribe/:token" => "/users/file_attente/unsubscribe/%<token>s",
+    "GET /prdv" => "/prdv?tkn=%<token>s",
+    "GET /prdv avec un suffixe .json" => "/prdv.json?tkn=%<token>s",
+    "GET /prdv avec un suffixe .html" => "/prdv.html?tkn=%<token>s",
+    "GET /prdv avec un slash final" => "/prdv/?tkn=%<token>s",
+    "GET /prendre_rdv avec un invitation_token en query param" => "/prendre_rdv?invitation_token=%<token>s",
+    "GET /prendre_rdv avec un suffixe .json" => "/prendre_rdv.json?invitation_token=%<token>s",
+    "GET /prendre_rdv avec un slash final" => "/prendre_rdv/?invitation_token=%<token>s",
+    "GET /users/rdvs/:id avec un invitation_token en query param et un ID de RDV inventé" => "/users/rdvs/123?invitation_token=%<token>s",
+    "GET /users/rdvs/:id avec un suffixe .json" => "/users/rdvs/123.json?invitation_token=%<token>s",
+    "GET /users/rdvs/:id avec un slash final" => "/users/rdvs/123/?invitation_token=%<token>s",
+    "GET /users/rdvs/:id/creneaux avec un invitation_token en query param et un ID de RDV inventé" => "/users/rdvs/123/creneaux?invitation_token=%<token>s",
+    "GET /users/rdvs/:id/creneaux avec un suffixe .json" => "/users/rdvs/123/creneaux.json?invitation_token=%<token>s",
+    "GET /users/rdvs/:id/creneaux avec un slash final" => "/users/rdvs/123/creneaux/?invitation_token=%<token>s",
+  }.each do |description, path_template|
+    it "#{description} est rate-limité" do
+      path = format(path_template, token:, rdv_id:)
+
+      2.times do
+        get path
+        expect(response).not_to redirect_to("/500.html")
+      end
+
+      get path
+      expect(response).to redirect_to("/500.html")
+      expect(sentry_events.last.level).to eq(:warning)
+      expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
     end
-
-    get rdv_short_from_token_path(token)
-    expect(response).to redirect_to("/500.html")
-    expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
-  end
-
-  specify "GET /r/:id/cr est rate-limité" do
-    2.times do
-      get creneaux_users_rdv_short_path(id: participation.rdv_id)
-      expect(response).not_to redirect_to("/500.html")
-    end
-
-    get creneaux_users_rdv_short_path(id: participation.rdv_id)
-    expect(response).to redirect_to("/500.html")
-    expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
-  end
-
-  specify "GET /r/:id/:tkn est rate-limité" do
-    2.times do
-      get rdv_short_path(id: participation.rdv_id, tkn: token)
-      expect(response).not_to redirect_to("/500.html")
-    end
-
-    get rdv_short_path(id: participation.rdv_id, tkn: token)
-    expect(response).to redirect_to("/500.html")
-    expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
-  end
-
-  specify "GET /users/file_attente/unsubscribe/:token est rate-limité" do
-    2.times do
-      get users_unsubscribe_file_attente_path(token: token)
-      expect(response).not_to redirect_to("/500.html")
-    end
-
-    get users_unsubscribe_file_attente_path(token: token)
-    expect(response).to redirect_to("/500.html")
-    expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
-  end
-
-  specify "GET /prdv est rate-limité" do
-    2.times do
-      get reprendre_rdv_from_participation_invitation_token_short_path(tkn: token)
-      expect(response).not_to redirect_to("/500.html")
-    end
-
-    get reprendre_rdv_from_participation_invitation_token_short_path(tkn: token)
-    expect(response).to redirect_to("/500.html")
-    expect(sentry_events.last.level).to eq(:warning)
-    expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
-  end
-
-  specify "GET /prendre_rdv avec un invitation_token en query param est rate-limité" do
-    2.times do
-      get prendre_rdv_path(invitation_token: token)
-      expect(response).not_to redirect_to("/500.html")
-    end
-
-    get prendre_rdv_path(invitation_token: token)
-    expect(response).to redirect_to("/500.html")
-    expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
-  end
-
-  specify "GET /users/rdvs/:id avec un invitation_token en query param et un ID de RDV inventé est rate-limité" do
-    2.times do
-      get users_rdv_path(123, invitation_token: token)
-      expect(response).not_to redirect_to("/500.html")
-    end
-
-    get users_rdv_path(123, invitation_token: token)
-    expect(response).to redirect_to("/500.html")
-    expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
-  end
-
-  specify "GET /users/rdvs/:id/creneaux avec un invitation_token en query param et un ID de RDV inventé est rate-limité" do
-    2.times do
-      get creneaux_users_rdv_path(123, invitation_token: token)
-      expect(response).not_to redirect_to("/500.html")
-    end
-
-    get creneaux_users_rdv_path(123, invitation_token: token)
-    expect(response).to redirect_to("/500.html")
-    expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
   end
 
   specify "le compteur de rate-limit est partagé entre endpoints" do
-    get rdv_short_from_token_path(token)
+    get "/r/#{token}"
     expect(response).not_to redirect_to("/500.html")
 
-    get reprendre_rdv_from_participation_invitation_token_short_path(tkn: token)
+    get "/prdv?tkn=#{token}"
     expect(response).not_to redirect_to("/500.html")
 
-    get users_unsubscribe_file_attente_path(token: token)
+    get "/users/file_attente/unsubscribe/#{token}"
     expect(response).to redirect_to("/500.html")
     expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
   end
 
-  specify "/prendre_rdv n'est pas throttlé sans query param invitation_token" do
-    4.times do
-      get prendre_rdv_path
-      expect(response).not_to redirect_to("/500.html")
-    end
-  end
+  # Endpoints qui ne doivent PAS être throttlés : la limite (2 en test) est largement
+  # dépassée sans jamais déclencher la redirection vers /500.html.
+  {
+    "/prendre_rdv sans query param invitation_token" => "/prendre_rdv",
+    "/users/rdvs/:id sans query param invitation_token" => "/users/rdvs/1",
+    "/users/rdvs/:id/edit, même avec invitation_token en query param, car l'action ne l'interprète pas" => "/users/rdvs/1/edit?invitation_token=%<token>s",
+  }.each do |description, path_template|
+    it "#{description} n'est pas throttlé" do
+      path = format(path_template, token:)
 
-  specify "/users/rdvs/:id n'est pas throttlé si le query param invitation_token est absent" do
-    4.times do
-      get users_rdv_path(1)
-      expect(response).not_to redirect_to("/500.html")
-    end
-  end
-
-  specify "/users/rdvs/:id/edit n'est jamais throttlé, même avec invitation_token en query param, car elle ne l'interprète pas" do
-    4.times do
-      get edit_users_rdv_path(1, invitation_token: token)
-      expect(response).not_to redirect_to("/500.html")
+      4.times do
+        get path
+        expect(response).not_to redirect_to("/500.html")
+      end
     end
   end
 end

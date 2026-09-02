@@ -4,6 +4,7 @@ class ParticipationsExportJob < ExportJob
 
     organisations = agent.organisations.where(id: organisation_ids)
     rdvs = Rdv.search_for(organisations, options)
+    rdvs = Agent::RdvPolicy::Scope.new(agent, rdvs).resolve
     participations = Participation.where(rdv_id: rdvs.select(:id)).order(id: :desc)
 
     export = Export.create!(
