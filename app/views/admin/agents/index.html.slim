@@ -10,9 +10,11 @@
   .card-body
     - if @agents_search_form.should_display?
       = form_for @agents_search_form, url: admin_organisation_agents_path(current_organisation), method: :get, builder: Dsfr::FormBuilder, as: "search", html: { "data-controller": "form" } do |f|
-        fieldset.fr-fieldset.rdv-gap-1rem.rdv-align-items-first-baseline
-          .fr-fieldset__element--inline.fr-mr-auto
-            fieldset.fr-segmented.fr-segmented--sm.fr-segmented--no-legend
+        fieldset.fr-fieldset.rdv-gap-1rem.rdv-align-items-first-baseline.fr-mb-0
+          legend.fr-fieldset__legend--regular.fr-fieldset__legend.fr-mb-0.fr-pb-0
+            | Filtres
+          .fr-fieldset__element.fr-fieldset__element--inline.fr-mr-auto.fr-mb-0
+            fieldset.fr-segmented.fr-segmented--no-legend.fr-mb-0
               legend.fr-segmented__legend
                 | Rôle
               .fr-segmented__elements
@@ -22,21 +24,22 @@
                 .fr-segmented__element
                   = f.radio_button :role, "admin", data: { action: "change->form#submit" }
                   = f.label :role, "Admins uniquement", value: "admin", class: "fr-label fr-mb-0"
-          .fr-fieldset__element--inline
+          .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
             = f.dsfr_text_field :query, placeholder: "Prénom, Nom, Email", autocomplete: "off", label: ""
-          .fr-fieldset__element--inline
-            = f.submit "Filtrer", class: "fr-btn"
-    - if @agents_search_form.active_filters? && @agents.total_count > 0
-      p.fr-text--sm.fr-mb-1w.fr-mt-4w
-        - if @agents.total_count == 1
-          | 1 agent correspond aux filtres
-        - else
-          | #{@agents.total_count} agents correspondent aux filtres
-        - if @agents_filtered_out_count== 1
-          | , 1 autre agent est caché
-        - elsif @agents_filtered_out_count > 1
-          | , #{@agents_filtered_out_count} autres agents sont cachés
-        span.fr-ml-1w= link_to "Réinitialiser les filtres", admin_organisation_agents_path(current_organisation), class: "fr-btn fr-btn--tertiary fr-btn--sm"
+          .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
+            = f.submit "Rechercher", class: "fr-btn"
+
+- if @agents_search_form.active_filters? && @agents.total_count > 0
+  p.fr-mb-1w.fr-mt-4w
+    = icon("fr-icon-filter-line fr-icon--sm fr-mr-1w")
+    - if @agents.total_count == 1
+      | 1 agent correspond à vos filtres
+    - else
+      | #{@agents.total_count} agents correspondent à vos filtres
+    span.fr-ml-1w= link_to "Réinitialiser les filtres", admin_organisation_agents_path(current_organisation), class: "fr-link"
+
+.card
+  .card-body
     table.table
       thead
         tr

@@ -13,14 +13,14 @@ RSpec.describe "Un agent admin peut filtrer la liste d'agents" do
     %w[Raoul Tony Ada Emilia Johana Filipo].each { expect(page).to have_content(_1) }
     expect(page).to have_field(placeholder: "Prénom, Nom, Email")
     fill_in placeholder: "Prénom, Nom, Email", with: "Jean"
-    click_button "Filtrer"
+    click_button "Rechercher"
     expect(page).to have_content("Raoul")
     expect(page).to have_content("Ada")
     expect(page).not_to have_content("Tony")
     expect(page).not_to have_content("Emilia")
     expect(page).not_to have_content("Johana")
     expect(page).not_to have_content("Filipo")
-    expect(page).to have_content("2 agents correspondent aux filtres, 4 autres agents sont cachés")
+    expect(page).to have_content("2 agents correspondent à vos filtres")
 
     click_link "Réinitialiser les filtres"
     %w[Raoul Tony Ada Emilia Johana Filipo].each { expect(page).to have_content(_1) }
@@ -30,7 +30,7 @@ RSpec.describe "Un agent admin peut filtrer la liste d'agents" do
     login_as(admin, scope: :agent)
     visit admin_organisation_agents_path(organisation)
     choose "Admins uniquement"
-    click_button "Filtrer"
+    click_button "Rechercher"
 
     expect(page).to have_content("Ada")
     expect(page).to have_no_content("Tony")
