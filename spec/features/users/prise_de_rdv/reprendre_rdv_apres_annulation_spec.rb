@@ -9,7 +9,7 @@ RSpec.describe "Liens reprendre RDV après annulation (email et SMS)" do
     let(:autre_motif) { create(:motif, name: "Accompagnement", organisation: autre_organisation, bookable_by: :everyone) }
     let(:lieu) { create(:lieu, name: "MDS Issy", organisation:) }
     let(:autre_lieu) { create(:lieu, name: "MDS Là bas", organisation: autre_organisation) }
-    let(:user) { create(:user) }
+    let(:user) { create(:user, last_name: "Dupont") }
     let(:agent) { create(:agent) }
     let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu:, organisation:) }
     let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [autre_motif], lieu: autre_lieu, organisation: autre_organisation) }
@@ -24,6 +24,8 @@ RSpec.describe "Liens reprendre RDV après annulation (email et SMS)" do
       sms_link_url = Receipt.last.content.match(REPRENDRE_RDV_URL_REGEX)&.to_s
       expect(mail_link_url).to eq sms_link_url
       visit mail_link_url
+      fill_in "3 premières lettres de votre nom", with: "DUP"
+      click_on "Valider"
       expect(page).to have_content("MDS Issy")
       expect(page).not_to have_content("MDS Là bas")
     end
@@ -37,7 +39,7 @@ RSpec.describe "Liens reprendre RDV après annulation (email et SMS)" do
     let(:autre_motif) { create(:motif, name: "Accompagnement", organisation: autre_organisation, bookable_by: :everyone) }
     let(:lieu) { create(:lieu, name: "MDS Issy", organisation:) }
     let(:autre_lieu) { create(:lieu, name: "MDS Là bas", organisation: autre_organisation) }
-    let(:user) { create(:user) }
+    let(:user) { create(:user, last_name: "Dupont") }
     let(:agent) { create(:agent) }
     let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu:, organisation:) }
     let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [autre_motif], lieu: autre_lieu, organisation: autre_organisation) }
@@ -52,6 +54,8 @@ RSpec.describe "Liens reprendre RDV après annulation (email et SMS)" do
       sms_link_url = Receipt.last.content.match(REPRENDRE_RDV_URL_REGEX)&.to_s
       expect(mail_link_url).to eq sms_link_url
       visit mail_link_url
+      fill_in "3 premières lettres de votre nom", with: "DUP"
+      click_on "Valider"
       expect(page).to have_content("MDS Issy")
       expect(page).not_to have_content("MDS Là bas")
     end
@@ -65,7 +69,7 @@ RSpec.describe "Liens reprendre RDV après annulation (email et SMS)" do
     let(:autre_motif) { create(:motif, name: "Accompagnement", organisation: autre_organisation, bookable_by: :everyone) }
     let(:lieu) { create(:lieu, name: "MDS Issy", organisation:) }
     let(:autre_lieu) { create(:lieu, name: "MDS Là bas", organisation: autre_organisation) }
-    let(:user) { create(:user) }
+    let(:user) { create(:user, last_name: "Dupont") }
     let(:agent) { create(:agent) }
     let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu:, organisation:) }
     let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [autre_motif], lieu: autre_lieu, organisation: autre_organisation) }
@@ -82,6 +86,8 @@ RSpec.describe "Liens reprendre RDV après annulation (email et SMS)" do
       sms_link_url = Receipt.last.content.match(REPRENDRE_RDV_URL_REGEX)&.to_s
       expect(mail_link_url).to eq sms_link_url
       visit mail_link_url
+      fill_in "3 premières lettres de votre nom", with: "DUP"
+      click_on "Valider"
       expect(page).to have_content("MDS Issy")
       expect(page).not_to have_content("MDS Là bas")
     end

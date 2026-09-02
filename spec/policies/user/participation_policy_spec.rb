@@ -64,7 +64,7 @@ RSpec.describe User::ParticipationPolicy, type: :policy do
   context "User is invited to participate" do
     let!(:participation) { create(:participation, user: user, rdv: rdv) }
 
-    before { user.signed_in_with_invitation_token! }
+    before { user.signed_in_with_restricted_auth_token! }
 
     it_behaves_like "permit actions", :participation, :create?, :cancel?
     it_behaves_like "included in scope"
