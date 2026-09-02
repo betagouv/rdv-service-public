@@ -2,21 +2,16 @@ class Admin::AgentsController < AgentAuthController
   respond_to :html
 
   before_action :ensure_agent_is_admin, except: :index
+  helper_method :agents_search_params
 
   def index
-    @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active
-
-    @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id })
-    @agents = if index_params[:term].present?
-                @agents.search_by_text(index_params[:term])
-              else
-                @agents.order(Arel.sql("(invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL) DESC")).ordered_by_last_name
-              end
-
-    @display_services = current_territory.services.any? || current_organisation.agents.joins(:agent_services).any?
-
+    @agents_search_form = Admin::AgentsSearchForm.new(current_organisation:, query: params.dig(:search, :query), role: params.dig(:search, :role))
+    agents_scope = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active
+    @agents = @agents_search_form.filter_agents(agents_scope)
     @agents = @agents.includes(:services, :roles, :organisations)
     @agents = @agents.page(page_number)
+    @display_services = current_territory.services.any? || current_organisation.agents.joins(:agent_services).any?
+    @agents_filtered_out_count = @agents_search_form.organisation_scope(agents_scope).count - @agents.total_count
   end
 
   def new
@@ -115,10 +110,6 @@ class Admin::AgentsController < AgentAuthController
     @roles = access_levels_collection
 
     render :edit
-  end
-
-  def index_params
-    @index_params ||= params.permit(:term, :intervenant_term)
   end
 
   def access_levels_collection
