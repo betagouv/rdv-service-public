@@ -49,7 +49,7 @@ RSpec.describe UpsertUserForFranceconnectService do
 
         it "sets the ami_france_connect_hash" do
           service.perform
-          expect(AmiFranceConnectHash.find_by(user: service.user).fc_hash).to eq("4abd71ec1f581dce2ea2221cbeac7c973c6aea7bcb835acdfe7d6494f1528060")
+          expect(UserAmiProfile.find_by(user: service.user).fc_hash).to eq("4abd71ec1f581dce2ea2221cbeac7c973c6aea7bcb835acdfe7d6494f1528060")
         end
       end
 
@@ -58,7 +58,7 @@ RSpec.describe UpsertUserForFranceconnectService do
 
         it "doesn't set the ami_france_connect_hash" do
           service.perform
-          expect(AmiFranceConnectHash.count).to be 0
+          expect(UserAmiProfile.count).to be 0
         end
       end
     end
