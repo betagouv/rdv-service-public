@@ -1,4 +1,4 @@
-class AddAmiFranceConnectHashTable < ActiveRecord::Migration[8.0]
+class AddUserAmiProfileTable < ActiveRecord::Migration[8.0]
   def change
     create_table :ami_france_connect_hashes do |t|
       t.string :fc_hash, null: false

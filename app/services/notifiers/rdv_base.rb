@@ -7,6 +7,7 @@ class Notifiers::RdvBase < BaseService
   # Subclasses implement the notify_* methods:
   # :notify_user_by_mail(user)
   # :notify_user_by_sms(user)
+  # :notify_user_by_ami(user)
   # :notify_agent(agent)
 
   # By default, notifications are sent to all the rdv users
@@ -27,6 +28,7 @@ class Notifiers::RdvBase < BaseService
   def notify_users
     notify_users_by_mail
     notify_users_by_sms
+    notify_users_by_ami
   end
 
   ## Configured Mailers
@@ -55,6 +57,12 @@ class Notifiers::RdvBase < BaseService
     users_to_notify
       .select(&:notifiable_by_sms?)
       .each { notify_user_by_sms(_1) }
+  end
+
+  def notify_users_by_ami
+    User.joins(:user_ami_profile).where(user_ami_profiles: { notify_by_ami: true }).each do |user|
+      notify_user_by_ami(user)
+    end
   end
 
   def users_to_notify
