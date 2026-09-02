@@ -52,7 +52,7 @@ fr:
         external_calendar_sync_execution:
           attributes:
             ended_at:
-              cant_be_before_started_at: ne peut être inférieure à la date de début
+              cant_be_before_started_at: ne peut être inférieure à l'heure de début
         team:
           attributes:
             agents:

@@ -22,11 +22,11 @@
               tr id="external_calendar_sync_execution_#{execution.id}"
                 td = I18n.l(execution.started_at, format: :human)
                 td = execution.status
-                td = "#{execution.duration.in_milliseconds.to_i} ms" if execution.ended_at?
+                td = "#{execution.duration.in_milliseconds.to_i} ms" if execution.ended_at?
                 td
                   ul
                     - execution.logs.each do |entry|
-                      li = "+#{(entry.emitted_at - execution.started_at).in_milliseconds.to_i} ms: #{entry.message}"
+                      li = "+#{(entry.emitted_at - execution.started_at).in_milliseconds.to_i} ms : #{entry.message}"
   .fr-table__footer
     .fr-table__footer--middle
       = paginate @sync_executions, theme: "dsfr"
