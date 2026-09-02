@@ -20,17 +20,9 @@
   - else
     .fr-col-12.fr-col-md-4
       = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, event_sources:, single_day: true
-      = link_to edit_starts_at_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary" do
-        = back_icon(class: "fr-mr-1w")
-        = "Retour"
+      = link_to "Retour", edit_starts_at_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
 
     .fr-col-12.fr-col-md-8.fr-px-2w
-
-      /= simple_form_for @rdv_plan, url: update_lieu_agents_rdv_plan_path(@rdv_plan) do |f|
-      /  .fr-mb-4w
-      /    .input-group
-      /      = datetime_input(f, :starts_at, options: { label_html: { style: "flex-shrink: 0;", class: "fr-mr-2w" }, wrapper_html: { class: "d-flex", style: "align-items: baseline;" }})
-
       p Où souhaitez-vous faire le rendez-vous ?
       ul.fr-raw-list
         - lieux.each do |lieu|
