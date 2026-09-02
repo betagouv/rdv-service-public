@@ -4,7 +4,10 @@
 
   .fr-col-12.fr-col-md-8
     - if @motifs.empty?
-      = render "agents/rdv_plans/motifs/new", rdv_plan: @rdv_plan
+      p Aucun motif de rendez-vous n'est disponible.
+      - if current_agent.admin_orgs.any?
+        p Vous pouvez créer un nouveau motif depuis les paramètres de votre organisation.
+        = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_agent.admin_orgs.first), class:"fr-btn fr-btn--secondary"
     - else
       p Pour quel motif souhaitez-vous prendre rendez-vous ?
       ul.fr-raw-list

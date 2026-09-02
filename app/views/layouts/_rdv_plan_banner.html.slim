@@ -1,8 +1,0 @@
-- rdv_plan = RdvPlan.where(planning_agent: current_agent, rdv_id: nil).order("created_at desc").first
-
-.fr-notice.fr-notice--info
-  .fr-notice__body
-    p.fr-mb-0.fr-ml-6w
-      span.fr-notice__desc
-        |> Vous avez commencé à prendre un rendez-vous pour #{rdv_plan.user.full_name} depuis #{rdv_plan.oauth_application.name}.
-        = link_to("Retourner à la préparation de ce rendez-vous", agents_rdv_plan_path(rdv_plan), class: "fr-btn fr-btn--tertiary")

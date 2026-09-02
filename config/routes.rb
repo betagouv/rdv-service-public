@@ -161,10 +161,6 @@ Rails.application.routes.draw do
 
       resources :rdv_plans, only: %i[show] do
         member do
-          namespace :rdv_plans do
-            resources :motifs, only: %i[create]
-            resources :lieux, only: %i[create]
-          end
           get :edit_motif
           patch :update_motif
 
@@ -175,9 +171,6 @@ Rails.application.routes.draw do
 
           get :edit_lieu
           patch :update_lieu
-
-          get :edit_motif
-          patch :update_motif
 
           get :edit_user
           post :create_rdv
