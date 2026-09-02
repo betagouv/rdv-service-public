@@ -6,15 +6,26 @@ RSpec.describe "rate limiting des endpoints qui acceptent un token de connexion 
   let(:rdv_id) { participation.rdv_id }
 
   # Chaque endpoint qui accepte un token de connexion restreinte doit être rate-limité par IP.
+  # Rails ajoute un segment de format optionnel `(.:format)` à chaque route et tolère le slash final
   {
     "GET /r/:tkn" => "/r/%<token>s",
+    "GET /r/:tkn avec un suffixe .json" => "/r/%<token>s.json",
     "GET /r/:id/cr" => "/r/%<rdv_id>s/cr",
     "GET /r/:id/:tkn" => "/r/%<rdv_id>s/%<token>s",
     "GET /users/file_attente/unsubscribe/:token" => "/users/file_attente/unsubscribe/%<token>s",
     "GET /prdv" => "/prdv?tkn=%<token>s",
+    "GET /prdv avec un suffixe .json" => "/prdv.json?tkn=%<token>s",
+    "GET /prdv avec un suffixe .html" => "/prdv.html?tkn=%<token>s",
+    "GET /prdv avec un slash final" => "/prdv/?tkn=%<token>s",
     "GET /prendre_rdv avec un invitation_token en query param" => "/prendre_rdv?invitation_token=%<token>s",
+    "GET /prendre_rdv avec un suffixe .json" => "/prendre_rdv.json?invitation_token=%<token>s",
+    "GET /prendre_rdv avec un slash final" => "/prendre_rdv/?invitation_token=%<token>s",
     "GET /users/rdvs/:id avec un invitation_token en query param et un ID de RDV inventé" => "/users/rdvs/123?invitation_token=%<token>s",
+    "GET /users/rdvs/:id avec un suffixe .json" => "/users/rdvs/123.json?invitation_token=%<token>s",
+    "GET /users/rdvs/:id avec un slash final" => "/users/rdvs/123/?invitation_token=%<token>s",
     "GET /users/rdvs/:id/creneaux avec un invitation_token en query param et un ID de RDV inventé" => "/users/rdvs/123/creneaux?invitation_token=%<token>s",
+    "GET /users/rdvs/:id/creneaux avec un suffixe .json" => "/users/rdvs/123/creneaux.json?invitation_token=%<token>s",
+    "GET /users/rdvs/:id/creneaux avec un slash final" => "/users/rdvs/123/creneaux/?invitation_token=%<token>s",
   }.each do |description, path_template|
     it "#{description} est rate-limité" do
       path = format(path_template, token:, rdv_id:)
