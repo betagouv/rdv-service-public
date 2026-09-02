@@ -268,7 +268,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_02_132711) do
     t.boolean "successful"
     t.datetime "started_at", null: false
     t.datetime "ended_at"
-    t.index ["agent_id"], name: "index_external_calendar_sync_executions_on_agent_id"
+    t.index ["agent_id", "calendar_url"], name: "idx_on_agent_id_calendar_url_c0cf68d562"
   end
 
   create_table "external_calendar_sync_executions_logs", force: :cascade do |t|
