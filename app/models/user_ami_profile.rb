@@ -6,8 +6,8 @@ class UserAmiProfile < ApplicationRecord
   def self.update_notify_by_ami(user, boolean)
     return unless Ami.enabled?
 
-    hash = UserAmiProfile.find_by(user: user)
+    ami_profile = UserAmiProfile.find_by(user: user)
 
-    hash&.update(notify_by_ami: boolean)
+    ami_profile&.update(notify_by_ami: boolean)
   end
 end
