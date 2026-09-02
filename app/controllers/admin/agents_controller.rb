@@ -2,7 +2,6 @@ class Admin::AgentsController < AgentAuthController
   respond_to :html
 
   before_action :ensure_agent_is_admin, except: :index
-  helper_method :agents_search_params
 
   def index
     @agents_search_form = Admin::AgentsSearchForm.new(current_organisation:, query: params.dig(:search, :query), role: params.dig(:search, :role))
@@ -11,7 +10,6 @@ class Admin::AgentsController < AgentAuthController
     @agents = @agents.includes(:services, :roles, :organisations)
     @agents = @agents.page(page_number)
     @display_services = current_territory.services.any? || current_organisation.agents.joins(:agent_services).any?
-    @agents_filtered_out_count = @agents_search_form.organisation_scope(agents_scope).count - @agents.total_count
   end
 
   def new
