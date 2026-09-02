@@ -1,4 +1,4 @@
-class Agent::ExternalCalendarSyncLogPolicy
+class Agent::ExternalCalendarSyncExecutionPolicy
   class Scope
     def initialize(current_agent, scope)
       @current_agent = current_agent

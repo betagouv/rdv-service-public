@@ -1,13 +1,11 @@
-class ExternalCalendarSyncLog < ApplicationRecord
+class ExternalCalendarSyncExecution < ApplicationRecord
   # Relations
   belongs_to :agent
+  has_many :logs, -> { order(:emitted_at) }, class_name: "ExternalCalendarSyncExecutionsLog", inverse_of: :external_calendar_sync_execution, dependent: :destroy
 
   # Validations
   validates :started_at, presence: true
   validate :ended_at_cant_be_before_started_at
-
-  # Hooks
-  after_initialize { self.text_logs ||= [] }
 
   def status
     if ended_at?
@@ -27,7 +25,7 @@ class ExternalCalendarSyncLog < ApplicationRecord
   end
 
   def log(message)
-    text_logs << message
+    logs.create!(message:, emitted_at: Time.zone.now)
   end
 
   def flush!(successful:)

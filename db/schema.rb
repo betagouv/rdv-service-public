@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_24_085938) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_02_132711) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -187,14 +187,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_24_085938) do
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
   end
 
-  create_table "ami_france_connect_hashes", force: :cascade do |t|
-    t.string "fc_hash", null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_ami_france_connect_hashes_on_user_id", unique: true
-  end
-
   create_table "annotations", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "territory_id", null: false
@@ -270,14 +262,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_24_085938) do
     t.index ["agent_id", "url"], name: "index_external_calendar_events_on_agent_id_and_url", unique: true
   end
 
-  create_table "external_calendar_sync_logs", force: :cascade do |t|
+  create_table "external_calendar_sync_executions", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.string "calendar_url", null: false
     t.boolean "successful"
-    t.text "text_logs", default: [], array: true
     t.datetime "started_at", null: false
     t.datetime "ended_at"
-    t.index ["agent_id"], name: "index_external_calendar_sync_logs_on_agent_id"
+    t.index ["agent_id"], name: "index_external_calendar_sync_executions_on_agent_id"
+  end
+
+  create_table "external_calendar_sync_executions_logs", force: :cascade do |t|
+    t.bigint "external_calendar_sync_execution_id", null: false
+    t.text "message", null: false
+    t.datetime "emitted_at", null: false
+    t.index ["external_calendar_sync_execution_id"], name: "idx_on_external_calendar_sync_execution_id_7483f50873"
   end
 
   create_table "external_references", force: :cascade do |t|
@@ -853,6 +851,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_24_085938) do
     t.index ["territory_id"], name: "index_territory_tags_on_territory_id"
   end
 
+  create_table "user_ami_profiles", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "fc_hash", null: false
+    t.boolean "notify_by_ami", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_ami_profiles_on_user_id", unique: true
+  end
+
   create_table "user_profiles", force: :cascade do |t|
     t.bigint "organisation_id", null: false
     t.bigint "user_id", null: false
@@ -957,7 +964,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_24_085938) do
   add_foreign_key "agent_territorial_roles", "territories"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
-  add_foreign_key "ami_france_connect_hashes", "users"
   add_foreign_key "annotations", "territories"
   add_foreign_key "annotations", "users"
   add_foreign_key "api_calls", "agents"
@@ -965,7 +971,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_24_085938) do
   add_foreign_key "export_file_blobs", "exports"
   add_foreign_key "exports", "agents"
   add_foreign_key "external_calendar_events", "agents"
-  add_foreign_key "external_calendar_sync_logs", "agents"
+  add_foreign_key "external_calendar_sync_executions", "agents"
+  add_foreign_key "external_calendar_sync_executions_logs", "external_calendar_sync_executions"
   add_foreign_key "external_references", "oauth_applications"
   add_foreign_key "external_references", "territories"
   add_foreign_key "file_attentes", "rdvs"
@@ -1015,6 +1022,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_24_085938) do
   add_foreign_key "territory_services", "territories"
   add_foreign_key "territory_tags", "tags"
   add_foreign_key "territory_tags", "territories"
+  add_foreign_key "user_ami_profiles", "users"
   add_foreign_key "user_profiles", "organisations"
   add_foreign_key "user_profiles", "users"
   add_foreign_key "users", "users", column: "responsible_id"

@@ -49,7 +49,7 @@ fr:
             Vous ne pouvez pas supprimer l'enregistrement parce que des %{record}
             dépendant·e·s existent
       models:
-        external_calendar_sync_log:
+        external_calendar_sync_execution:
           attributes:
             ended_at:
               cant_be_before_started_at: ne peut être inférieure à la date de début

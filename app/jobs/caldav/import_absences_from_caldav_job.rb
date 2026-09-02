@@ -128,7 +128,7 @@ module Caldav
     end
 
     def sync_logger
-      @sync_logger ||= ExternalCalendarSyncLog.new(agent_id: @agent.id, calendar_url: caldav_config.caldav_agenda_url)
+      @sync_logger ||= ExternalCalendarSyncExecution.new(agent_id: @agent.id, calendar_url: caldav_config.caldav_agenda_url)
     end
   end
 end

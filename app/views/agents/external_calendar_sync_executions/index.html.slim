@@ -18,15 +18,15 @@
               th Durée
               th Logs
           tbody
-            - @sync_logs.each do |log|
-              tr id="external_calendar_sync_log_#{log.id}"
-                td = I18n.l(log.started_at, format: :human)
-                td = log.status
-                td = "#{log.duration.in_milliseconds.to_i} ms" if log.ended_at?
+            - @sync_executions.each do |execution|
+              tr id="external_calendar_sync_execution_#{execution.id}"
+                td = I18n.l(execution.started_at, format: :human)
+                td = execution.status
+                td = "#{execution.duration.in_milliseconds.to_i} ms" if execution.ended_at?
                 td
                   ol
-                    - log.text_logs.each do |log_line|
-                      li = log_line
+                    - execution.logs.each do |entry|
+                      li = entry.message
   .fr-table__footer
     .fr-table__footer--middle
-      = paginate @sync_logs, theme: "dsfr"
+      = paginate @sync_executions, theme: "dsfr"
