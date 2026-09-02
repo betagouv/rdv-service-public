@@ -27,10 +27,10 @@
       ul.fr-raw-list
         - lieux.each do |lieu|
           li.card.d-flex.fr-enlarge-link
-            .card-body
+            .card-body.fr-p-2w
               = link_to update_lieu_agents_rdv_plan_path(@rdv_plan, rdv_plan: { lieu_id: lieu.id}), method: :patch do
-                .fr-h6.rdv-color-text-action-high-blue-france = lieu.name
+                .fr-h6.fr-mb-1w.rdv-color-text-action-high-blue-france = lieu.name
               .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
                 p.fr-mb-0
-                  span.fr-hint-text = lieu.address
+                  = lieu.address
                 = icon("fr-icon-arrow-right-line", class: "rdv-color-text-action-high-blue-france")
