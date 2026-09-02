@@ -566,9 +566,16 @@ tables:
       - used_at
       - created_at
       - domain_id
-  - table_name: ami_france_connect_hashes
+  - table_name: rdv_invitations
+    anonymized_column_names:
+      - token
+    non_anonymized_column_names:
+      - created_at
+      - updated_at
+  - table_name: user_ami_profiles
     anonymized_column_names:
       - fc_hash
     non_anonymized_column_names:
+      - notify_by_ami
       - created_at
       - updated_at

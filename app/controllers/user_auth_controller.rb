@@ -7,6 +7,12 @@ class UserAuthController < ApplicationController
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
+  def self.set_user_name_initials_verified(cookies, user)
+    cookies.encrypted[:"user_name_initials_verified_#{user.id}"] = {
+      value: true, expires: 10.minutes.from_now,
+    }
+  end
+
   private
 
   def user_for_paper_trail

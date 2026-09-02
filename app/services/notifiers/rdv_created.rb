@@ -31,4 +31,9 @@ class Notifiers::RdvCreated < Notifiers::RdvBase
   def notify_agent(agent)
     agent_mailer(agent).rdv_created.deliver_later
   end
+
+  def notify_user_by_ami(user)
+    participation = user.participation_for(@rdv)
+    Ami.new(participation).create_event
+  end
 end

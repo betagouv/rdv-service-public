@@ -165,4 +165,18 @@ RSpec.describe "User can update their information" do
       expect(page).to have_field("Email", with: user.email, disabled: true)
     end
   end
+
+  context "when AMI is enabled" do
+    stub_env_with(AMI_ENABLED: "true")
+
+    let!(:ami_profile) { create(:user_ami_profile, user:, notify_by_ami: false) }
+
+    it "allows changing ami notification preferences" do
+      visit users_informations_path
+      find("label", text: "J’accepte les notifications via l’application mobile").click
+      click_on "Enregistrer"
+
+      expect(ami_profile.reload.notify_by_ami).to be_truthy
+    end
+  end
 end

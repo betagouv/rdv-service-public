@@ -153,7 +153,7 @@ _motif_org_paris_nord_social_droits = Motif.create!(
   name: "Droits sociaux",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
-  bookable_by: :everyone,
+  bookable_by: :agents,
   location_type: :public_office
 )
 _motif_org_paris_nord_social_collectif = Motif.create!(

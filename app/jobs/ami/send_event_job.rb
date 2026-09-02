@@ -1,4 +1,6 @@
-class Ami::SendEventJob
+class Ami::SendEventJob < ApplicationJob
+  queue_as :latency_30s
+
   def perform(payload)
     connection.put("/api/v2/event", payload)
   end
