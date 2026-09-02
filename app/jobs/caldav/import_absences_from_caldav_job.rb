@@ -34,12 +34,12 @@ module Caldav
 
       update_local_events_of(updated_events:, deleted_events:, new_sync_token:)
 
-      sync_logger.flush!(successful: true)
+      sync_logger.finalize!(successful: true)
       self.class.store_latest_run_timestamp(agent_id:)
       AgendaChannel.broadcast_to(agent_id, model: "ExternalCalendarEvent") if updated_events.any? || deleted_events.any?
     rescue StandardError => e
       sync_logger.log("Error: #{e.message}")
-      sync_logger.flush!(successful: false)
+      sync_logger.finalize!(successful: false)
       raise
     end
 

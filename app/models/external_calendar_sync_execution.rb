@@ -28,7 +28,7 @@ class ExternalCalendarSyncExecution < ApplicationRecord
     logs.create!(message:, emitted_at: Time.zone.now)
   end
 
-  def flush!(successful:)
+  def finalize!(successful:)
     self.successful = successful
     self.ended_at = Time.zone.now
     save!

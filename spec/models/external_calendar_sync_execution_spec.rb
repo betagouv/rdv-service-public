@@ -103,13 +103,13 @@ RSpec.describe ExternalCalendarSyncExecution, type: :model do
     end
   end
 
-  describe "#flush!" do
+  describe "#finalize!" do
     it "marks the sync as successful, sets ended_at to now and persists the record" do
       started_at = Time.zone.parse("2026-09-01 10:00:00")
       now = Time.zone.parse("2026-09-01 10:05:00")
       sync_execution = create(:external_calendar_sync_execution, started_at: started_at)
 
-      travel_to(now) { sync_execution.flush!(successful: true) }
+      travel_to(now) { sync_execution.finalize!(successful: true) }
 
       expect(sync_execution.successful).to be(true)
       expect(sync_execution.ended_at).to eq(now)
@@ -119,7 +119,7 @@ RSpec.describe ExternalCalendarSyncExecution, type: :model do
     it "marks the sync as failed" do
       sync_execution = create(:external_calendar_sync_execution)
 
-      sync_execution.flush!(successful: false)
+      sync_execution.finalize!(successful: false)
 
       expect(sync_execution.successful).to be(false)
     end
