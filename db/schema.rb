@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_26_074818) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_02_132711) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -268,7 +268,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_26_074818) do
     t.boolean "successful"
     t.datetime "started_at", null: false
     t.datetime "ended_at"
-    t.index ["agent_id", "calendar_url"], name: "idx_on_agent_id_calendar_url_c0cf68d562"
+    t.index ["agent_id", "calendar_url"], name: "idx_on_cal_sync_executions_agent_id_calendar_url"
   end
 
   create_table "external_calendar_sync_executions_logs", force: :cascade do |t|
