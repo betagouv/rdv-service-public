@@ -1,6 +1,14 @@
 class Rack::Attack
   class ThrottleError < StandardError; end
 
+  class Request < ::Rack::Request
+    # `request.path` est déjà normalisé par Rack::Attack (slashs multiples réduits, slash final retiré).
+    # Rails ajoute à chaque route un segment de format optionnel, ce helper le retire
+    def path_without_format
+      path.sub(/\.[a-z0-9]+\z/i, "")
+    end
+  end
+
   throttle("formulaire de demande de support - throttling par IP", limit: Rails.env.test? ? 2 : 10, period: 1.minute) do |request|
     if request.path.match(%r{aide/demande_support}) && request.post?
       request.ip
@@ -22,12 +30,14 @@ class Rack::Attack
   throttle("connexion via token d'auth restreinte - throttling par IP", limit: Rails.env.test? ? 2 : 600, period: 1.hour) do |request|
     next unless request.get?
 
-    request.ip if request.path.start_with?("/r/") || # redirect#rdv_short_from_token
-                  request.path.start_with?("/users/file_attente/unsubscribe/") ||
-                  (request.path == "/prdv" && request.params["tkn"].present?) || # redirect#reprendre_rdv_from_participation_invitation_token
-                  (request.path == "/prendre_rdv" && request.params["invitation_token"].present?) || # search#search_rdv
-                  (request.path.match?(%r{\A/users/rdvs/[^/]+\z}) && request.params["invitation_token"].present?) ||
-                  (request.path.match?(%r{\A/users/rdvs/[^/]+/creneaux\z}) && request.params["invitation_token"].present?)
+    path = request.path_without_format
+
+    request.ip if path.start_with?("/r/") || # redirect#rdv_short_from_token
+                  path.start_with?("/users/file_attente/unsubscribe/") ||
+                  (path == "/prdv" && request.params["tkn"].present?) || # redirect#reprendre_rdv_from_participation_invitation_token
+                  (path == "/prendre_rdv" && request.params["invitation_token"].present?) || # search#search_rdv
+                  (path.match?(%r{\A/users/rdvs/[^/]+\z}) && request.params["invitation_token"].present?) ||
+                  (path.match?(%r{\A/users/rdvs/[^/]+/creneaux\z}) && request.params["invitation_token"].present?)
   end
 
   Rack::Attack.throttled_responder = lambda do |request|
