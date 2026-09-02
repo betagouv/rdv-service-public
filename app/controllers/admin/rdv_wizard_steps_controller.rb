@@ -81,9 +81,14 @@ class Admin::RdvWizardStepsController < AgentAuthController
     return unless current_step == "step4"
     return unless @rdv.motif&.visio?
     return if ENV["VISIO_NUMERIQUE_DISABLED"]
-    return if agent_session[:pro_connect_access_token].blank?
 
-    result = VisioNumerique::CreateRoom.new(access_token: agent_session[:pro_connect_access_token]).call
+    # TODO: retirer le fallback `session[:pro_connect_access_token]` une fois la fenêtre de MEP passée
+    # (durée de vie max d'une session agent : 8h, cf `config.session_store` dans application.rb).
+    # Avant cette migration, le jeton était stocké à cette clé plate au lieu de `agent_session`.
+    access_token = agent_session[:pro_connect_access_token] || session[:pro_connect_access_token]
+    return if access_token.blank?
+
+    result = VisioNumerique::CreateRoom.new(access_token:).call
     @rdv.visio_url_custom = result["url"]
   rescue VisioNumerique::CreateRoom::ApiError => e
     Rails.logger.error("Visio Numerique API error: #{e.message}")

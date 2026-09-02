@@ -8,7 +8,10 @@ module Agents::DeviseOrSsoLogout
   # pourraient profiter à un autre agent se connectant ensuite depuis le même navigateur (poste
   # partagé).
   def sign_out_agent!(agent_or_scope)
-    pro_connect_id_token = agent_session[:pro_connect_id_token]
+    # TODO: retirer le fallback `session[:pro_connect_id_token]` une fois la fenêtre de MEP passée
+    # (durée de vie max d'une session agent : 8h, cf `config.session_store` dans application.rb).
+    # Avant cette migration, le jeton était stocké à cette clé plate au lieu de `agent_session`.
+    pro_connect_id_token = agent_session[:pro_connect_id_token] || session[:pro_connect_id_token]
     clear_agent_session!
     sign_out(agent_or_scope)
     pro_connect_id_token

@@ -127,6 +127,21 @@ RSpec.describe Admin::RdvWizardStepsController, type: :controller do
         end
       end
     end
+
+    context "avec un motif visio et seulement l'ancien jeton pro_connect_access_token à plat en session" do
+      let(:motif) { create(:motif, location_type: :visio) }
+
+      before { session[:pro_connect_access_token] = "un-ancien-token" }
+
+      it "crée une salle Visio Numérique en utilisant le jeton de fallback" do
+        stub_request(:post, "#{VisioNumerique::CreateRoom::DEFAULT_API_URL}/rooms/")
+          .to_return(status: 200, body: { url: "https://visio.numerique.gouv.fr/room-xyz" }.to_json, headers: { "Content-Type" => "application/json" })
+
+        create_request
+
+        expect(Rdv.last.visio_url_custom).to eq("https://visio.numerique.gouv.fr/room-xyz")
+      end
+    end
   end
 
   context "POST step2 avec motif téléphonique et l’usager a un numéro de téléphone" do

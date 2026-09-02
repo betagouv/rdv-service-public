@@ -101,5 +101,24 @@ RSpec.describe Agents::SessionsController do
         )
       end
     end
+
+    context "quand l'agent s'est connecté avec ProConnect avant la migration vers agent_session" do
+      stub_env_with(PRO_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2")
+
+      before do
+        ProConnectStubs.stub_and_run_discover_request
+        # simule une session créée avant la migration vers agent_session, avec la clé plate uniquement
+        session[:pro_connect_id_token] = "fake_pro_connect_id_token"
+      end
+
+      it "déconnecte l'agent et le redirige vers l'URL de déconnexion ProConnect en utilisant le jeton de fallback" do
+        get :destroy
+
+        redirect_url = response.headers["Location"]
+        redirect_url_query_params = Rack::Utils.parse_query(URI.parse(redirect_url).query)
+
+        expect(redirect_url_query_params["id_token_hint"]).to eq("fake_pro_connect_id_token")
+      end
+    end
   end
 end
