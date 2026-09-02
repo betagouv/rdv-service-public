@@ -40,7 +40,7 @@ RSpec.describe RdvInvitation do
       let(:user) { create(:user, :relative, organisations: [organisation]) }
 
       it "isn't supported" do
-        expect(rdv_invitation).not_to be_valid
+        expect(rdv_invitation.tap(&:validate).errors.full_messages).to include("Les invitations ne sont pas encore possible pour les proches.")
       end
     end
   end
