@@ -3,7 +3,7 @@
 # Les identifiants pour tester en local sont disponibles sur Vaulwarden
 class Ami
   def self.enabled?
-    ENV["AMI_ENABLED"] == "true"
+    ENV["AMI_ENABLED"] == "true" && !Rails.env.production?
   end
 
   def initialize(participation)
