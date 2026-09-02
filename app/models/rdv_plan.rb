@@ -1,6 +1,8 @@
 class RdvPlan < ApplicationRecord
+  self.ignored_columns += ["location_type"]
+
   has_paper_trail(
-    only: %i[planning_agent_id rdv_id user_id rdv_agent_id motif_id lieu_id starts_at duration_in_minutes return_url location_type dossier_url]
+    only: %i[planning_agent_id rdv_id user_id rdv_agent_id motif_id lieu_id starts_at duration_in_minutes return_url dossier_url]
   )
 
   belongs_to :planning_agent, class_name: "Agent"
@@ -18,21 +20,6 @@ class RdvPlan < ApplicationRecord
   delegate :organisation, to: :motif
 
   validate :return_url_is_authorized
-
-  # TODO: mettre en commun avec les motifs et ajouter une validation de synchro
-  enum :location_type, { public_office: "public_office", phone: "phone", home: "home", visio: "visio" }
-
-  def modalite
-    if location_type == "public_office"
-      "#{location_type}-#{lieu&.id}"
-    else
-      location_type
-    end
-  end
-
-  def modalite=(modalite)
-    self.location_type, self.lieu_id = modalite.split("-")
-  end
 
   def create_rdv(user_attributes:, participation_attributes:)
     update_user_before_creating_rdv(user_attributes:)
