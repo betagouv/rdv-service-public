@@ -230,6 +230,7 @@ class Domain
         RDV_SOLIDARITES => "reply.rdv-solidarites-test.localhost",
         RDV_AIDE_NUMERIQUE => "reply.rdv-aide-numerique-test.localhost",
         RDV_SERVICE_PUBLIC => "reply.rdv-service-public-test.localhost",
+        RDV_SERVICE_PUBLIC_ETAT => "reply.rdv-service-public.localhost",
       }.fetch(self)
     else
       raise "Rails.env not recognized: #{Rails.env.inspect}"

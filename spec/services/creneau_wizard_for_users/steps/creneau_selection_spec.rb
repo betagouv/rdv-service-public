@@ -1,5 +1,5 @@
 RSpec.describe CreneauWizardForUsers::Steps::CreneauSelection do
-  subject(:creneau_selection) { described_class.new(search_context) }
+  subject(:creneau_selection) { described_class.build_from_context(search_context) }
 
   let(:user) { create(:user) }
   let(:motif) { create(:motif, default_duration_in_min: 30) }
