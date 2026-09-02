@@ -28,11 +28,10 @@ RSpec.describe ExternalCalendarSyncLog, type: :model do
       expect(sync_log.errors[:ended_at]).to be_present
     end
 
-    it "is invalid when ended_at equals started_at" do
+    it "is valid when ended_at equals started_at" do
       now = Time.zone.now
       sync_log = build(:external_calendar_sync_log, started_at: now, ended_at: now)
-      expect(sync_log).not_to be_valid
-      expect(sync_log.errors[:ended_at]).to be_present
+      expect(sync_log).to be_valid
     end
   end
 

@@ -2,7 +2,7 @@ class ExternalCalendarSyncLog < ApplicationRecord
   belongs_to :agent
 
   validates :started_at, presence: true
-  validate :ended_at_must_be_after_started_at
+  validate :ended_at_cant_be_before_started_at
 
   def status
     if ended_at?
@@ -34,11 +34,11 @@ class ExternalCalendarSyncLog < ApplicationRecord
 
   private
 
-  def ended_at_must_be_after_started_at
+  def ended_at_cant_be_before_started_at
     return unless started_at && ended_at
 
-    if started_at >= ended_at
-      errors.add(:ended_at, :must_be_after_started_at)
+    if started_at > ended_at
+      errors.add(:ended_at, :cant_be_before_started_at)
     end
   end
 end

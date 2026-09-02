@@ -52,7 +52,7 @@ fr:
         external_calendar_sync_log:
           attributes:
             ended_at:
-              must_be_after_started_at: doit être postérieure à la date de début
+              cant_be_before_started_at: ne peut être inférieure à la date de début
         team:
           attributes:
             agents:
