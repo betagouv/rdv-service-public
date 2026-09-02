@@ -1,8 +1,13 @@
 class ExternalCalendarSyncLog < ApplicationRecord
+  # Relations
   belongs_to :agent
 
+  # Validations
   validates :started_at, presence: true
   validate :ended_at_cant_be_before_started_at
+
+  # Hooks
+  after_initialize { self.text_logs ||= [] }
 
   def status
     if ended_at?
@@ -22,7 +27,6 @@ class ExternalCalendarSyncLog < ApplicationRecord
   end
 
   def log(message)
-    self.text_logs ||= []
     text_logs << message
   end
 
