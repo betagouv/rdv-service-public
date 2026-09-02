@@ -9,7 +9,9 @@
         p Vous pouvez créer un nouveau motif depuis les paramètres de votre organisation.
         = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_agent.admin_orgs.first), class:"fr-btn fr-btn--secondary"
     - else
-      p Pour quel motif souhaitez-vous prendre rendez-vous ?
+      p
+        = motif_icon(class: "fr-mr-1w")
+        | Pour quel motif souhaitez-vous prendre rendez-vous ?
       ul.fr-raw-list
       - @motifs.each do |motif|
         li.card.d-flex.fr-enlarge-link

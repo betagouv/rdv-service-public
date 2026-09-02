@@ -23,7 +23,9 @@
       = link_to "Retour", edit_starts_at_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
 
     .fr-col-12.fr-col-md-8.fr-px-2w
-      p Où souhaitez-vous faire le rendez-vous ?
+      p
+        = lieu_icon(class: "fr-mr-1w")
+        | Où souhaitez-vous faire le rendez-vous ?
       ul.fr-raw-list
         - lieux.each do |lieu|
           li.card.d-flex.fr-enlarge-link

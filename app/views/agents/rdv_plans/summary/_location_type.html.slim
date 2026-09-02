@@ -9,8 +9,10 @@ br
     = rdv_plan.lieu.address
   = link_to "modifier", edit_lieu_agents_rdv_plan_path(rdv_plan), class: "fr-ml-2w fr-btn fr-btn--tertiary-no-outline fr-btn--sm"
 - elsif rdv_plan.motif.phone?
-  = phone_icon(class: "fr-mr-1w")
+  span.fr-text-mention--grey
+    = phone_icon(class: "fr-mr-1w")
   = "Par téléphone"
 - elsif rdv_plan.motif.visio?
-  = visio_icon(class: "fr-mr-1w")
+  span.fr-text-mention--grey
+    = visio_icon(class: "fr-mr-1w")
   = "Par visio"
