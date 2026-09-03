@@ -26,7 +26,7 @@ class RedirectController < ApplicationController
   def prendre_rdv_path_for(rdv, token)
     prendre_rdv_path(
       departement: rdv.organisation.departement_number,
-      motif_name_with_location_type: rdv.motif.name_with_location_type,
+      preselected_motif: rdv.motif&.public_link_id,
       public_link_organisation_id: rdv.organisation_id,
       lieu_id: rdv.lieu_id,
       address: rdv.address,

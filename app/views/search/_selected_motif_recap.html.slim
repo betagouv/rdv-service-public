@@ -5,8 +5,9 @@
         .col
           | Motif :&nbsp;
           = context.first_matching_motif.name
-        .col-auto
-          = dsfr_link_to "Modifier", path_to_service_selection(params), title: "Modifier le motif"
+        - if context.query_params["preselected_motif"].blank?
+          .col-auto
+            = dsfr_link_to "Modifier", path_to_service_selection(params), title: "Modifier le motif"
     - case context.first_matching_motif.location_type
     - when Motif.location_types[:phone]
       li.list-group-item
