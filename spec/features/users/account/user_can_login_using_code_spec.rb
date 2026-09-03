@@ -4,6 +4,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
   let!(:user) { create(:user, email: "marco@lolmail.fr", first_name: "Marco") }
 
   specify do
+    expect(UnblockBrevoTransactionalContact).not_to receive(:new)
     visit new_user_session_path
     fill_in "Adresse email", with: "marco@lolmail.fr"
     click_on "Recevoir un code de connexion"
@@ -103,6 +104,20 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       fill_in "Adresse email", with: "marco@lolmail.fr"
       expect { click_on "Recevoir un code de connexion" }.not_to change(LoginCode, :count)
       expect(page).to have_content("Un code a été envoyé à marco@lolmail.fr il y a moins de deux minutes")
+    end
+  end
+
+  context "l’usager redemande un code après le délai anti-spam (renvoi)" do
+    before { create(:login_code, email: "marco@lolmail.fr", code: "123456", created_at: 3.minutes.ago) }
+
+    it "débloque le contact auprès de Brevo" do
+      unblock = instance_double(UnblockBrevoTransactionalContact, call: true)
+      allow(UnblockBrevoTransactionalContact).to receive(:new).with("marco@lolmail.fr").and_return(unblock)
+      expect(unblock).to receive(:call)
+
+      visit new_user_session_path
+      fill_in "Adresse email", with: "marco@lolmail.fr"
+      click_on "Recevoir un code de connexion"
     end
   end
 
