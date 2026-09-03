@@ -140,7 +140,7 @@ class SearchController < ApplicationController
       redirect_to prendre_rdv_path({
         public_link_organisation_id: organisation.id,
         departement: organisation.territory.departement_number,
-        motif_id: motif&.id,
+        preselected_motif: motif&.public_link_id,
         prescripteur:,
       }.compact)
     else
@@ -167,7 +167,7 @@ class SearchController < ApplicationController
     params.permit(
       *WebSearchContext::ADDRESS_SELECTION_PARAMS,
       *WebSearchContext::USER_CHOICE_PARAMS,
-      :motif_category_short_name, :date, :public_link_organisation_id, :prescripteur,
+      :motif_category_short_name, :date, :public_link_organisation_id, :prescripteur, :preselected_motif,
       organisation_ids: [], referent_ids: [], external_organisation_ids: []
     ).to_h.deep_symbolize_keys
   end

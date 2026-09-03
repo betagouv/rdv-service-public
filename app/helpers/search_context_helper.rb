@@ -67,6 +67,7 @@ module SearchContextHelper
     [
       *WebSearchContext::ADDRESS_SELECTION_PARAMS,
       :public_link_organisation_id,
+      :preselected_motif,
       :prescripteur,
       :duration,
       :current_organisation,
