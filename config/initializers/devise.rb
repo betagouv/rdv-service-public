@@ -329,6 +329,12 @@ Devise.setup do |config|
   #   manager.default_strategies(scope: :user).unshift :some_external_strategy
   # end
 
+  Warden::Manager.before_logout(scope: :agent) do |_user, auth, _opts|
+    next if auth.raw_session[:super_admin_signed_in_as_agent]
+
+    ActionDispatch::Request.new(auth.env).reset_session
+  end
+
   # ==> Mountable engine configurations
   # When using Devise inside an engine, let's call it `MyEngine`, and this engine
   # is mountable, there are some extra configurations to be taken into account.
