@@ -1,4 +1,6 @@
 class Api::Rdvinsertion::AgentAuthBaseController < Api::V1::AgentAuthBaseController
+  skip_before_action :detect_param_injection
+
   private
 
   # Cette authentification est faite via un secret partagé avec rdv-insertion qui se trouve
