@@ -1,4 +1,21 @@
 GIT
+  remote: https://github.com/betagouv/dsfr-assets.git
+  revision: fc98aea1ba445d77c1415bdca0fb2557d4b551a6
+  ref: fc98aea1ba445d77c1415bdca0fb2557d4b551a6
+  specs:
+    dsfr-assets (1.15.1)
+
+GIT
+  remote: https://github.com/betagouv/dsfr-view-components.git
+  revision: 15f7da77b0a458f21214dc692cf9edf075cafa3b
+  ref: 15f7da77b0a458f21214dc692cf9edf075cafa3b
+  specs:
+    dsfr-view-components (5.0.2)
+      dsfr-assets (~> 1.15)
+      html-attributes-utils (~> 1)
+      view_component (~> 4)
+
+GIT
   remote: https://github.com/betagouv/omniauth-microsoft_graph
   revision: 8bcbaa37883454338a79606bdfd8e19d27e26673
   ref: 8bcbaa37883454338a79606bdfd8e19d27e26673
@@ -192,7 +209,7 @@ GEM
     choice (0.2.0)
     climate_control (1.2.0)
     common_french_passwords (0.0.1)
-    concurrent-ruby (1.3.7)
+    concurrent-ruby (1.3.8)
     connection_pool (3.0.2)
     crack (0.4.5)
       rexml
@@ -229,15 +246,10 @@ GEM
       dotenv (= 2.8.1)
       railties (>= 3.2)
     drb (2.2.3)
-    dsfr-assets (1.14.3)
     dsfr-form_builder (0.0.14)
       actionview (>= 6.1, < 9.0)
       activemodel (>= 6.1, < 9.0)
       activesupport (>= 6.1, < 9.0)
-    dsfr-view-components (5.0.0)
-      dsfr-assets (>= 1.13.2, < 1.15)
-      html-attributes-utils (~> 1)
-      view_component (~> 4)
     erb (6.0.4)
     erubi (1.13.1)
     et-orbi (1.2.11)
@@ -805,9 +817,9 @@ DEPENDENCIES
   doorkeeper
   doorkeeper-i18n
   dotenv-rails
-  dsfr-assets (~> 1.14.2)
+  dsfr-assets!
   dsfr-form_builder (= 0.0.14)
-  dsfr-view-components (~> 5.0.0)
+  dsfr-view-components!
   factory_bot
   faker
   good_job (= 3.27.4)
@@ -927,7 +939,7 @@ CHECKSUMS
   choice (0.2.0) sha256=a19617f7dfd4921b38a85d0616446620de685a113ec6d1ecc85bdb67bf38c974
   climate_control (1.2.0) sha256=36b21896193fa8c8536fa1cd843a07cf8ddbd03aaba43665e26c53ec1bd70aa5
   common_french_passwords (0.0.1) sha256=d8a8fa258ea9289f57fc818b4cb7b3b39178025a1cd8d8cb362f402a520d1981
-  concurrent-ruby (1.3.7) sha256=4412caec3a5ea2e5fdc52076724c071a81f2c0593d83b2ac8cbb8ca63b3151b0
+  concurrent-ruby (1.3.8) sha256=b2f1be836e968ccc78ccfce277ea79c72a88633f22306782c16ff23fb415d1e1
   connection_pool (3.0.2) sha256=33fff5ba71a12d2aa26cb72b1db8bba2a1a01823559fb01d29eb74c286e62e0a
   crack (0.4.5) sha256=798416fb29b8c9f655d139d5559169b39c4a0a3b8f8f39b7f670eec1af9b21b3
   crass (1.0.7) sha256=94868719948664c89ddcaf0a37c65048413dfcb1c869470a5f7a7ceb5390b295
@@ -947,9 +959,9 @@ CHECKSUMS
   dotenv (2.8.1) sha256=c5944793349ae03c432e1780a2ca929d60b88c7d14d52d630db0508c3a8a17d8
   dotenv-rails (2.8.1) sha256=b05b81b7f4e51d1359e218d92279db1d84b12440f7118c9df19b5dfffb620f6c
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
-  dsfr-assets (1.14.3) sha256=132dae8bbe8ddbcc2cf90f598c0112f3956453cd3c40bcd58442427b4215d9f1
+  dsfr-assets (1.15.1)
   dsfr-form_builder (0.0.14) sha256=d0acd0ee8bca09643b6025ea624ae62c632b9e15be9fb9ef891df54dd3386cda
-  dsfr-view-components (5.0.0) sha256=549c252625f1e4d117007dacfbe7dc8a8e83aa8ddf54f81f2f1d7ba71f80c399
+  dsfr-view-components (5.0.2)
   erb (6.0.4) sha256=38e3803694be357fe2bfe312487c74beaf9fb4e5beb3e22498952fe1645b95d9
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   et-orbi (1.2.11) sha256=d26e868cc21db88280a9ec1a50aa3da5d267eb9b2037ba7b831d6c2731f5df64
