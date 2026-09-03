@@ -6,8 +6,10 @@ class Users::LoginCodesController < ApplicationController
   def create
     login_code = LoginCode.new(**login_code_permitted_params, domain_id: current_domain.id)
     @login_code_request_form = Users::LoginCodeRequestForm.new(login_code, behaviour: params[:behaviour])
+    resend = LoginCode.most_recent_usable_for(email: login_code.email).present?
 
     if @login_code_request_form.save
+      UnblockBrevoTransactionalContact.new(@login_code_request_form.email).call if resend
       Users::LoginCodeMailer.with(login_code: @login_code_request_form.login_code).login_code.deliver_later
       redirect_to new_users_sessions_by_code_path(email: @login_code_request_form.email)
     else
