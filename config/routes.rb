@@ -154,6 +154,7 @@ Rails.application.routes.draw do
         resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync do
           post :calendar_selection
         end
+        resources :logs, only: %i[index], controller: :external_calendar_sync_executions
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end

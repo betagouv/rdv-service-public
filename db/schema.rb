@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_26_074818) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_02_132711) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -260,6 +260,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_26_074818) do
     t.text "raw_ical"
     t.index ["agent_id", "starts_at"], name: "index_external_calendar_events_on_agent_id_and_starts_at"
     t.index ["agent_id", "url"], name: "index_external_calendar_events_on_agent_id_and_url", unique: true
+  end
+
+  create_table "external_calendar_sync_executions", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.string "calendar_url", null: false
+    t.boolean "successful"
+    t.datetime "started_at", null: false
+    t.datetime "ended_at"
+    t.index ["agent_id", "calendar_url"], name: "idx_on_cal_sync_executions_agent_id_calendar_url"
+  end
+
+  create_table "external_calendar_sync_executions_logs", force: :cascade do |t|
+    t.bigint "external_calendar_sync_execution_id", null: false
+    t.text "message", null: false
+    t.datetime "emitted_at", null: false
+    t.index ["external_calendar_sync_execution_id"], name: "idx_on_external_calendar_sync_execution_id_7483f50873"
   end
 
   create_table "external_references", force: :cascade do |t|
@@ -972,6 +988,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_26_074818) do
   add_foreign_key "export_file_blobs", "exports"
   add_foreign_key "exports", "agents"
   add_foreign_key "external_calendar_events", "agents"
+  add_foreign_key "external_calendar_sync_executions", "agents"
+  add_foreign_key "external_calendar_sync_executions_logs", "external_calendar_sync_executions"
   add_foreign_key "external_references", "oauth_applications"
   add_foreign_key "external_references", "territories"
   add_foreign_key "file_attentes", "rdvs"

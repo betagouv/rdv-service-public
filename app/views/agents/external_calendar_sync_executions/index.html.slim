@@ -1,0 +1,32 @@
+- content_for :title, "Historique des synchronisations"
+
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Synchronisation d'agenda", href: agents_calendar_sync_path
+    = b.with_breadcrumb label: "Configuration de la synchronisation CalDAV", href: agents_calendar_sync_caldav_sync_path
+    = b.with_breadcrumb label: "Historique des synchronisations"
+
+.fr-table.fr-table--no-scroll.fr-mx-2w
+  .fr-table__wrapper
+    .fr-table__container
+      .fr-table__content
+        table
+          thead
+            tr
+              th Date
+              th État
+              th Durée
+              th Logs
+          tbody
+            - @sync_executions.each do |execution|
+              tr id="external_calendar_sync_execution_#{execution.id}"
+                td = I18n.l(execution.started_at, format: :human)
+                td = execution.status
+                td = "#{execution.duration.in_milliseconds.to_i} ms" if execution.ended_at?
+                td
+                  ul
+                    - execution.logs.each do |entry|
+                      li = "+#{(entry.emitted_at - execution.started_at).in_milliseconds.to_i} ms : #{entry.message}"
+  .fr-table__footer
+    .fr-table__footer--middle
+      = paginate @sync_executions, theme: "dsfr"
