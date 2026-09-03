@@ -18,7 +18,10 @@ class Agents::RdvPlansController < AgentAuthController
   def update_motif
     rdv_plan_params = params.require(:rdv_plan).permit(:motif_id)
 
-    if @rdv_plan.update(rdv_plan_params)
+    @rdv_plan.assign_attributes(rdv_plan_params)
+    @rdv_plan.duration_in_minutes = @rdv_plan.motif.default_duration_in_min
+
+    if @rdv_plan.save
       redirect_to edit_starts_at_agents_rdv_plan_path(@rdv_plan)
     else
       render "edit_motif", locals: { event_sources: }
@@ -47,6 +50,19 @@ class Agents::RdvPlansController < AgentAuthController
 
   def update_starts_at
     @rdv_plan.update!(params.require(:rdv_plan).permit(:starts_at))
+    if @rdv_plan.motif.public_office?
+      redirect_to edit_lieu_agents_rdv_plan_path(@rdv_plan)
+    else
+      redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
+    end
+  end
+
+  def edit_starts_at_and_duration
+    render locals: { event_sources: }
+  end
+
+  def update_starts_at_and_duration
+    @rdv_plan.update!(params.require(:rdv_plan).permit(:starts_at, :duration_in_minutes))
     if @rdv_plan.motif.public_office?
       redirect_to edit_lieu_agents_rdv_plan_path(@rdv_plan)
     else

@@ -169,6 +169,9 @@ Rails.application.routes.draw do
           get :edit_starts_at
           patch :update_starts_at
 
+          get :edit_starts_at_and_duration
+          patch :update_starts_at_and_duration
+
           get :edit_lieu
           patch :update_lieu
 

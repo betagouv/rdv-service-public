@@ -3,5 +3,5 @@ br
 span.fr-text-mention--grey
   = icon("fr-icon-calendar-fill", class: "fr-mr-1w")
   |> Date :
-= "#{l(rdv_plan.starts_at, format: :human)} (#{rdv_plan.motif.default_duration_in_min} minutes)"
-= link_to "modifier", edit_starts_at_agents_rdv_plan_path(rdv_plan), class: "fr-ml-2w fr-btn fr-btn--tertiary-no-outline fr-btn--sm"
+= "#{l(rdv_plan.starts_at, format: :human)} (#{rdv_plan.duration_in_minutes} minutes)"
+= link_to "modifier", edit_starts_at_and_duration_agents_rdv_plan_path(rdv_plan), class: "fr-ml-2w fr-btn fr-btn--tertiary-no-outline fr-btn--sm"
