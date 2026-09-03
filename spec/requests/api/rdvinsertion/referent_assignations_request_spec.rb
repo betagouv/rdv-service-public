@@ -78,6 +78,32 @@ RSpec.describe "Referent Assignation authentified API" do
           expect(response.body).to include("not_found")
         end
       end
+
+      context "when user does not belong to any rdv_insertion organisation" do
+        let!(:user_outside_rdv_insertion) { create(:user, organisations: [other_organisation]) }
+        let(:"agent_ids[]") { [agent1.id, agent2.id] }
+        let(:user_id) { user_outside_rdv_insertion.id }
+
+        it "returns a 404 not found" do
+          post "/api/rdvinsertion/referent_assignations/create_many", params: { "agent_ids[]": [agent1.id, agent2.id], user_id: user_id }, headers: auth_headers
+
+          expect(response).to have_http_status(:not_found)
+          expect(response.body).to include("not_found")
+        end
+      end
+
+      context "when the authenticated agent has no access to the user" do
+        let!(:other_rdv_insertion_organisation) { create(:organisation, territory: territory, verticale: "rdv_insertion") }
+        let!(:user_out_of_agent1_reach) { create(:user, organisations: [other_rdv_insertion_organisation]) }
+        let(:"agent_ids[]") { [agent1.id, agent2.id] }
+        let(:user_id) { user_out_of_agent1_reach.id }
+
+        it "returns a 403 forbidden response" do
+          post "/api/rdvinsertion/referent_assignations/create_many", params: { "agent_ids[]": [agent1.id, agent2.id], user_id: user_id }, headers: auth_headers
+
+          expect(response).to have_http_status(:forbidden)
+        end
+      end
     end
   end
 
