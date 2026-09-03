@@ -5,7 +5,7 @@ class Users::RdvWizardStepsController < UserAuthController
   EXTRA_PERMITTED_PARAMS = [
     *WebSearchContext::ADDRESS_SELECTION_PARAMS,
     :lieu_id, :where, :rdv_collectif_id, :user_selected_organisation_id,
-    :public_link_organisation_id, :duration, :ants_pre_demandes_count,
+    :public_link_organisation_id, :preselected_motif, :duration, :ants_pre_demandes_count,
     { organisation_ids: [], referent_ids: [], external_organisation_ids: [] },
   ].freeze
 

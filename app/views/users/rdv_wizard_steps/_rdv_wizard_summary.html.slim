@@ -4,8 +4,9 @@ ul.list-group.list-group-flush.fr-mt-0
       .col
         | Motif :&nbsp;
         = rdv_wizard.motif.name
-      .col-auto
-        = dsfr_link_to "Modifier", path_to_motif_selection(rdv_wizard.params_to_selections), title: "Modifier le motif"
+      - if rdv_wizard.params_to_selections[:preselected_motif].blank?
+        .col-auto
+          = dsfr_link_to "Modifier", path_to_motif_selection(rdv_wizard.params_to_selections), title: "Modifier le motif"
 
   - case rdv_wizard.motif.location_type
   - when Motif.location_types[:phone]
