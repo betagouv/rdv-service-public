@@ -60,7 +60,7 @@ class Notifiers::RdvBase < BaseService
   end
 
   def notify_users_by_ami
-    User.joins(:user_ami_profile).where(user_ami_profiles: { notify_by_ami: true }).each do |user|
+    users_to_notify.joins(:user_ami_profile).where(user_ami_profiles: { notify_by_ami: true }).each do |user|
       notify_user_by_ami(user)
     end
   end
