@@ -74,9 +74,17 @@ class Agents::SessionsController < Devise::SessionsController
 
     sign_out(:agent)
 
+    # `sign_out` ne vide que les clés Warden internes de la session : les données applicatives qui y
+    # auraient été stockées (jetons ProConnect, etc.) survivraient sinon à la déconnexion, avec un
+    # risque de fuite entre agents sur un poste partagé. On vide donc la session dans son intégralité,
+    # sauf si un super admin a usurpé l'identité de cet agent (`session[:super_admin_signed_in_as_agent]`,
+    # cf `SuperAdmins::AgentsController#sign_in_as`) : les scopes `:agent` et `:super_admin` coexistent
+    # alors dans la même session, et un `reset_session` déconnecterait aussi le super admin.
+    reset_session unless session[:super_admin_signed_in_as_agent]
+
     # Si on redirige vers l'app cliente, on n'aura pas de render pendant lequel le flash s'affichera, donc on ne l'ajoute pas.
     if @oauth_client_app_post_logout_redirect_url
-      # On est obligés de modifier la session ici puisque l'appel à `sign_out(:agent)` a effacé la session
+      # On est obligés de modifier la session ici puisque l'appel à `sign_out(:agent)` (ou `reset_session` juste au-dessus) a effacé la session
       session[:post_logout_redirect_url] = @oauth_client_app_post_logout_redirect_url
     else
       set_flash_message!(:notice, :signed_out)
