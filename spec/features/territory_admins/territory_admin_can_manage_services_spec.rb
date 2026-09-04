@@ -6,43 +6,48 @@ RSpec.describe "territory admin can manage services", type: :feature do
     login_as(agent, scope: :agent)
   end
 
-  describe "Listing services" do
-    let!(:service_a) { create(:service) }
-    let!(:service_b) { create(:service) }
-    let!(:service_c) { create(:service) }
-
-    it "works" do
-      visit edit_admin_territory_services_path(territory)
-
-      expect(page).to have_content("Vous pouvez activer ou désactiver les services auxquels vos agents peuvent être affectés.")
-      expect(page).to have_content(service_a.name)
-      expect(page).to have_content(service_b.name)
-      expect(page).to have_content(service_c.name)
-    end
-  end
-
   describe "Activating/Deactivating services" do
-    let!(:service_a) { create(:service) }
-    let!(:service_b) { create(:service) }
-    let!(:service_c) { create(:service) }
+    def check_toggle(service)
+      label_selector = %(label[for="service-toggle-#{service.id}"])
+      find(label_selector).click
+      within(label_selector) { expect(page).to have_content("Service activé") }
+    end
 
-    it "works" do
+    def uncheck_toggle(service)
+      label_selector = %(label[for="service-toggle-#{service.id}"])
+      find(label_selector).click
+      within(label_selector) { expect(page).to have_content("Service désactivé") }
+    end
+
+    it "works", js: true do
+      pmi = create(:service, :pmi)
+      social = create(:service, :social)
       visit edit_admin_territory_services_path(territory)
-      check service_a.name
-      check service_b.name
+      expect(territory.reload.services).to be_empty
 
-      expect { click_on "Enregistrer" }.to change {
-        territory.reload.services.ids
-      }.from([]).to([service_a.id, service_b.id])
-      expect(page).to have_content("Liste des services disponibles mise à jour")
+      # Lier un service existant
+      check_toggle(pmi)
+      expect(territory.reload.services).to eq([pmi])
 
-      uncheck service_b.name
-      check service_c.name
+      # Dé-lier un service
+      uncheck_toggle(pmi)
+      expect(territory.reload.services).to eq([])
 
-      expect { click_on "Enregistrer" }.to change {
-        territory.reload.services.ids
-      }.from([service_a.id, service_b.id]).to([service_a.id, service_c.id])
-      expect(page).to have_content("Liste des services disponibles mise à jour")
+      # Filtrage puis ajout
+      fill_in "Trouvez un service par nom", with: "social"
+      click_on "Filtrer"
+      expect(page).to have_content(social.name)
+      expect(page).not_to have_content(pmi.name)
+      check_toggle(social)
+      # click_on "Valider la sélection"
+      expect(territory.reload.services).to eq([social])
+      fill_in "Trouvez un service par nom", with: "pmi"
+      click_on "Filtrer"
+      expect(page).to have_content(pmi.name)
+      expect(page).not_to have_content(social.name)
+      check_toggle(pmi)
+      # click_on "Valider la sélection"
+      expect(territory.reload.services).to contain_exactly(social, pmi)
     end
   end
 

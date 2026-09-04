@@ -4,29 +4,39 @@
   .fr-col-md-10
     .card
       .card-body
+        = link_to("Retour à la création d'agent", new_admin_organisation_agent_path(params[:redirect_to_organisation_id]), class: "fr-btn fr-btn--tertiary fr-icon-arrow-left-line fr-btn--icon-left fr-mb-2w") if params[:redirect_to_organisation_id].present?
+
         h1.fr-h2 Services
+
         p Les services vous permettent de classifier vos motifs pour éviter que tous les agents aient accès à tous les rendez-vous.
 
         p Par exemple, si vous créez un motif « Entretien annuel » pour le service « Ressources Humaines », seuls les agents du service « Ressources Humaines » pourront assurer des rendez-vous pour ce motif. Les agents des autres services ne pourront pas les voir ni les modifier, sauf s'ils sont secrétaires ou admin.
 
         p Vous pouvez activer ou désactiver les services auxquels vos agents peuvent être affectés.
 
-        = simple_form_for current_territory, url: admin_territory_services_path(current_territory, redirect_to_organisation_id: params[:redirect_to_organisation_id]) do |f|
-          = render "model_errors", model: current_territory
+        = form_with(method: :get) do |f|
 
-          = f.association :services, collection: @services, label: "", as: :check_boxes, label_method: :first, value_method: :second
+          datalist#service_names
+            - Service.pluck(:name).each do |name|
+              option = name
 
-          p
-            |> Vous ne trouvez pas votre service dans la liste ?
-            = link_to "Créer un nouveau service", new_admin_territory_services_path(territory_id: current_territory.id)
-            | .
+          .fr-input-group.mt-4.mb-2
+            label.fr-label[for="filter"] Trouvez un service par nom
+            .fr-input-wrap.fr-input-wrap--addon
+              input#filter.fr-input[name="filter" value=@filter type="text" aria-describedby="filter-messages" list="service_names" autocomplete="off"]
+              button.fr-btn.fr-btn--secondary.fr-btn--icon-left.fr-icon-filter-fill[type="submit"] Filtrer
+            #filter-messages.fr-messages-group[aria-live="polite"]
 
-          = dsfr_callout do
-            .fr-text--sm Le service secrétariat a été remplacé par une nouvelle permission « Agent d’accueil » que vous pouvez activer pour chaque agent dans les paramètres de l’organisation.
+        .fr-mt-3w
+        - @displayed_services.each do |service|
+          = render partial: "admin/territories/services/service_toggle", locals: { service: }
 
-          .row.align-items-center.mt-3
-            - if params[:redirect_to_organisation_id]
-              .col.text-left
-                = link_to("Annuler", new_admin_organisation_agent_path(params[:redirect_to_organisation_id]))
-            .col.text-right
-              = f.submit class: "fr-btn"
+        p.fr-mt-3w
+          - new_form_link = new_admin_territory_services_path(territory_id: current_territory.id, name: @filter)
+          - if @displayed_services.any?
+            |> Vous ne trouvez pas votre service dans la liste ?
+            = link_to "Créer un nouveau service", new_form_link
+          - else
+            |> Aucun résultat pour “#{@filter}” ?
+            div
+              = link_to "Créer ce service", new_form_link, class: "fr-btn fr-btn--primary"

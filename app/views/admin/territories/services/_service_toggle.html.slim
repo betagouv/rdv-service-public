@@ -1,0 +1,23 @@
+/# locals: (service:, flash_message: nil)
+
+turbo-frame[id="service-toggle-turbo-frame-#{service.id}"]
+  = form_with(url: toggle_admin_territory_services_path(territory_id: current_territory, service_id: service.id), method: :put) do
+    - input_id = "service-toggle-#{service.id}"
+    .fr-toggle
+      input[type="hidden" name="enabled" value="0"]
+      input.fr-toggle__input.js-submit-on-change[
+        type="checkbox"
+        id=input_id
+        name="enabled"
+        value="1"
+        checked=current_territory.services.to_a.include?(service)
+      ]
+      label.fr-toggle__label.rdv-display-flex.rdv-align-items-center[for=input_id]
+        = service.name
+        - agents_count = service.agents.active.merge(current_territory.organisations_agents).count
+        - if agents_count > 0
+          strong.rdv-color-text-default-grey.fr-ml-1w
+            = " (#{agents_count} #{'agent'.pluralize(agents_count)})"
+        - if flash_message
+          em.fr-ml-1w.fr-text-mention--grey.fading-out
+            =< flash_message

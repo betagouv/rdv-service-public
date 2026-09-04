@@ -1,7 +1,8 @@
 class Admin::Territories::ServicesController < Admin::Territories::BaseController
   def new
     authorize(current_territory, :manage_services?, policy_class: Agent::TerritoryPolicy)
-    @service = Service.new
+    permitted_params = params.permit(:name, :short_name)
+    @service = Service.new(permitted_params)
   end
 
   def create
@@ -20,41 +21,26 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
 
   def edit
     authorize(current_territory, :manage_services?, policy_class: Agent::TerritoryPolicy)
+    @filter = params[:filter].presence
+    activated_service_ids = current_territory.services.ids.to_set
+    displayed_services = @filter ? Service.filter_by_name(@filter) : Service.all
 
-    activated_services = format_for_checkboxes(current_territory.services.reject(&:secretariat?))
-    other_services = format_for_checkboxes(Service.where.not(id: current_territory.service_ids).reject(&:secretariat?))
+    # Display activated services first
+    displayed_services = displayed_services.sort_by { |service| [service.id.in?(activated_service_ids) ? -1 : 1, service.name] }
 
-    @services = activated_services + other_services
+    @displayed_services = displayed_services.reject(&:secretariat?)
   end
 
-  def update
+  def toggle
     authorize(current_territory, :manage_services?, policy_class: Agent::TerritoryPolicy)
-    current_territory.update!(services_params)
-    flash[:success] = "Liste des services disponibles mise à jour"
-
-    if params[:redirect_to_organisation_id].present?
-      redirect_to new_admin_organisation_agent_path(params[:redirect_to_organisation_id])
+    service = Service.find(params[:service_id])
+    if params[:enabled].to_b
+      current_territory.territory_services.find_or_create_by!(service_id: service.id)
+      flash_message = "Service activé"
     else
-      redirect_to edit_admin_territory_services_path(current_territory)
+      current_territory.territory_services.find_by(service_id: service.id)&.destroy!
+      flash_message = "Service désactivé"
     end
-  end
-
-  private
-
-  def services_params
-    params.require(:territory).permit(service_ids: [])
-  end
-
-  def format_for_checkboxes(services)
-    services.map do |service|
-      label = service.name
-
-      agents_count = service.agents.active.merge(current_territory.organisations_agents).count
-      if agents_count > 0
-        label += " (#{agents_count} #{'agent'.pluralize(agents_count)})"
-      end
-
-      [label, service.id]
-    end
+    render partial: "admin/territories/services/service_toggle", locals: { service:, flash_message: }
   end
 end
