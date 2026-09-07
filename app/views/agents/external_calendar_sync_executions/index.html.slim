@@ -6,7 +6,7 @@
     = b.with_breadcrumb label: "Configuration de la synchronisation CalDAV", href: agents_calendar_sync_caldav_sync_path
     = b.with_breadcrumb label: "Historique des synchronisations"
 
-.fr-table.fr-table--no-scroll.fr-mx-2w
+.fr-table.fr-table--no-scroll
   .fr-table__wrapper
     .fr-table__container
       .fr-table__content
@@ -25,7 +25,7 @@
                 td = "#{execution.duration.in_milliseconds.to_i} ms" if execution.ended_at?
                 td
                   ul
-                    - execution.logs.each do |entry|
+                    - execution.logs.sort_by(&:emitted_at).each do |entry|
                       li = "+#{(entry.emitted_at - execution.started_at).in_milliseconds.to_i} ms : #{entry.message}"
   .fr-table__footer
     .fr-table__footer--middle
