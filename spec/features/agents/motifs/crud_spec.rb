@@ -17,7 +17,7 @@ RSpec.describe "Agent can CRUD motifs" do
       click_link motif.name
 
       expect(page).to have_content(motif.name)
-      click_link "Modifier"
+      click_link "Modifier", match: :first
 
       expect_page_title("Modifier le motif")
       fill_in "Nom", with: "Suivi bonsoir"
@@ -36,12 +36,17 @@ RSpec.describe "Agent can CRUD motifs" do
       ## Check secretariat is unavailable
       expect(page.all("select#motif_service_id option").map(&:value)).to contain_exactly("", service.id.to_s)
       find("#motif_service_id").find(:option, service.name).select_option
-      fill_in "Nom", with: "Suivi bonne nuit"
+      fill_in "Nom", with: "Suivi de dossier"
       fill_in "Couleur associée", with: "#000"
       click_button "Créer le motif"
 
       expect_page_title("Motifs de rendez-vous")
-      expect(page).to have_content("Suivi bonne nuit")
+      expect(page).to have_content("Suivi de dossier")
+
+      expect(Motif.find_by(name: "Suivi de dossier")).to have_attributes(
+        organisation: organisation,
+        bookable_by: "agents"
+      )
     end
   end
 
@@ -63,7 +68,7 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(organisation.motifs.count).to eq 1
       expect(page).to have_content("Demande de permis de construire")
 
-      click_link "Modifier"
+      click_link "Modifier", match: :first
 
       expect_page_title("Modifier le motif")
       fill_in "Nom", with: "Renouvellement de permis de construire"
@@ -113,7 +118,7 @@ RSpec.describe "Agent can CRUD motifs" do
 
     it "unchecks for_secretariat when checking followup", js: true do
       visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
-      find("#tab_notifs_et_instructions").click
+      click_on "Consignes et options avancées"
       check "Autoriser les agents d’accueil à assurer ces RDV", allow_label_click: true
       click_on "Enregistrer"
       expect(page).to have_content "Le motif #{motif.name} a été modifié."
@@ -121,8 +126,8 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(motif.for_secretariat).to be_truthy
       expect(motif.follow_up).to be_falsey
 
-      click_on "Modifier"
-      find("#tab_notifs_et_instructions").click
+      click_link "Modifier", match: :first
+      click_on "Consignes et options avancées"
       check "Autoriser ces rendez-vous seulement aux usagers bénéficiant d'un suivi par un référent", allow_label_click: true
       expect(find("#motif_for_secretariat", visible: false)).not_to be_checked
       click_on "Enregistrer"
@@ -132,58 +137,12 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(motif.follow_up).to be_truthy
     end
 
-    it "automatically checks and unchecks rdvs_editable_by_user when toggling online reservation", js: true do
-      # On ouvre le motif à la résa en ligne, la case "RDVs modifiables" est cochée automatiquement
-      visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
-      find("#tab_resa_en_ligne").click
-
-      # On ouvre à la résa en ligne, la case est cochée
-      choose "Agents de l’organisation, prescripteurs et usagers", allow_label_click: true
-      expect(page).to have_content "RDVs modifiables"
-      editable_by_user_checkbox = find("#motif_rdvs_editable_by_user", visible: false)
-      expect(editable_by_user_checkbox).to be_checked
-
-      # On ferme à la résa en ligne, la case est décochée
-      choose "Agents de l’organisation", id: "motif_bookable_by_agents", allow_label_click: true
-      expect(editable_by_user_checkbox).not_to be_checked
-
-      # On ouvre à la résa en ligne, la case est cochée
-      choose "Agents de l’organisation, prescripteurs et usagers", allow_label_click: true
-      expect(editable_by_user_checkbox).to be_checked
-
-      expect do
-        click_on "Enregistrer"
-        expect(page).to have_content "Le motif #{motif.name} a été modifié."
-      end.to change { motif.reload.bookable_by }.to("everyone")
-
-      # On décoche la case "RDVs modifiables" et on enregistre
-      click_on "Modifier"
-      find("#tab_resa_en_ligne").click
-      uncheck "motif_rdvs_editable_by_user", allow_label_click: true
-      expect do
-        click_on "Enregistrer"
-        expect(page).to have_content "Le motif #{motif.name} a été modifié."
-      end.to change { motif.reload.rdvs_editable_by_user }.from(true).to(false)
-
-      # On revient sur le formulaire, la case est bien décochée
-      # et reste décochée lorsque l'on désactive la résa en ligne
-      click_on "Modifier"
-      find("#tab_resa_en_ligne").click
-      expect(editable_by_user_checkbox).not_to be_checked
-      choose "Agents de l’organisation", id: "motif_bookable_by_agents", allow_label_click: true
-      expect(editable_by_user_checkbox).not_to be_checked
-      expect do
-        click_on "Enregistrer"
-        expect(page).to have_content "Le motif #{motif.name} a été modifié." # On attend le chargement de cette page pour éviter une flaky spec
-      end.to change { motif.reload.bookable_by }.from("everyone").to("agents")
-    end
-
     it "allows changing the motif's location_type to :visio" do
       motif = create(:motif, organisation: organisation, location_type: :public_office, service:)
 
       visit admin_organisation_motifs_path(organisation)
       click_on motif.name
-      click_on "Modifier"
+      click_link "Modifier", match: :first
       expect(page).to have_content "L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV."
       choose "Par visioconférence"
       expect { click_on "Enregistrer" }.to change { motif.reload.location_type }.from("public_office").to("visio")
@@ -282,6 +241,43 @@ RSpec.describe "Agent can CRUD motifs" do
       click_on("Créer le motif")
 
       expect(page).to have_content("Vous pouvez maintenant ajouter le lieu où vous allez faire vos rendez-vous.")
+    end
+  end
+
+  describe "prescription" do
+    it "allows enabling prescription for the motif" do
+      visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
+      check "Autoriser les prescripteurs à prendre rendez-vous pour ce motif"
+      click_on "Enregistrer"
+
+      expect(page).to have_content("Le motif Suivi bonjour a été modifié")
+      expect(motif.reload.bookable_by).to eq "agents_and_prescripteurs"
+    end
+
+    context "when the motif is open to prescripteurs" do
+      let!(:motif) { create(:motif, name: "Suivi bonjour", organisation:, bookable_by: "agents_and_prescripteurs") }
+
+      it "allows disabling prescription for the motif" do
+        visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
+        uncheck "Autoriser les prescripteurs à prendre rendez-vous pour ce motif"
+        click_on "Enregistrer"
+
+        expect(page).to have_content("Le motif Suivi bonjour a été modifié")
+        expect(motif.reload.bookable_by).to eq "agents"
+      end
+    end
+
+    context "when the motif is open to online booking" do
+      let!(:motif) { create(:motif, name: "Suivi bonjour", organisation:, bookable_by: "everyone") }
+
+      it "doesn't allow changing the prescription level" do
+        visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
+        expect(page).to have_field("motif_prescription", disabled: true)
+
+        click_on "Enregistrer"
+        expect(page).to have_content("Le motif Suivi bonjour a été modifié")
+        expect(motif.reload.bookable_by).to eq "everyone"
+      end
     end
   end
 end

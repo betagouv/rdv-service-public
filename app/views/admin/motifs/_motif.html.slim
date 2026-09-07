@@ -1,11 +1,10 @@
 - motif_policy = policy(motif, policy_class: Agent::MotifPolicy)
 
 tr
-  td.fr-pr-0.fr-py-2w.fr-pb-0
-    span.fr-icon-circle-fill style="color: #{motif.color};" &nbsp;
   td.fr-p-0
     / On agrandit la taille du lien pour faciliter le click
     = link_to admin_organisation_motif_path(motif.organisation, motif), style: "width: 100%; min-height: 48px;", class: "fr-btn fr-btn--tertiary-no-outline fr-m-0" do
+      span.fr-icon-circle-fill.fr-pr-1w style="color: #{motif.color};" &nbsp;
       =  motif.name
       = motif_badges(motif, only: %i[for_secretariat follow_up collectif])
   td

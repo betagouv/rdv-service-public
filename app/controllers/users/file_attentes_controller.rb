@@ -15,17 +15,20 @@ class Users::FileAttentesController < UserAuthController
   end
 
   def create_or_delete
-    skip_authorization
     fa = if file_attente_params[:id].present?
            FileAttente.find(file_attente_params[:id])
          else
-           FileAttente.where(rdv_id: file_attente_params[:rdv_id], user_id: file_attente_params[:user_id]).first
+           FileAttente.where(rdv_id: file_attente_params[:rdv_id], user_id: file_attente_params[:user_id])
+             .first_or_initialize
          end
-    if fa.present?
+
+    authorize(fa, policy_class: User::FileAttentePolicy)
+
+    if fa.persisted?
       fa.destroy!
       flash[:alert] = "Vous n'êtes plus sur la liste d'attente"
     else
-      FileAttente.create(rdv_id: file_attente_params[:rdv_id], user_id: file_attente_params[:user_id])
+      fa.save!
       flash[:success] = "Vous êtes à présent sur la liste d'attente"
     end
     redirect_to request.referer.to_s

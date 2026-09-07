@@ -46,6 +46,10 @@ fr:
         instruction_for_rdv_short: Indications après
         rdvs_editable_by_user: RDVs modifiables
         rdvs_editable_by_user_hint: L’horaire et la date du rendez-vous peuvent être changés par l’usager au plus tard 48h avant le rendez-vous.
+        prescription_hint: >
+          Vous pouvez permettre aux prescripteurs d’autres organisations peuvent ajouter des rendez-vous à votre agenda. Voir la
+          <a href="https://aide.rdv-service-public.fr/toutes-les-notions/utiliser-la-prescription-externe" target="_blank">documentation</a>
+          pour plus d’informations.
       motif/collectifs:
         true: RDV collectif
         false: RDV individuel

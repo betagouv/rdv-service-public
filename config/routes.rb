@@ -82,6 +82,7 @@ Rails.application.routes.draw do
     # pour éviter les 404 lors d’un refresh après un premier post qui a rendu :new
     get :rdv_wizard_step, to: redirect(path: "/users/rdv_wizard_step/new")
     post :rdvs, to: redirect(status: 303) { |_params, request| "/users/rdv_wizard_step/new?#{request.query_string}" } # TODO: supprimer après le 03/08/2026
+    # show et creneaux sont rate limités par IP quand invitation_token est présent (voir config/initializers/rack_attack.rb)
     resources :rdvs, only: %i[index show edit update] do
       resources :participations, only: %i[index create]
       put "participations/cancel", to: "participations#cancel"
@@ -97,6 +98,8 @@ Rails.application.routes.draw do
     get :user_name_initials_verification, to: redirect(path: "/users/user_name_initials_verification/new")
 
     post "file_attente", to: "file_attentes#create_or_delete"
+
+    # Rate limité par IP (voir config/initializers/rack_attack.rb)
     get "file_attente/unsubscribe/:token", to: "file_attentes#unsubscribe", as: "unsubscribe_file_attente"
 
     resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code" do
@@ -289,6 +292,10 @@ Rails.application.routes.draw do
         member do
           post :archive
           post :unarchive
+          get :edit_consignes
+          patch :update_consignes
+          get :edit_advanced_options
+          patch :update_advanced_options
         end
       end
       resources :rdvs_collectifs, only: %i[index new create edit update] do
@@ -310,6 +317,9 @@ Rails.application.routes.draw do
           get :a_renseigner
         end
       end
+
+      resources :rdv_invitations, only: %i[new create show]
+
       scope module: "organisations" do
         resource :online_booking, only: %i[show edit update] do
           member do
@@ -422,6 +432,7 @@ Rails.application.routes.draw do
   get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_short"
 
   # tkn est obligatoire pour s'assurer qu'il est possible de se connecter
+  # Rate limité par IP (voir config/initializers/rack_attack.rb)
   get "r/:tkn" => "redirect#rdv_short_from_token", as: "rdv_short_from_token"
 
   get "r/:id/cr", to: (redirect do |path_params, req|
@@ -431,10 +442,17 @@ Rails.application.routes.draw do
 
   # << REMOVE AFTER 01/01/2027
   # On préserve la route courte avec id pour la rétrocompatibilité des anciens SMS
+  # Rate limité par IP (voir config/initializers/rack_attack.rb)
   get "r/:id/:tkn" => "redirect#rdv_short", as: "rdv_short"
   # >> REMOVE AFTER 01/01/2027
 
+  # Rate limité par IP (voir config/initializers/rack_attack.rb)
   get "prdv", to: "redirect#reprendre_rdv_from_participation_invitation_token", as: "reprendre_rdv_from_participation_invitation_token_short"
+
+  get "invit/:rdv_invitation_token", to: "rdv_invitations#show", as: "rdv_invitations"
+
+  # Ça devrait être un post, mais ça compliquerait beaucoup la logique de CreneauWizardForUsers::Steps::CreneauSelection#wizard_after_creneau_selection_path
+  get "invit/:rdv_invitation_token/prendre_rdv", to: "rdv_invitations#create_rdv", as: "rdv_invitations_create_rdv"
 
   def format_redirect_params(params)
     # we rename the short parameter tkn
@@ -470,6 +488,7 @@ Rails.application.routes.draw do
 
   root "search#home"
 
+  # Rate limité par IP quand invitation_token est présent (voir config/initializers/rack_attack.rb)
   get "/prendre_rdv", to: "search#search_rdv"
 
   # temporary route after admin namespace introduction

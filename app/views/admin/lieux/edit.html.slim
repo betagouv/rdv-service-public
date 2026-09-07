@@ -45,7 +45,7 @@
               =< "Supprimez-les avant de pouvoir supprimer ce lieu."
         - else
           p Vous pouvez supprimer ce lieu
-          = link_to t("helpers.delete"), admin_organisation_lieu_path(@lieu.organisation, @lieu), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce lieu ?" }
+          = link_to t("helpers.delete"), admin_organisation_lieu_path(@lieu.organisation, @lieu), method: :delete, class: "fr-btn fr-btn--tertiary", data: { confirm: "Confirmez-vous la suppression de ce lieu ?" }
 
 .fr-grid-row.justify-content-center
   .fr-col-md-12.fr-col-lg-8

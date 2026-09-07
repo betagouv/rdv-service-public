@@ -68,6 +68,19 @@ a[disabled] {
   color: var(--text-action-high-blue-france);
 }
 
+// Variante DSFR pour un bouton "outline" blanc sur fond coloré (pas de variante native DSFR)
+.fr-btn--outline-white {
+  background-color: transparent;
+  box-shadow: inset 0 0 0 1px white;
+  color: white;
+
+  // spécificité renforcée pour l'emporter sur `main .fr-btn:hover` de _bootstrap_overrides.scss
+  &.fr-btn.fr-btn--outline-white:hover {
+    background-color: white;
+    color: var(--text-action-high-blue-france);
+  }
+}
+
 // GRID
 
 .d-grid {

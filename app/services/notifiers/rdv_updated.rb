@@ -35,4 +35,9 @@ class Notifiers::RdvUpdated < Notifiers::RdvBase
       agent_mailer(agent).rdv_cancelled(old_starts_at: old_starts_at).deliver_later
     end
   end
+
+  def notify_user_by_ami(user)
+    participation = user.participation_for(@rdv)
+    Ami.new(participation).send_event_update_notification
+  end
 end

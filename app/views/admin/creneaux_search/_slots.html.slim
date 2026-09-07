@@ -34,7 +34,7 @@ div id="creneaux-lieu-#{lieu&.id}"
       - if form.date_range.end < next_availability.starts_at.to_date && creneaux.empty?
         .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
           = link_to admin_organisation_creneaux_search_selection_creneaux_path(search_params.merge(from_date: next_availability.starts_at.to_date)),
-              class: "btn btn-light" do
+              class: "fr-btn fr-btn--secondary" do
             .d-flex.align-items-center
               div
                 | Prochaine disponibilité le

@@ -32,13 +32,23 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
     end
 
     context "quand il y a une connexion en attente dans la session" do
-      before { session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = agent.id }
+      before do
+        session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = agent.id
+        allow(UnblockBrevoTransactionalContact).to receive(:new).and_return(instance_double(UnblockBrevoTransactionalContact, call: true))
+      end
 
       it "crée et envoie un nouveau code par email" do
         expect { post :resend }
           .to change(LoginCode, :count).by(1)
           .and have_enqueued_mail(Agents::LoginCodeMailer, :login_code)
         expect(LoginCode.last.email).to eq(agent.email)
+      end
+
+      it "débloque le contact auprès de Brevo" do
+        unblock = instance_double(UnblockBrevoTransactionalContact, call: true)
+        allow(UnblockBrevoTransactionalContact).to receive(:new).with(agent.email).and_return(unblock)
+        expect(unblock).to receive(:call)
+        post :resend
       end
 
       it "redirige vers le formulaire de saisie du code" do

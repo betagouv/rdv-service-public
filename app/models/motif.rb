@@ -41,6 +41,7 @@ class Motif < ApplicationRecord
   has_many :rdvs, dependent: :restrict_with_exception
   has_many :motifs_plage_ouvertures, dependent: :delete_all
   has_many :external_references, as: :item, dependent: :destroy
+  has_many :rdv_invitations, dependent: :restrict_with_error
 
   # Through relations
   has_many :webhook_endpoints, through: :organisation
@@ -282,6 +283,10 @@ class Motif < ApplicationRecord
     else
       plage_ouvertures.in_range(Time.zone.now..)
     end
+  end
+
+  def prescription?
+    bookable_by.to_sym.in?(%i[agents_and_prescripteurs agents_and_prescripteurs_and_invited_users everyone])
   end
 
   private

@@ -49,7 +49,7 @@ class UpsertUserForFranceconnectService < BaseService
   end
 
   def save_ami_france_connect_hash(omniauth_info)
-    AmiFranceConnectHash.find_or_initialize_by(user_id: @user.id).update(fc_hash: ami_france_connect_hash(omniauth_info))
+    UserAmiProfile.find_or_initialize_by(user_id: @user.id).update(fc_hash: ami_france_connect_hash(omniauth_info))
   end
 
   def ami_france_connect_hash(omniauth_info)

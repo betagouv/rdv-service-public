@@ -68,7 +68,7 @@
               admin_territory_sector_zones_path(current_territory, @sector), \
               method: :delete, \
               data: { confirm: "Voulez-vous vraiment retirer ces #{@zones.total_count} communes et rues ?" }, \
-              class: "btn btn-danger" \
+              class: "fr-btn fr-btn--tertiary" \
             )
           = link_to admin_territory_sector_zones_path(current_territory, @sector, format: "xls"), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-download-line" do
             | Télécharger un export XLS des communes et rues

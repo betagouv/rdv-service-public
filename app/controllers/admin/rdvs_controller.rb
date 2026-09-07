@@ -50,7 +50,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def export
-    skip_authorization # RDV will be scoped in SendExportJob
+    skip_authorization # les RDV sont filtrés via Agent::RdvPolicy::Scope dans RdvsExportJob
     set_scoped_organisations
 
     RdvsExportJob.perform_later(
@@ -63,7 +63,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def participations_export
-    skip_authorization # RDV will be scoped in SendExportJob
+    skip_authorization # les RDV sont filtrés via Agent::RdvPolicy::Scope dans ParticipationsExportJob
     set_scoped_organisations
 
     ParticipationsExportJob.perform_later(

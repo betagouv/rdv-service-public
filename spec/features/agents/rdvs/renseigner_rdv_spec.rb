@@ -16,7 +16,7 @@ RSpec.describe "Les agents peuvent renseigner le statut des rendez-vous pour nou
     expect(rdv.reload.status).to eq("seen")
 
     # Et on peut faire un reset
-    find(".btn", text: "Rendez-vous honoré").click
+    find(".rdv-status-toggle", text: "Rendez-vous honoré").click
     find("span", text: "Réinitialiser").click
     expect(page).to have_css(".fr-btn", text: "Rendez-vous honoré")
     expect(page).to have_content("Rendez-vous mis à jour")
@@ -38,14 +38,14 @@ RSpec.describe "Les agents peuvent renseigner le statut des rendez-vous pour nou
 
   it "works from the rdv details page", js: true do
     visit admin_organisation_rdv_path(rdv.organisation, rdv)
-    find(".btn", text: "À renseigner").click
+    find(".rdv-status-toggle", text: "À renseigner").click
     find("span", text: "Rendez-vous honoré").click
     expect(page).to have_css("#rdv-status-#{rdv.id} .rdv-status-seen")
     expect(page).to have_content("Rendez-vous mis à jour")
     expect(rdv.reload.status).to eq("seen")
 
     # Et on peut faire un reset
-    find(".btn", text: "Rendez-vous honoré").click
+    find(".rdv-status-toggle", text: "Rendez-vous honoré").click
     find("span", text: "Réinitialiser").click
     expect(page).to have_css("#rdv-status-#{rdv.id} .rdv-status-unknown_past")
     expect(page).to have_content("Rendez-vous mis à jour")

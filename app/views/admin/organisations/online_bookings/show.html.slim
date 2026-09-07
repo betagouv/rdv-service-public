@@ -48,7 +48,8 @@
   .card-body
     .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
       h2.fr-h4 Modes d'authentification
-      = link_to "Modifier", edit_user_type_admin_organisation_online_booking_path(@organisation), class: "fr-btn fr-btn--secondary"
+      - if policy(@organisation, policy_class: Agent::OrganisationPolicy).edit?
+        = link_to "Modifier", edit_user_type_admin_organisation_online_booking_path(@organisation), class: "fr-btn fr-btn--secondary"
     p
       |> Vos usagers peuvent se connecter avec
       ruby:
@@ -64,7 +65,8 @@
   .card-body
     .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
       h3.fr-h4 Motifs ouverts à la réservation en ligne
-      = link_to "Modifier", edit_admin_organisation_online_booking_path(@organisation), class: "fr-btn fr-btn--secondary"
+      - if policy(@organisation, policy_class: Agent::OrganisationPolicy).edit?
+        = link_to "Modifier", edit_admin_organisation_online_booking_path(@organisation), class: "fr-btn fr-btn--secondary"
     ul.list-unstyled.my-1
       - @open_motifs.each do |motif|
         li = render "motif_card", motif:
@@ -74,7 +76,8 @@
     .card-body
       .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
         h3.fr-h4 Motifs fermés à la réservation en ligne
-        = link_to "Modifier", edit_admin_organisation_online_booking_path(@organisation), class: "fr-btn fr-btn--secondary"
+        - if policy(@organisation, policy_class: Agent::OrganisationPolicy).edit?
+          = link_to "Modifier", edit_admin_organisation_online_booking_path(@organisation), class: "fr-btn fr-btn--secondary"
       ul.list-unstyled.my-1
         - @closed_motifs.each do |motif|
           li = render "motif_card", motif:

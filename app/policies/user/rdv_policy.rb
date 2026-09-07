@@ -10,15 +10,15 @@ class User::RdvPolicy < ApplicationPolicy
   # rubocop:enable Style/ArrayIntersect
 
   def index?
-    !current_user.signed_in_with_invitation_token?
+    !current_user.signed_in_with_restricted_auth_token?
   end
 
   def show?
     record.motif.visible? &&
       rdv_belongs_to_user_or_relatives? && (
       (record.collectif? && record.bookable_by_everyone_or_bookable_by_invited_users?) ||
-      !current_user.signed_in_with_invitation_token? ||
-      current_user.invited_for_rdv?(record)
+      !current_user.signed_in_with_restricted_auth_token? ||
+      current_user.signed_in_for_rdv?(record)
     )
   end
 
@@ -32,7 +32,7 @@ class User::RdvPolicy < ApplicationPolicy
 
   def can_change_participants?
     record.motif.visible? &&
-      !current_user.signed_in_with_invitation_token? &&
+      !current_user.signed_in_with_restricted_auth_token? &&
       current_user.participation_for(record).not_cancelled? &&
       !record.in_the_past?
   end

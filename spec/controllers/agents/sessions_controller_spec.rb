@@ -57,6 +57,30 @@ RSpec.describe Agents::SessionsController do
   describe "#destroy" do
     before { sign_in agent }
 
+    it "vide la session dans son intégralité" do
+      session[:some_unrelated_key] = "devrait disparaître"
+      get :destroy
+      expect(session[:some_unrelated_key]).to be_nil
+    end
+
+    context "quand l'agent est usurpé par un super admin" do
+      let(:super_admin) { create(:super_admin) }
+
+      before do
+        sign_in super_admin, scope: :super_admin
+        session[:super_admin_signed_in_as_agent] = true
+        session[:some_unrelated_key] = "devrait survivre"
+      end
+
+      it "ne déconnecte pas le super admin et laisse le reste de la session intact" do
+        get :destroy
+
+        expect(session["warden.user.super_admin.key"]).to be_present
+        expect(session[:some_unrelated_key]).to eq("devrait survivre")
+        expect(response).to redirect_to(super_admins_agents_path)
+      end
+    end
+
     context "when the agent was logged in with ProConnect" do
       stub_env_with(PRO_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2")
 

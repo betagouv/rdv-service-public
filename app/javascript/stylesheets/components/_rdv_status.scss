@@ -5,6 +5,20 @@ a.rdv-status {
   }
 }
 
+.rdv-status-toggle {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+}
+
 $status_colors: (
   "unknown": var(--grey-950-100),
   "unknown_future": var(--grey-950-100),
@@ -20,7 +34,7 @@ $status_colors: (
 
 @each $status, $color in $status_colors {
   .rdv-status.rdv-status-#{$status},
-  .btn.rdv-status-#{$status} {
+  .rdv-status-toggle.rdv-status-#{$status} {
     background-color: $color;
     color: #000;
   }

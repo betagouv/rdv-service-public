@@ -6,10 +6,14 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
     set_motifs
 
     if @motifs.bookable_by_everyone.none?
-      @online_booking_motifs_form = Admin::OnlineBookingMotifsForm.new(current_organisation)
+      if current_agent.admin_in_organisation?(current_organisation)
+        @online_booking_motifs_form = Admin::OnlineBookingMotifsForm.new(current_organisation)
 
-      @cancel_path = admin_organisation_configuration_path(current_organisation)
-      render :form
+        @cancel_path = admin_organisation_configuration_path(current_organisation)
+        render :form
+      else
+        render :not_configured
+      end
     else
       @open_motifs = @motifs.bookable_by_everyone
       @closed_motifs = @motifs.where.not(bookable_by: :everyone)

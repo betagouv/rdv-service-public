@@ -30,6 +30,13 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
       get :show
       expect(response).to have_http_status(:ok)
     end
+
+    it "pré-remplit le sélecteur de couleur avec la couleur par défaut des indisponibilités" do
+      get :show
+      color_input = Capybara.string(response.body).find("#caldav_calendar_color")
+      expect(color_input[:type]).to eq("color")
+      expect(color_input[:value]).to eq(AbsencesHelper::CALENDAR_BACKGROUND_COLOR_HEX)
+    end
   end
 
   describe "#update" do

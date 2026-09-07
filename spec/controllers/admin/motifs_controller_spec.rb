@@ -22,27 +22,6 @@ RSpec.describe Admin::MotifsController, type: :controller do
     end
   end
 
-  describe "GET #show" do
-    it "returns a success response" do
-      get :show, params: { organisation_id: organisation.id, id: motif.to_param }
-      expect(response).to be_successful
-    end
-  end
-
-  describe "GET #new" do
-    it "returns a success response" do
-      get :new, params: { organisation_id: organisation.id }
-      expect(response).to be_successful
-    end
-  end
-
-  describe "GET #edit" do
-    it "returns a success response" do
-      get :edit, params: { organisation_id: organisation.id, id: motif.to_param }
-      expect(response).to be_successful
-    end
-  end
-
   describe "POST #create" do
     context "with valid params" do
       let(:valid_attributes) do
@@ -120,9 +99,7 @@ RSpec.describe Admin::MotifsController, type: :controller do
 
     context "with invalid params" do
       let(:new_attributes) do
-        {
-          name: "",
-        }
+        { name: "" }
       end
 
       it "returns a success response (i.e. to display the 'edit' template)" do

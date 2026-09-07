@@ -208,6 +208,9 @@ RSpec.describe "Adding a user to a collective RDV" do
         rdv2.save
 
         visit users_rdv_path(rdv2, invitation_token: participation2.restricted_auth_token)
+
+        fill_in(:letters, with: "INV")
+        click_on("Valider")
         expect(page).to have_content(/Annulé/i)
       end
 

@@ -1,5 +1,7 @@
 module AbsencesHelper
   CALENDAR_BACKGROUND_COLOR = "rgba(52, 57, 58, 0.7)".freeze
+  # Équivalent hexadécimal de CALENDAR_BACKGROUND_COLOR (sans transparence), pour les usages qui ne supportent pas le format rgba (ex : input[type=color]).
+  CALENDAR_BACKGROUND_COLOR_HEX = "#34393A".freeze
 
   def absence_tag(absence)
     if absence.expired?

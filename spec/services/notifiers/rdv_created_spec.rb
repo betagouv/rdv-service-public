@@ -46,6 +46,17 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
       expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user2)
       subject
     end
+
+    context "quand l'usager a activé les notifications par AMI" do
+      before do
+        create(:user_ami_profile, user: user1, notify_by_ami: true, fc_hash: "asdf")
+      end
+
+      it "envoie des notifs" do
+        expect_any_instance_of(Ami).to receive(:create_event) # rubocop:disable RSpec/AnyInstance
+        subject
+      end
+    end
   end
 
   context "commence aujourd'hui ou demain" do

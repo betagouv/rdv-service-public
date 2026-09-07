@@ -43,6 +43,7 @@ class Rdv < ApplicationRecord
   has_many :participations, validate: false, inverse_of: :rdv, dependent: :destroy, class_name: "Participation"
   has_many :receipts, dependent: :nullify
   has_many :external_references, as: :item, dependent: :destroy
+  has_one :rdv_invitation, dependent: :destroy
 
   accepts_nested_attributes_for :participations, allow_destroy: true
   accepts_nested_attributes_for :lieu
@@ -221,7 +222,7 @@ class Rdv < ApplicationRecord
 
   def editable_by_user?
     !cancelled? && !collectif? && motif.rdvs_editable_by_user? && starts_at > 2.days.from_now &&
-      motif.bookable_by_everyone_or_bookable_by_invited_users?
+      (motif.bookable_by_everyone_or_bookable_by_invited_users? || rdv_invitation.present?)
   end
 
   def available_to_file_attente?

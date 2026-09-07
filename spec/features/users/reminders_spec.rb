@@ -34,8 +34,8 @@ RSpec.describe "Les usagers peuvent voir les détails de leurs rendez-vous depui
     expect(page).to have_content "CCAS de Montreuil"
 
     visit path_in_first_sms
-
-    expect(page).not_to have_content "Votre invitation n'est pas valide."
+    fill_in(:letters, with: "FAC")
+    click_on "Valider"
 
     expect(page).to have_content "Votre RDV"
     expect(page).to have_content "CCAS de Montreuil"
