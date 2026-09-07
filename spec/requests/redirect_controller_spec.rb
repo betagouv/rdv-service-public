@@ -16,7 +16,6 @@ RSpec.describe "RedirectController#reprendre_rdv_from_participation_invitation_t
             motif_name_with_location_type: motif.name_with_location_type,
             public_link_organisation_id: organisation.id,
             lieu_id: lieu.id,
-            address: rdv.address,
             invitation_token: token
           )
         )
@@ -30,6 +29,20 @@ RSpec.describe "RedirectController#reprendre_rdv_from_participation_invitation_t
         expect(response).to redirect_to(root_path)
         expect(flash[:error]).to eq(I18n.t("devise.invitations.invitation_token_invalid"))
       end
+    end
+
+    it "ne divulgue pas l'adresse personnelle du bénéficiaire d'un RDV à domicile dans la redirection" do
+      organisation = create(:organisation)
+      motif = create(:motif, :at_home, organisation:, bookable_by: :everyone)
+      user = create(:user, address: "12 rue Secrète, 75001 Paris")
+      rdv = create(:rdv, organisation:, motif:, lieu: nil, users: [user])
+      token = rdv.participations.first.restricted_auth_token
+
+      get "/prdv", params: { tkn: token }
+
+      expect(response).to have_http_status(:found)
+      expect(response.headers["Location"]).not_to include("Secr")
+      expect(response.headers["Location"]).not_to include(CGI.escape("12 rue Secrète, 75001 Paris"))
     end
   end
 end
