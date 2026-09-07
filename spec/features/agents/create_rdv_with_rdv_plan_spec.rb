@@ -30,22 +30,25 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
 
   it "permet de prendre un rendez-vous", js: true do
     visit agents_rdv_plan_path(rdv_plan.id)
-    page.driver.with_playwright_page do |pw| # FC v7 overlay intercepts direct click → use mouse coordinates
-      slot = pw.locator('[data-time="08:30:00"]').first
+
+    expect(page).to have_content "Pour quel motif souhaitez-vous prendre rendez-vous ?"
+    click_on motif.name
+
+    expect(page).to have_content("Convenez d'un horaire")
+    expect(rdv_plan.reload).to have_attributes(motif_id: motif.id)
+
+    page.driver.with_playwright_page do |pw|
+      slot = pw.locator('[data-time="08:30:00"]').last
       box = slot.bounding_box
       pw.mouse.click(box["x"] + (box["width"] / 2), box["y"] + (box["height"] / 2))
     end
-    expect(page).to have_content "Nouveau"
+    sleep 0.1
+
+    expect(page).to have_content(motif.name)
     expect(rdv_plan.reload.starts_at).to be_present
 
     find("label", text: "Sur place").click
     click_on "Continuer"
-    expect(page).to have_content "Motif du rendez-vous "
-    click_on "Continuer"
-
-    # On a sélectionné le premier créneau visible du calendrier, qui est donc dans le passé
-    # Hack : on modifie à la main le starts_at
-    rdv_plan.update!(starts_at: 2.weeks.from_now)
 
     fill_in("Email", with: "newaddress@exemple.com")
 
