@@ -228,6 +228,23 @@ jobs:
           POSTGRES_USER: lapin_test
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
+      # Diagnostic temporaire : quand un shard échoue avec « The operation was canceled. »
+      # sans aucun log, le noyau garde une trace (OOM killer, disque plein) que GitHub n'affiche pas.
+      - name: Diagnostic ressources (OOM / disque / mémoire)
+        if: always()
+        run: |
+          echo "::group::free -m"
+          free -m
+          echo "::endgroup::"
+          echo "::group::df -h"
+          df -h
+          echo "::endgroup::"
+          echo "::group::dmesg (traces OOM)"
+          sudo dmesg --ctime | grep -iE 'oom|killed process|out of memory' || echo "aucune trace OOM dans dmesg"
+          echo "::endgroup::"
+          echo "::group::dmesg (100 dernières lignes)"
+          sudo dmesg --ctime | tail -100
+          echo "::endgroup::"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
