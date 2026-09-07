@@ -1,13 +1,12 @@
 RSpec.describe "Prise de rendez-vous depuis le lien d'un motif" do
   let(:organisation) { create(:organisation) }
-  let!(:motif) do
-    create(:motif, bookable_by: :everyone, organisation:)
-  end
+  let!(:motif) { create(:motif, bookable_by: :everyone, organisation:) }
+  let!(:other_motif) { create(:motif, bookable_by: :everyone, organisation:) }
   let(:lieu) { create(:lieu, organisation:) }
 
   before do
     travel_to(Time.zone.parse("2022-09-12 15:00:00"))
-    create(:plage_ouverture, motifs: [motif], lieu:)
+    create(:plage_ouverture, motifs: [motif, other_motif], lieu:)
   end
 
   it "permet une prise de rendez-vous mais ne permet pas de changer de motif" do
