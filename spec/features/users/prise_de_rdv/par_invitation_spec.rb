@@ -1,6 +1,6 @@
 RSpec.describe "Prise de rendez-vous par invitation" do
-  let(:motif) { create(:motif, organisation:) }
   let(:organisation) { create(:organisation) }
+  let(:motif) { create(:motif, organisation:) }
   let(:lieu) { create(:lieu, organisation:) }
   let!(:plage_ouverture) do
     create(:plage_ouverture, :weekdays, motifs: [motif], lieu:, organisation:, first_day: Time.zone.today)
@@ -33,6 +33,30 @@ RSpec.describe "Prise de rendez-vous par invitation" do
 
     it "redirige vers la page du rendez-vous, avec l'authentification avec les trois premières lettres" do
       expect(page).to have_content "Pour sécuriser l’accès à vos données, veuillez entrer les 3 premières lettres de votre nom de famille."
+    end
+  end
+
+  context "pour un motif qui ne nécessite pas de lieu" do
+    let(:motif) { create(:motif, organisation:, location_type: :visio) }
+    let!(:plage_ouverture) do
+      create(:plage_ouverture, :weekdays, motifs: [motif], lieu: nil, organisation:, first_day: Time.zone.today)
+    end
+    let(:rdv_invitation) { create(:rdv_invitation, motif:, lieu: nil) }
+
+    it "permet de prendre le rendez-vous" do
+      click_on "8:00", match: :first
+
+      expect(page).to have_content "Votre rendez vous a été confirmé."
+      expect(page).to have_content "Ajouter à mon calendrier"
+
+      rdv = rdv_invitation.reload.rdv
+      expect(rdv).to have_attributes(
+        organisation:, motif:,
+        lieu: nil,
+        agents: [plage_ouverture.agent],
+        status: "unknown",
+        users: [rdv_invitation.user]
+      )
     end
   end
 end

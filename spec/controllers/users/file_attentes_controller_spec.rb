@@ -68,6 +68,17 @@ RSpec.describe Users::FileAttentesController, type: :controller do
       end
     end
 
+    context "quand l'id fourni ne correspond à aucune file d'attente" do
+      let!(:own_file_attente) { create(:file_attente, rdv: rdv, user: user) }
+
+      it "ne touche à aucune file d'attente et redirige (pas d'oracle d'existence)" do
+        expect do
+          post :create_or_delete, params: { file_attente: { id: 0 } }
+        end.not_to change(FileAttente, :count)
+        expect(response).to have_http_status(:redirect)
+      end
+    end
+
     context "quand le current_user n'a aucun lien avec la file d'attente ciblée" do
       let(:other_user) { create(:user) }
       let!(:other_rdv) { create(:rdv, users: [other_user]) }
