@@ -1,10 +1,10 @@
 .fr-grid-row.justify-content-md-center.fr-mb-16w
   .fr-col-8
-    .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
-      h1.fr-h2 Rendez-vous confirmé
-      = link_to "Modifier", edit_admin_organisation_rdv_path(@rdv.organisation, @rdv), class: "fr-btn fr-btn--secondary", target: :blank
     .card
       .card-body
+        .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+          h1.fr-h2 Rendez-vous confirmé
+          = link_to "Modifier", edit_admin_organisation_rdv_path(@rdv.organisation, @rdv), class: "fr-btn fr-btn--secondary", target: :blank
         div
           = motif_icon(class: "fr-mr-1w")
           = "Motif : #{@rdv.motif.name}"
