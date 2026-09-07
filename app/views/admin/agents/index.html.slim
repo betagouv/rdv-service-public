@@ -8,13 +8,38 @@
 
 .card
   .card-body
-    - if needs_agent_search?
-      .fr-mb-2w.d-flex.justify-content-end
-        - search = params[:term].blank? && "d-none"
-        div= link_to t("helpers.reset"), admin_organisation_agents_path(current_organisation), class: "fr-btn fr-btn--tertiary-no-outline #{search}"
-        = simple_form_for "", url: admin_organisation_agents_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
-          = f.input :term, placeholder: "Prénom, Nom, Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:term] }, required: false
-          = f.submit t("helpers.search"), class: "fr-btn"
+    - if @agents_search_form.should_display?
+      = form_for @agents_search_form, url: admin_organisation_agents_path(current_organisation), method: :get, builder: Dsfr::FormBuilder, as: "search", html: { "data-controller": "form" } do |f|
+        fieldset.fr-fieldset.rdv-gap-1rem.rdv-align-items-first-baseline.fr-mb-0
+          legend.fr-fieldset__legend--regular.fr-fieldset__legend.fr-mb-0.fr-pb-0
+            | Filtres
+          .fr-fieldset__element.fr-fieldset__element--inline.fr-mr-auto.fr-mb-0
+            fieldset.fr-segmented.fr-segmented--no-legend.fr-mb-0
+              legend.fr-segmented__legend
+                | Rôle
+              .fr-segmented__elements
+                .fr-segmented__element
+                  = f.radio_button :role, "", checked: @agents_search_form.role != "admin", data: { action: "change->form#submit" }
+                  = f.label :role, "Tous les rôles", value: "", class: "fr-label fr-mb-0"
+                .fr-segmented__element
+                  = f.radio_button :role, "admin", data: { action: "change->form#submit" }
+                  = f.label :role, "Admins uniquement", value: "admin", class: "fr-label fr-mb-0"
+          .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
+            = f.dsfr_text_field :query, placeholder: "Prénom, Nom, Email", autocomplete: "off", label: ""
+          .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
+            = f.submit "Rechercher", class: "fr-btn"
+
+- if @agents_search_form.active_filters? && @agents.total_count > 0
+  p.fr-mb-1w.fr-mt-4w
+    = icon("fr-icon-filter-line fr-icon--sm fr-mr-1w")
+    - if @agents.total_count == 1
+      | 1 agent correspond à vos filtres
+    - else
+      | #{@agents.total_count} agents correspondent à vos filtres
+    span.fr-ml-1w= link_to "Réinitialiser les filtres", admin_organisation_agents_path(current_organisation), class: "fr-link"
+
+.card
+  .card-body
     table.table
       thead
         tr
@@ -27,7 +52,10 @@
       tbody
         = render partial: "agent", collection: @agents
     - if @agents.empty?
-      .mb-4.p.rdv-text-align-center Aucun agent trouvé
+      .mb-4.p.rdv-text-align-center
+        | Aucun agent trouvé
+        - if @agents_search_form.active_filters?
+          span.fr-ml-1w= link_to "Réinitialiser les filtres", admin_organisation_agents_path(current_organisation), class: "fr-btn fr-btn--tertiary fr-btn--sm"
     - elsif @agents.total_pages > 1
       .m-3
         .d-flex.justify-content-center
