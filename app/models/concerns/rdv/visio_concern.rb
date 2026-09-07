@@ -32,6 +32,23 @@ module Rdv::VisioConcern
     end
   end
 
+  # On préfère renvoyer un lien stable vers le RDV (qui redirige vers visio_url) plutôt que le lien
+  # de visio en direct. Cela permet de gérer les changements de fournisseurs de visio,
+  # et de ne pas casser les liens envoyés par email.
+  def visio_join_url(recipient = users.first)
+    case recipient
+    when User
+      token = recipient.participation_for(self)&.restricted_auth_token
+      return visio_url if token.blank?
+
+      Rails.application.routes.url_helpers.visio_users_rdv_url(self, invitation_token: token, host: domain.host_name)
+    when Agent
+      Rails.application.routes.url_helpers.visio_agents_rdv_url(self, host: domain.host_name)
+    else
+      visio_url
+    end
+  end
+
   def validate_visio_url_custom
     res = URI::DEFAULT_PARSER.make_regexp(%w[http https]).match(visio_url_custom)
     if !res

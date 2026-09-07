@@ -7,7 +7,7 @@ module IcsPayloads
         ends_at: ends_at,
         ical_uid: uuid,
         summary: ics_summary(sensitive_data: sensitive_data),
-        location: ics_location(sensitive_data: sensitive_data),
+        location: ics_location(recipient: recipient, sensitive_data: sensitive_data),
         domain: domain,
         status: ics_status,
         tzid: organisation&.time_zone,
@@ -25,10 +25,10 @@ module IcsPayloads
       payload
     end
 
-    def ics_location(sensitive_data: false)
+    def ics_location(recipient: users.first, sensitive_data: false)
       case motif.location_type.to_sym
       when :phone then users.first&.phone_number_formatted if sensitive_data
-      when :visio then visio_url
+      when :visio then visio_join_url(recipient)
       when :home then users.first&.address if sensitive_data
       else address
       end

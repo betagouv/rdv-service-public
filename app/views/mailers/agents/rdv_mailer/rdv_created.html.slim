@@ -4,7 +4,7 @@ div
     - date = relative_date(@rdv.starts_at)
     | Un nouveau RDV qui aura lieu #{date} vient d’être ajouté à votre agenda.
 
-    = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent
+    = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent, visio_url: @rdv.visio_join_url(@agent)
 
   p.aligncenter
     = link_to "Voir sur #{domain.name}", admin_organisation_rdv_url(@rdv.organisation_id, @rdv.id),  class: "btn btn-primary"
