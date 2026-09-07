@@ -47,7 +47,6 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     expect(page).to have_content(motif.name)
     expect(rdv_plan.reload.starts_at).to be_present
 
-    find("label", text: "Sur place").click
     click_on "Continuer"
 
     fill_in("Email", with: "newaddress@exemple.com")
@@ -78,16 +77,22 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
   context "quand il y a d'autres agents dans l'organisation" do
     let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
+    before do
+      rdv_plan.update!(motif:)
+    end
+
     it "permet de prendre rendez-vous pour un autre agent", js: true do
-      visit agents_rdv_plan_path(rdv_plan.id)
+      visit edit_starts_at_agents_rdv_plan_path(rdv_plan.id)
       find(".fr-select").click # On teste ce cas, puisqu'on a eu des bugs d'affichage qui cassaient cette partie de l'interface lors d'une mise à jour de Fullcalendar
     end
   end
 
   it "displays existing RDVs and absences", js: true do
+    rdv_plan.update!(motif:)
+
     existing_rdv_this_week = create(:rdv, starts_at: Time.zone.now.beginning_of_week + 8.hours, agents: [agent], motif:, organisation:)
     existing_absence_next_week = create(:absence, first_day: Time.zone.now.beginning_of_week.to_date + 1.week, agent:)
-    visit agents_rdv_plan_path(rdv_plan.id)
+    visit edit_starts_at_agents_rdv_plan_path(rdv_plan.id)
     expect(page).to have_content(existing_rdv_this_week.users.first.full_name)
     find('button[aria-label="Semaine suivante"]').click
     expect(page).to have_content(existing_absence_next_week.title)
@@ -95,7 +100,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
 
   context "quand l'usager a déjà une adresse email et qu'on veut la changer" do
     let(:rdv_plan) do
-      create(:rdv_plan, user: user, motif: motif, location_type: :public_office, duration_in_minutes: 30,
+      create(:rdv_plan, user:, motif:, duration_in_minutes: 30,
                         rdv_agent: agent,
                         lieu: lieu,
                         starts_at: 2.days.from_now,
@@ -152,7 +157,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     let(:user) { create(:user, latest_login_at: nil, organisations: [organisation], email: "francis@precedent.fr") }
     let!(:user_with_same_email) { create(:user, organisations: [organisation], email: "francis@exemple.fr") }
     let(:rdv_plan) do
-      create(:rdv_plan, user: user, motif: motif, location_type: :public_office, duration_in_minutes: 30,
+      create(:rdv_plan, user: user, motif: motif, duration_in_minutes: 30,
                         rdv_agent: agent,
                         lieu: lieu,
                         starts_at: 2.days.from_now,
@@ -196,42 +201,13 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     end
   end
 
-  context "avec plusieurs motifs qui ont des location types différents" do
-    let(:rdv_plan) do
-      create(:rdv_plan,
-             user: user,
-             starts_at: 2.weeks.from_now,
-             planning_agent: agent,
-             rdv_agent: agent,
-             return_url: "https://demo.demarches-simplifiees.fr/callback/123",
-             oauth_application: application)
-    end
-
-    let!(:other_motif) do
-      create(:motif, organisation: organisation, location_type: :phone, name: "Rappel téléphonique")
-    end
-
-    it "filtre les motifs par location type" do
-      visit edit_lieu_agents_rdv_plan_path(rdv_plan.id)
-
-      find("label", text: "Sur place").click
-      click_on "Continuer"
-
-      expect(page).to have_content "Motif du rendez-vous"
-
-      expect(page).not_to have_content(other_motif.name)
-    end
-  end
-
   context "quand aucun motif n'est disponible pour l'agent choisi" do
     before { motif.archive }
 
     it "affiche un message qui explique le blocage" do
-      visit edit_lieu_agents_rdv_plan_path(rdv_plan.id)
+      visit agents_rdv_plan_path(rdv_plan.id)
 
-      expect(page).not_to have_content("Continuer")
-
-      expect(page).to have_content "Vous devez d'abord créer un motif de rendez-vous pour l'organisation CCAS de Montreuil"
+      expect(page).to have_content "Aucun motif de rendez-vous n'est disponible."
     end
   end
 end
