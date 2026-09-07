@@ -11,6 +11,9 @@ RSpec.describe Ami do
 
   before do
     UserAmiProfile.create!(user: user, fc_hash: "test_ami_fc_hash")
+    WebMock.stub_request(:get, "https://ami.test/api/v1/consent/test_ami_fc_hash").to_return(
+      status: 200, body: '{"consent_datetime": "2026-09-02T13:05:56.256266Z"}'
+    )
     WebMock.stub_request(:put, "https://ami.test/api/v2/event")
   end
 
