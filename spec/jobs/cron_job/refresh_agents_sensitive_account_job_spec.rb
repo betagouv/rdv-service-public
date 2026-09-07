@@ -84,7 +84,7 @@ RSpec.describe CronJob::RefreshAgentsSensitiveAccountJob, type: :job do
       territory = create(:territory)
       organisation_1 = create(:organisation, territory: territory)
       organisation_2 = create(:organisation, territory: territory)
-      agent = create(:agent, role_in_territories: [territory], sensitive_account: false)
+      agent = create(:agent, admin_in_territories: [territory], sensitive_account: false)
       create(:rdv, organisation: organisation_1)
       create(:rdv, organisation: organisation_2)
 
