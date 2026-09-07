@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_26_074818) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_02_074544) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -64,9 +64,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_26_074818) do
     t.bigint "organisation_id", null: false
     t.enum "access_level", default: "basic", null: false, enum_type: "access_level"
     t.boolean "agent_accueil", default: false, null: false
-    t.index ["access_level"], name: "index_agent_roles_on_access_level"
-    t.index ["agent_id"], name: "index_agent_roles_on_agent_id"
-    t.index ["organisation_id", "agent_id"], name: "index_agent_roles_on_organisation_id_and_agent_id", unique: true
+    t.index ["agent_id", "organisation_id"], name: "index_agent_roles_on_agent_id_and_organisation_id", unique: true, include: ["access_level", "agent_accueil"]
+    t.index ["organisation_id"], name: "index_agent_roles_on_organisation_id"
   end
 
   create_table "agent_services", force: :cascade do |t|
