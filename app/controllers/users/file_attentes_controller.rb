@@ -31,7 +31,7 @@ class Users::FileAttentesController < UserAuthController
       fa.save!
       flash[:success] = "Vous êtes à présent sur la liste d'attente"
     end
-    redirect_to request.referer.to_s
+    redirect_back_or_to(users_rdvs_path)
   end
 
   private
