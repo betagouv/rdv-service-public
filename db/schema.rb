@@ -271,7 +271,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_02_132711) do
     t.index ["agent_id", "calendar_url"], name: "idx_on_cal_sync_executions_agent_id_calendar_url"
   end
 
-  create_table "external_calendar_sync_executions_logs", force: :cascade do |t|
+  create_table "external_calendar_sync_execution_logs", force: :cascade do |t|
     t.bigint "external_calendar_sync_execution_id", null: false
     t.text "message", null: false
     t.datetime "emitted_at", null: false
@@ -989,7 +989,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_02_132711) do
   add_foreign_key "exports", "agents"
   add_foreign_key "external_calendar_events", "agents"
   add_foreign_key "external_calendar_sync_executions", "agents"
-  add_foreign_key "external_calendar_sync_executions_logs", "external_calendar_sync_executions"
+  add_foreign_key "external_calendar_sync_execution_logs", "external_calendar_sync_executions"
   add_foreign_key "external_references", "oauth_applications"
   add_foreign_key "external_references", "territories"
   add_foreign_key "file_attentes", "rdvs"

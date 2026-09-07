@@ -1,4 +1,4 @@
-class ExternalCalendarSyncExecutionsLog < ApplicationRecord
+class ExternalCalendarSyncExecutionLog < ApplicationRecord
   # Relations
   belongs_to :external_calendar_sync_execution
 

@@ -1,7 +1,7 @@
 class ExternalCalendarSyncExecution < ApplicationRecord
   # Relations
   belongs_to :agent
-  has_many :logs, -> { order(:emitted_at) }, class_name: "ExternalCalendarSyncExecutionsLog", inverse_of: :external_calendar_sync_execution, dependent: :destroy
+  has_many :logs, -> { order(:emitted_at) }, class_name: "ExternalCalendarSyncExecutionLog", inverse_of: :external_calendar_sync_execution, dependent: :destroy
 
   # Validations
   validates :started_at, presence: true

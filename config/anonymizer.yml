@@ -36,7 +36,7 @@ tables:
     truncated: true
   - table_name: external_calendar_sync_executions
     truncated: true
-  - table_name: external_calendar_sync_executions_logs
+  - table_name: external_calendar_sync_execution_logs
     truncated: true
   - table_name: users
     anonymized_column_names:
