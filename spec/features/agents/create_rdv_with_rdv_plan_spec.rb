@@ -37,6 +37,8 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     expect(page).to have_content("Convenez d'un horaire")
     expect(rdv_plan.reload).to have_attributes(motif_id: motif.id)
 
+    # On agrandit la taille de la page pour que le calendrier soit visible en entier
+    Capybara.page.current_window.resize_to(1280, 1300)
     page.driver.with_playwright_page do |pw|
       slot = pw.locator('[data-time="08:30:00"]').last
       box = slot.bounding_box
@@ -44,10 +46,13 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     end
     sleep 0.1
 
-    expect(page).to have_content(motif.name)
+    expect(page).to have_content(lieu.name)
     expect(rdv_plan.reload.starts_at).to be_present
 
-    click_on "Continuer"
+    click_on lieu.name
+
+    expect(page).to have_content("Coordonnées")
+    expect(rdv_plan.reload.lieu).to eq lieu
 
     fill_in("Email", with: "newaddress@exemple.com")
 
