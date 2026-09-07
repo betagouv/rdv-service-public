@@ -44,7 +44,7 @@
 
     - if @rdvs.any?
       = render(partial: "admin/rdvs_collectifs/rdv", collection: @rdvs.includes(:organisation, :users, :lieu, :motif, agents: :services))
-      .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
+      .d-flex.justify-content-center= paginate @rdvs
     - else
       - if current_organisation.motifs.collectif.active.none?
         = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer un RDV collectif, vous devez d'abord créer un motif de rendez-vous collectif."
