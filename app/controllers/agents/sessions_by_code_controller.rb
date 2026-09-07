@@ -10,7 +10,8 @@ class Agents::SessionsByCodeController < ApplicationController
   end
 
   def resend
-    Agents::LoginCodeSender.perform(email: pending_agent.email, domain_id: current_domain.id, resend: true)
+    UnblockBrevoTransactionalContact.new(pending_agent.email).call
+    Agents::LoginCodeSender.perform(email: pending_agent.email, domain_id: current_domain.id)
     redirect_to new_agents_sessions_by_code_path
   end
 
