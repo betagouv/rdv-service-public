@@ -231,4 +231,24 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
       expect(page).to have_content "Vous devez d'abord créer un motif de rendez-vous pour l'organisation CCAS de Montreuil"
     end
   end
+
+  describe "retour vers la prise de rendez-vous depuis l'interface principale" do
+    before do
+      create(:rdv_plan, planning_agent: agent, rdv_agent: agent, rdv: nil)
+    end
+
+    it "est possible via un lien dans un bandeau" do
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+
+      expect(page).to have_content("Vous avez commencé à prendre un rendez-vous")
+      click_on "Retourner à la préparation de ce rendez-vous"
+      expect(page).to have_content("Nouveau rendez-vous avec")
+    end
+
+    it "remplace le bandeau de rendez-vous d'accompagnement" do
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+
+      expect(page).not_to have_content("Besoin d'aide pour bien démarrer ?")
+    end
+  end
 end
