@@ -2,7 +2,7 @@
   .fr-col-12
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Motif", next_step_title: "Créneau"
 
-  .fr-col-12.fr-col-md-8
+  .fr-col-12.fr-col-md-7
     - if @motifs.empty?
       p Aucun motif de rendez-vous n'est disponible.
       - if current_agent.admin_orgs.any?

@@ -133,8 +133,8 @@ class Agents::RdvPlansController < AgentAuthController
   private
 
   def available_motifs(rdv_plan)
-    rdv_plan.rdv_agent.organisations.map do |organisation|
-      Motif.individuel.available_motifs_for_organisation_and_agent(organisation, rdv_plan.rdv_agent)
+    rdv_plan.planning_agent.organisations.map do |organisation|
+      Motif.individuel.available_motifs_for_organisation_and_agent(organisation, rdv_plan.planning_agent)
     end.reduce do |motifs, additional_motifs|
       motifs.or(additional_motifs)
     end
