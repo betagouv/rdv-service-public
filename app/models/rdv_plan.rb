@@ -27,6 +27,7 @@ class RdvPlan < ApplicationRecord
     if by_invitation?
       invitation = RdvInvitation.create(motif:, lieu:, user:, inviting_agent: planning_agent)
       if invitation.valid?
+        update!(rdv_invitation_id: invitation.id)
         Users::RdvInvitationMailer.with(rdv_invitation: invitation).new_invitation.deliver_later
       end
 
