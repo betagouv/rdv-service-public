@@ -52,6 +52,10 @@ RSpec.describe "Update agent territorial access rights, cases the form doesn't a
   context "when the agent is territory admin" do
     let(:current_agent) { create(:agent, admin_in_territories: [territory]) }
 
+    before do
+      create(:agent_territorial_access_right, agent: target_agent, territory: territory)
+    end
+
     it "silently ignores the 3 specific rights submitted alongside territory_admin" do
       patch admin_territory_agent_territorial_access_right_path(territory_id: territory.id, id: target_agent.id),
             params: { agent_territorial_access_right: { territory_admin: "1", allow_to_manage_teams: "1" } }
