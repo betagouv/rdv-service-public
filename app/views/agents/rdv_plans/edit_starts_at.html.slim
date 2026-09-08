@@ -9,8 +9,10 @@
     hr.fr-mt-2w
 
     - if @rdv_plan.by_invitation?
-        span Un email sera envoyé à #{@rdv_plan.user.full_name} pour lui permettre de choisir un créneau.
-        = link_to "Continuer", edit_user_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-ml-2w"
+      - rdv_invitation = @rdv_plan.build_invitation
+
+      span Un email sera envoyé à #{@rdv_plan.user.full_name} pour lui permettre de choisir un créneau.
+      = link_to "Continuer", edit_user_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-ml-2w"
     - else
       = render "agents/rdv_plans/agents_calendar", rdv_plan: @rdv_plan, event_sources:, agents:
 

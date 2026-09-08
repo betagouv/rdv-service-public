@@ -25,8 +25,8 @@ class RdvPlan < ApplicationRecord
     user.update!(user_attributes)
 
     if by_invitation?
-      invitation = RdvInvitation.create(motif:, lieu:, user:, inviting_agent: planning_agent)
-      if invitation.valid?
+      invitation = build_invitation
+      if invitation.save
         update!(rdv_invitation_id: invitation.id)
         Users::RdvInvitationMailer.with(rdv_invitation: invitation).new_invitation.deliver_later
       end
@@ -35,6 +35,10 @@ class RdvPlan < ApplicationRecord
     else
       create_rdv(participation_attributes:)
     end
+  end
+
+  def build_invitation
+    RdvInvitation.new(motif:, lieu:, user:, inviting_agent: planning_agent)
   end
 
   private
