@@ -229,4 +229,13 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
       end
     end
   end
+
+  context "quand il y a des motifs collectifs" do
+    before { create(:motif, :collectif, name: "Atelier collectif", organisation:) }
+
+    it "ne les propose pas dans la liste" do
+      visit agents_rdv_plan_path(rdv_plan.id)
+      expect(page).not_to have_content "Atelier collectif"
+    end
+  end
 end
