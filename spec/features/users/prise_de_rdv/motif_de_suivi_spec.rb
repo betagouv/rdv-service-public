@@ -146,12 +146,8 @@ RSpec.describe "Prise de RDV pour un motif de suivi" do
   end
 
   context "sur le domaine RDV Service Public (pas de sélection d'adresse)" do
-    let(:host) { "http://www.rdv-service-public-test.localhost" }
-
-    before { default_url_options[:host] = host }
-
     it "affiche la sélection des motifs de suivi du référent au lieu de rediriger vers l'accueil" do
-      visit "#{host}/users/rdvs"
+      visit "http://www.rdv-service-public-test.localhost/users/rdvs"
       click_link "Prendre un RDV de suivi"
 
       expect(page).to have_content(motif1.name)
