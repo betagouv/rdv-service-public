@@ -48,7 +48,8 @@ class RdvInvitation < ApplicationRecord
 
     RdvInvitation.transaction do
       rdv = Rdv.create(
-        motif:, organisation:, lieu:, starts_at:,
+        motif:, organisation:, starts_at:,
+        lieu: creneau.lieu,
         ends_at: starts_at + motif.default_duration_in_min.minutes,
         agents: [creneau.agent],
         users: [user],
