@@ -5,6 +5,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   skip_before_action :verify_authenticity_token
   before_action :authenticate_agent
   before_action :log_api_call_in_database
+  before_action :detect_param_injection
   before_action :set_paper_trail_whodunnit
   before_action :set_sentry_context
 
@@ -127,6 +128,37 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
 
   def user_for_paper_trail
     "#{current_agent.name_for_paper_trail} (via API)"
+  end
+
+  # Cette vérification permet, par défaut, d'empêcher une injection d'un paramètre :
+  # - `organisation_id`
+  # - `organisation_ids`
+  # - `territory_id`
+  # - `territory_ids`
+  # pointant vers une orga ou un territory externe à l'agent courant.
+  #
+  # Elle sert de filet de sécurité partiel au cas où les permissions via policy échoue.
+  # ** Cette vérification ne se substitue pas à un usage rigoureux des policies. **
+  #
+  def detect_param_injection
+    organisation_ids = (Array(params[:organisation_id]) + Array(params[:organisation_ids])).compact_blank.map(&:to_i)
+    territory_ids = (Array(params[:territory_id]) + Array(params[:territory_ids])).compact_blank.map(&:to_i)
+    return if organisation_ids.blank? && territory_ids.blank?
+
+    agent_territories = current_agent.agent_territorial_access_rights.pluck(:territory_id)
+    agent_territories += current_agent.territorial_roles.pluck(:territory_id) # TODO: À supprimer après #6616
+    external_territories = territory_ids.difference(agent_territories)
+
+    if external_territories.any?
+      raise Pundit::NotAuthorizedError, query: :show?, record: external_territories.first, policy: Agent::TerritoryPolicy
+    end
+
+    agent_orgs = current_agent.roles.pluck(:organisation_id) + Organisation.where(territory_id: agent_territories).ids
+    external_orgs = organisation_ids.difference(agent_orgs)
+
+    if external_orgs.any?
+      raise Pundit::NotAuthorizedError, query: :show?, record: external_orgs.first, policy: Agent::OrganisationPolicy
+    end
   end
 
   def set_sentry_context

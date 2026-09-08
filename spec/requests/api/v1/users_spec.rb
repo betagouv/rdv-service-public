@@ -198,7 +198,7 @@ RSpec.describe "/api/v1/users" do
 
         it "ne modifie pas les orgas de l'usager" do
           expect { put "/api/v1/users/#{existing_user.id}", headers:, params:, as: :json }.not_to change { existing_user.reload.organisation_ids }
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(:forbidden)
         end
       end
     end

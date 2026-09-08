@@ -61,7 +61,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       end
 
       response 200, "when there is no webhook_endpoints" do
-        let(:agent) { create(:agent) }
+        let!(:agent) { create(:agent, role_in_territories: [organisation.territory]) }
 
         run_test!
 
