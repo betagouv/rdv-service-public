@@ -32,13 +32,13 @@ class RdvPlan < ApplicationRecord
 
       invitation
     else
-      create_rdv(user_attributes:, participation_attributes:)
+      create_rdv(participation_attributes:)
     end
   end
 
   private
 
-  def create_rdv(user_attributes:, participation_attributes:)
+  def create_rdv(participation_attributes:)
     rdv = Rdv.create(
       agents: [rdv_agent],
       participations: [Participation.new(participation_attributes.merge(user_id: user.id))],
