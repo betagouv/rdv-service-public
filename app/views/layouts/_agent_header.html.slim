@@ -47,4 +47,7 @@ header.header.bg-white
             = render "layouts/lagaufre_button"
 
   = render "layouts/super_admin_sign_in_as_warning"
-  = render "layouts/meet_the_team_banner" unless @hide_meet_the_team_banner
+  - if RdvPlan.where(planning_agent: current_agent, rdv_id: nil).where("created_at > ?", 20.minutes.ago).any?
+    = render "layouts/rdv_plan_banner"
+  - else
+    = render "layouts/meet_the_team_banner" unless @hide_meet_the_team_banner

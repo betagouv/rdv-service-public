@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_26_074818) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_02_074544) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -64,9 +64,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_26_074818) do
     t.bigint "organisation_id", null: false
     t.enum "access_level", default: "basic", null: false, enum_type: "access_level"
     t.boolean "agent_accueil", default: false, null: false
-    t.index ["access_level"], name: "index_agent_roles_on_access_level"
-    t.index ["agent_id"], name: "index_agent_roles_on_agent_id"
-    t.index ["organisation_id", "agent_id"], name: "index_agent_roles_on_organisation_id_and_agent_id", unique: true
+    t.index ["agent_id", "organisation_id"], name: "index_agent_roles_on_agent_id_and_organisation_id", unique: true, include: ["access_level", "agent_accueil"]
+    t.index ["organisation_id"], name: "index_agent_roles_on_organisation_id"
   end
 
   create_table "agent_services", force: :cascade do |t|
@@ -635,6 +634,23 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_26_074818) do
     t.index ["token"], name: "index_prescripteurs_on_token", where: "(token IS NOT NULL)"
   end
 
+  create_table "rdv_invitations", force: :cascade do |t|
+    t.string "token", null: false
+    t.bigint "user_id", null: false
+    t.bigint "motif_id", null: false
+    t.bigint "lieu_id"
+    t.bigint "inviting_agent_id", null: false
+    t.bigint "rdv_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["inviting_agent_id"], name: "index_rdv_invitations_on_inviting_agent_id"
+    t.index ["lieu_id"], name: "index_rdv_invitations_on_lieu_id"
+    t.index ["motif_id"], name: "index_rdv_invitations_on_motif_id"
+    t.index ["rdv_id"], name: "index_rdv_invitations_on_rdv_id"
+    t.index ["token"], name: "index_rdv_invitations_on_token", unique: true
+    t.index ["user_id"], name: "index_rdv_invitations_on_user_id"
+  end
+
   create_table "rdv_plans", force: :cascade do |t|
     t.bigint "planning_agent_id", comment: "L'id de l'agent qui planifie le rdv"
     t.bigint "rdv_id"
@@ -979,6 +995,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_26_074818) do
   add_foreign_key "plage_ouvertures", "agents"
   add_foreign_key "plage_ouvertures", "lieux"
   add_foreign_key "plage_ouvertures", "organisations"
+  add_foreign_key "rdv_invitations", "agents", column: "inviting_agent_id"
+  add_foreign_key "rdv_invitations", "lieux"
+  add_foreign_key "rdv_invitations", "motifs"
+  add_foreign_key "rdv_invitations", "rdvs"
+  add_foreign_key "rdv_invitations", "users"
   add_foreign_key "rdv_plans", "agents", column: "planning_agent_id"
   add_foreign_key "rdv_plans", "agents", column: "rdv_agent_id"
   add_foreign_key "rdv_plans", "lieux"
