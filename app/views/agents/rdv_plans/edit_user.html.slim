@@ -27,7 +27,8 @@
               = ff.dsfr_check_box :send_reminder_notification, label: "Envoyer une notification de rappel 48h avant le rendez-vous"
       - else
         | Les notifications ne sont pas envoyées pour ce motif de rendez-vous.
-      = f.submit "Confirmer le rendez-vous", class: "fr-btn float-right fr-btn--lg"
+      - submit_text = @rdv_plan.by_invitation? ? "Envoyer l'invitation" : "Confirmer le rendez-vous"
+      = f.submit submit_text, class: "fr-btn float-right fr-btn--lg"
 
       - if @rdv_plan.by_invitation?
         = link_to "Retour", edit_starts_at_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
