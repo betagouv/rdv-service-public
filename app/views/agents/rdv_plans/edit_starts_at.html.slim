@@ -4,12 +4,13 @@
   .fr-col-12
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 2, step_title: "Créneau", next_step_title: "Usager"
 
+  .fr-col-12.fr-col-md-8
     = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
     hr.fr-mt-2w
 
     - if @rdv_plan.by_invitation?
-      span Un email sera envoyé à #{@rdv_plan.user.full_name} pour lui permettre de choisir un créneau.
-      = link_to "Continuer", edit_user_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-ml-2w"
+        span Un email sera envoyé à #{@rdv_plan.user.full_name} pour lui permettre de choisir un créneau.
+        = link_to "Continuer", edit_user_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-ml-2w"
     - else
       = render "agents/rdv_plans/agents_calendar", rdv_plan: @rdv_plan, event_sources:, agents:
 
