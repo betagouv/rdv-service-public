@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_02_074544) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_08_124620) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -666,6 +666,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_02_074544) do
     t.enum "location_type", enum_type: "location_type"
     t.bigint "oauth_application_id"
     t.text "dossier_url"
+    t.boolean "by_invitation", default: false, null: false
     t.index ["lieu_id"], name: "index_rdv_plans_on_lieu_id"
     t.index ["motif_id"], name: "index_rdv_plans_on_motif_id"
     t.index ["oauth_application_id"], name: "index_rdv_plans_on_oauth_application_id"

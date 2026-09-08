@@ -1,0 +1,15 @@
+/# locals: (rdv_plan:, event_sources:, agents:)
+div[data-controller="rdv-plan" data-rdv-plan-id="#{rdv_plan.id}"]
+  p Convenez d'un horaire avec #{rdv_plan.user.full_name}, et cliquez dessus dans l'agenda de l'agent de votre choix.
+
+  .fr-mt-6w
+    h2.fr-h4.d-flex.rdv-align-items-baseline
+      | Agenda de
+      .fr-select-group.fr-col-4.fr-ml-1w
+        select.fr-select[data-action="change->rdv-plan#updateAgent"]
+          - agents.each do |agent|
+            - if agent == rdv_plan.rdv_agent
+              option[value="#{agent.id}" selected] #{agent.full_name_or_email}
+            - else
+              option[value="#{agent.id}"] #{agent.full_name_or_email}
+    = render "agents/rdv_plans/calendar", event_sources:, rdv_plan: rdv_plan, single_day: false

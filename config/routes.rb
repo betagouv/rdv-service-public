@@ -179,6 +179,7 @@ Rails.application.routes.draw do
           post :create_rdv
 
           get :rdv
+          get :rdv_invitation
         end
       end
 

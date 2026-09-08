@@ -1,6 +1,6 @@
 /# locals: (rdv_plan:)
 br
-- if rdv_plan.motif.public_office?
+- if rdv_plan.motif.public_office? && !rdv_plan.by_invitation
   span.fr-text-mention--grey
     = lieu_icon(class: "fr-mr-1w")
     |> Lieu :
