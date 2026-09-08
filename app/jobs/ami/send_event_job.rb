@@ -2,26 +2,22 @@ class Ami::SendEventJob < ApplicationJob
   queue_as :latency_30s
 
   def perform(payload)
-    connection.put("/api/v2/event", payload)
+    fc_hash = payload[:recipient_fc_hash]
+
+    if consent?(payload[:recipient_fc_hash])
+      connection.put("/api/v2/event", payload)
+    else
+      UserAmiProfile.find_by(fc_hash:)&.update(notify_by_ami: false)
+    end
   end
 
   private
 
-  def connection
-    Faraday.new(
-      url: ENV.fetch("AMI_URL"),
-      headers: {
-        "Authorization" => "Basic #{auth}",
-        "Content-Type" => "application/json",
-      }
-    ) do |builder|
-      builder.request :json
-      builder.response :json
-      builder.use :sentry_breadcrumbs
-    end
+  def consent?(fc_hash)
+    connection.get("/api/v1/consent/#{fc_hash}").success?
   end
 
-  def auth
-    Base64.strict_encode64("#{ENV['AMI_PARTNER_ID']}:#{ENV['AMI_PARTNER_SECRET']}")
+  def connection
+    @connection ||= AmiClient.new.connection
   end
 end
