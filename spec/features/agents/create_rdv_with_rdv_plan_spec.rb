@@ -230,6 +230,36 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     end
   end
 
+  context "quand aucun lieu n'est disponible" do
+    let!(:lieu) { nil }
+    let(:rdv_plan) do
+      create(:rdv_plan, user:, motif:, starts_at: 1.week.from_now,
+                        rdv_agent: agent,
+                        planning_agent: agent,
+                        oauth_application: application)
+    end
+
+    it "affiche un message qui explique le blocage" do
+      visit edit_lieu_agents_rdv_plan_path(rdv_plan.id)
+
+      expect(page).to have_content "Aucun lieu de rendez-vous n'a été défini."
+    end
+
+    context "et que l'agent est admin d'une orga" do
+      let!(:agent) do
+        create(:agent, admin_role_in_organisations: [organisation], rdv_notifications_level: :all)
+      end
+
+      it "affiche un lien vers le formulaire de motif" do
+        visit edit_lieu_agents_rdv_plan_path(rdv_plan.id)
+
+        expect(page).to have_content "Aucun lieu de rendez-vous n'a été défini."
+        click_on "Ajouter un lieu"
+        expect(page).to have_content "Nouveau lieu"
+      end
+    end
+  end
+
   context "quand il y a des motifs collectifs" do
     before { create(:motif, :collectif, name: "Atelier collectif", organisation:) }
 

@@ -15,8 +15,6 @@
       - if current_agent.admin_orgs.any?
         p Vous pouvez ajouter un nouveau lieu depuis les paramètres de votre organisation.
         = link_to "Ajouter un lieu", new_admin_organisation_lieu_path(current_agent.admin_orgs.first), class: "fr-btn fr-btn--secondary"
-      p Où souhaitez-vous faire le rendez-vous ?
-      = render "agents/rdv_plans/lieux/new", rdv_plan: @rdv_plan
   - else
     .fr-col-12.fr-col-md-4
       = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, event_sources:, single_day: true
