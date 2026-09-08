@@ -1,0 +1,12 @@
+- content_for :title do
+  | Invitation envoyée
+
+.fr-grid-row.justify-content-center
+  .fr-col-md-10.fr-col-lg-6.fr-col-xl-4
+    .card.card-body
+      .fr-grid-row.justify-content-center.fr-mb-2w
+        = dsfr_svg "artwork/pictograms/digital/mail-send", class: "fr-artwork--green-emeraude"
+      p Un email a été envoyé à #{@rdv_invitation.user.full_name} pour l'inviter à prendre rendez-vous pour #{@rdv_invitation.motif.name}.
+
+      - invitation_url = rdv_invitations_url(@rdv_invitation.token, host: @rdv_invitation.organisation.domain.host_name)
+      p Le lien d'invitation est #{link_to(invitation_url, invitation_url)}

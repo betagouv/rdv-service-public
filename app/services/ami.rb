@@ -3,7 +3,7 @@
 # Les identifiants pour tester en local sont disponibles sur Vaulwarden
 class Ami
   def self.enabled?
-    ENV["AMI_ENABLED"] == "true"
+    ENV["AMI_ENABLED"] == "true" && !Rails.env.production?
   end
 
   def initialize(participation)
@@ -34,13 +34,15 @@ class Ami
   # On ajoutera cet appel dans Notifiers::RdvUpcomingReminder
   def send_reminder
     # Cette notif devrait peut-être être juste une notif toute seule, pas dans le cadre d'une démarche.
-    send_event(
+    payload = {
       content_body: "Nous vous rappelons que vous avez rendez-vous #{I18n.l(rdv.starts_at, format: :short_sms)}.", # Ce champs est visible pour Apple/Google
       content_private_body: "Le rendez-vous aura lieu au #{rdv.address} pour #{rdv.motif.name}",
       item_generic_status: "wip",
       item_status_label: "À venir",
-      try_push: true
-    )
+      try_push: true,
+    }
+
+    Ami::SendEventJob.set(queue: :latency_5m).perform_later(default_payload.merge(payload))
   end
 
   def close_event
@@ -53,10 +55,18 @@ class Ami
     )
   end
 
+  def cancel_event
+    send_event(
+      content_body: "Votre rendez-vous #{I18n.l(rdv.starts_at, format: :short_sms)} a été annulé.", # Ce champs est visible pour Apple/Google
+      item_generic_status: "closed",
+      item_status_label: "Annulé",
+      try_push: true
+    )
+  end
+
   # On garde cette méthode publique pour faciliter les tests en console.
   def send_event(payload)
-    # Quand on fera les vrais appels il faudra mettre tous les jobs en perform_later avec la bonne queue
-    Ami::SendEventJob.new.perform(default_payload.merge(payload))
+    Ami::SendEventJob.perform_later(default_payload.merge(payload))
   end
 
   private
@@ -65,8 +75,8 @@ class Ami
 
   def default_payload
     {
-      content_title: "Rendez-vous en France Service",
-      recipient_fc_hash: AmiFranceConnectHash.find_by(user: @participation.user).fc_hash,
+      content_title: "Rendez-vous avec #{@participation.rdv.organisation.name}",
+      recipient_fc_hash: UserAmiProfile.find_by(user: @participation.user).fc_hash,
       event_date: Time.zone.now,
       content_icon: "fr-icon-calendar-event-line",
       item_type: "RDV",

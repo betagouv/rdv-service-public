@@ -19,6 +19,17 @@ RSpec.describe Notifiers::RdvUpcomingReminder, type: :service do
     expect_no_notifications_for(rdv, user3, :rdv_upcoming_reminder)
   end
 
+  context "quand l'usager a activé les notifications par AMI" do
+    before do
+      create(:user_ami_profile, user: user1, notify_by_ami: true, fc_hash: "asdf")
+    end
+
+    it "envoie des notifs" do
+      expect_any_instance_of(Ami).to receive(:send_reminder) # rubocop:disable RSpec/AnyInstance
+      subject
+    end
+  end
+
   it "doesnt send email if user participation is excused" do
     participation1.update(status: "excused")
     subject

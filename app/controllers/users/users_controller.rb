@@ -12,6 +12,7 @@ class Users::UsersController < UserAuthController
     authorize(@user, policy_class: User::UserPolicy)
     @user_form = Users::EditForm.new(user: @user, domain: current_domain)
     if @user.update(user_params)
+      update_ami_preferences
       flash[:success] = "Vos informations ont été mises à jour."
       redirect_to users_informations_path
     else
@@ -46,5 +47,9 @@ class Users::UsersController < UserAuthController
 
   def user_params
     params.require(:user).permit(*user_params_permitted_keys)
+  end
+
+  def update_ami_preferences
+    UserAmiProfile.update_notify_by_ami(@user, params.dig(:user, :notify_by_ami).to_boolean)
   end
 end

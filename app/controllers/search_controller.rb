@@ -152,6 +152,7 @@ class SearchController < ApplicationController
   def search_allowed?
     current_domain.provides_address_selection? || # toujours autorisé sur RDVS
       (@current_step != :address_selection && params[:public_link_organisation_id].present?) || # toujours scopé sur RDVSP
+      (@current_step != :address_selection && params[:referent_ids].present?) || # RDV de suivi : recherche scopée aux agents référents de l'usager
       exception_for_cdad_21?
   end
 

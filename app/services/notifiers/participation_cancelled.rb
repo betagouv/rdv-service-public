@@ -27,6 +27,10 @@ class Notifiers::ParticipationCancelled < BaseService
     if user.notifiable_by_sms? && (author.is_a?(Agent) || author.is_a?(Prescripteur))
       Users::RdvSms.participation_cancelled(rdv, user).deliver_later
     end
+
+    if UserAmiProfile.find_by(user: user)&.notify_by_ami?
+      Ami.new(participation).cancel_event
+    end
   end
 
   def notify_agent(agent)
