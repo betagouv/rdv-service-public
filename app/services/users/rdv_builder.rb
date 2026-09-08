@@ -67,7 +67,7 @@ class Users::RdvBuilder
   end
 
   def to_query_for_search_redirection
-    q = @attributes.slice(:address, :city_code, :street_ban_id, :departement, :organisation_ids, :ants_pre_demandes_count).merge(
+    q = @attributes.slice(:address, :city_code, :street_ban_id, :departement, :organisation_ids, :ants_pre_demandes_count, :preselected_motif).merge(
       service: motif&.service_id,
       motif_name_with_location_type: motif&.name_with_location_type
     )
