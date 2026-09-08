@@ -214,5 +214,19 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
 
       expect(page).to have_content "Aucun motif de rendez-vous n'est disponible."
     end
+
+    context "et que l'agent est admin d'une orga" do
+      let!(:agent) do
+        create(:agent, admin_role_in_organisations: [organisation], rdv_notifications_level: :all)
+      end
+
+      it "affiche un lien vers le formulaire de motif" do
+        visit agents_rdv_plan_path(rdv_plan.id)
+
+        expect(page).to have_content "Aucun motif de rendez-vous n'est disponible."
+        click_on "Créer un motif"
+        expect(page).to have_content "Choisissez le type du rendez-vous"
+      end
+    end
   end
 end
