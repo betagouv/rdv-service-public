@@ -72,6 +72,7 @@ class MonSuiviSocial < Sinatra::Base
         user: {
           first_name: "Francis",
           last_name: "Factice",
+          email: "francis@factice.org",
         },
         dossier_url: "http://localhost:3010/francis_factice",
         return_url: "http://localhost:3010/",
