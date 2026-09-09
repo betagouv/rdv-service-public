@@ -17,6 +17,13 @@ class Ami
       content_body: "Vous avez rendez vous #{I18n.l(rdv.starts_at, format: :short_sms)} au #{rdv.address} pour #{rdv.motif.name}",
       item_generic_status: "new",
       item_status_label: "À venir",
+
+      item_parent_partner_id: "dinum-dn",
+      #
+      # C'est l'id du dossier
+      item_parent_type: "9",
+      item_parent_id: "9",
+
       try_push: false # On crée cet event après que l'usager décide d'activer les notifications, donc pas besoin d'activer la notification
     )
   end
