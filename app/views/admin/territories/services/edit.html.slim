@@ -38,7 +38,7 @@
           - new_form_link = new_admin_territory_services_path(territory_id: current_territory.id, name: @filter)
           - if @displayed_services.any?
             |> Vous ne trouvez pas votre service dans la liste ?
-            = link_to "Créer un nouveau service", new_form_link
+            = link_to "Créer un nouveau service", new_form_link, class: "text-underline"
           - else
             |> Aucun résultat pour “#{@filter}” ?
             div
