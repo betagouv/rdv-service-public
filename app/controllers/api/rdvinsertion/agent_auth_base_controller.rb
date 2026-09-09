@@ -1,6 +1,10 @@
 class Api::Rdvinsertion::AgentAuthBaseController < Api::V1::AgentAuthBaseController
   private
 
+  def pundit_user
+    current_agent
+  end
+
   # L'authentification par secret partagé est faite via un secret partagé avec rdv-insertion qui se trouve
   # dans la variable d'environnement `SHARED_SECRET_FOR_AGENTS_AUTH`. Elle a vocation à disparaître.
   # L'authentification par OAuth sera la seule méthode d'authentification valide. Elle n'est autorisée que

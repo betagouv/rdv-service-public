@@ -13,7 +13,8 @@ RSpec.describe "Motif Category Territory API" do
       parameter name: "organisation_id", in: :query, type: :integer, description: "ID de l'organisation", example: 12
       parameter name: "motif_category_short_name", in: :query, type: :string, description: "Nom de la catégorie (généralement parametrizé)", example: "rsa_orientation"
 
-      let!(:agent) { create(:agent) }
+      let!(:agent_territories) { [organisation.territory] }
+      let!(:agent) { create(:agent, role_in_territories: agent_territories) }
       let!(:shared_secret) { "S3cr3T" }
       let!(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }
       let!(:uid) { auth_headers["uid"].to_s }
@@ -47,6 +48,23 @@ RSpec.describe "Motif Category Territory API" do
             action_name: "create",
             agent_id: agent.id
           )
+        end
+      end
+
+      context "when trying to edit another territory by injecting arbitrary org id" do
+        response 403, "returns an error", document: false do
+          let!(:agent_territories) { [create(:territory)] } # agent does not belong to requested org's territory
+          let!(:organisation) { create(:organisation) }
+          let!(:organisation_id) { organisation.id }
+          let!(:motif_category) { create(:motif_category) }
+          let!(:motif_category_short_name) { motif_category.short_name }
+
+          run_test!
+
+          it "works" do
+            post "/api/rdvinsertion/motif_category_territories/", params: { organisation_id: organisation.id, motif_category_short_name: motif_category_short_name }, headers: auth_headers
+            expect(response).to have_http_status(:forbidden)
+          end
         end
       end
 

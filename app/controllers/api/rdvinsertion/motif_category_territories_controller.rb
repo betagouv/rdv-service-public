@@ -2,6 +2,7 @@ class Api::Rdvinsertion::MotifCategoryTerritoriesController < Api::Rdvinsertion:
   def create
     motif_category = MotifCategory.find_by(short_name: motif_category_territories_params[:motif_category_short_name])
     territory = Organisation.find(motif_category_territories_params[:organisation_id]).territory
+    authorize(territory, :update?, policy_class: Agent::TerritoryPolicy)
     territory.motif_categories << motif_category unless territory.motif_categories.include?(motif_category)
     render_record territory
   end
