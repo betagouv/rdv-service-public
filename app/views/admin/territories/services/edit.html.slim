@@ -30,7 +30,7 @@
               .fr-mt-1w
                 = dsfr_link_to("Réinitialiser le filtre", edit_admin_territory_services_path(territory_id: current_territory.id))
 
-        .fr-mt-3w
+        #service_toggles.fr-mt-3w
           - @displayed_services.each do |service|
             = render partial: "admin/territories/services/service_toggle", locals: { service: }
 

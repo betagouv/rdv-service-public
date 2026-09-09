@@ -220,3 +220,12 @@
   border-radius: 8px;
   box-shadow: 0 12px 30px 0 rgba(221, 221, 221, 0.4);
 }
+
+#service_toggles {
+  .fr-toggle--valid::before {
+    content: none;
+  }
+  .fr-toggle .fr-message:first-child {
+    margin-top: 0;
+  }
+}

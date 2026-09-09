@@ -36,11 +36,9 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
     service = Service.find(params[:service_id])
     if params[:enabled].to_b
       current_territory.territory_services.find_or_create_by!(service_id: service.id)
-      flash_message = "Service activé"
     else
       current_territory.territory_services.find_by(service_id: service.id)&.destroy!
-      flash_message = "Service désactivé"
     end
-    render partial: "admin/territories/services/service_toggle", locals: { service:, flash_message: }
+    render partial: "admin/territories/services/service_toggle", locals: { service:, just_got_enabled: params[:enabled].to_b, just_got_disabled: !params[:enabled].to_b }
   end
 end
