@@ -48,7 +48,8 @@
           - if @display_services
             th= Agent.human_attribute_name(:services)
           th= AgentRole.human_attribute_name(:access_level)
-          th Actions
+          - if current_agent.admin_in_organisation?(current_organisation)
+            th Actions
       tbody
         = render partial: "agent", collection: @agents
     - if @agents.empty?
