@@ -22,17 +22,25 @@ module Caldav
       return unless @agent.caldav_configured?
       return if caldav_config.caldav_disconnect_started_at
 
+      sync_logger.start!
+
       if caldav_config.caldav_sync_token
+        sync_logger.log("Sync token found: loading only new events")
         updated_events, deleted_events, new_sync_token = changes_since_last_sync_of
       else
+        sync_logger.log("First sync: loading all events (paginated)")
         updated_events, deleted_events, new_sync_token = all_events_for
       end
 
       update_local_events_of(updated_events:, deleted_events:, new_sync_token:)
 
-      # Import successful: set job debounce and update realtime calendars
+      sync_logger.finalize!(successful: true)
       self.class.store_latest_run_timestamp(agent_id:)
       AgendaChannel.broadcast_to(agent_id, model: "ExternalCalendarEvent") if updated_events.any? || deleted_events.any?
+    rescue StandardError => e
+      sync_logger.log("Error: #{e.message}")
+      sync_logger.finalize!(successful: false)
+      raise
     end
 
     private
@@ -90,6 +98,8 @@ module Caldav
         ExternalCalendarEvent.where(agent: @agent, url: deleted_events).delete_all if deleted_events.any?
 
         caldav_config.update_columns(caldav_sync_token: new_sync_token) # rubocop:disable Rails/SkipsModelValidations
+
+        sync_logger.log("New/updated: #{updated_events.size}, deleted : #{deleted_events.size}")
       end
     end
 
@@ -115,6 +125,10 @@ module Caldav
 
     def caldav_client
       caldav_config.caldav_client
+    end
+
+    def sync_logger
+      @sync_logger ||= ExternalCalendarSyncExecution.new(agent_id: @agent.id, calendar_url: caldav_config.caldav_agenda_url)
     end
   end
 end
