@@ -18,12 +18,6 @@ class Ami
       item_generic_status: "new",
       item_status_label: "À venir",
 
-      item_parent_partner_id: "dinum-dn",
-      #
-      # C'est l'id du dossier
-      item_parent_type: "9",
-      item_parent_id: "9",
-
       try_push: false # On crée cet event après que l'usager décide d'activer les notifications, donc pas besoin d'activer la notification
     )
   end
@@ -81,7 +75,7 @@ class Ami
   delegate :rdv, to: :@participation
 
   def default_payload
-    {
+    payload = {
       content_title: "Rendez-vous avec #{@participation.rdv.organisation.name}",
       recipient_fc_hash: UserAmiProfile.find_by(user: @participation.user).fc_hash,
       event_date: Time.zone.now,
@@ -93,6 +87,17 @@ class Ami
       item_milestone_start_date: @participation.rdv.starts_at.iso8601,
       item_milestone_end_date: @participation.rdv.ends_at.iso8601,
     }
+
+    external_ami_item = participation.rdv&.rdv_plan&.external_ami_item
+    if external_ami_item
+      payload.merge!(
+        item_parent_partner_id: external_ami_item.partner_id,
+        item_parent_type: external_ami_item.item_type,
+        item_parent_id: external_ami_item.item_id
+      )
+    end
+
+    payload
   end
 
   def domain_host
