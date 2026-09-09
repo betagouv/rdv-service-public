@@ -1,9 +1,9 @@
 RSpec.describe "Agent can see CalDAV sync logs" do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-  let!(:caldav_config) { create(:caldav_config, agent: agent) }
 
   it "displays a link to the logs index" do
+    create(:caldav_config, agent: agent)
     login_as(agent, scope: :agent)
     visit agents_calendar_sync_caldav_sync_path
 
@@ -13,11 +13,18 @@ RSpec.describe "Agent can see CalDAV sync logs" do
     expect(page).to have_content("Historique des synchronisations")
   end
 
+  it "redirects if the agent has no config" do
+    login_as(agent, scope: :agent)
+    visit agents_calendar_sync_logs_path
+    expect(page).to have_current_path(agents_calendar_sync_caldav_sync_path)
+  end
+
   it "lists the logs" do
+    agent.caldav_config = create(:caldav_config, agent: agent)
     successful_execution = create(
       :external_calendar_sync_execution,
       agent: agent,
-      calendar_url: caldav_config.caldav_agenda_url,
+      calendar_url: agent.caldav_config.caldav_agenda_url,
       started_at: Time.zone.parse("2026-08-20 10:00:00"),
       ended_at: Time.zone.parse("2026-08-20 10:00:02"),
       successful: true
@@ -28,7 +35,7 @@ RSpec.describe "Agent can see CalDAV sync logs" do
     failed_execution = create(
       :external_calendar_sync_execution,
       agent: agent,
-      calendar_url: caldav_config.caldav_agenda_url,
+      calendar_url: agent.caldav_config.caldav_agenda_url,
       started_at: Time.zone.parse("2026-08-21 10:00:00"),
       ended_at: Time.zone.parse("2026-08-21 10:00:01"),
       successful: false
@@ -36,7 +43,7 @@ RSpec.describe "Agent can see CalDAV sync logs" do
     create(:external_calendar_sync_execution_log, external_calendar_sync_execution: failed_execution, message: "Erreur d'authentification")
 
     # belongs to another agent: must not be displayed
-    create(:external_calendar_sync_execution, calendar_url: caldav_config.caldav_agenda_url)
+    create(:external_calendar_sync_execution, calendar_url: agent.caldav_config.caldav_agenda_url)
     # same agent, but a different (previous) calendar: must not be displayed
     create(:external_calendar_sync_execution, agent: agent, calendar_url: "https://old-calendar.example.com")
 

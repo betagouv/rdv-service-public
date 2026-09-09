@@ -1,6 +1,8 @@
 class Agents::ExternalCalendarSyncExecutionsController < AgentAuthController
   layout "application_agent_config"
+
   before_action { @active_agent_preferences_menu_item = :synchronisation }
+  before_action { redirect_to agents_calendar_sync_caldav_sync_path unless current_agent.caldav_config }
 
   def index
     @sync_executions = policy_scope(ExternalCalendarSyncExecution.all, policy_scope_class: Agent::ExternalCalendarSyncExecutionPolicy::Scope)
