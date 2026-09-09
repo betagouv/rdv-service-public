@@ -26,6 +26,17 @@ RSpec.describe Notifiers::RdvUpdated, type: :service do
       expect_notifications_sent_for(rdv, kept_agent, :rdv_updated)
       expect_notifications_sent_for(rdv, removed_agent, :rdv_cancelled)
     end
+
+    context "quand l'usager a activé les notifications par AMI" do
+      before do
+        create(:user_ami_profile, user: user1, notify_by_ami: true, fc_hash: "asdf")
+      end
+
+      it "envoie des notifs" do
+        expect_any_instance_of(Ami).to receive(:send_event_update_notification) # rubocop:disable RSpec/AnyInstance
+        subject
+      end
+    end
   end
 
   context "update without agent change" do

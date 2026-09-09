@@ -144,4 +144,16 @@ RSpec.describe "Prise de RDV pour un motif de suivi" do
       expect(page).to have_content("Votre référent n'a pas de créneaux disponibles")
     end
   end
+
+  context "sur le domaine RDV Service Public (pas de sélection d'adresse)" do
+    it "affiche la sélection des motifs de suivi du référent au lieu de rediriger vers l'accueil" do
+      visit "http://www.rdv-service-public-test.localhost/users/rdvs"
+      click_link "Prendre un RDV de suivi"
+
+      expect(page).to have_content(motif1.name)
+      expect(page).to have_content(collectif_motif.name)
+      expect(page).not_to have_content(motif2.name)
+      expect(page).not_to have_content(motif3.name)
+    end
+  end
 end

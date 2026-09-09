@@ -1,0 +1,12 @@
+div
+  p Bonjour,
+
+  p #{@rdv_invitation.organisation.name} vous invite à prendre rendez-vous pour le motif <b>#{@rdv_invitation.motif.name}</b>.
+
+  p
+    = render "rdv_invitations/details", rdv_invitation: @rdv_invitation
+
+  .btn-wrapper
+    = link_to "Prendre rendez-vous", rdv_invitations_url(@rdv_invitation.token), class:"btn btn-primary"
+
+  = t("mailers.common.farewell_html", domain_name: domain.name)

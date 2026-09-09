@@ -234,8 +234,6 @@ group :test do
   gem "parallel_tests"
   # RSpec for Rails
   gem "rspec-rails"
-  # RSpec JUnit XML formatter
-  gem "rspec_junit_formatter", require: false
   # Extracting `assigns` and `assert_template` from ActionDispatch.
   gem "rails-controller-testing"
   # An OpenAPI-based (formerly called Swagger) DSL for rspec-rails & accompanying rake task for generating OpenAPI specification files

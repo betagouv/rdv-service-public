@@ -15,6 +15,11 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
 
   protected
 
+  def notify_user_by_ami(user)
+    participation = user.participation_for(@rdv)
+    Ami.new(participation).cancel_event
+  end
+
   def notify_cancellation?
     # if the rdv is collectif, there can still be cancellation notification if a participant is removed (regardless of the rdv status)
     return true if @rdv.collectif?

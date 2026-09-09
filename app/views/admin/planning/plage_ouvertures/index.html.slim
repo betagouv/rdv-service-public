@@ -49,7 +49,7 @@
       tbody
         = render partial: "admin/planning/plage_ouvertures/plage_ouverture", collection: @plage_ouvertures, as: :plage_ouverture
     .d-flex.justify-content-center
-      = paginate @plage_ouvertures, theme: "dsfr"
+      = paginate @plage_ouvertures
   - else
     .fr-grid-row.justify-content-md-center.p-2.mt-3
       .fr-col-lg-8.mb-2

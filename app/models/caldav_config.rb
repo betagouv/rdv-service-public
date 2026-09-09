@@ -3,6 +3,8 @@ class CaldavConfig < ApplicationRecord
 
   belongs_to :agent
 
+  validates :caldav_calendar_color, css_hex_color: true, allow_blank: true
+
   def caldav_client
     @caldav_client ||= Calendav::Client.new(
       Calendav::Credentials::Standard.new(

@@ -13,6 +13,10 @@ class Agent::LieuPolicy < ApplicationPolicy
   alias destroy? update?
   alias versions? update?
 
+  def show?
+    record.organisation.in?(current_agent.organisations)
+  end
+
   private
 
   def admin_of_record_organisation?
