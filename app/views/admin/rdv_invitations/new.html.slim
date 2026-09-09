@@ -11,18 +11,24 @@
         = render "model_errors", model: @rdv_invitation, f: f
 
         - if @rdv_invitation.user.blank?
-          = select_tag :status,
+          p
+            | Vous allez envoyer une invitation à prendre rendez-vous pour <b>#{@rdv_invitation.motif.name}</b>
+            - if @rdv_invitation.lieu.present?
+              |< à <b>#{@rdv_invitation.lieu.name}</b>
+            |.
+          = label_tag :user_id, "Quel usager souhaitez-vous inviter?"
+          = select_tag :user_id,
             options_for_select([]),
             required: true,
             class: "select2-input js-rdv-invitation-user-select",
             data: { \
               width: :style,
-              "select2-config": { ajax: { url: search_agents_users_path(organisation_id: @rdv_invitation.organisation.id), dataType: "json", delay: 250}, placeholder: "Nom, prénom, téléphone, ou email" } }
+              "select2-config": { ajax: { url: search_agents_users_path(organisation_id: @rdv_invitation.organisation.id), dataType: "json", delay: 250}, placeholder: "Nom, prénom, téléphone, ou email" }, }
 
         - elsif @rdv_invitation.lieu
-          p Vous allez inviter <b>#{@rdv_invitation.user.full_name}</b> à prendre rendez-vous pour #{@rdv_invitation.motif.name}</b> à <b>#{@rdv_invitation.lieu.name}</b>.
+          p Vous allez inviter <b>#{@rdv_invitation.user.full_name}</b> à prendre rendez-vous pour <b>#{@rdv_invitation.motif.name}</b> à <b>#{@rdv_invitation.lieu.name}</b>.
         - else
-          p Vous allez inviter <b>#{@rdv_invitation.user.full_name}</b> à prendre rendez-vous pour #{@rdv_invitation.motif.name}</b>.
+          p Vous allez inviter <b>#{@rdv_invitation.user.full_name}</b> à prendre rendez-vous pour <b>#{@rdv_invitation.motif.name}</b>.
 
         - if @rdv_invitation.user.present?
           = f.submit "Envoyer l'invitation", class: "fr-btn"
