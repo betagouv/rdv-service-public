@@ -15,6 +15,7 @@ class WebSearchContext < SearchContext
     @external_organisation_ids = query_params[:external_organisation_ids]
     @referent_ids = query_params[:referent_ids]
     @prescripteur = query_params[:prescripteur]
+    @preselected_motif_public_link_id = query_params[:preselected_motif]
 
     # Address selection:
     @latitude = query_params[:latitude]
@@ -60,6 +61,7 @@ class WebSearchContext < SearchContext
     motifs = motifs.where(service_id: @service_id) if @service_id.present?
     motifs = motifs.where(organisation_id: organisation_id) if organisation_id.present?
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
+    motifs = motifs.where(public_link_id: @preselected_motif_public_link_id) if @preselected_motif_public_link_id.present?
     motifs
   end
 
@@ -71,7 +73,8 @@ class WebSearchContext < SearchContext
 
   def motif_param_present?
     @motif_id.present? ||
-      @motif_name_with_location_type.present?
+      @motif_name_with_location_type.present? ||
+      @preselected_motif_public_link_id.present?
   end
 
   def matching_motifs
