@@ -29,4 +29,4 @@
                       li = "+#{(entry.emitted_at - execution.started_at).in_milliseconds.to_i} ms : #{entry.message}"
   .fr-table__footer
     .fr-table__footer--middle
-      = paginate @sync_executions, theme: "dsfr"
+      = paginate @sync_executions
