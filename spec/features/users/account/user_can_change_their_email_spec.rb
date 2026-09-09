@@ -16,7 +16,11 @@ RSpec.describe "L'usager peut changer son email" do
 
     expect(page).to have_content "Un code à 6 chiffres a été envoyé à nouvelle@adresse.fr"
 
-    fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: "nouvelle@adresse.fr").code
+    perform_enqueued_jobs
+    open_email("nouvelle@adresse.fr")
+    expect(current_email.subject).to include("Votre code de confirmation est ")
+    code = current_email.subject.match(/Votre code de confirmation est (\d{6})/)[1]
+    fill_in "Code à 6 chiffres", with: code
     click_on "Confirmer"
 
     expect(page).to have_content "Votre adresse email a été mise à jour."
