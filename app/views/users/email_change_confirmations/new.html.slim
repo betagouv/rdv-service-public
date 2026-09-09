@@ -1,0 +1,45 @@
+- content_for :title, "Confirmation du changement d’adresse email"
+
+- if @existing_login_code&.errors&.any?
+  .fr-mb-2w= render "model_errors", model: @existing_login_code
+
+.fr-container.fr-pt-3w
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Accueil", href: root_path
+    = b.with_breadcrumb label: "Mes informations", href: users_informations_path
+    = b.with_breadcrumb label: "Changer d’adresse email", href: new_email_change_request_path
+    = b.with_breadcrumb label: "Confirmation"
+
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-12.fr-col-md-6
+      h1
+        | Confirmation
+
+      p
+        |> Vous êtes en train de changer votre adresse email de
+        b> #{current_user.email}
+        |> vers
+        b= "#{@email}."
+
+      - if @existing_login_code
+        p
+          |> Un code à 6 chiffres a été envoyé à
+          b> #{@email}
+          | à #{l(@existing_login_code.created_at, format: :time_only)}
+
+      = form_for LoginCode.new(email: @email), as: :login_code, url: email_change_confirmation_path, method: :post, builder: Dsfr::FormBuilder do |f|
+        .rdv-legible-code-form
+          / nesting surprenant ici sinon ça casse le bouton confirmer sur mobile
+          = f.hidden_field :email
+          = f.dsfr_text_field :code,
+            label: "Code à 6 chiffres",
+            type: "text",
+            inputmode: "numeric",
+            maxlength: 6,
+            required: true,
+            autocomplete: "off"
+        ul.fr-btns-group.fr-btns-group--inline-md.fr-btns-group--right.rdv-flex-wrap-wrap-reverse.fr-mt-4w
+          li
+            = link_to "Annuler", users_informations_path, class: "fr-btn fr-btn--secondary"
+          li
+            = f.submit "Confirmer", class: "fr-btn"

@@ -71,9 +71,9 @@
 .row
   .col-12
     - if @motifs_page.any?
-      = paginate @motifs_page, theme: "dsfr"
+      = paginate @motifs_page
       = render partial: "admin/territories/motifs/motifs_table", locals: { motifs: @motifs_page, display_actions: true, display_checkboxes: @current_tab != :archived }
-      .mt-2 = paginate @motifs_page, theme: "dsfr"
+      .mt-2 = paginate @motifs_page
 
     - else
       .rdv-text-align-center
