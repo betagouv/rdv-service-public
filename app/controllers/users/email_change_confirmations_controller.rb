@@ -18,8 +18,10 @@ class Users::EmailChangeConfirmationsController < UserAuthController
 
     if validator.valid?
       valid_login_code = validator.valid_login_code
-      current_user.update!(email: valid_login_code.email)
-      valid_login_code.update!(used_at: Time.zone.now)
+      ActiveRecord::Base.transaction do
+        current_user.update!(email: valid_login_code.email)
+        valid_login_code.update!(used_at: Time.zone.now)
+      end
       session.delete(:user_new_email_pending_confirmation)
       redirect_to users_informations_path, flash: { success: "Votre adresse email a été mise à jour." }
     elsif validator.should_redirect_to_code_request?
