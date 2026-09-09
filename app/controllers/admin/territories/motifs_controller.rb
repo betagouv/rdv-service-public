@@ -52,7 +52,9 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
 
     Motif.transaction do
       @motifs.each do |motif|
-        motif.update(permitted_params)
+        # UPDATABLE_ATTRS (name/service_id/durée/couleur/instructions) n'affecte pas
+        # `agent_can_manage_motif?`, qui ne dépend que de `motif.organisation`.
+        motif.update(permitted_params) # rubocop:disable RdvServicePublic/PunditAuthorizeStaleAfterMutation
       end
 
       raise ActiveRecord::Rollback unless @motifs.all?(&:valid?)

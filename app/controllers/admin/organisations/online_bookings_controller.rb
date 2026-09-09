@@ -50,7 +50,9 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
   def update_user_type
     authorize(@organisation, :update?, policy_class: Agent::OrganisationPolicy)
 
-    if @organisation.update(permitted_params)
+    # `permitted_params` ne touche que les modes d'authentification à la prise de RDV en ligne,
+    # ce qui n'affecte pas `admin_in_organisation?`.
+    if @organisation.update(permitted_params) # rubocop:disable RdvServicePublic/PunditAuthorizeStaleAfterMutation
       flash[:success] = "Modes d'authentification mis à jour"
       redirect_to admin_organisation_online_booking_path(@organisation)
     else

@@ -20,7 +20,9 @@ class Admin::Planning::AgendasController < AgentAuthController
 
   def toggle_displays
     authorize(current_agent, policy_class: Agent::AgentPolicy)
-    current_agent.update!(permitted_agent_params)
+    # `toggle_displays?` vérifie `record == current_agent`, ce qui reste vrai quels que soient les
+    # préférences d'affichage modifiées ici.
+    current_agent.update!(permitted_agent_params) # rubocop:disable RdvServicePublic/PunditAuthorizeStaleAfterMutation
     redirect_back fallback_location: admin_organisation_planning_agenda_path(current_organisation)
   end
 

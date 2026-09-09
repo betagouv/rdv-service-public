@@ -5,7 +5,8 @@ class Admin::Territories::RdvFieldsController < Admin::Territories::BaseControll
 
   def update
     authorize(current_territory, policy_class: Agent::TerritoryPolicy)
-    current_territory.update(rdv_fields_params)
+    # Les toggles de champs RDV n'affectent pas `territorial_admin?` (basé sur le territoire lui-même).
+    current_territory.update(rdv_fields_params) # rubocop:disable RdvServicePublic/PunditAuthorizeStaleAfterMutation
     flash[:success] = "Configuration enregistrée"
     redirect_to action: :edit
   end

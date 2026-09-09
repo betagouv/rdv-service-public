@@ -54,7 +54,9 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
     @rdv = Rdv.find(params[:rdv_id])
     authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
 
-    @rdv.update!(params.permit(:status))
+    # Seul `:status` est modifié, ce qui n'affecte pas `same_agent_or_has_access?` ni
+    # `users_and_agents_authorized?` (basés sur les usagers/agents/motif du RDV).
+    @rdv.update!(params.permit(:status)) # rubocop:disable RdvServicePublic/PunditAuthorizeStaleAfterMutation
 
     # Le blueprint complet du rendez-vous renvoie énormément d'information, qui ne sont pas pertinentes ici.
     # On va sans doute devoir restreindre la quantité de données renvoyées par ce blueprint pour rendre
