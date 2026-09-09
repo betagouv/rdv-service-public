@@ -9,7 +9,8 @@ class Agents::WebcalSyncController < AgentAuthController
 
   def update
     authorize(current_agent, policy_class: Agent::AgentPolicy)
-    current_agent.update!(calendar_uid: new_calendar_uid)
+    # `record` est `current_agent` lui-même : la policy reste vraie quel que soit l'attribut modifié.
+    current_agent.update!(calendar_uid: new_calendar_uid) # rubocop:disable RdvServicePublic/PunditAuthorizeStaleAfterMutation
     redirect_to agents_calendar_sync_webcal_sync_path, flash: { success: "Votre url de calendrier a été mise à jour." }
   end
 

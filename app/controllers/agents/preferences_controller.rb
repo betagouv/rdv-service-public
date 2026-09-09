@@ -12,7 +12,8 @@ class Agents::PreferencesController < AgentAuthController
     @agent = current_agent
     authorize(@agent, policy_class: Agent::AgentPolicy)
 
-    if @agent.update(update_params)
+    # `record` est `current_agent` lui-même : la policy reste vraie quel que soit l'attribut modifié.
+    if @agent.update(update_params) # rubocop:disable RdvServicePublic/PunditAuthorizeStaleAfterMutation
       redirect_to agents_preferences_path, flash: { success: t(".update.done") }
     else
       render :show

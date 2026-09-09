@@ -47,7 +47,9 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
   def update
     if @absence
       authorize(@absence, policy_class: Agent::AbsencePolicy)
-      @absence.update!(update_params)
+      # `update_params` (title/first_day/start_time/end_day/end_time) n'inclut pas `agent_id`,
+      # seul champ dont dépend `can_manage_absence?`.
+      @absence.update!(update_params) # rubocop:disable RdvServicePublic/PunditAuthorizeStaleAfterMutation
       render_record @absence
     else
       render_error :not_found, not_found: :absence
