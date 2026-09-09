@@ -170,4 +170,38 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
       end
     end
   end
+
+  describe "logging de l'exécution" do
+    around do |example|
+      VCR.use_cassette("caldav/token_via_propfind", allow_playback_repeats: true) do
+        example.run
+      end
+    end
+
+    it "enregistre une exécution réussie avec ses messages" do
+      VCR.use_cassette("caldav/event_list_weekly_and_daily") do
+        expect { described_class.new.perform(agent.id) }.to change(ExternalCalendarSyncExecution, :count).by(1)
+      end
+
+      execution = ExternalCalendarSyncExecution.last
+      expect(execution).to have_attributes(agent:, successful: true)
+      expect(execution.ended_at).to be_present
+      expect(execution.logs.pluck(:message)).to eq(
+        ["First sync: loading all events (paginated)", "New/updated: 2, deleted : 0"]
+      )
+    end
+
+    it "enregistre une exécution en échec avec le message d'erreur" do
+      job = described_class.new
+      allow(job).to receive(:update_local_events_of).and_raise(StandardError, "boom")
+
+      VCR.use_cassette("caldav/event_list_weekly_and_daily") do
+        expect { job.perform(agent.id) }.to raise_error(StandardError, "boom")
+      end
+
+      execution = ExternalCalendarSyncExecution.last
+      expect(execution.successful).to be(false)
+      expect(execution.logs.pluck(:message)).to include("Error: boom")
+    end
+  end
 end
