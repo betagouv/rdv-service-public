@@ -26,6 +26,9 @@
               input#filter.fr-input[name="filter" value=@filter type="text" aria-describedby="filter-messages" list="service_names" autocomplete="off"]
               button.fr-btn.fr-btn--secondary.fr-btn--icon-left.fr-icon-filter-fill[type="submit"] Filtrer
             #filter-messages.fr-messages-group[aria-live="polite"]
+            - if params[:filter]
+              .fr-mt-1w
+                = dsfr_link_to("Réinitialiser le filtre", edit_admin_territory_services_path(territory_id: current_territory.id))
 
         .fr-mt-3w
         - @displayed_services.each do |service|
