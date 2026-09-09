@@ -88,6 +88,7 @@ class Agent < ApplicationRecord
   has_many :agent_teams, dependent: :destroy
   has_many :referent_assignations, dependent: :destroy
   has_many :instance_exports, dependent: :destroy
+  has_many :external_calendar_sync_executions, dependent: :destroy
   has_one :territory_creation_request, dependent: :destroy
   has_one :caldav_config, dependent: :destroy
 
@@ -178,6 +179,7 @@ class Agent < ApplicationRecord
       agent_teams.destroy_all
       referent_assignations.destroy_all
       sector_attributions.destroy_all
+      external_calendar_sync_executions.destroy_all
 
       assign_attributes(
         deleted_at: Time.zone.now,
