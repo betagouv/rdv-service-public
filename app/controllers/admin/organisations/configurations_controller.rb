@@ -18,10 +18,9 @@ class Admin::Organisations::ConfigurationsController < AgentAuthController
   def show
     authorize(@organisation, :show?, policy_class: Agent::OrganisationPolicy)
 
-    @agents_scope = current_organisation.agents.active
-
-    @motif_names = current_organisation.motifs.active.pluck(:name).uniq
-    @lieu_names = current_organisation.lieux.enabled.pluck(:name)
+    @agents_scope = policy_scope(Agent.where(id: current_organisation.agents.active.pluck(:id)), policy_scope_class: Agent::AgentPolicy::Scope) # TODO: simplifer cette requete
+    @motif_names = policy_scope(current_organisation.motifs.active, policy_scope_class: Agent::MotifPolicy::Scope).pluck(:name).uniq
+    @lieu_names = policy_scope(current_organisation.lieux.enabled, policy_scope_class: Agent::LieuPolicy::Scope).pluck(:name)
   end
 
   private
