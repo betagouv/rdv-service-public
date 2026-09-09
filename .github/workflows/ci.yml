@@ -219,11 +219,21 @@ jobs:
           else
             RUNTIME_LOG_ARGS="--group-by filesize"
           fi
-          # d'autres options sont passées via .rspec_parallel
-          RAILS_ENV=test bundle exec parallel_test spec --type rspec --pattern 'spec/(?!features/autodoc)' -n 16 --only-group ${{ matrix.only_group }} $RUNTIME_LOG_ARGS
+          # syntaxe `parallel_test <options> -- <options rspec> -- <fichiers>`
+          # parallel_test hérite aussi des options de .rspec (a part --format qui est overridé)
+          RAILS_ENV=test bundle exec parallel_test --type rspec \
+            --pattern 'spec/(?!features/autodoc)' \
+            -n 16 --only-group ${{ matrix.only_group }} \
+            $RUNTIME_LOG_ARGS \
+            -- \
+            --format progress \
+            --format ParallelTests::RSpec::RuntimeLogger --out tmp/rspec-runtime-${{ matrix.name }}.log \
+            --format ParallelTests::RSpec::SummaryLogger --out tmp/rspec-spec_summary.log \
+            --format ParallelTests::RSpec::FailuresLogger --out tmp/rspec-failing_specs.log \
+            -- \
+            spec
         env:
           HOST: http://example.com
-          CI_SHARD_NAME: ${{ matrix.name }}
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
           POSTGRES_USER: lapin_test
@@ -252,7 +262,7 @@ jobs:
       - name: Merge runtime logs
         run: |
           mkdir -p tmp
-          # un log par shard : rspec-runtime-${CI_SHARD_NAME}.log (cf .rspec_parallel), CI_SHARD_NAME = matrix.name = specs_1..4
+          # un log par shard : rspec-runtime-<matrix.name>.log, ex. rspec-runtime-specs_1.log
           cat artifacts/*/rspec-runtime-specs_*.log > tmp/rspec-runtime-merged.log 2>/dev/null || true
       - name: Save merged runtime log for the next runs
         uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
