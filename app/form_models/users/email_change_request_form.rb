@@ -12,7 +12,7 @@ module Users
     def initialize(current_user:, domain_id:, email: nil)
       @current_user = current_user
       @domain_id = domain_id
-      @email = email
+      @email = email&.to_s&.downcase
     end
 
     def login_code
@@ -40,7 +40,7 @@ module Users
     end
 
     def validate_new_email_different
-      return unless email.casecmp?(current_user.email.to_s)
+      return if email != current_user.email.to_s # l'email en base est aussi downcased via normalize cf app/models/user.rb:86
 
       errors.add(:base, "La nouvelle adresse email doit être différente de l’adresse actuelle")
     end
