@@ -25,8 +25,7 @@ class Api::Rdvinsertion::ReferentAssignationsController < Api::Rdvinsertion::Age
   end
 
   def set_user
-    @user = User.joins(:organisations).where(organisations: { verticale: "rdv_insertion" })
-      .distinct.find(referent_assignations_params[:user_id])
+    @user = User.find(referent_assignations_params[:user_id])
     authorize(@user, :show?, policy_class: Agent::UserPolicy)
   rescue ActiveRecord::RecordNotFound
     render_error :not_found, not_found: :user
