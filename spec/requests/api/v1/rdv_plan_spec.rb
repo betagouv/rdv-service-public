@@ -181,6 +181,40 @@ RSpec.describe "RDV Plan API" do
         end
       end
     end
+
+    context "when passing additional AMI information" do
+      let(:params) do
+        {
+          user: {
+            first_name: "Francis",
+            last_name: "Factice",
+          },
+          ami_item: {
+            partner_id: "dinum-dn",
+            item_type: "9", # L'id du dossier dans DN
+            item_id: "9", # L'id du dossier dans DN
+          },
+        }
+      end
+
+      it "creates the ami parent item, the user and the rdv plan" do
+        expect do
+          post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
+        end.to change(User, :count).by(1)
+        rdv_plan = RdvPlan.last
+        expect(rdv_plan.planning_agent).to eq agent
+        expect(rdv_plan.user).to have_attributes(
+          first_name: "Francis",
+          last_name: "Factice"
+        )
+
+        expect(rdv_plan.external_ami_item).to have_attributes(
+          partner_id: "dinum-dn",
+          item_type: "9", # L'id du dossier dans DN
+          item_id: "9" # L'id du dossier dans DN
+        )
+      end
+    end
   end
 
   describe "#show" do

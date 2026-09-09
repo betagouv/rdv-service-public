@@ -15,6 +15,8 @@ class RdvPlan < ApplicationRecord
   # TODO: il faudrait mettre à jour la spec swagger pour utiliser de l'oauth pour pouvoir enlever le `optional: true`
   belongs_to :oauth_application, class_name: "Doorkeeper::Application", optional: true
 
+  has_one :external_ami_item, dependent: :destroy
+
   delegate :organisation, to: :motif
 
   validate :return_url_is_authorized

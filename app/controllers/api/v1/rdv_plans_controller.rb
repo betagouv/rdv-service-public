@@ -5,8 +5,9 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
 
       user = find_or_build_user(user_params)
 
+
       user.save!
-      RdvPlan.create!(
+      rdv_plan = RdvPlan.create!(
         rdv_agent: current_agent,
         planning_agent: current_agent,
         user: user,
@@ -14,6 +15,13 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
         return_url: params[:return_url],
         dossier_url: params[:dossier_url]
       )
+
+      if params[:ami_item].present?
+        ami_params = params.require(:ami_item).permit(:partner_id, :item_id, :item_type)
+        ExternalAmiItem.create!(ami_params.merge(rdv_plan:))
+      end
+
+      rdv_plan
     end
     render json: RdvPlanBlueprint.render(rdv_plan, root: "rdv_plan"), status: :created
   end
