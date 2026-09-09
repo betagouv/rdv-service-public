@@ -29,6 +29,9 @@
           maxlength: 6,
           required: true,
           autocomplete: "off"
+        .fr-checkbox-group.fr-mb-3w
+          = check_box_tag :remember_device, "1", false
+          = label_tag :remember_device, "Je suis sur un appareil de confiance. Ne plus me demander cette vérification pendant 7 jours", class: "fr-label"
         = form.submit "Valider", class: "fr-btn"
 
     .fr-mt-8w.fr-mb-4w

@@ -1,6 +1,7 @@
 class Agents::SessionsController < Devise::SessionsController
   include Admin::WeakPasswordControllerConcern
   include DomainRedirectionAfterLogin
+  include Agents::TrustedDeviceConcern
 
   # Lorsqu'un agent est connecté à une application Oauth via notre application,
   # Il est possible qu'il cherche à se déconnecter alors que sa session a déjà expiré.
@@ -37,7 +38,7 @@ class Agents::SessionsController < Devise::SessionsController
 
     return if reset_current_agent_password_if_weak!(params[:agent][:password])
 
-    if resource.sensitive_account?
+    if resource.sensitive_account? && !agent_device_trusted?(resource)
       sign_out(resource)
       session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = resource.id
       Agents::LoginCodeSender.perform(email: resource.email, domain_id: current_domain.id)

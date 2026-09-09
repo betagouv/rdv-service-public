@@ -101,6 +101,22 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
             expect(session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY]).to be_nil
           end
         end
+
+        context "quand la case 'se souvenir de cet appareil' est cochée" do
+          it "mémorise l'appareil" do
+            expect { post :create, params: { login_code: { code: login_code.code }, remember_device: "1" } }
+              .to change(AgentTrustedDevice, :count).by(1)
+            expect(AgentTrustedDevice.last.agent).to eq(agent)
+            expect(cookies.encrypted[:"agent_trusted_device_#{agent.id}"]).to be_present
+          end
+        end
+
+        context "quand la case 'se souvenir de cet appareil' n'est pas cochée" do
+          it "ne mémorise pas l'appareil" do
+            expect { post :create, params: { login_code: { code: login_code.code } } }
+              .not_to change(AgentTrustedDevice, :count)
+          end
+        end
       end
 
       context "avec un code invalide" do

@@ -51,6 +51,20 @@ RSpec.describe Agents::SessionsController do
           .and have_enqueued_mail(Agents::LoginCodeMailer, :login_code)
         expect(LoginCode.last.email).to eq(agent.email)
       end
+
+      context "et que l'appareil est de confiance" do
+        before { cookies.encrypted[:"agent_trusted_device_#{agent.id}"] = AgentTrustedDevice.remember!(agent) }
+
+        it "connecte l'agent directement, sans redemander de code" do
+          post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
+          expect(controller.current_agent).to eq(agent)
+        end
+
+        it "ne crée pas de nouveau code de connexion" do
+          expect { post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } } }
+            .not_to change(LoginCode, :count)
+        end
+      end
     end
   end
 
