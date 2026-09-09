@@ -7,6 +7,10 @@ class Api::Rdvinsertion::UsersController < Api::Rdvinsertion::AgentAuthBaseContr
 
   private
 
+  def pundit_user
+    AgentOrganisationContext.new(current_agent, nil)
+  end
+
   def set_user
     @user = User.find(params[:id])
     authorize(@user, policy_class: Agent::UserPolicy)
