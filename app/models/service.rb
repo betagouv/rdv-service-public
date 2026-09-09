@@ -26,6 +26,8 @@ class Service < ApplicationRecord
   # Scopes
   default_scope { order(Arel.sql("unaccent(LOWER(services.name))")) }
 
+  scope :filter_by_name, ->(filter) { where(%[unaccent("#{table_name}"."name") ILIKE ?], "%#{filter}%").or(where(%[unaccent("#{table_name}"."short_name") ILIKE ?], "%#{filter}%")) }
+
   ## -
 
   def secretariat?

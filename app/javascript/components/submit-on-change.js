@@ -1,9 +1,9 @@
 class SubmitOnChange {
   constructor() {
-    document.querySelectorAll('.js-submit-on-change').forEach(input => {
-      $(input).on('change', input => {
-        input.target.form.submit();
-      });
+    document.addEventListener('change', event => {
+      if (event.target.matches('.js-submit-on-change')) {
+        event.target.form.requestSubmit();
+      }
     });
   }
 }
