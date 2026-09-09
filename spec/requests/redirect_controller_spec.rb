@@ -13,7 +13,7 @@ RSpec.describe "RedirectController#reprendre_rdv_from_participation_invitation_t
         expect(response).to redirect_to(
           prendre_rdv_path(
             departement: organisation.departement_number,
-            motif_name_with_location_type: motif.name_with_location_type,
+            preselected_motif: motif.public_link_id,
             public_link_organisation_id: organisation.id,
             lieu_id: lieu.id,
             address: rdv.address,

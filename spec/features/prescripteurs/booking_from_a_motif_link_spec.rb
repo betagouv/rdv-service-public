@@ -16,6 +16,6 @@ RSpec.describe "Prescription depuis un lien de motif" do
     expect(page).to have_content("Prenez rendez-vous en ligne") # On se fait rediriger vers la prise de rendez-vous en ligne
 
     # Le lien a bien le paramètre de prescription
-    expect(page.current_url).to end_with("/prendre_rdv?departement=01&motif_id=#{motif.id}&prescripteur=1&public_link_organisation_id=#{motif.organisation_id}")
+    expect(page.current_url).to end_with("/prendre_rdv?departement=01&prescripteur=1&preselected_motif=#{motif.public_link_id}&public_link_organisation_id=#{motif.organisation_id}")
   end
 end
