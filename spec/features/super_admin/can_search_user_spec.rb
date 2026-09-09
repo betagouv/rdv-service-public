@@ -11,7 +11,7 @@ RSpec.describe "Un super admin peut chercher un utilisateur", js: true do
     field = find_field("search")
     field.set(user.email)
     page.execute_script <<-JS
-      var form = document.querySelector('form');
+      var form = document.querySelector('form.search');
       form.requestSubmit();
     JS
 
@@ -26,7 +26,7 @@ RSpec.describe "Un super admin peut chercher un utilisateur", js: true do
     field = find_field("search")
     field.set("061122")
     page.execute_script <<-JS
-      var form = document.querySelector('form');
+      var form = document.querySelector('form.search');
       form.requestSubmit();
     JS
 
