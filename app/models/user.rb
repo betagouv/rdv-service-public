@@ -277,9 +277,9 @@ class User < ApplicationRecord
   end
 
   # Un usager déjà connecté peut demander à changer son email via le parcours à code de confirmation,
-  # sauf s'il s'est connecté avec FranceConnect
+  # sauf s'il s'est connecté avec FranceConnect ou ProConnect
   def can_change_email?
-    franceconnect_openid_sub.blank?
+    franceconnect_openid_sub.blank? && pro_connect_openid_sub.blank?
   end
 
   protected

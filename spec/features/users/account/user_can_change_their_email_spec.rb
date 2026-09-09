@@ -28,6 +28,32 @@ RSpec.describe "L'usager peut changer son email" do
     let(:user) { create(:user, :using_france_connect, organisations: [organisation]) }
 
     it "n'affiche pas le lien de changement d'adresse email et bloque la soumission directe du formulaire" do
+      visit edit_user_registration_path
+      expect(page).not_to have_link("Changer d’adresse email")
+      expect(page).to have_content("Votre compte étant connecté à FranceConnect, la modification de votre adresse email doit se faire directement depuis FranceConnect")
+
+      visit users_informations_path
+      expect(page).to have_field("Email", with: user.email, disabled: true)
+      expect(page).not_to have_link "Changer d’adresse email"
+
+      # l'usager force et accède directement au formulaire (peu probable)
+      visit new_email_change_request_path
+      fill_in "Nouvelle adresse email", with: "nouvelle@adresse.fr"
+      click_on "Recevoir un code de confirmation"
+
+      expect(page).to have_content "Vous ne pouvez pas modifier votre adresse email."
+      expect(user.reload.email).not_to eq "nouvelle@adresse.fr"
+    end
+  end
+
+  context "quand l'usager est connecté via ProConnect" do
+    let(:user) { create(:user, :using_pro_connect, organisations: [organisation]) }
+
+    it "n'affiche pas le lien de changement d'adresse email et bloque la soumission directe du formulaire" do
+      visit edit_user_registration_path
+      expect(page).not_to have_link("Changer d’adresse email")
+      expect(page).to have_content("Pour des raisons de sécurité, votre compte étant connecté à ProConnect, la modification de votre adresse email est impossible")
+
       visit users_informations_path
       expect(page).to have_field("Email", with: user.email, disabled: true)
       expect(page).not_to have_link "Changer d’adresse email"

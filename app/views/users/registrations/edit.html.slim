@@ -10,6 +10,12 @@
           | Votre compte étant connecté à FranceConnect, la modification de votre adresse email doit se faire directement depuis FranceConnect. Consultez le
           =< link_to "guide d'aide FranceConnect", "https://aide.franceconnect.gouv.fr/faq/comptes-identifiants/modification-email/", target: "_blank", rel: "noopener"
           | .
+    - elsif resource.pro_connect_openid_sub.present?
+      .fr-alert.fr-alert--info.fr-mb-4w
+        p
+          | Pour des raisons de sécurité, votre compte étant connecté à ProConnect, la modification de votre adresse email est impossible. Consultez le
+          =< link_to "guide d'aide ProConnect à ce sujet", "https://proconnect.crisp.help/fr/article/comment-modifier-mon-compte-hcuo5x", target: "_blank", rel: "noopener"
+          | .
     - elsif resource.can_change_email?
       p
         = link_to "Changer d’adresse email", new_email_change_request_path, class: "fr-btn fr-btn--secondary"
