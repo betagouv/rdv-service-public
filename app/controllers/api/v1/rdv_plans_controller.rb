@@ -40,17 +40,22 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
 
   def find_user(user_params)
     if user_params.permit(:id).present?
-
       user = User.find(user_params[:id])
 
-      # La présence de current_organisation dans Agent::UserPolicy nous empêche de réutiliser la policy directement ici
-      unless user.organisation_ids.intersect?(current_agent.organisation_ids) || RdvPlan.where(planning_agent: current_agent, user: user).any?
-        raise Pundit::NotAuthorizedError
-      end
+      raise Pundit::NotAuthorizedError unless agent_has_access_to_user?(user)
 
       user
     elsif user_params[:email].present?
-      User.find_by(user_params.permit(:email))
+      user = User.find_by(user_params.permit(:email))
+
+      return nil unless user
+
+      user if agent_has_access_to_user?(user)
     end
+  end
+
+  # La présence de current_organisation dans Agent::UserPolicy nous empêche de réutiliser la policy directement ici
+  def agent_has_access_to_user?(user)
+    user.organisation_ids.intersect?(current_agent.organisation_ids) || RdvPlan.where(planning_agent: current_agent, user: user).any?
   end
 end
