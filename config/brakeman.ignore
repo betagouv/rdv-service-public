@@ -38,7 +38,7 @@
           "type": "controller",
           "class": "Agents::RdvPlansController",
           "method": "rdv",
-          "line": 107,
+          "line": 121,
           "file": "app/controllers/agents/rdv_plans_controller.rb",
           "rendered": {
             "name": "agents/rdv_plans/rdv",
@@ -60,29 +60,29 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 4,
-      "fingerprint": "dbe0369e2d4d1c53275ed53753eb214ac4f86b713b15cbe7035590a5fd0139ab",
+      "fingerprint": "f661ce1976d0da82af7148bd96d0ace974b5a178e0f1a762f80e5a858a3651f0",
       "check_name": "LinkToHref",
       "message": "Potentially unsafe model attribute in `link_to` href",
-      "file": "app/views/agents/rdv_plans/edit_starts_at.html.slim",
-      "line": 21,
+      "file": "app/views/agents/rdv_plans/edit_motif.html.slim",
+      "line": 30,
       "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
-      "code": "link_to(RdvPlan.find(params[:id]).return_url)",
+      "code": "link_to(\"Retour sur #{RdvPlan.find(params[:id]).oauth_application.name}\", RdvPlan.find(params[:id]).return_url, :class => \"fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line\")",
       "render_path": [
         {
           "type": "controller",
           "class": "Agents::RdvPlansController",
-          "method": "edit_starts_at",
-          "line": 31,
+          "method": "edit_motif",
+          "line": 16,
           "file": "app/controllers/agents/rdv_plans_controller.rb",
           "rendered": {
-            "name": "agents/rdv_plans/edit_starts_at",
-            "file": "app/views/agents/rdv_plans/edit_starts_at.html.slim"
+            "name": "agents/rdv_plans/edit_motif",
+            "file": "app/views/agents/rdv_plans/edit_motif.html.slim"
           }
         }
       ],
       "location": {
         "type": "template",
-        "template": "agents/rdv_plans/edit_starts_at"
+        "template": "agents/rdv_plans/edit_motif"
       },
       "user_input": "RdvPlan.find(params[:id]).return_url",
       "confidence": "Weak",
@@ -98,7 +98,7 @@
       "check_name": "LinkToHref",
       "message": "Potentially unsafe model attribute in `link_to` href",
       "file": "app/views/admin/rdvs_collectifs/edit.html.slim",
-      "line": 39,
+      "line": 40,
       "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
       "code": "link_to(\"Visioconf\\u00E9rence\", Rdv.find(params[:id]).visio_url, :target => :_blank)",
       "render_path": [
@@ -106,7 +106,7 @@
           "type": "controller",
           "class": "Admin::RdvsCollectifsController",
           "method": "edit",
-          "line": 52,
+          "line": 50,
           "file": "app/controllers/admin/rdvs_collectifs_controller.rb",
           "rendered": {
             "name": "admin/rdvs_collectifs/edit",
@@ -123,7 +123,7 @@
       "cwe_id": [
         79
       ],
-      "note": "l'attribute visio_url_custom est validée lors de la sauvegarde, les domaines sont filtrés"
+      "note": ""
     }
   ],
   "brakeman_version": "7.0.0"

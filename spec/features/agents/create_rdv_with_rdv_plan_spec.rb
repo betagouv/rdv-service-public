@@ -30,22 +30,29 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
 
   it "permet de prendre un rendez-vous", js: true do
     visit agents_rdv_plan_path(rdv_plan.id)
-    page.driver.with_playwright_page do |pw| # FC v7 overlay intercepts direct click → use mouse coordinates
-      slot = pw.locator('[data-time="08:30:00"]').first
+
+    expect(page).to have_content "Pour quel motif souhaitez-vous prendre rendez-vous ?"
+    click_on motif.name
+
+    expect(page).to have_content("Convenez d'un horaire")
+    expect(rdv_plan.reload).to have_attributes(motif_id: motif.id)
+
+    # On agrandit la taille de la page pour que le calendrier soit visible en entier
+    Capybara.page.current_window.resize_to(1280, 1300)
+    page.driver.with_playwright_page do |pw|
+      slot = pw.locator('[data-time="08:30:00"]').last
       box = slot.bounding_box
       pw.mouse.click(box["x"] + (box["width"] / 2), box["y"] + (box["height"] / 2))
     end
-    expect(page).to have_content "Nouveau"
+    sleep 0.1
+
+    expect(page).to have_content(lieu.name)
     expect(rdv_plan.reload.starts_at).to be_present
 
-    find("label", text: "Sur place").click
-    click_on "Continuer"
-    expect(page).to have_content "Motif du rendez-vous "
-    click_on "Continuer"
+    click_on lieu.name
 
-    # On a sélectionné le premier créneau visible du calendrier, qui est donc dans le passé
-    # Hack : on modifie à la main le starts_at
-    rdv_plan.update!(starts_at: 2.weeks.from_now)
+    expect(page).to have_content("Coordonnées")
+    expect(rdv_plan.reload.lieu).to eq lieu
 
     fill_in("Email", with: "newaddress@exemple.com")
 
@@ -75,16 +82,22 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
   context "quand il y a d'autres agents dans l'organisation" do
     let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
+    before do
+      rdv_plan.update!(motif:)
+    end
+
     it "permet de prendre rendez-vous pour un autre agent", js: true do
-      visit agents_rdv_plan_path(rdv_plan.id)
+      visit edit_starts_at_agents_rdv_plan_path(rdv_plan.id)
       find(".fr-select").click # On teste ce cas, puisqu'on a eu des bugs d'affichage qui cassaient cette partie de l'interface lors d'une mise à jour de Fullcalendar
     end
   end
 
   it "displays existing RDVs and absences", js: true do
+    rdv_plan.update!(motif:)
+
     existing_rdv_this_week = create(:rdv, starts_at: Time.zone.now.beginning_of_week + 8.hours, agents: [agent], motif:, organisation:)
     existing_absence_next_week = create(:absence, first_day: Time.zone.now.beginning_of_week.to_date + 1.week, agent:)
-    visit agents_rdv_plan_path(rdv_plan.id)
+    visit edit_starts_at_agents_rdv_plan_path(rdv_plan.id)
     expect(page).to have_content(existing_rdv_this_week.users.first.full_name)
     find('button[aria-label="Semaine suivante"]').click
     expect(page).to have_content(existing_absence_next_week.title)
@@ -92,7 +105,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
 
   context "quand l'usager a déjà une adresse email et qu'on veut la changer" do
     let(:rdv_plan) do
-      create(:rdv_plan, user: user, motif: motif, location_type: :public_office, duration_in_minutes: 30,
+      create(:rdv_plan, user:, motif:, duration_in_minutes: 30,
                         rdv_agent: agent,
                         lieu: lieu,
                         starts_at: 2.days.from_now,
@@ -149,7 +162,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     let(:user) { create(:user, latest_login_at: nil, organisations: [organisation], email: "francis@precedent.fr") }
     let!(:user_with_same_email) { create(:user, organisations: [organisation], email: "francis@exemple.fr") }
     let(:rdv_plan) do
-      create(:rdv_plan, user: user, motif: motif, location_type: :public_office, duration_in_minutes: 30,
+      create(:rdv_plan, user: user, motif: motif, duration_in_minutes: 30,
                         rdv_agent: agent,
                         lieu: lieu,
                         starts_at: 2.days.from_now,
@@ -193,42 +206,66 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     end
   end
 
-  context "avec plusieurs motifs qui ont des location types différents" do
-    let(:rdv_plan) do
-      create(:rdv_plan,
-             user: user,
-             starts_at: 2.weeks.from_now,
-             planning_agent: agent,
-             rdv_agent: agent,
-             return_url: "https://demo.demarches-simplifiees.fr/callback/123",
-             oauth_application: application)
-    end
-
-    let!(:other_motif) do
-      create(:motif, organisation: organisation, location_type: :phone, name: "Rappel téléphonique")
-    end
-
-    it "filtre les motifs par location type" do
-      visit edit_modalites_agents_rdv_plan_path(rdv_plan.id)
-
-      find("label", text: "Sur place").click
-      click_on "Continuer"
-
-      expect(page).to have_content "Motif du rendez-vous"
-
-      expect(page).not_to have_content(other_motif.name)
-    end
-  end
-
   context "quand aucun motif n'est disponible pour l'agent choisi" do
     before { motif.archive }
 
     it "affiche un message qui explique le blocage" do
-      visit edit_modalites_agents_rdv_plan_path(rdv_plan.id)
+      visit agents_rdv_plan_path(rdv_plan.id)
 
-      expect(page).not_to have_content("Continuer")
+      expect(page).to have_content "Aucun motif de rendez-vous n'est disponible."
+    end
 
-      expect(page).to have_content "Vous devez d'abord créer un motif de rendez-vous pour l'organisation CCAS de Montreuil"
+    context "et que l'agent est admin d'une orga" do
+      let!(:agent) do
+        create(:agent, admin_role_in_organisations: [organisation], rdv_notifications_level: :all)
+      end
+
+      it "affiche un lien vers le formulaire de motif" do
+        visit agents_rdv_plan_path(rdv_plan.id)
+
+        expect(page).to have_content "Aucun motif de rendez-vous n'est disponible."
+        click_on "Créer un motif"
+        expect(page).to have_content "Choisissez le type du rendez-vous"
+      end
+    end
+  end
+
+  context "quand aucun lieu n'est disponible" do
+    let!(:lieu) { nil }
+    let(:rdv_plan) do
+      create(:rdv_plan, user:, motif:, starts_at: 1.week.from_now,
+                        rdv_agent: agent,
+                        planning_agent: agent,
+                        oauth_application: application)
+    end
+
+    it "affiche un message qui explique le blocage" do
+      visit edit_lieu_agents_rdv_plan_path(rdv_plan.id)
+
+      expect(page).to have_content "Aucun lieu de rendez-vous n'a été défini."
+    end
+
+    context "et que l'agent est admin d'une orga" do
+      let!(:agent) do
+        create(:agent, admin_role_in_organisations: [organisation], rdv_notifications_level: :all)
+      end
+
+      it "affiche un lien vers le formulaire de motif" do
+        visit edit_lieu_agents_rdv_plan_path(rdv_plan.id)
+
+        expect(page).to have_content "Aucun lieu de rendez-vous n'a été défini."
+        click_on "Ajouter un lieu"
+        expect(page).to have_content "Nouveau lieu"
+      end
+    end
+  end
+
+  context "quand il y a des motifs collectifs" do
+    before { create(:motif, :collectif, name: "Atelier collectif", organisation:) }
+
+    it "ne les propose pas dans la liste" do
+      visit agents_rdv_plan_path(rdv_plan.id)
+      expect(page).not_to have_content "Atelier collectif"
     end
   end
 

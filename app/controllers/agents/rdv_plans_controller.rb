@@ -5,9 +5,26 @@ class Agents::RdvPlansController < AgentAuthController
 
   def show
     if current_agent.organisations.any?
-      redirect_to edit_starts_at_agents_rdv_plan_path(@rdv_plan)
+      redirect_to edit_motif_agents_rdv_plan_path(@rdv_plan)
     else
       redirect_to authenticated_agent_root_path
+    end
+  end
+
+  def edit_motif
+    @motifs = available_motifs(@rdv_plan).ordered_by_name
+  end
+
+  def update_motif
+    rdv_plan_params = params.require(:rdv_plan).permit(:motif_id)
+
+    @rdv_plan.assign_attributes(rdv_plan_params)
+    @rdv_plan.duration_in_minutes = @rdv_plan.motif.default_duration_in_min
+
+    if @rdv_plan.save
+      redirect_to edit_starts_at_agents_rdv_plan_path(@rdv_plan)
+    else
+      render "edit_motif", locals: { event_sources: }
     end
   end
 
@@ -33,43 +50,40 @@ class Agents::RdvPlansController < AgentAuthController
 
   def update_starts_at
     @rdv_plan.update!(params.require(:rdv_plan).permit(:starts_at))
-    redirect_to edit_modalites_agents_rdv_plan_path(@rdv_plan)
+    if @rdv_plan.motif.public_office?
+      redirect_to edit_lieu_agents_rdv_plan_path(@rdv_plan)
+    else
+      redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
+    end
   end
 
-  def edit_modalites
+  def edit_starts_at_and_duration
+    render locals: { event_sources: }
+  end
+
+  def update_starts_at_and_duration
+    @rdv_plan.update!(params.require(:rdv_plan).permit(:starts_at, :duration_in_minutes))
+    if @rdv_plan.motif.public_office?
+      redirect_to edit_lieu_agents_rdv_plan_path(@rdv_plan)
+    else
+      redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
+    end
+  end
+
+  def edit_lieu
     render locals: {
-      available_location_types: available_motifs(@rdv_plan).pluck(:location_type),
+      lieux: policy_scope(Lieu.enabled, policy_scope_class: Agent::LieuPolicy::Scope),
       event_sources:,
     }
   end
 
-  def update_modalites
-    rdv_plan_params = params.require(:rdv_plan).permit(:starts_at, :modalite)
-
-    if @rdv_plan.update(rdv_plan_params)
-      redirect_to edit_motif_agents_rdv_plan_path(@rdv_plan)
-    else
-      render "edit_modalites", locals: { event_sources: }
-    end
-  end
-
-  def edit_motif
-    @motifs = available_motifs(@rdv_plan).where(location_type: @rdv_plan.location_type).ordered_by_name
-    if @motifs.count == 1
-      @rdv_plan.motif_id ||= @motifs.first.id
-    end
-    @rdv_plan.duration_in_minutes ||= @motifs.first.default_duration_in_min
-
-    render locals: { event_sources: }
-  end
-
-  def update_motif
-    rdv_plan_params = params.require(:rdv_plan).permit(:motif_id, :duration_in_minutes)
+  def update_lieu
+    rdv_plan_params = params.require(:rdv_plan).permit(:starts_at, :lieu_id)
 
     if @rdv_plan.update(rdv_plan_params)
       redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
     else
-      render "edit_motif_from_calendar", locals: { event_sources: }
+      render "edit_lieu", locals: { event_sources: }
     end
   end
 
@@ -110,7 +124,7 @@ class Agents::RdvPlansController < AgentAuthController
 
   def available_motifs(rdv_plan)
     rdv_plan.rdv_agent.organisations.map do |organisation|
-      Motif.available_motifs_for_organisation_and_agent(organisation, rdv_plan.rdv_agent)
+      Motif.individuel.available_motifs_for_organisation_and_agent(organisation, rdv_plan.rdv_agent)
     end.reduce do |motifs, additional_motifs|
       motifs.or(additional_motifs)
     end

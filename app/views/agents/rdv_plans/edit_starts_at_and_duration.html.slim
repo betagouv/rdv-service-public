@@ -1,0 +1,19 @@
+/# locals: (event_sources:)
+.fr-grid-row
+  .fr-col-12
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 2, step_title: "Créneau", next_step_title: "Usager"
+
+    = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
+    = render "agents/rdv_plans/summary/agent", rdv_plan: @rdv_plan
+
+    hr.fr-mt-2w.fr-mb-2w
+
+.fr-grid-row.fr-mb-4w
+  .fr-col-12.fr-col-md-6
+    = form_for @rdv_plan, url: update_starts_at_and_duration_agents_rdv_plan_path(@rdv_plan), builder: Dsfr::FormBuilder do |f|
+      = render "model_errors", model: @rdv_plan
+      = dsfr_datetime_input f, :starts_at, label: "Date et heure de début", data: { "past-date-alert-target": "date-input" }, required: true
+      = f.dsfr_number_field :duration_in_minutes, label: "Durée du rendez-vous", hint: "en minutes"
+
+      = f.submit "Continuer", class: "fr-btn float-right"
+    = link_to "Retour", edit_starts_at_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"

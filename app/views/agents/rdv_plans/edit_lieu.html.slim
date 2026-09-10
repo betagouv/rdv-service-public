@@ -1,0 +1,36 @@
+/# locals: (event_sources:, lieux:)
+
+.fr-row
+  .fr-col-12
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 2, step_title: "Créneau", next_step_title: "Usager"
+
+    = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
+    = render "agents/rdv_plans/summary/agent", rdv_plan: @rdv_plan
+    = render "agents/rdv_plans/summary/starts_at", rdv_plan: @rdv_plan
+    hr.fr-mt-2w.fr-mb-2w
+.fr-grid-row.fr-mb-16w[data-controller="rdv-plan"]
+  - if lieux.none?
+    .fr-col-12
+      p Aucun lieu de rendez-vous n'a été défini.
+      - if current_agent.admin_orgs.any?
+        p Vous pouvez ajouter un nouveau lieu depuis les paramètres de votre organisation.
+        = link_to "Ajouter un lieu", new_admin_organisation_lieu_path(current_agent.admin_orgs.first), class: "fr-btn fr-btn--secondary"
+  - else
+    .fr-col-12.fr-col-md-4
+      = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, event_sources:, single_day: true
+      = link_to "Retour", edit_starts_at_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
+
+    .fr-col-12.fr-col-md-8.fr-px-2w
+      p
+        = lieu_icon(class: "fr-mr-1w")
+        | Où souhaitez-vous faire le rendez-vous ?
+      ul.fr-raw-list
+        - lieux.each do |lieu|
+          li.card.d-flex.fr-enlarge-link
+            .card-body.fr-p-2w
+              = link_to update_lieu_agents_rdv_plan_path(@rdv_plan, rdv_plan: { lieu_id: lieu.id}), method: :patch do
+                .fr-h6.fr-mb-1w.rdv-color-text-action-high-blue-france = lieu.name
+              .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+                p.fr-mb-0
+                  = lieu.address
+                = icon("fr-icon-arrow-right-line", class: "rdv-color-text-action-high-blue-france")
