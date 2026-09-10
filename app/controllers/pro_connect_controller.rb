@@ -2,7 +2,6 @@
 
 class ProConnectController < ApplicationController
   include DomainRedirectionAfterLogin
-  include Agents::TrustedDeviceConcern
 
   # IDP ProConnect nécessitant une double authentification pour les agents qui ont des comptes sensibles.
   # Configurable via la variable d'environnement IDP_PRO_CONNECT_FORCE_2FA_ENABLED (liste séparée par des virgules).
@@ -190,7 +189,7 @@ class ProConnectController < ApplicationController
         ERROR
         redirect_to new_agent_session_path and return
       end
-    elsif agent.sensitive_account? && !callback_client.went_through_2fa? && !agent_device_trusted?(agent)
+    elsif agent.sensitive_account? && !callback_client.went_through_2fa? && !AgentTrustedDevice.trusted_by_cookie?(agent, cookies)
       if IDP_PRO_CONNECT_FORCE_2FA_ENABLED.include?(callback_client.user_idp_id)
         require_2fa_for_sensitive_agent(callback_client) and return
       else
@@ -225,7 +224,7 @@ class ProConnectController < ApplicationController
     session.delete(Agents::ProConnectStepUpController::SESSION_LOGIN_HINT_KEY)
 
     bypass_sign_in agent, scope: :agent
-    remember_agent_device!(agent) if remember_device
+    AgentTrustedDevice.remember_by_cookie!(agent, cookies) if remember_device
     session[:pro_connect_id_token] = callback_client.id_token_for_logout
     session[:pro_connect_access_token] = callback_client.access_token
 
