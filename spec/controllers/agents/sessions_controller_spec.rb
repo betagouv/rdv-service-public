@@ -53,7 +53,7 @@ RSpec.describe Agents::SessionsController do
       end
 
       context "et que l'appareil est de confiance" do
-        before { cookies.encrypted[:"agent_trusted_device_#{agent.id}"] = AgentTrustedDevice.remember!(agent) }
+        before { AgentTrustedDevice.remember_by_cookie!(agent, cookies) }
 
         it "connecte l'agent directement, sans redemander de code" do
           post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
@@ -63,6 +63,26 @@ RSpec.describe Agents::SessionsController do
         it "ne crée pas de nouveau code de connexion" do
           expect { post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } } }
             .not_to change(LoginCode, :count)
+        end
+
+        it "reste vrai pour un autre agent ayant aussi mémorisé cet appareil (poste partagé)" do
+          other_agent = create(:agent, password: "c0rrecThorse!", sensitive_account: true)
+          AgentTrustedDevice.remember_by_cookie!(other_agent, cookies)
+
+          post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
+          expect(controller.current_agent).to eq(agent)
+        end
+      end
+
+      context "et que seul un autre agent a mémorisé cet appareil" do
+        before do
+          other_agent = create(:agent, password: "c0rrecThorse!", sensitive_account: true)
+          AgentTrustedDevice.remember_by_cookie!(other_agent, cookies)
+        end
+
+        it "redemande un code de connexion" do
+          post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
+          expect(response).to redirect_to(new_agents_sessions_by_code_path)
         end
       end
     end

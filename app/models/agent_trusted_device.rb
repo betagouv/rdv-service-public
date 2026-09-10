@@ -24,7 +24,9 @@ class AgentTrustedDevice < ApplicationRecord
     Digest::SHA256.hexdigest(raw_token)
   end
 
-  def self.cookie_name(agent) = :"agent_trusted_device_#{agent.id}"
+  def self.cookie_name(agent)
+    :"agent_trusted_device_#{Digest::SHA256.hexdigest(agent.id.to_s)[0, 8]}"
+  end
 
   def self.trusted_by_cookie?(agent, cookies)
     trusted?(agent, cookies.encrypted[cookie_name(agent)])

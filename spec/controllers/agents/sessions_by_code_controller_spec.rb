@@ -107,7 +107,7 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
             expect { post :create, params: { login_code: { code: login_code.code }, remember_device: "1" } }
               .to change(AgentTrustedDevice, :count).by(1)
             expect(AgentTrustedDevice.last.agent).to eq(agent)
-            expect(cookies.encrypted[:"agent_trusted_device_#{agent.id}"]).to be_present
+            expect(cookies.encrypted[AgentTrustedDevice.cookie_name(agent)]).to be_present
           end
         end
 

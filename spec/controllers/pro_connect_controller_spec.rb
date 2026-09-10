@@ -284,7 +284,7 @@ RSpec.describe ProConnectController do
           end
 
           it "connecte l'agent directement, sans passer par le step-up, si l'appareil est de confiance" do
-            cookies.encrypted[:"agent_trusted_device_#{agent.id}"] = AgentTrustedDevice.remember!(agent)
+            AgentTrustedDevice.remember_by_cookie!(agent, cookies)
             get :callback, params: { state:, code: }
             expect_agent_to_be_updated_and_logged_in(agent.reload)
           end
