@@ -6,6 +6,8 @@
 gem_spec = Gem.loaded_specs["dsfr-assets"]
 return unless gem_spec
 
+Dsfr::Assets.accepted_license_version = "1.0.1"
+
 artwork_source = File.join(gem_spec.full_gem_path, "vendor/assets/stylesheets/artwork")
 artwork_dest = Rails.public_path.join("assets/artwork")
 
