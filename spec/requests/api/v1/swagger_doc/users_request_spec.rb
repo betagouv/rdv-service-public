@@ -224,45 +224,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         let(:phone_number) { "misformatted phone number" }
       end
     end
-
-    patch "Mettre à jour un·e usager·ère via l'authentification shared secret", params: { document: false } do
-      with_shared_secret_authentication
-
-      tags "User"
-      produces "application/json"
-      operationId "updateUser"
-      description "Met à jour un·e usager·ère"
-
-      parameter name: :user_id, in: :path, type: :integer, description: "ID de l'usager·ère", example: 123
-      parameter name: "first_name", in: :query, type: :string, description: "Prénom", example: "Johnny", required: false
-      parameter name: "last_name", in: :query, type: :string, description: "Nom", example: "Silverhand", required: false
-      parameter name: "email", in: :query, type: :string, description: "Email", required: false, document: false
-
-      let(:user) { create(:user, :without_devise_email, latest_login_at: nil, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
-      let(:user_id) { user.id }
-
-      before do
-        allow(Agent).to receive(:find_by).and_return(agent)
-        allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return(shared_secret)
-        allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(true)
-      end
-
-      let!(:shared_secret) { "S3cr3T" }
-      let!(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }
-      let!(:uid) { auth_headers["uid"].to_s }
-      let!(:"X-Agent-Auth-Signature") { auth_headers["X-Agent-Auth-Signature"].to_s }
-
-      response 200, "updates email when authenticated through rdvinsertion", document: false do
-        let(:email) { "notif@example.com" }
-        let(:first_name) { "Alain" }
-        let(:last_name) { "Verse" }
-
-        run_test!
-
-        it { expect(parsed_response_body["user"]["email"]).to eq(email) }
-        it { expect(user.reload.email).to eq(email) }
-      end
-    end
   end
 
   path "/api/v1/users/{user_id}/rdv_invitation_token" do
