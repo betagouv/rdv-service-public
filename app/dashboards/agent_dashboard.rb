@@ -15,7 +15,6 @@ class AgentDashboard < Administrate::BaseDashboard
     organisations: Field::HasMany,
     roles: Field::HasMany,
     territories: Field::HasMany,
-    territorial_roles: Field::HasMany,
     agent_territorial_access_rights: Field::HasMany,
     services: Field::HasMany,
     agent_services: Field::HasMany,
@@ -50,7 +49,6 @@ class AgentDashboard < Administrate::BaseDashboard
     last_name
     roles
     agent_services
-    territorial_roles
     agent_territorial_access_rights
     rdvs
     invitation_sent_at

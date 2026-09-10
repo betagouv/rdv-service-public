@@ -1,7 +1,7 @@
 RSpec.describe Admin::Territories::SectorAttributionsController do
   let!(:territory) { create(:territory) }
   let!(:organisation) { create(:organisation, territory:) }
-  let!(:current_agent) { create(:agent, role_in_territories: [territory], admin_role_in_organisations: [organisation]) }
+  let!(:current_agent) { create(:agent, admin_in_territories: [territory], admin_role_in_organisations: [organisation]) }
   let!(:sector) { create(:sector, territory:) }
 
   before { sign_in current_agent }

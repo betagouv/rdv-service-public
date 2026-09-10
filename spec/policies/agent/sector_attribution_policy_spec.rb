@@ -20,7 +20,7 @@ RSpec.describe Agent::SectorAttributionPolicy do
     let(:territory) { create(:territory) }
     let(:sector) { create(:sector, territory:) }
     let(:sector_attribution) { create(:sector_attribution, sector:) }
-    let(:agent) { create(:agent, role_in_territories: [territory]) }
+    let(:agent) { create(:agent, admin_in_territories: [territory]) }
 
     it_behaves_like "permit actions", :sector_attribution,
                     :new?,
@@ -33,7 +33,7 @@ RSpec.describe Agent::SectorAttributionPolicy do
     let(:territory_agent) { create(:territory) }
     let(:sector) { create(:sector, territory: territory_sector_attribution) }
     let(:sector_attribution) { create(:sector_attribution, sector:) }
-    let(:agent) { create(:agent, role_in_territories: [territory_agent]) }
+    let(:agent) { create(:agent, admin_in_territories: [territory_agent]) }
 
     it_behaves_like "not permit actions", :sector_attribution,
                     :new?,
@@ -45,7 +45,7 @@ RSpec.describe Agent::SectorAttributionPolicy do
     let(:territory) { create(:territory) }
     let(:sector) { create(:sector, territory: territory) }
     let(:sector_attribution) { build(:sector_attribution, sector:, organisation: create(:organisation)) }
-    let(:agent) { create(:agent, role_in_territories: [territory]) }
+    let(:agent) { create(:agent, admin_in_territories: [territory]) }
 
     it_behaves_like "not permit actions", :sector_attribution,
                     :create?,
@@ -56,7 +56,7 @@ RSpec.describe Agent::SectorAttributionPolicy do
     let(:territory) { create(:territory) }
     let(:sector) { create(:sector, territory: territory) }
     let(:sector_attribution) { build(:sector_attribution, :level_agent, sector:, agent: create(:agent)) }
-    let(:agent) { create(:agent, role_in_territories: [territory]) }
+    let(:agent) { create(:agent, admin_in_territories: [territory]) }
 
     it_behaves_like "not permit actions", :sector_attribution,
                     :create?,

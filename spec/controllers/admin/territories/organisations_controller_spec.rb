@@ -22,7 +22,7 @@ RSpec.describe Admin::Territories::OrganisationsController, type: :controller do
         create(
           :agent,
           admin_role_in_organisations: [organisation],
-          role_in_territories: [territory]
+          admin_in_territories: [territory]
         )
       end
       let!(:territory2) { create(:territory) }

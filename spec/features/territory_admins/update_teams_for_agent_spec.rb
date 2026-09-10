@@ -1,5 +1,5 @@
 RSpec.describe "update an agent's teams" do
-  let(:territory_admin) { create(:agent) }
+  let(:territory_team_manager) { create(:agent) }
   let(:agent) { create(:agent, basic_role_in_organisations: [orga]) }
 
   let(:territory) { create(:territory) }
@@ -13,12 +13,12 @@ RSpec.describe "update an agent's teams" do
   let(:multi_territory_agent) { create(:agent) }
 
   before do
-    create(:agent_territorial_access_right, agent: territory_admin, territory: territory, allow_to_manage_teams: true)
+    create(:agent_territorial_access_right, agent: territory_team_manager, territory: territory, allow_to_manage_teams: true)
     create(:agent_territorial_access_right, agent:, territory: territory)
     AgentTeam.create!(agent: agent, team: team)
     AgentTeam.create!(agent: agent, team: other_team_in_other_territory)
 
-    login_as(territory_admin, scope: :agent)
+    login_as(territory_team_manager, scope: :agent)
   end
 
   it "allows changing the agent teams in this territory" do

@@ -4,7 +4,7 @@ RSpec.describe Admin::Territories::TeamsController, type: :controller do
 
   describe "#new" do
     it "assigns new team" do
-      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      agent = create(:agent, admin_role_in_organisations: [organisation], admin_in_territories: [territory])
       sign_in agent
 
       get :new, params: { territory_id: territory.id }
@@ -51,7 +51,7 @@ RSpec.describe Admin::Territories::TeamsController, type: :controller do
 
   describe "#edit" do
     it "assigns new team" do
-      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      agent = create(:agent, admin_role_in_organisations: [organisation], admin_in_territories: [territory])
       team = create(:team, territory: territory)
       sign_in agent
 

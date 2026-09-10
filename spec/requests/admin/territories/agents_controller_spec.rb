@@ -1,6 +1,6 @@
 RSpec.describe Admin::Territories::AgentsController do
   let!(:territory) { create(:territory) }
-  let!(:current_agent) { create(:agent, role_in_territories: [territory]) }
+  let!(:current_agent) { create(:agent, admin_in_territories: [territory]) }
 
   before { sign_in current_agent }
 

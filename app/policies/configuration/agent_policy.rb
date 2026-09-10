@@ -43,9 +43,9 @@ class Configuration::AgentPolicy
   def agent_territories
     # tous les espaces où l'agent cible est admin OU a un rôle dans une orga (basic, admin ou intervenant)
     # cette implémentation est plus explicite que via les agent_territorial_access_rights
-    # passer par territory_ids et organisation_ids permet de supporter les tests sur les agents non persistés
+    # passer par admin_territory_ids et organisation_ids permet de supporter les tests sur les agents non persistés
     arel = Territory.left_joins(:organisations)
-    arel.where(id: @agent.territory_ids).or(
+    arel.where(id: @agent.admin_territory_ids).or(
       arel.where(organisations: { id: @agent.organisation_ids })
     )
   end

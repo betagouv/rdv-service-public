@@ -3,7 +3,7 @@ RSpec.describe "Admin can configure the territory" do
     it "update territory phone number" do
       territory = create(:territory, name: "Ville de Montreuil")
       organisation = create(:organisation, territory: territory)
-      agent = create(:agent, basic_role_in_organisations: [organisation], role_in_territories: [territory])
+      agent = create(:agent, basic_role_in_organisations: [organisation], admin_in_territories: [territory])
       login_as(agent, scope: :agent)
 
       visit edit_admin_territory_path(territory)
@@ -17,7 +17,7 @@ RSpec.describe "Admin can configure the territory" do
     it "forbids from accessing the form" do
       territory = create(:territory, name: "Ville de Montreuil")
       organisation = create(:organisation, territory: territory)
-      agent = create(:agent, basic_role_in_organisations: [organisation], role_in_territories: [])
+      agent = create(:agent, basic_role_in_organisations: [organisation], admin_in_territories: [])
       login_as(agent, scope: :agent)
       visit edit_admin_territory_path(territory)
       expect(page).to have_content("Vous n’avez pas les droits suffisants")

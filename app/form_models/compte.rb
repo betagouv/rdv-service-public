@@ -46,9 +46,9 @@ class Compte
         create_example_motifs!
       end
 
-      AgentTerritorialRole.create!(agent: agent, territory: territory)
       AgentTerritorialAccessRight.create!(
         agent: agent, territory: territory,
+        territory_admin: true,
         allow_to_manage_access_rights: true,
         allow_to_invite_agents: true
       )

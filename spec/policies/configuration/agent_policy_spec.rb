@@ -6,7 +6,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
 
   context "no rights at all" do
     let(:territory) { create(:territory) }
-    let(:current_agent) { create(:agent, role_in_territories: []) }
+    let(:current_agent) { create(:agent, admin_in_territories: []) }
     let(:target_agent) { create(:agent) }
     let(:pundit_context) { current_agent }
 
@@ -15,7 +15,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
 
   context "current_agent is territory admin, target_agent has a basic role in this territory" do
     let(:territory) { create(:territory) }
-    let(:current_agent) { create(:agent, role_in_territories: [territory]) }
+    let(:current_agent) { create(:agent, admin_in_territories: [territory]) }
     let(:organisation) { create(:organisation, territory:) }
     let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let(:pundit_context) { current_agent }
@@ -26,7 +26,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
 
   context "current_agent is territory admin, target_agent has a basic role in different territory" do
     let(:territory) { create(:territory) }
-    let(:current_agent) { create(:agent, role_in_territories: [territory]) }
+    let(:current_agent) { create(:agent, admin_in_territories: [territory]) }
     let(:other_territory) { create(:territory) }
     let(:organisation) { create(:organisation, territory: other_territory) }
     let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
@@ -38,8 +38,8 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
 
   context "current_agent is territory admin, target_agent is also territory admin" do
     let(:territory) { create(:territory) }
-    let(:current_agent) { create(:agent, role_in_territories: [territory]) }
-    let(:target_agent) { create(:agent, role_in_territories: [territory]) }
+    let(:current_agent) { create(:agent, admin_in_territories: [territory]) }
+    let(:target_agent) { create(:agent, admin_in_territories: [territory]) }
     let(:pundit_context) { current_agent }
 
     it_behaves_like "permit actions", :target_agent, :edit?, :update_services?, :create?
@@ -48,7 +48,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
 
   context "current_agent has allow_to_manage_access_rights in a territory, target_agent has a basic role in this territory" do
     let(:territory) { create(:territory) }
-    let(:current_agent) { create(:agent, role_in_territories: []) }
+    let(:current_agent) { create(:agent, admin_in_territories: []) }
     let(:pundit_context) { current_agent }
     let(:organisation) { create(:organisation, territory:) }
     let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
@@ -61,7 +61,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
 
   context "current_agent has allow_to_manage_teams access right in a territory, target_agent has a basic role in this territory" do
     let(:territory) { create(:territory) }
-    let(:current_agent) { create(:agent, role_in_territories: []) }
+    let(:current_agent) { create(:agent, admin_in_territories: []) }
     let(:pundit_context) { current_agent }
     let(:organisation) { create(:organisation, territory:) }
     let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
@@ -74,7 +74,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
 
   context "current_agent has allow_to_invite_agents access right in a territory, target_agent has a basic role in this territory" do
     let(:territory) { create(:territory) }
-    let(:current_agent) { create(:agent, role_in_territories: []) }
+    let(:current_agent) { create(:agent, admin_in_territories: []) }
     let(:pundit_context) { current_agent }
     let(:organisation) { create(:organisation, territory:) }
     let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
@@ -87,7 +87,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
 
   context "current_agent is territory admin, target_agent is a new record without any role" do
     let(:territory) { create(:territory) }
-    let(:current_agent) { create(:agent, role_in_territories: [territory]) }
+    let(:current_agent) { create(:agent, admin_in_territories: [territory]) }
     let(:target_agent) { build(:agent) }
     let(:pundit_context) { current_agent }
 
@@ -96,7 +96,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
 
   context "current_agent is territory admin, target_agent is a new record with a role in an organisation of this territory" do
     let(:territory) { create(:territory) }
-    let(:current_agent) { create(:agent, role_in_territories: [territory]) }
+    let(:current_agent) { create(:agent, admin_in_territories: [territory]) }
     let!(:organisation) { create(:organisation, territory:) }
     # we cannot use the factory trait basic_roles_in_organisations because it works only with create, not build
     let(:target_agent) { build(:agent, organisation_ids: [organisation.id]) }
@@ -107,7 +107,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
 
   context "current_agent is territory admin, target_agent is a new record with a role in an organisation from another territory" do
     let(:territory) { create(:territory) }
-    let(:current_agent) { create(:agent, role_in_territories: [territory]) }
+    let(:current_agent) { create(:agent, admin_in_territories: [territory]) }
     let!(:other_territory) { create(:territory) }
     let!(:organisation) { create(:organisation, territory: other_territory) }
     # we cannot use the factory trait basic_roles_in_organisations because it works only with create, not build
@@ -119,7 +119,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
 
   context "current_agent is territory A admin, target_agent is a new record with 2 roles but one of them is in another territory" do
     let(:territory) { create(:territory) }
-    let(:current_agent) { create(:agent, role_in_territories: [territory]) }
+    let(:current_agent) { create(:agent, admin_in_territories: [territory]) }
     let!(:other_territory) { create(:territory) }
     let!(:organisation1) { create(:organisation, territory:) }
     let!(:organisation2) { create(:organisation, territory: other_territory) }

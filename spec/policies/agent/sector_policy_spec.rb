@@ -21,7 +21,7 @@ RSpec.describe Agent::SectorPolicy do
   context "agent has territorial role in sector territory" do
     let(:territory) { create(:territory) }
     let(:sector) { create(:sector, territory:) }
-    let(:agent) { create(:agent, role_in_territories: [territory]) }
+    let(:agent) { create(:agent, admin_in_territories: [territory]) }
 
     it_behaves_like "permit actions",
                     :sector,
@@ -37,7 +37,7 @@ RSpec.describe Agent::SectorPolicy do
     let(:territory_sector) { create(:territory) }
     let(:territory_agent) { create(:territory) }
     let(:sector) { create(:sector, territory: territory_sector) }
-    let(:agent) { create(:agent, role_in_territories: [territory_agent]) }
+    let(:agent) { create(:agent, admin_in_territories: [territory_agent]) }
 
     it_behaves_like "not permit actions", :sector,
                     :new?,
@@ -62,7 +62,7 @@ RSpec.describe Agent::SectorPolicy do
     let!(:sector_partdieu) { create(:sector, territory: territory_lyon) }
 
     context "agent has territorial roles in Paris and Marseille" do
-      let(:agent) { create(:agent, role_in_territories: [territory_paris, territory_marseille]) }
+      let(:agent) { create(:agent, admin_in_territories: [territory_paris, territory_marseille]) }
 
       context "scope Paris sectors" do
         subject do
@@ -74,7 +74,7 @@ RSpec.describe Agent::SectorPolicy do
     end
 
     context "agent has no territorial roles at all" do
-      let(:agent) { create(:agent, role_in_territories: []) }
+      let(:agent) { create(:agent, admin_in_territories: []) }
 
       context "scope all sectors using Paris as context territory" do
         subject { described_class.new(agent, territory_paris.sectors).resolve }

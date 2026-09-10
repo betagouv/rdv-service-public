@@ -27,7 +27,6 @@ class Territory < ApplicationRecord
   has_many :teams, dependent: :destroy
   has_many :organisations, dependent: :destroy
   has_many :sectors, dependent: :restrict_with_error
-  has_many :roles, class_name: "AgentTerritorialRole", dependent: :delete_all
   has_many :agent_territorial_access_rights, dependent: :destroy
   has_many :territory_services, dependent: :destroy
   has_and_belongs_to_many :motif_categories
@@ -36,7 +35,7 @@ class Territory < ApplicationRecord
 
   # Through relations
   has_many :organisations_agents, -> { distinct }, through: :organisations, source: :agents
-  has_many :admin_agents, through: :roles, source: :agent
+  has_many :admin_agents, -> { where(agent_territorial_access_rights: { territory_admin: true }) }, through: :agent_territorial_access_rights, source: :agent
   has_many :zones, through: :sectors
   has_many :motifs, through: :organisations
   has_many :rdvs, through: :organisations

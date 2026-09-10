@@ -2,7 +2,7 @@ RSpec.describe "Gestion des organisations depuis les paramètres d'espace" do
   let(:territory) { create(:territory) }
   let(:organisation) { create(:organisation, territory:, name: "MDS de Pantin") }
   let(:agent) do
-    create(:agent, role_in_territories: [territory], admin_role_in_organisations: [organisation])
+    create(:agent, admin_in_territories: [territory], admin_role_in_organisations: [organisation])
   end
 
   before do

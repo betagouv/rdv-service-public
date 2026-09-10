@@ -3,7 +3,7 @@ RSpec.describe "CRUD zone pour la sectorisation", type: :request do
 
   let(:territory) { create(:territory, departement_number: "62") }
   let(:organisation) { create(:organisation, territory: territory) }
-  let(:agent) { create(:agent, basic_role_in_organisations: [organisation], role_in_territories: [territory]) }
+  let(:agent) { create(:agent, basic_role_in_organisations: [organisation], admin_in_territories: [territory]) }
 
   before { sign_in agent }
 

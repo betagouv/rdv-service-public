@@ -36,7 +36,7 @@ class Agent::AgentPolicy < ApplicationPolicy
       agents = scope.joins(:organisations) # JOINing on :organisations allows us to #merge Organisation scopes
 
       agents_i_can_see_as_agent_accueil = agents.merge(current_agent.agent_accueil_orgs)
-      agents_of_territories_i_admin = agents.merge(current_agent.organisations_of_territorial_roles)
+      agents_of_territories_i_admin = agents.merge(current_agent.organisations_of_admin_territories)
       agents_of_orgs_i_admin = agents.merge(current_agent.admin_orgs)
       agents_of_orgs_i_basic_same_service = agents.merge(current_agent.basic_orgs).merge(current_agent.confreres)
 
