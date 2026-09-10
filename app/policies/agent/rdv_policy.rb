@@ -22,6 +22,7 @@ class Agent::RdvPolicy < ApplicationPolicy
   end
   alias versions? show?
   alias download_participants? show?
+  alias visio? show?
 
   def destroy?
     current_agent.admin_in_organisation?(@record.organisation)
