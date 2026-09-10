@@ -95,7 +95,7 @@ const defaultFullCalendarConfig = () => ({
   displayEventEnd: false,
   selectAllow: canSelectOnlyOneDay,
   eventClass: eventClassNames,
-  eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
+  eventMouseLeave: () => hideEventTooltip(), // extra security
 
   // Avec la valeur par défaut (15), les RDVs de 10 minutes sont affichés côte-à-côte, car :
   //   1. FullCalendar estime que c'est plus lisible de "gonfler" un peu l'affichage d'un événement très court (augmenter sa hauteur).
@@ -152,10 +152,62 @@ function eventClassNames(info) {
   return customCssClasses.join(' ');
 }
 
+// Tooltip pour les événements du calendrier (RDV, plages d'ouverture, etc.), avec un style
+// visuel inspiré du DSFR.
+// Le composant Infobulle DSFR suppose une paire déclarative fixe trigger/tooltip dans
+// le DOM, ce qui ne correspond de toute façon pas à nos événements créés/détruits dynamiquement
+// par centaines. On garde `role="tooltip"` + `aria-describedby` (sémantique ARIA standard, sans
+// effet de bord JS) mais avec nos propres classes. Un unique nœud de tooltip est réutilisé pour
+// tous les événements.
+const EVENT_TOOLTIP_ID = "rdv-calendar-event-tooltip";
+
+function getOrCreateEventTooltipElement() {
+  let tooltip = document.getElementById(EVENT_TOOLTIP_ID);
+  if (!tooltip) {
+    tooltip = document.createElement("span");
+    tooltip.id = EVENT_TOOLTIP_ID;
+    tooltip.setAttribute("role", "tooltip");
+    tooltip.className = "rdv-calendar-tooltip";
+    document.body.appendChild(tooltip);
+  }
+  return tooltip;
+}
+
+function showEventTooltip(triggerEl, html) {
+  const tooltip = getOrCreateEventTooltipElement();
+  tooltip.innerHTML = html;
+  tooltip.classList.add("rdv-calendar-tooltip--shown");
+
+  const triggerRect = triggerEl.getBoundingClientRect();
+  const tooltipRect = tooltip.getBoundingClientRect();
+
+  const placedAbove = triggerRect.top >= tooltipRect.height + 8;
+  tooltip.classList.toggle("rdv-calendar-tooltip--top", placedAbove);
+  tooltip.classList.toggle("rdv-calendar-tooltip--bottom", !placedAbove);
+
+  const top = placedAbove ? triggerRect.top - tooltipRect.height - 8 : triggerRect.bottom + 8;
+  const left = Math.min(
+    Math.max(8, triggerRect.left + triggerRect.width / 2 - tooltipRect.width / 2),
+    window.innerWidth - tooltipRect.width - 8
+  );
+
+  tooltip.style.position = "fixed";
+  tooltip.style.top = `${top}px`;
+  tooltip.style.left = `${left}px`;
+}
+
+function hideEventTooltip() {
+  document.getElementById(EVENT_TOOLTIP_ID)?.classList.remove("rdv-calendar-tooltip--shown");
+}
+
 function eventRenderer(selectedEventId) {
   // On renvoie une fonction qui aura le bon selectedEventId
   return (info) => {
-    let $el = $(info.el);
+    // On capture la référence à l'élément tout de suite : FullCalendar réutilise/mute
+    // l'objet `info` en interne, donc lire `info.el` plus tard (au survol) renverrait
+    // systématiquement le dernier élément monté plutôt que celui réellement survolé.
+    const el = info.el;
+    let $el = $(el);
     let extendedProps = info.event.extendedProps;
 
     if (selectedEventId && info.event.id == selectedEventId) {
@@ -211,10 +263,9 @@ function eventRenderer(selectedEventId) {
       }
     }
 
-    $el.attr("title", title);
-    $el.attr("data-toggle", "tooltip");
-    $el.attr("data-html", "true");
-    $el.tooltip()
+    $el.attr("aria-describedby", EVENT_TOOLTIP_ID);
+    $el.on("mouseenter focus", () => showEventTooltip(el, title));
+    $el.on("mouseleave focusout", hideEventTooltip);
   }
 }
 
