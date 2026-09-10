@@ -265,22 +265,11 @@ RSpec.describe ProConnectController do
         context "quand l’agent a un compte sensible et n’a pas utiliser son deuxième facteur d’authentification" do
           let!(:agent) { create(:agent, email: user_info["email"], sensitive_account: true) }
 
-          it "redirects to ProConnect with force_2fa rather than logging in the agent" do
+          it "redirige vers la page intermédiaire de step-up plutôt que de connecter l'agent" do
             get :callback, params: { state:, code: }
 
             expect(current_agent_id).to be_nil
-            expect(response).to redirect_to(start_with("https://fca.integ01.dev-agentconnect.fr/api/v2/authorize?"))
-
-            redirect_url_query_params = Rack::Utils.parse_query(URI.parse(response.headers["Location"]).query)
-            expect(redirect_url_query_params.symbolize_keys).to include(login_hint: user_info["email"],
-                                                                        claims: {
-                                                                          id_token: {
-                                                                            acr: {
-                                                                              essential: true,
-                                                                              values: %w[eidas0-mfa eidas1-mfa eidas2 eidas3],
-                                                                            },
-                                                                          },
-                                                                        }.to_json)
+            expect(response).to redirect_to(new_agents_pro_connect_step_up_path)
           end
 
           it "ne met pas à jour l’agent" do
@@ -289,13 +278,15 @@ RSpec.describe ProConnectController do
             end.not_to change { agent.reload.pro_connect_openid_sub }
           end
 
-          it "met en place une nouvelle variable de session pour la ré-authentification avec ProConnect" do
+          it "stocke l'email de l'agent en session pour la page de step-up" do
             get :callback, params: { state:, code: }
+            expect(session[Agents::ProConnectStepUpController::SESSION_LOGIN_HINT_KEY]).to eq(user_info["email"])
+          end
 
-            new_redirect_url = Rack::Utils.parse_query(URI.parse(response.headers["Location"]).query)
-            expect(session["pro_connect"]).to include(connection_for: "agent",
-                                                      state: new_redirect_url["state"],
-                                                      nonce: new_redirect_url["nonce"])
+          it "connecte l'agent directement, sans passer par le step-up, si l'appareil est de confiance" do
+            AgentTrustedDevice.remember_by_cookie!(agent, cookies)
+            get :callback, params: { state:, code: }
+            expect_agent_to_be_updated_and_logged_in(agent.reload)
           end
         end
 
@@ -308,6 +299,19 @@ RSpec.describe ProConnectController do
             agent = create(:agent, email: user_info["email"])
             get :callback, params: { state:, code: }
             expect_agent_to_be_updated_and_logged_in(agent.reload, with_2fa: true)
+          end
+
+          it "ne mémorise pas l'appareil si la case n'a pas été cochée sur la page de step-up" do
+            agent = create(:agent, email: user_info["email"])
+            get :callback, params: { state:, code: }
+            expect(AgentTrustedDevice.where(agent:)).to be_none
+          end
+
+          it "mémorise l'appareil après la connexion si la case 'se souvenir' a été cochée sur la page de step-up" do
+            session[Agents::ProConnectStepUpController::SESSION_REMEMBER_DEVICE_KEY] = true
+            agent = create(:agent, email: user_info["email"])
+            get :callback, params: { state:, code: }
+            expect(AgentTrustedDevice.where(agent:).count).to eq(1)
           end
         end
       end

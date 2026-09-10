@@ -1,0 +1,12 @@
+- content_for :title, "Vérification de votre identité"
+
+.card
+  .card-body.fr-pt-4w
+    p
+      |> Votre compte est considéré comme sensible. Pour des raisons de sécurité, une vérification de votre identité via ProConnect est requise à chaque connexion.
+
+    = form_tag agents_pro_connect_step_up_path, method: :post do
+      .fr-checkbox-group.fr-mb-3w
+        = check_box_tag :remember_device, "1", false
+        = label_tag :remember_device, "Je suis sur un appareil de confiance. Ne plus me demander cette vérification pendant 7 jours", class: "fr-label"
+      = submit_tag "Continuer vers ProConnect", class: "fr-btn"

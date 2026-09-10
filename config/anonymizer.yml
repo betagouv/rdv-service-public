@@ -131,6 +131,9 @@ tables:
       - blog_read_at
       - group_by_agent
 
+  - table_name: agent_trusted_devices
+    truncated: true
+
   - table_name: rdvs
     anonymized_column_names:
       - context
