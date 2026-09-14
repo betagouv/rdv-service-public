@@ -27,7 +27,7 @@ class Agents::RdvPlansController < AgentAuthController
     if @rdv_plan.save
       redirect_to edit_starts_at_agents_rdv_plan_path(@rdv_plan)
     else
-      render "edit_motif", locals: { event_sources: }
+      render "edit_motif"
     end
   end
 
@@ -60,9 +60,7 @@ class Agents::RdvPlansController < AgentAuthController
     end
   end
 
-  def edit_starts_at_and_duration
-    render locals: { event_sources: }
-  end
+  def edit_starts_at_and_duration; end
 
   def update_starts_at_and_duration
     @rdv_plan.update!(params.require(:rdv_plan).permit(:starts_at, :duration_in_minutes))
