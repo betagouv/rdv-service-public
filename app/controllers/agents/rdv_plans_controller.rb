@@ -82,7 +82,10 @@ class Agents::RdvPlansController < AgentAuthController
   def update_lieu
     rdv_plan_params = params.require(:rdv_plan).permit(:starts_at, :lieu_id)
 
-    if @rdv_plan.update(rdv_plan_params)
+    @rdv_plan.assign_attributes(rdv_plan_params)
+
+    authorize(@rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy)
+    if @rdv_plan.save
       redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
     else
       render "edit_lieu", locals: { event_sources: }
