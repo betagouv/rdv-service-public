@@ -91,9 +91,7 @@ class Agents::RdvPlansController < AgentAuthController
     end
   end
 
-  def edit_user
-    render locals: { event_sources: }
-  end
+  def edit_user; end
 
   def create_rdv
     rdv_plan_params = params.require(:rdv_plan)
