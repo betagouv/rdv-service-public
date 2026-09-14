@@ -119,8 +119,9 @@ export class AgendaMonoAgent {
       if (info.view.type != "timeGridOneDay") return
 
       const url = new URL(printLinkElt.href)
-      printLinkElt.querySelector(".js-date").innerHTML = Intl.DateTimeFormat("fr", { day: "numeric", month: "numeric", year: "numeric" }).format(info.view.currentStart)
-      const currentStart = info.view.currentStart.toISOString().split('T')[0]
+      printLinkElt.querySelector(".js-date").innerHTML = Intl.DateTimeFormat("fr", { timeZone: "Europe/Paris", day: "numeric", month: "numeric", year: "numeric" }).format(info.view.currentStart)
+      // L’utilisation de "en-CA" permet d’avoir le format YYYY-MM-DD, qui est celui attendu par le controller pour la recherche des rendez-vous.
+      const currentStart = Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" }).format(info.view.currentStart)
       url.searchParams.set("start", currentStart)
       url.searchParams.set("end", currentStart)
 

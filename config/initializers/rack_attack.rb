@@ -43,7 +43,8 @@ class Rack::Attack
                   (path == "/prdv" && request.params["tkn"].present?) || # redirect#reprendre_rdv_from_participation_invitation_token
                   (path == "/prendre_rdv" && request.params["invitation_token"].present?) || # search#search_rdv
                   (path.match?(%r{\A/users/rdvs/[^/]+\z}) && request.params["invitation_token"].present?) ||
-                  (path.match?(%r{\A/users/rdvs/[^/]+/creneaux\z}) && request.params["invitation_token"].present?)
+                  (path.match?(%r{\A/users/rdvs/[^/]+/creneaux\z}) && request.params["invitation_token"].present?) ||
+                  (path.match?(%r{\A/users/rdvs/[^/]+/visio\z}) && request.params["invitation_token"].present?)
   end
 
   Rack::Attack.throttled_responder = lambda do |request|

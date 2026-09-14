@@ -124,6 +124,29 @@
         79
       ],
       "note": "l'attribute visio_url_custom est validée lors de la sauvegarde, les domaines sont filtrés"
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "5a21135f7b5043f70e136e52d36ecdf426a8b9e7c70e2d97ee979830c6562c7e",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/users/rdvs_controller.rb",
+      "line": 65,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Rdv.find(params[:id]).visio_url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Users::RdvsController",
+        "method": "visio"
+      },
+      "user_input": "Rdv.find(params[:id]).visio_url",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": "l'attribute visio_url_custom est validée lors de la sauvegarde, les domaines sont filtrés"
     }
   ],
   "brakeman_version": "7.0.0"
