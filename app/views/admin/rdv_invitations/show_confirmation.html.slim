@@ -1,0 +1,12 @@
+- content_for :title do
+  | Invitation à prendre rendez-vous
+
+.fr-grid-row.justify-content-center
+  .fr-col-md-10.fr-col-lg-6.fr-col-xl-4
+    .card.card-body
+      .fr-grid-row.justify-content-center.fr-mb-2w
+        = dsfr_svg "artwork/pictograms/digital/mail-send", class: "fr-artwork--green-emeraude"
+      p Un email a été envoyé à #{@rdv_invitation.user.full_name} pour l'inviter à prendre rendez-vous pour #{@rdv_invitation.motif.name}.
+
+      .fr-grid-row.justify-content-center.fr-mb-2w
+        = link_to "Retour au planning", admin_organisation_planning_agenda_path(current_organisation), class: "fr-btn fr-btn--secondary"
