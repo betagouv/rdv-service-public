@@ -12,7 +12,8 @@
           |< à <b>#{@rdv_invitation.lieu.name}</b>
         | .
 
-      p #{@rdv_invitation.user.full_name} n'a pas encore choisi de créneau.
+      - if @rdv_invitation.rdv_id.blank?
+        p #{@rdv_invitation.user.full_name} n'a pas encore choisi de créneau.
 
       p.fr-text-mention--grey.fr-text--sm Invitation envoyée par #{@rdv_invitation.inviting_agent.full_name}  #{human_date_format(@rdv_invitation.created_at)}.
 
