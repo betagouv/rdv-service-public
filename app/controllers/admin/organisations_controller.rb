@@ -23,7 +23,8 @@ class Admin::OrganisationsController < AgentAuthController
   def update
     authorize(@organisation, policy_class: Agent::OrganisationPolicy)
 
-    if @organisation.update(organisation_params)
+    # `organisation_params` (name/horaires/phone_number/website/email) n'affecte pas `admin_in_organisation?`.
+    if @organisation.update(organisation_params) # rubocop:disable RdvServicePublic/PunditAuthorizeStaleAfterMutation
       flash[:success] = "Les informations de contact ont été modifiées"
       redirect_to admin_organisation_path(@organisation)
     else

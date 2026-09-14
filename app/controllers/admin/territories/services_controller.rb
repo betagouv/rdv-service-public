@@ -29,7 +29,8 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
 
   def update
     authorize(current_territory, :manage_services?, policy_class: Agent::TerritoryPolicy)
-    current_territory.update!(services_params)
+    # `service_ids` n'affecte pas `manage_services?` (alias de `territorial_admin?`, basé sur le territoire).
+    current_territory.update!(services_params) # rubocop:disable RdvServicePublic/PunditAuthorizeStaleAfterMutation
     flash[:success] = "Liste des services disponibles mise à jour"
 
     if params[:redirect_to_organisation_id].present?

@@ -2,6 +2,9 @@ plugins:
   - rubocop-rspec
   - rubocop-rails
 
+require:
+  - ./lib/rubocop/cop/rdv_service_public/pundit_authorize_stale_after_mutation.rb
+
 AllCops:
   Exclude:
     - "vendor/bundle/**/*"
@@ -330,3 +333,8 @@ RSpec/PredicateMatcher:
 
 Rails/RedundantPresenceValidationOnBelongsTo:
   Enabled: false
+
+RdvServicePublic/PunditAuthorizeStaleAfterMutation:
+  Enabled: true
+  Include:
+    - "app/controllers/**/*.rb"

@@ -5,7 +5,8 @@ class Admin::Territories::UserFieldsController < Admin::Territories::BaseControl
 
   def update
     authorize(current_territory, policy_class: Agent::TerritoryPolicy)
-    current_territory.update!(user_fields_params)
+    # Les toggles de champs usager n'affectent pas `territorial_admin?` (basé sur le territoire lui-même).
+    current_territory.update!(user_fields_params) # rubocop:disable RdvServicePublic/PunditAuthorizeStaleAfterMutation
 
     flash[:success] = "Configuration enregistrée"
     redirect_to action: :edit

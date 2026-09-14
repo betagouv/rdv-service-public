@@ -11,7 +11,9 @@ class Users::UsersController < UserAuthController
     @user = current_user
     authorize(@user, policy_class: User::UserPolicy)
     @user_form = Users::EditForm.new(user: @user, domain: current_domain)
-    if @user.update(user_params)
+    # `record` est `current_user` lui-même (`record.id == current_user.id`), ce qui reste vrai
+    # quels que soient les attributs modifiés par `user_params`.
+    if @user.update(user_params) # rubocop:disable RdvServicePublic/PunditAuthorizeStaleAfterMutation
       update_ami_preferences
       flash[:success] = "Vos informations ont été mises à jour."
       redirect_to users_informations_path

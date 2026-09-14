@@ -7,7 +7,9 @@ class Admin::AgentIntervenantsController < AgentAuthController
 
     agent_role = @agent.roles.find_by(organisation: current_organisation)
 
-    if agent_role.intervenant? && @agent.update(last_name: params[:agent][:last_name])
+    # Seul `last_name` est modifié, ce qui n'affecte pas `current_agent_or_admin_in_record_organisation?`
+    # (basé sur l'identité de l'agent et son organisation, pas sur son nom).
+    if agent_role.intervenant? && @agent.update(last_name: params[:agent][:last_name]) # rubocop:disable RdvServicePublic/PunditAuthorizeStaleAfterMutation
       flash[:success] = "Intervenant modifié avec succès."
 
       redirect_to admin_organisation_agents_path(current_organisation)

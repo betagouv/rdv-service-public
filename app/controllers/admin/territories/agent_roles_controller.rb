@@ -2,7 +2,11 @@ class Admin::Territories::AgentRolesController < Admin::Territories::BaseControl
   def update
     agent_role = AgentRole.find(params[:id])
     authorize(agent_role, policy_class: Agent::AgentRolePolicy)
-    if agent_role.update(agent_role_params)
+    # `agent_role_params` permet de changer `organisation_id`, mais `AgentRole#organisation_cannot_change`
+    # bloque déjà toute modification de ce champ sur un enregistrement existant (voir agent_role_spec.rb).
+    # `agent_id`/`access_level` ne sont pas utilisés par `territorial_admin_or_can_invite_agents?`, donc
+    # une ré-authorization après coup ne changerait pas le verdict : pas besoin de la faire ici.
+    if agent_role.update(agent_role_params) # rubocop:disable RdvServicePublic/PunditAuthorizeStaleAfterMutation
       flash[:success] = "Les permissions de l'agent ont été mises à jour"
     else
       flash[:error] = agent_role.errors.full_messages.join(", ")
