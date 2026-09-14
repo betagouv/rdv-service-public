@@ -16,10 +16,10 @@ class User::RdvPolicy < ApplicationPolicy
   def show?
     record.motif.visible? &&
       rdv_belongs_to_user_or_relatives? && (
-      (record.collectif? && record.bookable_by_everyone_or_bookable_by_invited_users?) ||
-      !current_user.signed_in_with_restricted_auth_token? ||
-      current_user.signed_in_for_rdv?(record)
-    )
+        (record.collectif? && record.bookable_by_everyone_or_bookable_by_invited_users?) ||
+        !current_user.signed_in_with_restricted_auth_token? ||
+        current_user.signed_in_for_rdv?(record)
+      )
   end
 
   def cancel?
@@ -38,6 +38,7 @@ class User::RdvPolicy < ApplicationPolicy
   end
 
   alias ics? show?
+  alias visio? show?
   alias creneaux? edit?
   alias update? edit?
 
