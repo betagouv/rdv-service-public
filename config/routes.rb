@@ -163,23 +163,28 @@ Rails.application.routes.draw do
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end
+
       resources :rdvs, only: %i[show] do
         member do
           get :visio
         end
       end
+
       resources :rdv_plans, only: %i[show] do
         member do
+          get :edit_motif
+          patch :update_motif
+
           patch :update_agent
 
           get :edit_starts_at
           patch :update_starts_at
 
-          get :edit_modalites
-          patch :update_modalites
+          get :edit_starts_at_and_duration
+          patch :update_starts_at_and_duration
 
-          get :edit_motif
-          patch :update_motif
+          get :edit_lieu
+          patch :update_lieu
 
           get :edit_user
           post :create_rdv
