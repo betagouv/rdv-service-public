@@ -7,11 +7,18 @@ class Agent::RdvInvitationPolicy < ApplicationPolicy
   end
 
   alias new? create?
-  alias show? create?
+
+  def show?
+    can_show_user? && can_show_motif?
+  end
 
   class Scope < ApplicationPolicy::Scope
+    alias current_agent pundit_user
+
     def resolve
-      scope.where(inviting_agent: pundit_user)
+      scope.joins(motif: :organisation).where(motifs: { organisation: current_agent.basic_orgs, service: (current_agent.services + [nil]) })
+        .or(scope.where(motifs: { organisation: current_agent.admin_orgs }))
+        .or(scope.where(motifs: { organisation: current_agent.agent_accueil_orgs }))
     end
   end
 
