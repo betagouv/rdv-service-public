@@ -12,8 +12,7 @@ module SuperAdmins
 
     helper all_helpers_from_path "app/helpers"
 
-    if ENV["ADMIN_BASIC_AUTH_PASSWORD"].present?
-      # don't set this env var in prod!
+    if ENV["ADMIN_BASIC_AUTH_PASSWORD"].present? # garde-fou au boot dans config/initializers/admin_basic_auth_password.rb
       http_basic_authenticate_with name: "rdv-solidarites", password: ENV["ADMIN_BASIC_AUTH_PASSWORD"]
     else
       before_action :authenticate_super_admin!
