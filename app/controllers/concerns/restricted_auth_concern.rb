@@ -82,7 +82,12 @@ module RestrictedAuthConcern
   def sign_in_with_restricted_auth
     auth_state = RestrictedAuthSessionState.new(session)
 
-    return unless auth_state.authenticated?
+    unless auth_state.authenticated?
+      # Si l'usager n'est pas authentifié, on supprime les paramètres de l'invitation RDV Insertion
+      # qu'il pourrait avoir gardé en session pour éviter qu'il puisse accéder au parcours de prise de rdv avec invitation.
+      session.delete(:rdv_insertion_invitation)
+      return
+    end
 
     user = auth_state.user
 
