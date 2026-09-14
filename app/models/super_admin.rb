@@ -17,7 +17,10 @@ class SuperAdmin < ApplicationRecord
 
   devise :authenticatable, :timeoutable
 
-  def timeout_in = 30.minutes
+  # 2 niveaux de timeouts d'inactivité redondants (le plus petit prend le pas) :
+  # - 4 heures côté backend devise pour ce modèle via timeoutable et timeout_in
+  # - 8 heures côté expiration cookie (cf config/application.rb)
+  def timeout_in = 4.hours
 
   def name_for_paper_trail(impersonated: nil)
     return "[Admin] #{full_name}" if impersonated.blank?
