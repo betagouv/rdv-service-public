@@ -29,7 +29,6 @@ class RedirectController < ApplicationController
       preselected_motif: rdv.motif&.public_link_id,
       public_link_organisation_id: rdv.organisation_id,
       lieu_id: rdv.lieu_id,
-      address: rdv.address,
       invitation_token: token
     )
   end
