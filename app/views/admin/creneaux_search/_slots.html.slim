@@ -4,7 +4,7 @@
   - if form.date_range.begin > Time.zone.today
     - previous_from_date = form.date_range.begin - 7.days
     .col-auto
-      = link_to "Créneaux précédents", admin_organisation_creneaux_search_selection_creneaux_path(search_params.merge(from_date: previous_from_date)), class: "fr-btn fr-icon-arrow-left-s-line"
+      = link_to "Créneaux précédents", admin_organisation_creneaux_search_selection_creneaux_path(search_params.merge(from_date: previous_from_date)), class: "fr-btn fr-icon-arrow-left-s-line fr-mt-16w"
   .col
     .row.no-gutters.creneaux-row
       - form.date_range.each do |date|
@@ -44,4 +44,4 @@
                   = icon("fr-icon-arrow-right-s-line")
 
   .col-auto
-    = link_to "Créneaux suivants", admin_organisation_creneaux_search_selection_creneaux_path(search_params.merge(from_date: form.date_range.end + 1.day)), class: "fr-btn fr-icon-arrow-right-s-line"
+    = link_to "Créneaux suivants", admin_organisation_creneaux_search_selection_creneaux_path(search_params.merge(from_date: form.date_range.end + 1.day)), class: "fr-btn fr-icon-arrow-right-s-line fr-mt-16w"
