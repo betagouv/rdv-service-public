@@ -2,7 +2,7 @@
   | Invitation à prendre rendez-vous
 
 .fr-grid-row
-  .fr-col-md-10
+  .fr-col-md-12
     .card.card-body
       = dsfr_svg "artwork/pictograms/digital/mail-send", class: "fr-artwork--green-emeraude fr-mb-2w"
       p
@@ -17,4 +17,3 @@
       p.fr-text-mention--grey.fr-text--sm Invitation envoyée par #{@rdv_invitation.inviting_agent.full_name}  #{human_date_format(@rdv_invitation.created_at)}.
 
       = link_to "Retour au profil de #{@rdv_invitation.user.full_name}", admin_organisation_user_path(current_organisation, @rdv_invitation.user), class: "fr-btn fr-btn--secondary"
-
