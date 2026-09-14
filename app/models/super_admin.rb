@@ -15,7 +15,9 @@ class SuperAdmin < ApplicationRecord
   validates :last_name, presence: true
   validates :email, presence: true
 
-  devise :authenticatable
+  devise :authenticatable, :timeoutable
+
+  def timeout_in = 30.minutes
 
   def name_for_paper_trail(impersonated: nil)
     return "[Admin] #{full_name}" if impersonated.blank?
