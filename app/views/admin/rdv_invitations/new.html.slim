@@ -1,7 +1,6 @@
 - content_for :title do
   | Invitation à prendre rendez-vous
 
-
 .fr-grid-row.justify-content-center
   .fr-col-md-12.col-lg-8
     .card.card-body.fr-p-2w
@@ -42,4 +41,3 @@
               = link_to("Retour aux créneaux", admin_organisation_creneaux_search_selection_creneaux_path(current_organisation, lieux_ids: @rdv_invitation.lieu_id, motif_id: @rdv_invitation.motif_id), dsfr_return_btn_options)
               - if @rdv_invitation.user.present?
                 = f.submit "Envoyer l'invitation", class: "fr-btn"
-
