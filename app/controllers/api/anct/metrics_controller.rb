@@ -25,9 +25,12 @@ class Api::ANCT::MetricsController < ActionController::Base # rubocop:disable Ra
 
   def authorize_via_shared_secret
     valid_secret_key = ENV["CARTO_ANCT_SHARED_SECRET"].presence
-    if !valid_secret_key || request.headers["Authorization"] != "Bearer #{valid_secret_key}"
-      render status: :unauthorized, json: { error: "Authentification invalide" }
-    end
+    authorized = valid_secret_key && ActiveSupport::SecurityUtils.secure_compare(
+      request.headers["Authorization"] || "",
+      "Bearer #{valid_secret_key}"
+    )
+
+    render status: :unauthorized, json: { error: "Authentification invalide" } unless authorized
   end
 
   def render_json_error(exception)
