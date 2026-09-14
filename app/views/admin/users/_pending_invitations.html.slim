@@ -11,5 +11,7 @@
         .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
           p.fr-text-mention--grey.fr-mb-0.fr-text--xs
             = location_type_icon(rdv_invitation.motif.location_type, class: "fr-mr-1w fr-icon--sm")
+            = rdv_invitation.motif.human_attribute_value(:location_type)
+            = " · "
             | Envoyée le #{human_date_format(rdv_invitation.created_at)}
           = icon("fr-icon-arrow-right-line", class: "rdv-color-text-action-high-blue-france")
