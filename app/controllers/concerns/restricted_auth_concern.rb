@@ -105,7 +105,7 @@ module RestrictedAuthConcern
   end
 
   def delete_invitation_from_session_and_redirect(error_msg)
-    RestrictedAuthSessionState.clean_session!(session)
+    RestrictedAuthConcern.clean_session(session)
     redirect_with_error(error_msg)
   end
 
