@@ -21,6 +21,8 @@ class Agents::RdvPlansController < AgentAuthController
     @rdv_plan.assign_attributes(rdv_plan_params)
     @rdv_plan.duration_in_minutes = @rdv_plan.motif.default_duration_in_min
 
+    authorize(@rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy)
+
     if @rdv_plan.save
       redirect_to edit_starts_at_agents_rdv_plan_path(@rdv_plan)
     else
