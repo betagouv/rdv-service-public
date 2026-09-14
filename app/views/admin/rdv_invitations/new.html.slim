@@ -4,7 +4,7 @@
 
 .fr-grid-row.justify-content-center
   .fr-col-md-12.col-lg-8
-    .card.card-body
+    .card.card-body.fr-p-2w
       = form_for [:admin, current_organisation, @rdv_invitation], builder: Dsfr::FormBuilder do |f|
         = f.hidden_field :user_id
         = f.hidden_field :motif_id
@@ -36,9 +36,10 @@
               | à <b>#{@rdv_invitation.lieu.name}</b>
             | .
 
-        - if @rdv_invitation.user.present?
-          = f.submit "Envoyer l'invitation", class: "fr-btn"
-
         .fr-grid-row
-          = link_to("Retour aux créneaux", admin_organisation_creneaux_search_selection_creneaux_path(current_organisation, lieux_ids: @rdv_invitation.lieu_id, motif_id: @rdv_invitation.motif_id), class: "fr-btn fr-btn--tertiary-no-outline fr-btn--icon-left fr-icon-arrow-left-line fr-mt-2w")
+          .fr-col-12.fr-mt-2w
+            .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+              = link_to("Retour aux créneaux", admin_organisation_creneaux_search_selection_creneaux_path(current_organisation, lieux_ids: @rdv_invitation.lieu_id, motif_id: @rdv_invitation.motif_id), dsfr_return_btn_options)
+              - if @rdv_invitation.user.present?
+                = f.submit "Envoyer l'invitation", class: "fr-btn"
 
