@@ -16,4 +16,4 @@
 
       p.fr-text-mention--grey.fr-text--sm Invitation envoyée par #{@rdv_invitation.inviting_agent.full_name}  #{human_date_format(@rdv_invitation.created_at)}.
 
-      = link_to "Retour au profil de #{@rdv_invitation.user.full_name}", admin_organisation_user_path(current_organisation, @rdv_invitation.user), class: "fr-btn fr-btn--secondary"
+= link_to "Retour au profil de #{@rdv_invitation.user.full_name}", admin_organisation_user_path(current_organisation, @rdv_invitation.user), class: "fr-btn fr-btn--secondary fr-icon-arrow-left-line fr-btn--icon-left"
