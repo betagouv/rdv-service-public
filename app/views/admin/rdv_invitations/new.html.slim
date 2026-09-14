@@ -1,6 +1,7 @@
 - content_for :title do
   | Invitation à prendre rendez-vous
 
+
 .fr-grid-row.justify-content-center
   .fr-col-md-12.col-lg-8
     .card.card-body
@@ -36,3 +37,7 @@
 
         - if @rdv_invitation.user.present?
           = f.submit "Envoyer l'invitation", class: "fr-btn"
+
+        .fr-grid-row
+          = link_to("Retour aux créneaux", admin_organisation_creneaux_search_selection_creneaux_path(current_organisation, lieux_ids: @rdv_invitation.lieu_id, motif_id: @rdv_invitation.motif_id), class: "fr-btn fr-btn--tertiary-no-outline fr-btn--icon-left fr-icon-arrow-left-line fr-mt-2w")
+
