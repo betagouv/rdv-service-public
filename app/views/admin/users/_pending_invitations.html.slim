@@ -1,0 +1,9 @@
+/# locals: (user:)
+- rdv_invitations = Agent::RdvInvitationPolicy::Scope.apply(current_agent, user.rdv_invitations).joins(:motif).where(motifs: { organisation_id: current_organisation.id }).limit(10)
+- if rdv_invitations.none?
+  i.fr-text-mention--grey Pas d'invitations à prendre rendez-vous en attente
+- else
+  ul.fr-raw-list
+    - rdv_invitations.each do |rdv_invitation|
+      li
+        = link_to rdv_invitation.motif.name, admin_organisation_rdv_invitation_path(current_organisation, rdv_invitation)

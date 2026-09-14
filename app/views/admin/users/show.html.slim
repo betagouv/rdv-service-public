@@ -102,6 +102,11 @@ ruby:
         .card-header Rendez-vous en cours (+/- 1 heure)
         = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: ongoing_rdvs
 
+    - if current_agent.feature_enabled?("rdv_invitations")
+      .card
+        .card-header Invitations en attente
+        .card-body
+          = render "admin/users/pending_invitations", user: @user
     .card
       .card-header Prochains rendez-vous
       - future_rdvs = policy_scope(@user.rdvs_future_without_ongoing(current_organisation), policy_scope_class: Agent::RdvPolicy::Scope).order(starts_at: :asc).limit(10)
