@@ -82,7 +82,7 @@ Rails.application.routes.draw do
     # pour éviter les 404 lors d’un refresh après un premier post qui a rendu :new
     get :rdv_wizard_step, to: redirect(path: "/users/rdv_wizard_step/new")
     post :rdvs, to: redirect(status: 303) { |_params, request| "/users/rdv_wizard_step/new?#{request.query_string}" } # TODO: supprimer après le 03/08/2026
-    # show et creneaux sont rate limités par IP quand invitation_token est présent (voir config/initializers/rack_attack.rb)
+    # show, creneaux et visio sont rate limités par IP quand invitation_token est présent (voir config/initializers/rack_attack.rb)
     resources :rdvs, only: %i[index show edit update] do
       resources :participations, only: %i[index create]
       put "participations/cancel", to: "participations#cancel"
@@ -90,6 +90,7 @@ Rails.application.routes.draw do
         get :creneaux
         get :ics
         put :cancel
+        get :visio
       end
     end
 
@@ -122,6 +123,9 @@ Rails.application.routes.draw do
   authenticate :user do
     get "/users/informations", to: "users/users#edit"
     patch "users/informations", to: "users/users#update"
+    resource :email_change_request, only: %i[new create], controller: "users/email_change_requests", path: "users/email_change"
+    resource :email_change_confirmation, only: %i[new create], controller: "users/email_change_confirmations", path: "users/email_change/confirmation"
+    get "users/email_change/confirmation", to: "users/email_change_confirmations#new"
     resources :relatives, except: %i[index show], controller: "users/relatives"
   end
 
@@ -149,15 +153,22 @@ Rails.application.routes.draw do
       resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code" do
         post :resend, on: :collection
       end
+      resource :pro_connect_step_up, only: %i[new create], controller: "pro_connect_step_up"
       resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
         resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync do
           post :calendar_selection
         end
+        resources :logs, only: %i[index], controller: :external_calendar_sync_executions
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end
-      resources :rdvs, only: %i[show]
+
+      resources :rdvs, only: %i[show] do
+        member do
+          get :visio
+        end
+      end
 
       resources :rdv_plans, only: %i[show] do
         member do

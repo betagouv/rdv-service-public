@@ -189,7 +189,7 @@ class ProConnectController < ApplicationController
         ERROR
         redirect_to new_agent_session_path and return
       end
-    elsif agent.sensitive_account? && !callback_client.went_through_2fa?
+    elsif agent.sensitive_account? && !callback_client.went_through_2fa? && !AgentTrustedDevice.trusted_by_cookie?(agent, cookies)
       if IDP_PRO_CONNECT_FORCE_2FA_ENABLED.include?(callback_client.user_idp_id)
         require_2fa_for_sensitive_agent(callback_client) and return
       else
@@ -220,7 +220,11 @@ class ProConnectController < ApplicationController
     agent.skip_reconfirmation!
     agent.save!
 
+    remember_device = session.delete(Agents::ProConnectStepUpController::SESSION_REMEMBER_DEVICE_KEY)
+    session.delete(Agents::ProConnectStepUpController::SESSION_LOGIN_HINT_KEY)
+
     bypass_sign_in agent, scope: :agent
+    AgentTrustedDevice.remember_by_cookie!(agent, cookies) if remember_device
     session[:pro_connect_id_token] = callback_client.id_token_for_logout
     session[:pro_connect_access_token] = callback_client.access_token
 
@@ -244,17 +248,8 @@ class ProConnectController < ApplicationController
   end
 
   def require_2fa_for_sensitive_agent(callback_client)
-    auth_client = ProConnectOpenIdClient::Auth.new(
-      login_hint: callback_client.user_email,
-      client_id: current_domain.pro_connect_client_id,
-      client_secret: current_domain.pro_connect_client_secret
-    )
-    session[:pro_connect] = {
-      state: auth_client.state,
-      nonce: auth_client.nonce,
-      connection_for: "agent",
-    }
-    redirect_to auth_client.redirect_url(pro_connect_callback_url, force_2fa: true), allow_other_host: true
+    session[Agents::ProConnectStepUpController::SESSION_LOGIN_HINT_KEY] = callback_client.user_email
+    redirect_to new_agents_pro_connect_step_up_path
   end
 
   def generic_error_message

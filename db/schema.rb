@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_02_074544) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_08_153024) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -102,6 +102,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_02_074544) do
     t.bigint "territory_id", null: false
     t.index ["agent_id", "territory_id"], name: "index_agent_territorial_roles_unique_agent_territory", unique: true
     t.index ["territory_id"], name: "index_agent_territorial_roles_on_territory_id"
+  end
+
+  create_table "agent_trusted_devices", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.string "token_digest", null: false
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_agent_trusted_devices_on_agent_id"
+    t.index ["expires_at"], name: "index_agent_trusted_devices_on_expires_at"
+    t.index ["token_digest"], name: "index_agent_trusted_devices_on_token_digest", unique: true
   end
 
   create_table "agents", force: :cascade do |t|
@@ -259,6 +270,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_02_074544) do
     t.text "raw_ical"
     t.index ["agent_id", "starts_at"], name: "index_external_calendar_events_on_agent_id_and_starts_at"
     t.index ["agent_id", "url"], name: "index_external_calendar_events_on_agent_id_and_url", unique: true
+  end
+
+  create_table "external_calendar_sync_execution_logs", force: :cascade do |t|
+    t.bigint "external_calendar_sync_execution_id", null: false
+    t.text "message", null: false
+    t.datetime "emitted_at", null: false
+    t.index ["external_calendar_sync_execution_id"], name: "idx_on_external_calendar_sync_execution_id_59fda23095"
+  end
+
+  create_table "external_calendar_sync_executions", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.string "calendar_url", null: false
+    t.boolean "successful"
+    t.datetime "started_at", null: false
+    t.datetime "ended_at"
+    t.index ["agent_id", "calendar_url"], name: "idx_on_cal_sync_executions_agent_id_calendar_url"
   end
 
   create_table "external_references", force: :cascade do |t|
@@ -962,6 +989,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_02_074544) do
   add_foreign_key "agent_territorial_access_rights", "territories"
   add_foreign_key "agent_territorial_roles", "agents"
   add_foreign_key "agent_territorial_roles", "territories"
+  add_foreign_key "agent_trusted_devices", "agents"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
   add_foreign_key "annotations", "territories"
@@ -971,6 +999,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_02_074544) do
   add_foreign_key "export_file_blobs", "exports"
   add_foreign_key "exports", "agents"
   add_foreign_key "external_calendar_events", "agents"
+  add_foreign_key "external_calendar_sync_execution_logs", "external_calendar_sync_executions"
+  add_foreign_key "external_calendar_sync_executions", "agents"
   add_foreign_key "external_references", "oauth_applications"
   add_foreign_key "external_references", "territories"
   add_foreign_key "file_attentes", "rdvs"

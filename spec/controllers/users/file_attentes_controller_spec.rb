@@ -58,6 +58,17 @@ RSpec.describe Users::FileAttentesController, type: :controller do
       end
     end
 
+    context "quand le Referer pointe vers un host externe" do
+      subject { post :create_or_delete, params: { file_attente: { rdv_id: rdv.id, user_id: user.id } } }
+
+      before { request.env["HTTP_REFERER"] = "https://exemple-externe.com/page" }
+
+      it "ne lève pas d'erreur et redirige vers la liste des rdvs" do
+        expect { subject }.to change(FileAttente, :count).from(0).to(1)
+        expect(response).to redirect_to(users_rdvs_path)
+      end
+    end
+
     context "when file attente id is given" do
       subject { post :create_or_delete, params: { file_attente: { id: file_attente.id } } }
 

@@ -7,7 +7,7 @@
         .card-body
           h1.card-title = t(".my_informations")
           = form_for @user_form, as: :user, url: users_informations_path, method: "patch", builder: Dsfr::FormBuilder do |f|
-            = render "form_fields", f: f
+            = render "form_fields", f: f, display_change_email_link: true
             .rdv-text-align-right
               = f.submit "Enregistrer", class: "fr-btn"
     .col-md-6

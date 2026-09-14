@@ -24,8 +24,6 @@ class CronJob < ApplicationJob
   end
 
   class FileAttenteJob < CronJob
-    include MonitorConcern
-
     queue_as :latency_30s
 
     def perform

@@ -5,7 +5,7 @@ class LoginCode < ApplicationRecord
   scope :not_used, -> {  where(used_at: nil) }
   scope :usable, -> { not_expired.not_used }
 
-  validates :email, presence: true
+  validates :email, presence: true, format: { with: Devise.email_regexp }
 
   before_create :set_random_code
 
