@@ -20,7 +20,7 @@ class Agents::RdvPlansController < AgentAuthController
 
     @rdv_plan.assign_attributes(rdv_plan_params)
     @rdv_plan.duration_in_minutes = @rdv_plan.motif.default_duration_in_min
-    @rdv_plan.lieu_id = nil # On reset le lieu au cas où on passe à un motif sans lieu
+    @rdv_plan.lieu_id = nil # Pour éviter de garder un lieu si on passe à un motif qui n'est pas sur place
 
     authorize(@rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy)
 
