@@ -338,7 +338,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :rdv_invitations, only: %i[new create show]
+      resources :rdv_invitations, only: %i[new create show] do
+        member do
+          get :show_confirmation
+        end
+      end
 
       scope module: "organisations" do
         resource :online_booking, only: %i[show edit update] do
