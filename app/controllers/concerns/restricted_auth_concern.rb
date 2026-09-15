@@ -51,23 +51,24 @@ module RestrictedAuthConcern
     return redirect_with_error(t("devise.invitations.current_user_mismatch")) if current_user_mismatch?(user)
 
     if invited_user
-      session[:rdv_insertion_invitation] = current_url_params.except(:invitation_token)
-
-      RestrictedAuthSessionState.authenticate!(session, user_id: invited_user.id)
-
-      redirect_to current_path_without_token
+      start_rdv_insertion_invitation(invited_user)
     else
-      # L'usager a utilisé un lien avec un token envoyé dans une notification
-      # On fait vérifier le début du nom
-      RestrictedAuthSessionState.prepare_for_name_verification!(
-        session,
-        user_id: user.id,
-        rdv_id: participation.rdv_id
-      )
-      session[:return_to_after_verification] = current_path_without_token
-
-      redirect_to new_users_user_name_initials_verification_path
+      start_name_verification(user, participation.rdv_id)
     end
+  end
+
+  # Invitation RDV Insertion : on connecte l'usager et on garde les params d'invitation en session
+  def start_rdv_insertion_invitation(invited_user)
+    session[:rdv_insertion_invitation] = current_url_params.except(:invitation_token)
+    RestrictedAuthSessionState.authenticate!(session, user_id: invited_user.id)
+    redirect_to current_path_without_token
+  end
+
+  # L'usager a utilisé un lien avec un token envoyé dans une notification : on fait vérifier le début du nom
+  def start_name_verification(user, rdv_id)
+    RestrictedAuthSessionState.prepare_for_name_verification!(session, user_id: user.id, rdv_id: rdv_id)
+    session[:return_to_after_verification] = current_path_without_token
+    redirect_to new_users_user_name_initials_verification_path
   end
 
   def current_path_without_token
@@ -82,7 +83,12 @@ module RestrictedAuthConcern
   def sign_in_with_restricted_auth
     auth_state = RestrictedAuthSessionState.new(session)
 
-    return unless auth_state.authenticated?
+    unless auth_state.authenticated?
+      # Si l'usager n'est pas authentifié, on supprime les paramètres de l'invitation RDV Insertion
+      # qu'il pourrait avoir gardé en session pour éviter qu'il puisse accéder au parcours de prise de rdv avec invitation.
+      session.delete(:rdv_insertion_invitation)
+      return
+    end
 
     user = auth_state.user
 
@@ -100,7 +106,7 @@ module RestrictedAuthConcern
   end
 
   def delete_invitation_from_session_and_redirect(error_msg)
-    RestrictedAuthSessionState.clean_session!(session)
+    RestrictedAuthConcern.clean_session(session)
     redirect_with_error(error_msg)
   end
 
