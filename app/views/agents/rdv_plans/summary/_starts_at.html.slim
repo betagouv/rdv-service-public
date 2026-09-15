@@ -5,7 +5,7 @@ br
     = icon("fr-icon-mail-send-line", class: "fr-mr-1w")
     | Un email va être envoyé à #{rdv_plan.user.full_name} pour lui permettre de choisir son créneau.
 
-  = link_to "modifier", edit_starts_at_agents_rdv_plan_path(rdv_plan), class: "fr-ml-2w fr-btn fr-btn--tertiary-no-outline fr-btn--sm"
+  = link_to "modifier", edit_rdv_invitation_agents_rdv_plan_path(rdv_plan), class: "fr-ml-2w fr-btn fr-btn--tertiary-no-outline fr-btn--sm"
 - else
   span.fr-text-mention--grey
     = icon("fr-icon-calendar-fill", class: "fr-mr-1w")
