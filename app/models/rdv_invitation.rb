@@ -10,6 +10,8 @@ class RdvInvitation < ApplicationRecord
   belongs_to :lieu, optional: true
   belongs_to :rdv, optional: true
 
+  has_one :rdv_plan
+
   # Delegates
   delegate :organisation, to: :motif
 
@@ -48,7 +50,8 @@ class RdvInvitation < ApplicationRecord
 
     RdvInvitation.transaction do
       rdv = Rdv.create(
-        motif:, organisation:, lieu:, starts_at:,
+        motif:, organisation:, starts_at:,
+        lieu: creneau.lieu,
         ends_at: starts_at + motif.default_duration_in_min.minutes,
         agents: [creneau.agent],
         users: [user],
@@ -56,6 +59,10 @@ class RdvInvitation < ApplicationRecord
       )
 
       if rdv.persisted?
+        if rdv_plan.present?
+          rdv_plan.update(rdv_id: rdv.id)
+        end
+
         update(rdv: rdv)
         Notifiers::RdvCreated.perform_with(rdv, user)
       end

@@ -24,8 +24,16 @@ class Agents::RdvPlansController < AgentAuthController
 
     authorize(@rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy)
 
+    if current_agent.feature_enabled?("rdv_invitations") && @rdv_plan.motif.plage_ouvertures.not_expired.any?
+      @rdv_plan.assign_attributes(by_invitation: true, rdv_agent: nil)
+    end
+
     if @rdv_plan.save
-      redirect_to edit_starts_at_agents_rdv_plan_path(@rdv_plan)
+      if @rdv_plan.by_invitation?
+        redirect_to edit_rdv_invitation_agents_rdv_plan_path(@rdv_plan)
+      else
+        redirect_to edit_starts_at_agents_rdv_plan_path(@rdv_plan)
+      end
     else
       render "edit_motif"
     end
@@ -59,6 +67,8 @@ class Agents::RdvPlansController < AgentAuthController
       redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
     end
   end
+
+  def edit_rdv_invitation; end
 
   def edit_starts_at_and_duration; end
 
@@ -107,13 +117,18 @@ class Agents::RdvPlansController < AgentAuthController
                                  { send_lifecycle_notifications: false, send_reminder_notification: false }
                                end
 
-    rdv = @rdv_plan.create_rdv(user_attributes:, participation_attributes:)
+    result = @rdv_plan.create_rdv_or_send_invitation(user_attributes:, participation_attributes:)
 
-    if rdv.valid?
-      flash[:success] = "Le rendez-vous a été créé."
-      redirect_to rdv_agents_rdv_plan_path(@rdv_plan)
+    if result.valid?
+      if result.is_a?(Rdv)
+        flash[:success] = "Le rendez-vous a été créé."
+        redirect_to rdv_agents_rdv_plan_path(@rdv_plan)
+      else
+        flash[:success] = "L'invitation à prendre rendez-vous a été envoyée à #{@rdv_plan.user.email}."
+        redirect_to rdv_invitation_agents_rdv_plan_path(@rdv_plan)
+      end
     else
-      flash[:error] = rdv.errors.full_messages.to_sentence
+      flash[:error] = result.errors.full_messages.to_sentence
       redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
     end
   end
@@ -122,11 +137,13 @@ class Agents::RdvPlansController < AgentAuthController
     @rdv = @rdv_plan.rdv
   end
 
+  def rdv_invitation; end
+
   private
 
   def available_motifs(rdv_plan)
-    rdv_plan.rdv_agent.organisations.map do |organisation|
-      Motif.individuel.available_motifs_for_organisation_and_agent(organisation, rdv_plan.rdv_agent)
+    rdv_plan.planning_agent.organisations.map do |organisation|
+      Motif.individuel.available_motifs_for_organisation_and_agent(organisation, rdv_plan.planning_agent)
     end.reduce do |motifs, additional_motifs|
       motifs.or(additional_motifs)
     end
