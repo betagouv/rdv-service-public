@@ -21,9 +21,24 @@ class RdvPlan < ApplicationRecord
 
   validate :return_url_is_authorized
 
-  def create_rdv(user_attributes:, participation_attributes:)
-    update_user_before_creating_rdv(user_attributes:)
+  def create_rdv_or_send_invitation(user_attributes:, participation_attributes: nil)
+    user.update!(user_attributes)
 
+    if by_invitation?
+      invitation = RdvInvitation.create(motif:, lieu:, user:, inviting_agent: planning_agent)
+      if invitation.valid?
+        Users::RdvInvitationMailer.with(rdv_invitation: invitation).new_invitation.deliver_later
+      end
+
+      invitation
+    else
+      create_rdv(user_attributes:, participation_attributes:)
+    end
+  end
+
+  private
+
+  def create_rdv(user_attributes:, participation_attributes:)
     rdv = Rdv.create(
       agents: [rdv_agent],
       participations: [Participation.new(participation_attributes.merge(user_id: user.id))],
@@ -41,12 +56,6 @@ class RdvPlan < ApplicationRecord
     end
 
     rdv
-  end
-
-  private
-
-  def update_user_before_creating_rdv(user_attributes:)
-    user.update!(user_attributes)
   end
 
   def return_url_is_authorized
