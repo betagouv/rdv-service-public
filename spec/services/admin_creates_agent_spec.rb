@@ -25,7 +25,7 @@ RSpec.describe AdminCreatesAgent do
     end
   end
 
-  context "when inviting a new agent as admin of an organisation with a lot of RDVs" do
+  context "lors de l'invitation d'un nouvel agent en tant qu'admin d'une organisation avec beaucoup de RDVs" do
     before { stub_const("AgentSensitiveAccountCalculator::SENSITIVE_RDV_THRESHOLD", 2) }
 
     let(:organisation) { create(:organisation) }
