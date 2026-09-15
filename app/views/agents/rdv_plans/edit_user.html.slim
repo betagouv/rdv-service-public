@@ -16,7 +16,7 @@
       = f.fields_for :user, @rdv_plan.user do |ff|
         .fr-grid-row.fr-grid-row--gutters
           .fr-col-6
-            = ff.dsfr_email_field :email, autocomplete: "off", hint: ("Cet usager utilise cette adresse email pour se connecter." if @rdv_plan.user.already_logged_in?)
+            = ff.dsfr_email_field :email, autocomplete: "off", hint: ("Cet usager utilise cette adresse email pour se connecter." if @rdv_plan.user.already_logged_in?), required: @rdv_plan.by_invitation?
           .fr-col-6
             = ff.dsfr_phone_field :phone_number, as: :tel
       - if @rdv_plan.motif.visible_and_notified?
@@ -29,5 +29,8 @@
         | Les notifications ne sont pas envoyées pour ce motif de rendez-vous.
       = f.submit "Confirmer le rendez-vous", class: "fr-btn float-right fr-btn--lg"
 
-      - return_path =  @rdv_plan.motif.requires_lieu? ? edit_lieu_agents_rdv_plan_path(@rdv_plan) : edit_starts_at_agents_rdv_plan_path(@rdv_plan)
-      = link_to "Retour", return_path, class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
+      - if @rdv_plan.by_invitation?
+        = link_to "Retour", edit_starts_at_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
+      - else
+        - return_path =  @rdv_plan.motif.requires_lieu? ? edit_lieu_agents_rdv_plan_path(@rdv_plan) : edit_starts_at_agents_rdv_plan_path(@rdv_plan)
+        = link_to "Retour", return_path, class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"

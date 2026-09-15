@@ -48,7 +48,12 @@ class Agents::RdvPlansController < AgentAuthController
 
     agents = [current_agent] + other_agents
 
-    render locals: { event_sources:, agents: }
+    if current_agent.feature_enabled?("rdv_invitations") && @rdv_plan.motif.plage_ouvertures.not_expired.any?
+      @rdv_plan.update(by_invitation: true, rdv_agent: nil)
+      render
+    else
+      render locals: { event_sources:, agents: }
+    end
   end
 
   def update_starts_at
@@ -107,13 +112,18 @@ class Agents::RdvPlansController < AgentAuthController
                                  { send_lifecycle_notifications: false, send_reminder_notification: false }
                                end
 
-    rdv = @rdv_plan.create_rdv(user_attributes:, participation_attributes:)
+    result = @rdv_plan.create_rdv_or_send_invitation(user_attributes:, participation_attributes:)
 
-    if rdv.valid?
-      flash[:success] = "Le rendez-vous a été créé."
-      redirect_to rdv_agents_rdv_plan_path(@rdv_plan)
+    if result.valid?
+      if result.is_a?(Rdv)
+        flash[:success] = "Le rendez-vous a été créé."
+        redirect_to rdv_agents_rdv_plan_path(@rdv_plan)
+      else
+        flash[:success] = "L'invitation à prendre rendez-vous a été envoyée à #{@rdv_plan.user.email}."
+        redirect_to rdv_invitation_agents_rdv_plan_path(@rdv_plan)
+      end
     else
-      flash[:error] = rdv.errors.full_messages.to_sentence
+      flash[:error] = result.errors.full_messages.to_sentence
       redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
     end
   end
@@ -121,6 +131,8 @@ class Agents::RdvPlansController < AgentAuthController
   def rdv
     @rdv = @rdv_plan.rdv
   end
+
+  def rdv_invitation; end
 
   private
 

@@ -1,23 +1,17 @@
-/# locals: (event_sources:, agents:)
+/# locals: (event_sources: nil, agents: nil)
 
-.fr-row.fr-mb-16w[data-controller="rdv-plan" data-rdv-plan-id="#{@rdv_plan.id}"]
+.fr-row.fr-mb-16w
   .fr-col-12
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 2, step_title: "Créneau", next_step_title: "Usager"
 
     = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
     hr.fr-mt-2w
 
-    p Convenez d'un horaire avec #{@rdv_plan.user.full_name}, et cliquez dessus dans l'agenda de l'agent de votre choix
+    - if @rdv_plan.by_invitation?
+      span Un email sera envoyé à #{@rdv_plan.user.full_name} pour lui permettre de choisir un créneau.
+      = link_to "Continuer", edit_user_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-ml-2w"
+    - else
+      = render "agents/rdv_plans/agents_calendar", rdv_plan: @rdv_plan, event_sources:, agents:
 
-    .fr-mt-6w
-      h2.fr-h4.d-flex.rdv-align-items-baseline
-        | Agenda de
-        .fr-select-group.fr-col-4.fr-ml-1w
-          select.fr-select[data-action="change->rdv-plan#updateAgent"]
-            - agents.each do |agent|
-              - if agent == @rdv_plan.rdv_agent
-                option[value="#{agent.id}" selected] #{agent.full_name_or_email}
-              - else
-                option[value="#{agent.id}"] #{agent.full_name_or_email}
-      = render "agents/rdv_plans/calendar", event_sources:, rdv_plan: @rdv_plan, single_day: false
-      = link_to "Retour", edit_motif_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
+  .fr-col-12.fr-mt-2w
+    = link_to "Retour", edit_motif_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
