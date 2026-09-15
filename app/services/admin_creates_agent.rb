@@ -35,6 +35,10 @@ class AdminCreatesAgent
       end
     end
 
+    # Recalcul immédiat du statut "sensible" pour ne pas attendre le job quotidien
+    # CronJob::RefreshAgentsSensitiveAccountJob si le nouveau rôle rend l'agent sensible.
+    AgentSensitiveAccountCalculator.refresh_agent!(@agent) if @agent&.persisted?
+
     @agent
   end
 
