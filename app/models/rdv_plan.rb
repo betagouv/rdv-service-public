@@ -24,6 +24,8 @@ class RdvPlan < ApplicationRecord
   def create_rdv_or_send_invitation(user_attributes:, participation_attributes: nil)
     user.update!(user_attributes)
 
+    UserProfile.find_or_initialize_by(user_id: user.id, organisation_id: motif.organisation_id).save
+
     if by_invitation?
       invitation = build_invitation
       if invitation.save
