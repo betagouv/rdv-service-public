@@ -20,7 +20,7 @@ RSpec.describe AgentSensitiveAccountCalculator do
       expect(described_class.sensitive?(agent)).to be false
     end
 
-    it "ne tient pas compte du volume de RDVs des autres agents" do
+    it "ne tient pas compte du volume de RDVs d'une autre organisation" do
       organisation = create(:organisation)
       other_organisation = create(:organisation)
       agent = create(:agent, admin_role_in_organisations: [organisation])
@@ -28,6 +28,15 @@ RSpec.describe AgentSensitiveAccountCalculator do
       create_list(:rdv, 3, organisation: other_organisation)
 
       expect(described_class.sensitive?(agent)).to be false
+    end
+
+    it "tient compte du volume de RDVs de l'organisation même s'ils ne sont pas rattachés à cet agent" do
+      organisation = create(:organisation)
+      agent = create(:agent, admin_role_in_organisations: [organisation])
+      other_agent = create(:agent, basic_role_in_organisations: [organisation])
+      create_list(:rdv, 3, organisation: organisation, agents: [other_agent])
+
+      expect(described_class.sensitive?(agent)).to be true
     end
   end
 
