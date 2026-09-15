@@ -25,6 +25,26 @@ RSpec.describe AdminCreatesAgent do
     end
   end
 
+  context "when inviting a new agent as admin of an organisation with a lot of RDVs" do
+    before { stub_const("AgentSensitiveAccountCalculator::SENSITIVE_RDV_THRESHOLD", 2) }
+
+    let(:organisation) { create(:organisation) }
+    let(:admin) { create(:agent, admin_role_in_organisations: [organisation]) }
+
+    it "marque immédiatement le nouvel agent comme sensible, sans attendre le job quotidien" do
+      create_list(:rdv, 3, organisation: organisation)
+
+      agent = described_class.new(
+        agent_params: { email: "new-agent@example.com", service_ids: [] },
+        current_agent: admin,
+        organisations: [organisation],
+        access_level: :admin
+      ).call
+
+      expect(agent.reload.sensitive_account).to be true
+    end
+  end
+
   context "when the agent already has a pending invitation for this organisation" do
     subject(:service) do
       described_class.new(
