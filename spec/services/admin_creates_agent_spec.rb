@@ -43,6 +43,19 @@ RSpec.describe AdminCreatesAgent do
 
       expect(agent.reload.sensitive_account).to be true
     end
+
+    it "ne marque pas le nouvel agent comme sensible si l'organisation n'a pas beaucoup de RDVs" do
+      create_list(:rdv, 1, organisation: organisation)
+
+      agent = described_class.new(
+        agent_params: { email: "new-agent@example.com", service_ids: [] },
+        current_agent: admin,
+        organisations: [organisation],
+        access_level: :admin
+      ).call
+
+      expect(agent.reload.sensitive_account).to be false
+    end
   end
 
   context "when the agent already has a pending invitation for this organisation" do
