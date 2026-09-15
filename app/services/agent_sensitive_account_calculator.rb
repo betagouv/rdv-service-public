@@ -8,7 +8,7 @@ class AgentSensitiveAccountCalculator
 
   class << self
     def refresh_all!
-      sensitive_ids = (sensitive_agent_role_ids + sensitive_territory_admin_ids + rdv_insertion_admin_agent_ids).uniq
+      sensitive_ids = (sensitive_agent_roles.pluck(:agent_id) + sensitive_territory_admins.pluck(:agent_id) + rdv_insertion_admin_agents.pluck(:agent_id)).uniq
 
       # rubocop:disable Rails/SkipsModelValidations
       Agent.where(id: sensitive_ids).in_batches.update_all(sensitive_account: true)
@@ -22,9 +22,9 @@ class AgentSensitiveAccountCalculator
     end
 
     def sensitive?(agent)
-      sensitive_agent_role_ids(agent_id: agent.id).any? ||
-        sensitive_territory_admin_ids(agent_id: agent.id).any? ||
-        rdv_insertion_admin_agent_ids(agent_id: agent.id).any?
+      sensitive_agent_roles.exists?(agent_id: agent.id) ||
+        sensitive_territory_admins.exists?(agent_id: agent.id) ||
+        rdv_insertion_admin_agents.exists?(agent_id: agent.id)
     end
 
     private
@@ -42,19 +42,15 @@ class AgentSensitiveAccountCalculator
     # Un agent a accès à l'ensemble des RDVs d'une organisation (et non uniquement aux siens)
     # dès lors qu'il y a un rôle admin ou agent_accueil (cf. Agent::RdvPolicy::Scope). Le volume
     # est cumulé sur toutes les organisations où l'agent a un tel rôle.
-    def sensitive_agent_role_ids(agent_id: nil)
-      scope = AgentRole.where("access_level = 'admin' OR agent_accueil = true")
-      scope = scope.where(agent_id: agent_id) if agent_id
-      scope.joins(organisation: :rdvs)
+    def sensitive_agent_roles
+      AgentRole.where("access_level = 'admin' OR agent_accueil = true")
+        .joins(organisation: :rdvs)
         .group(:agent_id)
         .having("COUNT(rdvs.id) >= ?", SENSITIVE_RDV_THRESHOLD)
-        .pluck(:agent_id)
     end
 
-    def sensitive_territory_admin_ids(agent_id: nil)
-      scope = AgentTerritorialRole.where(territory_id: sensitive_territory_ids)
-      scope = scope.where(agent_id: agent_id) if agent_id
-      scope.pluck(:agent_id)
+    def sensitive_territory_admins
+      AgentTerritorialRole.where(territory_id: sensitive_territory_ids)
     end
 
     # Un admin de territoire a accès à l'ensemble des organisations de son territoire,
@@ -66,12 +62,11 @@ class AgentSensitiveAccountCalculator
         .pluck(:id)
     end
 
-    def rdv_insertion_admin_agent_ids(agent_id: nil)
-      scope = AgentRole.access_level_admin
+    def rdv_insertion_admin_agents
+      AgentRole.access_level_admin
         .joins(:organisation)
         .where(organisations: { verticale: :rdv_insertion })
-      scope = scope.where(agent_id: agent_id) if agent_id
-      scope.distinct.pluck(:agent_id)
+        .distinct
     end
   end
 end
