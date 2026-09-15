@@ -20,7 +20,7 @@ class Agent::RdvInvitationPolicy < ApplicationPolicy
   end
 
   def can_show_user?
-    Agent::UserPolicy.new(AgentOrganisationContext.new(current_agent, rdv_invitation.organisation), rdv_invitation.user).show?
+    rdv_invitation.user.blank? || Agent::UserPolicy.new(AgentOrganisationContext.new(current_agent, rdv_invitation.organisation), rdv_invitation.user).show?
   end
 
   def can_show_motif?
