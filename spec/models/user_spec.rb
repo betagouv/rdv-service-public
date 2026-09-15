@@ -22,6 +22,37 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe ".with_sso" do
+    let!(:user_normal)          { create(:user, email: "test@example.fr") }
+    let!(:user_france_connect)  { create(:user, email: "test@example.fr", franceconnect_openid_sub: "abc123") }
+    let!(:user_pro_connect)     { create(:user, email: "test@example.fr", pro_connect_openid_sub: "def456") }
+
+    it "ne retourne que les fiches connectées via SSO (FranceConnect ou ProConnect)" do
+      expect(described_class.with_sso).to contain_exactly(user_france_connect, user_pro_connect)
+    end
+
+    it "exclut les fiches non connectées via SSO" do
+      expect(described_class.with_sso).not_to include(user_normal)
+    end
+  end
+
+  describe "#sso_provider_name" do
+    it "retourne FranceConnect pour un compte connecté via FranceConnect" do
+      user = build(:user, franceconnect_openid_sub: "abc123")
+      expect(user.sso_provider_name).to eq("FranceConnect")
+    end
+
+    it "retourne ProConnect pour un compte connecté via ProConnect" do
+      user = build(:user, pro_connect_openid_sub: "def456")
+      expect(user.sso_provider_name).to eq("ProConnect")
+    end
+
+    it "retourne nil pour un compte non connecté via SSO" do
+      user = build(:user)
+      expect(user.sso_provider_name).to be_nil
+    end
+  end
+
   describe ".loginable_by_code_for_email_in_territory_or_without_territory" do
     let!(:territory_1)    { create(:territory) }
     let!(:territory_2)    { create(:territory) }
