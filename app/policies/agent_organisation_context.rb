@@ -3,6 +3,7 @@ class AgentOrganisationContext
   attr_reader :agent, :organisation, :agent_role
 
   delegate :can_access_others_planning?, to: :agent_role, allow_nil: true
+  delegate :organisation_ids, to: :agent
 
   def initialize(agent, organisation)
     @agent = agent
