@@ -8,8 +8,21 @@
     = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
     hr.fr-mt-2w
 
-    span Un email sera envoyé à #{@rdv_plan.user.full_name} pour lui permettre de choisir un créneau.
-    = link_to "Continuer", edit_user_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-ml-2w"
+    - creneaux_search = @rdv_plan.build_invitation.creneaux_search(Time.zone.now)
+    - creneaux_count = creneaux_search.creneaux.count
+
+    p Il y a #{creneaux_count} créneaux disponibles pour ce motif.
+
+    p Comment souhaitez-vous planifier ce rendez-vous ?
+
+    .card.card-body
+      p Permettre à #{@rdv_plan.user.full_name} de choisir un creneau (i) [ texte d'explication ]
+    .card.card-body
+      p Choisir un créneau directement à partir des disponibilités
+    .card.card-body
+      p Choisir un créneau dans l'agenda
+
+    p #{'[ ]'} enregistrer ma préférence
 
   .fr-col-12.fr-mt-2w
     = link_to "Retour", edit_motif_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
