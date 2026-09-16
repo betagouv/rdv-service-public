@@ -1,13 +1,4 @@
 class Api::V1::UserProfilesController < Api::V1::AgentAuthBaseController
-  def create
-    user_profile = UserProfile.new(user_profile_params)
-    authorize(user_profile, policy_class: Agent::UserProfilePolicy)
-    user_profile.save!
-    render_record user_profile
-  rescue ArgumentError => e
-    render_error :unprocessable_entity, { errors: {}, error_messages: [e] }
-  end
-
   def destroy
     user_profile = UserProfile.find_by!(user_profile_params)
     authorize(user_profile, policy_class: Agent::UserProfilePolicy)

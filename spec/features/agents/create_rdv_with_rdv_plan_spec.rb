@@ -39,6 +39,9 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
 
     # On agrandit la taille de la page pour que le calendrier soit visible en entier
     Capybara.page.current_window.resize_to(1280, 1300)
+    # On se place sur la semaine suivante pour être certain que le créneau cliqué est dans le futur,
+    # quels que soient le jour et l'heure d'exécution du test.
+    find('button[aria-label="Semaine suivante"]').click
     page.driver.with_playwright_page do |pw|
       slot = pw.locator('[data-time="08:30:00"]').last
       box = slot.bounding_box

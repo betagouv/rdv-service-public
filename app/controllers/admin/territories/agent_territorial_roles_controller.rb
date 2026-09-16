@@ -15,6 +15,11 @@ class Admin::Territories::AgentTerritorialRolesController < Admin::Territories::
     role = AgentTerritorialRole.find_or_initialize_by(territory: current_territory, agent: agent)
     authorize(role, policy_class: Agent::AgentTerritorialRolePolicy)
     role.save!
+
+    # Recalcul immédiat du statut "sensible" pour ne pas attendre le job quotidien
+    # CronJob::RefreshAgentsSensitiveAccountJob si le nouveau rôle territorial rend l'agent sensible.
+    AgentSensitiveAccountCalculator.refresh_agent!(agent)
+
     flash[:success] = "Les droits d'administrateur du #{current_territory} ont été ajoutés à #{agent.full_name}"
 
     redirect_to edit_admin_territory_agent_path(current_territory, agent)
