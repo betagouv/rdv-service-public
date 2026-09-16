@@ -19,7 +19,10 @@ tr id="agent_#{agent.id}"
       end
     - else
       span.mr-2= agent.reverse_full_name
-    = me_tag(agent)
+    - if current_agent == agent
+     .fr-badge.fr-badge--info.fr-badge--no-icon.fr-badge--sm.fr-ml-1w
+       | Vous
+
   td.word-break-all
     = agent.email
   - if @display_services
