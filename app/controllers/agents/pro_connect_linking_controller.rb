@@ -1,8 +1,6 @@
 class Agents::ProConnectLinkingController < AgentAuthController
   layout "application_agent_config"
 
-  before_action { @active_agent_preferences_menu_item = :pro_connect }
-
   def show
     @agent = current_agent
     authorize(@agent, policy_class: Agent::AgentPolicy)
