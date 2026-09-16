@@ -154,6 +154,7 @@ Rails.application.routes.draw do
         post :resend, on: :collection
       end
       resource :pro_connect_step_up, only: %i[new create], controller: "pro_connect_step_up"
+      resource :pro_connect_linking, only: %i[show create], controller: "pro_connect_linking"
       resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
         resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync do

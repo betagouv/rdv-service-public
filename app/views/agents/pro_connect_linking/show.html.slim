@@ -1,0 +1,19 @@
+- content_for :title, "Connexion avec ProConnect"
+
+p
+  | ProConnect va prochainement devenir l’unique moyen de connexion à votre compte agent sur #{current_domain.name}.
+
+ul
+  li Il renforce la sécurité de votre compte.
+  li Il vous permettra de continuer à utiliser la visioconférence : Webconf ferme le 29 octobre, et Visio nécessitera alors une connexion via ProConnect.
+
+p
+  |> En cliquant sur le bouton ci-dessous, vous allez être déconnecté·e puis invité·e à vous reconnecter avec ProConnect, avec l’adresse #{@agent.email}.
+  | Une fois connecté·e, ProConnect sera votre unique moyen de connexion à votre compte agent sur #{current_domain.name}.
+
+= form_tag agents_pro_connect_linking_path, method: :post, class: "fr-connect-group" do
+  button.fr-connect.fr-proconnect
+    span.fr-connect__login
+      |> S’identifier avec
+    span.fr-connect__brand
+      | ProConnect
