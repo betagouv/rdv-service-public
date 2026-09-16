@@ -8,7 +8,6 @@ RSpec.describe RdvInvitation do
   let(:lieu) { create(:lieu, organisation:) }
   let(:user) { create(:user, organisations: [organisation]) }
 
-  # TODO: checker les messages d'erreur
   describe "validations" do
     context "when the motif is collectif" do
       let(:motif) { create(:motif, :collectif, organisation:) }
@@ -75,6 +74,17 @@ RSpec.describe RdvInvitation do
             send_reminder_notification: false
           )
         end
+      end
+    end
+
+    context "when there is a rdv_plan for the invitation" do
+      let(:rdv_plan) { create(:rdv_plan, motif:, lieu:, user:) }
+
+      before { rdv_invitation.update!(rdv_plan:) }
+
+      it "updates the rdv on the rdv_plan" do
+        rdv_invitation.create_rdv_and_notify(starts_at: 1.week.from_now)
+        expect(rdv_plan.reload.rdv).to eq rdv_invitation.rdv
       end
     end
   end
