@@ -10,7 +10,7 @@ class RdvInvitation < ApplicationRecord
   belongs_to :lieu, optional: true
   belongs_to :rdv, optional: true
 
-  has_one :rdv_plan
+  has_one :rdv_plan, dependent: :destroy
 
   # Delegates
   delegate :organisation, to: :motif
