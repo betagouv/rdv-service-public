@@ -12,6 +12,8 @@ class RdvPlan < ApplicationRecord
   belongs_to :motif, optional: true
   belongs_to :lieu, optional: true
   belongs_to :rdv, optional: true
+  belongs_to :rdv_invitation, optional: true
+
   # Le `optional: true` sur les oauth_application est un peu anticipé : on pourra avoir ce cas quand des
   # rdv_plans seront créés en natif depuis l'application, probablement pour enregistrer un brouillon de rdv
   # TODO: il faudrait mettre à jour la spec swagger pour utiliser de l'oauth pour pouvoir enlever le `optional: true`
@@ -47,18 +49,16 @@ class RdvPlan < ApplicationRecord
 
   def create_rdv(participation_attributes:)
     rdv = Rdv.create(
+      motif:, lieu:, starts_at:,
       agents: [rdv_agent],
       participations: [Participation.new(participation_attributes.merge(user_id: user.id))],
-      motif: motif,
       organisation: organisation,
-      lieu: lieu,
-      starts_at: starts_at,
       created_by: planning_agent,
       ends_at: starts_at + (duration_in_minutes || motif.default_duration_in_min).minutes
     )
 
     if rdv.persisted?
-      update(rdv: rdv)
+      update(rdv:)
       Notifiers::RdvCreated.perform_with(rdv, planning_agent)
     end
 
