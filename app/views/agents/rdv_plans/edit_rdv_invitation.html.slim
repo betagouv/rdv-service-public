@@ -13,16 +13,8 @@
 
     p Il y a #{creneaux_count} créneaux disponibles pour ce motif.
 
-    p Comment souhaitez-vous planifier ce rendez-vous ?
+    p Nous allons envoyer un email à #{@rdv_plan.user.full_name} pour lui permettre de choisir un créneau.
 
-    .card.card-body
-      p Permettre à #{@rdv_plan.user.full_name} de choisir un creneau (i) [ texte d'explication ]
-    .card.card-body
-      p Choisir un créneau directement à partir des disponibilités
-    .card.card-body
-      p Choisir un créneau dans l'agenda
-
-    p #{'[ ]'} enregistrer ma préférence
-
-  .fr-col-12.fr-mt-2w
+  .fr-col-12.fr-col-md-8.fr-mt-2w.d-flex.rdv-justify-content-space-between
     = link_to "Retour", edit_motif_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
+    = link_to "Continuer", edit_user_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-ml-2w"
