@@ -10,6 +10,7 @@ module IcsPayloads
         description: "Voir sur #{domain.name} : #{Rails.application.routes.url_helpers.edit_admin_organisation_planning_absence_url(agent.organisations.first, id, host: domain.host_name)}",
         rrule: IcalFormatters::Rrule.from_recurrence(recurrence),
         domain: domain,
+        tzid: agent.organisations.first&.time_zone,
       }
 
       payload[:action] = action if action.present?

@@ -1,0 +1,17 @@
+/# locals: (user:)
+- rdv_invitations = Agent::RdvInvitationPolicy::Scope.apply(current_agent, user.rdv_invitations).joins(:motif).where(motifs: { organisation_id: current_organisation.id }, rdv_id: nil).order("created_at asc").limit(10)
+- if rdv_invitations.none?
+  i.fr-text-mention--grey Pas d'invitations à prendre rendez-vous en attente
+- else
+  ul.fr-raw-list
+    - rdv_invitations.each do |rdv_invitation|
+      li.card.card-body.fr-enlarge-link.fr-p-2w.fr-mb-1w
+        - invitation_name = rdv_invitation.lieu_id? ? "#{rdv_invitation.motif.name} à #{rdv_invitation.lieu.name}" : rdv_invitation.motif.name
+        = link_to invitation_name, admin_organisation_rdv_invitation_path(current_organisation, rdv_invitation)
+        .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+          p.fr-text-mention--grey.fr-mb-0.fr-text--xs
+            = location_type_icon(rdv_invitation.motif.location_type, class: "fr-mr-1w fr-icon--sm")
+            = rdv_invitation.motif.human_attribute_value(:location_type)
+            = " · "
+            | Envoyée le #{human_date_format(rdv_invitation.created_at)}
+          = icon("fr-icon-arrow-right-line", class: "rdv-color-text-action-high-blue-france")

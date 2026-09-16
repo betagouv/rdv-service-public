@@ -82,7 +82,7 @@ Rails.application.routes.draw do
     # pour éviter les 404 lors d’un refresh après un premier post qui a rendu :new
     get :rdv_wizard_step, to: redirect(path: "/users/rdv_wizard_step/new")
     post :rdvs, to: redirect(status: 303) { |_params, request| "/users/rdv_wizard_step/new?#{request.query_string}" } # TODO: supprimer après le 03/08/2026
-    # show et creneaux sont rate limités par IP quand invitation_token est présent (voir config/initializers/rack_attack.rb)
+    # show, creneaux et visio sont rate limités par IP quand invitation_token est présent (voir config/initializers/rack_attack.rb)
     resources :rdvs, only: %i[index show edit update] do
       resources :participations, only: %i[index create]
       put "participations/cancel", to: "participations#cancel"
@@ -90,6 +90,7 @@ Rails.application.routes.draw do
         get :creneaux
         get :ics
         put :cancel
+        get :visio
       end
     end
 
@@ -162,19 +163,28 @@ Rails.application.routes.draw do
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end
-      resources :rdvs, only: %i[show]
+
+      resources :rdvs, only: %i[show] do
+        member do
+          get :visio
+        end
+      end
+
       resources :rdv_plans, only: %i[show] do
         member do
+          get :edit_motif
+          patch :update_motif
+
           patch :update_agent
 
           get :edit_starts_at
           patch :update_starts_at
 
-          get :edit_modalites
-          patch :update_modalites
+          get :edit_starts_at_and_duration
+          patch :update_starts_at_and_duration
 
-          get :edit_motif
-          patch :update_motif
+          get :edit_lieu
+          patch :update_lieu
 
           get :edit_user
           post :create_rdv
@@ -328,7 +338,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :rdv_invitations, only: %i[new create show]
+      resources :rdv_invitations, only: %i[new create show] do
+        member do
+          get :show_confirmation
+        end
+      end
 
       scope module: "organisations" do
         resource :online_booking, only: %i[show edit update] do

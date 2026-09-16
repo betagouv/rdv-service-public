@@ -11,6 +11,7 @@ module IcsPayloads
         location: lieu_address,
         rrule: IcalFormatters::Rrule.from_recurrence(recurrence),
         domain: domain,
+        tzid: organisation.time_zone,
       }
 
       payload[:action] = action if action.present?
