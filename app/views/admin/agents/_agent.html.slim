@@ -3,22 +3,20 @@
 
 tr id="agent_#{agent.id}"
   td
-    - if current_agent.admin_in_organisation?(current_organisation) && agent_policy.edit?
-      - if agent.full_name.present?
-        span= link_to agent.reverse_full_name, edit_admin_organisation_agent_path(current_organisation, agent), class: "fr-link mr-2"
-      - unless agent.is_an_intervenant?
-        / les intervenants ne peuvent pas se connecter, il est inutile de les afficher comme "Inactif".
-        - if agent.last_sign_in_at.nil? && agent.invitation_sent_at.present? && agent.invitation_accepted_at.nil?
-          - if agent.invitation_due_at.past?
-            .fr-badge.fr-badge--warning.fr-badge--sm Invitation expirée
-          - else
-            .fr-badge.fr-badge--info.fr-badge--sm Invitation en attente
-        - elsif agent.last_sign_in_at.nil? || agent.last_sign_in_at <= 1.month.ago
-          / le cas agent.last_sign_in_at.nil? est très rare et correspond probablement à des agents connectés avant qu’on ne commence à stocker le last_sign_in_at
-          .fr-badge.fr-badge--sm Pas connecté·e depuis plus d'un mois
-      end
-    - else
+    - if agent.full_name.present? && current_agent.admin_in_organisation?(current_organisation) && agent_policy.edit?
+      span= link_to agent.reverse_full_name, edit_admin_organisation_agent_path(current_organisation, agent), class: "fr-link mr-2"
+    - elsif agent.full_name.present?
       span.mr-2= agent.reverse_full_name
+    - elsif !agent.is_an_intervenant?
+      / les intervenants ne peuvent pas se connecter, il est inutile de les afficher comme "Inactif".
+      - if agent.last_sign_in_at.nil? && agent.invitation_sent_at.present? && agent.invitation_accepted_at.nil?
+        - if agent.invitation_due_at.past?
+          .fr-badge.fr-badge--warning.fr-badge--sm Invitation expirée
+        - else
+          .fr-badge.fr-badge--info.fr-badge--sm Invitation en attente
+      - elsif agent.last_sign_in_at.nil? || agent.last_sign_in_at <= 1.month.ago
+        / le cas agent.last_sign_in_at.nil? est très rare et correspond probablement à des agents connectés avant qu’on ne commence à stocker le last_sign_in_at
+        .fr-badge.fr-badge--sm Pas connecté·e depuis plus d'un mois
     - if current_agent == agent
      .fr-badge.fr-badge--info.fr-badge--no-icon.fr-badge--sm.fr-ml-1w
        | Vous
