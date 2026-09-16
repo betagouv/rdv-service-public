@@ -243,6 +243,10 @@ class Agent < ApplicationRecord
     organisations.merge(roles.where(access_level: AgentRole::ACCESS_LEVEL_BASIC))
   end
 
+  def admin_roles_of_basic_orgs
+    AgentRole.where(access_level: AgentRole::ACCESS_LEVEL_ADMIN, organisation_id: basic_orgs.select(:id))
+  end
+
   def multiple_organisations_access?
     organisations.count > 1
   end

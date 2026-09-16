@@ -1,0 +1,47 @@
+- content_for :title, "Formulaire de contact pour les agents"
+
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Accueil", href: root_path
+    = b.with_breadcrumb label: "Contact", href: aide_aiguillage_role_path
+    = b.with_breadcrumb label: yield(:title)
+
+.fr-grid-row.fr-mb-4w
+  .fr-col-12.fr-col-md-8
+    - if @form.raison.blank?
+      = form_for @form, url: aide_aiguillage_agent_path, method: :GET, builder: Dsfr::FormBuilder do |f|
+        = f.dsfr_radio_buttons :raison, @form.raisons_options, legend: "Veuillez sélectionner la raison qui correspond le mieux à votre besoin d’aide :"
+        = f.submit "Valider", class: "fr-btn"
+    - else
+      .fr-mb-4w
+        |> Besoin d'aide pour :
+        b=> @form.raison_label
+        = link_to "modifier", aide_aiguillage_agent_path, class: "fr-link fr-link--icon-right fr-icon-pencil-line", title: "Modifier votre choix"
+
+    - if @form.should_show_contact_admin_message?
+      .fr-callout.fr-icon-info-line.fr-mb-2w
+        p
+          |> Les agents admin sont responsables de la gestion des agents, des motifs, des lieux et de la réservation en ligne.
+          | L’équipe technique de #{current_domain} ne réalisera pas de modification à leur place.
+      - if current_agent
+        - roles = current_agent.roles.joins(:organisation)
+        - if roles.count > 0
+          ul.fr-btns-group
+            - roles.each do |role|
+              - organisation = role.organisation
+              - if role.admin?
+                li= link_to "Accéder à l'admin de #{organisation.name}", admin_organisation_path(organisation), class: "fr-btn"
+              - if role.basic?
+                li= link_to "Contacter un admin de #{organisation.name}", admin_organisation_agents_path(organisation, search: { role: "admin" }), class: "fr-btn"
+      - else
+        p Connectez-vous pour accéder à vos organisations et contacter un admin.
+        div
+          = link_to "Se connecter en tant qu'agent", new_agent_session_path, class: "fr-btn"
+
+    - if @form.raison.present?
+      p.fr-mt-4w
+        |> Vous ne trouvez pas votre réponse ?
+      div
+        = link_to "Contacter l’équipe technique de #{current_domain}",
+          new_aide_demande_support_path(role: :agent, sujet: @form.raison_label),
+          class: "fr-btn fr-btn--secondary"
