@@ -9,13 +9,13 @@ class Api::Rdvinsertion::MotifCategoriesController < Api::Rdvinsertion::AgentAut
   private
 
   def ensure_agent_is_rdv_insertion_super_admin
-    return if rdv_insertion_super_admin_emails&.include?(current_agent.email)
+    return if rdv_insertion_super_admin_emails.include?(current_agent.email)
 
     render_error :forbidden, error: :forbidden
   end
 
   def rdv_insertion_super_admin_emails
-    ENV["RDV_INSERTION_SUPER_ADMIN_EMAILS"]&.split(",")&.map(&:strip)
+    ENV.fetch("RDV_INSERTION_SUPER_ADMIN_EMAILS", "").split(",").map(&:strip)
   end
 
   def motif_categories_params

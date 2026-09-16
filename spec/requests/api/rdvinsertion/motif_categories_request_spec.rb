@@ -22,6 +22,7 @@ RSpec.describe "Motif Category API" do
       before do
         allow(Agent).to receive(:find_by).and_return(agent)
         allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return(shared_secret)
+        allow(ENV).to receive(:fetch).with("RDV_INSERTION_SUPER_ADMIN_EMAILS", "").and_return(agent.email)
         allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(true)
       end
 
@@ -60,6 +61,23 @@ RSpec.describe "Motif Category API" do
           post "/api/rdvinsertion/motif_categories/", params: { name: name, short_name: short_name }, headers: auth_headers
 
           expect(response).to have_http_status(:unauthorized)
+        end
+      end
+
+      context "when the agent is not a rdv-insertion super admin" do
+        let(:name) { "RSA Orientation" }
+        let(:short_name) { "rsa_orientation" }
+
+        before do
+          allow(ENV).to receive(:fetch).with("RDV_INSERTION_SUPER_ADMIN_EMAILS", "").and_return("another_agent@rdv-insertion.fr")
+        end
+
+        it "returns a 403 forbidden and does not create the motif category" do
+          expect do
+            post "/api/rdvinsertion/motif_categories/", params: { name: name, short_name: short_name }, headers: auth_headers
+          end.not_to change(MotifCategory, :count)
+
+          expect(response).to have_http_status(:forbidden)
         end
       end
     end
