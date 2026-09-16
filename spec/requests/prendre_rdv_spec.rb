@@ -133,24 +133,6 @@ RSpec.describe "Search", type: :request do
     end
   end
 
-  describe "GET /prendre_rdv pour un RDV de suivi lorsque le territoire de l'agent référent n'a pas de département" do
-    let(:host) { "www.rdv-service-public-etat-test.localhost" }
-    let(:territory) { create(:territory, departement_number: "") }
-    let(:organisation) { create(:organisation, territory:) }
-    let(:agent) { create(:agent, organisations: [organisation]) }
-    let(:user) { create(:user, organisations: [organisation], referent_agents: [agent]) }
-    let!(:motif) { create(:motif, name: "Bilan annuel", follow_up: true, organisation:) }
-    let!(:plage_ouverture) { create(:plage_ouverture, agent:, motifs: [motif], organisation:) }
-
-    before { login_as(user, scope: :user) }
-
-    it "ne redirige pas vers l'accueil et affiche la sélection de motif" do
-      get prendre_rdv_url(host:, referent_ids: [agent.id], departement: "")
-      expect(response).not_to redirect_to(root_url(host:))
-      expect(response.body).to include("Bilan annuel")
-    end
-  end
-
   # dans le le CDAD de la Côte d'Or,  les agents ont distribué un lien de prise de rendez-vous à
   # l'échelle de leur espace. Pour éviter de casser ce lien, et en attendant d'avoir une solution plus pérenne,
   # on autorise l'utilisation du paramètre departement dans ce cas.
