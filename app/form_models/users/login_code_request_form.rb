@@ -26,12 +26,16 @@ module Users
 
       error =
         if Agent.exists?(email:)
-          <<~ERROR
-            Aucun compte usager n’existe pour cet email.
+          <<~ERROR.squish
+            Cet email ne correspond à aucun compte usager utilisant la connexion par email.
+            Vous pouvez essayer la connexion par FranceConnect.
             Si vous souhaitez vous connecter en tant qu’agent, veuillez vous rendre sur la page de connexion agent.
           ERROR
         else
-          "Aucun compte usager n’existe pour cet email"
+          <<~ERROR.squish
+            Cet email ne correspond à aucun compte usager utilisant la connexion par email.
+            Vous pouvez essayer la connexion par FranceConnect.
+          ERROR
         end
       errors.add(:base, error)
     end
