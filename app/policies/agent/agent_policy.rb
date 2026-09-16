@@ -40,6 +40,7 @@ class Agent::AgentPolicy < ApplicationPolicy
         agents.merge(current_agent.organisations_of_territorial_roles), # agents que je peux voir en tant qu'administrateur de territoire
         agents.merge(current_agent.admin_orgs), # agents que je peux voir en tant qu'administrateur d'organisation
         agents.merge(current_agent.basic_orgs).merge(current_agent.confreres), # agents du même service (ou sans services) que je peux voir en tant qu'agent basique
+        agents.merge(current_agent.admin_roles_of_basic_orgs), # agents admin des organisations où je suis agent basique
       ]
 
       scope.where_id_in_subqueries(subqueries)

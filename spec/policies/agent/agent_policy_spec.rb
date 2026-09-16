@@ -104,6 +104,14 @@ RSpec.describe Agent::AgentPolicy::Scope, type: :policy do
       it { is_expected.to contain_exactly(agent, autre_agent_sans_service) }
     end
 
+    context "agent basique avec un administrateur d'un autre service dans la même organisation" do
+      let!(:organisation) { create(:organisation) }
+      let!(:agent) { create(:agent, :with_service, basic_role_in_organisations: [organisation]) }
+      let!(:administrateur_service_different) { create(:agent, :with_service, admin_role_in_organisations: [organisation]) }
+
+      it { is_expected.to contain_exactly(agent, administrateur_service_different) }
+    end
+
     context "when agent is agent d'accueil" do
       let!(:other_service) { create :service }
       let!(:organisations) { create_list(:organisation, 2) }
