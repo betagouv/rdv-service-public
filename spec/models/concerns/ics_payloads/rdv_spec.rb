@@ -38,7 +38,7 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
 
       it "provides a link to the RDV for users, with their restricted auth token" do
         token = user.participation_for(rdv).restricted_auth_token
-        expect(rdv.payload[:description]).to eq("Infos et annulation: http://www.rdv-solidarites-test.localhost/r/#{token}")
+        expect(rdv.payload[:description]).to eq("Infos et annulation: http://www.rdv-solidarites-test.localhost/users/rdvs/#{rdv.id}?invitation_token=#{token}")
       end
 
       it "does not display the context" do
