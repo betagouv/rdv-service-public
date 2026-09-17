@@ -7,9 +7,7 @@ RSpec.describe "Agents can send an invitation to a rdv" do
   let(:motif) { create(:motif, organisation:) }
   let(:lieu) { create(:lieu, organisation:) }
 
-  before do
-    login_as agent, scope: :agent
-  end
+  before { login_as agent, scope: :agent }
 
   context "when the user doesn't have an email address" do
     let(:user) { create(:user, email: nil, organisations: [organisation]) }
