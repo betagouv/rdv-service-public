@@ -6,7 +6,7 @@ class RdvInvitationsController < ApplicationController
 
     if @rdv_invitation.rdv.present?
       redirect_to users_rdv_path(@rdv_invitation.rdv, invitation_token: restricted_auth_token)
-    else
+    elsif !@rdv_invitation.cancelled
       @creneau_selection_service = CreneauWizardForUsers::Steps::CreneauSelection.build_from_invitation(
         rdv_invitation: @rdv_invitation,
         start_date: params[:date].presence&.to_date || Time.zone.today

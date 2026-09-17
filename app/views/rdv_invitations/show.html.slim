@@ -1,13 +1,20 @@
-= render "search/banner", context: OpenStruct.new(public_link_organisation: @rdv_invitation.organisation)
+- if @rdv_invitation.cancelled?
+  .fr-container
+    section.fr-py-3w.fr-col-12.fr-col-lg-10.fr-col-offset-lg-1.fr-mb-16w
+      p.fr-text--lg Cette invitation a été résiliée par l'organisation qui vous l'a envoyé.
+      = render "/users/organisations/contact_info", organisation: @rdv_invitation.organisation, phone_number: @rdv_invitation.organisation.phone_number
 
-.fr-container
-  section.fr-py-3w.fr-col-12.fr-col-lg-10.fr-col-offset-lg-1
-    p.fr-text--lg #{@rdv_invitation.organisation.name} vous invite à prendre rendez-vous pour le motif <b>#{@rdv_invitation.motif.name}</b>.
+- else
+  .fr-container
+    section.fr-py-3w.fr-col-12.fr-col-lg-10.fr-col-offset-lg-1
+      - if @rdv_invitation.cancelled?
+      - else
+        p.fr-text--lg #{@rdv_invitation.organisation.name} vous invite à prendre rendez-vous pour le motif <b>#{@rdv_invitation.motif.name}</b>.
 
-    p.fr-text--lg
-      = render "details", rdv_invitation: @rdv_invitation
-    p.fr-text--lg Choisissez un créneau:
+        p.fr-text--lg
+          = render "details", rdv_invitation: @rdv_invitation
+        p.fr-text--lg Choisissez un créneau :
 
-    .card
-      .card-body
-        = render "search/creneaux", creneau_selection_service: @creneau_selection_service
+        .card
+          .card-body
+            = render "search/creneaux", creneau_selection_service: @creneau_selection_service
