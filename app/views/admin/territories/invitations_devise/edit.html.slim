@@ -15,25 +15,6 @@
         .rdv-text-align-center
           = render "common/proconnect_button_dsfr", login_hint: resource.email
 
-        .fr-hr-or ou
-
-        .legacy-signup-toggle
-
-          p.rdv-text-align-center.fr-mt-3v Vous ne parvenez pas à utiliser ProConnect ?
-
-          .fr-mt-3v.rdv-text-align-center
-            button.fr-btn.fr-btn--tertiary[type="button" aria-expanded="false" aria-controls="legacy-signup-form"]
-              | Créer un compte avec un mot de passe
-
-        .fr-collapse#legacy-signup-form
-          .fr-mt-3w
-            p.rdv-text-align-center Vous pouvez créer un compte avec un mot de passe sans utiliser ProConnect.
-            = dsfr_alert type: :info, title: "Préférez la connexion par ProConnect", html_attributes: { class: "fr-mb-4v" } do
-              | Vous êtes sur le point de créer un compte avec une adresse email. Pour une expérience simplifiée et sécurisée, nous vous recommandons d'utiliser ProConnect.
-              br
-              | ProConnect vous permet de vous connecter rapidement sans avoir à gérer un mot de passe supplémentaire. De plus, vous pourrez utiliser une authentification forte à deux facteurs.
-            = render "password_signup_form"
-
       - else
         p.rdv-text-align-center Pour finaliser votre création de compte, nous avons besoins de quelques informations complémentaires.
         = render "password_signup_form"
