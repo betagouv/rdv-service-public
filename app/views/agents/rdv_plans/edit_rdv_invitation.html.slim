@@ -9,10 +9,16 @@
     - creneaux_search = @rdv_plan.build_invitation.creneaux_search(Time.zone.now)
     - creneaux_count = creneaux_search.creneaux.count
 
-    p Il y a #{creneaux_count} créneaux disponibles pour ce motif.
+    - if creneaux_count > 0
+      p
+        = icon("fr-icon-checkbox-circle-fill", class: "fr-mr-1w color-scheme-green")
+        | Il y a #{creneaux_count} créneaux disponibles pour ce motif.
 
-    p Nous allons envoyer un email à #{@rdv_plan.user.full_name} pour lui permettre de choisir un créneau.
+      p Nous allons envoyer un email à #{@rdv_plan.user.full_name} pour lui permettre de choisir un créneau.
+    - else
+      p Il n'y a pas de créneau disponible pour ce motif.
 
   .fr-col-12.fr-col-md-8.fr-mt-2w.d-flex.rdv-justify-content-space-between
     = link_to "Retour", edit_motif_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
-    = link_to "Continuer", edit_user_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-ml-2w"
+    - if creneaux_count > 0
+      = link_to "Continuer", edit_user_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-ml-2w"
