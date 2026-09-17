@@ -7,7 +7,7 @@
     = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
     hr.fr-mt-2w
 
-    p Convenez d'un horaire avec #{@rdv_plan.user.full_name}, et cliquez dessus dans l'agenda de l'agent de votre choix
+    p Convenez d'un horaire avec #{@rdv_plan.user.full_name}, et cliquez dessus dans l'agenda de l'agent de votre choix.
 
     - if current_agent.feature_enabled?("rdv_invitations") && @rdv_plan.motif.plage_ouvertures.not_expired.any?
       p.fr-text-mention--grey.fr-text--sm

@@ -11,7 +11,6 @@
 
     hr.fr-mt-2w
     h3 Coordonnées de #{@rdv_plan.user.full_name}
-    p Des notifications seront envoyées par email et/ou par sms
     = form_for @rdv_plan, url: create_rdv_agents_rdv_plan_path(@rdv_plan), method: :post, builder: Dsfr::FormBuilder do |f|
       = f.fields_for :user, @rdv_plan.user do |ff|
         .fr-grid-row.fr-grid-row--gutters
@@ -27,6 +26,7 @@
               = ff.dsfr_check_box :send_reminder_notification, label: "Envoyer une notification de rappel 48h avant le rendez-vous"
       - else
         | Les notifications ne sont pas envoyées pour ce motif de rendez-vous.
+
       - submit_text = @rdv_plan.by_invitation? ? "Envoyer l'invitation" : "Confirmer le rendez-vous"
       = f.submit submit_text, class: "fr-btn float-right fr-btn--lg"
 
