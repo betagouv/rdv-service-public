@@ -32,7 +32,7 @@
               = icon_link_to "Changer d'usager", new_admin_organisation_rdv_invitation_path(current_organisation, motif_id: @rdv_invitation.motif_id, lieu_id: @rdv_invitation.lieu_id), class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-btn--icon-left fr-icon-edit-line fr-pr-0"
             |< à prendre rendez-vous pour <b>#{@rdv_invitation.motif.name}</b>
             - if @rdv_invitation.lieu
-              | à <b>#{@rdv_invitation.lieu.name}</b>
+              |< à <b>#{@rdv_invitation.lieu.name}</b>
             | .
 
         .fr-grid-row

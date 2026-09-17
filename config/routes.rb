@@ -342,6 +342,7 @@ Rails.application.routes.draw do
       resources :rdv_invitations, only: %i[new create show] do
         member do
           get :show_confirmation
+          patch :cancel
         end
       end
 
