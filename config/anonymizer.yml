@@ -575,6 +575,7 @@ tables:
     non_anonymized_column_names:
       - created_at
       - updated_at
+      - cancelled
   - table_name: user_ami_profiles
     anonymized_column_names:
       - fc_hash
