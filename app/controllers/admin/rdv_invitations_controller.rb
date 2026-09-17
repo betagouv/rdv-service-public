@@ -29,6 +29,7 @@ class Admin::RdvInvitationsController < AgentAuthController
   def cancel
     set_invitation(:update?)
     @rdv_invitation.update!(cancelled: true)
+    flash[:notice] = "Invitation résiliée"
     redirect_to admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation)
   end
 
