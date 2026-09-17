@@ -12,7 +12,7 @@
         p Cette invitation a été résiliée. L'usager ne pourra pas prendre ce rendez-vous.
 
         p.fr-text-mention--grey.fr-text--sm
-          | #{@rdv_invitation.user.full_name} était invité·e à prendre rendez-vous pour #{@rdv_invitation.motif.name}, mais l'invitation a été annulée .
+          | #{@rdv_invitation.user.full_name} était invité·e à prendre rendez-vous pour #{@rdv_invitation.motif.name}, mais l'invitation a été annulée.
       - else
         p
           |> Un email a été envoyé à #{@rdv_invitation.user.full_name} pour l'inviter à prendre rendez-vous
