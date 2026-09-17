@@ -4,6 +4,20 @@ class Admin::RdvInvitationsController < AgentAuthController
     authorize(@rdv_invitation, policy_class: Agent::RdvInvitationPolicy)
   end
 
+  def create_user
+    @user = User.new(params.require(:user).permit(:first_name, :last_name, :email, :phone_number))
+    @user.user_profiles.build(organisation: current_organisation)
+
+    authorize(@user, :create?, policy_class: Agent::UserPolicy)
+    if @user.save
+      redirect_to new_admin_organisation_rdv_invitation_path(motif_id: params[:motif_id], user_id: @user.id)
+    else
+      @rdv_invitation = RdvInvitation.new(params.permit(:motif_id, :lieu_id).merge(inviting_agent: current_agent))
+      authorize(@rdv_invitation, :new?, policy_class: Agent::RdvInvitationPolicy)
+      render :new
+    end
+  end
+
   def create
     @rdv_invitation = RdvInvitation.new(create_params.merge(inviting_agent: current_agent))
     authorize(@rdv_invitation, policy_class: Agent::RdvInvitationPolicy)
