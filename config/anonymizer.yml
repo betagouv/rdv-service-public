@@ -506,6 +506,7 @@ tables:
       - created_at
       - updated_at
       - location_type
+      - by_invitation
   - table_name: external_references
     anonymized_column_names:
       - external_url
