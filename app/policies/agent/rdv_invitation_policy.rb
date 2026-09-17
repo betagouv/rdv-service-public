@@ -37,6 +37,6 @@ class Agent::RdvInvitationPolicy < ApplicationPolicy
   end
 
   def can_show_motif?
-    Agent::MotifPolicy.new(current_agent, rdv_invitation.motif).show?
+    rdv_invitation.motif.blank? || Agent::MotifPolicy.new(current_agent, rdv_invitation.motif).show?
   end
 end
