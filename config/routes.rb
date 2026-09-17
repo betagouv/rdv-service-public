@@ -184,6 +184,7 @@ Rails.application.routes.draw do
           patch :update_starts_at_and_duration
 
           get :edit_rdv_invitation
+          patch :update_rdv_invitation
 
           get :edit_lieu
           patch :update_lieu

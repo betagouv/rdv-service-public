@@ -26,4 +26,5 @@
   .fr-col-12.fr-col-md-8.fr-mt-2w.d-flex.rdv-justify-content-space-between
     = link_to "Retour", edit_motif_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
     - if creneaux_count > 0
-      = link_to "Continuer", edit_user_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-ml-2w"
+      = form_for @rdv_plan, url: update_rdv_invitation_agents_rdv_plan_path(@rdv_plan), builder: Dsfr::FormBuilder do |f|
+        = f.submit "Continuer", class: "fr-btn"

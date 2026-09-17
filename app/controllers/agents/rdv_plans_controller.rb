@@ -24,12 +24,8 @@ class Agents::RdvPlansController < AgentAuthController
 
     authorize(@rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy)
 
-    if current_agent.feature_enabled?("rdv_invitations") && @rdv_plan.motif.plage_ouvertures.not_expired.any?
-      @rdv_plan.assign_attributes(by_invitation: true, rdv_agent: nil)
-    end
-
     if @rdv_plan.save
-      if @rdv_plan.by_invitation?
+      if current_agent.feature_enabled?("rdv_invitations") && @rdv_plan.motif.plage_ouvertures.not_expired.any?
         redirect_to edit_rdv_invitation_agents_rdv_plan_path(@rdv_plan)
       else
         redirect_to edit_starts_at_agents_rdv_plan_path(@rdv_plan)
@@ -70,6 +66,11 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def edit_rdv_invitation; end
+
+  def update_rdv_invitation
+    @rdv_plan.update!(by_invitation: true, rdv_agent: nil)
+    redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
+  end
 
   def edit_starts_at_and_duration; end
 
