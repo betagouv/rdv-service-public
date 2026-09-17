@@ -54,7 +54,8 @@ module IcsPayloads
     def ics_description_link(recipient)
       case recipient
       when User
-        "Infos et annulation: #{Rails.application.routes.url_helpers.rdvs_short_url(host: domain.host_name)}"
+        token = recipient.participation_for(self).restricted_auth_token
+        "Infos et annulation: #{Rails.application.routes.url_helpers.rdv_short_from_token_url(token, host: domain.host_name)}"
       when Agent
         "Voir sur #{domain.name}: #{Rails.application.routes.url_helpers.admin_organisation_rdv_url(organisation_id, self, host: domain.host_name)}"
       else

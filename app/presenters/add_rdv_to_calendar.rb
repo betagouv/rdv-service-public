@@ -8,6 +8,10 @@ class AddRdvToCalendar
 
   private
 
+  def token
+    @current_user.participation_for(@rdv).restricted_auth_token
+  end
+
   def cal
     @cal = AddToCalendar::URLs.new(
       start_datetime: @rdv.starts_at,
@@ -15,7 +19,7 @@ class AddRdvToCalendar
       timezone: @rdv.organisation.time_zone,
       title: "RDV #{@rdv.motif.name}",
       location: @rdv.ics_location(recipient: @current_user),
-      url: Rails.application.routes.url_helpers.rdvs_short_url(host: @rdv.domain.host_name),
+      url: Rails.application.routes.url_helpers.rdv_short_from_token_url(token, host: @rdv.domain.host_name),
       description: @rdv.ics_description(@current_user)
     )
   end
