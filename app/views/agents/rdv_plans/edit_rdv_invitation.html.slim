@@ -11,12 +11,17 @@
 
     - if creneaux_count > 0
       p
-        = icon("fr-icon-checkbox-circle-fill", class: "fr-mr-1w color-scheme-green")
+        = icon("fr-icon-checkbox-circle-fill", class: "fr-mr-1w rdv-color-text-default-success")
         | Il y a #{creneaux_count} créneaux disponibles pour ce motif.
 
-      p Nous allons envoyer un email à #{@rdv_plan.user.full_name} pour lui permettre de choisir un créneau.
+      p
+        = icon("fr-icon-mail-send-line", class: "fr-mr-1w")
+        | Nous allons envoyer un email à #{@rdv_plan.user.full_name} pour lui permettre de choisir un créneau.
     - else
       p Il n'y a pas de créneau disponible pour ce motif.
+
+    p.fr-text-mention--grey.fr-text--sm
+      | Si vous préférez, vous pouvez aussi #{link_to("choisir un horaire directement sur le calendrier", edit_starts_at_agents_rdv_plan_path(@rdv_plan))}.
 
   .fr-col-12.fr-col-md-8.fr-mt-2w.d-flex.rdv-justify-content-space-between
     = link_to "Retour", edit_motif_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"

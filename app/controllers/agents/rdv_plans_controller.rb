@@ -51,6 +51,7 @@ class Agents::RdvPlansController < AgentAuthController
 
   def edit_starts_at
     @rdv_plan.starts_at = nil
+    @rdv_plan.rdv_agent ||= @rdv_plan.planning_agent
 
     other_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active.ordered_by_last_name.where.not(id: current_agent.id)
 
@@ -60,7 +61,7 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def update_starts_at
-    @rdv_plan.update!(params.require(:rdv_plan).permit(:starts_at))
+    @rdv_plan.update!(params.require(:rdv_plan).permit(:starts_at).merge(by_invitation: false))
     if @rdv_plan.motif.public_office?
       redirect_to edit_lieu_agents_rdv_plan_path(@rdv_plan)
     else
