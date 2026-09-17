@@ -41,6 +41,11 @@ class RdvInvitation < ApplicationRecord
       return
     end
 
+    if cancelled?
+      errors.add(:base, "Cette invitation a été annulée, il n'est pas possible de prendre ce rendez-vous.")
+      return
+    end
+
     creneau = creneaux_search(starts_at).creneaux.first
 
     if creneau.nil?
