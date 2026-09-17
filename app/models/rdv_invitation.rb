@@ -74,7 +74,7 @@ class RdvInvitation < ApplicationRecord
 
   def validate_phone_number_present_for_motif_by_phone
     if motif.phone? && user.phone_number.blank?
-      errors.add(:base, "Le motif est pas téléphone mais  le numéro de #{user.full_name} n'est pas renseigné.")
+      errors.add(:base, "Le motif est par téléphone mais  le numéro de #{user.full_name} n'est pas renseigné.")
     end
   end
 

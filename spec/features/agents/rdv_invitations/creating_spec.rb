@@ -22,6 +22,28 @@ RSpec.describe "Agents can send an invitation to a rdv" do
     end
   end
 
+  describe "creating a new user" do
+    it "works" do
+      visit new_admin_organisation_rdv_invitation_path(organisation, motif_id: motif.id, lieu_id: lieu.id)
+      click_on "Ajouter un usager"
+
+      fill_in "Prénom", with: "Francis"
+      fill_in "Nom d’usage", with: "Factice"
+
+      fill_in "Email", with: "francis@factice.org"
+      click_on "Enregistrer"
+
+      expect(page).to have_content "Vous allez inviter Francis FACTICE"
+
+      expect(User.last).to have_attributes(
+        first_name: "Francis",
+        last_name: "Factice",
+        email: "francis@factice.org",
+        organisations: [organisation]
+      )
+    end
+  end
+
   describe "selecting the user" do
     let(:user) { create(:user, organisations: [organisation], first_name: "Francis", last_name: "Factice") }
 
