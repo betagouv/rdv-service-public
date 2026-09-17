@@ -7,14 +7,12 @@
 - else
   .fr-container
     section.fr-py-3w.fr-col-12.fr-col-lg-10.fr-col-offset-lg-1
-      - if @rdv_invitation.cancelled?
-      - else
-        p.fr-text--lg #{@rdv_invitation.organisation.name} vous invite à prendre rendez-vous pour le motif <b>#{@rdv_invitation.motif.name}</b>.
+      p.fr-text--lg #{@rdv_invitation.organisation.name} vous invite à prendre rendez-vous pour le motif <b>#{@rdv_invitation.motif.name}</b>.
 
-        p.fr-text--lg
-          = render "details", rdv_invitation: @rdv_invitation
-        p.fr-text--lg Choisissez un créneau :
+      p.fr-text--lg
+        = render "details", rdv_invitation: @rdv_invitation
+      p.fr-text--lg Choisissez un créneau :
 
-        .card
-          .card-body
-            = render "search/creneaux", creneau_selection_service: @creneau_selection_service
+      .card
+        .card-body
+          = render "search/creneaux", creneau_selection_service: @creneau_selection_service
