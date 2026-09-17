@@ -24,6 +24,8 @@ class RdvInvitation < ApplicationRecord
   validate :user_cannot_be_relative
   validate :motif_is_supported
 
+  scope :pending, -> { where(rdv_id: nil, cancelled: false) }
+
   def creneaux_search(starts_at)
     CreneauxSearch::ForUser.new(
       motif: motif,

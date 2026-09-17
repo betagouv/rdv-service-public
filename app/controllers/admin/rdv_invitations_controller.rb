@@ -19,16 +19,25 @@ class Admin::RdvInvitationsController < AgentAuthController
   end
 
   def show_confirmation
-    @rdv_invitation = current_organisation.rdv_invitations.find(params[:id])
-    authorize(@rdv_invitation, :show?, policy_class: Agent::RdvInvitationPolicy)
+    set_invitation(:show?)
   end
 
   def show
-    @rdv_invitation = current_organisation.rdv_invitations.find(params[:id])
-    authorize(@rdv_invitation, policy_class: Agent::RdvInvitationPolicy)
+    set_invitation
+  end
+
+  def cancel
+    set_invitation(:update?)
+    @rdv_invitation.update!(cancelled: true)
+    redirect_to admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation)
   end
 
   private
+
+  def set_invitation(action_name = nil)
+    @rdv_invitation = current_organisation.rdv_invitations.find(params[:id])
+    authorize(@rdv_invitation, action_name, policy_class: Agent::RdvInvitationPolicy)
+  end
 
   def create_params
     params.require(:rdv_invitation).permit(:user_id, :motif_id, :lieu_id)
