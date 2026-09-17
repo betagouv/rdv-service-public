@@ -94,7 +94,7 @@ class Admin::MotifsController < AgentAuthController
 
     if @motif.save
       flash[:success] = "Le motif #{link_to_motif(@motif)} a été modifié."
-      redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
+      redirect_to admin_organisation_motifs_path(@motif.organisation)
     else
       render :edit
     end
