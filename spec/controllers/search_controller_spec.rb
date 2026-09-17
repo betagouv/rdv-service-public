@@ -103,7 +103,7 @@ RSpec.describe SearchController, type: :controller do
 
       context "for an invitation" do
         before do
-          request.session["restricted_auth"] = { invitation_token: invitation_token, expires_at: 1.hour.from_now }
+          RestrictedAuthSessionState.authenticate!(request.session, user_id: user.id)
           request.session["rdv_insertion_invitation"] = { address: address, departement: departement_number, city_code: city_code }
         end
 
