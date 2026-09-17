@@ -11,12 +11,13 @@
 
     - if creneaux_count > 0
       p
-        = icon("fr-icon-checkbox-circle-fill", class: "fr-mr-1w rdv-color-text-default-success")
-        | Il y a #{creneaux_count} créneaux disponibles pour ce motif.
-
-      p
         = icon("fr-icon-mail-send-line", class: "fr-mr-1w")
         | Nous allons envoyer un email à #{@rdv_plan.user.full_name} pour lui permettre de choisir un créneau.
+
+      p.fr-text-mention--grey.fr-text--sm
+        = icon("fr-icon-checkbox-circle-line", class: "fr-mr-1w rdv-color-text-default-success fr-icon--sm")
+        | Il y a #{creneaux_count} créneaux disponibles pour ce motif.
+
     - else
       p Il n'y a pas de créneau disponible pour ce motif.
 

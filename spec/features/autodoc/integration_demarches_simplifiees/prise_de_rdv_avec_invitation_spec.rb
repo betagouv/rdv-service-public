@@ -38,7 +38,7 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
   stub_env_for_proconnect
 
   specify do
-    doc = Autodoc.start_scenario("3) Prise de RDV par un instructeur", self, accessibility_checks: false, category: "4) Intégration à Démarches Simplifiées")
+    doc = Autodoc.start_scenario("3) Prise de RDV avec invitation par un instructeur", self, accessibility_checks: false, category: "4) Intégration à Démarches Simplifiées")
 
     doc.start_section("Prise de rendez-vous par invitation")
 
