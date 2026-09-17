@@ -7,7 +7,8 @@
       .rdv-display-md-flex.rdv-justify-content-space-between
         - unless @rdv_invitation.cancelled?
           = dsfr_svg "artwork/pictograms/digital/mail-send", class: "fr-artwork--green-emeraude fr-mb-2w"
-          = button_to "Résilier l'invitation", cancel_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation), class: "fr-btn fr-btn--secondary", method: :patch
+          - if @rdv_invitation.rdv_id.blank?
+            = button_to "Résilier l'invitation", cancel_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation), class: "fr-btn fr-btn--secondary", method: :patch
       - if @rdv_invitation.cancelled?
         p Cette invitation a été résiliée. L'usager ne pourra pas prendre ce rendez-vous.
 
