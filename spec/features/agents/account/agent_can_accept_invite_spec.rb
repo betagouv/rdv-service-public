@@ -25,20 +25,22 @@ RSpec.describe "Agent can accept invitation" do
       expect(redirect_url_query_params["login_hint"]).to eq agent.email
     end
 
-    it "hides the password form behind a collapse and reveals it on click", js: true do
+    it "does not offer a password-based signup form" do
       agent.deliver_invitation
       visit accept_agent_invitation_path(invitation_token: agent.raw_invitation_token)
 
-      # Le formulaire de mot de passe est caché initialement
-      expect(page).to have_content "Vous ne parvenez pas à utiliser ProConnect ?"
       expect(page).to have_no_field "Prénom"
+      expect(page).to have_no_button "Créer un compte avec un mot de passe"
+    end
 
-      # Au clic sur le bouton, le formulaire apparaît
-      click_button "Créer un compte avec un mot de passe"
-      expect(page).to have_field "Prénom"
+    it "rejects a direct submission of the invitation update with a password" do
+      agent.deliver_invitation
 
-      # Le texte et bouton d'invitation au collapse disparaissent
-      expect(page).to have_no_content "Vous ne parvenez pas à utiliser ProConnect ?"
+      expect do
+        page.driver.submit(:put, agent_invitation_path,
+                           agent: { first_name: "John", last_name: "Doe", password: "c0rrecThorse!" },
+                           invitation_token: agent.raw_invitation_token)
+      end.to raise_error(Pundit::NotAuthorizedError)
     end
   end
 
