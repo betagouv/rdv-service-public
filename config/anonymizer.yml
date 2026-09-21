@@ -34,6 +34,10 @@ tables:
     truncated: true
   - table_name: oauth_access_grants
     truncated: true
+  - table_name: external_calendar_sync_executions
+    truncated: true
+  - table_name: external_calendar_sync_execution_logs
+    truncated: true
   - table_name: users
     anonymized_column_names:
       - first_name
@@ -126,6 +130,9 @@ tables:
       - caldav_disconnect_started_at
       - blog_read_at
       - group_by_agent
+
+  - table_name: agent_trusted_devices
+    truncated: true
 
   - table_name: rdvs
     anonymized_column_names:

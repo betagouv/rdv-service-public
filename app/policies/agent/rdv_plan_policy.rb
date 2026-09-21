@@ -1,6 +1,8 @@
 class Agent::RdvPlanPolicy < ApplicationPolicy
   def create?
-    authorized_lieu && pundit_user == record.planning_agent
+    authorized_lieu &&
+      pundit_user == record.planning_agent &&
+      authorized_motif?
   end
   alias edit? create?
 
@@ -17,5 +19,11 @@ class Agent::RdvPlanPolicy < ApplicationPolicy
     return true unless record.lieu_id
 
     Agent::LieuPolicy::Scope.new(pundit_user, Lieu.enabled).resolve.find_by(id: record.lieu_id).present?
+  end
+
+  def authorized_motif?
+    return true if record.motif.blank?
+
+    Agent::MotifPolicy.new(pundit_user, record.motif).show?
   end
 end

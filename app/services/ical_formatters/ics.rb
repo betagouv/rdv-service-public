@@ -54,6 +54,7 @@ module IcalFormatters
           Icalendar::Values::CalAddress.new("mailto:#{attendee_email}", { "PARTSTAT" => "ACCEPTED" })
         end
       end
+      event.transp = payload[:transp] if payload[:transp].present?
       event.summary = payload[:summary]
       event.location = payload[:location]
       event.rrule = payload[:rrule]

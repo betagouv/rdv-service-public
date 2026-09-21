@@ -14,6 +14,7 @@ RSpec.describe "Motif Category API" do
       parameter name: "short_name", in: :query, type: :string, description: "Nom de la catégorie (généralement parametrizé)", example: "rsa_orientation"
 
       let!(:agent) { create(:agent) }
+      let!(:super_admin) { create(:super_admin, email: agent.email) }
       let!(:shared_secret) { "S3cr3T" }
       let!(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }
       let!(:uid) { auth_headers["uid"].to_s }
@@ -60,6 +61,20 @@ RSpec.describe "Motif Category API" do
           post "/api/rdvinsertion/motif_categories/", params: { name: name, short_name: short_name }, headers: auth_headers
 
           expect(response).to have_http_status(:unauthorized)
+        end
+      end
+
+      context "when the agent has no super admin account" do
+        let!(:super_admin) { create(:super_admin) }
+        let(:name) { "RSA Orientation" }
+        let(:short_name) { "rsa_orientation" }
+
+        it "returns a 403 forbidden and does not create the motif category" do
+          expect do
+            post "/api/rdvinsertion/motif_categories/", params: { name: name, short_name: short_name }, headers: auth_headers
+          end.not_to change(MotifCategory, :count)
+
+          expect(response).to have_http_status(:forbidden)
         end
       end
     end

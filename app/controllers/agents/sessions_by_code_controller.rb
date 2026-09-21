@@ -26,6 +26,7 @@ class Agents::SessionsByCodeController < ApplicationController
       if session[SESSION_PRO_CONNECT_ID_TOKEN_KEY]
         session[:pro_connect_id_token] = session.delete(SESSION_PRO_CONNECT_ID_TOKEN_KEY)
       end
+      AgentTrustedDevice.remember_by_cookie!(agent, cookies) if ActiveModel::Type::Boolean.new.cast(params[:remember_device])
       sign_in(agent, scope: :agent)
       redirect_to after_sign_in_path_for(agent)
     else

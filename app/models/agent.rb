@@ -1,6 +1,6 @@
-class SoftDeleteError < StandardError; end
-
 class Agent < ApplicationRecord
+  class SoftDeleteError < StandardError; end
+
   # Ces colonnes ont été déplacées vers la table caldav_configs.
   # Elles seront supprimées dans une migration ultérieure.
   self.ignored_columns += %w[
@@ -26,6 +26,7 @@ class Agent < ApplicationRecord
   include WebhookDeliverable
   include FullNameConcern
   include TextSearch
+
   def self.search_options
     {
       against:
@@ -43,7 +44,10 @@ class Agent < ApplicationRecord
   devise :invitable, :database_authenticatable, :trackable, :timeoutable,
          :recoverable, :validatable, :confirmable, :async, validate_on_invite: true
 
-  def timeout_in = 14.days # Used by Devise's :timeoutable
+  # 2 niveaux de timeouts d'inactivité redondants (le plus petit prend le pas) :
+  # - 8 heures côté devise pour ce modèle via timeoutable et timeout_in
+  # - 8 heures côté expiration cookie vérifiée par Rails (cf config/application.rb)
+  def timeout_in = 8.hours
 
   # HACK : Ces accesseurs permettent d'utiliser Devise::Models::Trackable mais sans persister les valeurs en base
   attr_accessor :current_sign_in_ip, :last_sign_in_ip, :sign_in_count, :current_sign_in_at
@@ -88,6 +92,7 @@ class Agent < ApplicationRecord
   has_many :agent_teams, dependent: :destroy
   has_many :referent_assignations, dependent: :destroy
   has_many :instance_exports, dependent: :destroy
+  has_many :external_calendar_sync_executions, dependent: :destroy
   has_one :territory_creation_request, dependent: :destroy
   has_one :caldav_config, dependent: :destroy
 
@@ -166,6 +171,10 @@ class Agent < ApplicationRecord
     invitation_sent_at.nil? || invitation_accepted_at.present?
   end
 
+  def should_link_pro_connect_for_visio?
+    pro_connect_openid_sub.blank? && plage_ouvertures.joins(:motifs).merge(Motif.visio).exists?
+  end
+
   def soft_delete
     raise SoftDeleteError, "agent still has attached orgs: #{organisations.ids.inspect}" if organisations.any?
 
@@ -178,6 +187,7 @@ class Agent < ApplicationRecord
       agent_teams.destroy_all
       referent_assignations.destroy_all
       sector_attributions.destroy_all
+      external_calendar_sync_executions.destroy_all
 
       assign_attributes(
         deleted_at: Time.zone.now,
@@ -242,7 +252,7 @@ class Agent < ApplicationRecord
   end
 
   def multiple_organisations_access?
-    organisations.count > 1
+    organisations.many?
   end
 
   def admin_in_organisation?(organisation)

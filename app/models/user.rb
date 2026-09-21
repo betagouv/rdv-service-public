@@ -14,8 +14,11 @@ class User < ApplicationRecord
     ]
   )
 
+  # 2 niveaux de timeouts d'inactivité redondants (le plus petit prend le pas) :
+  # - 30 minutes côté backend devise pour ce modèle via timeoutable et timeout_in
+  # - 8 heures côté expiration cookie vérifiée par Rails (cf config/application.rb)
   devise :timeoutable
-  def timeout_in = 30.minutes # Used by Devise's :timeoutable
+  def timeout_in = 30.minutes
 
   include PgSearch::Model
   include FullNameConcern
@@ -55,6 +58,7 @@ class User < ApplicationRecord
   has_many :receipts, dependent: :destroy
   has_many :annotations, dependent: :destroy
   has_many :external_references, as: :item, dependent: :destroy
+  has_many :rdv_invitations, dependent: :destroy
   has_one :user_ami_profile, dependent: :destroy
 
   # Through relations
