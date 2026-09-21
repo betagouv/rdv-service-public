@@ -25,6 +25,7 @@
                 required: true,
                 class: "select2-input js-rdv-invitation-user-select",
                 data: { \
+                  "redirect-url": new_admin_organisation_rdv_invitation_url(current_organisation, motif_id: @rdv_invitation.motif_id, lieu_id: @rdv_invitation.lieu_id, host: current_domain.host_name),
                   "select2-config": { ajax: { url: search_agents_users_path(organisation_id: @rdv_invitation.organisation.id), dataType: "json", delay: 250}, placeholder: "Chercher un usager par nom, prénom, téléphone, ou email" }, }
 
             div
