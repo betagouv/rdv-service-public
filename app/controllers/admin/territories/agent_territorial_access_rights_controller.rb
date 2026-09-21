@@ -1,9 +1,7 @@
 class Admin::Territories::AgentTerritorialAccessRightsController < Admin::Territories::BaseController
   def update
     agent = Agent.find(params[:id])
-    agent_territorial_access_right = AgentTerritorialAccessRight.find_or_initialize_by(agent:, territory: current_territory)
-
-    policy_class = Agent::AgentTerritorialAccessRightPolicy
+    agent_territorial_access_right = AgentTerritorialAccessRight.find_by(agent:, territory: current_territory)
     authorize(agent_territorial_access_right, policy_class:)
 
     policy = policy_class.new(current_agent, agent_territorial_access_right)
@@ -19,4 +17,8 @@ class Admin::Territories::AgentTerritorialAccessRightsController < Admin::Territ
     end
     redirect_to edit_admin_territory_agent_path(territory_id: current_territory.id, id: agent.id)
   end
+
+  private
+
+  def policy_class = Agent::AgentTerritorialAccessRightPolicy
 end
