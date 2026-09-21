@@ -26,7 +26,6 @@ class SplitTerritory
 
       move_organisations
 
-      move_or_duplicate_agent_territorial_roles
       move_or_duplicate_agent_territorial_access_rights
 
       move_or_duplicate_motif_categories_territories
@@ -79,27 +78,6 @@ class SplitTerritory
     end
 
     puts "#{AgentTerritorialAccessRight.where(territory: @new_territory).count} agents dans le nouveau territory"
-  end
-
-  def move_or_duplicate_agent_territorial_roles
-    puts "\n\n## Déplacement des Admins d'espace"
-    AgentTerritorialRole.where(territory: @old_territory).each do |agent_territorial_role|
-      agent = agent_territorial_role.agent
-      territory_ids_from_agent_organisations = agent.organisations.pluck(:territory_id)
-
-      agent_in_new_territory = territory_ids_from_agent_organisations.include?(@new_territory.id)
-      agent_in_old_territory = territory_ids_from_agent_organisations.include?(@old_territory.id)
-
-      if agent_in_new_territory
-        if agent_in_old_territory
-          puts "Création de nouveaux AgentTerritorialRole pour #{agent.email}"
-          AgentTerritorialRole.create!(territory: @new_territory, agent: agent)
-        else
-          puts "Changement d'espace pour l'admin d'espace #{agent.email}"
-          agent_territorial_role.update!(territory: @new_territory)
-        end
-      end
-    end
   end
 
   def move_or_duplicate_motif_categories_territories
