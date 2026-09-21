@@ -51,7 +51,7 @@ tr id="agent_#{agent.id}"
                   method: :delete,
                   data: { confirm: agent_removal_presenter.confirm_message },
                   class: "fr-btn fr-btn--tertiary fr-icon-delete-bin-fill"
-  - elsif agent != current_agent
+  - elsif agent.email.present? && agent != current_agent
     td
       = mail_to agent.email, class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-btn--sm fr-icon-mail-line" do
         | Contacter
