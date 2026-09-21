@@ -7,10 +7,14 @@ RSpec.describe Api::V1::AgentAuthBaseController do
     end
     stub_const("Api::V1::TestController", klass)
 
+    Rails.application.routes.disable_clear_and_finalize = true
+
     Rails.application.routes.draw do
       get "/api/v1/test/fake_action", to: "api/v1/test#fake_action"
     end
   end
+
+  after { Rails.application.reload_routes! }
 
   let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id) }
   let(:agent) { create(:agent) }
