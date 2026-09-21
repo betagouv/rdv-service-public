@@ -1,4 +1,6 @@
 class Agents::RegistrationsController < Devise::RegistrationsController
+  include Agents::TwoFactorFreshnessConcern
+
   respond_to :html, :json
   before_action { @active_agent_preferences_menu_item = :compte }
 
@@ -12,6 +14,7 @@ class Agents::RegistrationsController < Devise::RegistrationsController
       removal_services.each(&:remove!)
       flash[:notice] = I18n.t("devise.failure.deleted_account")
       Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
+      clear_two_factor_freshness!
       redirect_to root_path
     else
       flash[:error] = removal_services.select(&:invalid?).map { |service| service.errors.full_messages.join }.join(", ")

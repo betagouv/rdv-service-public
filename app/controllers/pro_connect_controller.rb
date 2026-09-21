@@ -226,6 +226,7 @@ class ProConnectController < ApplicationController
     remember_device = session.delete(Agents::ProConnectStepUpController::SESSION_REMEMBER_DEVICE_KEY)
     session.delete(Agents::ProConnectStepUpController::SESSION_LOGIN_HINT_KEY)
 
+    clear_two_factor_freshness!
     bypass_sign_in agent, scope: :agent
     AgentTrustedDevice.remember_by_cookie!(agent, cookies) if remember_device
     session[:pro_connect_id_token] = callback_client.id_token_for_logout
