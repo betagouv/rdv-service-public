@@ -19,7 +19,7 @@ RSpec.describe Admin::Territories::AgentRolesController, type: :controller do
 
     it "marque immédiatement l'agent comme sensible, sans attendre le job quotidien" do
       stub_const("AgentSensitiveAccountCalculator::SENSITIVE_RDV_THRESHOLD", 2)
-      agent = create(:agent, role_in_territories: [territory])
+      agent = create(:agent, admin_in_territories: [territory])
       create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
       organisation = create(:organisation, territory: territory)
       agent_role = create(:agent_role, agent: agent, access_level: "basic", organisation: organisation)
@@ -47,7 +47,7 @@ RSpec.describe Admin::Territories::AgentRolesController, type: :controller do
     it "marque immédiatement le nouvel agent comme sensible, sans attendre le job quotidien" do
       stub_const("AgentSensitiveAccountCalculator::SENSITIVE_RDV_THRESHOLD", 2)
       organisation = create(:organisation, territory: territory)
-      agent = create(:agent, role_in_territories: [territory])
+      agent = create(:agent, admin_in_territories: [territory])
       create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
       other_agent = create(:agent, organisations: [])
       create_list(:rdv, 3, organisation: organisation)
