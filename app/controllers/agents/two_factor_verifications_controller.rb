@@ -1,5 +1,6 @@
 class Agents::TwoFactorVerificationsController < ApplicationController
   include Agents::TwoFactorFreshnessConcern
+  include Agents::LoginCodeVerificationConcern
 
   before_action :authenticate_agent!
 
@@ -14,24 +15,14 @@ class Agents::TwoFactorVerificationsController < ApplicationController
   end
 
   def resend
-    UnblockBrevoTransactionalContact.new(current_agent.email).call
-    Agents::LoginCodeSender.perform(email: current_agent.email, domain_id: current_domain.id)
+    resend_login_code!(current_agent.email)
     redirect_to new_agents_two_factor_verification_path
   end
 
   def create
-    code = params.require(:login_code).expect(:code)
-    validator = LoginCodeValidator.new(email: current_agent.email, code:)
-
-    if validator.valid?
-      validator.valid_login_code.update!(used_at: Time.zone.now)
+    submit_login_code!(current_agent.email) do
       mark_two_factor_verified!
       redirect_after_two_factor_verification!(session.delete(RETURN_TO_SESSION_KEY))
-    else
-      @email = current_agent.email
-      @existing_login_code = LoginCode.most_recent_usable_for(email: @email)
-      @existing_login_code&.errors&.add(:base, validator.error)
-      render :new
     end
   end
 
