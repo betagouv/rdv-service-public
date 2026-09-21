@@ -16,13 +16,13 @@ class Agents::RegistrationsController < Devise::RegistrationsController
       # tous les scopes Warden et vide déjà la session entière — si un super admin usurpe cet agent,
       # cela le déconnecterait aussi. On ne déconnecte donc que le scope `:agent` dans ce cas (comme
       # `Agents::SessionsController#destroy`), sans toucher au reste de la session.
+      sign_out(resource_name)
+
       if session[:super_admin_signed_in_as_agent]
-        sign_out(resource_name)
         session.delete(:super_admin_signed_in_as_agent)
         flash[:notice] = "Le compte de #{deleted_agent_email} a été supprimé."
         redirect_to super_admins_agents_path
       else
-        Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
         reset_session
 
         flash[:notice] = I18n.t("devise.failure.deleted_account")
