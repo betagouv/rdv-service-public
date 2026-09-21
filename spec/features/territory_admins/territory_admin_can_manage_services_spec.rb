@@ -8,13 +8,15 @@ RSpec.describe "territory admin can manage services", type: :feature do
 
   describe "Activating/Deactivating services" do
     def check_toggle(service)
-      find(%(label[for="service-toggle-#{service.id}"])).click
-      within("#service-toggle-#{service.id}-description") { expect(page).to have_content("Service activé") }
+      label_selector = %(label[for="service-toggle-#{service.id}"])
+      find(label_selector).click
+      within(label_selector) { expect(page).to have_content("Service activé") }
     end
 
     def uncheck_toggle(service)
-      find(%(label[for="service-toggle-#{service.id}"])).click
-      within("#service-toggle-#{service.id}-description") { expect(page).to have_content("Service désactivé") }
+      label_selector = %(label[for="service-toggle-#{service.id}"])
+      find(label_selector).click
+      within(label_selector) { expect(page).to have_content("Service désactivé") }
     end
 
     it "works", js: true do
