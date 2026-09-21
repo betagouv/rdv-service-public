@@ -25,7 +25,6 @@
                 required: true,
                 class: "select2-input js-rdv-invitation-user-select",
                 data: { \
-                  width: :style,
                   "select2-config": { ajax: { url: search_agents_users_path(organisation_id: @rdv_invitation.organisation.id), dataType: "json", delay: 250}, placeholder: "Chercher un usager par nom, prénom, téléphone, ou email" }, }
 
             div
