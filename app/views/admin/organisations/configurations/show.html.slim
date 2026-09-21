@@ -85,7 +85,7 @@
               - else
                 i.fr-text-mention--grey Pas d'informations de contact
 
-      - if current_domain == Domain::RDV_AIDE_NUMERIQUE
+      - if current_agent.admin_in_organisation?(current_organisation) && current_domain == Domain::RDV_AIDE_NUMERIQUE
         .fr-col-12.fr-col-md-4.fr-mb-2w
           .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
             .fr-tile__body
