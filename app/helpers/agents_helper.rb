@@ -9,14 +9,6 @@ module AgentsHelper
     end
   end
 
-  def current_agent?(agent)
-    agent.id == current_agent.id
-  end
-
-  def me_tag(agent)
-    tag.span("Vous", class: "fr-badge fr-badge--info fr-badge--no-icon fr-badge--sm") if current_agent?(agent)
-  end
-
   def build_link_to_rdv_wizard_params(creneau, form)
     params = {}
     params[:step] = 2

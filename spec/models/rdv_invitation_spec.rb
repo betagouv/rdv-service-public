@@ -88,4 +88,16 @@ RSpec.describe RdvInvitation do
       end
     end
   end
+
+  describe "pour une invitation annulée" do
+    let(:rdv_invitation) { build(:rdv_invitation, cancelled: true) }
+
+    it "ne permet pas de prendre rendez-vous" do
+      expect do
+        rdv_invitation.create_rdv_and_notify(starts_at: 1.week.from_now)
+      end.not_to change(Rdv, :count)
+
+      expect(rdv_invitation.errors.full_messages).to eq ["Cette invitation a été annulée, il n'est pas possible de prendre ce rendez-vous."]
+    end
+  end
 end

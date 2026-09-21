@@ -1,5 +1,6 @@
 RSpec.describe "Api::Rdvinsertion authentication" do
   let!(:agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
+  let!(:super_admin) { create(:super_admin, email: agent.email) }
 
   context "with OAuth authentication" do
     let!(:rdv_insertion_oauth_application) { create(:oauth_application, uid: "rdv-insertion-app-uid") }

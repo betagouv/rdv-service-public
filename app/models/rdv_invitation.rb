@@ -26,6 +26,8 @@ class RdvInvitation < ApplicationRecord
   validate :user_cannot_be_relative
   validate :motif_is_supported
 
+  scope :pending, -> { where(rdv_id: nil, cancelled: false) }
+
   def creneaux_search(starts_at)
     CreneauxSearch::ForUser.new(
       motif: motif,
@@ -38,6 +40,11 @@ class RdvInvitation < ApplicationRecord
   def create_rdv_and_notify(starts_at:)
     if rdv.present?
       errors.add(:base, "Un rendez-vous a déjà été pris pour cette invitation.")
+      return
+    end
+
+    if cancelled?
+      errors.add(:base, "Cette invitation a été annulée, il n'est pas possible de prendre ce rendez-vous.")
       return
     end
 
@@ -81,7 +88,7 @@ class RdvInvitation < ApplicationRecord
 
   def validate_phone_number_present_for_motif_by_phone
     if motif.phone? && user.phone_number.blank?
-      errors.add(:base, "Le motif est pas téléphone mais  le numéro de #{user.full_name} n'est pas renseigné.")
+      errors.add(:base, "Le motif est par téléphone mais  le numéro de #{user.full_name} n'est pas renseigné.")
     end
   end
 
