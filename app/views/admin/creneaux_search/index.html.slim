@@ -1,8 +1,8 @@
 - content_for(:title) do
   = t(".search_for_slots_title")
 - if @form.users.any?
-  .fr-text--xl.mb-2 = t(".search_for_slots_subtitle", users_fullname: @form.users.map(&:full_name).join(" ,"))
-.card.mt-2
+  .fr-text--xl.fr-mb-4 = t(".search_for_slots_subtitle", users_fullname: @form.users.map(&:full_name).join(" ,"))
+.card
   .card-body
     - if @motifs.none?
       = render "admin/motifs/creation_needed_callout", motivation_text: "Pour prendre un rendez-vous, vous devez d'abord créer un motif."

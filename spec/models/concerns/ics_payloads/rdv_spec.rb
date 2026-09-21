@@ -2,31 +2,31 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
   describe "#payload" do
     %i[attachement_filename ical_uid summary ends_at description location].each do |key|
       it "return an hash with key #{key}" do
-        user = build(:user)
-        rdv = build(:rdv, users: [user])
+        user = create(:user)
+        rdv = create(:rdv, users: [user])
         expect(rdv.payload).to have_key(key)
       end
     end
 
     describe ":attachement_filename" do
-      let(:user) { build(:user) }
-      let(:rdv) { build(:rdv, users: [user], starts_at: Time.zone.parse("20201123 15h50")) }
+      let(:user) { create(:user) }
+      let(:rdv) { create(:rdv, users: [user], starts_at: Time.zone.parse("20201123 15h50")) }
 
       it { expect(rdv.payload[:attachement_filename]).to eq("rdv-#{rdv.motif.name.parameterize}-2020-11-23-15h50.ics") }
     end
 
     describe ":starts_at" do
-      let(:user) { build(:user) }
+      let(:user) { create(:user) }
       let(:starts_at) { Time.zone.parse("20201123 15h50") }
-      let(:rdv) { build(:rdv, users: [user], starts_at: starts_at) }
+      let(:rdv) { create(:rdv, users: [user], starts_at: starts_at) }
 
       it { expect(rdv.payload[:starts_at]).to eq(starts_at) }
     end
 
     describe ":ends_at" do
-      let(:user) { build(:user) }
+      let(:user) { create(:user) }
       let(:starts_at) { Time.zone.parse("20201123 15h50") }
-      let(:rdv) { build(:rdv, users: [user], starts_at: Time.zone.parse("20201123 15h50"), duration_in_min: 10) }
+      let(:rdv) { create(:rdv, users: [user], starts_at: Time.zone.parse("20201123 15h50"), duration_in_min: 10) }
 
       it { expect(rdv.payload[:ends_at]).to eq(starts_at + 10.minutes) }
     end
@@ -36,8 +36,9 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
       let(:agent) { build(:agent) }
       let(:rdv) { create(:rdv, users: [user], agents: [agent], context: "Ceci est un RDV pour faire un passeport") }
 
-      it "provides a link to the RDV index for users" do
-        expect(rdv.payload[:description]).to eq("Infos et annulation: http://www.rdv-solidarites-test.localhost/r")
+      it "provides a link to the RDV for users, with their restricted auth token" do
+        token = user.participation_for(rdv).restricted_auth_token
+        expect(rdv.payload[:description]).to eq("Infos et annulation: http://www.rdv-solidarites-test.localhost/users/rdvs/#{rdv.id}?invitation_token=#{token}")
       end
 
       it "does not display the context" do
@@ -52,7 +53,8 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
       end
 
       context "with a visio motif" do
-        let(:rdv) { build(:rdv, users: [user], motif: build(:motif, location_type: :visio), uuid: 123) }
+        let(:organisation) { create(:organisation) }
+        let(:rdv) { create(:rdv, organisation:, users: [user], motif: build(:motif, location_type: :visio, organisation:), uuid: 123) }
 
         it "indicates the location type" do
           expect(rdv.payload[:description]).to start_with "RDV par visioconférence"
@@ -80,10 +82,11 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
     end
 
     describe ":location" do
-      let(:user) { build(:user) }
+      let(:user) { create(:user) }
+      let(:organisation) { create(:organisation) }
 
       context "with a phone motif" do
-        let(:rdv) { build(:rdv, users: [user], motif: build(:motif, :by_phone)) }
+        let(:rdv) { create(:rdv, organisation:, users: [user], motif: build(:motif, :by_phone, organisation:)) }
 
         it { expect(rdv.payload[:location]).to be_nil }
 
@@ -95,13 +98,13 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
       end
 
       context "with a public office motif" do
-        let(:rdv) { build(:rdv, users: [user], motif: build(:motif, :public_office), lieu: build(:lieu, address: "17 rue de l'adresse, Paris, 75016")) }
+        let(:rdv) { create(:rdv, organisation:, users: [user], motif: build(:motif, :public_office, organisation:), lieu: build(:lieu, address: "17 rue de l'adresse, Paris, 75016")) }
 
         it { expect(rdv.payload[:location]).to eq("17 rue de l'adresse, Paris, 75016") }
       end
 
       context "with a home motif" do
-        let(:rdv) { build(:rdv, users: [user], motif: build(:motif, :home)) }
+        let(:rdv) { create(:rdv, organisation:, users: [user], motif: build(:motif, :home, organisation:)) }
 
         it { expect(rdv.payload[:location]).to be_nil }
 
@@ -113,10 +116,11 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
       end
 
       context "with a visio motif" do
-        let(:rdv) { build(:rdv, users: [user], motif: build(:motif, location_type: :visio), uuid: 123) }
+        let(:rdv) { create(:rdv, organisation:, users: [user], motif: build(:motif, location_type: :visio, organisation:), uuid: 123) }
 
-        it "shows the link to the visio" do
-          expect(rdv.payload[:location]).to eq "https://webconf.numerique.gouv.fr/RdvServicePublic"
+        it "shows the link to the visio, with the user's restricted auth token" do
+          token = user.participation_for(rdv).restricted_auth_token
+          expect(rdv.payload[:location]).to eq "http://www.rdv-solidarites-test.localhost/users/rdvs/#{rdv.id}/visio?invitation_token=#{token}"
         end
       end
     end
@@ -129,8 +133,9 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
     end
 
     describe ":summary" do
-      let(:user) { build(:user, first_name: "Ethan", last_name: "DUVAL") }
-      let(:rdv) { build(:rdv, users: [user], motif: build(:motif, name: "Consultation")) }
+      let(:user) { create(:user, first_name: "Ethan", last_name: "DUVAL") }
+      let(:organisation) { create(:organisation) }
+      let(:rdv) { create(:rdv, organisation:, users: [user], motif: build(:motif, name: "Consultation", organisation:)) }
 
       context "with sensitive data enabled" do
         it "includes the user's name in the summary" do
@@ -138,7 +143,7 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
         end
 
         context "when RDV is collectif" do
-          let(:rdv) { build(:rdv, users: [user], motif: build(:motif, name: "Atelier", collectif: true)) }
+          let(:rdv) { create(:rdv, organisation:, users: [user], motif: build(:motif, name: "Atelier", collectif: true, organisation:)) }
 
           it "display motif name" do
             expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:summary]).to eq("Atelier")
@@ -152,7 +157,7 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
         end
 
         context "when RDV is collectif" do
-          let(:rdv) { build(:rdv, users: [user], motif: build(:motif, name: "Atelier", collectif: true)) }
+          let(:rdv) { create(:rdv, organisation:, users: [user], motif: build(:motif, name: "Atelier", collectif: true, organisation:)) }
 
           it "display motif name" do
             expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:summary]).to eq("Atelier")

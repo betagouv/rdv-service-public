@@ -75,11 +75,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   private
 
   def authenticate_agent
-    if request.headers.include?("X-Agent-Auth-Signature")
-      # Ce mode d'authentification n'est utilisé que par RDV Insertion et ne fonctionne que sur l'instance historique,
-      # puisqu'il dépend de la variable d'env SHARED_SECRET_FOR_AGENTS_AUTH
-      authenticate_agent_with_shared_secret
-    elsif request.headers["HTTP_ACCESS_TOKEN"] && request.headers["HTTP_UID"] && ENV["AUTHORIZE_DEPRECATED_API_AUTH"].present?
+    if request.headers["HTTP_ACCESS_TOKEN"] && request.headers["HTTP_UID"] && ENV["AUTHORIZE_DEPRECATED_API_AUTH"].present?
       # Ce mode d'authentification est déprécié, et n'est autorisé que sur l'instance historique
       authenticate_api_v1_agent_with_token_auth!
       @authentication_type = "DeviseTokenAuth"
@@ -90,39 +86,6 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
         @current_agent = Agent.find(doorkeeper_token.resource_owner_id)
       end
     end
-  end
-
-  def authenticate_agent_with_shared_secret
-    if shared_secret_is_valid?
-      @current_agent = Agent.find_by(email: request.headers["uid"])
-      @authentication_type = "SharedSecret"
-    else
-      Sentry.capture_message("API authentication agent was called with an invalid signature !", fingerprint: ["api_agent_invalid_sig"])
-      render(
-        status: :unauthorized,
-        json: {
-          errors: [I18n.t("devise.failure.unauthenticated")],
-        }
-      )
-    end
-  end
-
-  def shared_secret_is_valid?
-    return false if request.headers["X-Agent-Auth-Signature"].nil?
-
-    agent = Agent.find_by(email: request.headers["uid"])
-    # Structure of the payload need to be exact for digest comparison
-    payload = {
-      id: agent.id,
-      first_name: agent.first_name,
-      last_name: agent.last_name,
-      email: agent.email,
-    }
-
-    ActiveSupport::SecurityUtils.secure_compare(
-      OpenSSL::HMAC.hexdigest("SHA256", ENV.fetch("SHARED_SECRET_FOR_AGENTS_AUTH"), payload.to_json),
-      request.headers["X-Agent-Auth-Signature"]
-    )
   end
 
   def user_for_paper_trail
