@@ -58,6 +58,7 @@ class User < ApplicationRecord
   has_many :receipts, dependent: :destroy
   has_many :annotations, dependent: :destroy
   has_many :external_references, as: :item, dependent: :destroy
+  has_many :rdv_invitations, dependent: :destroy
   has_one :user_ami_profile, dependent: :destroy
 
   # Through relations

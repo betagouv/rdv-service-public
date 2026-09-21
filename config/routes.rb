@@ -154,6 +154,7 @@ Rails.application.routes.draw do
         post :resend, on: :collection
       end
       resource :pro_connect_step_up, only: %i[new create], controller: "pro_connect_step_up"
+      resource :pro_connect_linking, only: %i[show create], controller: "pro_connect_linking"
       resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
         resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync do
@@ -163,23 +164,28 @@ Rails.application.routes.draw do
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end
+
       resources :rdvs, only: %i[show] do
         member do
           get :visio
         end
       end
+
       resources :rdv_plans, only: %i[show] do
         member do
+          get :edit_motif
+          patch :update_motif
+
           patch :update_agent
 
           get :edit_starts_at
           patch :update_starts_at
 
-          get :edit_modalites
-          patch :update_modalites
+          get :edit_starts_at_and_duration
+          patch :update_starts_at_and_duration
 
-          get :edit_motif
-          patch :update_motif
+          get :edit_lieu
+          patch :update_lieu
 
           get :edit_user
           post :create_rdv
@@ -333,7 +339,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :rdv_invitations, only: %i[new create show]
+      resources :rdv_invitations, only: %i[new create show] do
+        member do
+          get :show_confirmation
+        end
+      end
 
       scope module: "organisations" do
         resource :online_booking, only: %i[show edit update] do
@@ -444,7 +454,10 @@ Rails.application.routes.draw do
   get "/budget", to: redirect("https://pad.numerique.gouv.fr/rHMnemklQm6Sww5yVCI9ow?view#RDV-Service-Public", status: 302)
 
   ## Shorten urls for SMS
+  # << REMOVE AFTER 01/01/2027
+  # On préserve cette route pour la rétrocompatibilité des anciens SMS/ICS envoyés avant qu'on utilise rdv_short_from_token
   get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_short"
+  # >> REMOVE AFTER 01/01/2027
 
   # tkn est obligatoire pour s'assurer qu'il est possible de se connecter
   # Rate limité par IP (voir config/initializers/rack_attack.rb)

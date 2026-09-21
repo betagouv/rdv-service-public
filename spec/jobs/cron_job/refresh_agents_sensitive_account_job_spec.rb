@@ -2,7 +2,7 @@ RSpec.describe CronJob::RefreshAgentsSensitiveAccountJob, type: :job do
   describe "#perform" do
     before do
       # Stub le seuil pour éviter de créer beaucoup de RDVs
-      stub_const("CronJob::RefreshAgentsSensitiveAccountJob::SENSITIVE_RDV_THRESHOLD", 2)
+      stub_const("AgentSensitiveAccountCalculator::SENSITIVE_RDV_THRESHOLD", 2)
     end
 
     it "met sensitive_account à true pour un agent admin d'une organisation avec beaucoup de RDVs" do
