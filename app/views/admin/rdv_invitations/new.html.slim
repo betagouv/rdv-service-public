@@ -5,7 +5,36 @@
   .fr-col-md-12.col-lg-8
     .card.card-body.fr-p-2w
       - if @rdv_invitation.motif
-        = render "form"
+        p
+          span.fr-text-mention--grey
+            = motif_icon(class: "fr-mr-1w")
+            |> Motif :
+          = @rdv_invitation.motif.name
+        p.fr-text-mention--grey
+          = location_type_icon(@rdv_invitation.motif.location_type, class: "fr-mr-1w")
+          = @rdv_invitation.motif.human_attribute_value(:location_type)
+          = " · "
+          = "#{@rdv_invitation.motif.default_duration_in_min} min."
+
+        - creneaux_search = @rdv_invitation.creneaux_search(Time.zone.now)
+        - creneaux_count = creneaux_search.creneaux.count
+        - if creneaux_count == 0
+          p
+            | Il n'y a pas de créneaux disponibles pour ce motif.
+            br
+            | Vous pouvez en ajouter en créant une nouvelle plage d'ouverture.
+            .fr-btns-group.fr-btns-group--inline-md
+              = link_to "Ajouter une plage d'ouverture", new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: current_agent.id), class: "fr-btn"
+              = link_to "Voir les plages d'ouvertures", admin_organisation_planning_plage_ouvertures_path(current_organisation, { agent_id: current_agent.id }), class: "fr-btn fr-btn--secondary"
+          .fr-grid-row
+            .fr-col-12.fr-mt-2w
+              = link_to("Retour aux motifs", new_admin_organisation_rdv_invitation_path(current_organisation), dsfr_return_btn_options)
+
+        - else
+          p.fr-text-mention--grey.fr-text--sm
+            = icon("fr-icon-checkbox-circle-line", class: "fr-mr-1w")
+            | Il y a #{creneaux_count} créneaux disponibles pour ce motif.
+          = render "form"
       - else
         - motifs = Agent::MotifPolicy::Scope.apply(current_agent, current_organisation.motifs)
         p
