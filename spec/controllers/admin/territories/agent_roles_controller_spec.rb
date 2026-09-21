@@ -16,6 +16,20 @@ RSpec.describe Admin::Territories::AgentRolesController, type: :controller do
 
       expect(response).to redirect_to(edit_admin_territory_agent_path(territory, agent))
     end
+
+    it "marque immédiatement l'agent comme sensible, sans attendre le job quotidien" do
+      stub_const("AgentSensitiveAccountCalculator::SENSITIVE_RDV_THRESHOLD", 2)
+      agent = create(:agent, role_in_territories: [territory])
+      create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
+      organisation = create(:organisation, territory: territory)
+      agent_role = create(:agent_role, agent: agent, access_level: "basic", organisation: organisation)
+      create_list(:rdv, 3, organisation: organisation)
+      sign_in agent
+
+      post :update, params: { territory_id: territory.id, id: agent_role.id, agent_role: { access_level: "admin" } }
+
+      expect(agent.reload.sensitive_account).to be true
+    end
   end
 
   describe "POST #create" do
@@ -28,6 +42,20 @@ RSpec.describe Admin::Territories::AgentRolesController, type: :controller do
 
       post :create, params: { territory_id: territory.id, agent_role: { access_level: "admin", agent_id: other_agent.id, organisation_id: organisation.id } }
       expect(response).to redirect_to(edit_admin_territory_agent_path(territory, other_agent))
+    end
+
+    it "marque immédiatement le nouvel agent comme sensible, sans attendre le job quotidien" do
+      stub_const("AgentSensitiveAccountCalculator::SENSITIVE_RDV_THRESHOLD", 2)
+      organisation = create(:organisation, territory: territory)
+      agent = create(:agent, role_in_territories: [territory])
+      create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
+      other_agent = create(:agent, organisations: [])
+      create_list(:rdv, 3, organisation: organisation)
+      sign_in agent
+
+      post :create, params: { territory_id: territory.id, agent_role: { access_level: "admin", agent_id: other_agent.id, organisation_id: organisation.id } }
+
+      expect(other_agent.reload.sensitive_account).to be true
     end
   end
 

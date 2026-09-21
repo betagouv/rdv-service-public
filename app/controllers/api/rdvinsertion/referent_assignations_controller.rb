@@ -19,15 +19,20 @@ class Api::Rdvinsertion::ReferentAssignationsController < Api::Rdvinsertion::Age
 
   private
 
+  # L'agent doit partager une organisation avec l'usager pour lui assigner des référents
+  def set_user
+    @user = User.find(referent_assignations_params[:user_id])
+    authorize(@user, :show?, policy_class: Agent::UserPolicy)
+  rescue ActiveRecord::RecordNotFound
+    render_error :not_found, not_found: :user
+  end
+
+  # Les agents assignables ne sont volontairement pas restreints à ceux des organisations de l'agent : quand
+  # rdv-insertion recrée un usager supprimé pour raison RGPD, il lui réassigne tous ses référents, y compris ceux
+  # d'autres départements.
   def set_agents
     @agents = Agent.where(id: referent_assignations_params[:agent_ids])
       .joins(:organisations).where(organisations: { verticale: "rdv_insertion" }).distinct
-  end
-
-  def set_user
-    @user = User.find(referent_assignations_params[:user_id])
-  rescue ActiveRecord::RecordNotFound
-    render_error :not_found, not_found: :user
   end
 
   def referent_assignations_params

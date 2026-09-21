@@ -11,6 +11,7 @@ module IcsPayloads
         rrule: IcalFormatters::Rrule.from_recurrence(recurrence),
         domain: domain,
         tzid: agent.organisations.first&.time_zone,
+        attendees: [agent.email],
       }
 
       payload[:action] = action if action.present?

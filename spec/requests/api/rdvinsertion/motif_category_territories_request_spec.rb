@@ -13,7 +13,9 @@ RSpec.describe "Motif Category Territory API" do
       parameter name: "organisation_id", in: :query, type: :integer, description: "ID de l'organisation", example: 12
       parameter name: "motif_category_short_name", in: :query, type: :string, description: "Nom de la catégorie (généralement parametrizé)", example: "rsa_orientation"
 
-      let!(:agent) { create(:agent) }
+      let!(:territory) { create(:territory) }
+      let!(:organisation) { create(:organisation, territory: territory) }
+      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
       let!(:shared_secret) { "S3cr3T" }
       let!(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }
       let!(:uid) { auth_headers["uid"].to_s }
@@ -26,8 +28,6 @@ RSpec.describe "Motif Category Territory API" do
       end
 
       response 200, "Active une catégorie de motifs sur un espace" do
-        let!(:territory) { create(:territory) }
-        let!(:organisation) { create(:organisation, territory: territory) }
         let!(:organisation_id) { organisation.id }
         let!(:motif_category) { create(:motif_category) }
         let!(:motif_category_short_name) { motif_category.short_name }
@@ -51,8 +51,6 @@ RSpec.describe "Motif Category Territory API" do
       end
 
       context "when authentication fails" do
-        let!(:territory) { create(:territory) }
-        let!(:organisation) { create(:organisation, territory: territory) }
         let!(:organisation_id) { organisation.id }
         let!(:motif_category) { create(:motif_category) }
         let!(:motif_category_short_name) { motif_category.short_name }
@@ -65,6 +63,34 @@ RSpec.describe "Motif Category Territory API" do
           post "/api/rdvinsertion/motif_category_territories/", params: { organisation_id: organisation_id, motif_category_short_name: motif_category_short_name }, headers: auth_headers
 
           expect(response).to have_http_status(:unauthorized)
+        end
+      end
+
+      context "when the agent is not admin in the organisation" do
+        let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+        let!(:organisation_id) { organisation.id }
+        let!(:motif_category) { create(:motif_category) }
+        let!(:motif_category_short_name) { motif_category.short_name }
+
+        it "returns a 403 forbidden and does not activate the motif category" do
+          post "/api/rdvinsertion/motif_category_territories/", params: { organisation_id: organisation_id, motif_category_short_name: motif_category_short_name }, headers: auth_headers
+
+          expect(response).to have_http_status(:forbidden)
+          expect(territory.reload.motif_categories).not_to include(motif_category)
+        end
+      end
+
+      context "when the agent has no role in the organisation" do
+        let!(:agent) { create(:agent) }
+        let!(:organisation_id) { organisation.id }
+        let!(:motif_category) { create(:motif_category) }
+        let!(:motif_category_short_name) { motif_category.short_name }
+
+        it "returns a 403 forbidden and does not activate the motif category" do
+          post "/api/rdvinsertion/motif_category_territories/", params: { organisation_id: organisation_id, motif_category_short_name: motif_category_short_name }, headers: auth_headers
+
+          expect(response).to have_http_status(:forbidden)
+          expect(territory.reload.motif_categories).not_to include(motif_category)
         end
       end
     end

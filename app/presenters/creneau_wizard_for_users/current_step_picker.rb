@@ -4,7 +4,7 @@ class CreneauWizardForUsers::CurrentStepPicker
   end
 
   def current_step
-    if @context.departement.blank? && public_link_organisation_id.blank?
+    if @context.departement.blank? && public_link_organisation_id.blank? && !@context.follow_up?
       :address_selection
     elsif requires_motif_selection?
       :motif_selection
