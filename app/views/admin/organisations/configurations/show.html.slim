@@ -1,27 +1,11 @@
 - content_for :title do
   = settings_icon(class: "fr-mr-1w")
   | Configuration
-
-- unless current_agent.admin_in_organisation?(current_organisation)
-  .fr-callout
-    .fr-callout__title.fr-text--lg
-      | Besoin de modifier un paramètre ?
-    div.fr-text--sm
-      |> En tant qu'agent, vous avez un accès en
-      b lecture seule
-      |> .
-      |> Pour modifier les motifs, les lieux, la réservation en ligne ou pour inviter de nouveaux agents, veuillez contacter un administrateur de votre organisation.
-    = link_to "voir la liste des administrateurs", admin_organisation_agents_path(current_organisation, search: { role: "admin" }), class: "fr-btn fr-btn--secondary fr-btn--sm"
+  - unless current_agent.admin_in_organisation?(current_organisation)
+    .fr-badge.fr-icon-lock-fill.fr-badge--icon-left.fr-ml-2w
+      | Lecture seule
 
 = render "admin/onboarding/banner"
-
-.rdv-display-flex.rdv-justify-content-space-between
-  h2.fr-text--lead
-    |> Paramètres de l'organisation
-    b= current_organisation.name
-  div
-    .fr-badge.fr-icon-lock-fill.fr-badge--icon-left
-      | Lecture seule
 
 .fr-container-fluid
   .fr-grid-row.fr-grid-row--gutters
@@ -108,6 +92,17 @@
               .fr-tile__content
                 h2.fr-tile__title
                   = link_to("Migration vers RDV Service Public", admin_organisation_instance_exports_path(current_organisation))
+
+- unless current_agent.admin_in_organisation?(current_organisation)
+  .fr-callout.fr-mt-4w
+    .fr-callout__title.fr-text--lg
+      | Besoin de modifier un paramètre ?
+    div.fr-text--sm
+      |> En tant qu'agent, vous avez un accès en
+      b lecture seule
+      |> .
+      |> Pour modifier les motifs, les lieux, la réservation en ligne ou pour inviter de nouveaux agents, veuillez contacter un administrateur de votre organisation.
+    = link_to "Voir la liste des administrateurs", admin_organisation_agents_path(current_organisation, search: { role: "admin" }), class: "fr-btn fr-btn--secondary fr-btn--sm"
 
   / Un bricolage pour éviter que le footer déborde sur les tuiles
   br.fr-my-2w
