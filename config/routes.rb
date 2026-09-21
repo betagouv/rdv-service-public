@@ -327,32 +327,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :rdv_plans, only: %i[create show] do
-        member do
-          get :edit_motif
-          patch :update_motif
-
-          patch :update_agent
-
-          get :edit_starts_at
-          patch :update_starts_at
-
-          get :edit_starts_at_and_duration
-          patch :update_starts_at_and_duration
-
-          get :edit_rdv_invitation
-          patch :update_rdv_invitation
-
-          get :edit_lieu
-          patch :update_lieu
-
-          get :edit_user
-          post :create_rdv
-
-          get :rdv
-          get :rdv_invitation
-        end
-      end
+      resources :rdv_plans, only: %i[create]
 
       resources :rdvs_collectifs, only: %i[index new create edit update] do
         collection do
