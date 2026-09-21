@@ -342,8 +342,12 @@ Rails.application.routes.draw do
       end
 
       resources :rdv_invitations, only: %i[new create show] do
+        collection do
+          post :create_user
+        end
         member do
           get :show_confirmation
+          patch :cancel
         end
       end
 
@@ -443,6 +447,7 @@ Rails.application.routes.draw do
   namespace :aide do
     get "aiguillage_role" => "pages#aiguillage_role"
     get "aiguillage_usager" => "pages#aiguillage_usager"
+    get "aiguillage_agent" => "pages#aiguillage_agent"
     resource :demande_support, only: %i[new create]
   end
 

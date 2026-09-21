@@ -86,6 +86,32 @@ RSpec.describe Agent::AgentPolicy::Scope, type: :policy do
       end
     end
 
+    context "agent basique avec un confrère sans service" do
+      let!(:organisation) { create(:organisation) }
+      let!(:agent) { create(:agent, :with_service, basic_role_in_organisations: [organisation]) }
+      let!(:confrere_sans_service) { create(:agent, basic_role_in_organisations: [organisation]) }
+      let!(:autre_agent_service_different) { create(:agent, :with_service, basic_role_in_organisations: [organisation]) }
+
+      it { is_expected.to contain_exactly(agent, confrere_sans_service) }
+    end
+
+    context "agent basique sans service" do
+      let!(:organisation) { create(:organisation) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+      let!(:autre_agent_sans_service) { create(:agent, basic_role_in_organisations: [organisation]) }
+      let!(:autre_agent_avec_service) { create(:agent, :with_service, basic_role_in_organisations: [organisation]) }
+
+      it { is_expected.to contain_exactly(agent, autre_agent_sans_service) }
+    end
+
+    context "agent basique avec un administrateur d'un autre service dans la même organisation" do
+      let!(:organisation) { create(:organisation) }
+      let!(:agent) { create(:agent, :with_service, basic_role_in_organisations: [organisation]) }
+      let!(:administrateur_service_different) { create(:agent, :with_service, admin_role_in_organisations: [organisation]) }
+
+      it { is_expected.to contain_exactly(agent, administrateur_service_different) }
+    end
+
     context "when agent is agent d'accueil" do
       let!(:other_service) { create :service }
       let!(:organisations) { create_list(:organisation, 2) }
@@ -115,7 +141,6 @@ RSpec.describe Agent::AgentPolicy::Scope, type: :policy do
           admin_role_in_organisations: [organisations[1], organisations[2]]
         )
       end
-      # TODO: ajouter une spec pour un agent sans service
       let!(:other_agent1) { create(:agent, :with_service, basic_role_in_organisations: [organisations[0]]) }
       let!(:other_agent2) { create(:agent, :with_service, basic_role_in_organisations: [organisations[1]]) }
       let!(:other_agent3) { create(:agent, :with_service, basic_role_in_organisations: [organisations[2]]) }
@@ -142,7 +167,6 @@ RSpec.describe Agent::AgentPolicy::Scope, type: :policy do
       let!(:other_agent_same_territory1) { create(:agent, basic_role_in_organisations: [same_territory_organisations[0]]) }
       let!(:other_agent_same_territory2) { create(:agent, basic_role_in_organisations: [same_territory_organisations[1]]) }
       let!(:other_agent_same_territory3) { create(:agent, basic_role_in_organisations: [same_territory_organisations[2]]) }
-      # TODO: ajouter un agent sans service
       let!(:other_agent_different_territory1) { create(:agent, :with_service, basic_role_in_organisations: [other_territory_organisations[0]]) }
       let!(:other_agent_different_territory2) { create(:agent, basic_role_in_organisations: [other_territory_organisations[1]]) }
       let!(:other_agent_different_territory3) { create(:agent, basic_role_in_organisations: [other_territory_organisations[2]]) }

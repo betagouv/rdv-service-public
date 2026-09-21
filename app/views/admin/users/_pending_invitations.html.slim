@@ -1,5 +1,5 @@
 /# locals: (user:)
-- rdv_invitations = Agent::RdvInvitationPolicy::Scope.apply(current_agent, user.rdv_invitations).joins(:motif).where(motifs: { organisation_id: current_organisation.id }, rdv_id: nil).order("created_at asc").limit(10)
+- rdv_invitations = Agent::RdvInvitationPolicy::Scope.apply(current_agent, user.rdv_invitations.pending).joins(:motif).where(motifs: { organisation_id: current_organisation.id }).order("created_at asc").limit(10)
 - if rdv_invitations.none?
   i.fr-text-mention--grey Pas d'invitations à prendre rendez-vous en attente
 - else
