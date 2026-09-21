@@ -62,6 +62,8 @@ class Agent < ApplicationRecord
   # on retire les espaces parfois présents dans les SIRET ProConnect
   normalizes :proconnect_siret, with: -> { _1.presence&.gsub(/\s/, "") }
 
+  encrypts :menshen_access_token
+
   enum :rdv_notifications_level, {
     all: "all",       # notify of all rdv changes
     others: "others", # notify of changes made by other agents or users
