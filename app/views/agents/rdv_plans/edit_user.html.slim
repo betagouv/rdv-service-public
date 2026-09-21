@@ -1,16 +1,15 @@
-.fr-grid-row
-  .fr-col-12
-    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 3, step_title: "Usager", next_step_title: ""
+= render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 3, step_title: "Usager", next_step_title: ""
 
-.fr-grid-row.fr-mb-16w[data-controller="rdv-plan"]
-  .fr-col-12
-    = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
-    = render "agents/rdv_plans/summary/agent", rdv_plan: @rdv_plan
-    = render "agents/rdv_plans/summary/starts_at", rdv_plan: @rdv_plan
-    = render "agents/rdv_plans/summary/location_type", rdv_plan: @rdv_plan
+.fr-grid-row
+  .fr-col-12[class=(@rdv_plan.oauth_application.present? ? "fr-mb-16w" : "fr-col-md-10 fr-col-offset-md-1 card card-body" ) ]
+    div
+      = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
+      = render "agents/rdv_plans/summary/agent", rdv_plan: @rdv_plan
+      = render "agents/rdv_plans/summary/starts_at", rdv_plan: @rdv_plan
+      = render "agents/rdv_plans/summary/location_type", rdv_plan: @rdv_plan
 
     hr.fr-mt-2w
-    h3 Coordonnées de #{@rdv_plan.user.full_name}
+    h3.fr-h3 Coordonnées de #{@rdv_plan.user.full_name}
     = form_for @rdv_plan, url: create_rdv_agents_rdv_plan_path(@rdv_plan), method: :post, builder: Dsfr::FormBuilder do |f|
       = f.fields_for :user, @rdv_plan.user do |ff|
         .fr-grid-row.fr-grid-row--gutters
