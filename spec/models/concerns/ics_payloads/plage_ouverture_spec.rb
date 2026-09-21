@@ -60,6 +60,20 @@ RSpec.describe IcsPayloads::PlageOuverture do
       it { expect(plage_ouverture.payload[:rrule]).to eq("FREQ=WEEKLY;BYDAY=WE;") }
     end
 
+    describe ":tzid" do
+      let(:plage_ouverture) do
+        create(:plage_ouverture, organisation: create(:organisation, time_zone: "America/Guadeloupe"),
+                                 first_day: Date.new(2026, 3, 2), start_time: Tod::TimeOfDay.new(9))
+      end
+
+      it { expect(plage_ouverture.payload[:tzid]).to eq("America/Guadeloupe") }
+
+      it "is used in the generated ICS" do
+        ics = IcalFormatters::Ics.from_payload(plage_ouverture.payload).to_ical
+        expect(ics).to include("DTSTART;TZID=America/Guadeloupe:20260302T090000")
+      end
+    end
+
     describe ":ical_uid" do
       let(:plage_ouverture) { create(:plage_ouverture) }
 

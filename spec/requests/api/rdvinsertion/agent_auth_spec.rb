@@ -1,5 +1,6 @@
 RSpec.describe "Api::Rdvinsertion authentication" do
   let!(:agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
+  let!(:super_admin) { create(:super_admin, email: agent.email) }
 
   context "with OAuth authentication" do
     let!(:rdv_insertion_oauth_application) { create(:oauth_application, uid: "rdv-insertion-app-uid") }
@@ -45,6 +46,28 @@ RSpec.describe "Api::Rdvinsertion authentication" do
 
       expect(response).to have_http_status(:ok)
       expect(ApiCall.last.authentication_type).to eq "SharedSecret"
+    end
+
+    it "returns unauthorized and logs to Sentry when the shared secret is invalid" do
+      post "/api/rdvinsertion/motif_categories",
+           params: { name: "RSA Orientation", short_name: "rsa_orientation" },
+           headers: { uid: agent.email, "X-Agent-Auth-Signature": "BAD_PAYLOAD" },
+           as: :json
+
+      expect(response).to have_http_status(:unauthorized)
+      expect(parsed_response_body).to eq({ "errors" => ["Vous devez vous connecter ou vous inscrire pour continuer."] })
+      expect(sentry_events.last.message).to eq("API authentication agent was called with an invalid signature !")
+    end
+
+    it "returns unauthorized and logs to Sentry when the shared secret is nil" do
+      post "/api/rdvinsertion/motif_categories",
+           params: { name: "RSA Orientation", short_name: "rsa_orientation" },
+           headers: { uid: agent.email, "X-Agent-Auth-Signature": nil },
+           as: :json
+
+      expect(response).to have_http_status(:unauthorized)
+      expect(parsed_response_body).to eq({ "errors" => ["Vous devez vous connecter ou vous inscrire pour continuer."] })
+      expect(sentry_events.last.message).to eq("API authentication agent was called with an invalid signature !")
     end
   end
 

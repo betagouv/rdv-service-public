@@ -3,6 +3,9 @@ class Admin::Territories::AgentRolesController < Admin::Territories::BaseControl
     agent_role = AgentRole.find(params[:id])
     authorize(agent_role, policy_class: Agent::AgentRolePolicy)
     if agent_role.update(agent_role_params)
+      # Recalcul immédiat du statut "sensible" pour ne pas attendre le job quotidien
+      # CronJob::RefreshAgentsSensitiveAccountJob si le changement de rôle rend l'agent sensible.
+      AgentSensitiveAccountCalculator.refresh_agent!(agent_role.agent)
       flash[:success] = "Les permissions de l'agent ont été mises à jour"
     else
       flash[:error] = agent_role.errors.full_messages.join(", ")
@@ -15,6 +18,9 @@ class Admin::Territories::AgentRolesController < Admin::Territories::BaseControl
     agent_role = AgentRole.new(agent_role_params)
     authorize(agent_role, policy_class: Agent::AgentRolePolicy)
     if agent_role.save
+      # Recalcul immédiat du statut "sensible" pour ne pas attendre le job quotidien
+      # CronJob::RefreshAgentsSensitiveAccountJob si le nouveau rôle rend l'agent sensible.
+      AgentSensitiveAccountCalculator.refresh_agent!(agent_role.agent)
       flash[:success] = "Les permissions de l'agent ont été mises à jour"
     else
       flash[:error] = agent_role.errors.full_messages.join(", ")
