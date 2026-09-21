@@ -10,5 +10,6 @@
 
       p Vous pouvez retrouver cette invitation sur la page du profil de cet usager.
 
-      .fr-grid-row.justify-content-center
-        = link_to "Retour au planning", admin_organisation_planning_agenda_path(current_organisation), class: "fr-btn fr-btn--secondary"
+      .fr-grid-row.rdv-justify-content-space-between.rdv-align-items-baseline
+        = button_to "Annuler", cancel_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation), class: "fr-btn fr-btn--secondary", method: :patch
+        = link_to "Retour au planning", admin_organisation_planning_agenda_path(current_organisation), class: "fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-arrow-right-line"

@@ -12,6 +12,8 @@ class Agent::RdvInvitationPolicy < ApplicationPolicy
     can_show_user? && can_show_motif?
   end
 
+  alias update? show?
+
   class Scope < ApplicationPolicy::Scope
     alias current_agent pundit_user
 
