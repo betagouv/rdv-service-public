@@ -374,7 +374,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :rdv_invitations, only: %i[new create show index] do
+      resources :rdv_invitations, only: %i[new create show] do
         collection do
           post :create_user
         end
@@ -429,7 +429,6 @@ Rails.application.routes.draw do
         put :toggle_displays, to: "agendas#toggle_displays"
 
         resources :absences
-        resources :rdv_invitations, only: %i[index]
         resources :plage_ouvertures do
           collection do
             get :calendar
