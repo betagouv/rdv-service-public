@@ -25,8 +25,7 @@ class Agents::RegistrationsController < Devise::RegistrationsController
         reset_session
 
         flash[:notice] = I18n.t("devise.failure.deleted_account")
-        redirect_to root_path
-      end
+      redirect_to root_pathend
     else
       flash[:error] = removal_services.select(&:invalid?).map { |service| service.errors.full_messages.join }.join(", ")
       redirect_back_or_to(root_path)
