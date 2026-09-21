@@ -28,9 +28,9 @@ tr id="agent_#{agent.id}"
       - agent.services.each do |service|
         .fr-badge.fr-badge--sm.fr-badge--info.fr-badge--no-icon= service.short_name
   td.text-nowrap
-    span>= agent_role.human_attribute_value(:access_level)
     - if agent_role.admin?
-      = icon("fr-icon-user-setting-line", class: "fr-icon--sm fr-text-mention--grey", title: "Administrateur")
+      = icon("fr-icon-user-setting-line", class: "fr-icon--sm fr-mr-1w", title: "Administrateur")
+    span>= agent_role.human_attribute_value(:access_level)
     - if agent_role.agent_accueil?
       = ", Agent d'accueil"
   - if current_agent.admin_in_organisation?(current_organisation)
