@@ -41,11 +41,20 @@ RSpec.describe Agents::TwoFactorVerificationsController, type: :controller do
   end
 
   describe "#resend" do
+    before { allow(UnblockBrevoTransactionalContact).to receive(:new).and_return(instance_double(UnblockBrevoTransactionalContact, call: true)) }
+
     it "envoie un nouveau code par email et redirige vers le formulaire" do
       expect { post :resend }
         .to change(LoginCode, :count).by(1)
         .and have_enqueued_mail(Agents::LoginCodeMailer, :login_code)
       expect(response).to redirect_to(new_agents_two_factor_verification_path)
+    end
+
+    it "débloque le contact auprès de Brevo" do
+      unblock = instance_double(UnblockBrevoTransactionalContact, call: true)
+      allow(UnblockBrevoTransactionalContact).to receive(:new).with(agent.email).and_return(unblock)
+      expect(unblock).to receive(:call)
+      post :resend
     end
   end
 

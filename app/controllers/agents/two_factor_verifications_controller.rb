@@ -14,6 +14,7 @@ class Agents::TwoFactorVerificationsController < ApplicationController
   end
 
   def resend
+    UnblockBrevoTransactionalContact.new(current_agent.email).call
     Agents::LoginCodeSender.perform(email: current_agent.email, domain_id: current_domain.id)
     redirect_to new_agents_two_factor_verification_path
   end
