@@ -154,6 +154,7 @@ Rails.application.routes.draw do
         post :resend, on: :collection
       end
       resource :pro_connect_step_up, only: %i[new create], controller: "pro_connect_step_up"
+      resource :pro_connect_linking, only: %i[show create], controller: "pro_connect_linking"
       resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
         resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync do
@@ -454,7 +455,10 @@ Rails.application.routes.draw do
   get "/budget", to: redirect("https://pad.numerique.gouv.fr/rHMnemklQm6Sww5yVCI9ow?view#RDV-Service-Public", status: 302)
 
   ## Shorten urls for SMS
+  # << REMOVE AFTER 01/01/2027
+  # On préserve cette route pour la rétrocompatibilité des anciens SMS/ICS envoyés avant qu'on utilise rdv_short_from_token
   get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_short"
+  # >> REMOVE AFTER 01/01/2027
 
   # tkn est obligatoire pour s'assurer qu'il est possible de se connecter
   # Rate limité par IP (voir config/initializers/rack_attack.rb)

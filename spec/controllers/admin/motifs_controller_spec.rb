@@ -92,8 +92,8 @@ RSpec.describe Admin::MotifsController, type: :controller do
         expect(motif.name).to eq("Le nouveau nom")
       end
 
-      it "redirects to the motif" do
-        expect(response).to redirect_to(admin_organisation_motif_path(organisation.id, motif))
+      it "redirects to the index to make it easier to change another motif" do
+        expect(response).to redirect_to(admin_organisation_motifs_path(organisation.id))
       end
     end
 

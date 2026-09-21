@@ -23,6 +23,7 @@ RSpec.describe "Agent can CRUD motifs" do
       fill_in "Nom", with: "Suivi bonsoir"
       click_button("Enregistrer")
 
+      click_on "Suivi bonsoir"
       expect(page).to have_content("Suivi bonsoir (PMI)")
       click_link("Archiver")
       expect(page).to have_content("Suivi bonsoir (PMI) (archivé)")
@@ -74,6 +75,7 @@ RSpec.describe "Agent can CRUD motifs" do
       fill_in "Nom", with: "Renouvellement de permis de construire"
       click_button("Enregistrer")
 
+      click_on "Renouvellement de permis de construire"
       expect(page).to have_content("Renouvellement de permis de construire")
       click_link("Archiver")
       expect(page).to have_content("Renouvellement de permis de construire (archivé)")
