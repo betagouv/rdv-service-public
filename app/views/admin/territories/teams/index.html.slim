@@ -29,7 +29,7 @@
                       data: { confirm: "Confirmez-vous la suppression de cette équipe ?"},
                       class: "fr-btn fr-btn--tertiary fr-icon-delete-fill"
   .d-flex.justify-content-center
-    = paginate @teams, theme: "dsfr"
+    = paginate @teams
 
   .text-right
     = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class: "fr-btn fr-btn--secondary"

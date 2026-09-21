@@ -140,7 +140,7 @@ class SearchController < ApplicationController
       redirect_to prendre_rdv_path({
         public_link_organisation_id: organisation.id,
         departement: organisation.territory.departement_number,
-        motif_id: motif&.id,
+        preselected_motif: motif&.public_link_id,
         prescripteur:,
       }.compact)
     else
@@ -152,6 +152,7 @@ class SearchController < ApplicationController
   def search_allowed?
     current_domain.provides_address_selection? || # toujours autorisé sur RDVS
       (@current_step != :address_selection && params[:public_link_organisation_id].present?) || # toujours scopé sur RDVSP
+      (@current_step != :address_selection && params[:referent_ids].present?) || # RDV de suivi : recherche scopée aux agents référents de l'usager
       exception_for_cdad_21?
   end
 
@@ -167,7 +168,7 @@ class SearchController < ApplicationController
     params.permit(
       *WebSearchContext::ADDRESS_SELECTION_PARAMS,
       *WebSearchContext::USER_CHOICE_PARAMS,
-      :motif_category_short_name, :date, :public_link_organisation_id, :prescripteur,
+      :motif_category_short_name, :date, :public_link_organisation_id, :prescripteur, :preselected_motif,
       organisation_ids: [], referent_ids: [], external_organisation_ids: []
     ).to_h.deep_symbolize_keys
   end

@@ -37,7 +37,7 @@ class Agents::SessionsController < Devise::SessionsController
 
     return if reset_current_agent_password_if_weak!(params[:agent][:password])
 
-    if resource.sensitive_account?
+    if resource.sensitive_account? && !AgentTrustedDevice.trusted_by_cookie?(resource, cookies)
       sign_out(resource)
       session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = resource.id
       Agents::LoginCodeSender.perform(email: resource.email, domain_id: current_domain.id)

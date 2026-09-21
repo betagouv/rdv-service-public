@@ -1,4 +1,4 @@
-RSpec.describe "RDV Plan API" do
+RSpec.describe "API RDV Plan" do
   let(:headers) { oauth_client_headers(oauth_token) }
 
   let!(:oauth_token) do
@@ -25,8 +25,8 @@ RSpec.describe "RDV Plan API" do
       }
     end
 
-    context "when the user doesn't already exist" do
-      it "creates the user and the rdv plan" do
+    context "quand l'usager n'existe pas encore" do
+      it "crée l'usager et le rdv plan" do
         expect do
           post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
         end.to change(User, :count).by(1)
@@ -38,12 +38,12 @@ RSpec.describe "RDV Plan API" do
         )
       end
 
-      context "when reusing the user id for a second rdv_plan, even if the first was not completed" do
+      context "quand on réutilise l'id de l'usager pour un second rdv_plan, même si le premier n'a pas été finalisé" do
         before do
           post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
         end
 
-        it "links the user to the second rdv plan as well" do
+        it "associe aussi l'usager au second rdv plan" do
           first_rdv_plan = RdvPlan.first
 
           params_for_second_call = { user: { id: first_rdv_plan.user_id } }
@@ -56,30 +56,30 @@ RSpec.describe "RDV Plan API" do
       end
     end
 
-    context "when passing a user id" do
+    context "quand on envoie l'id d'un usager" do
       let(:params) do
         { user: { id: user.id } }
       end
 
-      context "when the user is not in any of the agent's organisations" do
+      context "quand l'usager n'est dans aucune des organisations de l'agent" do
         let(:user) do
           create(:user, organisations: [other_organisation])
         end
         let(:other_organisation) { create(:organisation) }
 
-        it "raises an error" do
+        it "lève une erreur" do
           post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
           expect(RdvPlan.last).to be_nil
           expect(response.status).to eq 403
         end
       end
 
-      context "when the user is in one of the agent's organisations" do
+      context "quand l'usager est dans une des organisations de l'agent" do
         let(:user) do
           create(:user, organisations: [agent.organisations.last])
         end
 
-        it "creates the rdv plan with the user" do
+        it "crée le rdv plan avec l'usager" do
           post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
           expect(response.status).to eq 201
           expect(User.all.to_a).to eq [user]
@@ -88,12 +88,12 @@ RSpec.describe "RDV Plan API" do
       end
     end
 
-    context "when some of the params are missing" do
+    context "quand certains paramètres sont manquants" do
       let(:params) do
         { user: { first_name: "Francis" } }
       end
 
-      it "returns an error message and doesn't create the rdv plan" do
+      it "renvoie un message d'erreur et ne crée pas le rdv plan" do
         post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
         expect(RdvPlan.last).to be_nil
         expect(User.last).to be_nil
@@ -102,36 +102,87 @@ RSpec.describe "RDV Plan API" do
       end
     end
 
-    context "when passing a user email" do
+    context "quand on envoie l'email d'un usager" do
       let(:params) do
-        { user: { email: "francis@factice.com", first_name: "Francois" } }
-      end
-      let!(:user) do
-        create(:user, email: "francis@factice.com", organisations: [])
+        { user: { email: "francis@factice.com", first_name: "Francois", last_name: "Nouveau" } }
       end
 
-      it "creates the rdv plan with the user, because we don't allow multiple users with the same email" do
-        post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
-        expect(response.status).to eq 201
-        expect(User.all.to_a).to eq [user]
-        expect(RdvPlan.last.user).to eq user
-      end
-
-      context "when the email is un uppercase" do
-        let(:params) do
-          { user: { email: "FRANCIS@FACTICE.COM", first_name: "Francois" } }
+      context "quand l'usager existant avec cet email n'est lié à aucune organisation" do
+        let!(:user) do
+          create(:user, email: "francis@factice.com", phone_number: "0611223344", organisations: [])
         end
 
-        it "creates the rdv plan with the existing user" do
+        it "crée un nouvel usager au lieu de réutiliser un usager non revendiqué avec lequel l'agent n'a aucun lien" do
+          expect do
+            post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
+          end.to change(User, :count).by(1)
+
+          expect(response.status).to eq 201
+          new_user = RdvPlan.last.user
+          expect(new_user).not_to eq user
+          expect(new_user).to have_attributes(email: "francis@factice.com", first_name: "Francois", last_name: "Nouveau", phone_number: nil)
+        end
+
+        context "quand l'agent a déjà créé un précédent rdv_plan pour cet usager" do
+          before { create(:rdv_plan, planning_agent: agent, user: user) }
+
+          it "réutilise l'usager, puisque l'agent a déjà un lien avec lui" do
+            expect do
+              post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
+            end.not_to change(User, :count)
+
+            expect(response.status).to eq 201
+            expect(RdvPlan.last.user).to eq user
+          end
+        end
+      end
+
+      context "quand l'usager existant avec cet email est dans une des organisations de l'agent" do
+        let!(:user) do
+          create(:user, email: "francis@factice.com", organisations: [agent.organisations.last])
+        end
+
+        it "réutilise l'usager existant" do
           post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
           expect(response.status).to eq 201
           expect(User.all.to_a).to eq [user]
           expect(RdvPlan.last.user).to eq user
         end
+
+        context "quand l'email est en majuscules" do
+          let(:params) do
+            { user: { email: "FRANCIS@FACTICE.COM", first_name: "Francois", last_name: "Nouveau" } }
+          end
+
+          it "retrouve et réutilise quand même l'usager existant, indépendamment de la casse" do
+            post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
+            expect(response.status).to eq 201
+            expect(User.all.to_a).to eq [user]
+            expect(RdvPlan.last.user).to eq user
+          end
+        end
+      end
+
+      context "quand l'usager existant avec cet email appartient à une organisation à laquelle l'agent n'a pas accès" do
+        let(:other_organisation) { create(:organisation) }
+        let!(:user) do
+          create(:user, email: "francis@factice.com", phone_number: "0611223344", organisations: [other_organisation])
+        end
+
+        it "crée un nouvel usager au lieu de réutiliser celui auquel l'agent n'a pas accès" do
+          expect do
+            post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
+          end.to change(User, :count).by(1)
+
+          expect(response.status).to eq 201
+          new_user = RdvPlan.last.user
+          expect(new_user).not_to eq user
+          expect(new_user).to have_attributes(email: "francis@factice.com", first_name: "Francois", last_name: "Nouveau", phone_number: nil)
+        end
       end
     end
 
-    context "when passing all possible params" do
+    context "quand on envoie tous les paramètres possibles" do
       let(:params) do
         {
           user: {
@@ -147,7 +198,7 @@ RSpec.describe "RDV Plan API" do
         }
       end
 
-      it "creates the user and the rdv plan with all the attributes" do
+      it "crée l'usager et le rdv plan avec tous les attributs" do
         expect do
           post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
         end.to change(User, :count).by(1)
@@ -170,12 +221,12 @@ RSpec.describe "RDV Plan API" do
       end
     end
 
-    context "when the agent hasn't configured an organisation yet" do
+    context "quand l'agent n'a pas encore configuré d'organisation" do
       let(:agent) { create(:agent, basic_role_in_organisations: []) }
 
-      context "and the instance is RDV Service Public" do
+      context "et que l'instance est RDV Service Public" do
         stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: nil)
-        it "shows a url with the correct domain name" do
+        it "affiche une url avec le bon nom de domaine" do
           post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
           expect(parsed_response_body.dig("rdv_plan", "url")).to include("www.rdv-service-public-test.localhost")
         end
@@ -184,12 +235,12 @@ RSpec.describe "RDV Plan API" do
   end
 
   describe "#show" do
-    context "when the rdv_plan belongs to a different user" do
+    context "quand le rdv_plan appartient à un autre usager" do
       let(:rdv_plan) do
         create(:rdv_plan, planning_agent: create(:agent))
       end
 
-      it "returns an error" do
+      it "renvoie une erreur" do
         get "/api/v1/rdv_plans/#{rdv_plan.id}", headers: headers, params: {}, as: :json
         expect(response.status).to eq 404
       end

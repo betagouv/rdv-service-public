@@ -10,6 +10,7 @@ class Agents::SessionsByCodeController < ApplicationController
   end
 
   def resend
+    UnblockBrevoTransactionalContact.new(pending_agent.email).call
     Agents::LoginCodeSender.perform(email: pending_agent.email, domain_id: current_domain.id)
     redirect_to new_agents_sessions_by_code_path
   end
@@ -25,6 +26,7 @@ class Agents::SessionsByCodeController < ApplicationController
       if session[SESSION_PRO_CONNECT_ID_TOKEN_KEY]
         session[:pro_connect_id_token] = session.delete(SESSION_PRO_CONNECT_ID_TOKEN_KEY)
       end
+      AgentTrustedDevice.remember_by_cookie!(agent, cookies) if ActiveModel::Type::Boolean.new.cast(params[:remember_device])
       sign_in(agent, scope: :agent)
       redirect_to after_sign_in_path_for(agent)
     else

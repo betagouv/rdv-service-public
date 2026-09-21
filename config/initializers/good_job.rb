@@ -127,5 +127,9 @@ Rails.application.configure do
       cron: "every day at 04:00 Europe/Paris",
       class: "CronJob::RefreshAgentsSensitiveAccountJob",
     },
+    destroy_expired_agent_trusted_devices: {
+      cron: "every day at 04:20 Europe/Paris",
+      class: "CronJob::DestroyExpiredAgentTrustedDevicesJob",
+    },
   }
 end

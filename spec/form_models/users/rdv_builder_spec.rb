@@ -147,4 +147,14 @@ RSpec.describe Users::RdvBuilder do
       expect(described_class.new(user_for_rdv, attributes).rdv).to eq(rdv)
     end
   end
+
+  describe "#to_query_for_search_redirection" do
+    context "en utilisant le paramètre preselected_motif" do
+      it "garde le paramètre" do
+        rdv_builder = described_class.new(user, attributes.merge(preselected_motif: motif.public_link_id))
+        query_params = rdv_builder.to_query_for_search_redirection
+        expect(query_params[:preselected_motif]).to eq motif.public_link_id
+      end
+    end
+  end
 end

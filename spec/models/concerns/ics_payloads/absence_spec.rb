@@ -37,6 +37,20 @@ RSpec.describe IcsPayloads::Absence do
       it { expect(absence.payload[:rrule]).to eq("FREQ=WEEKLY;BYDAY=WE;") }
     end
 
+    describe ":tzid" do
+      let(:agent) { create(:agent, basic_role_in_organisations: [create(:organisation, time_zone: "America/Guadeloupe")]) }
+      let(:absence) do
+        create(:absence, agent:, first_day: Date.new(2026, 3, 2), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      end
+
+      it { expect(absence.payload[:tzid]).to eq("America/Guadeloupe") }
+
+      it "is used in the generated ICS" do
+        ics = IcalFormatters::Ics.from_payload(absence.payload).to_ical
+        expect(ics).to include("DTSTART;TZID=America/Guadeloupe:20260302T090000")
+      end
+    end
+
     describe ":ical_uid" do
       let(:absence) { create(:absence, agent:) }
 

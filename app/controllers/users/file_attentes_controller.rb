@@ -16,7 +16,7 @@ class Users::FileAttentesController < UserAuthController
 
   def create_or_delete
     fa = if file_attente_params[:id].present?
-           FileAttente.find(file_attente_params[:id])
+           FileAttente.find_or_initialize_by(id: file_attente_params[:id])
          else
            FileAttente.where(rdv_id: file_attente_params[:rdv_id], user_id: file_attente_params[:user_id])
              .first_or_initialize
@@ -31,7 +31,7 @@ class Users::FileAttentesController < UserAuthController
       fa.save!
       flash[:success] = "Vous êtes à présent sur la liste d'attente"
     end
-    redirect_to request.referer.to_s
+    redirect_back_or_to(users_rdvs_path)
   end
 
   private

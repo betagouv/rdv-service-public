@@ -54,7 +54,30 @@ RSpec.describe Agent::RdvInvitationPolicy do
     it "is forbidden" do
       expect(subject.new?).to be_falsey
       expect(subject.create?).to be_falsey
-      expect(subject.show?).to be_falsey
+    end
+  end
+
+  context "when the invitation was created by a colleague" do
+    let(:rdv_invitation) { create(:rdv_invitation, motif:, lieu:, user:, inviting_agent:) }
+    let(:inviting_agent) { create(:agent, basic_role_in_organisations: [organisation], services: [service]) }
+    let(:motif) { create(:motif, organisation:, service: inviting_agent.services.first) }
+    let(:service) { create(:service) }
+
+    context "with a motif that is visible" do
+      let(:agent) { create(:agent, basic_role_in_organisations: [organisation], services: [service]) }
+
+      it "is visible" do
+        expect(subject.show?).to be_truthy
+      end
+    end
+
+    context "with a motif that is not visible" do
+      let(:agent) { create(:agent, basic_role_in_organisations: [organisation], services: [other_service]) }
+      let(:other_service) { create(:service) }
+
+      it "is not visible" do
+        expect(subject.show?).to be_falsey
+      end
     end
   end
 end

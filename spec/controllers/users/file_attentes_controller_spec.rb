@@ -58,6 +58,17 @@ RSpec.describe Users::FileAttentesController, type: :controller do
       end
     end
 
+    context "quand le Referer pointe vers un host externe" do
+      subject { post :create_or_delete, params: { file_attente: { rdv_id: rdv.id, user_id: user.id } } }
+
+      before { request.env["HTTP_REFERER"] = "https://exemple-externe.com/page" }
+
+      it "ne lève pas d'erreur et redirige vers la liste des rdvs" do
+        expect { subject }.to change(FileAttente, :count).from(0).to(1)
+        expect(response).to redirect_to(users_rdvs_path)
+      end
+    end
+
     context "when file attente id is given" do
       subject { post :create_or_delete, params: { file_attente: { id: file_attente.id } } }
 
@@ -65,6 +76,17 @@ RSpec.describe Users::FileAttentesController, type: :controller do
 
       it "returns a success response" do
         expect { subject }.to change(FileAttente, :count).from(1).to(0)
+      end
+    end
+
+    context "quand l'id fourni ne correspond à aucune file d'attente" do
+      let!(:own_file_attente) { create(:file_attente, rdv: rdv, user: user) }
+
+      it "ne touche à aucune file d'attente et redirige (pas d'oracle d'existence)" do
+        expect do
+          post :create_or_delete, params: { file_attente: { id: 0 } }
+        end.not_to change(FileAttente, :count)
+        expect(response).to have_http_status(:redirect)
       end
     end
 

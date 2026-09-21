@@ -10,10 +10,11 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
                   email: "camille.dupont@exemple.fr", phone_number: nil,
                   first_name: "Camille", last_name: "Dupont") # créé par appel d'api par l'appli qui s'intègre avec nous
   end
-  let!(:motif) { create(:motif, organisation: organisation, location_type: :public_office, name: "Suivi de dossier") }
+  let!(:motif) { create(:motif, organisation: organisation, location_type: :public_office, name: "Suivi de dossier en présentiel") }
   let!(:phone_motif) { create(:motif, organisation: organisation, location_type: :phone, name: "Suivi de dossier") }
   let!(:visio_motif) { create(:motif, organisation: organisation, location_type: :visio, name: "Suivi de dossier") }
   let!(:lieu) { create(:lieu, address: "8 Rue Froissart, 75003 Paris", name: "DDPP de Paris", organisation:) }
+  let!(:other_lieu) { create(:lieu, address: "30 rue de la République, 94000 Nogent-sur-Marne", name: "DDPP du Val de Marne", organisation:) }
   let(:organisation) { create(:organisation, name: "Préfecture de Police de Paris") }
 
   let!(:agent) do
@@ -73,33 +74,30 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
 
     visit agents_rdv_plan_path(rdv_plan.id)
 
-    Capybara.page.current_window.resize_to(1280, 1340)
+    Capybara.page.current_window.resize_to(1280, 1300)
 
     doc.add_screenshot(page,
-                       text: "J'arrive sur mon agenda pour planifier un rendez-vous, je choisis un horaire.",
+                       text: "Je choisis le motif sur place",
+                       wait_for: "Suivi de dossier en présentiel")
+
+    click_on "Suivi de dossier en présentiel"
+
+    doc.add_screenshot(page,
+                       text: "Je choisis l'horaire",
                        wait_for: "Convenez d'un horaire")
 
     page.driver.with_playwright_page do |pw|
-      slot = pw.locator('[data-time="08:30:00"]').first
+      slot = pw.locator('[data-time="08:30:00"]').last
       box = slot.bounding_box
       pw.mouse.click(box["x"] + (box["width"] / 2), box["y"] + (box["height"] / 2))
     end
-
-    find("label", text: "Sur place").click
-
-    Capybara.page.current_window.resize_to(1280, 880)
+    sleep 0.1
 
     doc.add_screenshot(page,
-                       text: "Je choisis de faire le rendez-vous sur place.",
-                       wait_for: "Comment souhaitez-vous faire le rendez-vous ?")
+                       text: "Je choisis le lieu",
+                       wait_for: "Suivi de dossier en présentiel")
 
-    click_on "Continuer"
-
-    doc.add_screenshot(page,
-                       text: "J'utilise le motif Suivi de dossier qui a été créé par défaut",
-                       wait_for: "Motif")
-
-    click_on "Continuer"
+    click_on "DDPP de Paris"
 
     Capybara.page.current_window.resize_to(1280, 900)
 

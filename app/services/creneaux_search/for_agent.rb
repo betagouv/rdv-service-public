@@ -10,7 +10,7 @@ class CreneauxSearch::ForAgent
   end
 
   def next_availability(lieu = nil)
-    CreneauxSearch::NextAvailability.find(@form.motif, lieu, all_agents, from: @form.date_range.first)
+    CreneauxSearch::NextAvailability.find(@form.motif, lieu, all_agents, from: @form.date_range.first, to: 1.year.from_now)
   end
 
   def build_result

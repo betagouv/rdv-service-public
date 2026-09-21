@@ -32,13 +32,23 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
     end
 
     context "quand il y a une connexion en attente dans la session" do
-      before { session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = agent.id }
+      before do
+        session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = agent.id
+        allow(UnblockBrevoTransactionalContact).to receive(:new).and_return(instance_double(UnblockBrevoTransactionalContact, call: true))
+      end
 
       it "crée et envoie un nouveau code par email" do
         expect { post :resend }
           .to change(LoginCode, :count).by(1)
           .and have_enqueued_mail(Agents::LoginCodeMailer, :login_code)
         expect(LoginCode.last.email).to eq(agent.email)
+      end
+
+      it "débloque le contact auprès de Brevo" do
+        unblock = instance_double(UnblockBrevoTransactionalContact, call: true)
+        allow(UnblockBrevoTransactionalContact).to receive(:new).with(agent.email).and_return(unblock)
+        expect(unblock).to receive(:call)
+        post :resend
       end
 
       it "redirige vers le formulaire de saisie du code" do
@@ -89,6 +99,22 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
             post :create, params: { login_code: { code: login_code.code } }
             expect(session[:pro_connect_id_token]).to eq("fake_pro_connect_token")
             expect(session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY]).to be_nil
+          end
+        end
+
+        context "quand la case 'se souvenir de cet appareil' est cochée" do
+          it "mémorise l'appareil" do
+            expect { post :create, params: { login_code: { code: login_code.code }, remember_device: "1" } }
+              .to change(AgentTrustedDevice, :count).by(1)
+            expect(AgentTrustedDevice.last.agent).to eq(agent)
+            expect(cookies.encrypted[AgentTrustedDevice.cookie_name(agent)]).to be_present
+          end
+        end
+
+        context "quand la case 'se souvenir de cet appareil' n'est pas cochée" do
+          it "ne mémorise pas l'appareil" do
+            expect { post :create, params: { login_code: { code: login_code.code } } }
+              .not_to change(AgentTrustedDevice, :count)
           end
         end
       end

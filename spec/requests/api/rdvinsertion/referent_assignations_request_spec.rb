@@ -78,6 +78,18 @@ RSpec.describe "Referent Assignation authentified API" do
           expect(response.body).to include("not_found")
         end
       end
+
+      context "when the agent has no organisation in common with the user" do
+        let!(:user_from_another_organisation) { create(:user, organisations: [create(:organisation, verticale: "rdv_insertion")]) }
+
+        it "returns a 403 forbidden and does not create the referent assignations" do
+          expect do
+            post "/api/rdvinsertion/referent_assignations/create_many", params: { "agent_ids[]": [agent1.id], user_id: user_from_another_organisation.id }, headers: auth_headers
+          end.not_to change(ReferentAssignation, :count)
+
+          expect(response).to have_http_status(:forbidden)
+        end
+      end
     end
   end
 
@@ -100,6 +112,16 @@ RSpec.describe "Referent Assignation authentified API" do
       response_referent_assignations = response.parsed_body["referent_assignations"]
       response_referent_assignations_agent_ids = response_referent_assignations.map { |referent_assignation| referent_assignation.dig("agent", "id") }
       expect(response_referent_assignations_agent_ids).to contain_exactly(agent.id)
+    end
+
+    context "when the agent has no organisation in common with the user" do
+      let(:user_from_another_organisation) { create(:user, organisations: [create(:organisation, verticale: "rdv_insertion")]) }
+
+      it "returns a 403 forbidden" do
+        get api_rdvinsertion_user_referent_assignations_path(user_from_another_organisation.id), headers: auth_headers
+
+        expect(response).to have_http_status(:forbidden)
+      end
     end
   end
 end

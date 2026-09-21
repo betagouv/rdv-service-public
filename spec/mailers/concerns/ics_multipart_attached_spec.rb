@@ -13,7 +13,7 @@ RSpec.describe IcsMultipartAttached, type: :mailer do
       expected_parts_order = [
         "text/html; charset=UTF-8",
         "application/ics",
-        "text/calendar; charset=utf-8; method=PUBLISH",
+        "text/calendar; charset=utf-8; method=REQUEST",
       ]
       expect(mail.all_parts.map(&:content_type)).to eq(expected_parts_order)
     end
@@ -28,7 +28,7 @@ RSpec.describe IcsMultipartAttached, type: :mailer do
       expected_parts_order = [
         "text/html; charset=UTF-8",
         "application/ics",
-        "text/calendar; charset=utf-8; method=PUBLISH",
+        "text/calendar; charset=utf-8; method=REQUEST",
       ]
       expect(mail.all_parts.map(&:content_type)).to eq(expected_parts_order)
     end
