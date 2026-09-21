@@ -326,6 +326,34 @@ Rails.application.routes.draw do
           patch :update_advanced_options
         end
       end
+
+      resources :rdv_plans, only: %i[create show] do
+        member do
+          get :edit_motif
+          patch :update_motif
+
+          patch :update_agent
+
+          get :edit_starts_at
+          patch :update_starts_at
+
+          get :edit_starts_at_and_duration
+          patch :update_starts_at_and_duration
+
+          get :edit_rdv_invitation
+          patch :update_rdv_invitation
+
+          get :edit_lieu
+          patch :update_lieu
+
+          get :edit_user
+          post :create_rdv
+
+          get :rdv
+          get :rdv_invitation
+        end
+      end
+
       resources :rdvs_collectifs, only: %i[index new create edit update] do
         collection do
           resources :motif_selections, only: [:index], as: :rdvs_collectif_motif_selections, controller: "rdvs_collectifs/motif_selections"
@@ -346,7 +374,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :rdv_invitations, only: %i[new create show] do
+      resources :rdv_invitations, only: %i[new create show index] do
         collection do
           post :create_user
         end
@@ -401,6 +429,7 @@ Rails.application.routes.draw do
         put :toggle_displays, to: "agendas#toggle_displays"
 
         resources :absences
+        resources :rdv_invitations, only: %i[index]
         resources :plage_ouvertures do
           collection do
             get :calendar

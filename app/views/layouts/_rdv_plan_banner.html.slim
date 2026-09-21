@@ -4,5 +4,7 @@
   .fr-notice__body
     p.fr-mb-0.fr-ml-6w
       span.fr-notice__desc
-        |> Vous avez commencé à prendre un rendez-vous pour #{rdv_plan.user.full_name} depuis #{rdv_plan.oauth_application.name}.
+        |> Vous avez commencé à prendre un rendez-vous pour #{rdv_plan.user.full_name}
+        - if rdv_plan.oauth_application
+          |< depuis #{rdv_plan.oauth_application.name}.
         = link_to("Retourner à la préparation de ce rendez-vous", agents_rdv_plan_path(rdv_plan), class: "fr-btn fr-btn--tertiary")

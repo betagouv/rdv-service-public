@@ -1,0 +1,27 @@
+.fr-grid-row.fr-mb-4w.fr-mt-2w
+  .fr-col-8.fr-col-offset-2
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Motif", next_step_title: "Créneau"
+
+    .card.card-body
+      - if @motifs.empty?
+        p Aucun motif de rendez-vous n'est disponible.
+        - if current_agent.admin_orgs.any?
+          p Vous pouvez créer un nouveau motif depuis les paramètres de votre organisation.
+          = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_agent.admin_orgs.first), class:"fr-btn fr-btn--secondary"
+      - else
+        p
+          = motif_icon(class: "fr-mr-1w")
+          | Pour quel motif souhaitez-vous prendre rendez-vous ?
+        ul.fr-raw-list
+        - @motifs.each do |motif|
+          li.card.d-flex.fr-enlarge-link
+            .card-body.fr-p-2w
+              = link_to update_motif_admin_organisation_rdv_plan_path(current_organisation, @rdv_plan, rdv_plan: { motif_id: motif.id}), method: :patch do
+                .fr-h6.fr-mb-1w.rdv-color-text-action-high-blue-france = motif.name
+              .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+                p.fr-mb-0
+                  = location_type_icon(motif.location_type, class: "fr-mr-1w")
+                  = motif.human_attribute_value(:location_type)
+                  = " · "
+                  = "#{motif.default_duration_in_min} min."
+                = icon("fr-icon-arrow-right-line", class: "rdv-color-text-action-high-blue-france")

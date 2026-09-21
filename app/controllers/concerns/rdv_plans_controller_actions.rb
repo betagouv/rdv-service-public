@@ -1,0 +1,192 @@
+module RdvPlansControllerActions
+  extend ActiveSupport::Concern
+
+  def show
+    if current_agent.organisations.any?
+      redirect_to edit_motif_admin_organisation_rdv_plan_path(current_organisation, @rdv_plan)
+    else
+      redirect_to authenticated_agent_root_path
+    end
+  end
+
+  def edit_motif
+    @motifs = available_motifs(@rdv_plan).ordered_by_name
+  end
+
+  def update_motif
+    rdv_plan_params = params.require(:rdv_plan).permit(:motif_id)
+
+    @rdv_plan.assign_attributes(rdv_plan_params)
+    @rdv_plan.duration_in_minutes = @rdv_plan.motif.default_duration_in_min
+    @rdv_plan.lieu_id = nil # Pour éviter de garder un lieu si on passe à un motif qui n'est pas sur place
+
+    authorize(@rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy)
+
+    if @rdv_plan.save
+      if current_agent.feature_enabled?("rdv_invitations") && @rdv_plan.motif.plage_ouvertures.not_expired.any?
+        redirect_to edit_rdv_invitation_admin_organisation_rdv_plan_path(current_organisation, @rdv_plan)
+      else
+        redirect_to edit_starts_at_admin_organisation_rdv_plan_path(current_organisation, @rdv_plan)
+      end
+    else
+      render "edit_motif"
+    end
+  end
+
+  def update_agent
+    rdv_plan_params = params.require(:rdv_plan).permit(:rdv_agent_id)
+
+    rdv_agent = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active.find(rdv_plan_params[:rdv_agent_id])
+
+    @rdv_plan.update!(rdv_agent:)
+
+    render json: { event_sources: }
+  end
+
+  def edit_starts_at
+    @rdv_plan.starts_at = nil
+    @rdv_plan.rdv_agent ||= @rdv_plan.planning_agent
+
+    other_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active.ordered_by_last_name.where.not(id: current_agent.id)
+
+    agents = [current_agent] + other_agents
+
+    render locals: { event_sources:, agents: }
+  end
+
+  def update_starts_at
+    @rdv_plan.update!(params.require(:rdv_plan).permit(:starts_at).merge(by_invitation: false))
+    if @rdv_plan.motif.public_office?
+      redirect_to edit_lieu_admin_organisation_rdv_plan_path(current_organisation, @rdv_plan)
+    else
+      redirect_to edit_user_admin_organisation_rdv_plan_path(current_organisation, @rdv_plan)
+    end
+  end
+
+  def edit_rdv_invitation; end
+
+  def update_rdv_invitation
+    @rdv_plan.update!(by_invitation: true, rdv_agent: nil)
+    redirect_to edit_user_admin_organisation_rdv_plan_path(current_organisation, @rdv_plan)
+  end
+
+  def edit_starts_at_and_duration; end
+
+  def update_starts_at_and_duration
+    @rdv_plan.update!(params.require(:rdv_plan).permit(:starts_at, :duration_in_minutes))
+    if @rdv_plan.motif.public_office?
+      redirect_to edit_lieu_admin_organisation_rdv_plan_path(current_organisation, @rdv_plan)
+    else
+      redirect_to edit_user_admin_organisation_rdv_plan_path(current_organisation, @rdv_plan)
+    end
+  end
+
+  def edit_lieu
+    render locals: {
+      lieux: policy_scope(Lieu.enabled, policy_scope_class: Agent::LieuPolicy::Scope),
+      event_sources:,
+    }
+  end
+
+  def update_lieu
+    rdv_plan_params = params.require(:rdv_plan).permit(:starts_at, :lieu_id)
+
+    @rdv_plan.assign_attributes(rdv_plan_params)
+
+    authorize(@rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy)
+    if @rdv_plan.save
+      redirect_to edit_user_admin_organisation_rdv_plan_path(current_organisation, @rdv_plan)
+    else
+      render "edit_lieu", locals: { event_sources: }
+    end
+  end
+
+  def edit_user; end
+
+  def create_rdv
+    rdv_plan_params = params.require(:rdv_plan)
+
+    user_attributes = rdv_plan_params.require(:user).permit(:email, :phone_number)
+
+    # TODO: possible à mettre en commun ?
+    participation_attributes = if @rdv_plan.motif.visible_and_notified?
+                                 rdv_plan_params.require(:participation).permit(
+                                   :send_lifecycle_notifications, :send_reminder_notification
+                                 )
+                               else
+                                 { send_lifecycle_notifications: false, send_reminder_notification: false }
+                               end
+
+    result = @rdv_plan.create_rdv_or_send_invitation(user_attributes:, participation_attributes:)
+
+    if result.valid?
+      if result.is_a?(Rdv)
+        flash[:success] = "Le rendez-vous a été créé."
+        redirect_to rdv_admin_organisation_rdv_plan_path(current_organisation, @rdv_plan)
+      else
+        flash[:success] = "L'invitation à prendre rendez-vous a été envoyée à #{@rdv_plan.user.email}."
+        redirect_to rdv_invitation_admin_organisation_rdv_plan_path(current_organisation, @rdv_plan)
+      end
+    else
+      flash[:error] = result.errors.full_messages.to_sentence
+      redirect_to edit_user_admin_organisation_rdv_plan_path(current_organisation, @rdv_plan)
+    end
+  end
+
+  def rdv
+    @rdv = @rdv_plan.rdv
+  end
+
+  def rdv_invitation; end
+
+  private
+
+  def find_rdv_plan
+    @rdv_plan = RdvPlan.find(params[:id])
+    authorize @rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy
+  end
+
+  def redirect_to_rdv
+    # TODO: ajouter un flash ici?
+    redirect_to rdv_agents_rdv_plan_path(@rdv_plan)
+  end
+
+  def pundit_user
+    current_agent
+  end
+
+  def available_motifs(rdv_plan)
+    rdv_plan.planning_agent.organisations.map do |organisation|
+      Motif.individuel.available_motifs_for_organisation_and_agent(organisation, rdv_plan.planning_agent)
+    end.reduce do |motifs, additional_motifs|
+      motifs.or(additional_motifs)
+    end
+  end
+
+  def event_sources
+    agent = @rdv_plan.rdv_agent
+    organisation = agent.organisations.first
+
+    event_sources = [
+      { id: "Rdv",            url: admin_api_agenda_rdvs_path(agent_id: agent.id, organisation_id: organisation.id, format: :json) },
+      { id: "Absence",        url: admin_api_agenda_absences_path(agent_id: agent.id, organisation_id: organisation.id, format: :json) },
+      { id: "PlageOuverture", url: admin_api_agenda_plage_ouvertures_path(agent_id: agent.id, organisation_id: organisation.id, mixed_with_rdvs: true, format: :json) },
+      OffDays.to_full_calendar_array,
+    ]
+    event_sources.push({ id: "ExternalCalendarEvent", url: admin_api_agenda_external_calendar_events_path(agent_id: agent.id, format: :json) }) if agent.caldav_configured?
+
+    if @rdv_plan.starts_at
+      event_sources << [
+        {
+          title: @rdv_plan.user.full_name,
+          start: @rdv_plan.starts_at.as_json,
+          end: (@rdv_plan.starts_at + (@rdv_plan.duration_in_minutes || 30).minutes).as_json,
+          contrastColor: "white",
+          color: "#6a6af4",
+        },
+      ]
+    end
+
+    event_sources
+  end
+end
