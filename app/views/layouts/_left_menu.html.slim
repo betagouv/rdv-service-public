@@ -31,6 +31,6 @@ aside.left-side-menu-wrapper
           menu.with_item(title: safe_join([icon("fr-icon-bar-chart-box-line", class: "fr-icon--sm fr-mr-1w"), "Statistiques"]), path: admin_organisation_stats_path(current_organisation), current_page: current_page?(admin_organisation_stats_path(current_organisation)))
         ruby:
           config_badge = active_item != :menu_settings && current_organisation.created_at > 30.days.ago && needs_configuration(current_organisation)
-          config_badge_html = config_badge ? tag.span(class: "fr-ml-1w rdv-pastille") : "".html_safe
+          config_badge_html = config_badge ? tag.span(class: "fr-ml-1w rdv-pastille") : ""
           menu.with_item(title: safe_join([icon("fr-icon-settings-5-line", class: "fr-icon--sm fr-mr-1w"), "Configuration", config_badge_html]), path: admin_organisation_configuration_path(current_organisation), current_page: active_item == :menu_settings)
         - menu.with_item(title: safe_join([icon("fr-icon-question-line", class: "fr-icon--sm fr-mr-1w"), "Aide et support"]), path: admin_organisation_support_path(current_organisation), current_page: current_page?(admin_organisation_support_path(current_organisation)))
