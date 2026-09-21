@@ -26,7 +26,13 @@ module Agents::TwoFactorFreshnessConcern
     session.delete(RETURN_TO_SESSION_KEY)
   end
 
+  # Un super admin usurpant un agent n'a accès ni à sa boîte mail, ni à son compte ProConnect : lui
+  # demander le 2FA de l'agent le bloquerait. Sa propre connexion en tant que super admin a déjà
+  # nécessité un 2FA récent (cf. `ProConnectController#connect_super_admin`) et sa session est bornée
+  # dans le temps (cf. le timeout Devise sur les sessions SuperAdmin), donc on peut l'exempter ici.
+  # Idéalement on rajoutera la vérification du 2FA récent du SuperAdmin dans un second temps.
   def require_recent_two_factor_authentication!
+    return if session[:super_admin_signed_in_as_agent]
     return if two_factor_fresh?
 
     session[RETURN_TO_SESSION_KEY] = request.fullpath

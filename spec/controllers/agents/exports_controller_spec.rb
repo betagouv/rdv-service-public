@@ -56,5 +56,14 @@ RSpec.describe Agents::ExportsController, type: :controller do
         expect(response).to have_http_status(:ok)
       end
     end
+
+    context "quand un super admin usurpe l'identité de l'agent" do
+      before { session[:super_admin_signed_in_as_agent] = true }
+
+      it "envoie le fichier sans exiger la double authentification de l'agent" do
+        get :download, params: { export_id: export.id }
+        expect(response).to have_http_status(:ok)
+      end
+    end
   end
 end
