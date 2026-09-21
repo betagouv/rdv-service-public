@@ -60,14 +60,14 @@ class Users::RdvBuilder
     }.merge(
       @attributes.slice(
         *WebSearchContext::ADDRESS_SELECTION_PARAMS,
-        :where, :lieu_id, :organisation_ids, :public_link_organisation_id, :user_selected_organisation_id,
+        :where, :lieu_id, :organisation_ids, :public_link_organisation_id, :user_selected_organisation_id, :preselected_motif,
         :referent_ids, :external_organisation_ids, :duration, :ants_pre_demandes_count
       )
     )
   end
 
   def to_query_for_search_redirection
-    q = @attributes.slice(:address, :city_code, :street_ban_id, :departement, :organisation_ids, :ants_pre_demandes_count).merge(
+    q = @attributes.slice(:address, :city_code, :street_ban_id, :departement, :organisation_ids, :ants_pre_demandes_count, :preselected_motif).merge(
       service: motif&.service_id,
       motif_name_with_location_type: motif&.name_with_location_type
     )

@@ -29,7 +29,7 @@ RSpec.describe "Un agent admin peut filtrer la liste d'agents" do
   specify "filtre admin seulement" do
     login_as(admin, scope: :agent)
     visit admin_organisation_agents_path(organisation)
-    choose "Admins uniquement"
+    choose "Administrateurs uniquement"
     click_button "Rechercher"
 
     expect(page).to have_content("Ada")
@@ -42,7 +42,7 @@ RSpec.describe "Un agent admin peut filtrer la liste d'agents" do
   specify "le contrôle segmenté applique le filtre immédiatement", js: true do
     login_as(admin, scope: :agent)
     visit admin_organisation_agents_path(organisation)
-    find("label", text: "Admins uniquement").click
+    find("label", text: "Administrateurs uniquement").click
 
     expect(page).to have_content("Ada")
     expect(page).to have_no_content("Tony")

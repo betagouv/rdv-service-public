@@ -2,10 +2,11 @@ class Users::RdvWizardStepsController < UserAuthController
   layout "application_base"
 
   RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, :context, { user_ids: [] }].freeze
+
   EXTRA_PERMITTED_PARAMS = [
     *WebSearchContext::ADDRESS_SELECTION_PARAMS,
     :lieu_id, :where, :rdv_collectif_id, :user_selected_organisation_id,
-    :public_link_organisation_id, :duration, :ants_pre_demandes_count,
+    :public_link_organisation_id, :preselected_motif, :duration, :ants_pre_demandes_count,
     { organisation_ids: [], referent_ids: [], external_organisation_ids: [] },
   ].freeze
 
@@ -97,7 +98,7 @@ class Users::RdvWizardStepsController < UserAuthController
       { user_profiles_attributes: %i[logement id organisation_id] },
       { relatives_attributes: %i[id first_name last_name birth_date ants_pre_demande_number] },
     ]
-    keys << :email if current_user.email_editable?
+    keys << :email if current_user.can_change_email_without_confirmation?
     keys
   end
 

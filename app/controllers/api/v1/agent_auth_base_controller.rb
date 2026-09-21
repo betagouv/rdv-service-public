@@ -7,6 +7,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   before_action :log_api_call_in_database
   before_action :set_paper_trail_whodunnit
   before_action :set_sentry_context
+  before_action :detect_param_injection
 
   def pundit_user
     AgentOrganisationContext.new(current_agent, current_organisation)
@@ -75,11 +76,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   private
 
   def authenticate_agent
-    if request.headers.include?("X-Agent-Auth-Signature")
-      # Ce mode d'authentification n'est utilisé que par RDV Insertion et ne fonctionne que sur l'instance historique,
-      # puisqu'il dépend de la variable d'env SHARED_SECRET_FOR_AGENTS_AUTH
-      authenticate_agent_with_shared_secret
-    elsif request.headers["HTTP_ACCESS_TOKEN"] && request.headers["HTTP_UID"] && ENV["AUTHORIZE_DEPRECATED_API_AUTH"].present?
+    if request.headers["HTTP_ACCESS_TOKEN"] && request.headers["HTTP_UID"] && ENV["AUTHORIZE_DEPRECATED_API_AUTH"].present?
       # Ce mode d'authentification est déprécié, et n'est autorisé que sur l'instance historique
       authenticate_api_v1_agent_with_token_auth!
       @authentication_type = "DeviseTokenAuth"
@@ -92,41 +89,41 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
     end
   end
 
-  def authenticate_agent_with_shared_secret
-    if shared_secret_is_valid?
-      @current_agent = Agent.find_by(email: request.headers["uid"])
-      @authentication_type = "SharedSecret"
-    else
-      Sentry.capture_message("API authentication agent was called with an invalid signature !", fingerprint: ["api_agent_invalid_sig"])
-      render(
-        status: :unauthorized,
-        json: {
-          errors: [I18n.t("devise.failure.unauthenticated")],
-        }
-      )
-    end
-  end
-
-  def shared_secret_is_valid?
-    return false if request.headers["X-Agent-Auth-Signature"].nil?
-
-    agent = Agent.find_by(email: request.headers["uid"])
-    # Structure of the payload need to be exact for digest comparison
-    payload = {
-      id: agent.id,
-      first_name: agent.first_name,
-      last_name: agent.last_name,
-      email: agent.email,
-    }
-
-    ActiveSupport::SecurityUtils.secure_compare(
-      OpenSSL::HMAC.hexdigest("SHA256", ENV.fetch("SHARED_SECRET_FOR_AGENTS_AUTH"), payload.to_json),
-      request.headers["X-Agent-Auth-Signature"]
-    )
-  end
-
   def user_for_paper_trail
     "#{current_agent.name_for_paper_trail} (via API)"
+  end
+
+  # Cette vérification permet, par défaut, d'empêcher une injection d'un paramètre :
+  # - `organisation_id`
+  # - `organisation_ids`
+  # - `territory_id`
+  # - `territory_ids`
+  # pointant vers une orga ou un territory externe à l'agent courant.
+  #
+  # Elle sert de filet de sécurité partiel au cas où les permissions via policy échoue.
+  # ** Cette vérification ne se substitue pas à un usage rigoureux des policies. **
+  #
+  def detect_param_injection
+    organisation_ids = (Array(params[:organisation_id]) + Array(params[:organisation_ids])).compact_blank.map { Integer(_1, exception: false) }
+    territory_ids = (Array(params[:territory_id]) + Array(params[:territory_ids])).compact_blank.map { Integer(_1, exception: false) }
+    return if organisation_ids.blank? && territory_ids.blank?
+
+    agent_territories = current_agent.agent_territorial_access_rights.pluck(:territory_id)
+    agent_territories += current_agent.territorial_roles.pluck(:territory_id) # TODO: À supprimer après #6616
+    external_territories = territory_ids.difference(agent_territories)
+
+    if external_territories.any?
+      Sentry.capture_message("Forbidden org ID detected in API call", extra: { agent_territories:, external_territories: })
+      raise Pundit::NotAuthorizedError, query: :show?, record: external_territories.first, policy: Agent::TerritoryPolicy
+    end
+
+    agent_orgs = current_agent.roles.pluck(:organisation_id) + Organisation.where(territory_id: agent_territories).ids
+    external_orgs = organisation_ids.difference(agent_orgs)
+
+    if external_orgs.any?
+      Sentry.capture_message("Forbidden territory ID detected in API call", extra: { agent_orgs:, external_orgs: })
+      raise Pundit::NotAuthorizedError, query: :show?, record: external_orgs.first, policy: Agent::OrganisationPolicy
+    end
   end
 
   def set_sentry_context

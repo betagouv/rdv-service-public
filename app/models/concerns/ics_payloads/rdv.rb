@@ -7,7 +7,7 @@ module IcsPayloads
         ends_at: ends_at,
         ical_uid: uuid,
         summary: ics_summary(sensitive_data: sensitive_data),
-        location: ics_location(sensitive_data: sensitive_data),
+        location: ics_location(recipient: recipient, sensitive_data: sensitive_data),
         domain: domain,
         status: ics_status,
         tzid: organisation&.time_zone,
@@ -25,10 +25,10 @@ module IcsPayloads
       payload
     end
 
-    def ics_location(sensitive_data: false)
+    def ics_location(recipient: users.first, sensitive_data: false)
       case motif.location_type.to_sym
       when :phone then users.first&.phone_number_formatted if sensitive_data
-      when :visio then visio_url
+      when :visio then visio_join_url(recipient)
       when :home then users.first&.address if sensitive_data
       else address
       end
@@ -54,7 +54,8 @@ module IcsPayloads
     def ics_description_link(recipient)
       case recipient
       when User
-        "Infos et annulation: #{Rails.application.routes.url_helpers.rdvs_short_url(host: domain.host_name)}"
+        token = recipient.participation_for(self).restricted_auth_token
+        "Infos et annulation: #{Rails.application.routes.url_helpers.users_rdv_url(id, invitation_token: token, host: domain.host_name)}"
       when Agent
         "Voir sur #{domain.name}: #{Rails.application.routes.url_helpers.admin_organisation_rdv_url(organisation_id, self, host: domain.host_name)}"
       else

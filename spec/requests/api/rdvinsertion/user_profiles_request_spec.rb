@@ -17,7 +17,8 @@ RSpec.describe "User Profile authentified API" do
       let!(:organisation1) { create(:organisation, territory: territory, verticale: "rdv_insertion") }
       let!(:organisation2) { create(:organisation, territory: territory, verticale: "rdv_insertion") }
       let!(:organisation3) { create(:organisation, territory: territory, verticale: "rdv_solidarites") }
-      let!(:user) { create(:user) }
+      let!(:user_organisation) { create(:organisation, territory: territory, verticale: "rdv_insertion") }
+      let!(:user) { create(:user, organisations: [user_organisation]) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation1, organisation2]) }
       let!(:shared_secret) { "S3cr3T" }
       let!(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }
@@ -73,6 +74,20 @@ RSpec.describe "User Profile authentified API" do
 
         it "returns a 404 not found" do
           post "/api/rdvinsertion/user_profiles/create_many", params: { "organisation_ids[]": [organisation1.id, organisation2.id, organisation3.id], user_id: user_id }, headers: auth_headers
+
+          expect(response).to have_http_status(:not_found)
+          expect(response.body).to include("not_found")
+        end
+      end
+
+      context "when the user does not belong to a territory of the agent" do
+        let!(:other_territory_organisation) { create(:organisation, verticale: "rdv_insertion") }
+        let!(:user_from_another_territory) { create(:user, organisations: [other_territory_organisation]) }
+
+        it "returns a 404 not found and does not create the user profiles" do
+          expect do
+            post "/api/rdvinsertion/user_profiles/create_many", params: { "organisation_ids[]": [organisation1.id, organisation2.id], user_id: user_from_another_territory.id }, headers: auth_headers
+          end.not_to change(UserProfile, :count)
 
           expect(response).to have_http_status(:not_found)
           expect(response.body).to include("not_found")

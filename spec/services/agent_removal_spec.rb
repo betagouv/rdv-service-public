@@ -27,6 +27,28 @@ RSpec.describe AgentRemoval, type: :service do
 
       expect(agent.versions.last.object_changes.keys).to eq %w[email deleted_at]
     end
+
+    it "destroys all associations" do
+      agent.services = [create(:service)]
+      agent.agent_territorial_access_rights = [create(:agent_territorial_access_right, agent:)]
+      agent.agent_teams.create!(team: create(:team))
+      agent.referent_assignations = [create(:referent_assignation, agent:)]
+      agent.sector_attributions = [create(:sector_attribution, :level_agent, agent:)]
+      agent.external_calendar_sync_executions = [create(:external_calendar_sync_execution, :with_logs, agent:)]
+
+      service = described_class.new(agent, organisation)
+      expect(service).to be_valid
+
+      service.remove!
+      agent.reload
+
+      expect(agent.services).to be_empty
+      expect(agent.agent_territorial_access_rights).to be_empty
+      expect(agent.agent_teams).to be_empty
+      expect(agent.referent_assignations).to be_empty
+      expect(agent.sector_attributions).to be_empty
+      expect(agent.external_calendar_sync_executions).to be_empty
+    end
   end
 
   context "agent belongs to multiple organisations" do

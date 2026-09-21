@@ -46,9 +46,9 @@
 
     .fr-grid-row.fr-pb-3w
       .fr-col-12
-        .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr", params: { per: params[:per] }.compact
+        .d-flex.justify-content-center= paginate @rdvs, params: { per: params[:per] }.compact
         = render(partial: "rdv", collection: @rdvs_in_page, locals: { contextual_agents: nil })
-        .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr", params: { per: params[:per] }.compact
+        .d-flex.justify-content-center= paginate @rdvs, params: { per: params[:per] }.compact
 
     .fr-grid-row
       .fr-col-12

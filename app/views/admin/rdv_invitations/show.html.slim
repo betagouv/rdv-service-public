@@ -1,12 +1,30 @@
 - content_for :title do
-  | Invitation envoyée
+  | Invitation à prendre rendez-vous
 
-.fr-grid-row.justify-content-center
-  .fr-col-md-10.fr-col-lg-6.fr-col-xl-4
+.fr-grid-row
+  .fr-col-md-10
     .card.card-body
-      .fr-grid-row.justify-content-center.fr-mb-2w
-        = dsfr_svg "artwork/pictograms/digital/mail-send", class: "fr-artwork--green-emeraude"
-      p Un email a été envoyé à #{@rdv_invitation.user.full_name} pour l'inviter à prendre rendez-vous pour #{@rdv_invitation.motif.name}.
+      .rdv-display-md-flex.rdv-justify-content-space-between
+        - unless @rdv_invitation.cancelled?
+          = dsfr_svg "artwork/pictograms/digital/mail-send", class: "fr-artwork--green-emeraude fr-mb-2w"
+          - if @rdv_invitation.rdv_id.blank?
+            = button_to "Résilier l'invitation", cancel_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation), class: "fr-btn fr-btn--secondary", method: :patch
+      - if @rdv_invitation.cancelled?
+        p Cette invitation a été résiliée. L'usager ne pourra pas prendre ce rendez-vous.
 
-      - invitation_url = rdv_invitations_url(@rdv_invitation.token, host: @rdv_invitation.organisation.domain.host_name)
-      p Le lien d'invitation est #{link_to(invitation_url, invitation_url)}
+        p.fr-text-mention--grey.fr-text--sm
+          | #{@rdv_invitation.user.full_name} était invité·e à prendre rendez-vous pour #{@rdv_invitation.motif.name}, mais l'invitation a été annulée.
+      - else
+        p
+          |> Un email a été envoyé à #{@rdv_invitation.user.full_name} pour l'inviter à prendre rendez-vous
+          | pour le motif <b>#{@rdv_invitation.motif.name}</b>
+          - if @rdv_invitation.lieu_id
+            |< à <b>#{@rdv_invitation.lieu.name}</b>
+          | .
+
+        - if @rdv_invitation.rdv_id.blank?
+          p #{@rdv_invitation.user.full_name} n'a pas encore choisi de créneau.
+
+      p.fr-text-mention--grey.fr-text--sm Invitation envoyée par #{@rdv_invitation.inviting_agent.full_name}  #{human_date_format(@rdv_invitation.created_at)}.
+
+= link_to "Retour au profil de #{@rdv_invitation.user.full_name}", admin_organisation_user_path(current_organisation, @rdv_invitation.user), class: "fr-btn fr-btn--secondary fr-icon-arrow-left-line fr-btn--icon-left"

@@ -15,6 +15,12 @@ class Rack::Attack
     end
   end
 
+  throttle("saisie de code de confirmation de changement d'email usager - throttling par email de destination", limit: Rails.env.test? ? 2 : 60, period: 10.minutes) do |request|
+    if request.path.match(%r{/users/email_change/confirmation}) && request.post? && request.params.dig("login_code", "email").present?
+      request.params.dig("login_code", "email")
+    end
+  end
+
   throttle("saisie de code de connexion usager - throttling par email", limit: Rails.env.test? ? 2 : 60, period: 10.minutes) do |request|
     if request.path.match(%r{users/sessions_by_code}) && request.post? && request.params.dig("login_code", "email").present?
       request.params.dig("login_code", "email")
@@ -37,7 +43,8 @@ class Rack::Attack
                   (path == "/prdv" && request.params["tkn"].present?) || # redirect#reprendre_rdv_from_participation_invitation_token
                   (path == "/prendre_rdv" && request.params["invitation_token"].present?) || # search#search_rdv
                   (path.match?(%r{\A/users/rdvs/[^/]+\z}) && request.params["invitation_token"].present?) ||
-                  (path.match?(%r{\A/users/rdvs/[^/]+/creneaux\z}) && request.params["invitation_token"].present?)
+                  (path.match?(%r{\A/users/rdvs/[^/]+/creneaux\z}) && request.params["invitation_token"].present?) ||
+                  (path.match?(%r{\A/users/rdvs/[^/]+/visio\z}) && request.params["invitation_token"].present?)
   end
 
   Rack::Attack.throttled_responder = lambda do |request|

@@ -7,7 +7,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     before { rdv.participations.first.update(restricted_auth_token: "12345") }
 
     it "renders the headers" do
-      expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9\-]+@reply\.rdv-solidarites-test\.localhost>/)
+      expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9-]+@reply\.rdv-solidarites-test\.localhost>/)
       expect(mail.to).to eq([user.email])
       expect(mail.reply_to).to be_nil
     end
@@ -84,9 +84,10 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       let(:motif) { create(:motif, :collectif, organisation:, location_type: :visio) }
       let(:rdv) { create(:rdv, motif:, organisation:, visio_url_custom: nil) }
 
-      it "contient un lien vers la visio" do
+      it "contient un lien stable vers la visio (permettant l'authentification par token)" do
         mail = described_class.with(rdv:, user:).rdv_created
-        expect(mail.html_part.body.encoded).to include(%r{https://webconf.numerique.gouv.fr/RdvServicePublic})
+        expect(mail.html_part.body.encoded).not_to include(%r{https://webconf.numerique.gouv.fr/RdvServicePublic})
+        expect(mail.html_part.body.raw_source).to include("/users/rdvs/#{rdv.id}/visio?invitation_token=12345")
       end
     end
 
@@ -95,10 +96,10 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       let(:motif) { create(:motif, :collectif, organisation:, location_type: :visio) }
       let(:rdv) { create(:rdv, motif:, organisation:, visio_url_custom: "https://webinaire.numerique.gouv.fr/test123") }
 
-      it "contient un lien vers la visio" do
+      it "contient un lien stable vers la visio (permettant l'authentification par token)" do
         mail = described_class.with(rdv:, user:).rdv_created
-        expect(mail.html_part.body.encoded).not_to include(%r{https://webconf.numerique.gouv.fr/})
-        expect(mail.html_part.body.encoded).to include(%r{https://webinaire.numerique.gouv.fr/test123})
+        expect(mail.html_part.body.encoded).not_to include(%r{https://webinaire.numerique.gouv.fr/test123})
+        expect(mail.html_part.body.raw_source).to include("/users/rdvs/#{rdv.id}/visio?invitation_token=12345")
       end
     end
   end
@@ -116,7 +117,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     it "renders the headers" do
       mail = described_class.with(rdv: rdv, user: user).rdv_updated(old_starts_at: previous_starting_time, lieu_id: nil)
 
-      expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9\-]+@reply\.rdv-solidarites-test\.localhost/)
+      expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9-]+@reply\.rdv-solidarites-test\.localhost/)
       expect(mail.to).to eq([user.email])
     end
 
@@ -149,7 +150,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       user = rdv.users.first
       mail = described_class.with(rdv: rdv, user: user).rdv_cancelled
 
-      expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9\-]+@reply\.rdv-solidarites-test\.localhost>/)
+      expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9-]+@reply\.rdv-solidarites-test\.localhost>/)
       expect(mail.to).to eq([user.email])
     end
 
@@ -205,7 +206,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     let(:mail) { described_class.with(rdv:, user:, participation:).participation_cancelled }
 
     it "envoie le mail à l'usager" do
-      expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9\-]+@reply\.rdv-solidarites-test\.localhost>/)
+      expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9-]+@reply\.rdv-solidarites-test\.localhost>/)
       expect(mail.to).to eq([user.email])
     end
 
@@ -248,7 +249,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
     it "send mail to user" do
       mail = described_class.with(rdv: rdv, user: user).rdv_upcoming_reminder
-      expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9\-]+@reply\.rdv-solidarites-test\.localhost>/)
+      expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9-]+@reply\.rdv-solidarites-test\.localhost>/)
       expect(mail.to).to eq([user.email])
       expect(mail.html_part.body).to include("Nous vous rappellons que vous avez un RDV prévu")
       expect(mail.html_part.body.raw_source).to include("/users/rdvs/#{rdv.id}?invitation_token=12345")
@@ -267,7 +268,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first).send(action)
-          expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9\-]+@reply\.rdv-solidarites-test\.localhost>/)
+          expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9-]+@reply\.rdv-solidarites-test\.localhost>/)
           expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
           expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost))
           expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Solidarités))
@@ -279,7 +280,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first).send(action)
-          expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9\-]+@reply\.rdv-solidarites-test\.localhost/)
+          expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9-]+@reply\.rdv-solidarites-test\.localhost/)
           expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
           expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost))
           expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Solidarités))
@@ -291,7 +292,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first).send(action)
-          expect(mail[:from].to_s).to match(/"RDV Aide Numérique" <rdv\+[a-z0-9\-]+@reply\.rdv-aide-numerique-test\.localhost>/)
+          expect(mail[:from].to_s).to match(/"RDV Aide Numérique" <rdv\+[a-z0-9-]+@reply\.rdv-aide-numerique-test\.localhost>/)
           expect(mail.html_part.body.to_s).to include(%(src="/logo_aide_numerique.png))
           expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-aide-numerique-test.localhost))
           expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Aide Numérique))
@@ -303,7 +304,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first).send(action)
-          expect(mail[:from].to_s).to match(/RDV Service Public <rdv\+[a-z0-9\-]+@reply\.rdv-service-public-test\.localhost>/)
+          expect(mail[:from].to_s).to match(/RDV Service Public <rdv\+[a-z0-9-]+@reply\.rdv-service-public-test\.localhost>/)
           # les guillemets autour de "RDV Service Public" disparaissent probablement ici car il n’y a que des caractères ASCII
           expect(mail.html_part.body.to_s).to include(%(src="/logo_rdv_service_public.png))
           expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-service-public-test.localhost))
