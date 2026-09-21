@@ -2,7 +2,7 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
   include ActionView::Helpers::SanitizeHelper
 
   let(:oauth_application) { create(:oauth_application, name: "Démarches Simplifiées") }
-  let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, agent:, motifs: [motif, phone_motif]) }
+  let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, agent:, motifs: [motif, phone_motif], first_day: 2.weeks.ago) }
   let!(:user) do
     create(:user, latest_login_at: nil, organisations: [organisation],
                   email: "camille.dupont@exemple.fr", phone_number: nil,

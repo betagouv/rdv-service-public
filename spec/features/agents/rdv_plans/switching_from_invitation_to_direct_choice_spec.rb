@@ -9,7 +9,7 @@ RSpec.describe "Un agent peut choisir le mode de préparation du rdv" do
   let!(:motif) { create(:motif, organisation:, location_type: :phone) }
   let!(:user) { create(:user, organisations: [organisation]) }
   let(:organisation) { create(:organisation) }
-  let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, agent:, motifs: [motif]) }
+  let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, agent:, motifs: [motif], first_day: 2.weeks.ago) }
 
   before do
     agent.enable_feature!("rdv_invitations")
