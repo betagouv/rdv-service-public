@@ -2,7 +2,7 @@
   .fr-col-8.fr-col-offset-2
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 2, step_title: "Créneau", next_step_title: "Usager"
 
-    .card.card-body.fr-p-2w
+    .card.card-body.fr-p-2w[style="margin-top: -24px"]
       .fr-col-12
         = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
       hr.fr-mt-2w
