@@ -9,3 +9,7 @@ nav#planning_tabs.fr-nav[role="navigation" aria-label="Menu du planning"]
     li.fr-nav__item
       = active_link_to(admin_organisation_planning_absences_path(current_organisation, { agent_id: params[:agent_id] }.compact_blank), class: "fr-nav__link") do
         | Indisponibilités
+    - if current_agent.feature_enabled?("rdv_invitations")
+      li.fr-nav__item
+      = active_link_to(admin_organisation_planning_rdv_invitations_path(current_organisation, { agent_id: params[:agent_id] }.compact_blank), class: "fr-nav__link") do
+        | Invitations

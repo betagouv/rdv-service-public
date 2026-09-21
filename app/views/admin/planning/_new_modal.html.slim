@@ -18,7 +18,7 @@ dialog#planning-new-modal.fr-modal[aria-labelledby="planning-new-modal-title" da
                   .fr-tile__body
                     .fr-tile__content
                       h3.fr-tile__title
-                        = link_to "Un rendez-vous", new_admin_organisation_rdv_wizard_step_path(current_organisation, agent_ids: [agent.id])
+                        = link_to "Un rendez-vous", admin_organisation_rdv_plans_path(current_organisation, agent_id: agent.id), method: :post
                       p.fr-tile__desc
                         | Prendre un rendez-vous pour un usager
 
