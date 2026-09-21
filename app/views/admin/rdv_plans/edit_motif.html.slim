@@ -2,7 +2,7 @@
   .fr-col-8.fr-col-offset-2
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Motif", next_step_title: "Créneau"
 
-    .card.card-body
+    .card.card-body.fr-p-2w[style="margin-top: -24px"]
       - if @motifs.empty?
         p Aucun motif de rendez-vous n'est disponible.
         - if current_agent.admin_orgs.any?
@@ -25,3 +25,4 @@
                   = " · "
                   = "#{motif.default_duration_in_min} min."
                 = icon("fr-icon-arrow-right-line", class: "rdv-color-text-action-high-blue-france")
+      = link_to "Retour", admin_organisation_planning_agenda_path(current_organisation), dsfr_return_btn_options

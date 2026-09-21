@@ -6,7 +6,7 @@
 
 .fr-grid-row.fr-mb-4w[data-controller="rdv-plan" data-rdv-plan-id="#{@rdv_plan.id}"]
   .fr-col-8.fr-col-offset-2
-    .card.card-body.fr-p-2w
+    .card.card-body.fr-p-2w[style="margin-top: -24px"]
       .fr-col-12
         = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
       hr.fr-mt-2w
