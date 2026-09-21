@@ -73,5 +73,15 @@ RSpec.describe CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux do
         expect(creneaux.map { [_1.starts_at.strftime("%H:%M"), _1.ends_at.strftime("%H:%M")] }).to eq([["09:00", "11:00"]])
       end
     end
+
+    context "when the free time is exactly as long as the motif duration, leaving no room for the buffer" do
+      let(:free_time_ranges) { [Time.zone.parse("2021-04-30 09:00")..Time.zone.parse("2021-04-30 10:00")] }
+      let(:duration_in_min) { 60 }
+      let(:minutes_after_rdvs) { 30 }
+
+      it "still offers the single creneau that fits" do
+        expect(creneaux.map { [_1.starts_at.strftime("%H:%M"), _1.ends_at.strftime("%H:%M")] }).to eq([["09:00", "10:00"]])
+      end
+    end
   end
 end
