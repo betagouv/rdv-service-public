@@ -23,7 +23,7 @@
                   = f.label :role, "Tous les rôles", value: "", class: "fr-label fr-mb-0"
                 .fr-segmented__element
                   = f.radio_button :role, "admin", data: { action: "change->form#submit" }
-                  = f.label :role, "Admins uniquement", value: "admin", class: "fr-label fr-mb-0"
+                  = f.label :role, "Administrateurs uniquement", value: "admin", class: "fr-label fr-mb-0"
           .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
             = f.dsfr_text_field :query, placeholder: "Prénom, Nom, Email", autocomplete: "off", label: ""
           .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
