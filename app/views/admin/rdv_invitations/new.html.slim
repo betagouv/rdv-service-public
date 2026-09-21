@@ -2,7 +2,7 @@
   | Invitation à prendre rendez-vous
 
 .fr-grid-row.justify-content-center
-  .fr-col-md-12.col-lg-8
+  .fr-col-md-12.fr-col-lg-10.fr-col-xl-8
     .card.card-body.fr-p-2w
       = form_for [:admin, current_organisation, @rdv_invitation], builder: Dsfr::FormBuilder do |f|
         = f.hidden_field :user_id
