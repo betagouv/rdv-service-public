@@ -94,11 +94,6 @@ tables:
       - pro_connect_openid_sub
       - pro_connect_2fa_active
       - pro_connect_idp_id
-      - caldav_agenda_url
-      - caldav_username
-      - caldav_password
-      - caldav_include_sensitive_data
-      - caldav_sync_token
       - sensitive_account
     non_anonymized_column_names:
       - reset_password_sent_at
@@ -127,7 +122,6 @@ tables:
       - updated_at
       - proconnect_siret
       - feature_flags
-      - caldav_disconnect_started_at
       - blog_read_at
       - group_by_agent
 
