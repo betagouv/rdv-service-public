@@ -1,4 +1,11 @@
 class Api::Rdvinsertion::AgentAuthBaseController < Api::V1::AgentAuthBaseController
+  # Les API réservées à RDV-Insertion ont souvent besoin d'effectuer des opérations
+  # d'administration incompatibles avec cette protection.
+  # Dans ce contexte, la sécurité est renforcée à travers :
+  # - l'usage la restriction ci-dessous impliquant RDV_INSERTION_OAUTH_APPLICATION_UID
+  # - les vérifications ajoutées dans #6719
+  skip_before_action :detect_param_injection
+
   private
 
   # L'authentification par secret partagé est faite via un secret partagé avec rdv-insertion qui se trouve
