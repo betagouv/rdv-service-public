@@ -53,6 +53,18 @@ RSpec.describe IcalFormatters::Ics do
       end
     end
 
+    describe "transp" do
+      it "is absent when not provided in payload" do
+        expect(subject).not_to include("TRANSP")
+      end
+
+      context "when transp is provided" do
+        let(:payload) { super().merge(transp: "TRANSPARENT") }
+
+        it { expect(subject).to include("TRANSP:TRANSPARENT") }
+      end
+    end
+
     describe "status" do
       let(:payload) { { starts_at: Time.zone.parse("20190704 15h00"), action: action, domain: Domain::RDV_SOLIDARITES } }
 

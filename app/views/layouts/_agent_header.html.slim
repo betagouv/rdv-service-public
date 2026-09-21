@@ -48,6 +48,7 @@ header.header.bg-white
             = render "layouts/lagaufre_button"
 
   = render "layouts/super_admin_sign_in_as_warning"
+  = render "layouts/pro_connect_visio_notice"
   - if RdvPlan.where(planning_agent: current_agent, rdv_id: nil).where("created_at > ?", 20.minutes.ago).any?
     = render "layouts/rdv_plan_banner"
   - else

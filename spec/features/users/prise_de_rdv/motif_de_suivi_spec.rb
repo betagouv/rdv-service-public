@@ -145,9 +145,25 @@ RSpec.describe "Prise de RDV pour un motif de suivi" do
     end
   end
 
-  context "sur le domaine RDV Service Public (pas de sélection d'adresse)" do
-    it "affiche la sélection des motifs de suivi du référent au lieu de rediriger vers l'accueil" do
+  context "sur le domaine RDV Service Public dans un espace qui a un departement_number" do
+    let!(:territory) { create(:territory, departement_number: "C24", enable_birth_date_field: true) }
+
+    specify do
       visit "http://www.rdv-service-public-test.localhost/users/rdvs"
+      click_link "Prendre un RDV de suivi"
+
+      expect(page).to have_content(motif1.name)
+      expect(page).to have_content(collectif_motif.name)
+      expect(page).not_to have_content(motif2.name)
+      expect(page).not_to have_content(motif3.name)
+    end
+  end
+
+  context "sur le domaine RDV Service Public État, dans un espace qui n'a pas de departement_number" do
+    let!(:territory) { create(:territory, departement_number: "", enable_birth_date_field: true) }
+
+    it "affiche la sélection des motifs de suivi du référent au lieu de rediriger vers l'accueil" do
+      visit "http://www.rdv-service-public-etat-test.localhost/users/rdvs"
       click_link "Prendre un RDV de suivi"
 
       expect(page).to have_content(motif1.name)

@@ -143,11 +143,25 @@ RSpec.describe RestrictedAuthConcern do
         request.session[:restricted_auth][:expires_at] = 5.minutes.ago
       end
 
-      it "deletes the invitation and redirects to root path with a message" do
+      it "cleans the session and redirects to root path with a message" do
         subject
         expect(request.session[:restricted_auth]).to be_nil
+        expect(request.session[:rdv_insertion_invitation]).to be_nil
         expect(response).to redirect_to(root_path)
         expect(flash[:error]).to eq("La session a expiré")
+      end
+    end
+
+    context "when the restricted auth is gone but a rdv insertion invitation lingers in session" do
+      before do
+        request.session.delete(:restricted_auth)
+        request.session[:rdv_insertion_invitation] = { motif_category_short_name: "rsa_orientation" }
+      end
+
+      it "deletes the residual invitation from the session" do
+        subject
+        expect(response).to be_successful
+        expect(request.session[:rdv_insertion_invitation]).to be_nil
       end
     end
 
@@ -168,8 +182,10 @@ RSpec.describe RestrictedAuthConcern do
 
         before { sign_in other_user }
 
-        it "redirects to root path with a message" do
+        it "cleans the session and redirects to root path with a message" do
           subject
+          expect(request.session[:restricted_auth]).to be_nil
+          expect(request.session[:rdv_insertion_invitation]).to be_nil
           expect(response).to redirect_to(root_path)
           expect(flash[:error]).to eq("L’utilisateur connecté ne correspond pas à l’utilisateur invité. Déconnectez-vous et réessayez.")
         end

@@ -3,16 +3,41 @@
 
 .fr-grid-row.justify-content-center
   .fr-col-md-12.col-lg-8
-    .card.card-body
+    .card.card-body.fr-p-2w
       = form_for [:admin, current_organisation, @rdv_invitation], builder: Dsfr::FormBuilder do |f|
         = f.hidden_field :user_id
         = f.hidden_field :motif_id
         = f.hidden_field :lieu_id
         = render "model_errors", model: @rdv_invitation, f: f
 
-        - if @rdv_invitation.lieu
-          p Vous allez inviter <b>#{@rdv_invitation.user.full_name}</b> à prendre rendez-vous pour #{@rdv_invitation.motif.name}</b> à <b>#{@rdv_invitation.lieu.name}</b>.
-        - else
-          p Vous allez inviter <b>#{@rdv_invitation.user.full_name}</b> à prendre rendez-vous pour #{@rdv_invitation.motif.name}</b>.
+        - if @rdv_invitation.user.blank?
+          p
+            | Vous allez envoyer une invitation à prendre rendez-vous pour <b>#{@rdv_invitation.motif.name}</b>
+            - if @rdv_invitation.lieu.present?
+              |< à <b>#{@rdv_invitation.lieu.name}</b>
+            |.
+          = label_tag :user_id, "Quel usager souhaitez-vous inviter?"
+          = select_tag :user_id,
+            options_for_select([]),
+            required: true,
+            class: "select2-input js-rdv-invitation-user-select",
+            data: { \
+              width: :style,
+              "select2-config": { ajax: { url: search_agents_users_path(organisation_id: @rdv_invitation.organisation.id), dataType: "json", delay: 250}, placeholder: "Nom, prénom, téléphone, ou email" }, }
 
-        = f.submit "Envoyer l'invitation", class: "fr-btn"
+        - else
+          p
+            | Vous allez inviter <b>#{@rdv_invitation.user.full_name}</b>
+            span
+              = icon_link_to "Changer d'usager", new_admin_organisation_rdv_invitation_path(current_organisation, motif_id: @rdv_invitation.motif_id, lieu_id: @rdv_invitation.lieu_id), class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-btn--icon-left fr-icon-edit-line fr-pr-0"
+            |< à prendre rendez-vous pour <b>#{@rdv_invitation.motif.name}</b>
+            - if @rdv_invitation.lieu
+              |< à <b>#{@rdv_invitation.lieu.name}</b>
+            | .
+
+        .fr-grid-row
+          .fr-col-12.fr-mt-2w
+            .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+              = link_to("Retour aux créneaux", admin_organisation_creneaux_search_selection_creneaux_path(current_organisation, lieux_ids: @rdv_invitation.lieu_id, motif_id: @rdv_invitation.motif_id), dsfr_return_btn_options)
+              - if @rdv_invitation.user.present?
+                = f.submit "Envoyer l'invitation", class: "fr-btn"
