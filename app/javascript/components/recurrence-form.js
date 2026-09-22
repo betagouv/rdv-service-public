@@ -45,7 +45,7 @@ class RecurrenceForm {
   getFirstDay = () => {
     const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
     const [, day, month, year] = datePattern.exec(this.firstDayTarget.value)
-    return new Date(`${year}-${month}-${day}`);
+    return new Date(Number(year), Number(month) - 1, Number(day));
   }
 
   setRecurrenceComputed = (model) => {
