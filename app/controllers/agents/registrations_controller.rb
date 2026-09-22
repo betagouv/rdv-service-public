@@ -12,10 +12,9 @@ class Agents::RegistrationsController < Devise::RegistrationsController
       deleted_agent_email = current_agent.email
       removal_services.each(&:remove!)
 
-      # `Devise.sign_out_all_scopes` (activé par défaut) fait qu'un `sign_out` sans scope déconnecte
-      # tous les scopes Warden et vide déjà la session entière — si un super admin usurpe cet agent,
-      # cela le déconnecterait aussi. On ne déconnecte donc que le scope `:agent` dans ce cas (comme
-      # `Agents::SessionsController#destroy`), sans toucher au reste de la session.
+      # `sign_out` sans scope déconnecte tous les scopes Warden et vide déjà la session entière
+      # — si un super admin usurpe cet agent, cela le déconnecterait aussi. On ne déconnecte donc que le scope `:agent`
+      # dans ce cas (comme `Agents::SessionsController#destroy`), sans toucher au reste de la session.
       sign_out(resource_name)
 
       if session[:super_admin_signed_in_as_agent]
