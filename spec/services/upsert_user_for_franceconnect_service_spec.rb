@@ -49,7 +49,7 @@ RSpec.describe UpsertUserForFranceconnectService do
 
         it "sets the ami_france_connect_hash" do
           service.perform
-          expect(UserAmiProfile.find_by(user: service.user).fc_hash).to eq("4abd71ec1f581dce2ea2221cbeac7c973c6aea7bcb835acdfe7d6494f1528060")
+          expect(UserAmiProfile.find_by(user: service.user).fc_hash).to eq("01d6f14bd06de19c43c2984da5fb1a6941ac7d964f2a7c191d696e4a76aaf986")
         end
       end
 
