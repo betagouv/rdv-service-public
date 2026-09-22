@@ -16,6 +16,7 @@ module Menshen
           subject_token: @subject_token,
           subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
           audience: ENV.fetch("MENSHEN_AUDIENCE"),
+          scope: "action:create-meet-room",
         }
       end
 
