@@ -82,7 +82,7 @@ class Autodoc
           @example.expect(page_or_email).to @example.be_axe_clean
         end
 
-        high_res_zoom = ENV["AUTODOC_HIGH_RES_SCREENSHOTS"] && !disable_high_res_zoom
+        high_res_zoom = ENV["AUTODOC_HIGH_RES_SCREENSHOTS"] == "true" && !disable_high_res_zoom
 
         if high_res_zoom
           current_size = page_or_email.current_window.size
@@ -98,7 +98,7 @@ class Autodoc
         end
       end
 
-      img_src = ENV["UPLOAD_TO_GH_PAGES"] ? "/rdv-service-public/#{filename}" : path
+      img_src = ENV["UPLOAD_TO_GH_PAGES"] == "true" ? "/rdv-service-public/#{filename}" : path
 
       @current_section.steps << { text: text, img_src: img_src }
     end
