@@ -66,6 +66,8 @@ class Ami
 
   # On garde cette méthode publique pour faciliter les tests en console.
   def send_event(payload)
+    return unless @participation.rdv.organisation.ami_enabled
+
     Ami::SendEventJob.perform_later(default_payload.merge(payload))
   end
 
