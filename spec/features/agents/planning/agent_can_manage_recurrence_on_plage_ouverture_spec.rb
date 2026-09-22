@@ -129,6 +129,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
         fill_in("recurrence-source", with: "24/09/2026")
         select("1", from: "recurrence_interval")
         expect(page).to have_text("Tous les 4ème jeudi du mois")
+        fill_in("recurrence-until", with: "31/12/2026")
         click_button("Enregistrer")
 
         # check if everything is ok in db
@@ -136,8 +137,14 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
           day: { 4 => [4] },
           every: :month,
           interval: 1,
-          starts: Time.zone.local(2026, 9, 24)
+          starts: Time.zone.local(2026, 9, 24),
+          until: Time.zone.local(2026, 12, 31)
         )
+
+        # reload page to check if form is filled correctly
+        visit edit_admin_organisation_planning_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
+        expect(page).to have_text("Tous les 4ème jeudi du mois")
+        expect(page).to have_field("recurrence-until", with: "31/12/2026")
       end
     end
   end
