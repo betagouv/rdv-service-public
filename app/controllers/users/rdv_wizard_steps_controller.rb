@@ -39,7 +39,8 @@ class Users::RdvWizardStepsController < UserAuthController
 
     authorize(@rdv_booking_form, policy_class: User::RdvBookingPolicy)
 
-    UserAmiProfile.update_notify_by_ami(current_user, params.dig(:user, :notify_by_ami).to_boolean)
+    # On fait l'appel à AMI en synchrone pour mettre à jour le profil avant d'envoyer les notifications
+    UserAmiProfile.update_notify_by_ami(current_user, params.dig(:user, :notify_by_ami).to_boolean, synchronous: true)
     if @rdv_booking_form.save
       flash[:success] = (@rdv_booking_form.collectif? ? "Participation confirmée" : t("users.rdvs.create.rdv_confirmed"))
 
