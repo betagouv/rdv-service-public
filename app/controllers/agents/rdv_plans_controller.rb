@@ -57,7 +57,12 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def update_starts_at
-    @rdv_plan.update!(params.require(:rdv_plan).permit(:starts_at).merge(by_invitation: false))
+    @rdv_plan.assign_attributes(params.require(:rdv_plan).permit(:starts_at, :rdv_agent_id).merge(by_invitation: false))
+
+    authorize @rdv_plan, :update?, policy_class: Agent::RdvPlanPolicy
+
+    @rdv_plan.save!
+
     if @rdv_plan.motif.public_office?
       redirect_to edit_lieu_agents_rdv_plan_path(@rdv_plan)
     else
