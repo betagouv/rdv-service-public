@@ -1,4 +1,11 @@
 class Api::Rdvinsertion::AgentAuthBaseController < Api::V1::AgentAuthBaseController
+  # Les API réservées à RDV-Insertion ont souvent besoin d'effectuer des opérations
+  # d'administration incompatibles avec cette protection.
+  # Dans ce contexte, la sécurité est renforcée à travers :
+  # - l'usage la restriction ci-dessous impliquant RDV_INSERTION_OAUTH_APPLICATION_UID
+  # - les vérifications ajoutées dans #6719
+  skip_before_action :detect_param_injection
+
   private
 
   # L'authentification par secret partagé est faite via un secret partagé avec rdv-insertion qui se trouve
@@ -20,5 +27,38 @@ class Api::Rdvinsertion::AgentAuthBaseController < Api::V1::AgentAuthBaseControl
         render(status: :unauthorized, json: {})
       end
     end
+  end
+
+  def authenticate_agent_with_shared_secret
+    if shared_secret_is_valid?
+      @current_agent = Agent.find_by(email: request.headers["uid"])
+      @authentication_type = "SharedSecret"
+    else
+      Sentry.capture_message("API authentication agent was called with an invalid signature !", fingerprint: ["api_agent_invalid_sig"])
+      render(
+        status: :unauthorized,
+        json: {
+          errors: [I18n.t("devise.failure.unauthenticated")],
+        }
+      )
+    end
+  end
+
+  def shared_secret_is_valid?
+    return false if request.headers["X-Agent-Auth-Signature"].nil?
+
+    agent = Agent.find_by(email: request.headers["uid"])
+    # Structure of the payload need to be exact for digest comparison
+    payload = {
+      id: agent.id,
+      first_name: agent.first_name,
+      last_name: agent.last_name,
+      email: agent.email,
+    }
+
+    ActiveSupport::SecurityUtils.secure_compare(
+      OpenSSL::HMAC.hexdigest("SHA256", ENV.fetch("SHARED_SECRET_FOR_AGENTS_AUTH"), payload.to_json),
+      request.headers["X-Agent-Auth-Signature"]
+    )
   end
 end

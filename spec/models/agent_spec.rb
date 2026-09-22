@@ -5,7 +5,7 @@ RSpec.describe Agent, type: :model do
       let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
       it "raises" do
-        expect { agent.soft_delete }.to raise_error SoftDeleteError
+        expect { agent.soft_delete }.to raise_error Agent::SoftDeleteError
       end
     end
 
@@ -111,6 +111,31 @@ RSpec.describe Agent, type: :model do
     it "return Validay Martine" do
       agent = build(:agent, last_name: "Validay", first_name: "Martine")
       expect(agent.to_s).to eq("Martine Validay")
+    end
+  end
+
+  describe "#should_link_pro_connect_for_visio?" do
+    it "retourne true si l'agent n'est pas connecté à ProConnect et a un motif visio" do
+      agent = create(:agent, pro_connect_openid_sub: nil)
+      motif = create(:motif, location_type: :visio)
+      create(:plage_ouverture, agent: agent, motifs: [motif])
+
+      expect(agent.should_link_pro_connect_for_visio?).to be true
+    end
+
+    it "retourne false si l'agent est déjà connecté à ProConnect" do
+      agent = create(:agent, pro_connect_openid_sub: "some-sub")
+      motif = create(:motif, location_type: :visio)
+      create(:plage_ouverture, agent: agent, motifs: [motif])
+
+      expect(agent.should_link_pro_connect_for_visio?).to be false
+    end
+
+    it "retourne false si l'agent n'a pas de motif visio" do
+      agent = create(:agent, pro_connect_openid_sub: nil)
+      create(:plage_ouverture, agent: agent)
+
+      expect(agent.should_link_pro_connect_for_visio?).to be false
     end
   end
 

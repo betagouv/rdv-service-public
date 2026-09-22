@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_08_153024) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_21_135003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -155,19 +155,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_08_153024) do
     t.datetime "account_deletion_warning_sent_at", comment: "Quand le compte de l'agent est inactif depuis bientôt deux ans, on lui envoie un mail qui le prévient que sont compte sera bientôt supprimé, et qu'il doit se connecter à nouveau s'il souhaite conserver son compte. On enregistre la date d'envoi de cet email ici pour s'assure qu'on lui laisse un délai d'au moins un mois pour réagir.\n"
     t.string "proconnect_siret"
     t.jsonb "feature_flags", default: {}
-    t.string "caldav_agenda_url"
-    t.string "caldav_username"
-    t.string "caldav_password"
     t.datetime "blog_read_at"
     t.string "pro_connect_openid_sub"
-    t.string "caldav_sync_token"
     t.boolean "pro_connect_2fa_active"
     t.boolean "group_by_agent", default: false, null: false
     t.string "pro_connect_idp_id", comment: "Fournisseur d'identité ProConnect (identity provider)"
     t.boolean "sensitive_account", default: false, null: false
-    t.datetime "caldav_disconnect_started_at"
     t.boolean "display_extended_hours", default: false, null: false
-    t.boolean "caldav_include_sensitive_data", default: false, null: false
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -670,6 +664,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_08_153024) do
     t.bigint "rdv_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "cancelled", default: false, null: false
     t.index ["inviting_agent_id"], name: "index_rdv_invitations_on_inviting_agent_id"
     t.index ["lieu_id"], name: "index_rdv_invitations_on_lieu_id"
     t.index ["motif_id"], name: "index_rdv_invitations_on_motif_id"
@@ -693,12 +688,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_08_153024) do
     t.enum "location_type", enum_type: "location_type"
     t.bigint "oauth_application_id"
     t.text "dossier_url"
+    t.boolean "by_invitation", default: false, null: false
+    t.bigint "rdv_invitation_id"
     t.index ["lieu_id"], name: "index_rdv_plans_on_lieu_id"
     t.index ["motif_id"], name: "index_rdv_plans_on_motif_id"
     t.index ["oauth_application_id"], name: "index_rdv_plans_on_oauth_application_id"
     t.index ["planning_agent_id"], name: "index_rdv_plans_on_planning_agent_id"
     t.index ["rdv_agent_id"], name: "index_rdv_plans_on_rdv_agent_id"
     t.index ["rdv_id"], name: "index_rdv_plans_on_rdv_id"
+    t.index ["rdv_invitation_id"], name: "index_rdv_plans_on_rdv_invitation_id"
     t.index ["user_id"], name: "index_rdv_plans_on_user_id"
   end
 
@@ -1035,6 +1033,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_08_153024) do
   add_foreign_key "rdv_plans", "lieux"
   add_foreign_key "rdv_plans", "motifs"
   add_foreign_key "rdv_plans", "oauth_applications"
+  add_foreign_key "rdv_plans", "rdv_invitations"
   add_foreign_key "rdv_plans", "rdvs"
   add_foreign_key "rdv_plans", "users"
   add_foreign_key "rdvs", "lieux"

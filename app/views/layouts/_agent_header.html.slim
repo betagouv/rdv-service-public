@@ -13,6 +13,8 @@ header.header.bg-white
           = render "layouts/blog_posts_modal"
         li#rdv-account-dropdown.list-inline-item.dropdown.mr-2
           button.link-dsfr.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false"
+            - if defined?(current_organisation) && current_organisation && current_agent.admin_in_organisation?(current_organisation)
+              = icon("fr-icon-user-setting-line", class: "fr-icon--sm fr-mr-1w", title: "Administrateur")
             = current_agent.full_name
           ul.dropdown-menu.dropdown-menu-right
             li = link_to edit_agent_registration_path, class: "dropdown-item-dsfr dropdown-item" do
@@ -46,7 +48,8 @@ header.header.bg-white
             = render "layouts/lagaufre_button"
 
   = render "layouts/super_admin_sign_in_as_warning"
-  - if RdvPlan.where(planning_agent: current_agent, rdv_id: nil).where("created_at > ?", 20.minutes.ago).any?
+  = render "layouts/pro_connect_visio_notice"
+  - if RdvPlan.where(planning_agent: current_agent, rdv_id: nil, rdv_invitation_id: nil).where("created_at > ?", 20.minutes.ago).any?
     = render "layouts/rdv_plan_banner"
   - else
     = render "layouts/meet_the_team_banner" unless @hide_meet_the_team_banner

@@ -12,6 +12,8 @@ class Agent::RdvInvitationPolicy < ApplicationPolicy
     can_show_user? && can_show_motif?
   end
 
+  alias update? show?
+
   class Scope < ApplicationPolicy::Scope
     alias current_agent pundit_user
 
@@ -33,7 +35,7 @@ class Agent::RdvInvitationPolicy < ApplicationPolicy
   end
 
   def can_show_user?
-    Agent::UserPolicy.new(AgentOrganisationContext.new(current_agent, rdv_invitation.organisation), rdv_invitation.user).show?
+    rdv_invitation.user.blank? || Agent::UserPolicy.new(AgentOrganisationContext.new(current_agent, rdv_invitation.organisation), rdv_invitation.user).show?
   end
 
   def can_show_motif?

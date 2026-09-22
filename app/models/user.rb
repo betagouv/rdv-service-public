@@ -14,8 +14,11 @@ class User < ApplicationRecord
     ]
   )
 
+  # 2 niveaux de timeouts d'inactivité redondants (le plus petit prend le pas) :
+  # - 30 minutes côté backend devise pour ce modèle via timeoutable et timeout_in
+  # - 8 heures côté expiration cookie vérifiée par Rails (cf config/application.rb)
   devise :timeoutable
-  def timeout_in = 30.minutes # Used by Devise's :timeoutable
+  def timeout_in = 30.minutes
 
   include PgSearch::Model
   include FullNameConcern

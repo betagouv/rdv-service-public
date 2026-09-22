@@ -2,17 +2,78 @@
   | Invitation à prendre rendez-vous
 
 .fr-grid-row.justify-content-center
-  .fr-col-md-12.col-lg-8
-    .card.card-body
+  .fr-col-md-12.fr-col-lg-10.fr-col-xl-8
+    .card.card-body.fr-p-2w
       = form_for [:admin, current_organisation, @rdv_invitation], builder: Dsfr::FormBuilder do |f|
         = f.hidden_field :user_id
         = f.hidden_field :motif_id
         = f.hidden_field :lieu_id
         = render "model_errors", model: @rdv_invitation, f: f
 
-        - if @rdv_invitation.lieu
-          p Vous allez inviter <b>#{@rdv_invitation.user.full_name}</b> à prendre rendez-vous pour #{@rdv_invitation.motif.name}</b> à <b>#{@rdv_invitation.lieu.name}</b>.
-        - else
-          p Vous allez inviter <b>#{@rdv_invitation.user.full_name}</b> à prendre rendez-vous pour #{@rdv_invitation.motif.name}</b>.
+        - if @rdv_invitation.user.blank?
+          p
+            | Vous allez envoyer une invitation à prendre rendez-vous pour <b>#{@rdv_invitation.motif.name}</b>
+            - if @rdv_invitation.lieu.present?
+              |< à <b>#{@rdv_invitation.lieu.name}</b>
+            |.
+          = label_tag :user_id, "Qui souhaitez-vous inviter ?"
 
-        = f.submit "Envoyer l'invitation", class: "fr-btn"
+          .d-flex
+            .flex-grow-1.fr-pr-2w
+              = select_tag :user_id,
+                options_for_select([]),
+                required: true,
+                class: "select2-input js-rdv-invitation-user-select",
+                data: { \
+                  "redirect-url": new_admin_organisation_rdv_invitation_url(current_organisation, motif_id: @rdv_invitation.motif_id, lieu_id: @rdv_invitation.lieu_id, host: current_domain.host_name),
+                  "select2-config": { ajax: { url: search_agents_users_path(organisation_id: @rdv_invitation.organisation.id), dataType: "json", delay: 250}, placeholder: "Chercher un usager par nom, prénom, téléphone, ou email" }, }
+
+            div
+              span.fr-text-mention--grey.fr-text--sm
+                | Vous ne trouvez pas l'usager ?&nbsp;
+
+              button[data-fr-opened="#{@user.present?}" aria-controls="new-user-modal" type="button" class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"]
+                | Ajouter un usager
+
+        - else
+          p
+            | Vous allez inviter <b>#{@rdv_invitation.user.full_name}</b>
+            span
+              = icon_link_to "Changer d'usager", new_admin_organisation_rdv_invitation_path(current_organisation, motif_id: @rdv_invitation.motif_id, lieu_id: @rdv_invitation.lieu_id), class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-btn--icon-left fr-icon-edit-line fr-pr-0"
+            |< à prendre rendez-vous pour <b>#{@rdv_invitation.motif.name}</b>
+            - if @rdv_invitation.lieu
+              |< à <b>#{@rdv_invitation.lieu.name}</b>
+            | .
+
+        .fr-grid-row
+          .fr-col-12.fr-mt-2w
+            .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+              = link_to("Retour aux créneaux", admin_organisation_creneaux_search_selection_creneaux_path(current_organisation, lieux_ids: @rdv_invitation.lieu_id, motif_id: @rdv_invitation.motif_id, user_ids: [@rdv_invitation.user_id].compact), dsfr_return_btn_options)
+              - if @rdv_invitation.user.present?
+                = f.submit "Envoyer l'invitation", class: "fr-btn"
+
+- if @rdv_invitation.user.blank?
+  dialog#new-user-modal.fr-modal[aria-labelledby="new-user-modal-title"]
+    .fr-container.fr-container--fluid.fr-container-md
+      .fr-grid-row.fr-grid-row--center
+        .fr-col-12.fr-col-md-8
+          .fr-modal__body
+            .fr-modal__header
+              button[aria-controls="new-user-modal" title="Fermer" type="button" class="fr-btn--close fr-btn"] Fermer
+            .fr-modal__content.fr-mb-4w
+              h2.fr-modal__title#new-user-modal-title
+                = user_icon(class: "fr-mr-1w")
+                | Nouvel usager
+              - user = @user || User.new
+              = form_for user, url: create_user_admin_organisation_rdv_invitations_path(current_organisation, motif_id: @rdv_invitation.motif_id), method: :post, builder: Dsfr::FormBuilder do |f|
+                .fr-grid-row.fr-grid-row--gutters
+                  .fr-col-6
+                    = f.dsfr_text_field :first_name, required: true
+                  .fr-col-6
+                    = f.dsfr_text_field :last_name, required: true
+                  .fr-col-6
+                    = f.dsfr_email_field :email, required: true, autocomplete: "off"
+                  .fr-col-6
+                    = f.dsfr_phone_field :phone_number, as: :tel, required: @rdv_invitation.motif.phone?
+                .fr-btns-group.fr-btns-group--right.fr-mt-4w
+                  = f.submit "Enregistrer", class: "fr-btn"

@@ -10,13 +10,19 @@ class AdminUpdatesAgent
   end
 
   def call
-    if change_role_from_intervenant?
-      turn_intervenant_into_agent_with_account
-    elsif change_role_to_intervenant?
-      turn_agent_with_account_into_intervenant
-    else
-      agent_role.update(access_level: @new_access_level, **agent_accueil_update)
-    end
+    result = if change_role_from_intervenant?
+               turn_intervenant_into_agent_with_account
+             elsif change_role_to_intervenant?
+               turn_agent_with_account_into_intervenant
+             else
+               agent_role.update(access_level: @new_access_level, **agent_accueil_update)
+             end
+
+    # Recalcul immédiat du statut "sensible" pour ne pas attendre le job quotidien
+    # CronJob::RefreshAgentsSensitiveAccountJob si le changement de rôle rend l'agent sensible (ou plus).
+    AgentSensitiveAccountCalculator.refresh_agent!(@agent)
+
+    result
   end
 
   attr_reader :confirmation_message, :new_access_level
@@ -54,7 +60,7 @@ class AdminUpdatesAgent
   end
 
   def turn_agent_with_account_into_intervenant
-    if @agent.organisations.count > 1
+    if @agent.organisations.many?
       @agent.errors.add(:base, "Un agent membre de plusieurs organisations ne peut pas avoir un statut d'intervenant")
       return false
     end
@@ -101,7 +107,9 @@ class AdminUpdatesAgent
   end
 
   def agent_role
-    @agent_role ||= @agent.roles.find_by(organisation: @organisation)
+    return @agent_role if defined?(@agent_role)
+
+    @agent_role = @agent.roles.find_by(organisation: @organisation)
   end
 
   def agent_accueil_update

@@ -8,7 +8,6 @@ RSpec.describe RdvInvitation do
   let(:lieu) { create(:lieu, organisation:) }
   let(:user) { create(:user, organisations: [organisation]) }
 
-  # TODO: checker les messages d'erreur
   describe "validations" do
     context "when the motif is collectif" do
       let(:motif) { create(:motif, :collectif, organisation:) }
@@ -76,6 +75,29 @@ RSpec.describe RdvInvitation do
           )
         end
       end
+    end
+
+    context "when there is a rdv_plan for the invitation" do
+      let(:rdv_plan) { create(:rdv_plan, motif:, lieu:, user:) }
+
+      before { rdv_invitation.update!(rdv_plan:) }
+
+      it "updates the rdv on the rdv_plan" do
+        rdv_invitation.create_rdv_and_notify(starts_at: 1.week.from_now)
+        expect(rdv_plan.reload.rdv).to eq rdv_invitation.rdv
+      end
+    end
+  end
+
+  describe "pour une invitation annulée" do
+    let(:rdv_invitation) { build(:rdv_invitation, cancelled: true) }
+
+    it "ne permet pas de prendre rendez-vous" do
+      expect do
+        rdv_invitation.create_rdv_and_notify(starts_at: 1.week.from_now)
+      end.not_to change(Rdv, :count)
+
+      expect(rdv_invitation.errors.full_messages).to eq ["Cette invitation a été annulée, il n'est pas possible de prendre ce rendez-vous."]
     end
   end
 end

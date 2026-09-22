@@ -64,7 +64,7 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
     doc.add_screenshot(
       page,
       text: "En dessous de la liste des créneaux, on me proposer de laisser l'usager choisir son créneau. Je clique sur ce lien",
-      wait_for: "Vous pouvez aussi inviter l'usager à choisir son créneau."
+      wait_for: "Vous pouvez inviter l'usager à choisir son créneau"
     )
 
     click_on "inviter l'usager à choisir son créneau"

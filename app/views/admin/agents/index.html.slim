@@ -6,9 +6,9 @@
   - content_for :right_of_page_title do
     = link_to t("agents.create_cta"), new_admin_organisation_agent_path(current_organisation), class:"fr-btn fr-btn--secondary"
 
-.card
-  .card-body
-    - if @agents_search_form.should_display?
+- if @agents_search_form.should_display?
+  .card
+    .card-body
       = form_for @agents_search_form, url: admin_organisation_agents_path(current_organisation), method: :get, builder: Dsfr::FormBuilder, as: "search", html: { "data-controller": "form" } do |f|
         fieldset.fr-fieldset.rdv-gap-1rem.rdv-align-items-first-baseline.fr-mb-0
           legend.fr-fieldset__legend--regular.fr-fieldset__legend.fr-mb-0.fr-pb-0
@@ -23,7 +23,7 @@
                   = f.label :role, "Tous les rôles", value: "", class: "fr-label fr-mb-0"
                 .fr-segmented__element
                   = f.radio_button :role, "admin", data: { action: "change->form#submit" }
-                  = f.label :role, "Admins uniquement", value: "admin", class: "fr-label fr-mb-0"
+                  = f.label :role, "Administrateurs uniquement", value: "admin", class: "fr-label fr-mb-0"
           .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
             = f.dsfr_text_field :query, placeholder: "Prénom, Nom, Email", autocomplete: "off", label: ""
           .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0

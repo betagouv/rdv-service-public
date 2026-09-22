@@ -154,6 +154,7 @@ Rails.application.routes.draw do
         post :resend, on: :collection
       end
       resource :pro_connect_step_up, only: %i[new create], controller: "pro_connect_step_up"
+      resource :pro_connect_linking, only: %i[show create], controller: "pro_connect_linking"
       resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
         resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync do
@@ -183,6 +184,9 @@ Rails.application.routes.draw do
           get :edit_starts_at_and_duration
           patch :update_starts_at_and_duration
 
+          get :edit_rdv_invitation
+          patch :update_rdv_invitation
+
           get :edit_lieu
           patch :update_lieu
 
@@ -190,6 +194,7 @@ Rails.application.routes.draw do
           post :create_rdv
 
           get :rdv
+          get :rdv_invitation
         end
       end
 
@@ -272,7 +277,9 @@ Rails.application.routes.draw do
         resource :motif_categories, only: %i[update]
         resources :zone_imports, only: %i[new create]
         resources :zones, only: [:index] # exports only
-        resource :services, only: %i[new create edit update]
+        resource :services, only: %i[new create edit] do
+          put "toggle/:service_id", to: "services#toggle", as: :toggle
+        end
         resource :sectorization, only: [:show]
         resources :sectors do
           resources :zones
@@ -339,8 +346,12 @@ Rails.application.routes.draw do
       end
 
       resources :rdv_invitations, only: %i[new create show] do
+        collection do
+          post :create_user
+        end
         member do
           get :show_confirmation
+          patch :cancel
         end
       end
 
@@ -440,6 +451,7 @@ Rails.application.routes.draw do
   namespace :aide do
     get "aiguillage_role" => "pages#aiguillage_role"
     get "aiguillage_usager" => "pages#aiguillage_usager"
+    get "aiguillage_agent" => "pages#aiguillage_agent"
     resource :demande_support, only: %i[new create]
   end
 
@@ -453,7 +465,10 @@ Rails.application.routes.draw do
   get "/budget", to: redirect("https://pad.numerique.gouv.fr/rHMnemklQm6Sww5yVCI9ow?view#RDV-Service-Public", status: 302)
 
   ## Shorten urls for SMS
+  # << REMOVE AFTER 01/01/2027
+  # On préserve cette route pour la rétrocompatibilité des anciens SMS/ICS envoyés avant qu'on utilise rdv_short_from_token
   get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_short"
+  # >> REMOVE AFTER 01/01/2027
 
   # tkn est obligatoire pour s'assurer qu'il est possible de se connecter
   # Rate limité par IP (voir config/initializers/rack_attack.rb)
