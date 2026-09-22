@@ -8,7 +8,7 @@ RSpec.describe "User signs in" do
       expect(page).not_to have_content("Inscription")
       fill_in "Adresse email", with: user.email
       click_on "Recevoir un code de connexion"
-      expect(page).to have_content("Aucun compte usager n’existe pour cet email")
+      expect(page).to have_content("Cet email ne correspond à aucun compte usager utilisant la connexion par email. Vous pouvez essayer la connexion par FranceConnect.")
     end
   end
 
