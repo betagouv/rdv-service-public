@@ -84,7 +84,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       doorkeeper_authorize!
       if doorkeeper_token
         @authentication_type = "OAuth"
-        @current_agent = Agent.find(doorkeeper_token.resource_owner_id)
+        @current_agent = Agent.active.find(doorkeeper_token.resource_owner_id)
       end
     end
   end
@@ -113,7 +113,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
     external_territories = territory_ids.difference(agent_territories)
 
     if external_territories.any?
-      Sentry.capture_message("Forbidden org ID detected in API call", extra: { agent_territories:, external_territories: })
+      Sentry.capture_message("Forbidden territory ID detected in API call", extra: { agent_territories:, external_territories: })
       raise Pundit::NotAuthorizedError, query: :show?, record: external_territories.first, policy: Agent::TerritoryPolicy
     end
 
@@ -121,7 +121,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
     external_orgs = organisation_ids.difference(agent_orgs)
 
     if external_orgs.any?
-      Sentry.capture_message("Forbidden territory ID detected in API call", extra: { agent_orgs:, external_orgs: })
+      Sentry.capture_message("Forbidden org ID detected in API call", extra: { agent_orgs:, external_orgs: })
       raise Pundit::NotAuthorizedError, query: :show?, record: external_orgs.first, policy: Agent::OrganisationPolicy
     end
   end

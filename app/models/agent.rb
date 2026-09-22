@@ -188,6 +188,8 @@ class Agent < ApplicationRecord
       referent_assignations.destroy_all
       sector_attributions.destroy_all
       external_calendar_sync_executions.destroy_all
+      access_grants.destroy_all
+      access_tokens.destroy_all
 
       assign_attributes(
         deleted_at: Time.zone.now,
