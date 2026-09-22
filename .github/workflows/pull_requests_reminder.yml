@@ -8,7 +8,7 @@ on:
 
 jobs:
   pull-request-reminder:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - name: Pull requests reminder
         uses: betagouv/pr-reviews-reminder-action@fb8f561286f429438f50092f8f0101150c085759 # master
