@@ -1,4 +1,4 @@
-RSpec.describe "/api/v1/users" do
+RSpec.describe "/api/v1/users", versioning: true do
   let(:my_organisation) { create(:organisation) }
   let(:myself) { create(:agent, basic_role_in_organisations: [my_organisation]) }
 

@@ -1,4 +1,4 @@
-RSpec.describe ParticipationExporter, type: :service do
+RSpec.describe ParticipationExporter, type: :service, versioning: true do
   describe "#xls_string_from_rdvs_rows" do
     it "return export with header" do
       organisation = create(:organisation, name: "MDS Paris")

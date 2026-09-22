@@ -1,4 +1,4 @@
-RSpec.describe Agent::PlageOuverturePolicy, type: :policy do
+RSpec.describe Agent::PlageOuverturePolicy, type: :policy, versioning: true do
   let(:policy) { described_class.new(agent, plage_ouverture) }
   let(:policy_scope) { described_class::Scope.new(agent, PlageOuverture.all).resolve }
 

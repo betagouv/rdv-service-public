@@ -1,4 +1,4 @@
-RSpec.describe "Adding a user to a collective RDV" do
+RSpec.describe "Adding a user to a collective RDV", versioning: true do
   include Rails.application.routes.url_helpers
 
   before do

@@ -1,4 +1,4 @@
-RSpec.describe PaperTrailAugmentedVersion do
+RSpec.describe PaperTrailAugmentedVersion, versioning: true do
   describe "#changes" do
     context "no previous version" do
       it "works with only object_changes" do

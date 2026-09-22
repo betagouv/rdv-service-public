@@ -1,4 +1,4 @@
-RSpec.describe Agent::MotifPolicy do
+RSpec.describe Agent::MotifPolicy, versioning: true do
   subject { described_class }
 
   let!(:motif) { create(:motif, service: service) }

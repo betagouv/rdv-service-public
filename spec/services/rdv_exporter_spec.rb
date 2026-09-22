@@ -1,4 +1,4 @@
-RSpec.describe RdvExporter, type: :service do
+RSpec.describe RdvExporter, type: :service, versioning: true do
   describe "#write_xls_to_io" do
     it "return export with header" do
       rdv = create(:rdv, created_at: Time.zone.parse("2023-01-01"), agents: [create(:agent, email: "agent@mail.com")])

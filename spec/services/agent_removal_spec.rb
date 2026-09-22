@@ -1,4 +1,4 @@
-RSpec.describe AgentRemoval, type: :service do
+RSpec.describe AgentRemoval, type: :service, versioning: true do
   context "agent belongs to single organisation, with a few absences and plages ouvertures" do
     # orgs must have at least one admin
     let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation]) }

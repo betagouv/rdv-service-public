@@ -1,4 +1,4 @@
-RSpec.describe User::SoftDeleteConcern do
+RSpec.describe User::SoftDeleteConcern, versioning: true do
   describe "#soft_delete!" do
     it "change l’email en @deleted.rdv-solidarites.fr et anonymise les autres attributs" do
       user = create(:user, email: "jean@valjean.fr", first_name: "Jean", last_name: "Valjean")

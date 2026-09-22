@@ -46,7 +46,7 @@ RSpec.describe WebhookEndpoint, type: :model do
     end
   end
 
-  describe "sending notifications for a new URL" do
+  describe "sending notifications for a new URL", versioning: true do
     let!(:territory) { create(:territory) }
     let!(:organisation) { create(:organisation, territory: territory) }
     let!(:territory_admins) { create_list(:agent, 2, admin_role_in_organisations: [organisation], role_in_territories: [territory]) }

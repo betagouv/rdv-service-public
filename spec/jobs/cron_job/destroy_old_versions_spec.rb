@@ -1,4 +1,4 @@
-RSpec.describe CronJob::DestroyOldVersions do
+RSpec.describe CronJob::DestroyOldVersions, versioning: true do
   before do
     PaperTrail.request.whodunnit = "Francis Factice"
   end

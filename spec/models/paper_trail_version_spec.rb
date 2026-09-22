@@ -1,4 +1,4 @@
-RSpec.describe "PaperTrail::Version" do
+RSpec.describe "PaperTrail::Version", versioning: true do
   describe "changes" do
     it "can read changes" do
       user = create(:user, first_name: "Frédérique")

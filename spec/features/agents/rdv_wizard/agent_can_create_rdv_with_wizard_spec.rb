@@ -143,7 +143,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
       end
     end
 
-    describe "sending webhook upon creation" do
+    describe "sending webhook upon creation", versioning: true do
       let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation, target_url: "https://example.com") }
 
       def visit_step4
