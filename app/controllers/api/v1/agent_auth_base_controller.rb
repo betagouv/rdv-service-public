@@ -7,6 +7,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   before_action :log_api_call_in_database
   before_action :set_paper_trail_whodunnit
   before_action :set_sentry_context
+  before_action :detect_param_injection
 
   def pundit_user
     AgentOrganisationContext.new(current_agent, current_organisation)
@@ -83,13 +84,46 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       doorkeeper_authorize!
       if doorkeeper_token
         @authentication_type = "OAuth"
-        @current_agent = Agent.find(doorkeeper_token.resource_owner_id)
+        @current_agent = Agent.active.find(doorkeeper_token.resource_owner_id)
       end
     end
   end
 
   def user_for_paper_trail
     "#{current_agent.name_for_paper_trail} (via API)"
+  end
+
+  # Cette vérification permet, par défaut, d'empêcher une injection d'un paramètre :
+  # - `organisation_id`
+  # - `organisation_ids`
+  # - `territory_id`
+  # - `territory_ids`
+  # pointant vers une orga ou un territory externe à l'agent courant.
+  #
+  # Elle sert de filet de sécurité partiel au cas où les permissions via policy échoue.
+  # ** Cette vérification ne se substitue pas à un usage rigoureux des policies. **
+  #
+  def detect_param_injection
+    organisation_ids = (Array(params[:organisation_id]) + Array(params[:organisation_ids])).compact_blank.map { Integer(_1, exception: false) }
+    territory_ids = (Array(params[:territory_id]) + Array(params[:territory_ids])).compact_blank.map { Integer(_1, exception: false) }
+    return if organisation_ids.blank? && territory_ids.blank?
+
+    agent_territories = current_agent.agent_territorial_access_rights.pluck(:territory_id)
+    agent_territories += current_agent.territorial_roles.pluck(:territory_id) # TODO: À supprimer après #6616
+    external_territories = territory_ids.difference(agent_territories)
+
+    if external_territories.any?
+      Sentry.capture_message("Forbidden territory ID detected in API call", extra: { agent_territories:, external_territories: })
+      raise Pundit::NotAuthorizedError, query: :show?, record: external_territories.first, policy: Agent::TerritoryPolicy
+    end
+
+    agent_orgs = current_agent.roles.pluck(:organisation_id) + Organisation.where(territory_id: agent_territories).ids
+    external_orgs = organisation_ids.difference(agent_orgs)
+
+    if external_orgs.any?
+      Sentry.capture_message("Forbidden org ID detected in API call", extra: { agent_orgs:, external_orgs: })
+      raise Pundit::NotAuthorizedError, query: :show?, record: external_orgs.first, policy: Agent::OrganisationPolicy
+    end
   end
 
   def set_sentry_context
