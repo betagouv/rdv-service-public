@@ -60,6 +60,10 @@ class Autodoc
     # On zoome artificiellement pour avoir des captures d'écran en haute résolution, mais cela peut fausser l'affichage
     # des pages qui utilisent un layout centré verticalement.
     # Dans ce cas, il faut passer l'option `disable_high_res_zoom: true` pour avoir un affichage correct (mais une capture d'écran en basse définition)
+    #
+    # Ce zoom (2 resize de fenêtre + 2 execute_script par capture) ralentit sensiblement les specs autodoc.
+    # Il est donc désactivé par défaut, sauf quand on génère vraiment la doc : en local ou dans le job CI
+    # dédié à la publication de la doc, en passant AUTODOC_HIGH_RES_SCREENSHOTS=true.
     def add_screenshot(page_or_email, text: nil, wait_for: nil, accessibility_checks: true, disable_high_res_zoom: false)
       if wait_for
         @example.expect(page_or_email).to(@example.have_content(wait_for))
@@ -78,7 +82,9 @@ class Autodoc
           @example.expect(page_or_email).to @example.be_axe_clean
         end
 
-        unless disable_high_res_zoom
+        high_res_zoom = ENV["AUTODOC_HIGH_RES_SCREENSHOTS"] && !disable_high_res_zoom
+
+        if high_res_zoom
           current_size = page_or_email.current_window.size
           page_or_email.current_window.resize_to(current_size[0] * 2, current_size[1] * 2)
           page_or_email.execute_script("document.body.style.zoom=2.0")
@@ -86,7 +92,7 @@ class Autodoc
 
         page_or_email.driver.save_screenshot(path)
 
-        unless disable_high_res_zoom
+        if high_res_zoom
           page_or_email.execute_script("document.body.style.zoom=1.0")
           page_or_email.current_window.resize_to(current_size[0], current_size[1])
         end
