@@ -1,6 +1,6 @@
 / unconfirmed_rdv est le rendez-vous que l'usager s'apprête à confirmer après avoir validé ses informations.
 / Il n'est pas toujours présent, puisque parfois on peut simplement être sur le formulaire de l'usager sans prise de rdv.
-/# locals: (f:, unconfirmed_rdv: nil)
+/# locals: (f:, display_change_email_link: false, unconfirmed_rdv: nil)
 
 = render "model_errors", model: f.object, f: f
 
