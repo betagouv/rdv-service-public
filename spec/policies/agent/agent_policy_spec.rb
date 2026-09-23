@@ -5,7 +5,7 @@ RSpec.describe Agent::AgentPolicy, type: :policy do
   let!(:organisation) { create(:organisation) }
   let!(:organisation2) { create(:organisation) }
 
-  %i[show? new? create? edit? update? invite? rdvs? reinvite? versions?].each do |action|
+  %i[show? edit? update? invite? rdvs? reinvite? versions?].each do |action|
     describe "##{action}" do
       context "regular agent, self" do
         let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
@@ -48,6 +48,50 @@ RSpec.describe Agent::AgentPolicy, type: :policy do
       current_agent = create(:agent, admin_role_in_organisations: [organisation])
       agent_cible = Agent.new(organisations: [organisation, organisation2])
       expect(described_class.new(AgentContext.new(current_agent), agent_cible).create?).to be false
+      expect(described_class.new(AgentContext.new(current_agent), agent_cible).new?).to be false
+    end
+
+    it "n'autorise pas un agent à créer un nouvel agent sans aucune organisation" do
+      current_agent = create(:agent, admin_role_in_organisations: [organisation])
+      agent_cible = Agent.new(organisations: [])
+      expect(described_class.new(AgentContext.new(current_agent), agent_cible).create?).to be false
+      expect(described_class.new(AgentContext.new(current_agent), agent_cible).new?).to be false
+    end
+
+    it "n'autorise pas un agent non admin à créer un nouvel agent dans son organisation" do
+      current_agent = create(:agent, basic_role_in_organisations: [organisation])
+      agent_cible = Agent.new(organisations: [organisation])
+      expect(described_class.new(AgentContext.new(current_agent), agent_cible).create?).to be false
+      expect(described_class.new(AgentContext.new(current_agent), agent_cible).new?).to be false
+    end
+
+    it "autorise un agent admin à créer un nouvel agent dans son organisation" do
+      current_agent = create(:agent, admin_role_in_organisations: [organisation])
+      agent_cible = Agent.new(organisations: [organisation])
+      expect(described_class.new(AgentContext.new(current_agent), agent_cible).create?).to be true
+      expect(described_class.new(AgentContext.new(current_agent), agent_cible).new?).to be true
+    end
+
+    it "n'autorise pas un agent admin à créer un nouvel agent dans une autre organisation que la sienne" do
+      current_agent = create(:agent, admin_role_in_organisations: [organisation])
+      agent_cible = Agent.new(organisations: [organisation2])
+      expect(described_class.new(AgentContext.new(current_agent), agent_cible).create?).to be false
+      expect(described_class.new(AgentContext.new(current_agent), agent_cible).new?).to be false
+    end
+
+    it "autorise un agent admin de 2 organisations à créer un nouvel agent dans une seule d'entre elles" do
+      current_agent = create(:agent, admin_role_in_organisations: [organisation, organisation2])
+      agent_cible = Agent.new(organisations: [organisation])
+      expect(described_class.new(AgentContext.new(current_agent), agent_cible).create?).to be true
+      expect(described_class.new(AgentContext.new(current_agent), agent_cible).new?).to be true
+    end
+
+    it "autorise un agent admin de 3 organisations à créer un nouvel agent dans 2 d'entre elles" do
+      organisation3 = create(:organisation)
+      current_agent = create(:agent, admin_role_in_organisations: [organisation, organisation2, organisation3])
+      agent_cible = Agent.new(organisations: [organisation, organisation2])
+      expect(described_class.new(AgentContext.new(current_agent), agent_cible).create?).to be true
+      expect(described_class.new(AgentContext.new(current_agent), agent_cible).new?).to be true
     end
   end
 
