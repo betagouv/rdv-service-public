@@ -1,4 +1,6 @@
 RSpec.describe "territory admin can crud webhooks endpoints" do
+  stub_env_with(ALLOWED_WEBHOOK_HOSTS: "ALLOW_ALL_HOSTS")
+
   let(:territory) { create(:territory) }
   let!(:organisation) { create(:organisation, territory: territory) }
   let(:agent) do

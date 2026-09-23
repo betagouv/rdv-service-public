@@ -1,6 +1,6 @@
 # Cette spec vérifie les aspects de sécurité liés à ces endpoints d'api. Le comportement de l'api est documenté par des specs swagger.
 RSpec.describe "Visioplainte Webhook Endpoints" do
-  stub_env_with(DB_SEEDS_USERS_AND_AGENTS_PASSWORD: "Rdvservicepublictest1!")
+  stub_env_with(DB_SEEDS_USERS_AND_AGENTS_PASSWORD: "Rdvservicepublictest1!", ALLOWED_WEBHOOK_HOSTS: "ALLOW_ALL_HOSTS")
   before { load Rails.root.join("db/seeds/visioplainte.rb") }
 
   include_context "Visioplainte Auth"

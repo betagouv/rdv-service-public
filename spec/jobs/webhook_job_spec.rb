@@ -1,7 +1,7 @@
 RSpec.describe WebhookJob, type: :job do
   describe "#perform" do
     let(:payload) { "{}" }
-    let(:webhook_endpoint) { create(:webhook_endpoint, secret: "bla", target_url: "https://example.com/rdv-s-endpoint") }
+    let(:webhook_endpoint) { create(:webhook_endpoint, :bypassing_host_validation, secret: "bla", target_url: "https://example.com/rdv-s-endpoint") }
 
     it "retries and notifies Sentry on the 3rd and 10th tries" do
       stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "ERROR" })

@@ -1,4 +1,6 @@
 RSpec.describe WebhookEndpoint, type: :model do
+  stub_env_with(ALLOWED_WEBHOOK_HOSTS: "ALLOW_ALL_HOSTS")
+
   describe "target_url validation" do
     subject { webhook_endpoint.valid? }
 
@@ -24,8 +26,6 @@ RSpec.describe WebhookEndpoint, type: :model do
   end
 
   describe "format de target_url" do
-    stub_env_with(ALLOWED_WEBHOOK_HOSTS: "ALLOW_ALL_HOSTS")
-
     it "est valide si target_url est une URL https valide" do
       webhook_endpoint = build(:webhook_endpoint, target_url: "https://cd92.fr/webhooks?source=rdv")
       expect(webhook_endpoint).to be_valid
@@ -39,7 +39,7 @@ RSpec.describe WebhookEndpoint, type: :model do
     it "est invalide si target_url n'a pas de schéma" do
       webhook_endpoint = build(:webhook_endpoint, target_url: "evil.fr/webhooks")
       expect(webhook_endpoint).not_to be_valid
-      expect(webhook_endpoint.errors[:target_url]).to eq(["n’est pas une URL valide, elle doit commencer par https://"])
+      expect(webhook_endpoint.errors[:target_url]).to eq(["n’est pas une URL valide, elle doit commencer par http(s)://"])
     end
 
     it "est invalide si target_url n'a qu'un slash après le schéma http:/" do
@@ -106,7 +106,7 @@ RSpec.describe WebhookEndpoint, type: :model do
       with_modified_env(ALLOWED_WEBHOOK_HOSTS: "cd92.fr") do
         webhook_endpoint = build(:webhook_endpoint, target_url: "evil.fr/webhooks")
         expect(webhook_endpoint).not_to be_valid
-        expect(webhook_endpoint.errors[:target_url]).to eq(["n’est pas une URL valide, elle doit commencer par https://"])
+        expect(webhook_endpoint.errors[:target_url]).to eq(["n’est pas une URL valide, elle doit commencer par http(s)://"])
       end
     end
 
