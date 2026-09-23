@@ -356,4 +356,24 @@ RSpec.describe PlageOuverture, type: :model do
       end
     end
   end
+
+  describe "#overlapping_plages_ouvertures" do
+    let!(:plage_ouverture) { create(:plage_ouverture, first_day: Date.tomorrow, start_time: "09:00", end_time: "12:00", lieu: lieu, motifs: [public_office_motif], agent:) }
+    let!(:plage_ouverture_in_other_lieu) do
+      create(:plage_ouverture, first_day: Date.tomorrow, start_time: "09:00", end_time: "12:00", lieu: other_lieu, motifs: [public_office_motif], agent:, ignore_benign_errors: true)
+    end
+
+    let!(:plage_ouverture_on_the_phone) { create(:plage_ouverture, first_day: Date.tomorrow, start_time: "09:00", end_time: "12:00", lieu: lieu, motifs: [public_office_motif], agent:) }
+
+    let(:lieu) { create(:lieu, organisation:) }
+    let(:other_lieu) { create(:lieu, organisation:) }
+    let(:public_office_motif) { create(:motif, organisation:, location_type: :public_office) }
+    let(:phone_motif) { create(:motif, organisation:, location_type: :phone) }
+    let(:organisation) { create(:organisation) }
+    let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
+    it "only returns plage ouverture that require the agent to be in two different lieux at the same time" do
+      expect(plage_ouverture.overlapping_plages_ouvertures).to eq [plage_ouverture_in_other_lieu]
+    end
+  end
 end
