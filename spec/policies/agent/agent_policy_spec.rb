@@ -43,6 +43,14 @@ RSpec.describe Agent::AgentPolicy, type: :policy do
     end
   end
 
+  describe "#create?" do
+    it "n'autorise pas un agent admin d'une orga à créer un nouvel agent dans cette orga ET une autre" do
+      current_agent = create(:agent, admin_role_in_organisations: [organisation])
+      agent_cible = Agent.new(organisations: [organisation, organisation2])
+      expect(described_class.new(AgentContext.new(current_agent), agent_cible).create?).to be false
+    end
+  end
+
   describe "#destroy?" do
     context "regular agent, other agent same org" do
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
