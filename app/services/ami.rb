@@ -92,7 +92,8 @@ class Ami
       payload.merge!(
         item_parent_partner_id: external_ami_item.partner_id,
         item_parent_type: external_ami_item.item_type,
-        item_parent_id: external_ami_item.item_id
+        item_parent_id: external_ami_item.item_id,
+        content_subheading: "Rendez-vous avec #{@participation.rdv.organisation.name}"
       )
     end
 
