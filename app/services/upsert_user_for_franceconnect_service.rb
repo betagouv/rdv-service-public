@@ -62,6 +62,6 @@ class UpsertUserForFranceconnectService < BaseService
       omniauth_info.birthcountry,
     ]
 
-    Digest::SHA256.hexdigest(attributes.join)
+    Digest::SHA256.hexdigest(attributes.join(";"))
   end
 end

@@ -47,5 +47,21 @@ RSpec.describe "Agents API" do
         expect(parsed_response_body["error_messages"].first).to eq "Email n'est pas valide"
       end
     end
+
+    context "l'agent invitant est admin d'une seule des orga auxquelles il invite un nouvel agent" do
+      let(:agent) { create(:agent, :with_territory_access_rights, admin_role_in_organisations: [organisation]) }
+      let!(:other_organisation) { create(:organisation, territory: organisation.territory) }
+
+      it "bloque l'invitation" do
+        expect do
+          post "/api/v1/agents", headers:, params: {
+            email: "autre@adresse.fr",
+            organisation_ids: [organisation.id, other_organisation.id],
+            access_level: "admin",
+          }, as: :json
+        end.not_to change(AgentRole, :count)
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
   end
 end

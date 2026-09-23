@@ -14,8 +14,6 @@ class Agent::AgentPolicy < ApplicationPolicy
   end
 
   alias show? current_agent_or_admin_in_record_organisation?
-  alias new? current_agent_or_admin_in_record_organisation?
-  alias create? current_agent_or_admin_in_record_organisation?
   alias edit? current_agent_or_admin_in_record_organisation?
   alias update? current_agent_or_admin_in_record_organisation?
   alias invite? current_agent_or_admin_in_record_organisation?
@@ -23,11 +21,18 @@ class Agent::AgentPolicy < ApplicationPolicy
   alias reinvite? current_agent_or_admin_in_record_organisation?
   alias versions? current_agent_or_admin_in_record_organisation?
   alias toggle_displays? current_agent?
+  alias link_to_pro_connect? current_agent?
 
   def destroy?
     # Even admins cannot destroy themselves
     admin_in_record_organisation? && record != current_agent
   end
+
+  def create?
+    record.organisation_ids.any? &&
+      record.organisation_ids.all? { current_agent.admin_in_organisation?(_1) } # NOTE: on fait ici un all? et pas un any?
+  end
+  alias new? create?
 
   class Scope < Scope
     include CurrentAgentInPolicyConcern

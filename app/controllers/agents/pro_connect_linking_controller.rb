@@ -2,11 +2,11 @@ class Agents::ProConnectLinkingController < AgentAuthController
   layout "application_agent_config"
 
   def show
-    authorize(current_agent, policy_class: Agent::AgentPolicy)
+    authorize(current_agent, :link_to_pro_connect?, policy_class: Agent::AgentPolicy)
   end
 
   def create
-    authorize(current_agent, policy_class: Agent::AgentPolicy)
+    authorize(current_agent, :link_to_pro_connect?, policy_class: Agent::AgentPolicy)
 
     email = current_agent.email
     sign_out(current_agent)

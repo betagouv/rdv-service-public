@@ -15,3 +15,4 @@
 
 = simple_form_for rdv_plan, url: update_starts_at_agents_rdv_plan_path(rdv_plan),html: { id: "rdvPlanCalendarForm"} do |f|
   = f.hidden_field :starts_at, id: "rdvPlanCalendarField"
+  = f.hidden_field :rdv_agent_id, value: agent.id

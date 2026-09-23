@@ -47,6 +47,8 @@ class RecurrenceForm {
   getFirstDay = () => {
     const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
     const [, day, month, year] = datePattern.exec(this.firstDayTarget.value)
+    // new Date("YYYY-MM-DD") serait minuit UTC, donc la veille dans les fuseaux à l'ouest de UTC (Antilles, Guyane) :
+    // on construit la date à minuit local pour que getDate() et le jour de la semaine correspondent à la saisie
     return new Date(Number(year), Number(month) - 1, Number(day));
   }
 
