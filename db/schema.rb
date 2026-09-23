@@ -162,7 +162,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_21_135003) do
     t.string "pro_connect_idp_id", comment: "Fournisseur d'identité ProConnect (identity provider)"
     t.boolean "sensitive_account", default: false, null: false
     t.boolean "display_extended_hours", default: false, null: false
-    t.boolean "caldav_include_sensitive_data", default: false, null: false
     t.text "menshen_access_token"
     t.datetime "menshen_access_token_expires_at"
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
