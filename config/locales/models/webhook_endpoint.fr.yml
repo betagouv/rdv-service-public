@@ -1,5 +1,11 @@
 fr:
   activerecord:
+    errors:
+      models:
+        webhook_endpoint:
+          attributes:
+            target_url:
+              invalid_format: "n’est pas une URL valide, elle doit commencer par http(s)://"
     models:
       webhook_endpoint: Webhook
     attributes:

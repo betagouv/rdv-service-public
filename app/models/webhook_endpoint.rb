@@ -8,6 +8,7 @@ class WebhookEndpoint < ApplicationRecord
   validates :target_url, presence: true, uniqueness: { scope: :organisation_id }
   validate :subscriptions_validity
   validates :secret, presence: true
+  validate :validate_target_url_format, if: -> { will_save_change_to_target_url? && errors[:target_url].empty? }
 
   # Callbacks
   after_save :warn_admins_if_new_url
@@ -43,6 +44,20 @@ class WebhookEndpoint < ApplicationRecord
     return if subscriptions.all? { |subscription| ALL_SUBSCRIPTIONS.include?(subscription) }
 
     errors.add(:base, "la liste des abonnements choisis contient une ou plusieurs valeurs incorrectes")
+  end
+
+  def validate_target_url_format
+    return if target_url_parsed.present? &&
+              target_url_parsed.is_a?(URI::HTTP) && # ce test accepte aussi https
+              target_url_parsed.host.present?
+
+    errors.add(:target_url, :invalid_format)
+  end
+
+  def target_url_parsed
+    URI.parse(target_url.to_s)
+  rescue URI::InvalidURIError
+    nil
   end
 
   def warn_admins_if_new_url

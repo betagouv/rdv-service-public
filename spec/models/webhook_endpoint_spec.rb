@@ -23,6 +23,39 @@ RSpec.describe WebhookEndpoint, type: :model do
     end
   end
 
+  describe "format de target_url" do
+    it "est valide si target_url est une URL https valide" do
+      webhook_endpoint = build(:webhook_endpoint, target_url: "https://cd92.fr/webhooks?source=rdv")
+      expect(webhook_endpoint).to be_valid
+    end
+
+    it "est valide si target_url est une URL http avec un port" do
+      webhook_endpoint = build(:webhook_endpoint, target_url: "http://localhost:3000/webhooks")
+      expect(webhook_endpoint).to be_valid
+    end
+
+    it "est invalide si target_url n'a pas de schéma" do
+      webhook_endpoint = build(:webhook_endpoint, target_url: "evil.fr/webhooks")
+      expect(webhook_endpoint).not_to be_valid
+      expect(webhook_endpoint.errors[:target_url]).to eq(["n’est pas une URL valide, elle doit commencer par https://"])
+    end
+
+    it "est invalide si target_url n'a qu'un slash après le schéma http:/" do
+      webhook_endpoint = build(:webhook_endpoint, target_url: "http:/evil.fr/webhooks")
+      expect(webhook_endpoint).not_to be_valid
+    end
+
+    it "est invalide pour un autre schéma que http(s)" do
+      webhook_endpoint = build(:webhook_endpoint, target_url: "ftp://cd92.fr/webhooks")
+      expect(webhook_endpoint).not_to be_valid
+    end
+
+    it "est invalide si target_url contient des espaces" do
+      webhook_endpoint = build(:webhook_endpoint, target_url: "pas une url")
+      expect(webhook_endpoint).not_to be_valid
+    end
+  end
+
   describe "#subscriptions_validity" do
     subject { webhook_endpoint.valid? }
 
