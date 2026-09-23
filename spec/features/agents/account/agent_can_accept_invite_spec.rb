@@ -1,14 +1,14 @@
 RSpec.describe "Agent can accept invitation" do
   let(:agent) { create(:agent) }
 
-  context "when using ProConnect" do
+  context "avec ProConnect" do
     stub_env_with(
       PRO_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2",
       PRO_CONNECT_RDVS_CLIENT_SECRET: "un faux secret de test",
       PRO_CONNECT_RDVS_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
     )
 
-    it "sets the login_hint to make sure the agent uses ProConnect with the right email and avoids getting stuck" do
+    it "renseigne le login_hint pour que l'agent utilise ProConnect avec le bon email et évite de rester bloqué" do
       agent.deliver_invitation
       visit accept_agent_invitation_path(invitation_token: agent.raw_invitation_token)
       expect(page).to have_content "connectez-vous avec ProConnect"
@@ -25,10 +25,10 @@ RSpec.describe "Agent can accept invitation" do
       expect(redirect_url_query_params["login_hint"]).to eq agent.email
     end
 
-    context "when the agent is invited as admin" do
+    context "quand l'agent est invité en tant qu'admin" do
       let(:agent) { create(:agent, admin_role_in_organisations: [create(:organisation)]) }
 
-      it "does not offer a password-based signup form" do
+      it "ne propose pas de formulaire de création de compte par mot de passe" do
         agent.deliver_invitation
         visit accept_agent_invitation_path(invitation_token: agent.raw_invitation_token)
 
@@ -36,7 +36,7 @@ RSpec.describe "Agent can accept invitation" do
         expect(page).to have_no_button "Créer un compte avec un mot de passe"
       end
 
-      it "rejects a direct submission of the invitation update with a password" do
+      it "rejette une soumission directe de la mise à jour de l'invitation avec un mot de passe" do
         agent.deliver_invitation
 
         expect do
@@ -47,10 +47,10 @@ RSpec.describe "Agent can accept invitation" do
       end
     end
 
-    context "when the agent is invited with a basic role", js: true do
+    context "quand l'agent est invité avec un rôle basique", js: true do
       let(:agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
 
-      it "hides the password form behind a collapse and reveals it on click" do
+      it "cache le formulaire de mot de passe derrière un élément repliable et le révèle au clic" do
         agent.deliver_invitation
         visit accept_agent_invitation_path(invitation_token: agent.raw_invitation_token)
 
@@ -68,8 +68,8 @@ RSpec.describe "Agent can accept invitation" do
     end
   end
 
-  context "when password is secure" do
-    it "accepts the invitation" do
+  context "quand le mot de passe est sécurisé" do
+    it "accepte l'invitation" do
       agent.deliver_invitation
       visit accept_agent_invitation_path(invitation_token: agent.raw_invitation_token)
       fill_in "Prénom", with: "John"
@@ -81,8 +81,8 @@ RSpec.describe "Agent can accept invitation" do
     end
   end
 
-  context "when password is not secure" do
-    it "shows a warning and advises to change the password" do
+  context "quand le mot de passe n'est pas sécurisé" do
+    it "affiche un avertissement et invite à changer le mot de passe" do
       agent.deliver_invitation
       visit accept_agent_invitation_path(invitation_token: agent.raw_invitation_token)
       fill_in "Prénom", with: "John"
