@@ -118,9 +118,9 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
       plage_ouverture = create(:plage_ouverture, agent:, organisation:, first_day: "2026-09-15")
 
       Capybara.using_driver(:playwright_guadeloupe) do
+        page.driver.with_playwright_page { _1.clock.pause_at(now) }
         login_as(agent, scope: :agent)
         visit edit_admin_organisation_planning_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
-        page.driver.with_playwright_page { _1.clock.pause_at(now) }
         check "Suivi bonjour"
         find('[for="radio_recurring"]').click
         expect(page).to have_text("Répéter tou(te)s les")
