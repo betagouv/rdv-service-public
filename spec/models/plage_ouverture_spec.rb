@@ -363,7 +363,7 @@ RSpec.describe PlageOuverture, type: :model do
       create(:plage_ouverture, first_day: Date.tomorrow, start_time: "09:00", end_time: "12:00", lieu: other_lieu, motifs: [public_office_motif], agent:, ignore_benign_errors: true)
     end
 
-    let!(:plage_ouverture_on_the_phone) { create(:plage_ouverture, first_day: Date.tomorrow, start_time: "09:00", end_time: "12:00", lieu: lieu, motifs: [public_office_motif], agent:) }
+    let!(:plage_ouverture_on_the_phone) { create(:plage_ouverture, first_day: Date.tomorrow, start_time: "09:00", end_time: "12:00", lieu: nil, motifs: [phone_motif], agent:) }
 
     let(:lieu) { create(:lieu, organisation:) }
     let(:other_lieu) { create(:lieu, organisation:) }
