@@ -1,0 +1,11 @@
+fr:
+  activerecord:
+    models:
+      oauth_application:
+        one: Application OAuth
+        other: Applications OAuth
+    attributes:
+      oauth_application:
+        name: Nom
+        logo_base64: Logo
+        created_at: Créée le
