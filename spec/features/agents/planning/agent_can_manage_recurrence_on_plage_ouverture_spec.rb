@@ -2,15 +2,12 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, name: "Suivi bonjour", organisation: organisation, location_type: :phone) }
-  let!(:plage_ouverture) { create(:plage_ouverture, agent: agent, organisation: organisation, first_day: Time.zone.local(2019, 12, 3)) }
 
-  before do
+  it "default", js: true do
+    plage_ouverture = create(:plage_ouverture, agent: agent, organisation: organisation, first_day: Time.zone.local(2019, 12, 3))
     travel_to(Time.zone.local(2019, 12, 2))
     login_as(agent, scope: :agent)
     visit edit_admin_organisation_planning_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
-  end
-
-  it "default", js: true do
     expect(find("#radio_recurring", visible: false)).not_to be_checked
     expect(page).not_to have_text("Répéter tou(te)s les")
 
@@ -54,9 +51,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     expect_checked("recurrence_on_thursday")
     expect_checked("recurrence_on_friday")
     expect_checked("recurrence_on_saturday")
-    expect(page).to have_field("recurrence-until")
-    # expect(page).to have_field("recurrence-until", with: "30/12/2019")
-    # TODO Pourquoi le champs ne contient pas la valeur ici. Quand on le fait à la main, tout va bien.
+    expect(page).to have_field("recurrence-until", with: "30/12/2019")
 
     visit edit_admin_organisation_planning_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
     uncheck("recurrence_on_monday")
@@ -87,7 +82,6 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     expect(page).not_to have_text("Répéter les")
     expect(page).to have_text("Tous les 1er mardi du mois")
     fill_in("recurrence-source", with: "11/12/2019")
-    page.execute_script("document.querySelector('#recurrence-source').dispatchEvent(new CustomEvent('change'))") # NOTE: I don’t know why we need to trigger the event manually in the spec.
     select("1", from: "recurrence_interval")
     expect(page).to have_text("Tous les 2ème mercredi du mois")
     click_button("Enregistrer")
@@ -113,9 +107,46 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     expect(page).to have_select("recurrence_every", selected: "mois")
     expect(page).to have_select("recurrence_interval", selected: "1")
     expect(page).to have_text("Tous les 2ème mercredi du mois")
-    expect(page).to have_field("recurrence-until")
-    # expect(page).to have_field("recurrence-until", with: "30/12/2019")
-    # TODO Pourquoi le champs ne contient pas la valeur ici. Quand on le fait à la main, tout va bien.
+    expect(page).to have_field("recurrence-until", with: "30/12/2019")
+  end
+
+  context "dans un fuseau horaire à l'offset négatif" do
+    it "ne se trompe pas sur le jour de récurrence et de fin (voir #6708)", js: true do
+      now = Time.zone.parse("2026-09-15 08:00")
+      travel_to(now)
+
+      plage_ouverture = create(:plage_ouverture, agent:, organisation:, first_day: "2026-09-15")
+
+      Capybara.using_driver(:playwright_guadeloupe) do
+        page.driver.with_playwright_page { _1.clock.pause_at(now) }
+        login_as(agent, scope: :agent)
+        visit edit_admin_organisation_planning_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
+        check "Suivi bonjour"
+        find('[for="radio_recurring"]').click
+        expect(page).to have_text("Répéter tou(te)s les")
+        select("mois", from: "recurrence_every")
+        expect(page).to have_text("Tous les 3ème mardi du mois")
+        fill_in("recurrence-source", with: "24/09/2026")
+        select("1", from: "recurrence_interval")
+        expect(page).to have_text("Tous les 4ème jeudi du mois")
+        fill_in("recurrence-until", with: "31/12/2026")
+        click_button("Enregistrer")
+
+        # check if everything is ok in db
+        expect(plage_ouverture.reload.recurrence.to_hash).to eq(
+          day: { 4 => [4] },
+          every: :month,
+          interval: 1,
+          starts: Time.zone.local(2026, 9, 24),
+          until: Time.zone.local(2026, 12, 31)
+        )
+
+        # reload page to check if form is filled correctly
+        visit edit_admin_organisation_planning_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
+        expect(page).to have_text("Tous les 4ème jeudi du mois")
+        expect(page).to have_field("recurrence-until", with: "31/12/2026")
+      end
+    end
   end
 
   def expect_checked(element_selector)
