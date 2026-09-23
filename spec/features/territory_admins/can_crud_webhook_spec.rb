@@ -39,6 +39,21 @@ RSpec.describe "territory admin can crud webhooks endpoints" do
     expect(organisation.reload.webhook_endpoints.count).to eq(0)
   end
 
+  context "quand le domaine de l'URL n'est pas dans la liste des domaines autorisé" do
+    stub_env_with(ALLOWED_WEBHOOK_HOSTS: "webhook.test.com")
+
+    it "affiche une erreur invitant à nous contacter" do
+      click_on "Webhook"
+      click_on "Ajouter"
+      select(organisation.name, from: "webhook_endpoint_organisation_id")
+      fill_in("URL de destination", with: "https://exfiltration.example.com/webhook")
+      fill_in("Clé privée", with: "XSECRET")
+      click_on "Enregistrer"
+      expect(page).to have_content("« exfiltration.example.com » ne fait pas partie des domaines autorisés pour les webhooks. Contactez-nous pour ajouter votre domaine.")
+      expect(organisation.reload.webhook_endpoints).to be_empty
+    end
+  end
+
   it "has correct permissions for other territories" do
     other_territory = create(:territory)
     visit admin_territory_webhook_endpoints_path(territory_id: other_territory.id)

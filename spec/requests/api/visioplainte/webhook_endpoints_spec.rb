@@ -37,6 +37,20 @@ RSpec.describe "Visioplainte Webhook Endpoints" do
     end
   end
 
+  describe "#create avec un domaine non autorisé" do
+    stub_env_with(ALLOWED_WEBHOOK_HOSTS: "rdvi.gouv.fr")
+
+    it "refuse la création" do
+      expect do
+        post "/api/visioplainte/webhook_endpoints", headers: auth_header, params: {
+          target_url: "https://exemple.fr/webhook_rdv_service_public", subscriptions: [:rdv], secret: "fake_test_secret_123",
+        }
+      end.to raise_error(ActiveRecord::RecordInvalid, /exemple.fr » ne fait pas partie des domaines autorisés/)
+
+      expect(orga_gendarmerie.webhook_endpoints).to be_blank
+    end
+  end
+
   describe "#update" do
     let!(:webhook_endpoint_from_other_organisation) { create(:webhook_endpoint, target_url: "https://exemple.fr") }
 

@@ -9,6 +9,7 @@ class WebhookEndpoint < ApplicationRecord
   validate :subscriptions_validity
   validates :secret, presence: true
   validate :validate_target_url_format, if: -> { will_save_change_to_target_url? && errors[:target_url].empty? }
+  validate :validate_target_url_host_allowed, if: -> { will_save_change_to_target_url? && errors[:target_url].empty? }
 
   # Callbacks
   after_save :warn_admins_if_new_url
@@ -58,6 +59,15 @@ class WebhookEndpoint < ApplicationRecord
     URI.parse(target_url.to_s)
   rescue URI::InvalidURIError
     nil
+  end
+
+  def validate_target_url_host_allowed
+    return if ENV["ALLOWED_WEBHOOK_HOSTS"] == "ALLOW_ALL_HOSTS"
+
+    allowed_hosts = ENV["ALLOWED_WEBHOOK_HOSTS"].to_s.split(";").map(&:strip).compact_blank
+    return if allowed_hosts.map(&:downcase).include?(target_url_parsed.host.downcase)
+
+    errors.add(:target_url, :host_not_allowed, host: target_url_parsed.host)
   end
 
   def warn_admins_if_new_url

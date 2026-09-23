@@ -1,7 +1,16 @@
 = simple_form_for webhook, url: url do |f|
   = render "model_errors", model: webhook
+  - if webhook.errors.of_kind?(:target_url, :host_not_allowed)
+    p.fr-mb-4w
+      |> Pour ajouter votre domaine à la liste des domaines autorisés,
+      = link_to "contactez-nous via le formulaire de contact", new_aide_demande_support_path(role: :agent, sujet: "Ajout d'un domaine autorisé pour les webhooks")
+      | .
   = f.input :organisation_id, collection: current_territory.organisations
-  = f.input :target_url
+  = f.input :target_url, hint: safe_join([ \
+    "Seuls certains domaines sont autorisés. Pour ajouter le vôtre, ", \
+    link_to("contactez-nous", new_aide_demande_support_path(role: :agent, sujet: "Ajout d'un domaine autorisé pour les webhooks")),
+    ".", \
+  ])
   = f.input :secret, input_html: { value: webhook.partially_hidden_secret, id: "secret_field" },
           hint: sanitize(t("activerecord.attributes.webhook_endpoint.secret_hint"))
   .row.col-md-6
