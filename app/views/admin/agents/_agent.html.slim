@@ -36,7 +36,7 @@ tr id="agent_#{agent.id}"
   - if current_agent.admin_in_organisation?(current_organisation)
     td
       .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline
-        - if agent_policy.create? && !agent.invitation_accepted? && !agent.is_an_intervenant?
+        - if agent_policy.reinvite? && !agent.invitation_accepted? && !agent.is_an_intervenant?
           = icon_link_to "Renvoyer l’invitation",
                   reinvite_admin_organisation_invitation_path(current_organisation, agent),
                   method: :post,
