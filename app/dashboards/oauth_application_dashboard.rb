@@ -11,6 +11,8 @@ class OauthApplicationDashboard < Administrate::BaseDashboard
     id: Field::Number,
     name: Field::String,
     logo_base64: LogoField,
+    post_logout_redirect_uri: Field::String,
+    grants_autonomous_signup: Field::Boolean,
     created_at: Field::DateTime,
   }.freeze
 
@@ -32,6 +34,8 @@ class OauthApplicationDashboard < Administrate::BaseDashboard
     id
     name
     logo_base64
+    post_logout_redirect_uri
+    grants_autonomous_signup
     created_at
   ].freeze
 
