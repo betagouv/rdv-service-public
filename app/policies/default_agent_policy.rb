@@ -42,9 +42,7 @@ class DefaultAgentPolicy < ApplicationPolicy
   def same_org?
     return false if current_organisation.nil?
 
-    if @record.is_a? Agent
-      @record.roles.map(&:organisation_id) # works for unpersisted agents
-    elsif @record.respond_to?(:organisation_id)
+    if @record.respond_to?(:organisation_id)
       @record.organisation_id == current_organisation.id
     elsif @record.respond_to?(:organisation_ids)
       @record.organisation_ids.include?(current_organisation.id)
