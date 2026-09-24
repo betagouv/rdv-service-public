@@ -567,6 +567,7 @@ tables:
   - table_name: rdv_invitations
     anonymized_column_names:
       - token
+      - visio_url_custom
     non_anonymized_column_names:
       - created_at
       - updated_at
