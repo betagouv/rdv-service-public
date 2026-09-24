@@ -6,8 +6,10 @@ RSpec.describe Ami do
     AMI_PARTNER_SECRET: "test-secret"
   )
 
-  let(:participation) { create(:participation, user: user) }
-  let(:user) { create(:user) }
+  let(:participation) { rdv.participations.first }
+  let(:user) { participation.user }
+  let(:organisation) { create(:organisation, ami_enabled: true) }
+  let(:rdv) { create(:rdv, organisation:) }
 
   before do
     UserAmiProfile.create!(user: user, fc_hash: "test_ami_fc_hash")
@@ -56,5 +58,15 @@ RSpec.describe Ami do
     expect(WebMock).to(have_requested(:put, "https://ami.test/api/v2/event").with do |request|
       expect(JSON.parse(request.body)["item_generic_status"]).to eq "closed"
     end)
+  end
+
+  context "quand AMI n'est pas activé pour l'organisation" do
+    let(:organisation) { create(:organisation, ami_enabled: false) }
+
+    it "n'envoie pas de notification" do
+      described_class.new(participation).create_event
+
+      expect(WebMock).not_to(have_requested(:put, "https://ami.test/api/v2/event"))
+    end
   end
 end

@@ -66,6 +66,8 @@ class Ami
 
   # On garde cette méthode publique pour faciliter les tests en console.
   def send_event(payload)
+    return unless @participation.rdv.organisation.ami_enabled
+
     Ami::SendEventJob.perform_later(default_payload.merge(payload))
   end
 
@@ -77,6 +79,7 @@ class Ami
     {
       content_title: "Rendez-vous avec #{@participation.rdv.organisation.name}",
       recipient_fc_hash: UserAmiProfile.find_by(user: @participation.user).fc_hash,
+      content_subheading: "Rendez-vous avec #{@participation.rdv.organisation.name}", # A tester
       event_date: Time.zone.now,
       content_icon: "fr-icon-calendar-event-line",
       item_type: "RDV",
