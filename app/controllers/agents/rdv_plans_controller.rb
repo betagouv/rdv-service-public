@@ -173,7 +173,7 @@ class Agents::RdvPlansController < AgentAuthController
 
   def event_sources
     agent = @rdv_plan.rdv_agent
-    organisation = agent.organisations.first
+    organisation = @rdv_plan.organisation
 
     event_sources = [
       { id: "Rdv",            url: admin_api_agenda_rdvs_path(agent_id: agent.id, organisation_id: organisation.id, format: :json) },
