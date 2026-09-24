@@ -4,7 +4,8 @@ application = OauthApplication.new(
   redirect_uri: "http://localhost:3002/auth/rdvservicepublic/callback\nhttp://127.0.0.1:3002/auth/rdvservicepublic/callback",
   post_logout_redirect_uri: "http://localhost:3002/",
   logo_base64: "",
-  grants_autonomous_signup: true
+  grants_autonomous_signup: true,
+  description: "Application pour l’interop avec DN. Code source disponible ici : https://github.com/demarche-numerique/demarche.numerique.gouv.fr"
 )
 
 test_secret = "development-A39QXp76ICRMmYqn_STrwsiLXYdkj2u4CtF9R8IgwnA" # Pour le développement en local uniquement

@@ -71,7 +71,8 @@ application = OauthApplication.new(
   redirect_uri: "http://localhost:3010/auth/rdvservicepublic/callback\nhttp://127.0.0.1:3010/auth/rdvservicepublic/callback",
   post_logout_redirect_uri: "http://localhost:3010/",
   logo_base64: "",
-  grants_autonomous_signup: true
+  grants_autonomous_signup: true,
+  description: "Application utilisée pour l’interop avec Mon Suivi Social. Code source disponible ici : https://gitlab.com/incubateur-territoires/startups/monsuivisocial/monsuivisocial-v2"
 )
 
 test_secret = "development-kLbob_cr6Z58h9DTHjUvOhi44cImr2QA4XOQZJHKTCg" # Pour le développement en local uniquement
