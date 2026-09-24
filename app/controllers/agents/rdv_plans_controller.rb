@@ -27,7 +27,11 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def edit_motif
-    @motifs = available_motifs(@rdv_plan).ordered_by_name
+    @motifs = if @current_organisation
+                Motif.individuel.available_motifs_for_organisation_and_agent(@current_organisation, @rdv_plan.planning_agent).ordered_by_name
+              else
+                available_motifs(@rdv_plan).ordered_by_name
+              end
   end
 
   def update_motif
