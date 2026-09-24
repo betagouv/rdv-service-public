@@ -3,8 +3,8 @@ RSpec.describe "Agent can setup sectorisation", type: :feature do
   let!(:service) { create(:service, name: "Service social") }
   let(:ccas_valentinois) { create(:organisation, territory: territory, name: "CCAS Valentinois") }
   let(:mds_drome) { create(:organisation, territory: territory, name: "MDS Drôme") }
-  let(:lea) { create(:agent, first_name: "lea", last_name: "Dupont", services: [service], role_in_territories: [territory], admin_role_in_organisations: [ccas_valentinois, mds_drome]) }
-  let!(:marguerite) { create(:agent, first_name: "Marguerite", last_name: "Duras", services: [service], role_in_territories: [territory], basic_role_in_organisations: [ccas_valentinois, mds_drome]) }
+  let(:lea) { create(:agent, first_name: "lea", last_name: "Dupont", services: [service], admin_in_territories: [territory], admin_role_in_organisations: [ccas_valentinois, mds_drome]) }
+  let!(:marguerite) { create(:agent, first_name: "Marguerite", last_name: "Duras", services: [service], admin_in_territories: [territory], basic_role_in_organisations: [ccas_valentinois, mds_drome]) }
 
   before { login_as(lea, scope: :agent) }
 

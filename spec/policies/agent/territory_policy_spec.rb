@@ -6,7 +6,7 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
 
   describe "agent with" do
     context "no admin access to this territory and no access_rights" do
-      let(:agent) { create(:agent, role_in_territories: []) }
+      let(:agent) { create(:agent, admin_in_territories: []) }
       let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory) }
 
       it_behaves_like "not permit actions",
@@ -19,10 +19,9 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
                       :allow_to_manage_teams?
     end
 
-    context "admin access to this territory" do
+    context "admin access to this territory (territory_admin)" do
       let(:territory) { create(:territory) }
-      let(:agent) { create(:agent, role_in_territories: [territory]) }
-      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory) }
+      let(:agent) { create(:agent, admin_in_territories: [territory]) }
 
       it_behaves_like "permit actions",
                       :territory,
@@ -37,7 +36,7 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
     end
 
     context "allowed to manage teams access right" do
-      let(:agent) { create(:agent, role_in_territories: []) }
+      let(:agent) { create(:agent, admin_in_territories: []) }
       let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true) }
 
       it_behaves_like "permit actions", :territory, :show?, :allow_to_manage_teams?
@@ -46,7 +45,7 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
     end
 
     context "allowed to manage access rights access right" do
-      let(:agent) { create(:agent, role_in_territories: []) }
+      let(:agent) { create(:agent, admin_in_territories: []) }
       let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_access_rights: true) }
 
       it_behaves_like "permit actions", :territory, :show?, :allow_to_manage_access_rights?
@@ -55,7 +54,7 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
     end
 
     context "allowed to invite agents access right" do
-      let(:agent) { create(:agent, role_in_territories: []) }
+      let(:agent) { create(:agent, admin_in_territories: []) }
       let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_invite_agents: true) }
 
       it_behaves_like "permit actions", :territory, :show?, :allow_to_invite_agents?
@@ -143,8 +142,8 @@ RSpec.describe Agent::TerritoryPolicy::Scope, type: :policy do
       end
 
       let!(:territory_with_role) do
-        create(:territory, name: "Espace ou j'ai un AgentTerritorialRole").tap do |territory|
-          agent.territorial_roles.create!(territory:)
+        create(:territory, name: "Espace ou j'ai le statut administrateur (territory_admin)").tap do |territory|
+          agent.agent_territorial_access_rights.create!(territory:, territory_admin: true)
         end
       end
 
@@ -164,16 +163,9 @@ RSpec.describe Agent::TerritoryPolicy::Scope, type: :policy do
         end
       end
 
-      let!(:territory_with_role_and_rights) do
-        create(:territory, name: "Espace ou j'ai un à la fois un role et des rights").tap do |territory|
-          agent.territorial_roles.create!(territory:)
-          agent.agent_territorial_access_rights.create!(territory:, allow_to_manage_access_rights: true)
-        end
-      end
-
       let!(:territory_with_role_for_another_agent) do
-        create(:territory, name: "Espace où quelqu'un d'autre a un AgentTerritorialRole").tap do |territory|
-          create(:agent).territorial_roles.create!(territory:)
+        create(:territory, name: "Espace où quelqu'un d'autre a le statut administrateur (territory_admin)").tap do |territory|
+          create(:agent).agent_territorial_access_rights.create!(territory:, territory_admin: true)
         end
       end
 
@@ -183,13 +175,12 @@ RSpec.describe Agent::TerritoryPolicy::Scope, type: :policy do
         end
       end
 
-      it "includes any territory where I either have a role or any right" do
+      it "includes any territory where I either have territory_admin or any specific right" do
         expect(subject).to contain_exactly(
           territory_with_role,
           territory_manage_teams,
           territory_invite_agents,
-          territory_manage_access_rights,
-          territory_with_role_and_rights
+          territory_manage_access_rights
         )
       end
     end

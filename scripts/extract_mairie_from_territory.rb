@@ -72,10 +72,12 @@ class ExtractMairieFromTerritory
         )
       end
       @admin_agent_ids.each do |admin_agent_id|
-        AgentTerritorialRole.find_or_initialize_by(
+        access_rights = AgentTerritorialAccessRight.find_or_initialize_by(
           territory: @new_territory,
           agent_id: admin_agent_id
-        ).save!
+        )
+        access_rights.territory_admin = true
+        access_rights.save!
       end
     end
   end

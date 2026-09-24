@@ -5,7 +5,7 @@ RSpec.describe ImportZoneRowsService, type: :service do
   let!(:orga62) { create(:organisation, territory: territory62) }
   let!(:sector_arques) { create(:sector, human_id: "arques", territory: territory62) }
   let!(:sector_arras_sud) { create(:sector, human_id: "arras-sud", territory: territory62) }
-  let!(:agent) { create(:agent, admin_role_in_organisations: [orga62], role_in_territories: [territory62]) }
+  let!(:agent) { create(:agent, admin_role_in_organisations: [orga62], admin_in_territories: [territory62]) }
 
   context "valid rows" do
     let(:rows) do

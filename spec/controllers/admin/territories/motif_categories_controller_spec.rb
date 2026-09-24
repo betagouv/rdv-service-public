@@ -2,7 +2,7 @@ RSpec.describe Admin::Territories::MotifCategoriesController, type: :controller 
   describe "#update" do
     it "responds redirect" do
       territory = create(:territory)
-      agent = create(:agent, role_in_territories: [territory])
+      agent = create(:agent, admin_in_territories: [territory])
       sign_in agent
       post :update, params: { territory_id: territory.id, territory: { motif_category_ids: nil } }
       expect(response).to redirect_to(edit_admin_territory_motif_fields_path(territory))
@@ -11,7 +11,7 @@ RSpec.describe Admin::Territories::MotifCategoriesController, type: :controller 
     it "update territory" do
       create_list(:motif_category, 5)
       territory = create(:territory)
-      agent = create(:agent, role_in_territories: [territory])
+      agent = create(:agent, admin_in_territories: [territory])
       random_categories_ids = MotifCategory.all.sample(3).map(&:id)
       sign_in agent
 

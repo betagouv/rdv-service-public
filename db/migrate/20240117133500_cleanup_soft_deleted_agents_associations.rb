@@ -8,7 +8,6 @@ class CleanupSoftDeletedAgentsAssociations < ActiveRecord::Migration[7.0]
         agent.plage_ouvertures.destroy_all
         agent.agent_services.destroy_all
         agent.agent_territorial_access_rights.destroy_all
-        agent.territorial_roles.destroy_all
         agent.agent_teams.destroy_all
         agent.referent_assignations.destroy_all
         agent.sector_attributions.destroy_all

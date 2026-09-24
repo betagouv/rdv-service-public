@@ -6,7 +6,7 @@ class Agent::TerritoryPolicy
   end
 
   def territorial_admin?
-    @current_agent.territorial_roles.exists?(territory_id: @territory.id)
+    @current_agent.territorial_admin_in?(@territory)
   end
 
   alias manage_services? territorial_admin?
@@ -46,14 +46,9 @@ class Agent::TerritoryPolicy
     end
 
     def resolve
-      territories_with_roles = @scope.joins(:roles)
-        .where(agent_territorial_roles: { agent: @current_agent })
-
-      territories_with_rights = @scope.joins(:agent_territorial_access_rights)
+      @scope.joins(:agent_territorial_access_rights)
         .where(agent_territorial_access_rights: { agent: @current_agent })
         .merge(AgentTerritorialAccessRight.with_some_rights_allowed)
-
-      @scope.where_id_in_subqueries([territories_with_roles, territories_with_rights])
     end
   end
 

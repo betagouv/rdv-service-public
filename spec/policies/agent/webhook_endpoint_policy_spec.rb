@@ -6,13 +6,13 @@ RSpec.describe Agent::WebhookEndpointPolicy do
   let(:webhook) { create(:webhook_endpoint, organisation: organisation) }
 
   context "with territory admin agent" do
-    let(:agent) { create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory]) }
+    let(:agent) { create(:agent, admin_role_in_organisations: [organisation], admin_in_territories: [territory]) }
 
     permissions(:create?) { it { is_expected.to permit(agent, webhook) } }
   end
 
   context "with admin agent not on territory" do
-    let(:agent) { create(:agent, admin_role_in_organisations: [organisation], role_in_territories: []) }
+    let(:agent) { create(:agent, admin_role_in_organisations: [organisation], admin_in_territories: []) }
 
     permissions(:create?) { it { is_expected.not_to permit(agent, webhook) } }
   end
@@ -23,7 +23,7 @@ RSpec.describe Agent::WebhookEndpointPolicy::Scope do
     let(:organisation) { create(:organisation) }
 
     context "with an admin agent" do
-      let(:agent) { create(:agent, role_in_territories: [organisation.territory]) }
+      let(:agent) { create(:agent, admin_in_territories: [organisation.territory]) }
 
       it "allow to see webhook from same territory" do
         webhook = create(:webhook_endpoint, organisation: organisation)

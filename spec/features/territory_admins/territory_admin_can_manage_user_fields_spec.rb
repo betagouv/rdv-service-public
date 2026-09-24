@@ -1,6 +1,6 @@
 RSpec.describe "admin d'espace peut gérer les champs de fiche usager", type: :feature do
   let!(:territory) { create(:territory) }
-  let!(:agent) { create(:agent, role_in_territories: [territory]) }
+  let!(:agent) { create(:agent, admin_in_territories: [territory]) }
 
   it "works (cas général)" do
     login_as(agent, scope: :agent)
@@ -40,7 +40,7 @@ RSpec.describe "admin d'espace peut gérer les champs de fiche usager", type: :f
           enable_address_details: false
         )
       end
-      let!(:agent) { create(:agent, role_in_territories: [territory]) }
+      let!(:agent) { create(:agent, admin_in_territories: [territory]) }
 
       it "affiche uniquement les champs légitimes" do
         login_as(agent, scope: :agent)
@@ -79,7 +79,7 @@ RSpec.describe "admin d'espace peut gérer les champs de fiche usager", type: :f
           enable_address_details: false
         )
       end
-      let!(:agent) { create(:agent, role_in_territories: [territory]) }
+      let!(:agent) { create(:agent, admin_in_territories: [territory]) }
 
       it "affiche les champs légitimes et les champs activés" do
         login_as(agent, scope: :agent)

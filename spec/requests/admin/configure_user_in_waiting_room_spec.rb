@@ -2,7 +2,7 @@ RSpec.describe "Configure les préférences de signalisation d'usager en salle d
   include Rails.application.routes.url_helpers
 
   let(:organisation) { create(:organisation) }
-  let(:agent) { create(:agent, basic_role_in_organisations: [organisation], role_in_territories: [organisation.territory]) }
+  let(:agent) { create(:agent, basic_role_in_organisations: [organisation], admin_in_territories: [organisation.territory]) }
 
   before { sign_in agent }
 

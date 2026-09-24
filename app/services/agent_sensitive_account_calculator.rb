@@ -32,7 +32,7 @@ class AgentSensitiveAccountCalculator
     # Tous les agents susceptibles d'être concernés par l'un des critères ci-dessous,
     # pour pouvoir repasser sensitive_account à false s'ils ne les remplissent plus.
     def evaluated_agent_ids
-      (admin_or_agent_accueil_agent_ids + AgentTerritorialRole.distinct.pluck(:agent_id)).uniq
+      (admin_or_agent_accueil_agent_ids + AgentTerritorialAccessRight.where(territory_admin: true).distinct.pluck(:agent_id)).uniq
     end
 
     def admin_or_agent_accueil_agent_ids
@@ -50,7 +50,7 @@ class AgentSensitiveAccountCalculator
     end
 
     def sensitive_territory_admins
-      AgentTerritorialRole.where(territory_id: sensitive_territory_ids)
+      AgentTerritorialAccessRight.where(territory_admin: true).where(territory_id: sensitive_territory_ids)
     end
 
     # Un admin de territoire a accès à l'ensemble des organisations de son territoire,

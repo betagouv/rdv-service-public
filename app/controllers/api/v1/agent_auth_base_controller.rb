@@ -109,7 +109,6 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
     return if organisation_ids.blank? && territory_ids.blank?
 
     agent_territories = current_agent.agent_territorial_access_rights.pluck(:territory_id)
-    agent_territories += current_agent.territorial_roles.pluck(:territory_id) # TODO: À supprimer après #6616
     external_territories = territory_ids.difference(agent_territories)
 
     if external_territories.any?
