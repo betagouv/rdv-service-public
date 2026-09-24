@@ -36,7 +36,7 @@ class Ami
     # Cette notif devrait peut-être être juste une notif toute seule, pas dans le cadre d'une démarche.
     payload = {
       content_body: "Nous vous rappelons que vous avez rendez-vous #{I18n.l(rdv.starts_at, format: :short_sms)}.", # Ce champs est visible pour Apple/Google
-      content_private_body: "Le rendez-vous aura lieu au #{rdv.address} pour #{rdv.motif.name}",
+      content_private_body: reminder_content_private_body,
       item_generic_status: "wip",
       item_status_label: "À venir",
       try_push: true,
@@ -78,6 +78,14 @@ class Ami
       "Vous avez rendez vous #{I18n.l(rdv.starts_at, format: :short_sms)} par visioconférence pour #{rdv.motif.name}"
     else
       "Vous avez rendez vous #{I18n.l(rdv.starts_at, format: :short_sms)} au #{rdv.address} pour #{rdv.motif.name}"
+    end
+  end
+
+  def reminder_content_private_body
+    if rdv.motif.phone?
+      "Nous vous appellerons au #{@participation.user.phone_number}."
+    else
+      "Le rendez-vous aura lieu au #{rdv.address} pour #{rdv.motif.name}"
     end
   end
 
