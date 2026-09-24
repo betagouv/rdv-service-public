@@ -13,7 +13,9 @@ class OauthApplicationDashboard < Administrate::BaseDashboard
     logo_base64: LogoField,
     post_logout_redirect_uri: Field::String,
     grants_autonomous_signup: Field::Boolean,
-    internal_documentation: Field::Text,
+    internal_documentation: Field::Text.with_options(
+      input_options: { placeholder: "Utilisé pour synchroniser des données avec : \nLien vers le code source du produit synchronisé : https://code.gouv.fr/.\nPersonne à contacter concernant cette application : francis.factis@example.gouv.fr" }
+    ),
     created_at: Field::DateTime,
   }.freeze
 
