@@ -124,7 +124,7 @@ class Agents::RdvPlansController < AgentAuthController
                                  { send_lifecycle_notifications: false, send_reminder_notification: false }
                                end
 
-    result = @rdv_plan.create_rdv_or_send_invitation(user_attributes:, participation_attributes:)
+    result = @rdv_plan.create_rdv_or_send_invitation(user_attributes:, participation_attributes:, pro_connect_access_token: session[:pro_connect_access_token])
 
     if result.valid?
       if result.is_a?(Rdv)

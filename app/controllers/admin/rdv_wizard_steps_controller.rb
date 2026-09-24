@@ -83,11 +83,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
     return if ENV["VISIO_NUMERIQUE_DISABLED"]
     return if session[:pro_connect_access_token].blank?
 
-    result = VisioNumerique::CreateRoom.new(access_token: session[:pro_connect_access_token]).call
-    @rdv.visio_url_custom = result["url"]
-  rescue VisioNumerique::CreateRoom::ApiError => e
-    Rails.logger.error("Visio Numerique API error: #{e.message}")
-    Sentry.capture_exception(e)
+    @rdv.visio_url_custom = VisioNumerique::CreateRoom.new(access_token: session[:pro_connect_access_token]).visio_url
   end
 
   def rdv_params
