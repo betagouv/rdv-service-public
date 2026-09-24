@@ -91,7 +91,7 @@ class Agents::RdvPlansController < AgentAuthController
 
   def edit_lieu
     render locals: {
-      lieux: policy_scope(Lieu.enabled, policy_scope_class: Agent::LieuPolicy::Scope),
+      lieux: policy_scope(@rdv_plan.organisation.lieux.enabled, policy_scope_class: Agent::LieuPolicy::Scope),
       event_sources:,
     }
   end
