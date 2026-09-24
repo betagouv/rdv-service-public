@@ -20,9 +20,7 @@ RSpec.describe CronJob::SynchronizeCrm, type: :job do
   end
 
   context "quand la clef NOTION_API_SECRET n'est pas définie" do
-    before do
-      ENV["NOTION_API_SECRET"] = nil
-    end
+    stub_env_with(NOTION_API_SECRET: nil)
 
     it "ne fait rien" do
       described_class.new.perform
@@ -32,9 +30,7 @@ RSpec.describe CronJob::SynchronizeCrm, type: :job do
   end
 
   context "quand la clef NOTION_API_SECRET est définie" do
-    before do
-      ENV["NOTION_API_SECRET"] = "secret"
-    end
+    stub_env_with(NOTION_API_SECRET: "secret")
 
     it "enqueue un job SynchronizeCrmPageJob pour chaque page Notion" do
       expect { described_class.new.perform }.to have_enqueued_job(SynchronizeCrmPageJob).with(
