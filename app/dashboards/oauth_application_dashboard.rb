@@ -13,6 +13,7 @@ class OauthApplicationDashboard < Administrate::BaseDashboard
     logo_base64: LogoField,
     post_logout_redirect_uri: Field::String,
     grants_autonomous_signup: Field::Boolean,
+    description: Field::Text,
     created_at: Field::DateTime,
   }.freeze
 
@@ -36,13 +37,14 @@ class OauthApplicationDashboard < Administrate::BaseDashboard
     logo_base64
     post_logout_redirect_uri
     grants_autonomous_signup
+    description
     created_at
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = %i[].freeze
+  FORM_ATTRIBUTES = %i[description].freeze
 
   def display_resource(oauth_application)
     oauth_application.name
