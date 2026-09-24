@@ -37,11 +37,8 @@
 - if f.object.show_landline_phone_number_warning?
   .fr-alert.fr-alert--warning.fr-mb-1w Vous ne recevrez pas de SMS avec ce numéro non-mobile
 
-- if Ami.enabled?
-  - rdv_for_organisation_with_ami_or_form_without_rdv = unconfirmed_rdv.blank? ||  unconfirmed_rdv&.organisation&.ami_enabled?
-  - hash = UserAmiProfile.find_by(user: f.object.user)
-  - if hash && rdv_for_organisation_with_ami_or_form_without_rdv
-    = f.dsfr_check_box :notify_by_ami, checked: hash.notify_by_ami, label: "J’accepte les notifications via l’application mobile officielle et gratuite de l’administration française"
+- if UserAmiProfile.show_checkbox_in_user_form?(f.object.user, unconfirmed_rdv)
+  = f.dsfr_check_box :notify_by_ami, checked: hash.notify_by_ami, label: "J’accepte les notifications via l’application mobile officielle et gratuite de l’administration française"
 
 - if f.object.show_address_field?
   = f.dsfr_text_field :address,
