@@ -58,7 +58,7 @@ Rails.application.routes.draw do
     resources :rdvs, only: %i[show]
     resources :prescripteurs, only: %i[show]
     resources :tags
-    resources :oauth_applications, only: %i[index show]
+    resources :oauth_applications, only: %i[index show edit update]
     root to: "agents#index"
 
     authenticate :super_admin do

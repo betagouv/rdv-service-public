@@ -461,6 +461,7 @@ tables:
   - table_name: oauth_applications
     anonymized_column_names:
       - secret
+      - internal_documentation
     non_anonymized_column_names:
       - name
       - uid
