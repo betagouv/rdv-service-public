@@ -102,7 +102,7 @@ if ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "RDV_SERVICE_PUBLIC_DEV"
     redirect_uri: "http://www.rdv-aide-numerique.localhost:3001/omniauth/rdvservicepublic/callback",
     logo_base64: "",
     grants_autonomous_signup: true,
-    description: "Application utilisée pour la migration RDV Aide Numérique vers RDV Service Public"
+    internal_documentation: "Application utilisée pour la migration RDV Aide Numérique vers RDV Service Public"
   )
 
   test_secret = "development-6AJOgLXnZRkMfZQ6ICc6vvG84f7r8QD8GLqEp-TgnDg" # Pour le développement en local uniquement

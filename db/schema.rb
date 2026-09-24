@@ -540,7 +540,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_24_120000) do
     t.text "logo_base64"
     t.text "post_logout_redirect_uri"
     t.boolean "grants_autonomous_signup", default: false, null: false
-    t.text "description"
+    t.text "internal_documentation"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
