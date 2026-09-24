@@ -57,7 +57,7 @@ class RdvInvitation < ApplicationRecord
 
     RdvInvitation.transaction do
       rdv = Rdv.create(
-        motif:, organisation:, starts_at:,
+        motif:, organisation:, starts_at:, visio_url_custom:,
         lieu: creneau.lieu,
         ends_at: starts_at + motif.default_duration_in_min.minutes,
         agents: [creneau.agent],
