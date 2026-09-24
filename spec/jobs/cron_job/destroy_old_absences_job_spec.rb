@@ -61,7 +61,7 @@ RSpec.describe CronJob::DestroyOldAbsencesJob do
     organisation = create(:organisation)
     agent = create(:agent, basic_role_in_organisations: [organisation])
     absence = create(:absence, first_day: now - 2.years - 3.days, recurrence: nil, agent:)
-    create(:webhook_endpoint, organisation:, subscriptions: ["absence"])
+    create(:webhook_endpoint, :bypassing_host_validation, organisation:, subscriptions: ["absence"])
 
     described_class.new.perform
 

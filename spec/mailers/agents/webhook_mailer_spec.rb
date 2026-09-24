@@ -1,7 +1,7 @@
 RSpec.describe Agents::WebhookMailer, type: :mailer do
   describe "#new_webhook_url" do
     it "works" do
-      webhook = create(:webhook_endpoint)
+      webhook = create(:webhook_endpoint, :bypassing_host_validation, :bypassing_host_validation)
       notified_agent = create(:agent)
       mail = described_class.new_webhook_url(webhook_endpoint_id: webhook.id, notified_agent_id: notified_agent.id)
 
@@ -18,7 +18,7 @@ RSpec.describe Agents::WebhookMailer, type: :mailer do
       author = create(:agent, first_name: "Amine", last_name: "Despace")
       notified_agent = create(:agent)
       PaperTrail.request.whodunnit = author.name_for_paper_trail
-      mail = described_class.new_webhook_url(webhook_endpoint_id: create(:webhook_endpoint).id, notified_agent_id: notified_agent.id)
+      mail = described_class.new_webhook_url(webhook_endpoint_id: create(:webhook_endpoint, :bypassing_host_validation, :bypassing_host_validation).id, notified_agent_id: notified_agent.id)
 
       expect(mail.body.encoded).to include("par Amine DESPACE")
     end
@@ -26,7 +26,7 @@ RSpec.describe Agents::WebhookMailer, type: :mailer do
     it "speaks to you at the second person" do
       author = create(:agent, first_name: "Amine", last_name: "Despace")
       PaperTrail.request.whodunnit = author.name_for_paper_trail
-      mail = described_class.new_webhook_url(webhook_endpoint_id: create(:webhook_endpoint).id, notified_agent_id: author.id)
+      mail = described_class.new_webhook_url(webhook_endpoint_id: create(:webhook_endpoint, :bypassing_host_validation, :bypassing_host_validation).id, notified_agent_id: author.id)
 
       expect(mail.subject).to eq("Vous venez d'ajouter une nouvelle URL de webhook")
       expect(mail.body.encoded).to include("Vous venez d'introduire une nouvelle URL de webhook :")
@@ -37,7 +37,7 @@ RSpec.describe Agents::WebhookMailer, type: :mailer do
       notified_agent = create(:agent)
       PaperTrail.request.whodunnit = "#{author.name_for_paper_trail} (via API)"
 
-      mail = described_class.new_webhook_url(webhook_endpoint_id: create(:webhook_endpoint).id, notified_agent_id: notified_agent.id)
+      mail = described_class.new_webhook_url(webhook_endpoint_id: create(:webhook_endpoint, :bypassing_host_validation, :bypassing_host_validation).id, notified_agent_id: notified_agent.id)
 
       expect(mail.subject).to eq("Un webhook vient d'être ajouté par API")
       expect(mail.body.encoded).to include("Une nouvelle URL de webhook vient d'être introduite par Amine DESPACE (via API) :")

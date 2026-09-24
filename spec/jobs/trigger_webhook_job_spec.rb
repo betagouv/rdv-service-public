@@ -3,7 +3,7 @@ RSpec.describe TriggerWebhookJob, type: :job do
     described_class.perform_now(webhook_endpoint_id)
   end
 
-  let!(:webhook_endpoint) { create(:webhook_endpoint) }
+  let!(:webhook_endpoint) { create(:webhook_endpoint, :bypassing_host_validation, :bypassing_host_validation) }
   let(:webhook_endpoint_id) { webhook_endpoint.id }
 
   describe "#perform" do

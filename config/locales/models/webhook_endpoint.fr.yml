@@ -1,5 +1,12 @@
 fr:
   activerecord:
+    errors:
+      models:
+        webhook_endpoint:
+          attributes:
+            target_url:
+              invalid_format: "n’est pas une URL valide, elle doit commencer par http(s)://"
+              host_not_allowed: "« %{host} » ne fait pas partie des domaines autorisés pour les webhooks. Contactez-nous pour ajouter votre domaine."
     models:
       webhook_endpoint: Webhook
     attributes:

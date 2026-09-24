@@ -75,7 +75,7 @@ RSpec.describe Participation::StatusChangeable, type: :concern do
       end
 
       describe "triggers webhook" do
-        let!(:webhook_endpoint) { create(:webhook_endpoint, organisation:, subscriptions: ["rdv"]) }
+        let!(:webhook_endpoint) { create(:webhook_endpoint, :bypassing_host_validation, organisation:, subscriptions: ["rdv"]) }
 
         it "sends a webhook" do
           rdv.reload
