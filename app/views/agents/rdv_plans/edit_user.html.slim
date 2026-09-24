@@ -9,30 +9,50 @@
       = render "agents/rdv_plans/summary/location_type", rdv_plan: @rdv_plan
 
     hr.fr-mt-2w
-    h3.fr-h3 Coordonnées de #{@rdv_plan.user.full_name}
-    = form_for @rdv_plan, url: create_rdv_agents_rdv_plan_path(@rdv_plan), method: :post, builder: Dsfr::FormBuilder do |f|
-      = f.fields_for :user, @rdv_plan.user do |ff|
-        .fr-grid-row.fr-grid-row--gutters
-          .fr-col-6
-            = ff.dsfr_email_field :email, autocomplete: "off", hint: ("Cet usager utilise cette adresse email pour se connecter." if @rdv_plan.user.already_logged_in?), required: @rdv_plan.by_invitation?
-          .fr-col-6
-            = ff.dsfr_phone_field :phone_number, as: :tel, required: @rdv_plan.motif.phone?
+    - if @rdv_plan.user
+      = render "edit_user_form"
+    - else
+      = label_tag :user_id, "Qui souhaitez-vous inviter ?"
 
-      - if @rdv_plan.motif.visible_and_notified?
-        .fr-grid-row.fr-grid-row--gutters
-          .fr-col-12
-            = f.fields_for :participation, (Participation.new(send_lifecycle_notifications: true, send_reminder_notification: true)) do |ff|
-              = ff.dsfr_check_box :send_lifecycle_notifications, label: "Envoyer une notification de confirmation"
-              = ff.dsfr_check_box :send_reminder_notification, label: "Envoyer une notification de rappel 48h avant le rendez-vous"
-      - else
-        | Les notifications ne sont pas envoyées pour ce motif de rendez-vous.
+      .d-flex
+        .flex-grow-1.fr-pr-2w
+          = select_tag :user_id,
+            options_for_select([]),
+            required: true,
+            class: "select2-input js-rdv-invitation-user-select",
+            data: { \
+              "redirect-url": edit_user_agents_rdv_plan_url(@rdv_plan, host: current_domain.host_name),
+              "select2-config": { ajax: { url: search_agents_users_path(organisation_id: @rdv_plan.organisation.id), dataType: "json", delay: 250}, placeholder: "Chercher un usager par nom, prénom, téléphone, ou email" }, }
 
-      .fr-col-12.fr-mt-2w.d-flex.rdv-justify-content-space-between
-        - if @rdv_plan.by_invitation?
-          = link_to "Retour", edit_rdv_invitation_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
-        - else
-          - return_path =  @rdv_plan.motif.requires_lieu? ? edit_lieu_agents_rdv_plan_path(@rdv_plan) : edit_starts_at_agents_rdv_plan_path(@rdv_plan)
-          = link_to "Retour", return_path, class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
+        div
+          span.fr-text-mention--grey.fr-text--sm
+            | Vous ne trouvez pas l'usager ?&nbsp;
 
-        - submit_text = @rdv_plan.by_invitation? ? "Envoyer l'invitation" : "Confirmer le rendez-vous"
-        = f.submit submit_text, class: "fr-btn float-right fr-btn--lg"
+          button[data-fr-opened="#{@user.present?}" aria-controls="new-user-modal" type="button" class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"]
+            | Ajouter un usager
+
+- if @rdv_plan.user.blank?
+  dialog#new-user-modal.fr-modal[aria-labelledby="new-user-modal-title"]
+    .fr-container.fr-container--fluid.fr-container-md
+      .fr-grid-row.fr-grid-row--center
+        .fr-col-12.fr-col-md-8
+          .fr-modal__body
+            .fr-modal__header
+              button[aria-controls="new-user-modal" title="Fermer" type="button" class="fr-btn--close fr-btn"] Fermer
+            .fr-modal__content.fr-mb-4w
+              h2.fr-modal__title#new-user-modal-title
+                = user_icon(class: "fr-mr-1w")
+                | Nouvel usager
+              - user = @user || User.new
+              = form_for user, url: create_user_agents_rdv_plan_path(@rdv_plan), method: :post, builder: Dsfr::FormBuilder do |f|
+                .fr-grid-row.fr-grid-row--gutters
+                  .fr-col-6
+                    = f.dsfr_text_field :first_name, required: true
+                  .fr-col-6
+                    = f.dsfr_text_field :last_name, required: true
+                  .fr-col-6
+                    = f.dsfr_email_field :email, required: true, autocomplete: "off"
+                  .fr-col-6
+                    = f.dsfr_phone_field :phone_number, as: :tel, required: @rdv_plan.motif.phone?
+                .fr-btns-group.fr-btns-group--right.fr-mt-4w
+                  = f.submit "Enregistrer", class: "fr-btn"

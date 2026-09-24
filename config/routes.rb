@@ -192,6 +192,8 @@ Rails.application.routes.draw do
           patch :update_lieu
 
           get :edit_user
+          post :create_user
+
           post :create_rdv
 
           get :rdv

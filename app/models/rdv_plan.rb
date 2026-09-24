@@ -6,9 +6,9 @@ class RdvPlan < ApplicationRecord
   )
 
   belongs_to :planning_agent, class_name: "Agent"
-  belongs_to :user
 
   belongs_to :rdv_agent, class_name: "Agent", optional: true
+  belongs_to :user, optional: true
   belongs_to :motif, optional: true
   belongs_to :lieu, optional: true
   belongs_to :rdv, optional: true
@@ -43,6 +43,10 @@ class RdvPlan < ApplicationRecord
 
   def build_invitation
     RdvInvitation.new(motif:, lieu:, user:, inviting_agent: planning_agent)
+  end
+
+  def user_name
+    user&.full_name || "l'usager"
   end
 
   private

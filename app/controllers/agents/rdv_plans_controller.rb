@@ -2,6 +2,8 @@ class Agents::RdvPlansController < AgentAuthController
   before_action :find_rdv_plan
   before_action :redirect_to_rdv, if: -> { @rdv_plan.rdv.present? }, except: [:rdv]
 
+  before_action -> { @hide_rdv_plan_banner = true }
+
   layout lambda {
     return "application" unless @rdv_plan
 
@@ -129,6 +131,20 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def edit_user; end
+
+  def create_user
+    user = User.new(params.require(:user).permit(:first_name, :last_name, :email, :phone_number))
+    user.user_profiles.build(organisation: @rdv_plan.organisation)
+
+    authorize(user, :create?, policy_class: Agent::UserPolicy)
+
+    if user.save
+      @rdv_plan.update(user: user)
+      redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
+    else
+      render :edit_user
+    end
+  end
 
   def create_rdv
     rdv_plan_params = params.require(:rdv_plan)
