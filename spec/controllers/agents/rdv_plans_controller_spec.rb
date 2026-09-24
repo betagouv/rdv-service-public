@@ -10,7 +10,7 @@ RSpec.describe Agents::RdvPlansController do
     create(:rdv_plan, user:, motif:,
                       starts_at: 1.week.from_now,
                       duration_in_minutes: 30,
-                      by_invitation: true,
+                      by_invitation:,
                       rdv_agent: agent,
                       planning_agent: agent)
   end
@@ -23,9 +23,23 @@ RSpec.describe Agents::RdvPlansController do
       .to_return(status: 200, body: { url: "https://visio.numerique.gouv.fr/room-xyz" }.to_json, headers: { "Content-Type" => "application/json" })
   end
 
-  it "sets the custom visio url for the invitation" do
-    post :create_rdv, params: { id: rdv_plan.id, rdv_plan: { user: { email: "francis@factice.org" }, participation: { send_lifecycle_notifications: true } } }
+  context "for an invitation" do
+    let(:by_invitation) { true }
 
-    expect(RdvInvitation.last.visio_url_custom).to eq("https://visio.numerique.gouv.fr/room-xyz")
+    it "sets the custom visio url for the invitation" do
+      post :create_rdv, params: { id: rdv_plan.id, rdv_plan: { user: { email: "francis@factice.org" }, participation: { send_lifecycle_notifications: true } } }
+
+      expect(RdvInvitation.last.visio_url_custom).to eq("https://visio.numerique.gouv.fr/room-xyz")
+    end
+  end
+
+  context "for a rdv" do
+    let(:by_invitation) { false }
+
+    it "sets the custom visio url for the rdv" do
+      post :create_rdv, params: { id: rdv_plan.id, rdv_plan: { user: { email: "francis@factice.org" }, participation: { send_lifecycle_notifications: true, send_reminder_notification: true } } }
+
+      expect(Rdv.last.visio_url_custom).to eq("https://visio.numerique.gouv.fr/room-xyz")
+    end
   end
 end
