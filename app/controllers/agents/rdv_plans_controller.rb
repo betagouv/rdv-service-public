@@ -1,7 +1,22 @@
 class Agents::RdvPlansController < AgentAuthController
-  layout "application"
   before_action :find_rdv_plan
   before_action :redirect_to_rdv, if: -> { @rdv_plan.rdv.present? }, except: [:rdv]
+
+  layout lambda {
+    return "application" unless @rdv_plan
+
+    @rdv_plan.oauth_application ? "application" : "application_agent"
+  }
+
+  # Ces actions peuvent être utilisées dans le contexte d'une organisation, ou pour la prise de rendez-vous en général
+  def current_organisation
+    find_rdv_plan
+
+    return nil if @rdv_plan&.oauth_application
+
+    # TODO: Est-ce qu'il faut gérer le latest_used_organisation_id ici ?
+    @current_organisation = @rdv_plan&.motif&.organisation || current_agent.organisations.find_by(id: params[:organisation_id])
+  end
 
   def show
     if current_agent.organisations.any?

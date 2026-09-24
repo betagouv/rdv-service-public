@@ -326,6 +326,9 @@ Rails.application.routes.draw do
           patch :update_advanced_options
         end
       end
+
+      resources :rdv_plans, only: %i[create]
+
       resources :rdvs_collectifs, only: %i[index new create edit update] do
         collection do
           resources :motif_selections, only: [:index], as: :rdvs_collectif_motif_selections, controller: "rdvs_collectifs/motif_selections"
