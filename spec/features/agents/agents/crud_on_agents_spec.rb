@@ -150,6 +150,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
       click_link("activer des services supplémentaires")
 
       find(%(label[for="service-toggle-#{new_service.id}"])).click
+      expect(page).to have_content("Service activé")
       click_on("Retour à la création d'agent")
 
       fill_in "Email", with: "jean@paul.com"
