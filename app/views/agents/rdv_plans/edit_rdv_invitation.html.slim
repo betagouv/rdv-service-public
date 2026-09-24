@@ -20,6 +20,7 @@
 
     - else
       p Il n'y a pas de créneau disponible pour ce motif.
+      = link_to "Ajouter des plages d'ouverture", admin_organisation_planning_plage_ouvertures_path(@rdv_plan.organisation, { agent_id: current_agent.id }), class: "fr-btn fr-btn--secondary fr-mb-4w"
 
     p.fr-text-mention--grey.fr-text--sm
       | Si vous préférez, vous pouvez aussi #{link_to("choisir un horaire directement", edit_starts_at_agents_rdv_plan_path(@rdv_plan))}.
