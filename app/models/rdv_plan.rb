@@ -23,21 +23,15 @@ class RdvPlan < ApplicationRecord
 
   validate :return_url_is_authorized
 
-  def create_rdv_or_send_invitation(user_attributes:, participation_attributes: nil)
+  def create_rdv_or_send_invitation(user_attributes:, participation_attributes: nil, pro_connect_access_token: nil)
     user.update!(user_attributes)
 
     UserProfile.find_or_initialize_by(user_id: user.id, organisation_id: motif.organisation_id).save!
 
     if by_invitation?
-      invitation = build_invitation
-      if invitation.save
-        update!(rdv_invitation_id: invitation.id)
-        Users::RdvInvitationMailer.with(rdv_invitation: invitation).new_invitation.deliver_later
-      end
-
-      invitation
+      create_rdv_invitation(pro_connect_access_token)
     else
-      create_rdv(participation_attributes:)
+      create_rdv(participation_attributes:, pro_connect_access_token:)
     end
   end
 
@@ -47,14 +41,15 @@ class RdvPlan < ApplicationRecord
 
   private
 
-  def create_rdv(participation_attributes:)
+  def create_rdv(participation_attributes:, pro_connect_access_token:)
     rdv = Rdv.create(
       motif:, lieu:, starts_at:,
       agents: [rdv_agent],
       participations: [Participation.new(participation_attributes.merge(user_id: user.id))],
       organisation: organisation,
       created_by: planning_agent,
-      ends_at: starts_at + (duration_in_minutes || motif.default_duration_in_min).minutes
+      ends_at: starts_at + (duration_in_minutes || motif.default_duration_in_min).minutes,
+      visio_url_custom: visio_url_custom(pro_connect_access_token)
     )
 
     if rdv.persisted?
@@ -63,6 +58,25 @@ class RdvPlan < ApplicationRecord
     end
 
     rdv
+  end
+
+  def create_rdv_invitation(pro_connect_access_token)
+    invitation = build_invitation
+    invitation.visio_url_custom = visio_url_custom(pro_connect_access_token)
+    if invitation.save
+      update!(rdv_invitation_id: invitation.id)
+      Users::RdvInvitationMailer.with(rdv_invitation: invitation).new_invitation.deliver_later
+    end
+
+    invitation
+  end
+
+  def visio_url_custom(pro_connect_access_token)
+    return unless motif&.visio?
+    return if ENV["VISIO_NUMERIQUE_DISABLED"]
+    return if pro_connect_access_token.blank?
+
+    VisioNumerique::CreateRoom.new(access_token: pro_connect_access_token).visio_url
   end
 
   def return_url_is_authorized
