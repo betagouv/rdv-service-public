@@ -167,6 +167,15 @@ RSpec.describe ProConnectController do
         end
       end
 
+      context "échange du jeton Menshen" do
+        it "enqueue un job d'échange du jeton Menshen en asynchrone, pour ne pas ralentir la ProConnexion" do
+          agent = create(:agent, email: user_info["email"])
+          expect do
+            get :callback, params: { state:, code: }
+          end.to have_enqueued_job(MenshenExchangeTokenJob).with(agent.id, "fake proconnect access token")
+        end
+      end
+
       context "when an agent exists with the given email address and no sub" do
         it "updates the existing agent's sub" do
           agent = create(:agent, email: user_info["email"])
