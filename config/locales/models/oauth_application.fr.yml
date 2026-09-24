@@ -1,0 +1,13 @@
+fr:
+  activerecord:
+    models:
+      oauth_application:
+        one: Application OAuth
+        other: Applications OAuth
+    attributes:
+      oauth_application:
+        name: Nom
+        logo_base64: Logo
+        post_logout_redirect_uri: URL de redirection après déconnexion
+        grants_autonomous_signup: Autorise l’inscription autonome
+        created_at: Créée le
