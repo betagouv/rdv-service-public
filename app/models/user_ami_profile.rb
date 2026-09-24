@@ -8,9 +8,9 @@ class UserAmiProfile < ApplicationRecord
 
     unconfirmed_rdv&.organisation&.ami_enabled?
     profile_in_ami_organisation = unconfirmed_rdv.blank? && user.organisations.where(ami_enabled: true).any?
-    hash = UserAmiProfile.find_by(user: user)
+    profile = UserAmiProfile.find_by(user: user)
 
-    hash && (rdv_for_organisation_with_ami || profile_in_ami_organisation)
+    profile && (rdv_for_organisation_with_ami || profile_in_ami_organisation)
   end
 
   def self.update_notify_by_ami(user, boolean, synchronous: false)
