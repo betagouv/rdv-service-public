@@ -230,10 +230,12 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
   end
 
   describe "displaying overlapping plages on the show page" do
+    let!(:other_lieu) { create(:lieu, organisation: organisation) }
     let!(:overlapping_plage) do
       plage_ouverture.dup.tap do |duplicate|
         duplicate.title = "Autre plage au même moment"
         duplicate.motifs = plage_ouverture.motifs
+        duplicate.lieu = other_lieu
         duplicate.save!
       end
     end
@@ -241,7 +243,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     it "works" do
       visit admin_organisation_planning_plage_ouverture_path(organisation, plage_ouverture)
       expect(page).to have_content(plage_ouverture.title_with_default)
-      expect(page).to have_content("Conflit de dates et d'horaires avec d'autres plages d'ouvertures\nPlage d'ouverture #{overlapping_plage.id}")
+      expect(page).to have_content("Conflit de dates et d'horaires avec d'autres plages d'ouvertures\nAutre plage au même moment")
     end
   end
 
