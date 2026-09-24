@@ -38,7 +38,7 @@
   .fr-alert.fr-alert--warning.fr-mb-1w Vous ne recevrez pas de SMS avec ce numéro non-mobile
 
 - if UserAmiProfile.show_checkbox_in_user_form?(f.object.user, unconfirmed_rdv)
-  = f.dsfr_check_box :notify_by_ami, checked: hash.notify_by_ami, label: "J’accepte les notifications via l’application mobile officielle et gratuite de l’administration française"
+  = f.dsfr_check_box :notify_by_ami, checked: f.object.user.user_ami_profile.notify_by_ami, label: "J’accepte les notifications via l’application mobile officielle et gratuite de l’administration française"
 
 - if f.object.show_address_field?
   = f.dsfr_text_field :address,

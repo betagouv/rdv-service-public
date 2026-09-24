@@ -1,5 +1,5 @@
 RSpec.describe "User can update their information" do
-  let!(:organisation) { create(:organisation, territory: territory) }
+  let!(:organisation) { create(:organisation, territory: territory, ami_enabled: true) }
   let(:user) { create(:user, organisations: [organisation]) }
   let(:territory) { create(:territory) }
 
