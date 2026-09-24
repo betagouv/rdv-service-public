@@ -1,4 +1,6 @@
 class OauthApplication < Doorkeeper::Application
+  has_paper_trail(only: %w[description])
+
   def self.agent_is_verified_by_an_application?(agent)
     OauthApplication
       .joins(:access_tokens)
