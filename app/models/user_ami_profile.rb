@@ -6,7 +6,8 @@ class UserAmiProfile < ApplicationRecord
   def self.show_checkbox_in_user_form?(user, unconfirmed_rdv)
     return false unless Ami.enabled?
 
-    unconfirmed_rdv&.organisation&.ami_enabled?
+    rdv_for_organisation_with_ami = unconfirmed_rdv&.organisation&.ami_enabled?
+
     profile_in_ami_organisation = unconfirmed_rdv.blank? && user.organisations.where(ami_enabled: true).any?
     profile = UserAmiProfile.find_by(user: user)
 
