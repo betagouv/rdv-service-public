@@ -1,7 +1,6 @@
 export default () => {
   document.querySelectorAll('.js-rdv-invitation-user-picker').forEach(elt => {
     const select = $(elt.querySelector(".js-rdv-invitation-user-picker__select"))
-    const form = elt.querySelector(".js-rdv-invitation-user-picker__form")
 
     const newUserBtn = elt.querySelector(".js-rdv-invitation-user-picker__new-user-btn")
 
@@ -40,6 +39,8 @@ export default () => {
 
     // Les events de select2 ne semblent être utilisables que via le système d'events de jQuery, et pas avec un addEventListener normal
     select.on('select2:select', (e) => {
+      const form = elt.querySelector(".js-rdv-invitation-user-picker__form")
+
       form.querySelector("input#rdv_plan_user_id").value = e.params.data.id
       form.submit()
     })

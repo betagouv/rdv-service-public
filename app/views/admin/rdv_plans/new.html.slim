@@ -36,15 +36,16 @@ dialog#new-user-modal.fr-modal[aria-labelledby="new-user-modal-title"]
               = user_icon(class: "fr-mr-1w")
               | Nouvel usager
             - user = @user || User.new
-            = form_for user, url: admin_organisation_rdv_plans_path(current_organisation, @rdv_plan), method: :post, builder: Dsfr::FormBuilder do |f|
-              .fr-grid-row.fr-grid-row--gutters
-                .fr-col-6
-                  = f.dsfr_text_field :first_name, required: true
-                .fr-col-6
-                  = f.dsfr_text_field :last_name, required: true
-                .fr-col-6
-                  = f.dsfr_email_field :email, required: true, autocomplete: "off"
-                .fr-col-6
-                  = f.dsfr_phone_field :phone_number, as: :tel
+            = form_for @rdv_plan, url: admin_organisation_rdv_plans_path(current_organisation, @rdv_plan), method: :post, builder: Dsfr::FormBuilder do |f|
+              = f.fields_for :user, User.new do |ff|
+                .fr-grid-row.fr-grid-row--gutters
+                  .fr-col-6
+                    = ff.dsfr_text_field :first_name, required: true
+                  .fr-col-6
+                    = ff.dsfr_text_field :last_name, required: true
+                  .fr-col-6
+                    = ff.dsfr_email_field :email, required: true, autocomplete: "off"
+                  .fr-col-6
+                    = ff.dsfr_phone_field :phone_number, as: :tel
               .fr-btns-group.fr-btns-group--right.fr-mt-4w
                 = f.submit "Enregistrer", class: "fr-btn"
