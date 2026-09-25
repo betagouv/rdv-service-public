@@ -1,7 +1,24 @@
 class Agents::RdvPlansController < AgentAuthController
-  layout "application"
   before_action :find_rdv_plan
   before_action :redirect_to_rdv, if: -> { @rdv_plan.rdv.present? }, except: [:rdv]
+
+  before_action -> { @hide_rdv_plan_banner = true }
+
+  layout lambda {
+    return "application" unless @rdv_plan
+
+    @rdv_plan.oauth_application ? "application" : "application_agent"
+  }
+
+  # Ces actions peuvent être utilisées dans le contexte d'une organisation, ou pour la prise de rendez-vous en général
+  def current_organisation
+    find_rdv_plan
+
+    return nil if @rdv_plan&.oauth_application
+
+    # TODO: Est-ce qu'il faut gérer le latest_used_organisation_id ici ?
+    @current_organisation = @rdv_plan&.motif&.organisation || current_agent.organisations.find_by(id: params[:organisation_id])
+  end
 
   def show
     if current_agent.organisations.any?
@@ -12,7 +29,11 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def edit_motif
-    @motifs = available_motifs(@rdv_plan).ordered_by_name
+    @motifs = if @current_organisation
+                Motif.individuel.available_motifs_for_organisation_and_agent(@current_organisation, @rdv_plan.planning_agent).ordered_by_name
+              else
+                available_motifs(@rdv_plan).ordered_by_name
+              end
   end
 
   def update_motif
@@ -110,6 +131,20 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def edit_user; end
+
+  def update_user
+    context = AgentOrganisationContext.new(current_agent, current_organisation)
+    territory_scope = Agent::UserPolicy::TerritoryScope.new(context, User.all).resolve
+
+    user = territory_scope.find(params[:user_id])
+
+    if @rdv_plan.update(user:)
+      redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
+    else
+      @rdv_plan.user = nil
+      render :edit_user
+    end
+  end
 
   def create_rdv
     rdv_plan_params = params.require(:rdv_plan)

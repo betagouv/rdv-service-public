@@ -1,7 +1,7 @@
 = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 2, step_title: "Créneau", next_step_title: "Usager"
 
 .fr-grid-row
-  .fr-col-12.fr-mb-16w.fr-col-md-8
+  .fr-col-12[class=(@rdv_plan.oauth_application.present? ? "fr-mb-16w fr-col-md-8" : "fr-col-md-10  fr-col-offset-md-1 card card-body" )]
     div
       = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
       = render "agents/rdv_plans/summary/agent", rdv_plan: @rdv_plan

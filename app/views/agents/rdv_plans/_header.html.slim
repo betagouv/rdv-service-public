@@ -1,6 +1,16 @@
 /# locals: (rdv_plan:, current_step:, step_title:, next_step_title:)
 - content_for(:additional_scripts) { javascript_include_tag "rdv_plan" }
 - content_for(:additional_stylesheets) { stylesheet_link_tag "rdv_plan", media: "all" }
-h1.fr-h2
-  | Nouveau rendez-vous avec #{rdv_plan.user.full_name}
-= render "common/stepper", step_count: 3, current_step:, step_title:, next_step_title:
+
+- stepper = render "common/stepper", step_count: 3, current_step:, step_title:, next_step_title:
+
+- if rdv_plan.oauth_application.present?
+  h1.fr-h2
+    | Nouveau rendez-vous avec #{rdv_plan.user.full_name}
+  = stepper
+- else
+  .fr-grid-row.fr-mt-2w
+    .fr-col-10.fr-col-offset-1
+      h1.fr-h2
+        | Invitation à prendre rendez-vous pour #{rdv_plan.user.full_name}
+      =  render "common/stepper", step_count: 4, current_step: (current_step + 1), step_title:, next_step_title:

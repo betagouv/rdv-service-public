@@ -1,6 +1,6 @@
 = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 2, step_title: "Créneau", next_step_title: "Usager"
 
-.fr-col-12.fr-col-md-8.fr-mb-16w
+.fr-col-12[class=(@rdv_plan.oauth_application.present? ? "fr-col-md-8 fr-mb-16w" : "fr-col-md-10 fr-col-offset-md-1 card card-body" ) ]
   .fr-col-12
     = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
 
@@ -12,7 +12,7 @@
     - if creneaux_count > 0
       p
         = icon("fr-icon-mail-send-line", class: "fr-mr-1w")
-        | Nous allons envoyer un email à #{@rdv_plan.user.full_name} pour lui permettre de choisir un créneau.
+        | Nous allons envoyer un email à #{@rdv_plan.user.full_name} à l'adresse #{@rdv_plan.user.email} pour lui permettre de choisir un créneau.
 
       p.fr-text-mention--grey.fr-text--sm
         = icon("fr-icon-checkbox-circle-line", class: "fr-mr-1w rdv-color-text-default-success fr-icon--sm")
@@ -22,8 +22,9 @@
       p Il n'y a pas de créneau disponible pour ce motif.
       = link_to "Ajouter des plages d'ouverture", admin_organisation_planning_plage_ouvertures_path(@rdv_plan.organisation, { agent_id: current_agent.id }), class: "fr-btn fr-btn--secondary fr-mb-4w"
 
-    p.fr-text-mention--grey.fr-text--sm
-      | Si vous préférez, vous pouvez aussi #{link_to("choisir un horaire directement", edit_starts_at_agents_rdv_plan_path(@rdv_plan))}.
+    - if @rdv_plan.oauth_application
+      p.fr-text-mention--grey.fr-text--sm
+        | Si vous préférez, vous pouvez aussi #{link_to("choisir un horaire directement", edit_starts_at_agents_rdv_plan_path(@rdv_plan))}.
 
     .fr-col-12.fr-mt-2w.d-flex.rdv-justify-content-space-between
       = link_to "Retour", edit_motif_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
