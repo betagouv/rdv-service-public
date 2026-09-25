@@ -132,6 +132,20 @@ class Agents::RdvPlansController < AgentAuthController
 
   def edit_user; end
 
+  def update_user
+    context = AgentOrganisationContext.new(current_agent, current_organisation)
+    territory_scope = Agent::UserPolicy::TerritoryScope.new(context, User.all).resolve
+
+    user = territory_scope.find(params[:user_id])
+
+    if @rdv_plan.update(user:)
+      redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
+    else
+      @rdv_plan.user = nil
+      render :edit_user
+    end
+  end
+
   def create_user
     user = User.new(params.require(:user).permit(:first_name, :last_name, :email, :phone_number))
     user.user_profiles.build(organisation: @rdv_plan.organisation)

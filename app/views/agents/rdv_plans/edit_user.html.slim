@@ -16,13 +16,16 @@
 
       .d-flex
         .flex-grow-1.fr-pr-2w
-          = select_tag :user_id,
-            options_for_select([]),
-            required: true,
-            class: "select2-input js-rdv-invitation-user-select",
-            data: { \
-              "redirect-url": edit_user_agents_rdv_plan_url(@rdv_plan, host: current_domain.host_name),
-              "select2-config": { ajax: { url: search_agents_users_path(organisation_id: @rdv_plan.organisation.id), dataType: "json", delay: 250}, placeholder: "Chercher un usager par nom, prénom, téléphone, ou email" }, }
+          .js-rdv-invitation-user-picker
+            = select_tag :user_id,
+              options_for_select([]),
+              required: true,
+              class: "select2-input js-rdv-invitation-user-picker__select",
+              data: { \
+                "redirect-url": edit_user_agents_rdv_plan_url(@rdv_plan, host: current_domain.host_name),
+                "select2-config": { ajax: { url: search_agents_users_path(organisation_id: @rdv_plan.organisation.id), dataType: "json", delay: 250}, placeholder: "Chercher un usager par nom, prénom, téléphone, ou email" }, }
+            = form_with url: update_user_agents_rdv_plan_path(@rdv_plan), method: :patch, html: { class: "js-rdv-invitation-user-picker__form"} do |f|
+              = f.hidden_field :user_id
 
         div
           span.fr-text-mention--grey.fr-text--sm

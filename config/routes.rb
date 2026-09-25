@@ -193,6 +193,7 @@ Rails.application.routes.draw do
 
           get :edit_user
           post :create_user
+          patch :update_user
 
           post :create_rdv
 
