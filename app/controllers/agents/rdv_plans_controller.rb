@@ -146,20 +146,6 @@ class Agents::RdvPlansController < AgentAuthController
     end
   end
 
-  def create_user
-    user = User.new(params.require(:user).permit(:first_name, :last_name, :email, :phone_number))
-    user.user_profiles.build(organisation: @rdv_plan.organisation)
-
-    authorize(user, :create?, policy_class: Agent::UserPolicy)
-
-    if user.save
-      @rdv_plan.update(user: user)
-      redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
-    else
-      render :edit_user
-    end
-  end
-
   def create_rdv
     rdv_plan_params = params.require(:rdv_plan)
 

@@ -45,10 +45,6 @@ class RdvPlan < ApplicationRecord
     RdvInvitation.new(motif:, lieu:, user:, inviting_agent: planning_agent)
   end
 
-  def user_name
-    user&.full_name || "l'usager"
-  end
-
   private
 
   def create_rdv(participation_attributes:)
