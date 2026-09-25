@@ -28,7 +28,7 @@ dialog#planning-new-modal.fr-modal[aria-labelledby="planning-new-modal-title" da
                     .fr-tile__body
                       .fr-tile__content
                         h3.fr-tile__title
-                          = link_to "Une invitation à prendre rendez-vous", admin_organisation_rdv_plans_path(current_organisation, agent_id: agent.id), method: :post
+                          = link_to "Une invitation à prendre rendez-vous", new_admin_organisation_rdv_plan_path(current_organisation, agent_id: agent.id)
                           span.fr-badge.fr-badge--pink-tuile Beta
                         p.fr-tile__desc
                           | Permettre à un usager de choisir un créneau pour un rendez-vous

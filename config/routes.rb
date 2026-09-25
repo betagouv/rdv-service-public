@@ -330,7 +330,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :rdv_plans, only: %i[create]
+      resources :rdv_plans, only: %i[new create]
 
       resources :rdvs_collectifs, only: %i[index new create edit update] do
         collection do
