@@ -1,7 +1,9 @@
 .select2-container--bootstrap4 .select2-dropdown.rdv-select-2--inline {
-  margin-top: -40px;
-  border-radius: 4px 4px 0 0;
   border: none;
+  border-radius: 4px 4px 0 0;
+}
+.select2-container--bootstrap4 .select2-dropdown.select2-dropdown--below.rdv-select-2--inline {
+  margin-top: -40px;
 }
 
 .select2-results__options[aria-multiselectable="true"]

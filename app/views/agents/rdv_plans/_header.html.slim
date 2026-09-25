@@ -12,5 +12,5 @@
   .fr-grid-row.fr-mt-2w
     .fr-col-10.fr-col-offset-1
       h1.fr-h2
-        | Nouveau rendez-vous avec #{rdv_plan.user.full_name}
-      = stepper
+        | Invitation à prendre rendez-vous pour #{rdv_plan.user.full_name}
+      =  render "common/stepper", step_count: 4, current_step: (current_step + 1), step_title:, next_step_title:

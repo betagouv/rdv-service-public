@@ -1,6 +1,7 @@
 .fr-grid-row
   .fr-col-md-12.fr-col-lg-10.fr-col-offset-1
-    h1.fr-h2.fr-mt-2w Nouveau rendez-vous
+    h1.fr-h2.fr-mt-2w Invitation à prendre rendez-vous
+    =  render "common/stepper", step_count: 4, current_step: 1, step_title: "Usager", next_step_title: "Motif"
     .card.card-body.fr-p-2w
       = label_tag :user_id, "Qui souhaitez-vous inviter ?"
       span.fr-text-mention--grey.fr-text--sm Cherchez un usager par nom, prénom, téléphone, ou email
@@ -13,7 +14,7 @@
               required: true,
               class: "select2-input js-rdv-invitation-user-picker__select",
               data: { \
-                "select2-config": { dropdownCssClass: "rdv-select-2--inline", ajax: { url: search_agents_users_path(organisation_id: current_organisation.id), dataType: "json", delay: 250 }, placeholder: "Tapez ici pour chercher" } }
+                "select2-config": { dropdownCssClass: "rdv-select-2--inline", ajax: { url: search_agents_users_path(organisation_id: current_organisation.id), dataType: "json", delay: 250 } } }
             = form_for @rdv_plan, url: admin_organisation_rdv_plans_path(current_organisation, @rdv_plan), method: :post, html: { class: "js-rdv-invitation-user-picker__form"} do |f|
               = f.hidden_field :rdv_agent_id
               = f.hidden_field :user_id
