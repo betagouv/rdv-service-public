@@ -6,15 +6,13 @@
       = label_tag :user_id, "Qui souhaitez-vous inviter ?"
       span.fr-text-mention--grey.fr-text--sm Cherchez un usager par nom, prénom, téléphone, ou email
 
-      .d-flex
+      .d-flex.js-rdv-invitation-user-picker
         .flex-grow-1.fr-pr-2w.fr-mb-8w
-          .js-rdv-invitation-user-picker.fr-mr-2w
+          .fr-mr-2w
             = select_tag :user_id,
               options_for_select([]),
-              required: true,
-              class: "select2-input js-rdv-invitation-user-picker__select",
-              data: { \
-                "select2-config": { dropdownCssClass: "rdv-select-2--inline", ajax: { url: search_agents_users_path(organisation_id: current_organisation.id), dataType: "json", delay: 250 } } }
+              class: "js-rdv-invitation-user-picker__select",
+              data: { url: search_agents_users_path(organisation_id: current_organisation.id) }
             = form_for @rdv_plan, url: admin_organisation_rdv_plans_path(current_organisation, @rdv_plan), method: :post, html: { class: "js-rdv-invitation-user-picker__form"} do |f|
               = f.hidden_field :rdv_agent_id
               = f.hidden_field :user_id
@@ -23,7 +21,7 @@
           span.fr-text-mention--grey.fr-text--sm
             | Vous ne trouvez pas l'usager ?&nbsp;
 
-          button[data-fr-opened="#{@user.present?}" aria-controls="new-user-modal" type="button" class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"]
+          button[data-fr-opened="#{@user.present?}" aria-controls="new-user-modal" type="button" class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline js-rdv-invitation-user-picker__new-user-btn"]
             | Ajouter un usager
 
 dialog#new-user-modal.fr-modal[aria-labelledby="new-user-modal-title"]
