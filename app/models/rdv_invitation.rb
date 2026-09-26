@@ -6,7 +6,7 @@ class RdvInvitation < ApplicationRecord
   # Relations
   belongs_to :inviting_agent, class_name: "Agent"
   belongs_to :user
-  belongs_to :motif
+  belongs_to :motif, optional: true
   belongs_to :lieu, optional: true
   belongs_to :rdv, optional: true
 
@@ -14,9 +14,6 @@ class RdvInvitation < ApplicationRecord
 
   # Delegates
   delegate :organisation, to: :motif
-
-  # Hooks
-  before_create :set_token
 
   # Validation
   validate :user_can_be_notified
@@ -27,6 +24,14 @@ class RdvInvitation < ApplicationRecord
   validate :motif_is_supported
 
   scope :pending, -> { where(rdv_id: nil, cancelled: false) }
+
+  def send_invitation!
+    # TODO: transaction and validation logic
+    set_token
+    save!
+
+    Users::RdvInvitationMailer.with(rdv_invitation: @rdv_invitation).new_invitation.deliver_later
+  end
 
   def creneaux_search(starts_at)
     CreneauxSearch::ForUser.new(
@@ -87,7 +92,7 @@ class RdvInvitation < ApplicationRecord
   end
 
   def validate_phone_number_present_for_motif_by_phone
-    if motif.phone? && user.phone_number.blank?
+    if motif&.phone? && user.phone_number.blank?
       errors.add(:base, "Le motif est par téléphone mais  le numéro de #{user.full_name} n'est pas renseigné.")
     end
   end
@@ -99,6 +104,8 @@ class RdvInvitation < ApplicationRecord
   end
 
   def motif_is_supported
+    return if motif.blank?
+
     if motif.collectif?
       errors.add(:base, "Les invitations ne sont pas encore possible pour les motifs collectifs")
     end

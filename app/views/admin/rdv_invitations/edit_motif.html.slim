@@ -1,0 +1,31 @@
+- content_for :tab_title do
+  | Invitation à prendre rendez-vous
+
+.fr-col-12.fr-col-md-10.fr-col-offset-md-1
+  h1.fr-h2.fr-pt-2w Invitation à prendre rendez-vous
+  = render "common/stepper", step_count: 3, current_step: 2, step_title: "Motif", next_step_title: "Confirmation"
+  .card.card-body
+    - if @motifs.empty?
+      p Aucun motif de rendez-vous n'est disponible.
+      - if current_agent.admin_orgs.any?
+        p Vous pouvez créer un nouveau motif depuis les paramètres de votre organisation.
+        = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_agent.admin_orgs.first), class:"fr-btn fr-btn--secondary"
+    - else
+      p
+        = motif_icon(class: "fr-mr-1w")
+        | Pour quel motif souhaitez-vous prendre rendez-vous ?
+      ul.fr-raw-list
+        - @motifs.each do |motif|
+          li.card.d-flex.fr-enlarge-link
+            .card-body.fr-p-2w
+              = link_to update_motif_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation, rdv_invitation: { motif_id: motif.id}), method: :patch do
+                .fr-h6.fr-mb-1w.rdv-color-text-action-high-blue-france = motif.name
+              .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+                p.fr-mb-0
+                  = location_type_icon(motif.location_type, class: "fr-mr-1w")
+                  = motif.human_attribute_value(:location_type)
+                  = " · "
+                  = "#{motif.default_duration_in_min} min."
+                = icon("fr-icon-arrow-right-line", class: "rdv-color-text-action-high-blue-france")
+
+    = link_to "Retour", edit_user_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"

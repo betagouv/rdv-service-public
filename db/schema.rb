@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_21_135003) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_26_084858) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -581,6 +581,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_21_135003) do
     t.datetime "disabled_at", comment: "Date de fermeture de l'organisation"
     t.string "public_link_id", null: false
     t.boolean "online_booking_with_email", default: true, null: false, comment: "Indique si on autorise ou non les usagers à se connecter via leur adresse email lors de la prise de rendez-vous en ligne."
+    t.boolean "ami_enabled", default: false, null: false
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["public_link_id"], name: "index_organisations_on_public_link_id", unique: true
@@ -656,15 +657,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_21_135003) do
   end
 
   create_table "rdv_invitations", force: :cascade do |t|
-    t.string "token", null: false
+    t.string "token"
     t.bigint "user_id", null: false
-    t.bigint "motif_id", null: false
+    t.bigint "motif_id"
     t.bigint "lieu_id"
     t.bigint "inviting_agent_id", null: false
     t.bigint "rdv_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "cancelled", default: false, null: false
+    t.string "visio_url_custom"
     t.index ["inviting_agent_id"], name: "index_rdv_invitations_on_inviting_agent_id"
     t.index ["lieu_id"], name: "index_rdv_invitations_on_lieu_id"
     t.index ["motif_id"], name: "index_rdv_invitations_on_motif_id"
