@@ -6,8 +6,8 @@ RSpec.describe SuperAdmin::OauthApplicationPolicy, type: :policy do
     let!(:pundit_context) { super_admin }
     let!(:oauth_application) { create(:oauth_application) }
 
-    it_behaves_like "permit actions", :oauth_application, :index?, :show?
-    it_behaves_like "not permit actions", :oauth_application, :new?, :create?, :edit?, :update?, :destroy?
+    it_behaves_like "permit actions", :oauth_application, :index?, :show?, :edit?, :update?
+    it_behaves_like "not permit actions", :oauth_application, :new?, :create?, :destroy?
   end
 
   context "permitted actions for support" do
