@@ -28,10 +28,6 @@ class RdvInvitation < ApplicationRecord
 
   scope :pending, -> { where(rdv_id: nil, cancelled: false) }
 
-  def send_invitation!
-    Users::RdvInvitationMailer.with(rdv_invitation: @rdv_invitation).new_invitation.deliver_later
-  end
-
   def creneaux_search(starts_at)
     @creneaux_search ||= CreneauxSearch::ForUser.new(
       motif: motif,

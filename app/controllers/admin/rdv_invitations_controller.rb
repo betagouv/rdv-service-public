@@ -52,7 +52,7 @@ class Admin::RdvInvitationsController < AgentAuthController
     authorize(@rdv_invitation, policy_class: Agent::RdvInvitationPolicy)
 
     if @rdv_invitation.save
-      @rdv_invitation.send_invitation!
+      Users::RdvInvitationMailer.with(rdv_invitation: @rdv_invitation).new_invitation.deliver_later
 
       flash[:success] = "Invitation envoyée"
       redirect_to show_confirmation_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation)
