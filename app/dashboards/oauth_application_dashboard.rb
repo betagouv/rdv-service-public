@@ -1,0 +1,54 @@
+require "administrate/base_dashboard"
+
+class OauthApplicationDashboard < Administrate::BaseDashboard
+  # ATTRIBUTE_TYPES
+  # a hash that describes the type of each of the model's fields.
+  #
+  # Each different type represents an Administrate::Field object,
+  # which determines how the attribute is displayed
+  # on pages throughout the dashboard.
+  ATTRIBUTE_TYPES = {
+    id: Field::Number,
+    name: Field::String,
+    logo_base64: LogoField,
+    post_logout_redirect_uri: Field::String,
+    grants_autonomous_signup: Field::Boolean,
+    internal_documentation: Field::Text.with_options(
+      input_options: { placeholder: "Utilisé pour synchroniser des données avec : \nLien vers le code source du produit synchronisé : https://code.gouv.fr/.\nPersonne à contacter concernant cette application : francis.factis@example.gouv.fr" }
+    ),
+    created_at: Field::DateTime,
+  }.freeze
+
+  # COLLECTION_ATTRIBUTES
+  # an array of attributes that will be displayed on the model's index page.
+  #
+  # By default, it's limited to four items to reduce clutter on index pages.
+  # Feel free to add, remove, or rearrange items.
+  COLLECTION_ATTRIBUTES = %i[
+    id
+    name
+    logo_base64
+    created_at
+  ].freeze
+
+  # SHOW_PAGE_ATTRIBUTES
+  # an array of attributes that will be displayed on the model's show page.
+  SHOW_PAGE_ATTRIBUTES = %i[
+    id
+    name
+    logo_base64
+    post_logout_redirect_uri
+    grants_autonomous_signup
+    internal_documentation
+    created_at
+  ].freeze
+
+  # FORM_ATTRIBUTES
+  # an array of attributes that will be displayed
+  # on the model's form (`new` and `edit`) pages.
+  FORM_ATTRIBUTES = %i[internal_documentation].freeze
+
+  def display_resource(oauth_application)
+    oauth_application.name
+  end
+end

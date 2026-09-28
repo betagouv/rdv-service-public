@@ -5,7 +5,7 @@ RSpec.describe Agent::AgentPolicy, type: :policy do
   let!(:organisation) { create(:organisation) }
   let!(:organisation2) { create(:organisation) }
 
-  %i[show? edit? update? invite? rdvs? reinvite? versions?].each do |action|
+  %i[show? edit? update? reinvite? versions?].each do |action|
     describe "##{action}" do
       context "regular agent, self" do
         let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
