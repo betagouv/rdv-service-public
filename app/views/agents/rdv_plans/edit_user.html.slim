@@ -1,16 +1,15 @@
-.fr-grid-row
-  .fr-col-12
-    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 3, step_title: "Usager", next_step_title: ""
+= render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 3, step_title: "Usager", next_step_title: ""
 
-.fr-grid-row.fr-mb-16w[data-controller="rdv-plan"]
-  .fr-col-12
-    = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
-    = render "agents/rdv_plans/summary/agent", rdv_plan: @rdv_plan
-    = render "agents/rdv_plans/summary/starts_at", rdv_plan: @rdv_plan
-    = render "agents/rdv_plans/summary/location_type", rdv_plan: @rdv_plan
+.fr-grid-row
+  .fr-col-12.fr-mb-16w
+    div
+      = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
+      = render "agents/rdv_plans/summary/agent", rdv_plan: @rdv_plan
+      = render "agents/rdv_plans/summary/starts_at", rdv_plan: @rdv_plan
+      = render "agents/rdv_plans/summary/location_type", rdv_plan: @rdv_plan
 
     hr.fr-mt-2w
-    h3 Coordonnées de #{@rdv_plan.user.full_name}
+    h3.fr-h3 Coordonnées de #{@rdv_plan.user.full_name}
     = form_for @rdv_plan, url: create_rdv_agents_rdv_plan_path(@rdv_plan), method: :post, builder: Dsfr::FormBuilder do |f|
       = f.fields_for :user, @rdv_plan.user do |ff|
         .fr-grid-row.fr-grid-row--gutters
@@ -18,6 +17,7 @@
             = ff.dsfr_email_field :email, autocomplete: "off", hint: ("Cet usager utilise cette adresse email pour se connecter." if @rdv_plan.user.already_logged_in?), required: @rdv_plan.by_invitation?
           .fr-col-6
             = ff.dsfr_phone_field :phone_number, as: :tel, required: @rdv_plan.motif.phone?
+
       - if @rdv_plan.motif.visible_and_notified?
         .fr-grid-row.fr-grid-row--gutters
           .fr-col-12
@@ -27,11 +27,12 @@
       - else
         | Les notifications ne sont pas envoyées pour ce motif de rendez-vous.
 
-      - submit_text = @rdv_plan.by_invitation? ? "Envoyer l'invitation" : "Confirmer le rendez-vous"
-      = f.submit submit_text, class: "fr-btn float-right fr-btn--lg"
+      .fr-col-12.fr-mt-2w.d-flex.rdv-justify-content-space-between
+        - if @rdv_plan.by_invitation?
+          = link_to "Retour", edit_rdv_invitation_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
+        - else
+          - return_path =  @rdv_plan.motif.requires_lieu? ? edit_lieu_agents_rdv_plan_path(@rdv_plan) : edit_starts_at_agents_rdv_plan_path(@rdv_plan)
+          = link_to "Retour", return_path, class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
 
-      - if @rdv_plan.by_invitation?
-        = link_to "Retour", edit_rdv_invitation_agents_rdv_plan_path(@rdv_plan), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
-      - else
-        - return_path =  @rdv_plan.motif.requires_lieu? ? edit_lieu_agents_rdv_plan_path(@rdv_plan) : edit_starts_at_agents_rdv_plan_path(@rdv_plan)
-        = link_to "Retour", return_path, class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
+        - submit_text = @rdv_plan.by_invitation? ? "Envoyer l'invitation" : "Confirmer le rendez-vous"
+        = f.submit submit_text, class: "fr-btn float-right fr-btn--lg"
