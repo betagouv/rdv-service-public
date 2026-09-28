@@ -60,9 +60,9 @@
           - if !@motif.archived? && @motif_policy.edit?
             = link_to t("admin.motifs.actions.edit"), edit_consignes_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
 
-        = render "admin/motifs/restriction_for_rdv_recap", motif: @motif
-        = render "admin/motifs/instruction_for_rdv_recap", motif: @motif
-        = render "admin/motifs/custom_cancel_warning_message", motif: @motif
+        = render "admin/motifs/show/restriction_for_rdv", motif: @motif
+        = render "admin/motifs/show/instruction_for_rdv", motif: @motif
+        = render "admin/motifs/show/custom_cancel_warning_message", motif: @motif
 
     .card.mt-2
       .card-body
