@@ -1,0 +1,31 @@
+/# locals: (creneaux:)
+
+- agent_names = creneaux.map(&:agent).uniq.map(&:full_name).to_sentence
+
+- creneaux_by_agents = creneaux.group_by(&:agent)
+
+- creneaux_by_agents.each do |agent, creneaux|
+  .fr-grid-row
+    .fr-col-9
+      section.fr-accordion.rdv-accordion-card.rdv-accordion-card--secondary
+        h2.fr-accordion__title[style="margin-left: -16px"]
+          button.fr-accordion__btn.fr-text-mention--grey.fr-text--sm aria-expanded="false" aria-controls="creneaux-#{agent.id}"
+            = icon("fr-icon-checkbox-circle-line", class: "fr-mr-1w rdv-color-text-default-success fr-icon--sm")
+            - if agent == current_agent
+              | Vous avez #{creneaux.count} créneaux cette semaine pour ce motif.
+            - else
+              | #{agent.full_name} a #{creneaux.count} créneaux cette semaine pour ce motif.
+        .fr-collapse id="creneaux-#{agent.id}"
+
+          .fr-grid-row.fr-grid-row--no-gutters
+            - first_day = creneaux.first.starts_at.beginning_of_week.to_date
+            - (first_day..first_day + 4.days).each do |day|
+              .fr-col.rdv-text-align-center
+                = l(day, format: "%A")
+                br
+                .fr-mb-2w= l(day, format: "%-d %b")
+                - creneaux_of_the_day = creneaux.select { |creneau| creneau.starts_at.to_date == day}
+                .fr-text-mention--grey.fr-text--sm
+                  - creneaux_of_the_day.each do |creneau|
+                    .fr-mx-1w.fr-my-1v[style="box-shadow: inset 0 0 0 1px var(--border-default-grey);"]
+                      = l(creneau.starts_at, format: "%H:%M")

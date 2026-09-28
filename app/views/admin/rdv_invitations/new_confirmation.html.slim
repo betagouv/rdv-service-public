@@ -4,7 +4,7 @@
 .fr-col-12.fr-col-md-10.fr-col-offset-md-1
   h1.fr-h2.fr-pt-2w Invitation à prendre rendez-vous
   = render "common/stepper", step_count: 3, current_step: 3, step_title: "Confirmation"
-  .card.card-body
+  .card.card-body.fr-p-2w
     p
       | Nous allons envoyer une invitation à <b>#{@rdv_invitation.user.full_name}</b> à l'adresse <b>#{@rdv_invitation.user.email}</b>
       span
@@ -15,12 +15,10 @@
       | .
 
     - creneaux_search = @rdv_invitation.creneaux_search(Time.zone.now)
-    - creneaux_count = creneaux_search.creneaux.count
+    - creneaux = creneaux_search.creneaux
 
-    - if creneaux_count > 0
-      p.fr-text-mention--grey.fr-text--sm
-        = icon("fr-icon-checkbox-circle-line", class: "fr-mr-1w rdv-color-text-default-success fr-icon--sm")
-        | Il y a #{creneaux_count} créneaux disponibles pour ce motif.
+    - if creneaux.count > 0
+      = render "admin/rdv_invitations/creneaux_preview", creneaux:
 
     - else
       p Il n'y a pas de créneau disponible pour ce motif.
@@ -28,6 +26,6 @@
 
     .fr-col-12.fr-mt-2w.d-flex.rdv-justify-content-space-between
       = link_to "Retour", edit_motif_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
-      - if creneaux_count > 0
+      - if creneaux.any?
         = form_for @rdv_invitation, url: confirm_and_send_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation), method: :patch, builder: Dsfr::FormBuilder do |f|
           = f.submit "Envoyer l'invitation", class: "fr-btn"
