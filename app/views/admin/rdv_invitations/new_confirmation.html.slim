@@ -14,11 +14,10 @@
         = icon_link_to "Changer de motif", edit_motif_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation), class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-btn--icon-left fr-icon-edit-line fr-pr-0"
       | .
 
-    - creneaux_search = @rdv_invitation.creneaux_search(Time.zone.now)
-    - creneaux = creneaux_search.creneaux
+    - next_available_date = @rdv_invitation.next_available_date
 
-    - if creneaux.count > 0
-      = render "admin/rdv_invitations/creneaux_preview", creneaux:
+    - if next_available_date
+      = render "admin/rdv_invitations/creneaux_preview", next_available_date:
 
     - else
       p Il n'y a pas de créneau disponible pour ce motif.
@@ -26,6 +25,6 @@
 
     .fr-col-12.fr-mt-2w.d-flex.rdv-justify-content-space-between
       = link_to "Retour", edit_motif_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
-      - if creneaux.any?
+      - if next_available_date
         = form_for @rdv_invitation, url: confirm_and_send_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation), method: :patch, builder: Dsfr::FormBuilder do |f|
           = f.submit "Envoyer l'invitation", class: "fr-btn"

@@ -2,11 +2,11 @@
 
 turbo-frame id="rdv-invitation-creneaux"
   .fr-grid-row.fr-grid-row--no-gutters
-    - previous_date = (starting_date || Time.zone.today) - 1.week
+    - first_day = (starting_date || Time.zone.today).beginning_of_week.to_date
+    - previous_date = first_day - 1.week
     - if previous_date >= 1.week.ago
       = link_to "", creneaux_preview_frame_admin_organisation_rdv_invitation_path(current_organisation, rdv_invitation, date: previous_date), class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-arrow-left-s-line fr-mt-8w", aria: { label: "Semaine précédente" }, data: { turbo_stream: true }
 
-    - first_day = creneaux.first.starts_at.beginning_of_week.to_date
     - (first_day..first_day + 4.days).each do |day|
       .fr-col.rdv-text-align-center
         = l(day, format: "%A")
@@ -20,4 +20,4 @@ turbo-frame id="rdv-invitation-creneaux"
             .fr-mx-1w.fr-my-1v[style="box-shadow: inset 0 0 0 1px var(--border-default-grey);"]
               = l(creneau.starts_at, format: "%H:%M")
 
-    = link_to "", creneaux_preview_frame_admin_organisation_rdv_invitation_path(current_organisation, rdv_invitation, date: (starting_date || Time.zone.today) + 1.week), class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-arrow-right-s-line fr-mt-8w", aria: { label: "Semaine précédente" }, data: { turbo_stream: true }
+    = link_to "", creneaux_preview_frame_admin_organisation_rdv_invitation_path(current_organisation, rdv_invitation, date: first_day + 1.week), class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-arrow-right-s-line fr-mt-8w", aria: { label: "Semaine précédente" }, data: { turbo_stream: true }

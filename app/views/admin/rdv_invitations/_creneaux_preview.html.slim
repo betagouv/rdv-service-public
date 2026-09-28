@@ -1,19 +1,11 @@
-/# locals: (creneaux:)
+/# locals: (next_available_date:)
 
-- agent_names = creneaux.map(&:agent).uniq.map(&:full_name).to_sentence
-
-- creneaux_by_agents = creneaux.group_by(&:agent)
-
-- creneaux_by_agents.each do |agent, creneaux|
-  .fr-grid-row
-    .fr-col-9
-      section.fr-accordion.rdv-accordion-card.rdv-accordion-card--secondary
-        h2.fr-accordion__title[style="margin-left: -16px"]
-          button.fr-accordion__btn.fr-text-mention--grey.fr-text--sm aria-expanded="false" aria-controls="creneaux-#{agent.id}"
-            = icon("fr-icon-checkbox-circle-line", class: "fr-mr-1w rdv-color-text-default-success fr-icon--sm")
-            - if agent == current_agent
-              | Vous avez #{creneaux.count} créneaux cette semaine pour ce motif.
-            - else
-              | #{agent.full_name} a #{creneaux.count} créneaux cette semaine pour ce motif.
-        .fr-collapse id="creneaux-#{agent.id}"
-          = render "creneaux_preview_frame", creneaux:, current_organisation:, rdv_invitation: @rdv_invitation
+.fr-grid-row
+  .fr-col-9
+    section.fr-accordion.rdv-accordion-card.rdv-accordion-card--secondary
+      h2.fr-accordion__title[style="margin-left: -16px"]
+        button.fr-accordion__btn.fr-text-mention--grey.fr-text--sm aria-expanded="false" aria-controls="creneaux-preview"
+          = icon("fr-icon-checkbox-circle-line", class: "fr-mr-1w rdv-color-text-default-success fr-icon--sm")
+          | Il y a des créneaux à partir du #{human_date_format(next_available_date)} pour ce motif
+      .fr-collapse id="creneaux-preview"
+        = render "creneaux_preview_frame", creneaux: @rdv_invitation.creneaux_search(next_available_date).creneaux, current_organisation:, rdv_invitation: @rdv_invitation, starting_date: next_available_date
