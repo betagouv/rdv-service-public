@@ -12,9 +12,10 @@
         = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_agent.admin_orgs.first), class:"fr-btn fr-btn--secondary"
     - else
       p
-        | Nous allons envoyer une invitation à <b>#{@rdv_invitation.user.full_name}</b> à l'adresse <b>#{@rdv_invitation.user.email}</b> pour lui permettre de réserver un créneau.
+        | Nous allons envoyer une invitation à <b>#{@rdv_invitation.user.full_name}</b> à l'adresse <b>#{@rdv_invitation.user.email}</b>.
+        span
+          = icon_link_to "Changer d'usager", edit_user_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation), class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-btn--icon-left fr-icon-edit-line fr-pr-0"
       p
-        = motif_icon(class: "fr-mr-1w")
         | Pour quel motif souhaitez-vous que #{@rdv_invitation.user.full_name} prenne rendez-vous ?
       ul.fr-raw-list
         - @motifs.each do |motif|

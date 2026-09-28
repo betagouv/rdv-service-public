@@ -9,7 +9,16 @@
       | Nous allons envoyer une invitation à <b>#{@rdv_invitation.user.full_name}</b> à l'adresse <b>#{@rdv_invitation.user.email}</b>
       span
         = icon_link_to "Changer d'usager", edit_user_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation), class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-btn--icon-left fr-icon-edit-line fr-pr-0"
-      | pour lui permettre de prendre rendez-vous pour <b>#{@rdv_invitation.motif.name}</b>
+      |> pour lui permettre de prendre rendez-vous
+      - if @rdv_invitation.motif.public_office?
+        | sur place
+      - elsif @rdv_invitation.motif.phone?
+        | par téléphone
+      - elsif @rdv_invitation.motif.visio?
+        | par visio
+      - elsif @rdv_invitation.motif.home?
+        | à domicile
+      |< pour <b>#{@rdv_invitation.motif.name}</b>
       span
         = icon_link_to "Changer de motif", edit_motif_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation), class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-btn--icon-left fr-icon-edit-line fr-pr-0"
       | .
