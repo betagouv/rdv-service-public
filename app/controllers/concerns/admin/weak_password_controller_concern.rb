@@ -3,7 +3,7 @@ module Admin::WeakPasswordControllerConcern
     Agent.new(password:).tap(&:readonly!).tap(&:validate).errors[:password].any?
   end
 
-  def reset_current_agent_password!(password)
+  def reset_current_agent_password!
     resource.update_attribute(:encrypted_password, "") # rubocop:disable Rails/SkipsModelValidations
     reset_password_token = resource.send(:set_reset_password_token)
 

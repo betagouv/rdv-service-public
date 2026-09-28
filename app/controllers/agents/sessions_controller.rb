@@ -36,7 +36,7 @@ class Agents::SessionsController < Devise::SessionsController
     end
 
     if password_too_weak?(params[:agent][:password])
-      reset_current_agent_password!(params[:agent][:password])
+      reset_current_agent_password!
       return
     end
 
