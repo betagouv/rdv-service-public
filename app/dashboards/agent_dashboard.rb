@@ -75,6 +75,7 @@ class AgentDashboard < Administrate::BaseDashboard
     services
     territories
     pro_connect_openid_sub
+    pro_connect_idp_id
     deleted_at
   ].freeze
 
