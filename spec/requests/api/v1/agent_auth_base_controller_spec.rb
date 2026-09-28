@@ -71,5 +71,19 @@ RSpec.describe Api::V1::AgentAuthBaseController, type: :request do
       get "/api/v1/test/fake_action", headers: oauth_client_headers(oauth_token), params: { territory_id: "; SELECT * FROM users" }, as: :json
       expect(response).to have_http_status(:success) # ignores bogus param
     end
+
+    it "reads organisation IDs in base 10 (like ActiveRecord), so a leading-zero value is not read as octal" do
+      external_org = create(:organisation)
+
+      # ActiveRecord casts a string id with String#to_i, which is base 10 ("010" => 10). Integer()
+      # without an explicit base reads a leading zero as octal, so detect_param_injection could resolve
+      # a different id than the one actually queried, and the check could be bypassed.
+      get "/api/v1/test/fake_action", headers: oauth_client_headers(oauth_token), params: { organisation_id: "0#{external_org.id}" }, as: :json
+      expect(response).to have_http_status(:forbidden)
+
+      # A leading-zero id of my own org is still accepted (read in base 10, not corrupted by octal)
+      get "/api/v1/test/fake_action", headers: oauth_client_headers(oauth_token), params: { organisation_id: "0#{agent_org.id}" }, as: :json
+      expect(response).to have_http_status(:success)
+    end
   end
 end
