@@ -25,9 +25,6 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def create
-    params[:user] ||= {} # TODO: supprimer après le 03/08/2026
-    params[:selected_users] ||= ["current_user"] # TODO: supprimer après le 03/08/2026
-
     @rdv_builder = Users::RdvBuilder.new(current_user, rdv_params)
     @rdv = @rdv_builder.rdv
     @rdv_booking_form = Users::RdvBookingForm.new(
