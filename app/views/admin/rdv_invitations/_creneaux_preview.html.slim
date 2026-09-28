@@ -16,16 +16,4 @@
             - else
               | #{agent.full_name} a #{creneaux.count} créneaux cette semaine pour ce motif.
         .fr-collapse id="creneaux-#{agent.id}"
-
-          .fr-grid-row.fr-grid-row--no-gutters
-            - first_day = creneaux.first.starts_at.beginning_of_week.to_date
-            - (first_day..first_day + 4.days).each do |day|
-              .fr-col.rdv-text-align-center
-                = l(day, format: "%A")
-                br
-                .fr-mb-2w= l(day, format: "%-d %b")
-                - creneaux_of_the_day = creneaux.select { |creneau| creneau.starts_at.to_date == day}
-                .fr-text-mention--grey.fr-text--sm
-                  - creneaux_of_the_day.each do |creneau|
-                    .fr-mx-1w.fr-my-1v[style="box-shadow: inset 0 0 0 1px var(--border-default-grey);"]
-                      = l(creneau.starts_at, format: "%H:%M")
+          = render "creneaux_preview_frame", creneaux:, current_organisation:, rdv_invitation: @rdv_invitation

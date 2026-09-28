@@ -60,6 +60,21 @@ class Admin::RdvInvitationsController < AgentAuthController
     set_and_authorize_invitation(:edit?)
   end
 
+  def creneaux_preview_frame
+    set_and_authorize_invitation(:show?)
+    respond_to do |format|
+      format.turbo_stream do
+        starting_date = Date.parse(params[:date])
+        render "creneaux_preview_frame", locals: {
+          creneaux: @rdv_invitation.creneaux_search(starting_date).creneaux,
+          current_organisation:,
+          rdv_invitation: @rdv_invitation,
+          starting_date:,
+        }
+      end
+    end
+  end
+
   def confirm_and_send
     set_and_authorize_invitation(:update?)
 

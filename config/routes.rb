@@ -356,6 +356,7 @@ Rails.application.routes.draw do
 
           get :new_confirmation
           patch :confirm_and_send
+          get :creneaux_preview_frame
 
           get :show_confirmation
           patch :cancel
