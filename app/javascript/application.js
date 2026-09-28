@@ -26,18 +26,6 @@ document.addEventListener("DOMContentLoaded", function() {
   DsfrAlertClose();
   PreventDefault();
   setupCopyToClipBoardButtons()
-
-  const whereInput = document.querySelector('#search_where');
-  const submitButton = document.querySelector('#search_submit');
-  const departementInput = document.querySelector('#search_departement')
-  if (departementInput) {
-    departementInput.addEventListener('change', event => {
-      const valid = [2, 3].includes(departementInput.value.length)
-      whereInput.classList.toggle('fr-input--valid', valid)
-      whereInput.classList.toggle('fr-input--error', !valid)
-      $(submitButton).attr('disabled', !valid)
-    })
-  }
 });
 
 import "@hotwired/turbo-rails"

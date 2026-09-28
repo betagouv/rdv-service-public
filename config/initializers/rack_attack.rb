@@ -47,6 +47,11 @@ class Rack::Attack
                   (path.match?(%r{\A/users/rdvs/[^/]+/visio\z}) && request.params["invitation_token"].present?)
   end
 
+  # Chaque recherche déclenche un appel à l'API de géocodage de l'IGN depuis nos serveurs, dont le quota est limité par IP
+  throttle("recherche d'adresse usager - throttling par IP", limit: Rails.env.test? ? 2 : 60, period: 1.minute) do |request|
+    request.ip if request.get? && request.path_without_format == "/prendre_rdv/adresse"
+  end
+
   Rack::Attack.throttled_responder = lambda do |request|
     exception = ThrottleError.new(request.env["rack.attack.matched"])
     Sentry.set_context("rack_attack_match_data", request.env["rack.attack.match_data"])

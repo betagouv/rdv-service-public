@@ -530,6 +530,8 @@ Rails.application.routes.draw do
 
   # Rate limité par IP quand invitation_token est présent (voir config/initializers/rack_attack.rb)
   get "/prendre_rdv", to: "search#search_rdv"
+  # Rate limité par IP (voir config/initializers/rack_attack.rb)
+  get "/prendre_rdv/adresse", to: "address_searches#index", as: :address_search
 
   # temporary route after admin namespace introduction
   get "/organisations/*rest", to: redirect("admin/organisations/%{rest}")

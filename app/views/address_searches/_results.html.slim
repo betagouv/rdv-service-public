@@ -1,0 +1,19 @@
+/# locals: (address:, results:)
+- if results.nil?
+  .fr-alert.fr-alert--error.fr-mt-4w
+    p
+      ' Le service de recherche d’adresse est momentanément indisponible.
+      | Veuillez réessayer dans quelques instants.
+- elsif results.empty?
+  .fr-alert.fr-alert--info.fr-mt-4w
+    h2.fr-alert__title
+      = "Aucune adresse ne correspond à « #{address} »"
+    p
+      | Vérifiez l’orthographe, ou précisez la commune ou le code postal.
+- else
+  h2.fr-h4.fr-mt-4w
+    = "#{pluralize(results.size, 'adresse correspond', plural: 'adresses correspondent')} à « #{address} »"
+  ul
+    - results.each do |result|
+      li.fr-mb-2w
+        = link_to result.label, prendre_rdv_path(result_search_params(result)), class: "fr-link fr-link--lg"

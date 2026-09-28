@@ -1,0 +1,16 @@
+- content_for :title do
+  - if @address.blank?
+    | Erreur - Choix de votre adresse
+  - elsif @results.present?
+    = "#{pluralize(@results.size, 'adresse trouvée', plural: 'adresses trouvées')} - Choix de votre adresse"
+  - else
+    | Aucune adresse trouvée - Choix de votre adresse
+
+.fr-container.fr-my-4w
+  .fr-col-12.fr-col-lg-10.fr-col-offset-lg-1
+    h1
+      | Choisissez votre adresse
+    = render "search/address_selection/address_form", address: @address, prescripteur: @prescripteur, error_message: ("Saisissez votre adresse pour rechercher un rendez-vous" if @address.blank?)
+    #address_results
+      - if @address.present?
+        = render "address_searches/results", address: @address, results: @results

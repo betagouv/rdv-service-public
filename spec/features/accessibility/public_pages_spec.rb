@@ -61,6 +61,15 @@ RSpec.describe "public pages", js: true do
       expect_page_to_be_axe_clean(path)
     end
 
+    it "la page de choix de l'adresse est accessible" do
+      stub_geocoding_search("rue de plaisance", ban_feature_79_rue_de_plaisance(score: 0.6), ban_feature_rue_de_plaisance_nogent)
+      stub_geocoding_search("introuvable")
+
+      expect_page_to_be_axe_clean(address_search_path(address: "rue de plaisance"))
+      expect_page_to_be_axe_clean(address_search_path(address: "introuvable"))
+      expect_page_to_be_axe_clean(address_search_path(address: ""))
+    end
+
     describe "with available slots" do
       # Nécessite de préciser le département pour le moment,
       # à cause de la recherche par sectorisation (?)

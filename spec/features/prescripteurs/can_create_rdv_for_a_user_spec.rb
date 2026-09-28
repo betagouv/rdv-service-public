@@ -103,11 +103,10 @@ RSpec.describe "un prescripteur peut prendre rendez-vous pour un usager" do
   end
 
   def fill_address_form
-    fill_in :search_where, with: "21 rue des Ardennes, 75019 Paris"
-
-    # fake address autocomplete
-    page.execute_script("document.querySelector('#search_departement').value = '#{motif.organisation.territory.departement_number}'")
-    page.execute_script("document.querySelector('#search_submit').disabled = false")
+    context = "#{motif.organisation.territory.departement_number}, Paris, Île-de-France"
+    ardennes = ban_feature(name: "21 Rue des Ardennes", city: "Paris", postcode: "75019", citycode: "75119", id: "75119_0419_00021", context:)
+    stub_geocoding_search("21 rue des Ardennes, 75019 Paris", ardennes)
+    fill_in "Saisissez votre adresse", with: "21 rue des Ardennes, 75019 Paris"
 
     click_on("Rechercher")
   end

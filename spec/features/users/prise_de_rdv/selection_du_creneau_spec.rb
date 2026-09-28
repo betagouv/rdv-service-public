@@ -18,11 +18,8 @@ RSpec.describe "Prise de RDV - Sélection du créneau" do
 
     it "shows that no creneau is available", js: true do
       visit root_path
-      fill_in("search_where", with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
-
-      # Fake autocomplete
-      page.execute_script("document.querySelector('#search_departement').value = '92'")
-      page.execute_script("document.querySelector('#search_submit').disabled = false")
+      stub_geocoding_search("79 Rue de Plaisance, 92250 La Garenne-Colombes", ban_feature_79_rue_de_plaisance)
+      fill_in("Saisissez votre adresse", with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
 
       click_button("Rechercher")
 

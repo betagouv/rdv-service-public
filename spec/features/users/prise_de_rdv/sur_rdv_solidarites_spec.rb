@@ -21,18 +21,31 @@ RSpec.describe "Prise de RDV sur RDVS" do
     let!(:lieu2) { create(:lieu, organisation: organisation) }
     let!(:plage_ouverture2) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
 
+    it "permet de choisir son adresse parmi les résultats, sans JS" do
+      stub_geocoding_search("rue de plaisance", ban_feature_79_rue_de_plaisance(score: 0.6), ban_feature_rue_de_plaisance_nogent)
+
+      visit root_path
+      fill_in("Saisissez votre adresse", with: "rue de plaisance")
+      click_button("Rechercher")
+
+      expect(page).to have_title("2 adresses trouvées - Choix de votre adresse - RDV Solidarités")
+      expect(page).to have_field("Saisissez votre adresse", with: "rue de plaisance")
+      click_link("79 Rue de Plaisance, La Garenne-Colombes, 92250")
+
+      expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
+      expect(page).to have_content(motif.service.name)
+    end
+
     it "permet la recherche géographique depuis la page d'accueil", js: true do
       visit root_path
 
       expect(page).to have_selector("h1", text: "Prenez rendez-vous en ligne\navec votre département")
-      fill_in("search_where", with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
-
-      find("#search_departement", visible: :all) # permet d'attendre que l'élément soit dans le DOM
-      page.execute_script("document.querySelector('#search_departement').value = '92'")
-      page.execute_script("document.querySelector('#search_submit').disabled = false")
+      stub_geocoding_search("79 Rue de Plaisance, 92250 La Garenne-Colombes", ban_feature_79_rue_de_plaisance)
+      fill_in("Saisissez votre adresse", with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
 
       click_button("Rechercher")
 
+      expect(page).to have_content("Adresse retenue : 79 Rue de Plaisance, La Garenne-Colombes, 92250")
       expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
       find("button", text: motif.service.name).click
       find("a", text: motif.name).click
@@ -46,15 +59,15 @@ RSpec.describe "Prise de RDV sur RDVS" do
 
       expect(page).to have_current_path(
         prendre_rdv_path(
-          address: "79 Rue de Plaisance, 92250 La Garenne-Colombes",
-          city_code: "",
+          address: "79 Rue de Plaisance, La Garenne-Colombes, 92250",
+          city_code: "92035",
           departement: 92,
           date: "2022-01-13 08:00:00 +0100",
-          latitude: "",
+          latitude: 48.9,
           lieu_id: lieu&.id,
-          longitude: "",
+          longitude: 2.25,
           motif_name_with_location_type: "vaccination-public_office",
-          street_ban_id: "",
+          street_ban_id: "92035_7180",
           service_id: service&.id
         )
       ) # Cet expect permet de vérifier que les tests qui se basent sur ce path pour éviter des étapes intermédiaires sont corrects
@@ -197,11 +210,8 @@ RSpec.describe "Prise de RDV sur RDVS" do
       visit root_path
 
       expect(page).to have_selector("h1", text: "Prenez rendez-vous en ligne\navec votre département")
-      fill_in("search_where", with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
-
-      find("#search_departement", visible: :all) # permet d'attendre que l'élément soit dans le DOM
-      page.execute_script("document.querySelector('#search_departement').value = '92'")
-      page.execute_script("document.querySelector('#search_submit').disabled = false")
+      stub_geocoding_search("79 Rue de Plaisance, 92250 La Garenne-Colombes", ban_feature_79_rue_de_plaisance)
+      fill_in("Saisissez votre adresse", with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
 
       click_button("Rechercher")
 

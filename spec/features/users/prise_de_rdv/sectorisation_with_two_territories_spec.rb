@@ -28,11 +28,9 @@ RSpec.describe "Prise de rdv avec sectorisations pour deux espaces dans le même
     SectorAttribution.create!(sector: insertion_sector, organisation: orga_insertion, level: SectorAttribution::LEVEL_ORGANISATION)
 
     visit root_path
-    fill_in("search_where", with: "9 Rue Georges Méliès, 26000 Valence")
-
-    # Fake autocomplete
-    page.execute_script("document.querySelector('#search_departement').value = '26'")
-    page.execute_script("document.querySelector('#search_submit').disabled = false")
+    valence = ban_feature(name: "9 Rue Georges Méliès", city: "Valence", postcode: "26000", citycode: "26362", id: "26362_1234_00009", context: "26, Drôme, Auvergne-Rhône-Alpes")
+    stub_geocoding_search("9 Rue Georges Méliès, 26000 Valence", valence)
+    fill_in("Saisissez votre adresse", with: "9 Rue Georges Méliès, 26000 Valence")
 
     click_button("Rechercher")
     click_on("Rdv d'orientation") # sélection du motif

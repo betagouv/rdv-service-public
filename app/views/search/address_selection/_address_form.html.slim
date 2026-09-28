@@ -1,0 +1,15 @@
+/# locals: (address:, prescripteur:, error_message: nil)
+= form_with url: address_search_path, method: :get, html: { role: "search" } do
+  - if prescripteur
+    = hidden_field_tag :prescripteur, 1, id: nil
+  .fr-input-group class=("fr-input-group--error" if error_message)
+    = label_tag :address, class: "fr-label" do
+      | Saisissez votre adresse
+      span.fr-hint-text
+        | Exemple : 21 rue Anatole France, Calais
+    .fr-search-bar.fr-search-bar--lg
+      = text_field_tag :address, address, class: ["fr-input", ("fr-input--error" if error_message)], required: true, autocomplete: "street-address", dir: "ltr", aria: { describedby: ("address_error" if error_message) }
+      = button_tag "Rechercher", class: "fr-btn", name: nil
+    - if error_message
+      p#address_error.fr-error-text
+        = error_message
