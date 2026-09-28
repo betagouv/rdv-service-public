@@ -61,8 +61,10 @@
             = link_to t("admin.motifs.actions.edit"), edit_consignes_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
 
         = render "admin/motifs/show/restriction_for_rdv", motif: @motif
-        = render "admin/motifs/show/instruction_for_rdv", motif: @motif
-        = render "admin/motifs/show/custom_cancel_warning_message", motif: @motif
+        .fr-mt-4w
+          = render "admin/motifs/show/instruction_for_rdv", motif: @motif
+        .fr-mt-4w
+          = render "admin/motifs/show/custom_cancel_warning_message", motif: @motif
 
     .card.mt-2
       .card-body
