@@ -1,10 +1,9 @@
 /# locals: (motif: )
 
+p Instructions à afficher après la prise de rendez-vous
 - if motif.instruction_for_rdv.blank?
-  p.fr-mt-4w
+  p.fr-ml-2w
     i.fr-text-mention--grey Pas d'instructions à afficher après la prise de rendez-vous
 - else
-  p.fr-mt-4w
-    b Instructions à afficher après la prise de rendez-vous
   .fr-highlight.fr-mb-2w
-    i= instruction_for_rdv_to_html(motif)
+    = auto_link_text(motif.instruction_for_rdv)

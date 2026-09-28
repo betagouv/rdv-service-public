@@ -46,7 +46,7 @@ main.container
                 = icon("fr-icon-warning-fill", class: "fr-mr-1w")
                 strong Informations supplémentaires&nbsp;:
                 .pl-3.pt-1
-                  = instruction_for_rdv_to_html(rdv.motif)
+                  = auto_link_text(rdv.motif.instruction_for_rdv)
             li.list-group-item
               |> Besoin de déplacer le rendez-vous ou de corriger un détail ?
               = link_to "Contactez-nous", new_aide_demande_support_path(role: :agent, sujet: "Déplacer ou corriger un RDV pris via prescription (RDV ID: #{rdv.id})")

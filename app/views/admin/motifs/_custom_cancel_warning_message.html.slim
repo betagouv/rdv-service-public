@@ -1,0 +1,13 @@
+/# locals: (motif: )
+
+p
+  = Motif.human_attribute_name(:custom_cancel_warning_message)
+  = icon("fr-icon-information-line", "aria-describedby" => "cancel-warning-message-tooltip", class: "fr-icon--sm fr-ml-1w")
+  span.fr-tooltip.fr-placement#cancel-warning-message-tooltip role="tooltip"
+    = Motif.human_attribute_name(:custom_cancel_warning_message_hint)
+- if motif.custom_cancel_warning_message.blank?
+  p.fr-ml-2w
+    i.fr-text-mention--grey Pas d'instructions à afficher quand l'usager annule le rendez-vous
+- else
+  .fr-highlight.fr-mb-2w
+    = auto_link_text(motif.custom_cancel_warning_message)

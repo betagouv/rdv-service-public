@@ -1,10 +1,9 @@
 /# locals: (motif: )
 
+p Instructions à accepter avant la prise de rendez-vous
 - if motif.restriction_for_rdv.blank?
-  p
+  p.fr-ml-2w
     i.fr-text-mention--grey Pas d'instructions à accepter avant la prise de rendez-vous
 - else
-  p
-    b Instructions à accepter avant la prise de rendez-vous
   .fr-highlight.fr-mb-2w
-    i= restriction_for_rdv_to_html(motif)
+    = auto_link_text(motif.restriction_for_rdv)
