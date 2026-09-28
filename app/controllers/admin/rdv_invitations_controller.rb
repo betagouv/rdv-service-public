@@ -1,67 +1,33 @@
 class Admin::RdvInvitationsController < AgentAuthController
-  def new
+  def edit_user
     @rdv_invitation = RdvInvitation.new(inviting_agent: current_agent)
-    authorize(@rdv_invitation, policy_class: Agent::RdvInvitationPolicy)
+    authorize(@rdv_invitation, :new?, policy_class: Agent::RdvInvitationPolicy)
   end
 
-  def create
-    create_params = params.require(:rdv_invitation).permit(:user_id)
+  def create_user
+    user = User.new(params.require(:rdv_invitation).require(:user).permit(:first_name, :last_name, :email, :phone_number))
+    user.user_profiles.build(organisation: current_organisation)
 
-    @rdv_invitation = RdvInvitation.new(create_params.merge(inviting_agent: current_agent))
-    authorize(@rdv_invitation, policy_class: Agent::RdvInvitationPolicy)
+    authorize(user, :create?, policy_class: Agent::UserPolicy)
 
-    user = @rdv_invitation.user
-
-    if user.blank?
-      user = User.new(params.require(:rdv_invitation).require(:user).permit(:first_name, :last_name, :email, :phone_number))
-      user.user_profiles.build(organisation: current_organisation)
-
-      authorize(user, :create?, policy_class: Agent::UserPolicy)
-
-      user.save!
-      @rdv_invitation.user_id = user.id
-    end
-
-    if @rdv_invitation.save!
-      redirect_to edit_motif_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation)
+    if user.save
+      redirect_to edit_motif_admin_organisation_rdv_invitations_path(current_organisation, user_id: user.id)
     else
       render :new
     end
   end
 
-  def edit_user
-    set_and_authorize_invitation(:edit?)
-    render :new
-  end
-
   def edit_motif
-    set_and_authorize_invitation(:edit?)
+    @rdv_invitation = RdvInvitation.new(inviting_agent: current_agent, user_id: params.require(:user_id))
+
+    authorize(@rdv_invitation, :new?, policy_class: Agent::RdvInvitationPolicy)
     @motifs = Motif.individuel.available_motifs_for_organisation_and_agent(current_organisation, current_agent).ordered_by_name
   end
 
-  def update_motif
-    set_and_authorize_invitation(:update?)
-
-    rdv_invitation_params = params.require(:rdv_invitation).permit(:motif_id)
-
-    @rdv_invitation.assign_attributes(rdv_invitation_params)
-    @rdv_invitation.lieu_id = nil # Pour éviter de garder un lieu si on passe à un motif qui n'est pas sur place
-
-    authorize(@rdv_invitation, :edit?, policy_class: Agent::RdvInvitationPolicy)
-
-    if @rdv_invitation.save
-      redirect_to new_confirmation_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation)
-    else
-      render "edit_motif"
-    end
-  end
-
-  def new_confirmation
-    set_and_authorize_invitation(:edit?)
-  end
-
   def creneaux_preview_frame
-    set_and_authorize_invitation(:show?)
+    @rdv_invitation = RdvInvitation.new(inviting_agent: current_agent, motif_id: params.require(:motif_id))
+
+    authorize(@rdv_invitation, :new?, policy_class: Agent::RdvInvitationPolicy)
     respond_to do |format|
       format.turbo_stream do
         starting_date = Date.parse(params[:date])
@@ -75,13 +41,24 @@ class Admin::RdvInvitationsController < AgentAuthController
     end
   end
 
-  def confirm_and_send
-    set_and_authorize_invitation(:update?)
+  def new
+    @rdv_invitation = RdvInvitation.new({ inviting_agent: current_agent }.merge(params.permit(:user_id, :motif_id)))
+    authorize(@rdv_invitation, policy_class: Agent::RdvInvitationPolicy)
+  end
 
-    @rdv_invitation.send_invitation!
+  def create
+    rdv_invitation_params = params.require(:rdv_invitation).permit(:user_id, :motif_id)
+    @rdv_invitation = RdvInvitation.new({ inviting_agent: current_agent }.merge(rdv_invitation_params))
+    authorize(@rdv_invitation, policy_class: Agent::RdvInvitationPolicy)
 
-    flash[:success] = "Invitation envoyée"
-    redirect_to show_confirmation_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation)
+    if @rdv_invitation.save
+      @rdv_invitation.send_invitation!
+
+      flash[:success] = "Invitation envoyée"
+      redirect_to show_confirmation_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation)
+    else
+      render :new
+    end
   end
 
   def show_confirmation

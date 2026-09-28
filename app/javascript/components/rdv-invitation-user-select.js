@@ -41,7 +41,7 @@ export default () => {
     select.on('select2:select', (e) => {
       const form = elt.querySelector(".js-rdv-invitation-user-picker__form")
 
-      form.querySelector("input#rdv_invitation_user_id").value = e.params.data.id
+      form.querySelector("input#user_id").value = e.params.data.id
       form.submit()
     })
   });

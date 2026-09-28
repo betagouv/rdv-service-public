@@ -14,14 +14,14 @@
       p
         | Nous allons envoyer une invitation à <b>#{@rdv_invitation.user.full_name}</b> à l'adresse <b>#{@rdv_invitation.user.email}</b>.
         span
-          = icon_link_to "Changer d'usager", edit_user_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation), class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-btn--icon-left fr-icon-edit-line fr-pr-0"
+          = icon_link_to "Changer d'usager", edit_user_admin_organisation_rdv_invitations_path(current_organisation, @rdv_invitation), class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-btn--icon-left fr-icon-edit-line fr-pr-0"
       p
         | Pour quel motif souhaitez-vous que #{@rdv_invitation.user.full_name} prenne rendez-vous ?
       ul.fr-raw-list
         - @motifs.each do |motif|
           li.card.d-flex.fr-enlarge-link
             .card-body.fr-p-2w
-              = link_to update_motif_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation, rdv_invitation: { motif_id: motif.id}), method: :patch do
+              = link_to new_admin_organisation_rdv_invitation_path(current_organisation, { user_id: params[:user_id], motif_id: motif.id}) do
                 .fr-h6.fr-mb-1w.rdv-color-text-action-high-blue-france = motif.name
               .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
                 p.fr-mb-0
@@ -31,4 +31,4 @@
                   = "#{motif.default_duration_in_min} min."
                 = icon("fr-icon-arrow-right-line", class: "rdv-color-text-action-high-blue-france")
 
-    = link_to "Retour", edit_user_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
+    = link_to "Retour", edit_user_admin_organisation_rdv_invitations_path(current_organisation), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"

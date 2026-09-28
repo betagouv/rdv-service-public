@@ -348,16 +348,16 @@ Rails.application.routes.draw do
       end
 
       resources :rdv_invitations, only: %i[new create show] do
-        member do
+        collection do
           get :edit_user
+          patch :create_user
 
           get :edit_motif
-          patch :update_motif
 
-          get :new_confirmation
-          patch :confirm_and_send
           get :creneaux_preview_frame
+        end
 
+        member do
           get :show_confirmation
           patch :cancel
         end
