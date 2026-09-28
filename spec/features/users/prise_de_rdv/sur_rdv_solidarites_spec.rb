@@ -36,6 +36,29 @@ RSpec.describe "Prise de RDV sur RDVS" do
       expect(page).to have_content(motif.service.name)
     end
 
+    it "affiche les adresses pendant la saisie, en laissant le focus dans le champ et en annonçant les résultats", js: true do
+      stub_browser_geocoding_search("rue de plaisance", ban_feature_79_rue_de_plaisance(score: 0.6), ban_feature_rue_de_plaisance_nogent, delay: 0.5)
+
+      visit root_path
+      fill_in("Saisissez votre adresse", with: "rue de plaisance")
+
+      expect(page).to have_content("Recherche des adresses en cours…")
+      expect(page).to have_link("79 Rue de Plaisance, La Garenne-Colombes, 92250")
+      expect(page).to have_no_content("Recherche des adresses en cours…")
+      expect(page).to have_css("[role=status]", text: "2 adresses correspondent à « rue de plaisance ». Résultats listés après le bouton Rechercher.", visible: :all)
+      expect(page).to have_current_path(root_path)
+      expect(page.evaluate_script("document.activeElement.id")).to eq("address")
+
+      click_link("79 Rue de Plaisance, La Garenne-Colombes, 92250")
+
+      expect(page).to have_current_path(/prendre_rdv/)
+      expect(Rack::Utils.parse_query(URI(page.current_url).query)).to eq(
+        "address" => "79 Rue de Plaisance, La Garenne-Colombes, 92250", "departement" => "92", "city_code" => "92035",
+        "street_ban_id" => "92035_7180", "latitude" => "48.9", "longitude" => "2.25"
+      )
+      expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
+    end
+
     it "permet la recherche géographique depuis la page d'accueil", js: true do
       visit root_path
 

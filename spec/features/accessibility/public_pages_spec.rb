@@ -70,6 +70,16 @@ RSpec.describe "public pages", js: true do
       expect_page_to_be_axe_clean(address_search_path(address: ""))
     end
 
+    it "la page d'accueil est accessible avec les adresses affichées pendant la saisie" do
+      stub_browser_geocoding_search("rue de plaisance", ban_feature_79_rue_de_plaisance(score: 0.6), ban_feature_rue_de_plaisance_nogent)
+
+      visit root_path
+      fill_in("Saisissez votre adresse", with: "rue de plaisance")
+
+      expect(page).to have_link("79 Rue de Plaisance, La Garenne-Colombes, 92250")
+      expect(page).to be_axe_clean
+    end
+
     describe "with available slots" do
       # Nécessite de préciser le département pour le moment,
       # à cause de la recherche par sectorisation (?)

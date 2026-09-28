@@ -1,15 +1,44 @@
-/# locals: (address:, prescripteur:, error_message: nil)
-= form_with url: address_search_path, method: :get, html: { role: "search" } do
-  - if prescripteur
-    = hidden_field_tag :prescripteur, 1, id: nil
-  .fr-input-group class=("fr-input-group--error" if error_message)
-    = label_tag :address, class: "fr-label" do
-      | Saisissez votre adresse
-      span.fr-hint-text
-        | Exemple : 21 rue Anatole France, Calais
-    .fr-search-bar.fr-search-bar--lg
-      = text_field_tag :address, address, class: ["fr-input", ("fr-input--error" if error_message)], required: true, autocomplete: "street-address", dir: "ltr", aria: { describedby: ("address_error" if error_message) }
-      = button_tag "Rechercher", class: "fr-btn", name: nil
-    - if error_message
-      p#address_error.fr-error-text
-        = error_message
+/# locals: (address:, prescripteur:, error_message: nil, results: nil, show_results: false)
+div data-controller="address-search" data-address-search-geocoding-url-value="https://data.geopf.fr/geocodage/search/" data-address-search-booking-url-value=prendre_rdv_path
+  = form_with url: address_search_path, method: :get, html: { role: "search" }, data: { address_search_target: "form" } do
+    - if prescripteur
+      = hidden_field_tag :prescripteur, 1, id: nil
+    .fr-input-group class=("fr-input-group--error" if error_message)
+      = label_tag :address, class: "fr-label" do
+        | Saisissez votre adresse
+        span.fr-hint-text
+          | Exemple : 21 rue Anatole France, Calais
+      .fr-search-bar.fr-search-bar--lg
+        = text_field_tag :address, address, class: ["fr-input", ("fr-input--error" if error_message)], required: true, autocomplete: "street-address", dir: "ltr",
+          aria: { describedby: ("address_error" if error_message) }, data: { address_search_target: "input", action: "input->address-search#search" }
+        = button_tag "Rechercher", class: "fr-btn", name: nil
+      - if error_message
+        p#address_error.fr-error-text
+          = error_message
+  / Annonce aux technologies d'assistance le résultat de la recherche pendant la saisie (présente dès le chargement pour être restituée)
+  p.fr-sr-only role="status" data-address-search-target="status"
+  / Retour visuel immédiat pendant la saisie ; les technologies d'assistance sont prévenues via la zone de statut si la recherche dure
+  p.fr-text--sm.fr-mt-2w.fr-mb-0 aria-hidden="true" hidden=true data-address-search-target="loading"
+    span.fr-icon-search-line.fr-icon--sm.fr-mr-1v aria-hidden="true"
+    | Recherche des adresses en cours…
+  #address_results data-address-search-target="results"
+    - if show_results
+      = render "address_searches/results", address:, results:
+
+  / Gabarits utilisés par le JS pour afficher les résultats de la recherche pendant la saisie
+  template data-address-search-target="listTemplate"
+    h2.fr-h4.fr-mt-4w data-address-search-summary=true
+    ul
+  template data-address-search-target="itemTemplate"
+    li.fr-mb-2w
+      a.fr-link.fr-link--lg
+  template data-address-search-target="emptyTemplate"
+    .fr-alert.fr-alert--info.fr-mt-4w
+      h2.fr-alert__title data-address-search-summary=true
+      p
+        | Vérifiez l’orthographe, ou précisez la commune ou le code postal.
+  template data-address-search-target="errorTemplate"
+    .fr-alert.fr-alert--error.fr-mt-4w
+      p
+        ' La recherche automatique d’adresse n’a pas abouti.
+        | Utilisez le bouton « Rechercher ».

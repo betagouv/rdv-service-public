@@ -10,7 +10,5 @@
   .fr-col-12.fr-col-lg-10.fr-col-offset-lg-1
     h1
       | Choisissez votre adresse
-    = render "search/address_selection/address_form", address: @address, prescripteur: @prescripteur, error_message: ("Saisissez votre adresse pour rechercher un rendez-vous" if @address.blank?)
-    #address_results
-      - if @address.present?
-        = render "address_searches/results", address: @address, results: @results
+    = render "search/address_selection/address_form", address: @address, prescripteur: @prescripteur, results: @results, show_results: @address.present?,
+      error_message: ("Saisissez votre adresse pour rechercher un rendez-vous" if @address.blank?)
