@@ -42,9 +42,9 @@ class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
 
     status, appointments = fetch_ants_api_status(record).values_at("status", "appointments")
 
-    return unless validate_status_validated(status, record)
+    return unless status_validated?(status, record)
 
-    validate_empty_appointments(appointments, record)
+    appointments_empty?(appointments, record)
   rescue AntsApi::ApiRequestError, Typhoeus::Errors::TimeoutError => e
     # Si l'API de l'ANTS est fiable, donc si elle renvoie une erreur ou un timeout,
     # on préfère bloquer la réservation et logguer l'erreur.
@@ -76,14 +76,14 @@ class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
     meeting_point_id
   end
 
-  def validate_status_validated(status, record)
+  def status_validated?(status, record)
     return true if status == "validated"
 
     record.errors.add(:ants_pre_demande_number, AntsApi::ERROR_STATUSES.fetch(status))
     false
   end
 
-  def validate_empty_appointments(appointments, record)
+  def appointments_empty?(appointments, record)
     return true if appointments.empty? || record.ignore_benign_errors
 
     record.add_benign_error(

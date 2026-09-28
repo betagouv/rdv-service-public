@@ -35,7 +35,10 @@ class Agents::SessionsController < Devise::SessionsController
       return
     end
 
-    return if reset_current_agent_password_if_weak!(params[:agent][:password])
+    if password_too_weak?(params[:agent][:password])
+      reset_current_agent_password!(params[:agent][:password])
+      return
+    end
 
     if resource.sensitive_account? && !AgentTrustedDevice.trusted_by_cookie?(resource, cookies)
       sign_out(resource)
