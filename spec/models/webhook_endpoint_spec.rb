@@ -31,7 +31,7 @@ RSpec.describe WebhookEndpoint, type: :model do
       expect(webhook_endpoint).to be_valid
     end
 
-    it "est valide si target_url est une URL http avec un port" do
+    it "est valide si target_url est une URL http avec un port (uniquement sur un environnement non production)" do
       webhook_endpoint = build(:webhook_endpoint, target_url: "http://localhost:3000/webhooks")
       expect(webhook_endpoint).to be_valid
     end
@@ -39,7 +39,7 @@ RSpec.describe WebhookEndpoint, type: :model do
     it "est invalide si target_url n'a pas de schéma" do
       webhook_endpoint = build(:webhook_endpoint, target_url: "evil.fr/webhooks")
       expect(webhook_endpoint).not_to be_valid
-      expect(webhook_endpoint.errors[:target_url]).to eq(["n’est pas une URL valide, elle doit commencer par http(s)://"])
+      expect(webhook_endpoint.errors[:target_url]).to eq(["n’est pas une URL valide"])
     end
 
     it "est invalide si target_url n'a qu'un slash après le schéma http:/" do
@@ -55,6 +55,29 @@ RSpec.describe WebhookEndpoint, type: :model do
     it "est invalide si target_url contient des espaces" do
       webhook_endpoint = build(:webhook_endpoint, target_url: "pas une url")
       expect(webhook_endpoint).not_to be_valid
+    end
+  end
+
+  describe "schéma https obligatoire en production" do
+    before { allow(Rails.env).to receive(:production?).and_return(true) }
+
+    it "est valide si target_url est une URL https" do
+      webhook_endpoint = build(:webhook_endpoint, target_url: "https://cd92.fr/webhooks")
+      expect(webhook_endpoint).to be_valid
+    end
+
+    it "est invalide si target_url est une URL http, avec un message demandant https" do
+      webhook_endpoint = build(:webhook_endpoint, target_url: "http://cd92.fr/webhooks")
+      expect(webhook_endpoint).not_to be_valid
+      expect(webhook_endpoint.errors[:target_url]).to eq(["n’est pas une URL acceptée, elle doit commencer par https://"])
+    end
+
+    it "ne renvoie que l'erreur https si target_url est une URL http sur un domaine non autorisé" do
+      with_modified_env(ALLOWED_WEBHOOK_HOSTS: "cd92.fr") do
+        webhook_endpoint = build(:webhook_endpoint, target_url: "http://evil.fr/webhooks")
+        expect(webhook_endpoint).not_to be_valid
+        expect(webhook_endpoint.errors[:target_url]).to eq(["n’est pas une URL acceptée, elle doit commencer par https://"])
+      end
     end
   end
 
@@ -106,7 +129,7 @@ RSpec.describe WebhookEndpoint, type: :model do
       with_modified_env(ALLOWED_WEBHOOK_HOSTS: "cd92.fr") do
         webhook_endpoint = build(:webhook_endpoint, target_url: "evil.fr/webhooks")
         expect(webhook_endpoint).not_to be_valid
-        expect(webhook_endpoint.errors[:target_url]).to eq(["n’est pas une URL valide, elle doit commencer par http(s)://"])
+        expect(webhook_endpoint.errors[:target_url]).to eq(["n’est pas une URL valide"])
       end
     end
 

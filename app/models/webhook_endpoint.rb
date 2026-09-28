@@ -9,6 +9,7 @@ class WebhookEndpoint < ApplicationRecord
   validate :subscriptions_validity
   validates :secret, presence: true
   validate :validate_target_url_format, if: -> { will_save_change_to_target_url? && errors[:target_url].empty? }
+  validate :validate_target_url_https, if: -> { Rails.env.production? && will_save_change_to_target_url? && errors[:target_url].empty? }
   validate :validate_target_url_host_allowed, if: -> { will_save_change_to_target_url? && errors[:target_url].empty? }
 
   # Callbacks
@@ -53,6 +54,12 @@ class WebhookEndpoint < ApplicationRecord
               target_url_parsed.host.present?
 
     errors.add(:target_url, :invalid_format)
+  end
+
+  def validate_target_url_https
+    return if target_url_parsed.is_a?(URI::HTTPS)
+
+    errors.add(:target_url, :https_required)
   end
 
   def target_url_parsed
