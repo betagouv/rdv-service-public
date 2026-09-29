@@ -38,7 +38,7 @@ class RdvInvitation < ApplicationRecord
   end
 
   def next_available_date
-    creneaux_search(Time.zone.now).next_availability.starts_at.to_date
+    creneaux_search(Time.zone.now).next_availability&.starts_at&.to_date
   end
 
   def create_rdv_and_notify(starts_at:)
