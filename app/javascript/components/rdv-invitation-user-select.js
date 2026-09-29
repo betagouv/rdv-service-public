@@ -6,6 +6,7 @@ export default () => {
 
     select.select2({
       dropdownCssClass: 'rdv-select-2--inline',
+      width: '100%', // Permet d'avoir un affichage correct sur firefox
       minimumInputLength: 1,
       language:  {
         inputTooShort: () => "Commencez à taper pour chercher",
