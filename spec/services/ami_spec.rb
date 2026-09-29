@@ -108,7 +108,7 @@ RSpec.describe Ami do
 
       it "envoie le bon texte de notification" do
         expect(WebMock).to(have_requested(:put, "https://ami.test/api/v2/event").with do |request|
-          expect(JSON.parse(request.body)["content_body"]).to include "par visioconférence"
+          expect(JSON.parse(request.body)["content_private_body"]).to include "par visioconférence"
         end)
       end
     end

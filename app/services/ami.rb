@@ -84,6 +84,8 @@ class Ami
   def reminder_content_private_body
     if rdv.motif.phone?
       "Nous vous appellerons au #{@participation.user.phone_number}."
+    elsif rdv.motif.visio?
+      "Le rendez-vous aura lieu par visioconférence pour #{rdv.motif.name}"
     else
       "Le rendez-vous aura lieu au #{rdv.address} pour #{rdv.motif.name}"
     end
