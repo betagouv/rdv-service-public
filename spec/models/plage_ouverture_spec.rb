@@ -358,29 +358,29 @@ RSpec.describe PlageOuverture, type: :model do
   end
 
   describe "#overlapping_plages_ouvertures" do
-    let!(:plage_ouverture) { create(:plage_ouverture, first_day: Date.tomorrow, start_time: "09:00", end_time: "12:00", lieu: lieu, motifs: [public_office_motif], agent:) }
-    let!(:plage_ouverture_in_other_lieu) do
-      po = build(:plage_ouverture, first_day: Date.tomorrow, start_time: "09:00", end_time: "12:00", lieu: other_lieu, motifs: [public_office_motif], agent:)
-      po.save!(validate: false)
-      po
-    end
+    let!(:plage_ouverture_lieu1) { create(:plage_ouverture, first_day: Date.tomorrow, start_time: "09:00", end_time: "12:00", lieu: lieu1, motifs: [public_office_motif], agent:) }
+    let!(:plage_ouverture_phone) { create(:plage_ouverture, first_day: Date.tomorrow, start_time: "09:00", end_time: "12:00", lieu: nil, motifs: [phone_motif], agent:) }
 
-    let!(:plage_ouverture_on_the_phone) { create(:plage_ouverture, first_day: Date.tomorrow, start_time: "09:00", end_time: "12:00", lieu: nil, motifs: [phone_motif], agent:) }
-
-    let(:lieu) { create(:lieu, organisation:) }
-    let(:other_lieu) { create(:lieu, organisation:) }
+    let(:lieu1) { create(:lieu, organisation:) }
+    let(:lieu2) { create(:lieu, organisation:) }
     let(:public_office_motif) { create(:motif, organisation:, location_type: :public_office) }
     let(:phone_motif) { create(:motif, organisation:, location_type: :phone) }
     let(:organisation) { create(:organisation) }
     let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
-    it "only returns plage ouverture that require the agent to be in two different lieux at the same time" do
-      # La valeur de #overlapping_plages_ouvertures est memoizée, donc on crée un nouvel objet
-      reloaded_plage_ouverture = described_class.find(plage_ouverture.id)
+    it "détecte les plages d'ouvertures qui exigeraient que l'agent soit dans deux lieux à la fois" do
+      new_plage_ouverture_lieu2 = build(:plage_ouverture, first_day: Date.tomorrow, start_time: "09:00", end_time: "12:00", lieu: lieu2, motifs: [public_office_motif], agent:)
+      expect(new_plage_ouverture_lieu2.overlapping_plages_ouvertures).to eq [plage_ouverture_lieu1]
+    end
 
-      expect(reloaded_plage_ouverture.overlapping_plages_ouvertures).to eq [plage_ouverture_in_other_lieu]
+    it "ignore les plages d'ouvertures au sein du même lieu" do
+      new_plage_ouverture_lieu1 = build(:plage_ouverture, first_day: Date.tomorrow, start_time: "09:00", end_time: "12:00", lieu: lieu1, motifs: [public_office_motif], agent:)
+      expect(new_plage_ouverture_lieu1.overlapping_plages_ouvertures).to be_empty
+    end
 
-      expect(plage_ouverture_on_the_phone.overlapping_plages_ouvertures).to be_empty
+    it "est toujours vide pour les plages d'ouvertures téléphoniques" do
+      expect(plage_ouverture_phone.overlapping_plages_ouvertures).to be_empty
     end
   end
+****
 end
