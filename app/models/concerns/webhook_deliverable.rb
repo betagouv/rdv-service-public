@@ -15,7 +15,8 @@ module WebhookDeliverable
     blueprint_class.render(self, root: :data, meta: meta)
   end
 
-  def generate_payload_and_send_webhook(action)
+  def enqueue_webhook_job(action)
+    # NOTE: le payload sera généré dans le job, donc potentiellement désynchronisé
     subscribed_webhook_endpoints.each do |endpoint|
       WebhookJob.perform_later(record: self, action:, webhook_endpoint_id: endpoint.id)
     end
@@ -50,11 +51,11 @@ module WebhookDeliverable
     attr_accessor :skip_webhooks, :webhook_reason
 
     after_commit on: :create, unless: :skip_webhooks do
-      generate_payload_and_send_webhook(:created)
+      enqueue_webhook_job(:created)
     end
 
     after_commit on: :update, unless: :skip_webhooks do
-      generate_payload_and_send_webhook(:updated)
+      enqueue_webhook_job(:updated)
     end
 
     around_destroy :generate_payload_and_send_webhook_for_destroy, unless: :skip_webhooks
