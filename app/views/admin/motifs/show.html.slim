@@ -58,7 +58,7 @@
           h2.fr-h5 Consignes à destination de l'usager
 
           - if !@motif.archived? && @motif_policy.edit?
-            = link_to t("admin.motifs.actions.edit"), edit_consignes_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
+            = link_to "Modifier la section", edit_consignes_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--sm fr-btn--secondary"
 
         = render "admin/motifs/restriction_for_rdv_recap", motif: @motif
         = render "admin/motifs/instruction_for_rdv_recap", motif: @motif
@@ -74,14 +74,14 @@
             i.fr-text-mention--grey Pas d'instructions à afficher quand l'usager annule le rendez-vous
         - else
           .fr-highlight.fr-mb-2w
-             = @motif.custom_cancel_warning_message
+            = @motif.custom_cancel_warning_message
 
     .card.mt-2
       .card-body
         .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
           h2.fr-h5 Options avancées
           - if !@motif.archived? && @motif_policy.edit?
-            = link_to t("admin.motifs.actions.edit"), edit_advanced_options_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
+            = link_to "Modifier la section", edit_advanced_options_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--sm fr-btn--secondary"
 
         .fr-grid-row.fr-grid-row--gutters.fr-mt-2w
           .fr-col-4
