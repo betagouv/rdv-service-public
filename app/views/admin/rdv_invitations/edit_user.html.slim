@@ -38,7 +38,7 @@ dialog#new-user-modal.fr-modal[aria-labelledby="new-user-modal-title"]
               = user_icon(class: "fr-mr-1w")
               | Nouvel usager
             - user = @user || User.new
-            = form_for @rdv_invitation, url: create_user_admin_organisation_rdv_invitations_path(current_organisation), method: :post, builder: Dsfr::FormBuilder do |f|
+            = form_for @rdv_invitation, url: create_user_admin_organisation_rdv_invitations_path(current_organisation), method: :patch, builder: Dsfr::FormBuilder do |f|
               = f.fields_for :user, User.new do |ff|
                 .fr-grid-row.fr-grid-row--gutters
                   .fr-col-6
