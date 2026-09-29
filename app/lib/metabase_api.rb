@@ -8,6 +8,7 @@ class MetabaseApi
     res = Typhoeus.post(
       "#{HOST_URL}/api/dataset/json",
       body: { query: { database: DATABASE_ID, native: { query: }, type: "native" } }.to_json,
+      userpwd: "#{ENV['METABASE_BASIC_AUTH_USER']}:#{ENV['METABASE_BASIC_AUTH_PASSWORD']}",
       headers: {
         "x-api-key" => ENV["METABASE_API_KEY"],
         "Content-Type" => "application/json",
@@ -26,5 +27,5 @@ class MetabaseApi
     end
   end
 
-  def self.authentication_present? = ENV["METABASE_API_KEY"].present?
+  def self.authentication_present? = ENV["METABASE_API_KEY"].present? && ENV["METABASE_BASIC_AUTH_USER"].present? && ENV["METABASE_BASIC_AUTH_PASSWORD"].present?
 end
