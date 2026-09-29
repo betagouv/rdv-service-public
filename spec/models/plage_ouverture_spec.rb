@@ -382,5 +382,4 @@ RSpec.describe PlageOuverture, type: :model do
       expect(plage_ouverture_phone.overlapping_plages_ouvertures).to be_empty
     end
   end
-****
 end
