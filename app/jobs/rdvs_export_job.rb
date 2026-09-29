@@ -33,7 +33,7 @@ class RdvsExportJob < ExportJob
     # Le département du Var se base sur la position de chaque caractère du nom
     # de fichier pour extraire la date et l'ID d'organisation, donc
     # si on modifie le fichier il faut soit les prévenir soit ajouter à la fin.
-    if organisations.count == 1
+    if organisations.one?
       "export-rdv-#{today}-org-#{organisations.first.id.to_s.rjust(6, '0')}.xls"
     else
       "export-rdv-#{today}.xls"
