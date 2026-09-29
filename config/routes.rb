@@ -58,6 +58,7 @@ Rails.application.routes.draw do
     resources :rdvs, only: %i[show]
     resources :prescripteurs, only: %i[show]
     resources :tags
+    resources :oauth_applications, only: %i[index show edit update]
     root to: "agents#index"
 
     authenticate :super_admin do
@@ -81,7 +82,6 @@ Rails.application.routes.draw do
     resource :rdv_wizard_step, only: %i[new create]
     # pour éviter les 404 lors d’un refresh après un premier post qui a rendu :new
     get :rdv_wizard_step, to: redirect(path: "/users/rdv_wizard_step/new")
-    post :rdvs, to: redirect(status: 303) { |_params, request| "/users/rdv_wizard_step/new?#{request.query_string}" } # TODO: supprimer après le 03/08/2026
     # show, creneaux et visio sont rate limités par IP quand invitation_token est présent (voir config/initializers/rack_attack.rb)
     resources :rdvs, only: %i[index show edit update] do
       resources :participations, only: %i[index create]

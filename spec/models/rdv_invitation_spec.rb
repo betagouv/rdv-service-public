@@ -87,6 +87,17 @@ RSpec.describe RdvInvitation do
         expect(rdv_plan.reload.rdv).to eq rdv_invitation.rdv
       end
     end
+
+    describe "visio_url_custom" do
+      before do
+        rdv_invitation.update(visio_url_custom: "https://visio.numerique.gouv.fr/room-xyz")
+      end
+
+      it "copies the custom url from the invitation to the rdv" do
+        rdv_invitation.create_rdv_and_notify(starts_at: 1.week.from_now)
+        expect(Rdv.last.visio_url_custom).to eq "https://visio.numerique.gouv.fr/room-xyz"
+      end
+    end
   end
 
   describe "pour une invitation annulée" do
