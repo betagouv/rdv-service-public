@@ -3,7 +3,8 @@ module SuperAdmins
     def destroy
       pro_connect_id_token = session.delete(:pro_connect_id_token)
       skip_authorization
-      sign_out_all_scopes if super_admin_signed_in?
+      # Effectue la déconnexion de tous les types d’utilisateurs (et supprime la session quand on fait un logout sans scope précis via Warden)
+      sign_out_all_scopes
 
       if pro_connect_id_token.present?
         pro_connect_client = ProConnectOpenIdClient::Logout.new(pro_connect_id_token)

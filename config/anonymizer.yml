@@ -462,6 +462,7 @@ tables:
   - table_name: oauth_applications
     anonymized_column_names:
       - secret
+      - internal_documentation
     non_anonymized_column_names:
       - name
       - uid
@@ -501,6 +502,7 @@ tables:
       - created_at
       - updated_at
       - location_type
+      - by_invitation
   - table_name: external_references
     anonymized_column_names:
       - external_url
@@ -567,6 +569,7 @@ tables:
   - table_name: rdv_invitations
     anonymized_column_names:
       - token
+      - visio_url_custom
     non_anonymized_column_names:
       - created_at
       - updated_at

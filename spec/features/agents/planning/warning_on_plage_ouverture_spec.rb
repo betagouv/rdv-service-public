@@ -7,11 +7,15 @@ RSpec.describe "Recurrence works on plage d'ouverture even in case of a warning 
   let!(:plage_ouverture) { create(:plage_ouverture, :weekly_on_monday, motifs: [motif], agent: agent, organisation: organisation, title: "Permanence", first_day: 2.weeks.ago) }
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-  let!(:motif) { create(:motif, name: "Suivi", organisation:, location_type: :phone) }
+  let!(:motif) { create(:motif, name: "Suivi", organisation:, location_type: :public_office) }
+  let!(:other_lieu) { create(:lieu, organisation:) }
 
   it "works", js: true do
     visit new_admin_organisation_planning_plage_ouverture_path(organisation_id: organisation.id)
     find('[for="radio_recurring"]').click
+
+    select(other_lieu.name, from: "Lieu")
+
     fill_in("recurrence-until", with: "30/12/2019")
     check("recurrence_on_monday")
 

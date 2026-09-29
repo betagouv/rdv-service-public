@@ -5,6 +5,7 @@ class Agent::RdvPlanPolicy < ApplicationPolicy
       authorized_motif?
   end
   alias edit? create?
+  alias update? create?
 
   class Scope < Scope
     def resolve
@@ -19,6 +20,12 @@ class Agent::RdvPlanPolicy < ApplicationPolicy
     return true unless record.lieu_id
 
     Agent::LieuPolicy::Scope.new(pundit_user, Lieu.enabled).resolve.find_by(id: record.lieu_id).present?
+  end
+
+  def authorized_agent
+    return true unless record.rdv_agent
+
+    Agent::AgentPolicy::Scope.new(pundit_user, Agent.active).resolve.find_by(id: record.rdv_agent_id).present?
   end
 
   def authorized_motif?

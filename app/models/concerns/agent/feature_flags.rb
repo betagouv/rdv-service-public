@@ -18,7 +18,7 @@ module Agent::FeatureFlags
   private
 
   def set_feature!(feature, set_to)
-    raise "Invalid feature name: #{feature.inspect}" unless feature.in?(AVAILABLE_FEATURES)
+    raise "Invalid feature name: #{feature.inspect}" unless feature.to_s.in?(AVAILABLE_FEATURES)
 
     feature_flags[feature] = set_to
     update!(feature_flags: feature_flags)

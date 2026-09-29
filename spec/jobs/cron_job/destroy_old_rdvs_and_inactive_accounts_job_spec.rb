@@ -3,6 +3,7 @@ RSpec.describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
   let!(:webhook_endpoint) do
     create(
       :webhook_endpoint,
+      :bypassing_host_validation,
       organisation: organisation,
       subscriptions: %w[rdv user user_profile agent]
     )

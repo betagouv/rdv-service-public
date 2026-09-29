@@ -12,6 +12,8 @@ class RdvPlan < ApplicationRecord
   belongs_to :motif, optional: true
   belongs_to :lieu, optional: true
   belongs_to :rdv, optional: true
+  belongs_to :rdv_invitation, optional: true
+
   # Le `optional: true` sur les oauth_application est un peu anticipé : on pourra avoir ce cas quand des
   # rdv_plans seront créés en natif depuis l'application, probablement pour enregistrer un brouillon de rdv
   # TODO: il faudrait mettre à jour la spec swagger pour utiliser de l'oauth pour pouvoir enlever le `optional: true`
@@ -21,32 +23,60 @@ class RdvPlan < ApplicationRecord
 
   validate :return_url_is_authorized
 
-  def create_rdv(user_attributes:, participation_attributes:)
-    update_user_before_creating_rdv(user_attributes:)
+  def create_rdv_or_send_invitation(user_attributes:, participation_attributes: nil, pro_connect_access_token: nil)
+    user.update!(user_attributes)
 
+    UserProfile.find_or_initialize_by(user_id: user.id, organisation_id: motif.organisation_id).save!
+
+    if by_invitation?
+      create_rdv_invitation(pro_connect_access_token)
+    else
+      create_rdv(participation_attributes:, pro_connect_access_token:)
+    end
+  end
+
+  def build_invitation
+    RdvInvitation.new(motif:, lieu:, user:, inviting_agent: planning_agent)
+  end
+
+  private
+
+  def create_rdv(participation_attributes:, pro_connect_access_token:)
     rdv = Rdv.create(
+      motif:, lieu:, starts_at:,
       agents: [rdv_agent],
       participations: [Participation.new(participation_attributes.merge(user_id: user.id))],
-      motif: motif,
       organisation: organisation,
-      lieu: lieu,
-      starts_at: starts_at,
       created_by: planning_agent,
-      ends_at: starts_at + (duration_in_minutes || motif.default_duration_in_min).minutes
+      ends_at: starts_at + (duration_in_minutes || motif.default_duration_in_min).minutes,
+      visio_url_custom: visio_url_custom(pro_connect_access_token)
     )
 
     if rdv.persisted?
-      update(rdv: rdv)
+      update(rdv:)
       Notifiers::RdvCreated.perform_with(rdv, planning_agent)
     end
 
     rdv
   end
 
-  private
+  def create_rdv_invitation(pro_connect_access_token)
+    invitation = build_invitation
+    invitation.visio_url_custom = visio_url_custom(pro_connect_access_token)
+    if invitation.save
+      update!(rdv_invitation_id: invitation.id)
+      Users::RdvInvitationMailer.with(rdv_invitation: invitation).new_invitation.deliver_later
+    end
 
-  def update_user_before_creating_rdv(user_attributes:)
-    user.update!(user_attributes)
+    invitation
+  end
+
+  def visio_url_custom(pro_connect_access_token)
+    return unless motif&.visio?
+    return if ENV["VISIO_NUMERIQUE_DISABLED"]
+    return if pro_connect_access_token.blank?
+
+    VisioNumerique::CreateRoom.new(access_token: pro_connect_access_token).visio_url
   end
 
   def return_url_is_authorized

@@ -24,7 +24,7 @@ header.header.bg-white
               span.fr-icon--sm.fr-mr-2v.fr-icon-notification-3-line[aria-hidden="true"]
               = "Préférences de notifications"
             li = link_to agents_calendar_sync_path, class: "dropdown-item-dsfr dropdown-item" do
-              span.fr-icon--sm.fr-mr-2v.fr-icon-links-line[aria-hidden="true"]
+              span.fr-icon--sm.fr-mr-2v.fr-icon-arrow-left-right-line[aria-hidden="true"]
               = "Synchronisation d’agenda"
             li = link_to admin_organisations_path, class: "dropdown-item-dsfr dropdown-item" do
               span.fr-icon--sm.fr-mr-2v.fr-icon-building-line[aria-hidden="true"]
@@ -49,7 +49,7 @@ header.header.bg-white
 
   = render "layouts/super_admin_sign_in_as_warning"
   = render "layouts/pro_connect_visio_notice"
-  - if RdvPlan.where(planning_agent: current_agent, rdv_id: nil).where("created_at > ?", 20.minutes.ago).any?
+  - if RdvPlan.where(planning_agent: current_agent, rdv_id: nil, rdv_invitation_id: nil).where("created_at > ?", 20.minutes.ago).any?
     = render "layouts/rdv_plan_banner"
   - else
     = render "layouts/meet_the_team_banner" unless @hide_meet_the_team_banner

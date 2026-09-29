@@ -14,13 +14,16 @@ Du code d’exemple est [disponible C# et en NodeJS](https://github.com/guillett
 
 Si vous avez les droits d'administration au niveau de l'espace, vous pouvez mettre en place des webhooks en toute autonomie à partir de la page de configuration de votre organisation accessible en suivant « Mon compte », « Mes organisations » et « Configuration ». Depuis la page « Webhook », vous pourrez indiquer l'organisation concernée, l'URL à notifier, le secret partagé et les modèles pour lesquels vous souhaitez recevoir des notifications.
 
+Pour des raisons de sécurité, seuls certains domaines sont autorisés comme destination des webhooks.
+Si le vôtre n'en fait pas partie, contactez-nous pour que nous l'ajoutions.
+
 ## Démonstration
 
 Dans notre environnement de démonstration, nous pouvons envoyer des notifications sur une URL de test. Pour obtenir un compte de test sur notre démo, [contactez-nous](mailto:contact@rdv-solidarites.fr) !
 
 ## Signatures des requêtes
 
-Un secret partagé est associé à chacune de ces URLs pour vous permettre de vérifier que nous sommes bien à l'origine de l'envoi d'information. La requête envoyée en HTTP POST contient un entête `X-Lapin-Signature` qui contient une signature SHA256 hexadécimale du corps de la requête. 
+Un secret partagé est associé à chacune de ces URLs pour vous permettre de vérifier que nous sommes bien à l'origine de l'envoi d'information. La requête envoyée en HTTP POST contient un entête `X-Lapin-Signature` qui contient une signature SHA256 hexadécimale du corps de la requête.
 
 Voilà quelques exemples et informations très pratiques pour valider la signature des corps de requêtes envoyées par RDV-Solidarités.
 

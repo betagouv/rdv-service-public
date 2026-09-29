@@ -1,4 +1,4 @@
-- rdv_plan = RdvPlan.where(planning_agent: current_agent, rdv_id: nil).order("created_at desc").first
+- rdv_plan = RdvPlan.where(planning_agent: current_agent, rdv_id: nil, rdv_invitation_id: nil).order("created_at desc").first
 
 .fr-notice.fr-notice--info
   .fr-notice__body

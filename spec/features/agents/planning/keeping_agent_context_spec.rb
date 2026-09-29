@@ -1,5 +1,6 @@
 RSpec.describe "permettre de revenir à l'agenda d'un collègue après avoir cliqué sur un RDV pour le modifier" do
-  let(:territory) { create(:territory, work_on_sunday: true) } # nécessaire pour lancer cette spec un dimanche
+  let(:now) { Time.zone.parse("2026-04-14 07:00") }
+  let(:territory) { create(:territory) }
   let(:organisation) { create(:organisation, territory:) }
   let!(:current_agent) { create(:agent, first_name: "Agent", last_name: "COURANT", admin_role_in_organisations: [organisation], display_saturdays: true) }
   let!(:collegue) { create(:agent, first_name: "Mon", last_name: "COLLEGUE", admin_role_in_organisations: [organisation]) }
@@ -9,10 +10,15 @@ RSpec.describe "permettre de revenir à l'agenda d'un collègue après avoir cli
       :rdv,
       :no_service,
       organisation:,
-      starts_at: Time.zone.today.beginning_of_day + 8.hours,
+      starts_at: now.change(hour: 8),
       agents: [collegue],
       users: [usager_du_rdv]
     )
+  end
+
+  before do
+    travel_to(now)
+    page.driver.with_playwright_page { it.clock.set_fixed_time(now) }
   end
 
   it "fonctionne quand j'ai un seul agent sélectionné dans l'agenda", js: true do
@@ -29,7 +35,7 @@ RSpec.describe "permettre de revenir à l'agenda d'un collègue après avoir cli
     expect(page).to have_link(back_button)
     fill_in "rdv_duration_in_min", with: "240"
     click_on "Enregistrer"
-    click_on "Confirmer en ignorant les avertissements" if page.body.include?("Confirmer en ignorant les avertissements") # modification d'un RDV dans le passé
+    expect(page).to have_content("Le rendez-vous a été modifié.")
     expect(rdv_du_collegue.reload.duration_in_min).to eq(240)
     expect(page).to have_link(back_button)
     click_on back_button
@@ -52,7 +58,7 @@ RSpec.describe "permettre de revenir à l'agenda d'un collègue après avoir cli
     expect(page).to have_link(back_button)
     fill_in "rdv_duration_in_min", with: "240"
     click_on "Enregistrer"
-    click_on "Confirmer en ignorant les avertissements" if page.body.include?("Confirmer en ignorant les avertissements") # modification d'un RDV dans le passé
+    expect(page).to have_content("Le rendez-vous a été modifié.")
     expect(rdv_du_collegue.reload.duration_in_min).to eq(240)
     expect(page).to have_link(back_button)
     click_on back_button

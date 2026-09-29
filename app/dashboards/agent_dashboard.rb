@@ -24,6 +24,7 @@ class AgentDashboard < Administrate::BaseDashboard
     pro_connect_openid_sub: Field::String,
     pro_connect_idp_id: Field::String,
     pro_connect_2fa_active: Field::Boolean,
+    sensitive_account: Field::Boolean,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
@@ -57,6 +58,7 @@ class AgentDashboard < Administrate::BaseDashboard
     pro_connect_openid_sub
     pro_connect_idp_id
     pro_connect_2fa_active
+    sensitive_account
     created_at
     deleted_at
     updated_at
@@ -73,6 +75,7 @@ class AgentDashboard < Administrate::BaseDashboard
     services
     territories
     pro_connect_openid_sub
+    pro_connect_idp_id
     deleted_at
   ].freeze
 

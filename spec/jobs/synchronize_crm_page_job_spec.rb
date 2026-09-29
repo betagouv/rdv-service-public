@@ -9,9 +9,7 @@ RSpec.describe SynchronizeCrmPageJob, type: :job do
   context "quand la clef NOTION_API_SECRET n'est pas définie" do
     let(:territory) { create(:territory) }
 
-    before do
-      ENV["NOTION_API_SECRET"] = nil
-    end
+    stub_env_with(NOTION_API_SECRET: nil)
 
     it "ne fait rien" do
       described_class.new.perform(
@@ -26,9 +24,7 @@ RSpec.describe SynchronizeCrmPageJob, type: :job do
   end
 
   context "quand la clef NOTION_API_SECRET est définie" do
-    before do
-      ENV["NOTION_API_SECRET"] = "secret"
-    end
+    stub_env_with(NOTION_API_SECRET: "secret")
 
     context "quand la variable COMPTE PROD est un territory" do
       let(:territory) { create(:territory) }
