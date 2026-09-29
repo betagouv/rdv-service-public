@@ -16,7 +16,7 @@
               options_for_select([]),
               class: "js-rdv-invitation-user-picker__select",
               data: { url: search_agents_users_path(organisation_id: current_organisation.id) }
-            = form_tag edit_motif_admin_organisation_rdv_invitations_path(current_organisation, @rdv_invitation), method: :get, class: "js-rdv-invitation-user-picker__form" do |f|
+            = form_tag edit_motif_admin_organisation_rdv_invitations_path(current_organisation), method: :get, class: "js-rdv-invitation-user-picker__form" do |f|
               = hidden_field_tag :user_id
 
         div
