@@ -26,8 +26,6 @@ RSpec.describe "Changement d'agent" do
     visit edit_starts_at_agents_rdv_plan_path(rdv_plan.id)
     select "Francis FACTICE", from: "agent_id"
 
-    sleep 1
-
     Capybara.page.current_window.resize_to(1280, 1300) # Permet de s'assurer que le click de l'action suivante ne sera pas hors de la fenêtre
 
     page.driver.with_playwright_page do |pw|
@@ -35,7 +33,6 @@ RSpec.describe "Changement d'agent" do
       box = slot.bounding_box
       pw.mouse.click(box["x"] + (box["width"] / 2), box["y"] + (box["height"] / 2))
     end
-    sleep 1
 
     expect(page).to have_content("Étape 3 sur 3")
 
