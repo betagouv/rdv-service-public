@@ -138,4 +138,18 @@ RSpec.describe WebhookDeliverable, type: :concern do
       end
     end
   end
+
+  it "envoie event_occured_at à l'heure de la modification et timestamp à l'heure d'exécution du job" do
+    sent_meta = nil
+    stub_request(:post, webhook_endpoint.target_url).to_return do |request|
+      sent_meta = JSON.parse(request.body)["meta"]
+      { status: 200 }
+    end
+
+    travel_to(Time.zone.parse("2026-09-29 10:00:00")) { rdv.update(status: :excused) }
+    travel_to(Time.zone.parse("2026-09-29 10:05:00")) { perform_enqueued_jobs(only: WebhookJob) }
+
+    expect(Time.zone.parse(sent_meta["event_occured_at"])).to eq(Time.zone.parse("2026-09-29 10:00:00"))
+    expect(Time.zone.parse(sent_meta["timestamp"])).to eq(Time.zone.parse("2026-09-29 10:05:00"))
+  end
 end
