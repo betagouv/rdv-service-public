@@ -135,9 +135,12 @@ class PlageOuverture < ApplicationRecord
   def overlapping_plages_ouvertures_candidates
     return [] unless valid_date_and_times?
 
+    return [] if lieu.blank?
+
     candidate_pos = agent.plage_ouvertures
       .not_expired
       .where.not(id: id)
+      .where.not(lieu: [lieu, nil])
 
     if ponctuelle?
       candidate_pos.regulieres.where(first_day: ..first_day)
