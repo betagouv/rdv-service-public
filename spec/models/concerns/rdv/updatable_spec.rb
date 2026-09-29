@@ -90,7 +90,7 @@ RSpec.describe Rdv::Updatable do
     end
 
     describe "triggers webhook" do
-      let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation, subscriptions: ["rdv"]) }
+      let!(:webhook_endpoint) { create(:webhook_endpoint, :bypassing_host_validation, organisation: organisation, subscriptions: ["rdv"]) }
 
       before do
         travel_to Time.zone.local(2026, 8, 6, 14, 0, 0)

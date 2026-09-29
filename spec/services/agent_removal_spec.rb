@@ -7,7 +7,7 @@ RSpec.describe AgentRemoval, type: :service do
     let!(:plage_ouvertures) { create_list(:plage_ouverture, 2, agent: agent, organisation: organisation) }
     let!(:absences) { create_list(:absence, 2, agent: agent) }
 
-    before { create(:webhook_endpoint, organisation:, subscriptions: [:agent]) }
+    before { create(:webhook_endpoint, :bypassing_host_validation, organisation:, subscriptions: [:agent]) }
 
     it "succeeds destroy absences and plages ouvertures, and soft delete, but without sending email change confirmation notifications" do
       service = described_class.new(agent, organisation)
