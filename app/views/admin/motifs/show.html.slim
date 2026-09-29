@@ -13,7 +13,7 @@
     - if @motif_policy.duplicate?
       = link_to t("admin.motifs.actions.duplicate"), new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: @motif.id), class: "fr-btn fr-btn--secondary"
 
-.fr-grid-row
+.fr-grid-row.rdv-max-width-1024
   .fr-col-12
     .card.mt-2
       .card-body[style="border-radius: 4px; border-left: 6px solid #{sanitize(@motif.color)};"]
@@ -141,6 +141,6 @@
               - if @motif_policy.destroy?
                 = link_to t("admin.motifs.actions.destroy"), admin_organisation_motif_path(current_organisation, @motif), method: :delete, data: { confirm: t("admin.motifs.actions.destroy_confirm") }, class: "fr-btn fr-btn--tertiary"
 
-.fr-grid-row
+.fr-grid-row.rdv-max-width-1024
   .fr-col-12
     = render "admin/versions/resource_versions_row", resource_policy: @motif_policy, resource: @motif
