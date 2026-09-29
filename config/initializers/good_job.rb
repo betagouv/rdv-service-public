@@ -111,10 +111,16 @@ Rails.application.configure do
       cron: "every day at 08:00 Europe/Paris",
       class: "CronJob::RefreshCachedStats::EnqueueAllKeysJob",
     },
-    import_caldav_absences: {
-      cron: "every 15 minutes",
+
+    import_caldav_absences__day: {
+      cron: "0/10 7,8,9,10,11,12,13,14,15,16,17,18,19 * * * Europe/Paris", # Every 10 minutes, from 7:00 to 19:50 (working day)
       class: "CronJob::ImportCaldavAbsences",
     },
+    import_caldav_absences__morning_evening: {
+      cron: "0/30 5,6,20,21,22,23 * * * Europe/Paris", # Every 30 minutes, from 05:00 to 06:30 (morning) and from 19:00 to 23:30 (evening)
+      class: "CronJob::ImportCaldavAbsences",
+    },
+
     destroy_login_codes: {
       cron: "every day at 05:00 Europe/Paris",
       class: "CronJob::DestroyLoginCodesJob",
