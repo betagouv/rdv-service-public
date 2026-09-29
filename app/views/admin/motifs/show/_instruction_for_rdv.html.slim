@@ -3,7 +3,7 @@
 p Instructions à afficher après la prise de rendez-vous
 - if motif.instruction_for_rdv.blank?
   p.fr-ml-2w
-    i.fr-text-mention--grey Pas d'instructions à afficher après la prise de rendez-vous
+    i.fr-text-mention--grey Non renseigné
 - else
   .fr-highlight.fr-mb-2w
     = auto_link_text(motif.instruction_for_rdv)

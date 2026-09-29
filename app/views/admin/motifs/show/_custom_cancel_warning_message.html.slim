@@ -7,7 +7,7 @@ p
     = Motif.human_attribute_name(:custom_cancel_warning_message_hint)
 - if motif.custom_cancel_warning_message.blank?
   p.fr-ml-2w
-    i.fr-text-mention--grey Pas d'instructions à afficher quand l'usager annule le rendez-vous
+    i.fr-text-mention--grey Non renseigné
 - else
   .fr-highlight.fr-mb-2w
     = auto_link_text(motif.custom_cancel_warning_message)
