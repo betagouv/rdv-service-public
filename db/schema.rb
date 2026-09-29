@@ -582,7 +582,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_24_120000) do
     t.datetime "disabled_at", comment: "Date de fermeture de l'organisation"
     t.string "public_link_id", null: false
     t.boolean "online_booking_with_email", default: true, null: false, comment: "Indique si on autorise ou non les usagers à se connecter via leur adresse email lors de la prise de rendez-vous en ligne."
-    t.boolean "ami_enabled", default: false, null: false
+    t.boolean "ami_enabled", default: false, null: false, comment: "Active le suivi des rendez-vous via l'Application Mobile Interministérielle (AMI)\n"
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["public_link_id"], name: "index_organisations_on_public_link_id", unique: true
