@@ -27,9 +27,9 @@ class Rack::Attack
     end
   end
 
-  throttle("saisie de code de connexion agent - throttling par email", limit: Rails.env.test? ? 2 : 60, period: 10.minutes) do |request|
-    if request.path.match(%r{agents/sessions_by_code}) && request.post? && request.params.dig("login_code", "email").present?
-      request.params.dig("login_code", "email")
+  throttle("saisie de code de connexion agent - throttling par agent en attente de connexion", limit: Rails.env.test? ? 2 : 60, period: 10.minutes) do |request|
+    if request.path.match(%r{agents/sessions_by_code}) && request.post?
+      request.session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY]
     end
   end
 
