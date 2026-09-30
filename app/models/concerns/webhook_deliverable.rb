@@ -5,14 +5,13 @@ module WebhookDeliverable
   extend ActiveSupport::Concern
 
   def generate_webhook_payload(action, event_occurred_at:)
-    payload_computed_at = Time.zone.now
     meta = {
       model: self.class.name,
       event: action,
       webhook_reason: webhook_reason,
       event_occurred_at:,
-      payload_computed_at:,
-      timestamp: payload_computed_at, # champ déprécié
+      payload_computed_at: Time.zone.now,
+      timestamp: event_occurred_at, # champ déprécié
     }
     blueprint_class = "#{self.class.name}Blueprint".constantize
     blueprint_class.render(self, root: :data, meta: meta)
