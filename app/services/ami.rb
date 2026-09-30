@@ -3,7 +3,7 @@
 # Les identifiants pour tester en local sont disponibles sur Vaulwarden
 class Ami
   def self.enabled?
-    ENV["AMI_ENABLED"] == "true" && !Rails.env.production?
+    ENV["AMI_ENABLED"] == "true"
   end
 
   def initialize(participation)
@@ -14,7 +14,7 @@ class Ami
   def create_event
     send_event(
       # Vu qu'il n'y a pas de notification pour l'évènement, on peut mettre le motif dans le content_body sans qu'il ne soit envoyé à Apple/Google
-      content_body: "Vous avez rendez vous #{I18n.l(rdv.starts_at, format: :short_sms)} au #{rdv.address} pour #{rdv.motif.name}",
+      content_body: create_event_content_body,
       item_generic_status: "new",
       item_status_label: "À venir",
       try_push: false # On crée cet event après que l'usager décide d'activer les notifications, donc pas besoin d'activer la notification
@@ -36,7 +36,7 @@ class Ami
     # Cette notif devrait peut-être être juste une notif toute seule, pas dans le cadre d'une démarche.
     payload = {
       content_body: "Nous vous rappelons que vous avez rendez-vous #{I18n.l(rdv.starts_at, format: :short_sms)}.", # Ce champs est visible pour Apple/Google
-      content_private_body: "Le rendez-vous aura lieu au #{rdv.address} pour #{rdv.motif.name}",
+      content_private_body: reminder_content_private_body,
       item_generic_status: "wip",
       item_status_label: "À venir",
       try_push: true,
@@ -72,6 +72,26 @@ class Ami
   end
 
   private
+
+  def create_event_content_body
+    if rdv.motif.phone?
+      "Vous avez rendez vous #{I18n.l(rdv.starts_at, format: :short_sms)} par téléphone pour #{rdv.motif.name}"
+    elsif rdv.motif.visio?
+      "Vous avez rendez vous #{I18n.l(rdv.starts_at, format: :short_sms)} par visioconférence pour #{rdv.motif.name}"
+    else
+      "Vous avez rendez vous #{I18n.l(rdv.starts_at, format: :short_sms)} au #{rdv.address} pour #{rdv.motif.name}"
+    end
+  end
+
+  def reminder_content_private_body
+    if rdv.motif.phone?
+      "Nous vous appellerons au #{@participation.user.phone_number}."
+    elsif rdv.motif.visio?
+      "Le rendez-vous aura lieu par visioconférence pour #{rdv.motif.name}"
+    else
+      "Le rendez-vous aura lieu au #{rdv.address} pour #{rdv.motif.name}"
+    end
+  end
 
   delegate :rdv, to: :@participation
 

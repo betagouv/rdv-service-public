@@ -61,7 +61,7 @@ class Admin::CreneauxSearchController < AgentAuthController
     @motifs = Agent::MotifPolicy::Scope.apply(current_agent, current_organisation.motifs).active.ordered_by_name
     @services = Service.where(id: @motifs.map(&:service_id).uniq)
 
-    @form.service_id = @services.first.id if @services.count == 1 && @motifs.where(service_id: nil).none?
+    @form.service_id = @services.first.id if @services.one? && @motifs.where(service_id: nil).none?
     @teams = Agent::TeamPolicy::Scope.apply(current_agent, current_territory.teams)
     @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
       .joins(:organisations).where(organisations: { id: current_organisation.id })
@@ -74,7 +74,7 @@ class Admin::CreneauxSearchController < AgentAuthController
   end
 
   def only_one_lieu?
-    requires_lieu? && @next_availabilities&.count == 1
+    requires_lieu? && @next_availabilities&.one?
   end
 
   def requires_lieu?
