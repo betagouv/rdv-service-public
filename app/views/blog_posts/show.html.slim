@@ -19,6 +19,7 @@
           time<> datetime=@post.published_at.to_date.iso8601
             = l(@post.published_at.to_date, format: :long)
 
-      p.fr-text--lg = @post.description
+      .rdv-blog-post-content
+        = sanitize @post.content_html, tags: BlogPost::CONTENT_HTML_ALLOWED_TAGS, attributes: BlogPost::CONTENT_HTML_ALLOWED_ATTRIBUTES
 
       = link_to "Toutes les nouveautés", blog_posts_path, class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-arrow-left-line fr-mt-4w"

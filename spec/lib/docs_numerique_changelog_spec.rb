@@ -53,7 +53,8 @@ RSpec.describe DocsNumeriqueChangelog do
       expect(posts.first).to have_attributes(
         title: "Première fonctionnalité",
         categories: ["Nouveauté"],
-        description: "Titre Ceci est le premier paragraphe. Deuxième paragraphe.",
+        content_truncated_text: "Titre Ceci est le premier paragraphe. Deuxième paragraphe.",
+        content_html: "<h1>Titre</h1><p>Ceci est le <strong>premier</strong> paragraphe.</p><p>Deuxième paragraphe.</p>",
         id: doc1_id,
         external_url: "https://docs.numerique.gouv.fr/docs/#{doc1_id}",
         published_at: Time.zone.local(2025, 5, 5)
@@ -62,7 +63,8 @@ RSpec.describe DocsNumeriqueChangelog do
       expect(posts.second).to have_attributes(
         title: "Incroyable amélioration",
         categories: ["Amélioration"],
-        description: "Article sans description longue.",
+        content_truncated_text: "Article sans description longue.",
+        content_html: "<p>Article sans description longue.</p>",
         id: doc2_id,
         external_url: "https://docs.numerique.gouv.fr/docs/#{doc2_id}",
         published_at: Time.zone.local(2025, 5, 1)
@@ -71,7 +73,8 @@ RSpec.describe DocsNumeriqueChangelog do
       expect(posts.third).to have_attributes(
         title: "Une nouvelle page de réservation en ligne, pensée pour plus de clarté et d'autonomie",
         categories: ["Nouveauté"],
-        description: "Description de la nouvelle page.",
+        content_truncated_text: "Description de la nouvelle page.",
+        content_html: "<p>Description de la <a href='http://example.com'>nouvelle page</a>.</p>",
         id: doc3_id,
         external_url: "https://docs.numerique.gouv.fr/docs/#{doc3_id}",
         published_at: Time.zone.local(2025, 4, 17)

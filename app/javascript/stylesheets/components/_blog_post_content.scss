@@ -1,0 +1,21 @@
+// Contenu HTML des nouveautés, rédigé dans docs.numerique.gouv.fr
+.rdv-blog-post-content {
+  img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 1.5rem;
+  }
+
+  figcaption {
+    font-size: 0.875rem;
+    color: var(--text-mention-grey);
+  }
+
+  // Encadrés (blocs « callout » de Docs)
+  aside {
+    padding: 1.5rem 1.5rem 0.5rem;
+    margin-bottom: 1.5rem;
+    background-color: var(--background-contrast-info);
+    border-left: 4px solid var(--border-plain-info);
+  }
+}

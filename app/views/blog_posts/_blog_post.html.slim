@@ -3,7 +3,7 @@
     .fr-card__content
       h3.fr-card__title
         = link_to post.title, blog_post_path(post)
-      p.fr-card__desc = post.description.truncate_words(35)
+      p.fr-card__desc = post.content_truncated_text.truncate_words(35)
       .fr-card__start
         - if post.categories.any?
           ul.fr-tags-group

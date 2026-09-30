@@ -1,17 +1,32 @@
 RSpec.describe "Tout le monde peut lire les nouveautés" do
   it "liste les nouveautés et permet de consulter chacune d'entre elles" do
     create(:blog_post, title: "Ancienne nouveauté", published_at: 2.months.ago)
-    create(:blog_post, title: "Nouveauté récente", description: "Une description de la nouveauté", categories: ["Amélioration"], published_at: 1.day.ago)
+    create(
+      :blog_post,
+      title: "Nouveauté récente",
+      content_truncated_text: "Le résumé de la nouveauté",
+      content_html: <<~HTML,
+        <p>Le <strong>contenu complet</strong> de la nouveauté, avec un <a href="https://example.com/aide">lien</a>.</p>
+        <img src="https://example.com/capture.png" alt="Capture d'écran">
+        <script>alert("xss")</script>
+      HTML
+      categories: ["Amélioration"],
+      published_at: 1.day.ago
+    )
 
     visit "/nouveautes"
 
     expect(page).to have_css("h1", text: "Nouveautés")
+    expect(page).to have_content("Le résumé de la nouveauté")
     expect(page.text.index("Nouveauté récente")).to be < page.text.index("Ancienne nouveauté")
 
     click_on "Nouveauté récente"
 
     expect(page).to have_css("h1", text: "Nouveauté récente")
-    expect(page).to have_content("Une description de la nouveauté")
+    expect(page).to have_css("strong", text: "contenu complet")
+    expect(page).to have_link("lien", href: "https://example.com/aide")
+    expect(page).to have_css("img[src='https://example.com/capture.png'][alt=\"Capture d'écran\"]")
+    expect(page).to have_no_css(".rdv-blog-post-content script")
     expect(page).to have_content("Amélioration")
 
     click_on "Toutes les nouveautés"
