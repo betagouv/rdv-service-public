@@ -61,9 +61,8 @@ RSpec.describe Ami do
   end
 
   describe "notifications de confirmation pour les différents location types" do
-    let(:motif) { create(:motif, location_type:) }
-    let(:rdv) { create(:rdv, motif:, organisation: motif.organisation, users: [user]) }
-    let(:participation) { rdv.participations.first }
+    let(:motif) { create(:motif, location_type:, organisation:) }
+    let(:rdv) { create(:rdv, motif:, organisation:) }
 
     before { described_class.new(participation).create_event }
 
@@ -89,8 +88,8 @@ RSpec.describe Ami do
   end
 
   describe "notifications de rappel pour les différents location types" do
-    let(:motif) { create(:motif, location_type:) }
-    let(:rdv) { create(:rdv, motif:, organisation: motif.organisation, users: [user]) }
+    let(:motif) { create(:motif, location_type:, organisation:) }
+    let(:rdv) { create(:rdv, motif:, organisation:) }
     let(:participation) { rdv.participations.first }
 
     before { described_class.new(participation).send_reminder }
