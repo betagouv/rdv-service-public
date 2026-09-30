@@ -4,11 +4,6 @@ module Agents::TwoFactorFreshnessConcern
   FRESHNESS_WINDOW = 30.minutes
   SESSION_KEY = :agent_2fa_verified_at
   RETURN_TO_SESSION_KEY = :two_factor_step_up_return_to
-  # Un fichier envoyé via `send_data` ne remplace pas la page affichée par le navigateur (pas de
-  # rendu HTML) : rediriger directement vers ce lien laisserait l'agent sur la page de vérification
-  # du code, sans retour visuel. On redirige donc vers la liste des exports avec un message
-  # l'invitant à relancer lui-même le téléchargement.
-  EXPORT_DOWNLOAD_PATH_PATTERN = %r{\A/agents/exports/[0-9a-f-]+/download\z}
 
   def two_factor_fresh?
     verified_at = session[SESSION_KEY]
@@ -43,10 +38,25 @@ module Agents::TwoFactorFreshnessConcern
   def redirect_after_two_factor_verification!(return_to)
     notice = "Votre identité a été vérifiée, vous pouvez maintenant continuer votre action."
 
-    if return_to&.match?(EXPORT_DOWNLOAD_PATH_PATTERN)
+    # Un fichier envoyé via `send_data` ne remplace pas la page affichée par le navigateur (pas de
+    # rendu HTML) : rediriger directement vers ce lien laisserait l'agent sur la page de vérification
+    # du code, sans retour visuel. On redirige donc vers la liste des exports avec un message
+    # l'invitant à relancer lui-même le téléchargement.
+    if export_download_path?(return_to)
       redirect_to agents_exports_path, flash: { success: notice }
     else
       redirect_to return_to || agents_exports_path, flash: { success: notice }
     end
+  end
+
+  private
+
+  def export_download_path?(path)
+    return false if path.blank?
+
+    route = Rails.application.routes.recognize_path(path)
+    route[:controller] == "agents/exports" && route[:action] == "download"
+  rescue ActionController::RoutingError
+    false
   end
 end
