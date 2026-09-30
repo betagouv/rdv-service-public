@@ -33,7 +33,7 @@ class WebhookEndpoint < ApplicationRecord
   end
 
   def trigger_for(record)
-    WebhookJob.set(queue: :latency_whenever).perform_later(record.generate_webhook_payload(:created), id)
+    WebhookJob.set(queue: :latency_whenever).perform_later(record.generate_webhook_payload(:created, event_occurred_at: Time.zone.now), id)
   end
 
   def partially_hidden_secret

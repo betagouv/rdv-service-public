@@ -4,20 +4,23 @@
 module WebhookDeliverable
   extend ActiveSupport::Concern
 
-  def generate_webhook_payload(action)
+  def generate_webhook_payload(action, event_occurred_at:)
     meta = {
       model: self.class.name,
       event: action,
       webhook_reason: webhook_reason,
-      timestamp: Time.zone.now,
+      event_occurred_at:,
+      payload_computed_at: Time.zone.now,
+      timestamp: event_occurred_at, # champ déprécié
     }
     blueprint_class = "#{self.class.name}Blueprint".constantize
     blueprint_class.render(self, root: :data, meta: meta)
   end
 
-  def generate_payload_and_send_webhook(action)
+  def enqueue_webhook_job(action)
+    # NOTE: le payload sera généré dans le job, donc potentiellement désynchronisé
     subscribed_webhook_endpoints.each do |endpoint|
-      WebhookJob.perform_later(record: self, action:, webhook_endpoint_id: endpoint.id)
+      WebhookJob.perform_later(record: self, action:, webhook_endpoint_id: endpoint.id, event_occurred_at: Time.zone.now)
     end
   end
 
@@ -27,7 +30,7 @@ module WebhookDeliverable
     end
 
     # Prépare le payload, avant de supprimer l'objet
-    payload = generate_webhook_payload(:destroyed)
+    payload = generate_webhook_payload(:destroyed, event_occurred_at: Time.zone.now)
 
     # Execute la suppression
     yield
@@ -50,11 +53,11 @@ module WebhookDeliverable
     attr_accessor :skip_webhooks, :webhook_reason
 
     after_commit on: :create, unless: :skip_webhooks do
-      generate_payload_and_send_webhook(:created)
+      enqueue_webhook_job(:created)
     end
 
     after_commit on: :update, unless: :skip_webhooks do
-      generate_payload_and_send_webhook(:updated)
+      enqueue_webhook_job(:updated)
     end
 
     around_destroy :generate_payload_and_send_webhook_for_destroy, unless: :skip_webhooks
