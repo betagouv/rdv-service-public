@@ -9,7 +9,7 @@ class WebhookEndpoint < ApplicationRecord
   validate :subscriptions_validity
   validates :secret, presence: true
   validate :validate_target_url_format, if: -> { will_save_change_to_target_url? && errors[:target_url].empty? }
-  validate :validate_target_url_https, if: -> { Rails.env.production? && ENV["IS_REVIEW_APP"] != "true" && will_save_change_to_target_url? && errors[:target_url].empty? }
+  validate :validate_target_url_https, if: -> { Rails.env.production? && will_save_change_to_target_url? && errors[:target_url].empty? }
   validate :validate_target_url_host_allowed, if: -> { will_save_change_to_target_url? && errors[:target_url].empty? }
 
   # Callbacks
