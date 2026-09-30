@@ -48,10 +48,11 @@ module DocsNumeriqueChangelog
 
     def to_blog_post
       BlogPost.new(
+        id:,
         title:,
         categories:,
         description:,
-        external_url: "#{BlogPost::DOCS_DOCUMENT_URL_PREFIX}#{id}",
+        external_url: "https://docs.numerique.gouv.fr/docs/#{id}",
         published_at:
       )
     end

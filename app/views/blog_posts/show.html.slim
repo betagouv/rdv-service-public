@@ -21,8 +21,4 @@
 
       p.fr-text--lg = @post.description
 
-      ul.fr-btns-group.fr-btns-group--inline-md.fr-mt-4w
-        li
-          = link_to "Lire l’article complet", @post.external_url, class: "fr-btn fr-btn--icon-right fr-icon-external-link-line", target: "_blank", rel: "noopener", title: "Lire l’article complet - nouvelle fenêtre"
-        li
-          = link_to "Toutes les nouveautés", blog_posts_path, class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-arrow-left-line"
+      = link_to "Toutes les nouveautés", blog_posts_path, class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-arrow-left-line fr-mt-4w"

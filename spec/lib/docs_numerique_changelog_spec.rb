@@ -1,4 +1,7 @@
 RSpec.describe DocsNumeriqueChangelog do
+  let(:doc1_id) { "0b0c5b3e-1f4d-4c2a-9e8f-111111111111" }
+  let(:doc2_id) { "0b0c5b3e-1f4d-4c2a-9e8f-222222222222" }
+  let(:doc3_id) { "0b0c5b3e-1f4d-4c2a-9e8f-333333333333" }
   let(:children_url) { "#{DocsNumeriqueChangelog::BASE_URL}/documents/#{DocsNumeriqueChangelog::PARENT_DOCUMENT_ID}/children/" }
 
   context "l'API retourne des documents" do
@@ -8,15 +11,15 @@ RSpec.describe DocsNumeriqueChangelog do
         body: {
           "count" => 3,
           "results" => [
-            { "id" => "doc-1", "title" => " Première fonctionnalité - 05/05/2025 - Nouveauté" },
-            { "id" => "doc-2", "title" => "Incroyable amélioration - 01/05/2025 - Amélioration" },
-            { "id" => "doc-3", "title" => " Une nouvelle page de réservation en ligne, pensée pour plus de clarté et d'autonomie - 17/04/2025 - Nouveauté" },
+            { "id" => doc1_id, "title" => " Première fonctionnalité - 05/05/2025 - Nouveauté" },
+            { "id" => doc2_id, "title" => "Incroyable amélioration - 01/05/2025 - Amélioration" },
+            { "id" => doc3_id, "title" => " Une nouvelle page de réservation en ligne, pensée pour plus de clarté et d'autonomie - 17/04/2025 - Nouveauté" },
           ],
         }.to_json,
         headers: { "Content-Type" => "application/json" }
       )
 
-      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/doc-1/formatted-content/")
+      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/#{doc1_id}/formatted-content/")
         .with(query: { content_format: "html" })
         .to_return(
           status: 200,
@@ -24,7 +27,7 @@ RSpec.describe DocsNumeriqueChangelog do
           headers: { "Content-Type" => "application/json" }
         )
 
-      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/doc-2/formatted-content/")
+      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/#{doc2_id}/formatted-content/")
         .with(query: { content_format: "html" })
         .to_return(
           status: 200,
@@ -32,7 +35,7 @@ RSpec.describe DocsNumeriqueChangelog do
           headers: { "Content-Type" => "application/json" }
         )
 
-      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/doc-3/formatted-content/")
+      stub_request(:get, "#{DocsNumeriqueChangelog::BASE_URL}/documents/#{doc3_id}/formatted-content/")
         .with(query: { content_format: "html" })
         .to_return(
           status: 200,
@@ -51,7 +54,8 @@ RSpec.describe DocsNumeriqueChangelog do
         title: "Première fonctionnalité",
         categories: ["Nouveauté"],
         description: "Titre Ceci est le premier paragraphe. Deuxième paragraphe.",
-        external_url: "https://docs.numerique.gouv.fr/docs/doc-1",
+        id: doc1_id,
+        external_url: "https://docs.numerique.gouv.fr/docs/#{doc1_id}",
         published_at: Time.zone.local(2025, 5, 5)
       )
 
@@ -59,7 +63,8 @@ RSpec.describe DocsNumeriqueChangelog do
         title: "Incroyable amélioration",
         categories: ["Amélioration"],
         description: "Article sans description longue.",
-        external_url: "https://docs.numerique.gouv.fr/docs/doc-2",
+        id: doc2_id,
+        external_url: "https://docs.numerique.gouv.fr/docs/#{doc2_id}",
         published_at: Time.zone.local(2025, 5, 1)
       )
 
@@ -67,7 +72,8 @@ RSpec.describe DocsNumeriqueChangelog do
         title: "Une nouvelle page de réservation en ligne, pensée pour plus de clarté et d'autonomie",
         categories: ["Nouveauté"],
         description: "Description de la nouvelle page.",
-        external_url: "https://docs.numerique.gouv.fr/docs/doc-3",
+        id: doc3_id,
+        external_url: "https://docs.numerique.gouv.fr/docs/#{doc3_id}",
         published_at: Time.zone.local(2025, 4, 17)
       )
     end

@@ -211,7 +211,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_13_100000) do
     t.string "param_names", default: [], array: true
   end
 
-  create_table "blog_posts", force: :cascade do |t|
+  create_table "blog_posts", id: :uuid, default: nil, force: :cascade do |t|
     t.string "title", null: false
     t.string "description", null: false
     t.string "categories", default: [], array: true

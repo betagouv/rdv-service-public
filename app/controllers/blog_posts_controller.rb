@@ -4,6 +4,6 @@ class BlogPostsController < ApplicationController
   end
 
   def show
-    @post = BlogPost.find_by_docs_document_id!(params[:id])
+    @post = BlogPost.find(params[:id])
   end
 end
