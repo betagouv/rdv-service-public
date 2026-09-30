@@ -60,6 +60,61 @@ RSpec.describe Ami do
     end)
   end
 
+  describe "notifications de confirmation pour les différents location types" do
+    let(:motif) { create(:motif, location_type:, organisation:) }
+    let(:rdv) { create(:rdv, motif:, organisation:) }
+
+    before { described_class.new(participation).create_event }
+
+    describe "pour un motif par téléphone" do
+      let(:location_type) { :phone }
+
+      it "envoie le bon texte de notification" do
+        expect(WebMock).to(have_requested(:put, "https://ami.test/api/v2/event").with do |request|
+          expect(JSON.parse(request.body)["content_body"]).to include "par téléphone"
+        end)
+      end
+    end
+
+    describe "pour un motif par visio" do
+      let(:location_type) { :visio }
+
+      it "envoie le bon texte de notification" do
+        expect(WebMock).to(have_requested(:put, "https://ami.test/api/v2/event").with do |request|
+          expect(JSON.parse(request.body)["content_body"]).to include "par visioconférence"
+        end)
+      end
+    end
+  end
+
+  describe "notifications de rappel pour les différents location types" do
+    let(:motif) { create(:motif, location_type:, organisation:) }
+    let(:rdv) { create(:rdv, motif:, organisation:) }
+    let(:participation) { rdv.participations.first }
+
+    before { described_class.new(participation).send_reminder }
+
+    describe "pour un motif par téléphone" do
+      let(:location_type) { :phone }
+
+      it "envoie le bon texte de notification" do
+        expect(WebMock).to(have_requested(:put, "https://ami.test/api/v2/event").with do |request|
+          expect(JSON.parse(request.body)["content_private_body"]).to include "Nous vous appellerons"
+        end)
+      end
+    end
+
+    describe "pour un motif par visio" do
+      let(:location_type) { :visio }
+
+      it "envoie le bon texte de notification" do
+        expect(WebMock).to(have_requested(:put, "https://ami.test/api/v2/event").with do |request|
+          expect(JSON.parse(request.body)["content_private_body"]).to include "par visioconférence"
+        end)
+      end
+    end
+  end
+
   context "quand AMI n'est pas activé pour l'organisation" do
     let(:organisation) { create(:organisation, ami_enabled: false) }
 
