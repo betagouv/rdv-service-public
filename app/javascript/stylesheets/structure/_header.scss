@@ -19,7 +19,7 @@ header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  max-width: calc( $max-agent-layout-width + 250px); // Le 250px est pour la largeut du .left-side-menu
   align-items: center;
   flex-grow: inherit;
   padding: 0.2rem 0 0 0;
