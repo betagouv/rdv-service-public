@@ -1,4 +1,6 @@
 module Admin::WeakPasswordControllerConcern
+  private
+
   def password_too_weak?(password)
     Agent.new(password:).tap(&:readonly!).tap(&:validate).errors[:password].any?
   end
@@ -9,8 +11,6 @@ module Admin::WeakPasswordControllerConcern
 
     redirect_to edit_agent_password_path(reset_password_token:), flash: { error: weak_password_error_message }
   end
-
-  protected
 
   def weak_password_error_message
     <<~MESSAGE
