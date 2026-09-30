@@ -25,9 +25,6 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def create
-    params[:user] ||= {} # TODO: supprimer après le 03/08/2026
-    params[:selected_users] ||= ["current_user"] # TODO: supprimer après le 03/08/2026
-
     @rdv_builder = Users::RdvBuilder.new(current_user, rdv_params)
     @rdv = @rdv_builder.rdv
     @rdv_booking_form = Users::RdvBookingForm.new(
@@ -39,7 +36,10 @@ class Users::RdvWizardStepsController < UserAuthController
 
     authorize(@rdv_booking_form, policy_class: User::RdvBookingPolicy)
 
-    UserAmiProfile.update_notify_by_ami(current_user, params.dig(:user, :notify_by_ami).to_boolean)
+    # On fait l'appel à AMI en synchrone pour mettre à jour le profil avant d'envoyer les notifications
+    if params[:user].key?(:notify_by_ami)
+      UserAmiProfile.update_notify_by_ami(current_user, params[:user][:notify_by_ami].to_boolean, synchronous: true)
+    end
     if @rdv_booking_form.save
       flash[:success] = (@rdv_booking_form.collectif? ? "Participation confirmée" : t("users.rdvs.create.rdv_confirmed"))
 

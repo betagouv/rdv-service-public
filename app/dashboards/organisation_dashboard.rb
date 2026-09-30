@@ -15,6 +15,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     motifs: Field::HasMany,
     lieux: Field::HasMany,
     ants_connectable: Field::Boolean,
+    ami_enabled: Field::Boolean,
     horaires: Field::String,
     phone_number: Field::String,
     email: Field::String,
@@ -51,6 +52,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     motifs
     lieux
     ants_connectable
+    ami_enabled
     verticale
     time_zone
     created_at
@@ -66,6 +68,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     phone_number
     email
     ants_connectable
+    ami_enabled
     verticale
     territory
     time_zone

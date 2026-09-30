@@ -8,14 +8,18 @@ module VisioNumerique
       @access_token = access_token
     end
 
-    def call
+    def visio_url
       response = connection.post("rooms/") do |req|
         req.headers["Authorization"] = "Bearer #{@access_token}"
       end
 
       raise ApiError, "HTTP #{response.status}: #{response.body}" unless response.success?
 
-      response.body
+      response.body.fetch("url")
+    rescue VisioNumerique::CreateRoom::ApiError => e
+      Rails.logger.error("Visio Numerique API error: #{e.message}")
+      Sentry.capture_exception(e)
+      nil
     end
 
     private

@@ -5,6 +5,7 @@ RSpec.describe WebhookDeliverable, type: :concern do
   let!(:webhook_endpoint) do
     create(
       :webhook_endpoint,
+      :bypassing_host_validation,
       organisation: organisation,
       subscriptions: %w[rdv absence plage_ouverture]
     )
@@ -69,6 +70,7 @@ RSpec.describe WebhookDeliverable, type: :concern do
       let!(:webhook_endpoint) do
         create(
           :webhook_endpoint,
+          :bypassing_host_validation,
           organisation: organisation,
           subscriptions: %w[absence plage_ouverture]
         )

@@ -202,6 +202,7 @@ tables:
       - external_id
       - verticale
       - ants_connectable
+      - ami_enabled
       - public_link_id
       - time_zone
       - disabled_at
@@ -461,6 +462,7 @@ tables:
   - table_name: oauth_applications
     anonymized_column_names:
       - secret
+      - internal_documentation
     non_anonymized_column_names:
       - name
       - uid
@@ -567,6 +569,7 @@ tables:
   - table_name: rdv_invitations
     anonymized_column_names:
       - token
+      - visio_url_custom
     non_anonymized_column_names:
       - created_at
       - updated_at

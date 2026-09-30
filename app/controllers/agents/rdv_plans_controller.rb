@@ -49,7 +49,8 @@ class Agents::RdvPlansController < AgentAuthController
     @rdv_plan.starts_at = nil
     @rdv_plan.rdv_agent ||= @rdv_plan.planning_agent
 
-    other_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active.ordered_by_last_name.where.not(id: current_agent.id)
+    other_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
+      .active.merge(@rdv_plan.organisation.agents).ordered_by_last_name.where.not(id: current_agent.id)
 
     agents = [current_agent] + other_agents
 
@@ -90,7 +91,7 @@ class Agents::RdvPlansController < AgentAuthController
 
   def edit_lieu
     render locals: {
-      lieux: policy_scope(Lieu.enabled, policy_scope_class: Agent::LieuPolicy::Scope),
+      lieux: policy_scope(@rdv_plan.organisation.lieux.enabled, policy_scope_class: Agent::LieuPolicy::Scope),
       event_sources:,
     }
   end
@@ -124,7 +125,7 @@ class Agents::RdvPlansController < AgentAuthController
                                  { send_lifecycle_notifications: false, send_reminder_notification: false }
                                end
 
-    result = @rdv_plan.create_rdv_or_send_invitation(user_attributes:, participation_attributes:)
+    result = @rdv_plan.create_rdv_or_send_invitation(user_attributes:, participation_attributes:, pro_connect_access_token: session[:pro_connect_access_token])
 
     if result.valid?
       if result.is_a?(Rdv)
@@ -172,7 +173,7 @@ class Agents::RdvPlansController < AgentAuthController
 
   def event_sources
     agent = @rdv_plan.rdv_agent
-    organisation = agent.organisations.first
+    organisation = @rdv_plan.organisation
 
     event_sources = [
       { id: "Rdv",            url: admin_api_agenda_rdvs_path(agent_id: agent.id, organisation_id: organisation.id, format: :json) },
