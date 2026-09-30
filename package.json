@@ -13,6 +13,7 @@
     "@rails/actioncable": ">=7.0",
     "@rails/ujs": "^6.0.0",
     "@stimulus-components/checkbox-select-all": "^6.1.0",
+    "accessible-autocomplete": "^3.0.1",
     "autocomplete.js": "^0.37.1",
     "bootstrap": "^4.3.1",
     "bowser": "^2.7.0",
