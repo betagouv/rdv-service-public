@@ -5,7 +5,6 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
   end
   let(:organisation) { create(:organisation, name: "DREETS de l'Ile de France", verticale: :rdv_etat) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [motif.organisation]) }
-  let!(:user) { create(:user, organisations: [organisation]) }
   let(:lieu) { create(:lieu, organisation: organisation, name: "Bureau départemental", address: "21 rue des Ardennes, 75019 Paris") }
   let(:now) do
     Time.zone.local(2026, 8, 12, 14, 0, 0)
@@ -33,19 +32,11 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
     doc.add_text("La fonctionnalité est cachée derrière un feature flag")
     agent.enable_feature!("rdv_invitations")
 
-    visit calendar_admin_organisation_planning_plage_ouvertures_path(organisation.id)
-
-    doc.add_screenshot(
-      page,
-      text: "J'ai une plage d'ouverture pour un motif qui n'est pas réservable en ligne",
-      wait_for: "Créer une plage"
-    )
-
     visit admin_organisation_planning_agenda_path(organisation.id)
 
     doc.add_screenshot(
       page,
-      text: "Je clique sur le bouton Nouveau",
+      text: "Depuis la page de planning, je clique sur le bouton Nouveau",
       wait_for: "Préférences d’affichage"
     )
 
@@ -75,6 +66,20 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
 
     click_on "Enregistrer"
 
+    doc.add_screenshot(
+      page,
+      text: "Je choisis mon motif de rendez-vous",
+      wait_for: "Pour quel motif souhaitez-vous que Francis FACTICE prenne rendez-vous ?"
+    )
+
+    click_on "Suivi de dossier"
+
+    doc.add_screenshot(
+      page,
+      text: "Je confirme l'envoi de l'invitation",
+      wait_for: "Il y a des créneaux"
+    )
+
     click_on "Envoyer l'invitation"
 
     doc.add_screenshot(
@@ -85,9 +90,11 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
 
     logout
 
+    perform_enqueued_jobs
+
     doc.start_section("Côté usager")
 
-    open_email(user.email)
+    open_email("francis@factice.org")
 
     expect(current_email.subject).to eq "Vous êtes invité.e à prendre rendez-vous"
 

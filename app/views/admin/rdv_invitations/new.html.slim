@@ -35,7 +35,7 @@
     .fr-col-12.fr-mt-2w.d-flex.rdv-justify-content-space-between
       = link_to "Retour", edit_motif_admin_organisation_rdv_invitations_path(current_organisation, params.permit(:motif_id)), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
       - if next_available_date
-        = form_for @rdv_invitation, url: admin_organisation_rdv_invitations_path(current_organisation, @rdv_invitation), method: :post, builder: Dsfr::FormBuilder do |f|
+        = form_for @rdv_invitation, url: admin_organisation_rdv_invitations_path(current_organisation), method: :post, builder: Dsfr::FormBuilder do |f|
           = f.hidden_field :user_id
           = f.hidden_field :motif_id
           = f.submit "Envoyer l'invitation", class: "fr-btn"
