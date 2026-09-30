@@ -33,9 +33,9 @@ class Rack::Attack
     end
   end
 
-  throttle("saisie de code de vérification 2FA agent - throttling par email", limit: Rails.env.test? ? 2 : 60, period: 10.minutes) do |request|
-    if request.path.match(%r{agents/two_factor_verification}) && request.post? && request.params.dig("login_code", "email").present?
-      request.params.dig("login_code", "email")
+  throttle("saisie de code de vérification 2FA agent - throttling par agent connecté", limit: Rails.env.test? ? 2 : 60, period: 10.minutes) do |request|
+    if request.path.match(%r{agents/two_factor_verification}) && request.post?
+      request.session["warden.user.agent.key"]&.first&.first
     end
   end
 
