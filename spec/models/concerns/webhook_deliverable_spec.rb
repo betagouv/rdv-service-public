@@ -23,14 +23,14 @@ RSpec.describe WebhookDeliverable, type: :concern do
         it "notifies the creation" do
           expect do
             rdv.save
-          end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :created, webhook_endpoint_id: webhook_endpoint.id, event_occured_at: a_kind_of(Time))
+          end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :created, webhook_endpoint_id: webhook_endpoint.id, event_occurred_at: a_kind_of(Time))
         end
       end
 
       it "notifies on update" do
         expect do
           rdv.update(status: :excused)
-        end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id, event_occured_at: a_kind_of(Time))
+        end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id, event_occurred_at: a_kind_of(Time))
       end
 
       it "notifies on deletion" do
@@ -139,7 +139,7 @@ RSpec.describe WebhookDeliverable, type: :concern do
     end
   end
 
-  it "envoie event_occured_at à l'heure de la modification et timestamp à l'heure d'exécution du job" do
+  it "envoie event_occurred_at à l'heure de la modification et timestamp à l'heure d'exécution du job" do
     sent_meta = nil
     stub_request(:post, webhook_endpoint.target_url).to_return do |request|
       sent_meta = JSON.parse(request.body)["meta"]
@@ -149,7 +149,7 @@ RSpec.describe WebhookDeliverable, type: :concern do
     travel_to(Time.zone.parse("2026-09-29 10:00:00")) { rdv.update(status: :excused) }
     travel_to(Time.zone.parse("2026-09-29 10:05:00")) { perform_enqueued_jobs(only: WebhookJob) }
 
-    expect(Time.zone.parse(sent_meta["event_occured_at"])).to eq(Time.zone.parse("2026-09-29 10:00:00"))
+    expect(Time.zone.parse(sent_meta["event_occurred_at"])).to eq(Time.zone.parse("2026-09-29 10:00:00"))
     expect(Time.zone.parse(sent_meta["timestamp"])).to eq(Time.zone.parse("2026-09-29 10:05:00"))
   end
 end

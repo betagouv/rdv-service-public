@@ -19,7 +19,7 @@ class WebhookJob < ApplicationJob
   #
   def perform(*args, **kwargs)
     if kwargs[:record]
-      payload = kwargs[:record].generate_webhook_payload(kwargs[:action], event_occured_at: kwargs[:event_occured_at])
+      payload = kwargs[:record].generate_webhook_payload(kwargs[:action], event_occurred_at: kwargs[:event_occurred_at])
       webhook_endpoint_id = kwargs[:webhook_endpoint_id]
     else
       payload, webhook_endpoint_id = args

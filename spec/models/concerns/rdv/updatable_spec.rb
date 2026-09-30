@@ -100,7 +100,7 @@ RSpec.describe Rdv::Updatable do
         rdv.reload
         expect do
           rdv.update_and_notify(agent, starts_at: 5.days.from_now)
-        end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id, event_occured_at: a_kind_of(Time))
+        end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id, event_occurred_at: a_kind_of(Time))
       end
     end
 
