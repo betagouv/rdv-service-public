@@ -9,26 +9,6 @@ RSpec.describe Agents::ExportsController, type: :controller do
 
   before { sign_in agent }
 
-  describe "#index" do
-    it "expose l'export à télécharger automatiquement quand il appartient à l'agent" do
-      get :index, params: { auto_download_export_id: export.id }
-      expect(assigns(:auto_download_export)).to eq(export)
-      meta_refresh = Capybara.string(response.body).find("meta[http-equiv='refresh']", visible: false)
-      expect(meta_refresh[:content]).to eq("0; url=#{agents_export_download_path(export.id)}")
-    end
-
-    it "n'expose aucun export à télécharger automatiquement pour un export d'un autre agent" do
-      other_export = create(:export)
-      get :index, params: { auto_download_export_id: other_export.id }
-      expect(assigns(:auto_download_export)).to be_nil
-    end
-
-    it "n'expose aucun export à télécharger automatiquement par défaut" do
-      get :index
-      expect(assigns(:auto_download_export)).to be_nil
-    end
-  end
-
   describe "#download" do
     context "quand la double authentification n'a pas été validée récemment" do
       it "redirige vers la page de vérification et mémorise l'URL demandée" do

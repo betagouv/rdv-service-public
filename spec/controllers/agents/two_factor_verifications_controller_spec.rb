@@ -72,12 +72,13 @@ RSpec.describe Agents::TwoFactorVerificationsController, type: :controller do
         expect(session[:two_factor_step_up_return_to]).to be_nil
       end
 
-      it "redirige vers la liste des exports avec relance automatique quand la page demandée était un téléchargement d'export" do
+      it "redirige vers la liste des exports avec un message quand la page demandée était un téléchargement d'export" do
         session[:two_factor_step_up_return_to] = "/agents/exports/42/download"
 
         post :create, params: { login_code: { code: login_code.code } }
 
-        expect(response).to redirect_to(agents_exports_path(auto_download_export_id: "42"))
+        expect(response).to redirect_to(agents_exports_path)
+        expect(flash[:success]).to be_present
       end
 
       it "marque le code comme utilisé" do
