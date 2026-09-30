@@ -4,7 +4,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
   end
 
   def create?
-    return true if @record.organisations.none?
+    return false if @record.organisations.none?
 
     @record.organisations.all? { |user_org| user_org.in?(current_agent.organisations) }
   end
