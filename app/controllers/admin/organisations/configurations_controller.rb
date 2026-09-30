@@ -8,7 +8,7 @@ class Admin::Organisations::ConfigurationsController < AgentAuthController
 
     if @organisations.none?
       redirect_to authenticated_agent_root_path
-    elsif @organisations.count == 1
+    elsif @organisations.one?
       redirect_to admin_organisation_configuration_path(@organisations.first)
     else
       render :index, layout: "application"
