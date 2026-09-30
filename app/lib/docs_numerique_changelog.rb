@@ -35,7 +35,7 @@ module DocsNumeriqueChangelog
   end
 
   class ChildDoc
-    attr_reader :id, :title, :categories, :description, :published_at
+    attr_reader :id, :title, :categories, :content_html, :content_truncated_text, :published_at
 
     def initialize(id:, title:)
       @id = id
@@ -43,7 +43,7 @@ module DocsNumeriqueChangelog
     end
 
     def fetch_and_parse_content
-      @content = parse_content(Client.instance.fetch_content(id))
+      parse_content(Client.instance.fetch_content(id))
     end
 
     def to_blog_post
@@ -51,7 +51,8 @@ module DocsNumeriqueChangelog
         id:,
         title:,
         categories:,
-        description:,
+        content_html:,
+        content_truncated_text:,
         external_url: "https://docs.numerique.gouv.fr/docs/#{id}",
         published_at:
       )
@@ -83,8 +84,9 @@ module DocsNumeriqueChangelog
     end
 
     def parse_content(html_content)
+      @content_html = html_content
       doc = Nokogiri::HTML.fragment(html_content)
-      @description = doc.children.map(&:text).join(" ").squish.truncate(500)
+      @content_truncated_text = doc.children.map(&:text).join(" ").squish.truncate(500)
     end
   end
 
