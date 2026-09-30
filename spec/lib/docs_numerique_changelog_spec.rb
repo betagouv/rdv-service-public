@@ -31,7 +31,7 @@ RSpec.describe DocsNumeriqueChangelog do
         .with(query: { content_format: "html" })
         .to_return(
           status: 200,
-          body: { content: "<p>Article sans description longue.</p>" }.to_json,
+          body: { content: "<p>Article sans description longue.</p><p>\u{FFFC}</p><p>Suite de l'article.</p>" }.to_json,
           headers: { "Content-Type" => "application/json" }
         )
 
@@ -63,8 +63,8 @@ RSpec.describe DocsNumeriqueChangelog do
       expect(posts.second).to have_attributes(
         title: "Incroyable amélioration",
         categories: ["Amélioration"],
-        content_truncated_text: "Article sans description longue.",
-        content_html: "<p>Article sans description longue.</p>",
+        content_truncated_text: "Article sans description longue. Suite de l'article.",
+        content_html: "<p>Article sans description longue.</p><br><p>Suite de l'article.</p>",
         id: doc2_id,
         external_url: "https://docs.numerique.gouv.fr/docs/#{doc2_id}",
         published_at: Time.zone.local(2025, 5, 1)
