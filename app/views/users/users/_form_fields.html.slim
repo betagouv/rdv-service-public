@@ -22,6 +22,7 @@
   = f.dsfr_text_field :address,
     value: f.object.address_value,
     required: f.object.address_required?,
+    label: f.object.address_required? ? "Adresse" : "Adresse (optionnel)",
     data: { "address-autocomplete": "on" },
     autocomplete: "street-address",
     dir: "ltr"
