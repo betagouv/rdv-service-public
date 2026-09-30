@@ -77,7 +77,7 @@ class Admin::MotifsController < AgentAuthController
     authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.save
       flash[:success] = "Motif créé."
-      if current_organisation.motifs.active.count == 1
+      if current_organisation.motifs.active.one?
         flash[:onboarding] = "first_motif_created"
       end
       redirect_to admin_organisation_motifs_path(@motif.organisation)
