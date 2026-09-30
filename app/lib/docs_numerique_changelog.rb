@@ -84,8 +84,10 @@ module DocsNumeriqueChangelog
     end
 
     def parse_content(html_content)
-      @content_html = html_content
-      doc = Nokogiri::HTML.fragment(html_content)
+      # Docs fonctionne par blocs : un bloc vide est exporté sous la forme d'un paragraphe
+      # contenant le caractère U+FFFC (OBJECT REPLACEMENT CHARACTER), qu'on remplace par une ligne vide.
+      @content_html = html_content.gsub("<p>\u{FFFC}</p>", "<br>")
+      doc = Nokogiri::HTML.fragment(@content_html)
       @content_truncated_text = doc.children.map(&:text).join(" ").squish.truncate(500)
     end
   end
