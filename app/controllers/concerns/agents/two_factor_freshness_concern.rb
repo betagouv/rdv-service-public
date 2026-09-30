@@ -5,9 +5,10 @@ module Agents::TwoFactorFreshnessConcern
   SESSION_KEY = :agent_2fa_verified_at
   RETURN_TO_SESSION_KEY = :two_factor_step_up_return_to
   # Un fichier envoyé via `send_data` ne remplace pas la page affichée par le navigateur (pas de
-  # rendu HTML) : rediriger directement vers ce lien laisse l'agent sur la page de vérification du
-  # code. On redirige donc vers la liste des exports, qui se charge de relancer le téléchargement.
-  EXPORT_DOWNLOAD_PATH_PATTERN = %r{\A/agents/exports/([0-9a-f-]+)/download\z}
+  # rendu HTML) : rediriger directement vers ce lien laisserait l'agent sur la page de vérification
+  # du code, sans retour visuel. On redirige donc vers la liste des exports avec un message
+  # l'invitant à relancer lui-même le téléchargement.
+  EXPORT_DOWNLOAD_PATH_PATTERN = %r{\A/agents/exports/[0-9a-f-]+/download\z}
 
   def two_factor_fresh?
     verified_at = session[SESSION_KEY]
@@ -40,12 +41,12 @@ module Agents::TwoFactorFreshnessConcern
   end
 
   def redirect_after_two_factor_verification!(return_to)
-    match = return_to&.match(EXPORT_DOWNLOAD_PATH_PATTERN)
+    notice = "Votre identité a été vérifiée, vous pouvez maintenant continuer votre action."
 
-    if match
-      redirect_to agents_exports_path(auto_download_export_id: match[1])
+    if return_to&.match?(EXPORT_DOWNLOAD_PATH_PATTERN)
+      redirect_to agents_exports_path, flash: { success: notice }
     else
-      redirect_to return_to || agents_exports_path
+      redirect_to return_to || agents_exports_path, flash: { success: notice }
     end
   end
 end
