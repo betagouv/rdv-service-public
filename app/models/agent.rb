@@ -92,7 +92,8 @@ class Agent < ApplicationRecord
   has_many :agent_teams, dependent: :destroy
   has_many :referent_assignations, dependent: :destroy
   has_many :instance_exports, dependent: :destroy
-  has_many :external_calendar_sync_executions, dependent: :destroy
+  has_many :external_calendar_sync_executions, dependent: :delete_all
+  has_many :agent_trusted_devices, dependent: :delete_all
   has_one :territory_creation_request, dependent: :destroy
   has_one :caldav_config, dependent: :destroy
 
