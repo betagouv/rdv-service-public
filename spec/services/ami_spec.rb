@@ -116,7 +116,6 @@ RSpec.describe Ami do
     end
   end
 
-
   context "quand AMI n'est pas activé pour l'organisation" do
     let(:organisation) { create(:organisation, ami_enabled: false) }
 
