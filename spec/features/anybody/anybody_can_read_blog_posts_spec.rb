@@ -27,6 +27,7 @@ RSpec.describe "Tout le monde peut lire les nouveautés" do
     expect(page).to have_link("lien", href: "https://example.com/aide")
     expect(page).to have_css("img[src='https://example.com/capture.png'][alt=\"Capture d'écran\"]")
     expect(page).to have_no_css(".rdv-blog-post-content script")
+    expect(page.response_headers["Content-Security-Policy"]).to include("img-src 'self' data: blob: tile.openstreetmap.org openmaptiles.data.gouv.fr lasuite.numerique.gouv.fr https://docs.numerique.gouv.fr/media/")
     expect(page).to have_content("Amélioration")
 
     click_on "Toutes les nouveautés"
