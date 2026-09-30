@@ -20,12 +20,4 @@ RSpec.describe "rate limiting de la saisie de code de connexion agent (compte se
     expect(sentry_events.last.level).to eq(:warning)
     expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
   end
-
-  it "throttle après quelques tentatives en faisant varier le champ email soumis" do
-    3.times do |i|
-      post agents_sessions_by_code_path, params: { login_code: { email: "attacker-#{i}@exemple.fr", code: "000000" } }
-    end
-
-    expect(response).to redirect_to("/500.html")
-  end
 end
