@@ -11,6 +11,7 @@ class Users::RdvBookingForm
   validate :validate_user # ordre important car user.valid? commence par vider les erreurs sur @user
   validate :validate_selected_users_count
   validate :validate_phone_number_present_for_motif_by_phone
+  validate :validate_address_present_for_motif_at_home
 
   def initialize(user:, rdv_builder:, domain:, user_attributes: {}, selected_users: ["current_user"])
     @user = user
@@ -45,7 +46,7 @@ class Users::RdvBookingForm
 
   def show_logement_field? = rdv.territory.enable_logement_field
 
-  def show_address_field? = !signed_in_with_restricted_auth_token? && rdv.territory.enable_address_field?
+  def show_address_field? = !signed_in_with_restricted_auth_token? && (address_required? || rdv.territory.enable_address_field?)
 
   def address_required? = motif.home?
 
@@ -105,6 +106,10 @@ class Users::RdvBookingForm
 
   def validate_phone_number_present_for_motif_by_phone
     errors.add(:phone_number, :missing_for_phone_motif) if rdv.motif.phone? && user.phone_number.blank?
+  end
+
+  def validate_address_present_for_motif_at_home
+    errors.add(:address, :missing_for_home_motif) if show_address_field? && address_required? && user.address.blank?
   end
 
   def create_individual_rdv
