@@ -51,7 +51,7 @@ module DocsNumeriqueChangelog
         title:,
         categories:,
         description:,
-        external_url: "https://docs.numerique.gouv.fr/docs/#{id}",
+        external_url: "#{BlogPost::DOCS_DOCUMENT_URL_PREFIX}#{id}",
         published_at:
       )
     end
