@@ -5,7 +5,6 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
   end
   let(:organisation) { create(:organisation, name: "DREETS de l'Ile de France", verticale: :rdv_etat) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [motif.organisation]) }
-  let!(:user) { create(:user, organisations: [organisation]) }
   let(:lieu) { create(:lieu, organisation: organisation, name: "Bureau départemental", address: "21 rue des Ardennes, 75019 Paris") }
   let(:now) do
     Time.zone.local(2026, 8, 12, 14, 0, 0)
@@ -33,46 +32,52 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
     doc.add_text("La fonctionnalité est cachée derrière un feature flag")
     agent.enable_feature!("rdv_invitations")
 
-    visit calendar_admin_organisation_planning_plage_ouvertures_path(organisation.id)
+    visit admin_organisation_planning_agenda_path(organisation.id)
 
     doc.add_screenshot(
       page,
-      text: "J'ai une plage d'ouverture pour un motif qui n'est pas réservable en ligne",
-      wait_for: "Planning de"
+      text: "Depuis la page de planning, je clique sur le bouton Nouveau",
+      wait_for: "Préférences d’affichage"
     )
 
-    visit admin_organisation_user_path(organisation.id, user.id)
+    click_on "Nouveau"
 
     doc.add_screenshot(
       page,
-      text: "Je vais sur la page de l'usager, et je clique sur Trouver un rendez-vous",
-      wait_for: "Informations générales"
+      text: "Je clique sur Invitation a prendre rendez-vous",
+      wait_for: "Permettre à un usager de choisir un créneau pour un rendez-vous"
     )
 
-    click_on "Trouver un RDV pour l’usager"
-
-    select("Suivi de dossier", from: "Motif")
+    click_on "Une invitation à prendre rendez-vous"
 
     doc.add_screenshot(
       page,
-      text: "Je fais une recherche de créneaux pour mon motif",
-      wait_for: "Trouver un RDV"
+      text: "Je clique sur le bouton pour ajouter un usager",
+      wait_for: "Invitation à prendre rendez-vous"
     )
 
-    click_on "Afficher les créneaux"
+    click_on "Ajouter un usager"
+
+    fill_in "Prénom", with: "Francis"
+    fill_in "Nom", with: "Factice"
+    fill_in "Email", with: "francis@factice.org"
+
+    doc.add_screenshot(page, text: "J'ajoute un nouvel usager")
+
+    click_on "Enregistrer"
 
     doc.add_screenshot(
       page,
-      text: "En dessous de la liste des créneaux, on me proposer de laisser l'usager choisir son créneau. Je clique sur ce lien",
-      wait_for: "Vous pouvez inviter l'usager à choisir son créneau"
+      text: "Je choisis mon motif de rendez-vous",
+      wait_for: "Pour quel motif souhaitez-vous que Francis FACTICE prenne rendez-vous ?"
     )
 
-    click_on "inviter l'usager à choisir son créneau"
+    click_on "Suivi de dossier"
 
     doc.add_screenshot(
       page,
-      text: "On me récapitule les infos. Je clique sur Envoyer l'invitation",
-      wait_for: "Vous allez inviter"
+      text: "Je confirme l'envoi de l'invitation",
+      wait_for: "Il y a des créneaux"
     )
 
     click_on "Envoyer l'invitation"
@@ -85,9 +90,11 @@ RSpec.describe "Invitation à prendre rendez-vous", js: true do
 
     logout
 
+    perform_enqueued_jobs
+
     doc.start_section("Côté usager")
 
-    open_email(user.email)
+    open_email("francis@factice.org")
 
     expect(current_email.subject).to eq "Vous êtes invité.e à prendre rendez-vous"
 
