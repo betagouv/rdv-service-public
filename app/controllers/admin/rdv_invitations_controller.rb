@@ -24,6 +24,23 @@ class Admin::RdvInvitationsController < AgentAuthController
     @motifs = Motif.individuel.available_motifs_for_organisation_and_agent(current_organisation, current_agent).ordered_by_name
   end
 
+  def creneaux_preview_frame
+    @rdv_invitation = RdvInvitation.new(inviting_agent: current_agent, motif_id: params.require(:motif_id))
+
+    authorize(@rdv_invitation, :new?, policy_class: Agent::RdvInvitationPolicy)
+    respond_to do |format|
+      format.turbo_stream do
+        starting_date = Date.parse(params[:date])
+        render "creneaux_preview_frame", locals: {
+          creneaux: @rdv_invitation.creneaux_search(starting_date).creneaux,
+          current_organisation:,
+          rdv_invitation: @rdv_invitation,
+          starting_date:,
+        }
+      end
+    end
+  end
+
   def new
     @rdv_invitation = RdvInvitation.new({ inviting_agent: current_agent }.merge(params.permit(:user_id, :motif_id)))
     authorize(@rdv_invitation, policy_class: Agent::RdvInvitationPolicy)

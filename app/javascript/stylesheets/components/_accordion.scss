@@ -12,3 +12,13 @@
     margin: 0 8px;
   }
 }
+
+.rdv-accordion-card--secondary {
+  .fr-accordion__btn {
+    padding: 16px;
+  }
+
+  .fr-accordion__btn:after {
+    margin-left: 16px;
+  }
+}
