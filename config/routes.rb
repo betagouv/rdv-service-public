@@ -347,7 +347,10 @@ Rails.application.routes.draw do
 
       resources :rdv_invitations, only: %i[new create show] do
         collection do
-          post :create_user
+          get :edit_user
+          patch :create_user
+
+          get :edit_motif
         end
         member do
           get :show_confirmation
