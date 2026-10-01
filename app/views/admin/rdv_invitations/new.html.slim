@@ -33,7 +33,7 @@
       = link_to "Ajouter des plages d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation, { agent_id: current_agent.id }), class: "fr-btn fr-btn--secondary fr-mb-4w"
 
     .fr-col-12.fr-mt-2w.d-flex.rdv-justify-content-space-between
-      = link_to "Retour", edit_motif_admin_organisation_rdv_invitations_path(current_organisation, params.permit(:motif_id)), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
+      = link_to "Retour", edit_motif_admin_organisation_rdv_invitations_path(current_organisation, params.permit(:user_id)), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line"
       - if next_available_date
         = form_for @rdv_invitation, url: admin_organisation_rdv_invitations_path(current_organisation), method: :post, builder: Dsfr::FormBuilder do |f|
           = f.hidden_field :user_id

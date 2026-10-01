@@ -1,8 +1,7 @@
 RSpec.describe "Agents can send an invitation to a rdv" do
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+  let(:user) { create(:user, email: nil, organisations: [organisation]) }
   let(:organisation) { create(:organisation) }
-
-  let(:rdv_invitation) { create(:rdv_invitation, motif:, lieu:, user:, inviting_agent: agent) }
 
   let(:motif) { create(:motif, organisation:) }
   let(:lieu) { create(:lieu, organisation:) }
@@ -14,14 +13,21 @@ RSpec.describe "Agents can send an invitation to a rdv" do
   before { login_as agent, scope: :agent }
 
   context "when the user doesn't have an email address" do
-    let(:user) { create(:user, email: nil, organisations: [organisation]) }
-
     it "shows an error message" do
       # On devrait sans doute plutôt gérer ce cas lors de la sélection de l'usager, ça fait partie des améliorations à prévoir
-      visit new_admin_organisation_rdv_invitation_path(organisation, motif_id: motif.id, lieu_id: lieu.id, user_id: user.id)
+      visit new_admin_organisation_rdv_invitation_path(organisation, motif_id: motif.id, user_id: user.id)
       click_on "Envoyer l'invitation"
       expect(page).to have_content "ne peut donc pas recevoir d'invitation"
       expect(RdvInvitation.count).to eq 0
+    end
+  end
+
+  describe "navigating back to a previous step" do
+    it "works" do
+      visit new_admin_organisation_rdv_invitation_path(organisation, motif_id: motif.id, user_id: user.id)
+
+      click_on "Retour"
+      expect(page).to have_content("Étape 2 sur 3")
     end
   end
 end
