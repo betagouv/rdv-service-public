@@ -7,9 +7,10 @@ class Agent::RdvInvitationPolicy < ApplicationPolicy
   end
 
   alias new? create?
+  alias edit? create?
 
   def show?
-    can_show_user? && can_show_motif?
+    can_show_user? && can_show_lieu? && can_show_motif?
   end
 
   alias update? show?
@@ -35,10 +36,10 @@ class Agent::RdvInvitationPolicy < ApplicationPolicy
   end
 
   def can_show_user?
-    rdv_invitation.user.blank? || Agent::UserPolicy.new(AgentOrganisationContext.new(current_agent, rdv_invitation.organisation), rdv_invitation.user).show?
+    rdv_invitation.user.blank? || Agent::UserPolicy.new(AgentOrganisationContext.new(current_agent, rdv_invitation&.motif&.organisation), rdv_invitation.user).show?
   end
 
   def can_show_motif?
-    Agent::MotifPolicy.new(current_agent, rdv_invitation.motif).show?
+    rdv_invitation.motif.blank? || Agent::MotifPolicy.new(current_agent, rdv_invitation.motif).show?
   end
 end
