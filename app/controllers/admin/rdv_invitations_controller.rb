@@ -57,6 +57,7 @@ class Admin::RdvInvitationsController < AgentAuthController
       flash[:success] = "Invitation envoyée"
       redirect_to show_confirmation_admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation)
     else
+      flash.now[:error] = @rdv_invitation.errors.full_messages.join(" ")
       render :new
     end
   end
