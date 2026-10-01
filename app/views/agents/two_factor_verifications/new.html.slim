@@ -1,0 +1,4 @@
+= render layout: "agents/shared/login_code_verification", locals: { form_url: agents_two_factor_verification_path, resend_path: resend_agents_two_factor_verification_path, show_remember_device: false } do
+  p
+    |> Pour télécharger cet export, nous devons vérifier à nouveau votre identité.
+    |> Pour des raisons de sécurité, une double authentification récente (moins de 30 minutes) est requise avant tout téléchargement.

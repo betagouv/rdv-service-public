@@ -1,4 +1,6 @@
 class Agents::ProConnectLinkingController < AgentAuthController
+  include Agents::TwoFactorFreshnessConcern
+
   layout "application_agent_config"
 
   def show
@@ -10,6 +12,7 @@ class Agents::ProConnectLinkingController < AgentAuthController
 
     email = current_agent.email
     sign_out(current_agent)
+    clear_two_factor_freshness!
     redirect_to pro_connect_auth_path(login_hint: email, user_type: "agent")
   end
 
