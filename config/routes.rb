@@ -358,6 +358,8 @@ Rails.application.routes.draw do
           patch :create_user
 
           get :edit_motif
+
+          get :creneaux_preview_frame
         end
         member do
           get :show_confirmation
