@@ -99,22 +99,31 @@
           .fr-col-4
             = Motif.human_attribute_name(:follow_up_short)
           .fr-col-8
-            .fr-badge = @motif.follow_up? ? "Oui" : "Désactivée"
-            .fr-hint-text.fr-mt-1w = Motif.human_attribute_name(:follow_up_hint)
+            - if @motif.follow_up?
+              .fr-badge Oui
+              .fr-hint-text.fr-mt-1w = Motif.human_attribute_name(:follow_up_hint)
+            - else
+              .fr-badge Désactivée
 
         .fr-grid-row.fr-grid-row--gutters.fr-mt-2w
           .fr-col-4
             = Motif.human_attribute_name(:for_secretariat_short)
           .fr-col-8
-            .fr-badge = @motif.for_secretariat? ? "Oui" : "Désactivée"
-            .fr-hint-text.fr-mt-1w = Motif.human_attribute_name(:for_secretariat_hint)
+            - if @motif.for_secretariat?
+              .fr-badge Oui
+              .fr-hint-text.fr-mt-1w = Motif.human_attribute_name(:for_secretariat_hint)
+            - else
+              .fr-badge Désactivée
 
         .fr-grid-row.fr-grid-row--gutters.fr-mt-2w
           .fr-col-4
-            = "Ouverture aux prescripteurs"
+            | Ouverture aux prescripteurs
           .fr-col-8
-            .fr-badge = @motif.prescription? ? "Oui" : "Désactivée"
-            .fr-hint-text.fr-mt-1w = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone"))
+            - if @motif.prescription?
+              .fr-badge Oui
+              .fr-hint-text.fr-mt-1w = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone"))
+            - else
+              .fr-badge Désactivée
 
     - if @motif_policy.edit? || @motif_policy.destroy?
       .card.mt-2
