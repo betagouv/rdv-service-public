@@ -13,13 +13,13 @@
 # referent_assignations
 # sector_attributions
 
-# Usage: rails runner scripts/merge_two_agents.rb <source_id> <dest_id>
+# Usage: rails runner scripts/merge_two_agents.rb <source_id_or_email> <dest_id_or_email>
 
-source_id = ARGV[0]
-dest_id = ARGV[1]
+source_id_or_email = ARGV[0]
+dest_id_or_email = ARGV[1]
 
-source = Agent.find(source_id)
-dest = Agent.find(dest_id)
+source = Agent.where(id: source_id_or_email).or(Agent.where(email: source_id_or_email)).sole
+dest = Agent.where(id: dest_id_or_email).or(Agent.where(email: dest_id_or_email)).sole
 
 if source.organisations.count > 1 || dest.organisations.count > 1
   puts "Both Agents must belong to only one organisation"
@@ -77,7 +77,7 @@ Agent.transaction do
 
   puts "---Deleting Source Agent---"
 
-  Agent.find(source_id).destroy!
+  Agent.find(source.id).destroy!
 
   puts "---Merge completed---"
 end
