@@ -1,5 +1,6 @@
 .fr-grid-row.fr-mb-16w
-  .fr-col-12[class=(@rdv_plan.oauth_application.present? ? "fr-mb-16w" : "fr-col-md-8  fr-col-offset-md-2 card card-body fr-mt-4w" )]
+  .fr-col-12.fr-col-md-8.fr-col-offset-md-2.card.card-body.fr-mt-4w
+    h1.fr-h3 Invitation envoyée
     .fr-grid-row.justify-content-center.fr-mb-2w
       = dsfr_svg "artwork/pictograms/digital/mail-send", class: "fr-artwork--green-emeraude"
     p Un email a été envoyé à <b>#{@rdv_plan.user.full_name}</b> à l'adresse #{@rdv_plan.user.email} pour l'inviter à prendre rendez-vous pour le motif <b>#{@rdv_plan.motif.name}</b>.
