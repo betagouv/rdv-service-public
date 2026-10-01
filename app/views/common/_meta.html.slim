@@ -9,6 +9,8 @@ title
       = "#{strip_tags(content_for(:subtitle))} - #{strip_tags(content_for(:title))} - #{current_domain.name}"
     - else
       = "#{strip_tags(content_for(:title))} - #{current_domain.name}"
+  - if content_for? :tab_title
+    = "#{strip_tags(content_for(:tab_title))} - #{current_domain.name}"
   - else
     | #{current_domain.name}
 

@@ -29,12 +29,16 @@ class RdvInvitation < ApplicationRecord
   scope :pending, -> { where(rdv_id: nil, cancelled: false) }
 
   def creneaux_search(starts_at)
-    CreneauxSearch::ForUser.new(
+    @creneaux_search ||= CreneauxSearch::ForUser.new(
       motif: motif,
       lieu: lieu,
       user: user,
       date_range: starts_at..(starts_at + 6.days)
     )
+  end
+
+  def next_available_date
+    creneaux_search(Time.zone.now).next_availability&.starts_at&.to_date
   end
 
   def create_rdv_and_notify(starts_at:)
