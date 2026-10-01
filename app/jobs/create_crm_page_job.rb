@@ -44,7 +44,7 @@ class CreateCrmPageJob < ApplicationJob
           url: "#{ENV['HOST']}/super_admins/territories/#{territory.id}",
         },
         CONTACT: {
-          email: territory.admin_agents.count == 1 ? territory.admin_agents.first.email : nil,
+          email: territory.admin_agents.one? ? territory.admin_agents.first.email : nil,
         },
       }
     )

@@ -65,7 +65,7 @@ class CronJob::RefreshCachedStats
       rows[0]["c"].to_s.gsub(/[, ]/, "").to_i
     end
 
-    def single_count_row? = rows.count == 1 && rows[0]["c"].present?
+    def single_count_row? = rows.one? && rows[0]["c"].present?
 
     def values_to_compare
       single_count_row? ? [previous_value, new_value] : [previous_value&.count, rows.count]
