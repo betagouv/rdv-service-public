@@ -34,7 +34,7 @@ ul.list-group.fr-mb-3w
       span.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
       strong Informations supplémentaires&nbsp;:
       .pl-3.pt-1
-        = instruction_for_rdv_to_html(@rdv.motif)
+        = auto_link_text(@rdv.motif.instruction_for_rdv)
 
   li.list-group-item
     span.fr-icon-team-fill.fr-mr-1w[aria-hidden="true"]

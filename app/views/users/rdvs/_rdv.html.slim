@@ -9,7 +9,7 @@ ul.list-group.list-group-flush.fr-mb-3w.fr-mt-0
   - if rdv.motif.restriction_for_rdv.present?
     li.list-group-item.fr-pl-0.fr-py-2w
       span.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
-      = restriction_for_rdv_to_html(rdv.motif)
+      = auto_link_text(rdv.motif.restriction_for_rdv)
 
   - if rdv.home?
     li.list-group-item.fr-pl-0.fr-py-2w
@@ -63,7 +63,7 @@ ul.list-group.list-group-flush.fr-mb-3w.fr-mt-0
         span.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
         strong Informations supplémentaires&nbsp;:
       .fr-ml-4w
-        = instruction_for_rdv_to_html(rdv.motif)
+        = auto_link_text(rdv.motif.instruction_for_rdv)
 
   = render "/users/rdvs/file_attente", rdv: rdv
 

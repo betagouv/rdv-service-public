@@ -140,11 +140,7 @@ module MotifsHelper
     end
   end
 
-  def restriction_for_rdv_to_html(motif)
-    auto_link(simple_format(motif.restriction_for_rdv, {}, wrapper_tag: "p"), html: { target: "_blank" })
-  end
-
-  def instruction_for_rdv_to_html(motif)
-    auto_link(simple_format(motif.instruction_for_rdv, {}, wrapper_tag: "p"), html: { target: "_blank" })
+  def auto_link_text(text)
+    auto_link(simple_format(text, {}, wrapper_tag: "p"), html: { target: "_blank" })
   end
 end
