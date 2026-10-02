@@ -4,12 +4,12 @@ RSpec.describe Agents::Blog::PostsController, "#index" do
   before { sign_in agent }
 
   it "displays all posts" do
-    create(:blog_post, title: "Un titre de post", description: "Une description de post", external_url: "https://example.com")
+    post = create(:blog_post, title: "Un titre de post", content_truncated_text: "Un résumé de post")
     get agents_blog_posts_path
 
     expect(response.body).to include("Un titre de post")
-    expect(response.body).to include("Une description de post")
-    expect(response.body).to include("https://example.com")
+    expect(response.body).to include("Un résumé de post")
+    expect(response.body).to include(blog_post_path(post))
   end
 
   it "updates the agent's blog_read_at" do

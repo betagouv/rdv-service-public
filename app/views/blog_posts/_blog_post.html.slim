@@ -1,0 +1,14 @@
+.fr-card.fr-enlarge-link.fr-card--horizontal
+  .fr-card__body
+    .fr-card__content
+      h3.fr-card__title
+        = link_to post.title, blog_post_path(post)
+      p.fr-card__desc = post.content_truncated_text.truncate_words(35)
+      .fr-card__start
+        - if post.categories.any?
+          ul.fr-tags-group
+            - post.categories.each do |category|
+              li = dsfr_tag(title: category, size: :sm)
+        p.fr-card__detail.fr-icon-calendar-line
+          time datetime=post.published_at.to_date.iso8601
+            = l(post.published_at.to_date, format: :long)
