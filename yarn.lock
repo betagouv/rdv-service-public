@@ -456,6 +456,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"accessible-autocomplete@npm:^3.0.1":
+  version: 3.0.2
+  resolution: "accessible-autocomplete@npm:3.0.2"
+  peerDependencies:
+    preact: ^8.0.0
+  peerDependenciesMeta:
+    preact:
+      optional: true
+  checksum: 10c0/23be53e61c1fde637cc04a1e842ff01ad8a76e6137473fcce975f5350ab23b075003b3f0544745b822e01de3f919cca83859e68a84e8119ae2567aa3b3c2e6b6
+  languageName: node
+  linkType: hard
+
 "agent-base@npm:^7.1.0, agent-base@npm:^7.1.2":
   version: 7.1.4
   resolution: "agent-base@npm:7.1.4"
@@ -1009,6 +1021,7 @@ __metadata:
     "@rails/actioncable": "npm:>=7.0"
     "@rails/ujs": "npm:^6.0.0"
     "@stimulus-components/checkbox-select-all": "npm:^6.1.0"
+    accessible-autocomplete: "npm:^3.0.1"
     autocomplete.js: "npm:^0.37.1"
     axe-core: "npm:4.11.0"
     bootstrap: "npm:^4.3.1"

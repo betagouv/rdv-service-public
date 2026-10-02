@@ -14,7 +14,6 @@ import { Modal } from './components/modal'
 import DsfrAlertClose from "./components/dsfr-alert-close";
 import { ServiceFilterForMotifsSelects } from './components/service-filter-for-motifs-selects'
 import { SubmitOnChange } from './components/submit-on-change'
-import { PlacesInputs } from './components/places-inputs.js'
 import { RdvWizardStep2 } from './components/rdv_wizard_step2.js'
 import { RdvLieu } from './components/rdv_lieu.js'
 import { PastDateAlert } from './components/past-date-alert.js'
@@ -95,8 +94,6 @@ document.addEventListener("DOMContentLoaded", function() {
   $(window).on('resize', function(e) {
     e.preventDefault()
   })
-
-  new PlacesInputs()
 
   new Datetimepicker()
 
