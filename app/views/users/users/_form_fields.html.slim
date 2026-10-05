@@ -22,8 +22,8 @@
   = f.dsfr_text_field :address,
     value: f.object.address_value,
     required: f.object.address_required?,
-    label: "Adresse"
-    hint: "facultatif" unless f.object.address_required?
+    label: "Adresse",
+    hint: ("facultatif" unless f.object.address_required?),
     data: { "address-autocomplete": "on" },
     autocomplete: "street-address",
     dir: "ltr"
