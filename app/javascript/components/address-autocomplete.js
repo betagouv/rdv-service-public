@@ -112,6 +112,7 @@ class AddressAutocompleteInput {
 
   source = (query, populateResults) => {
     clearTimeout(this.debounceTimeout)
+    this.abortController?.abort()
     const trimmedQuery = query.trim()
     if (trimmedQuery.length < MIN_QUERY_LENGTH) return populateResults([])
 
@@ -119,18 +120,22 @@ class AddressAutocompleteInput {
   }
 
   fetchSuggestions = (query, populateResults) => {
+    this.abortController = new AbortController() // cf https://developer.mozilla.org/en-US/docs/Web/API/AbortController
     const url = "https://data.geopf.fr/geocodage/search/"
     const searchParams = new URLSearchParams()
     searchParams.append("q", query)
     if (this.addressType) searchParams.append("type", this.addressType)
-    fetch(`${url}?${searchParams}`).
+    fetch(`${url}?${searchParams}`, { signal: this.abortController.signal }).
       then(res => res.json()).
       then(data => {
         const suggestions = data.features.map(remapBanFeature)
         if (this.addressWithoutGeocodingInput) suggestions.push({ type: 'no_address', value: query })
         return suggestions
       }).
-      then(populateResults)
+      then(populateResults).
+      catch(error => {
+        if (error.name !== "AbortError") throw error
+      })
   }
 
   setDependentInputs = suggestion =>
