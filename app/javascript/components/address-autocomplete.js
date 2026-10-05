@@ -133,12 +133,7 @@ class AddressAutocompleteInput {
 
   suggestionTemplate = suggestion => {
     if (suggestion.type === 'no_address') {
-      return `
-        <div class='d-flex'>
-          <div class='fr-ml-1w'><i class="fr-icon-question-fill"></i></div>
-          <div class='fr-ml-1w fr-text-mention--grey'><em>Adresse introuvable ou à l'étranger ?</em></div>
-        </div>
-      `
+      return `<span class="fr-icon-question-fill" aria-hidden="true"></span> <em class="fr-text-mention--grey">Adresse introuvable ou à l’étranger ?</em>`
     }
 
     const { type, name } = suggestion
@@ -147,15 +142,9 @@ class AddressAutocompleteInput {
       locality: "road-map-fill",
       municipality: "community-fill",
       street: 'map-pin-2-fill'
-    }[type] || "question"
+    }[type] || "question-fill"
     const details = this.getDetails(suggestion).join(", ")
-    const content = `<b>${name}</b> <span class='fr-text-mention--grey'>${details}</span>`
-    return `
-      <div class='d-flex'>
-        <div class='fr-ml-1w'><i class="fr-icon-${icon}"></i></div>
-        <div class='fr-ml-1w'>${content}</div>
-      </div>
-    `
+    return `<span class="fr-icon-${icon}" aria-hidden="true"></span> <b>${name}</b> <span class="fr-text-mention--grey">${details}</span>`
   }
 
   // exemple de name : 52 Avenue Jean Jaurès, city : Paris, postcode : 75019.
