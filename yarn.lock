@@ -456,6 +456,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"accessible-autocomplete@betagouv/accessible-autocomplete#rdv-service-public":
+  version: 3.0.2
+  resolution: "accessible-autocomplete@https://github.com/betagouv/accessible-autocomplete.git#commit=c32a4c25a0a5d6c33bfc1bc9004fc173b5f34937"
+  peerDependencies:
+    preact: ^8.0.0
+  peerDependenciesMeta:
+    preact:
+      optional: true
+  checksum: 10c0/c77a936b9bcff2c698d11924acdb3f69828c27751a6384257b5d445af5f0f15745ff5819a8f49f416dee21d1af5f0aa5cca8f65750542b515e3414049edd69bd
+  languageName: node
+  linkType: hard
+
 "agent-base@npm:^7.1.0, agent-base@npm:^7.1.2":
   version: 7.1.4
   resolution: "agent-base@npm:7.1.4"
@@ -1009,6 +1021,7 @@ __metadata:
     "@rails/actioncable": "npm:>=7.0"
     "@rails/ujs": "npm:^6.0.0"
     "@stimulus-components/checkbox-select-all": "npm:^6.1.0"
+    accessible-autocomplete: "betagouv/accessible-autocomplete#rdv-service-public"
     autocomplete.js: "npm:^0.37.1"
     axe-core: "npm:4.11.0"
     bootstrap: "npm:^4.3.1"
