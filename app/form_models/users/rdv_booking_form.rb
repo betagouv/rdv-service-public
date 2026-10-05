@@ -46,7 +46,10 @@ class Users::RdvBookingForm
 
   def show_logement_field? = rdv.territory.enable_logement_field
 
-  def show_address_field? = !signed_in_with_restricted_auth_token? && (address_required? || rdv.territory.enable_address_field?)
+  def show_address_field?
+    !signed_in_with_restricted_auth_token? &&
+      (address_required? || rdv.territory.enable_address_field?)
+  end
 
   def address_required? = motif.home?
 
