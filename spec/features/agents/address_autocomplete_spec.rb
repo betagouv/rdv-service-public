@@ -61,4 +61,52 @@ RSpec.describe "Autocomplétion d’adresse côté agent", :js do
 
     expect(page).to have_css(".autocomplete__option--no-results", text: "Nous n’avons pas trouvé d’adresse correspondant à votre recherche")
   end
+
+  it "indique le chargement pendant la recherche" do
+    page.driver.with_playwright_page do |playwright_page|
+      playwright_page.route("https://data.geopf.fr/geocodage/search/**", lambda { |route, _request|
+        sleep 2
+        route.fulfill(status: 200, contentType: "application/json", body: file_fixture("geocode_result.json").read)
+      })
+    end
+
+    visit new_admin_organisation_lieu_path(organisation)
+    fill_in "Adresse", with: "16 quai de la Loire"
+
+    expect(page).to have_css(".autocomplete__option--no-results", text: "Chargement des suggestions…")
+    expect(page).to have_css("[role=option]", text: "16 Quai de la Loire", wait: 5)
+
+    fill_in "Adresse", with: "16 quai de la Loire Paris"
+    expect(page).to have_css(".autocomplete__option--no-results", text: "Chargement des suggestions…")
+    expect(page).to have_no_css("[role=option]", text: "16 Quai de la Loire")
+  end
+
+  it "indique une erreur quand la recherche échoue" do
+    page.driver.with_playwright_page do |playwright_page|
+      playwright_page.route("https://data.geopf.fr/geocodage/search/**", ->(route, _request) { route.abort })
+    end
+
+    visit new_admin_organisation_lieu_path(organisation)
+    fill_in "Adresse", with: "16 quai de la Loire"
+
+    expect(page).to have_css(".autocomplete__option--no-results", text: "Une erreur est survenue lors de la recherche")
+  end
+
+  it "demande au moins 3 caractères, espaces exclus, sans lancer de recherche" do
+    nombre_de_recherches = 0
+    page.driver.with_playwright_page do |playwright_page|
+      playwright_page.route("https://data.geopf.fr/geocodage/search/**", lambda { |route, _request|
+        nombre_de_recherches += 1
+        route.abort
+      })
+    end
+
+    visit new_admin_organisation_lieu_path(organisation)
+    fill_in "Adresse", with: "1"
+    expect(page).to have_css(".autocomplete__option--no-results", text: "Saisissez au moins 3 caractères pour lancer la recherche")
+
+    fill_in "Adresse", with: "10 "
+    expect(page).to have_css(".autocomplete__option--no-results", text: "Saisissez au moins 3 caractères pour lancer la recherche")
+    expect(nombre_de_recherches).to eq(0)
+  end
 end

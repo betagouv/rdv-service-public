@@ -44,6 +44,8 @@ const remapBanFeature = feature => ({
   ...feature.properties,
 })
 
+const QUERY_TOO_SHORT_MESSAGE = `Saisissez au moins ${MIN_QUERY_LENGTH} caractères pour lancer la recherche`
+
 const tStatusResults = (length, contentSelectedOption) => {
   const words = length === 1 ? "résultat disponible" : "résultats disponibles"
   return `${length} ${words}. ${contentSelectedOption}`
@@ -73,14 +75,14 @@ class AddressAutocompleteInput {
       required: input.required,
       inputClasses: input.className,
       placeholder: input.placeholder,
-      minLength: MIN_QUERY_LENGTH,
+      minLength: 1, // affiche un message dès le premier caractère, filtre effectif dans source
       displayMenu: "overlay",
       source: this.source,
       onConfirm: this.onConfirm,
       templates: { inputValue: this.inputValueTemplate, suggestion: this.suggestionTemplate },
-      tNoResults: () => "Nous n’avons pas trouvé d’adresse correspondant à votre recherche",
-      tStatusNoResults: () => "Aucun résultat",
-      tStatusQueryTooShort: minLength => `Saisissez au moins ${minLength} caractères pour lancer la recherche`,
+      tNoResults: this.tNoResults,
+      tStatusNoResults: this.tNoResults,
+      tStatusQueryTooShort: () => QUERY_TOO_SHORT_MESSAGE,
       tStatusSelectedOption: (selectedOption, length, index) => `${selectedOption} ${index + 1} sur ${length} est sélectionné`,
       tStatusResults,
       tAssistiveHint: () => "Quand des suggestions sont disponibles, utilisez les flèches haut et bas pour les parcourir et Entrée pour en choisir une. Sur un écran tactile, explorez au toucher ou par balayage.",
@@ -114,8 +116,13 @@ class AddressAutocompleteInput {
     clearTimeout(this.debounceTimeout)
     this.abortController?.abort()
     const trimmedQuery = query.trim()
-    if (trimmedQuery.length < MIN_QUERY_LENGTH) return populateResults([])
+    if (trimmedQuery.length < MIN_QUERY_LENGTH) {
+      this.status = "query_too_short"
+      return populateResults([]) // déclenche l'affichage du message « trop court »
+    }
 
+    this.status = "loading"
+    populateResults([]) // déclenche l'affichage du message de chargement
     this.debounceTimeout = setTimeout(() => this.fetchSuggestions(trimmedQuery, populateResults), DEBOUNCE_DELAY)
   }
 
@@ -130,13 +137,22 @@ class AddressAutocompleteInput {
       then(data => {
         const suggestions = data.features.map(remapBanFeature)
         if (this.addressWithoutGeocodingInput) suggestions.push({ type: 'no_address', value: query })
+        this.status = "success"
         return suggestions
       }).
       then(populateResults).
       catch(error => {
-        if (error.name !== "AbortError") throw error
+        if (error.name === "AbortError") return
+        this.status = "error"
+        populateResults([])
       })
   }
+
+  tNoResults = () => ({
+    query_too_short: QUERY_TOO_SHORT_MESSAGE,
+    loading: "Chargement des suggestions…",
+    error: "Une erreur est survenue lors de la recherche",
+  }[this.status] || "Nous n’avons pas trouvé d’adresse correspondant à votre recherche")
 
   setDependentInputs = suggestion =>
     this.dependentInputs.forEach(({ name, elt }) => {
