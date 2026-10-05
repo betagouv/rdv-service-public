@@ -43,14 +43,13 @@ const tStatusResults = (length, contentSelectedOption) => {
 
 class AddressAutocompleteInput {
   constructor(input) {
-    this.addressType = input.dataset.addressType;
-    const form = $(input).closest('form')[0];
+    this.addressType = input.dataset.addressType
+    const form = input.closest("form")
     this.dependentInputs =
       DEPENDENT_INPUT_NAMES.
         map(name => ({ name, elt: form.querySelector(`input[name*=${name}]`)})).
         filter(i => !!i.elt) // filter only present inputs
-
-    this.addressWithoutGeocodingInput = form.querySelector('input[type="hidden"][name*="address_without_geocoding"]');
+    this.addressWithoutGeocodingInput = form.querySelector('input[type="hidden"][name*="address_without_geocoding"]')
 
     // accessible-autocomplete ne décore pas un input existant mais en créé un nouveau
     // On remplace donc l'input d'origine par un container, et on préserve les attributs
@@ -131,7 +130,6 @@ class AddressAutocompleteInput {
       elt.value = suggestion[name] || ""
     })
 
-
   inputValueTemplate = suggestion => suggestion?.value
 
   suggestionTemplate = suggestion => {
@@ -157,5 +155,4 @@ class AddressAutocomplete {
   }
 }
 
-
-export { AddressAutocomplete };
+export { AddressAutocomplete }
