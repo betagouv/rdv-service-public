@@ -30,7 +30,7 @@ ruby:
             small.form-text.fr-text-mention--grey data={"rdv-lieu-target": "select_lieu_link"}
               = t(".existing_lieu_hint_html")
       - elsif @rdv.home?
-        = f.dsfr_text_field :address, label: "Lieu (RDV à domicile)", disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}", data: { "address-autocomplete": "on" }, dir: "ltr"
+        = f.dsfr_text_field :address, label: "Lieu (RDV à domicile)", disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}", dir: "ltr"
       .fr-input-group
         = f.label :agents, class: "fr-label"
         = f.select :agent_ids, @rdv.motif.authorized_agents.collect { |a| [a.reverse_full_name_and_service, a.id] }, {}, multiple: true, class: "select2-input fr-select", data: { "auto-select-sole-option": true }
