@@ -93,7 +93,7 @@ class AddressAutocompleteInput {
   onConfirm = suggestion => {
     if (!suggestion) return
 
-    if (suggestion.type === 'no_address') {
+    if (suggestion.type === "no_address") {
       this.setDependentInputs({})
       if (this.addressWithoutGeocodingInput) this.addressWithoutGeocodingInput.value = "1"
     } else {
@@ -134,7 +134,7 @@ class AddressAutocompleteInput {
   inputValueTemplate = suggestion => suggestion?.value
 
   suggestionTemplate = suggestion => {
-    if (suggestion.type === 'no_address') {
+    if (suggestion.type === "no_address") {
       return `<span class="fr-icon-question-fill" aria-hidden="true"></span> <em class="fr-text-mention--grey">Adresse introuvable ou à l’étranger ?</em>`
     }
 
@@ -143,7 +143,7 @@ class AddressAutocompleteInput {
       housenumber: "home-4-fill",
       locality: "road-map-fill",
       municipality: "community-fill",
-      street: 'map-pin-2-fill'
+      street: "map-pin-2-fill"
     }[type] || "question-fill"
     const details = getDetails(suggestion).join(", ")
     return `<span class="fr-icon-${icon}" aria-hidden="true"></span> <b>${name}</b> <span class="fr-text-mention--grey">${details}</span>`
