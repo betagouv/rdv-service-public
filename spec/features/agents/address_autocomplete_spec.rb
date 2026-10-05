@@ -1,6 +1,7 @@
 RSpec.describe "Autocomplétion d’adresse côté agent", :js do
-  let(:organisation) { create(:organisation) }
-  let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+  let(:territory) { create(:territory, departement_number: "75") }
+  let(:organisation) { create(:organisation, territory:) }
+  let(:agent) { create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory]) }
 
   before do
     page.driver.with_playwright_page do |playwright_page|
@@ -108,5 +109,17 @@ RSpec.describe "Autocomplétion d’adresse côté agent", :js do
     fill_in "Adresse", with: "10 "
     expect(page).to have_css(".autocomplete__option--no-results", text: "Saisissez au moins 3 caractères pour lancer la recherche")
     expect(nombre_de_recherches).to eq(0)
+  end
+
+  it "remplit le code BAN d’une rue de sectorisation à partir de la suggestion choisie" do
+    sector = create(:sector, territory:)
+    visit new_admin_territory_sector_zone_path(territory, sector, default_zone_level: "street")
+    fill_in "Rechercher une rue", with: "quai de la Gironde"
+    find("[role=option]", text: "Quai de la Gironde").click
+
+    expect(page).to have_field("zone_city_name", with: "Paris")
+    expect(page).to have_field("zone_city_code", with: "75119")
+    expect(page).to have_field("zone_street_name", with: "Quai de la Gironde")
+    expect(page).to have_field("zone_street_ban_id", with: "75119_4197")
   end
 end
