@@ -9,7 +9,7 @@ class AgentDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     id: Field::Number,
-    email: EmailField,
+    email: CopyableEmailField,
     first_name: Field::String,
     last_name: Field::String,
     organisations: Field::HasMany,

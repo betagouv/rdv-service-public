@@ -18,7 +18,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     ami_enabled: Field::Boolean,
     horaires: Field::String,
     phone_number: Field::String,
-    email: EmailField,
+    email: CopyableEmailField,
     territory: Field::BelongsTo,
     verticale: EnumField,
     time_zone: Field::Select.with_options(

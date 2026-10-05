@@ -1,4 +1,0 @@
-<% if field.data.present? %>
-  <%= mail_to field.data %>
-  <%= button_tag "📋", type: "button", class: "copy-email-button js-copy-email", data: { "clipboard-content": field.data }, title: "Copier l'adresse email", "aria-label": "Copier l'adresse email" %>
-<% end %>
