@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_05_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_05_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -263,6 +263,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_05_120000) do
     t.datetime "ends_at", null: false
     t.string "url", null: false
     t.text "raw_ical"
+    t.string "etag"
     t.index ["agent_id", "starts_at"], name: "index_external_calendar_events_on_agent_id_and_starts_at"
     t.index ["agent_id", "url"], name: "index_external_calendar_events_on_agent_id_and_url", unique: true
   end
