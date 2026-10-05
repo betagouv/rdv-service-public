@@ -2,7 +2,7 @@ import 'autocomplete.js/dist/autocomplete.jquery.js'
 import 'custom-event-polyfill'
 import 'whatwg-fetch'
 
-class PlacesInput {
+class AddressAutocompleteInput {
   constructor(container) {
     if (container === null) return false;
 
@@ -126,11 +126,11 @@ class PlacesInput {
   }
 }
 
-class PlacesInputs {
+class AddressAutocomplete {
   constructor() {
-    document.querySelectorAll('input[data-address-autocomplete="on"]').forEach(elt => new PlacesInput(elt))
+    document.querySelectorAll('input[data-address-autocomplete="on"]').forEach(elt => new AddressAutocompleteInput(elt))
   }
 }
 
 
-export { PlacesInputs };
+export { AddressAutocomplete };
