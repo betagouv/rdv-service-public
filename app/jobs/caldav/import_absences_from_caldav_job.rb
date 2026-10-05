@@ -56,6 +56,9 @@ module Caldav
       elsif calendar.ctag.present? && calendar.ctag == caldav_config.caldav_ctag
         sync_logger.log("No sync token support: ctag unchanged, nothing to load")
         [[], [], nil, calendar.ctag]
+      elsif calendar.ctag.present? && caldav_config.caldav_ctag.present?
+        sync_logger.log("No sync token support: ctag changed, loading only new or updated events")
+        changed_events_by_etag_for(calendar)
       else
         sync_logger.log("No sync token support: ctag changed, loading all events")
         all_events_with_deletions_for(calendar)
@@ -99,6 +102,26 @@ module Caldav
       [updated_events, deleted_events, nil, calendar.ctag]
     end
 
+    # On compare les etags du serveur avec ceux stockés localement, pour ne télécharger que les événements
+    # nouveaux ou modifiés, et ne supprimer que ceux qui ont disparu du serveur.
+    def changed_events_by_etag_for(calendar)
+      remote_etags = caldav_etag_client.etags(caldav_config.caldav_agenda_url)
+      local_etags = ExternalCalendarEvent.where(agent: @agent).pluck(:url, :etag).to_h
+
+      # Les événements provenant de nos RDV sont ignorés : inutile de les télécharger
+      urls_of_rdvs = AgentsRdv.where(caldav_url: remote_etags.keys).pluck(:caldav_url)
+      changed_urls = remote_etags.reject { |url, etag| local_etags[url] == etag }.keys - urls_of_rdvs
+
+      # On rejette les ressources qui ne sont pas des événements (VTODO notamment)
+      changed_events = caldav_etag_client.events(caldav_config.caldav_agenda_url, changed_urls.sort)
+        .select { _1.calendar_data && _1.send(:inner_event) }
+      updated_events, not_busy_events = changed_events.partition { consider_busy?(_1) }
+
+      deleted_events = (local_etags.keys - remote_etags.keys) + (not_busy_events.map(&:url) & local_etags.keys)
+
+      [updated_events, deleted_events, nil, calendar.ctag]
+    end
+
     def update_local_events_of(updated_events:, deleted_events:, new_sync_token:, new_ctag:)
       # On exclut le traitement des événements provenant d'un RDV de chez nous
       urls_of_rdvs = AgentsRdv.where(caldav_url: updated_events.map(&:url)).pluck(:caldav_url).to_set
@@ -117,6 +140,7 @@ module Caldav
             starts_at: event.dtstart,
             ends_at: event.dtend,
             raw_ical:,
+            etag: event.etag,
           }
         end
 
@@ -152,6 +176,10 @@ module Caldav
 
     def caldav_client
       caldav_config.caldav_client
+    end
+
+    def caldav_etag_client
+      caldav_config.caldav_etag_client
     end
 
     def sync_logger

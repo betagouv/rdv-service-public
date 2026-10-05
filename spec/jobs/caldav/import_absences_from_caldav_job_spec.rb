@@ -206,53 +206,95 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
   end
 
   # Zimbra ne supporte pas le report sync-collection (RFC 6578) et ne renvoie pas de sync-token.
-  # On se base alors sur le ctag du calendrier pour savoir s'il a changé depuis la dernière synchro.
+  # On se base alors sur le ctag du calendrier pour savoir s'il a changé depuis la dernière synchro,
+  # puis sur les etags des événements pour ne télécharger que ceux qui sont nouveaux ou modifiés.
+  #
+  # Les cassettes ont été enregistrées en deux temps sur un vrai serveur Zimbra :
+  # - page 1 : 10 événements, ctag "1-32"
+  # - page 2 : 6 événements ajoutés depuis, ctag "1-38"
   context "quand l'agent utilise un système ne supportant pas le sync token (Zimbra typiquement)" do
-    around do |example|
-      VCR.use_cassette("caldav/zimbra_without_sync_token", allow_playback_repeats: true) do
-        example.run
-      end
+    # Toutes les requêtes (PROPFIND Depth 0 et 1, REPORT) visent l'URL du calendrier : on les distingue par leur body
+    def with_zimbra_cassette(page, &)
+      VCR.use_cassette("caldav/zimbra_without_sync_token_page_#{page}", match_requests_on: %i[method uri body], allow_playback_repeats: true, &)
     end
 
     before do
       agent.caldav_config.update!(
         caldav_agenda_url: "https://webmail.genci.fr/dav/pbrdv@genci.fr/Calendar",
         caldav_username: "pbrdv@genci.fr",
-        caldav_password: "mot_de_passe_factice" # le vrai mot de passe n’est utile que pour réenregistrer la cassette
+        # Le vrai mot de passe n’est utile que pour réenregistrer les cassettes
+        caldav_password: ENV.fetch("ZIMBRA_CALDAV_PASSWORD", "mot_de_passe_factice")
       )
     end
 
     let(:url_of_event_deleted_on_server) { "https://webmail.genci.fr/dav/pbrdv%40genci.fr/Calendar/deleted-on-server.ics" }
 
-    it "importe les événements et enregistre le ctag lors de la première synchro" do
-      expect { described_class.new.perform(agent.id) }.to change(ExternalCalendarEvent, :count).by(10)
+    def sync_logs = ExternalCalendarSyncExecution.last.logs.pluck(:message)
 
-      expect(agent.caldav_config.reload).to have_attributes(caldav_sync_token: nil, caldav_ctag: "1-32")
-      expect(ExternalCalendarSyncExecution.last.logs.pluck(:message)).to eq(
-        ["No sync token support: ctag changed, loading all events", "New/updated: 10, deleted : 0"]
-      )
+    context "lors de la première synchro (page 1)" do
+      around { |example| with_zimbra_cassette(1) { example.run } }
+
+      it "importe tous les événements et enregistre le ctag et les etags" do
+        expect { described_class.new.perform(agent.id) }.to change(ExternalCalendarEvent, :count).by(10)
+
+        expect(agent.caldav_config.reload).to have_attributes(caldav_sync_token: nil, caldav_ctag: "1-32")
+        expect(ExternalCalendarEvent.pluck(:etag)).to all(match(/\A"\d+-\d+"\z/))
+        expect(sync_logs).to eq(["No sync token support: ctag changed, loading all events", "New/updated: 10, deleted : 0"])
+      end
+
+      it "supprime les événements locaux qui n'existent pas sur le serveur" do
+        create(:external_calendar_event, agent:, url: url_of_event_deleted_on_server)
+
+        described_class.new.perform(agent.id)
+
+        expect(ExternalCalendarEvent.where(url: url_of_event_deleted_on_server)).to be_empty
+        expect(ExternalCalendarEvent.count).to eq(10)
+      end
+
+      it "ne recharge pas les événements quand le ctag n'a pas changé" do
+        agent.caldav_config.update!(caldav_ctag: "1-32")
+        create(:external_calendar_event, agent:, url: url_of_event_deleted_on_server)
+
+        expect { described_class.new.perform(agent.id) }.not_to change(ExternalCalendarEvent, :count)
+
+        expect(sync_logs).to eq(["No sync token support: ctag unchanged, nothing to load", "New/updated: 0, deleted : 0"])
+      end
     end
 
-    it "supprime les événements locaux qui n'existent plus sur le serveur quand le ctag a changé" do
-      agent.caldav_config.update!(caldav_ctag: "1-31")
-      create(:external_calendar_event, agent:, url: url_of_event_deleted_on_server)
+    context "lors d'une synchro suivante, après l'ajout d'événements sur le serveur (page 2)" do
+      before do
+        with_zimbra_cassette(1) { described_class.new.perform(agent.id) }
+        create(:external_calendar_event, agent:, url: url_of_event_deleted_on_server, etag: '"22-22"')
+      end
 
-      described_class.new.perform(agent.id)
+      it "ne télécharge que les nouveaux événements, sans toucher aux événements déjà synchronisés" do
+        events_of_page_1 = ExternalCalendarEvent.where.not(url: url_of_event_deleted_on_server).order(:id).pluck(:id, :url, :etag)
 
-      expect(ExternalCalendarEvent.where(url: url_of_event_deleted_on_server)).to be_empty
-      expect(ExternalCalendarEvent.count).to eq(10)
-      expect(agent.caldav_config.reload.caldav_ctag).to eq("1-32")
-    end
+        with_zimbra_cassette(2) do
+          expect { described_class.new.perform(agent.id) }.to change(ExternalCalendarEvent, :count).from(11).to(16)
+        end
 
-    it "ne recharge pas les événements quand le ctag n'a pas changé" do
-      agent.caldav_config.update!(caldav_ctag: "1-32")
-      create(:external_calendar_event, agent:, url: url_of_event_deleted_on_server)
+        # Les événements de la page 1 sont toujours là, inchangés (ils n'ont été ni supprimés, ni recréés)
+        expect(ExternalCalendarEvent.where(id: events_of_page_1.map(&:first)).order(:id).pluck(:id, :url, :etag)).to eq(events_of_page_1)
+        # L'événement qui n'existe plus sur le serveur est supprimé
+        expect(ExternalCalendarEvent.where(url: url_of_event_deleted_on_server)).to be_empty
+        expect(agent.caldav_config.reload.caldav_ctag).to eq("1-38")
+        expect(sync_logs).to eq(["No sync token support: ctag changed, loading only new or updated events", "New/updated: 6, deleted : 1"])
+      end
 
-      expect { described_class.new.perform(agent.id) }.not_to change(ExternalCalendarEvent, :count)
+      it "ne demande au serveur que les événements nouveaux ou modifiés" do
+        urls_before_sync = ExternalCalendarEvent.pluck(:url)
 
-      expect(ExternalCalendarSyncExecution.last.logs.pluck(:message)).to eq(
-        ["No sync token support: ctag unchanged, nothing to load", "New/updated: 0, deleted : 0"]
-      )
+        with_zimbra_cassette(2) { described_class.new.perform(agent.id) }
+
+        multiget_requests = WebMock::RequestRegistry.instance.requested_signatures.hash.keys
+          .select { _1.method == :report && _1.body.to_s.include?("calendar-multiget") }
+        expect(multiget_requests.size).to eq(1)
+
+        requested_hrefs = Nokogiri::XML(multiget_requests.first.body).xpath("//dav:href", "dav" => "DAV:").map(&:text)
+        new_urls = ExternalCalendarEvent.pluck(:url) - urls_before_sync
+        expect(requested_hrefs).to match_array(new_urls.map { URI(_1).path })
+      end
     end
   end
 end
