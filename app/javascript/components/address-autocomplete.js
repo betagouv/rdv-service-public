@@ -1,5 +1,6 @@
 import accessibleAutocomplete from 'accessible-autocomplete'
 
+const DEPENDENT_INPUT_NAMES = ["departement", "latitude", "longitude", "city_code", "post_code", "city_name", "street_ban_id", "street_name"]
 const MIN_QUERY_LENGTH = 3
 const DEBOUNCE_DELAY = 800
 const ATTRIBUTES_MANAGED_BY_AUTOCOMPLETE = ["id", "name", "class", "value", "type", "required", "placeholder", "autocomplete", "role", "data-address-autocomplete"]
@@ -45,7 +46,7 @@ class AddressAutocompleteInput {
     this.addressType = input.dataset.addressType;
     const form = $(input).closest('form')[0];
     this.dependentInputs =
-      ["departement", "latitude", "longitude", "city_code", "post_code", "city_name", "street_ban_id", "street_name"].
+      DEPENDENT_INPUT_NAMES.
         map(name => ({ name, elt: form.querySelector(`input[name*=${name}]`)})).
         filter(i => !!i.elt) // filter only present inputs
 
