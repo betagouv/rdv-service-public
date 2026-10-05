@@ -1,0 +1,11 @@
+// Le style de base vient de .button--tooltip d'Administrate
+.copy-email-button {
+  margin-top: -4px;
+  padding: 4px 3px;
+}
+
+// Sur l'index, le bouton n'apparaît qu'au survol de la cellule
+td.cell-data--copyable-email-field:not(:hover, :focus-within)
+  .copy-email-button {
+  visibility: hidden;
+}
