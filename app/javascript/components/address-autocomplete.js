@@ -4,6 +4,37 @@ const MIN_QUERY_LENGTH = 3
 const DEBOUNCE_DELAY = 800
 const ATTRIBUTES_MANAGED_BY_AUTOCOMPLETE = ["id", "name", "class", "value", "type", "required", "placeholder", "autocomplete", "role", "data-address-autocomplete"]
 
+// exemple de name : 52 Avenue Jean Jaurès, city : Paris, postcode : 75019.
+// District et context ont été supprimé afin de récupérer des adresses plus courtes. Exemple district: Paris 19e Arrondissement, context: 75, Paris, Île-de-France
+const getDetails = ({ name, city, postcode }) => {
+  let attributes = [postcode]
+  if (name !== city) // could also check for type !== 'municipality'
+    attributes.unshift(city)
+  return attributes.filter(e => e)
+}
+
+const remapBanStreetFeature = feature => {
+  if (feature.properties.type === "street") {
+    return { street_ban_id: feature.properties.id, street_name: feature.properties.name }
+  }
+  if (feature.properties.type === "housenumber") {
+    // 5 chars for city insee code, 1 for _, 4 (or more) for street fantoir
+    return { street_ban_id: feature.properties.id.split("_").slice(0, 2).join("_") }
+  }
+  return {}
+}
+
+const remapBanFeature = feature => ({
+  longitude: feature.geometry.coordinates[0],
+  latitude: feature.geometry.coordinates[1],
+  departement: feature.properties.context.split(",")[0],
+  value: [feature.properties.name].concat(getDetails(feature.properties)).join(", "),
+  city_code: feature.properties.citycode,
+  city_name: feature.properties.city,
+  ...remapBanStreetFeature(feature),
+  ...feature.properties,
+})
+
 const tStatusResults = (length, contentSelectedOption) => {
   const words = length === 1 ? "résultat disponible" : "résultats disponibles"
   return `${length} ${words}. ${contentSelectedOption}`
@@ -87,40 +118,11 @@ class AddressAutocompleteInput {
     fetch(`${url}?${searchParams}`).
       then(res => res.json()).
       then(data => {
-        const suggestions = this.remapBanFeatures(data)
+        const suggestions = data.features.map(remapBanFeature)
         if (this.addressWithoutGeocodingInput) suggestions.push({ type: 'no_address', value: query })
         return suggestions
       }).
       then(callback)
-  }
-
-  remapBanFeatures = data => data.features.map(this.remapBanFeature)
-
-  remapBanFeature = feature => ({
-    longitude: feature.geometry.coordinates[0],
-    latitude: feature.geometry.coordinates[1],
-    departement: feature.properties.context.split(",")[0],
-    value: this.getFeatureValueText(feature),
-    city_code: feature.properties.citycode,
-    city_name: feature.properties.city,
-    ...this.remapBanStreetFeature(feature),
-    ...feature.properties,
-  })
-
-  remapBanStreetFeature = feature => {
-    if (feature.properties.type === "street") {
-      return { street_ban_id: feature.properties.id, street_name: feature.properties.name }
-    }
-    if (feature.properties.type === "housenumber") {
-      // 5 chars for city insee code, 1 for _, 4 (or more) for street fantoir
-      return { street_ban_id: feature.properties.id.split("_").slice(0, 2).join("_") }
-    }
-
-    return {}
-  }
-
-  getFeatureValueText = ({ properties }) => {
-    return [properties.name].concat(this.getDetails(properties)).join(", ")
   }
 
   setDependentInputs = suggestion =>
@@ -143,17 +145,8 @@ class AddressAutocompleteInput {
       municipality: "community-fill",
       street: 'map-pin-2-fill'
     }[type] || "question-fill"
-    const details = this.getDetails(suggestion).join(", ")
+    const details = getDetails(suggestion).join(", ")
     return `<span class="fr-icon-${icon}" aria-hidden="true"></span> <b>${name}</b> <span class="fr-text-mention--grey">${details}</span>`
-  }
-
-  // exemple de name : 52 Avenue Jean Jaurès, city : Paris, postcode : 75019.
-  // District et context ont été supprimé afin de récupérer des adresses plus courtes. Exemple district: Paris 19e Arrondissement, context: 75, Paris, Île-de-France
-  getDetails = ({ name, city, postcode }) => {
-    let attributes = [postcode]
-    if (name !== city) // could also check for type !== 'municipality'
-      attributes.unshift(city)
-    return attributes.filter(e => e)
   }
 }
 
