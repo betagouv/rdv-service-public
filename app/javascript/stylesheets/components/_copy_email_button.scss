@@ -5,6 +5,7 @@
 }
 
 // Sur l'index, le bouton n'apparaît qu'au survol de la cellule
-td.cell-data--copyable-email-field:not(:hover, :focus-within) .copy-email-button {
+td.cell-data--copyable-email-field:not(:hover, :focus-within)
+  .copy-email-button {
   visibility: hidden;
 }
