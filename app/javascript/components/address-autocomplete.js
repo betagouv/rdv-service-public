@@ -5,6 +5,14 @@ const MIN_QUERY_LENGTH = 3
 const DEBOUNCE_DELAY = 800
 const ATTRIBUTES_MANAGED_BY_AUTOCOMPLETE = ["id", "name", "class", "value", "type", "required", "placeholder", "autocomplete", "role", "data-address-autocomplete"]
 
+// textContent insère le texte tel quel (jamais interprété comme du HTML) ;
+// innerHTML le relit ensuite sérialisé, avec <, >, & échappés en &lt;, &gt;, &amp;
+const escapeHtml = text => {
+  const div = document.createElement("div")
+  div.textContent = text
+  return div.innerHTML
+}
+
 // exemple de name : 52 Avenue Jean Jaurès, city : Paris, postcode : 75019.
 // District et context ont été supprimé afin de récupérer des adresses plus courtes. Exemple district: Paris 19e Arrondissement, context: 75, Paris, Île-de-France
 const getDetails = ({ name, city, postcode }) => {
@@ -144,8 +152,8 @@ class AddressAutocompleteInput {
       municipality: "community-fill",
       street: "map-pin-2-fill"
     }[type] || "question-fill"
-    const details = getDetails(suggestion).join(", ")
-    return `<span class="fr-icon-${icon}" aria-hidden="true"></span> <b>${name}</b> <span class="fr-text-mention--grey">${details}</span>`
+    const details = escapeHtml(getDetails(suggestion).join(", "))
+    return `<span class="fr-icon-${icon}" aria-hidden="true"></span> <b>${escapeHtml(name)}</b> <span class="fr-text-mention--grey">${details}</span>`
   }
 }
 
