@@ -48,4 +48,17 @@ RSpec.describe "Autocomplétion d’adresse côté agent", :js do
       longitude: 2.372095
     )
   end
+
+  it "indique quand aucune adresse ne correspond à la recherche" do
+    page.driver.with_playwright_page do |playwright_page|
+      playwright_page.route("https://data.geopf.fr/geocodage/search/**", lambda { |route, _request|
+        route.fulfill(status: 200, contentType: "application/json", body: { type: "FeatureCollection", features: [] }.to_json)
+      })
+    end
+
+    visit new_admin_organisation_lieu_path(organisation)
+    fill_in "Adresse", with: "adresse inexistante"
+
+    expect(page).to have_css(".autocomplete__option--no-results", text: "Nous n’avons pas trouvé d’adresse correspondant à votre recherche")
+  end
 end

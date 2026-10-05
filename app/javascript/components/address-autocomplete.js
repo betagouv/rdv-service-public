@@ -1,15 +1,18 @@
-import 'autocomplete.js/dist/autocomplete.jquery.js'
-import 'custom-event-polyfill'
-import 'whatwg-fetch'
+import accessibleAutocomplete from 'accessible-autocomplete'
 
+const MIN_QUERY_LENGTH = 3
 const DEBOUNCE_DELAY = 800
+const ATTRIBUTES_MANAGED_BY_AUTOCOMPLETE = ["id", "name", "class", "value", "type", "required", "placeholder", "autocomplete", "role", "data-address-autocomplete"]
+
+const tStatusResults = (length, contentSelectedOption) => {
+  const words = length === 1 ? "résultat disponible" : "résultats disponibles"
+  return `${length} ${words}. ${contentSelectedOption}`
+}
 
 class AddressAutocompleteInput {
-  constructor(container) {
-    if (container === null) return false;
-
-    this.addressType = container.dataset.addressType;
-    const form = $(container).closest('form')[0];
+  constructor(input) {
+    this.addressType = input.dataset.addressType;
+    const form = $(input).closest('form')[0];
     this.dependentInputs =
       ["departement", "latitude", "longitude", "city_code", "post_code", "city_name", "street_ban_id", "street_name"].
         map(name => ({ name, elt: form.querySelector(`input[name*=${name}]`)})).
@@ -17,14 +20,37 @@ class AddressAutocompleteInput {
 
     this.addressWithoutGeocodingInput = form.querySelector('input[type="hidden"][name*="address_without_geocoding"]');
 
-    $(container).autocomplete(
-      { hint: false },
-      [{
-        source: this.getSuggestions,
-        debounce: DEBOUNCE_DELAY,
-        templates: { suggestion: this.suggestionTemplate }
-      }]
-    ).on('autocomplete:selected', this.onConfirm);
+    // accessible-autocomplete ne décore pas un input existant mais en créé un nouveau
+    // On remplace donc l'input d'origine par un container, et on préserve les attributs
+    const container = document.createElement("div")
+    input.before(container)
+    input.remove()
+
+    accessibleAutocomplete({
+      element: container,
+      id: input.id,
+      name: input.name,
+      defaultValue: input.value,
+      required: input.required,
+      inputClasses: input.className,
+      placeholder: input.placeholder,
+      minLength: MIN_QUERY_LENGTH,
+      displayMenu: "overlay",
+      source: this.source,
+      onConfirm: this.onConfirm,
+      templates: { inputValue: this.inputValueTemplate, suggestion: this.suggestionTemplate },
+      tNoResults: () => "Nous n’avons pas trouvé d’adresse correspondant à votre recherche",
+      tStatusNoResults: () => "Aucun résultat",
+      tStatusQueryTooShort: minLength => `Saisissez au moins ${minLength} caractères pour lancer la recherche`,
+      tStatusSelectedOption: (selectedOption, length, index) => `${selectedOption} ${index + 1} sur ${length} est sélectionné`,
+      tStatusResults,
+      tAssistiveHint: () => "Quand des suggestions sont disponibles, utilisez les flèches haut et bas pour les parcourir et Entrée pour en choisir une. Sur un écran tactile, explorez au toucher ou par balayage.",
+    })
+
+    const autocompleteInput = container.querySelector("input")
+    Array.from(input.attributes).
+      filter(({ name }) => !ATTRIBUTES_MANAGED_BY_AUTOCOMPLETE.includes(name) && !name.startsWith("aria-")).
+      forEach(({ name, value }) => autocompleteInput.setAttribute(name, value))
 
     // clear dependent fields upon input event (before selecting suggestion)
     container.addEventListener("input", () => {
@@ -33,7 +59,9 @@ class AddressAutocompleteInput {
     })
   }
 
-  onConfirm = (_event, suggestion, _dataset, _context) => {
+  onConfirm = suggestion => {
+    if (!suggestion) return
+
     if (suggestion.type === 'no_address') {
       this.setDependentInputs({})
       if (this.addressWithoutGeocodingInput) this.addressWithoutGeocodingInput.value = "1"
@@ -41,6 +69,14 @@ class AddressAutocompleteInput {
       this.setDependentInputs(suggestion)
       if (this.addressWithoutGeocodingInput) this.addressWithoutGeocodingInput.value = "0"
     }
+  }
+
+  source = (query, populateResults) => {
+    clearTimeout(this.debounceTimeout)
+    const trimmedQuery = query.trim()
+    if (trimmedQuery.length < MIN_QUERY_LENGTH) return populateResults([])
+
+    this.debounceTimeout = setTimeout(() => this.getSuggestions(trimmedQuery, populateResults), DEBOUNCE_DELAY)
   }
 
   getSuggestions = (query, callback) => {
@@ -90,8 +126,10 @@ class AddressAutocompleteInput {
   setDependentInputs = suggestion =>
     this.dependentInputs.forEach(({ name, elt }) => {
       elt.value = suggestion[name] || ""
-      elt.dispatchEvent(new CustomEvent("change")) // not triggered automatically
     })
+
+
+  inputValueTemplate = suggestion => suggestion?.value
 
   suggestionTemplate = suggestion => {
     if (suggestion.type === 'no_address') {
