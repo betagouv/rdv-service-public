@@ -1,0 +1,26 @@
+.copy-email-button {
+  margin-left: 4px;
+  margin-top: -4px;
+  padding: 4px 3px;
+  border: none;
+  background: none;
+  font-size: 1em;
+  line-height: 1;
+  vertical-align: middle;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background: none;
+  }
+}
+
+// Sur l'index, le bouton n'apparaît qu'au survol de la cellule
+td.cell-data--email-field .copy-email-button {
+  visibility: hidden;
+}
+
+td.cell-data--email-field:hover .copy-email-button,
+td.cell-data--email-field:focus-within .copy-email-button {
+  visibility: visible;
+}

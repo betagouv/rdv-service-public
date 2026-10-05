@@ -5,7 +5,7 @@ class OperatorManagerDashboard < Administrate::BaseDashboard
     id: Field::Number,
     first_name: Field::String,
     last_name: Field::String,
-    email: Field::String,
+    email: EmailField,
     operator: Field::BelongsTo,
   }.freeze
 

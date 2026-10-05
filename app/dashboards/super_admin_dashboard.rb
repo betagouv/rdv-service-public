@@ -9,7 +9,7 @@ class SuperAdminDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     id: Field::Number,
-    email: Field::String,
+    email: EmailField,
     role: EnumField,
     first_name: Field::String,
     last_name: Field::String,
