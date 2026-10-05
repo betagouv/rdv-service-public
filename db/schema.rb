@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_24_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_05_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -231,6 +231,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_24_120000) do
     t.datetime "updated_at", null: false
     t.string "caldav_calendar_name"
     t.string "caldav_calendar_color", limit: 7
+    t.string "caldav_ctag"
     t.index ["agent_id"], name: "index_caldav_configs_on_agent_id", unique: true
   end
 

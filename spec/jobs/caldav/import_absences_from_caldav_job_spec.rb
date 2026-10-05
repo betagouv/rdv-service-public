@@ -204,4 +204,55 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
       expect(execution.logs.pluck(:message)).to include("Error: boom")
     end
   end
+
+  # Zimbra ne supporte pas le report sync-collection (RFC 6578) et ne renvoie pas de sync-token.
+  # On se base alors sur le ctag du calendrier pour savoir s'il a changé depuis la dernière synchro.
+  context "quand l'agent utilise un système ne supportant pas le sync token (Zimbra typiquement)" do
+    around do |example|
+      VCR.use_cassette("caldav/zimbra_without_sync_token", allow_playback_repeats: true) do
+        example.run
+      end
+    end
+
+    before do
+      agent.caldav_config.update!(
+        caldav_agenda_url: "https://webmail.genci.fr/dav/pbrdv@genci.fr/Calendar",
+        caldav_username: "pbrdv@genci.fr",
+        caldav_password: "mot_de_passe_factice" # le vrai mot de passe n’est utile que pour réenregistrer la cassette
+      )
+    end
+
+    let(:url_of_event_deleted_on_server) { "https://webmail.genci.fr/dav/pbrdv%40genci.fr/Calendar/deleted-on-server.ics" }
+
+    it "importe les événements et enregistre le ctag lors de la première synchro" do
+      expect { described_class.new.perform(agent.id) }.to change(ExternalCalendarEvent, :count).by(10)
+
+      expect(agent.caldav_config.reload).to have_attributes(caldav_sync_token: nil, caldav_ctag: "1-32")
+      expect(ExternalCalendarSyncExecution.last.logs.pluck(:message)).to eq(
+        ["No sync token support: ctag changed, loading all events", "New/updated: 10, deleted : 0"]
+      )
+    end
+
+    it "supprime les événements locaux qui n'existent plus sur le serveur quand le ctag a changé" do
+      agent.caldav_config.update!(caldav_ctag: "1-31")
+      create(:external_calendar_event, agent:, url: url_of_event_deleted_on_server)
+
+      described_class.new.perform(agent.id)
+
+      expect(ExternalCalendarEvent.where(url: url_of_event_deleted_on_server)).to be_empty
+      expect(ExternalCalendarEvent.count).to eq(10)
+      expect(agent.caldav_config.reload.caldav_ctag).to eq("1-32")
+    end
+
+    it "ne recharge pas les événements quand le ctag n'a pas changé" do
+      agent.caldav_config.update!(caldav_ctag: "1-32")
+      create(:external_calendar_event, agent:, url: url_of_event_deleted_on_server)
+
+      expect { described_class.new.perform(agent.id) }.not_to change(ExternalCalendarEvent, :count)
+
+      expect(ExternalCalendarSyncExecution.last.logs.pluck(:message)).to eq(
+        ["No sync token support: ctag unchanged, nothing to load", "New/updated: 0, deleted : 0"]
+      )
+    end
+  end
 end
