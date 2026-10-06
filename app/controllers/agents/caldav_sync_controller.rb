@@ -87,8 +87,9 @@ class Agents::CaldavSyncController < AgentAuthController
       return "L’accès en lecture au calendrier a échoué. Veuillez vérifier l’URL de l’agenda."
     end
 
-    if calendar.sync_token.blank?
-      return "Votre serveur CalDAV ne supporte pas la synchronisation incrémentale (sync-token), requise pour connecter " \
+    # Sans sync token (RFC 6578), on peut synchroniser de façon incrémentale grâce au ctag (Zimbra notamment)
+    if calendar.sync_token.blank? && calendar.ctag.blank?
+      return "Votre serveur CalDAV ne supporte pas la synchronisation incrémentale (sync-token ou ctag), requise pour connecter " \
              "votre agenda à RDV Service Public. Veuillez contacter votre fournisseur d’agenda ou utiliser un autre serveur CalDAV."
     end
 
