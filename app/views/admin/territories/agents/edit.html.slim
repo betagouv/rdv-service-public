@@ -1,130 +1,118 @@
 = territory_navigation(t(".agent_title", name: @agent.full_name_or_email), [[t(".territory_agents_title"), admin_territory_agents_path(current_territory)]])
 
-h1
+h1.fr-h2
   = @agent.full_name_or_email
 
-.container-fluid
-  - can_edit_services = Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
-  .card.m-2.rounded
-    h2.card-header
-      = t(".agent_services_legend")
+- can_edit_services = Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
+.card
+  .card-body
+    h2.fr-h3 = t(".agent_services_legend")
     = simple_form_for @agent, url: update_services_admin_territory_agent_path(current_territory, @agent) do |f|
-      .card-body
-        = f.input :service_ids,
-              collection: (current_territory.services + @agent.services).uniq.reject(&:secretariat?),
-              label: t(".services"),
-              label_method: lambda { |service| [service.name, (current_territory.services.include?(service) ? nil : "(désactivé dans l'espace courant)") ].compact.join(" ") },
+      = f.input :service_ids,
+            collection: (current_territory.services + @agent.services).uniq.reject(&:secretariat?),
+            label: t(".services"),
+            label_method: lambda { |service| [service.name, (current_territory.services.include?(service) ? nil : "(désactivé dans l'espace courant)") ].compact.join(" ") },
+            input_html: { \
+              multiple: true, \
+              class: "select2-input",\
+            },
+            disabled: !can_edit_services
+      .row
+        .col.text-right
+          - if can_edit_services
+            = f.submit class: "fr-btn", value: "Enregistrer les services"
+          - else
+            .fr-mb-0.fr-text--sm.fr-text-mention--grey
+              | Vous n’avez pas les droits nécessaires pour modifier les services des agents
+
+- can_edit_access_rights = Agent::AgentTerritorialAccessRightPolicy.new(current_agent, @agent.agent_territorial_access_rights.find_by(territory: current_territory)).edit?
+.card
+  .card-body
+    h2.fr-h3 Droits d'accès
+    = simple_form_for @agent.agent_territorial_access_rights.find_by(territory: current_territory), url: admin_territory_agent_territorial_access_right_path do |f|
+      p.fr-mb-3w.fr-mt-1w
+        |> Ces droits d'accès sont applicables
+        b
+          |> sur tout l'espace #{current_territory}
+        |> pour #{@agent}
+      = f.input :allow_to_manage_teams, as: :boolean, hint: "Créer, supprimer, modifier toutes les équipes de #{current_territory.name_for_agent}", disabled: !can_edit_access_rights
+      = f.input :allow_to_manage_access_rights, as: :boolean, hint: "Modifier les droits d'accès et les services de tous les agents de #{current_territory.name_for_agent}", disabled: !can_edit_access_rights
+      = f.input :allow_to_invite_agents, as: :boolean, hint: "Inviter de nouveaux agents, affecter ou retirer des agents des organisations, donner ou retirer le rôle admin d'organisation ou agent d’accueil", disabled: !can_edit_access_rights
+      .row
+        .col.text-right
+          - if can_edit_access_rights
+            = f.submit class: "fr-btn", value: "Enregistrer les droits d'accès"
+          - else
+            .fr-mb-0.fr-text--sm.fr-text-mention--grey
+              | Vous n’avez pas les droits nécessaires pour modifier les droits d’accès des agents
+
+- if Agent::AgentTerritorialRolePolicy.new(current_agent, AgentTerritorialRole.new(agent: @agent, territory: current_territory)).create_or_destroy?
+  .card.agent-territorial
+    .card-body
+      h2.fr-h3 = t(".agent_territorial_role_caption")
+
+      = simple_form_for @agent, url: create_or_destroy_admin_territory_agent_territorial_roles_path(current_territory, agent_id: @agent), method: :put do |f|
+        = check_box_tag :territorial_admin, 1, @agent.territorial_admin_in?(current_territory)
+        span>
+        = label_tag :territorial_admin, "Administrateur de #{current_territory.name_for_agent}"
+        small.form-text.fr-text-mention--grey
+          | Ce status d'agent ouvre un large accès à la création d'organisation, la gestion de la sectorisation, la gestion des webhook, la configuration de ce qui est visible dans une fiche usager, une fiche RDV, la visiblité des catégories de motif, …
+
+        .row
+          .col.text-right
+            = f.submit class: "fr-btn"
+
+- if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_teams?
+  .card
+    .card-body
+      h2.fr-h3 = t(".agent_teams_legend")
+      = simple_form_for @agent, url: update_teams_admin_territory_agent_path(current_territory, @agent) do |f|
+        = f.input :team_ids, collection: Agent::TeamPolicy::Scope.apply(current_agent, current_territory.teams).ordered_by_name,
+              label: t(".teams"),
+              label_method: :name,
               input_html: { \
                 multiple: true, \
                 class: "select2-input",\
-              },
-              disabled: !can_edit_services
-      .card-footer
+              }
         .row
           .col.text-right
-            - if can_edit_services
-              = f.submit class: "fr-btn", value: "Enregistrer les services"
-            - else
-              .fr-mb-0.fr-text--sm.fr-text-mention--grey
-                | Vous n’avez pas les droits nécessaires pour modifier les services des agents
+            = f.submit class: "fr-btn"
 
-  - can_edit_access_rights = Agent::AgentTerritorialAccessRightPolicy.new(current_agent, @agent.agent_territorial_access_rights.find_by(territory: current_territory)).edit?
-  .card.m-2.rounded
-    h2.card-header
-      | Droits d'accès
-    = simple_form_for @agent.agent_territorial_access_rights.find_by(territory: current_territory), url: admin_territory_agent_territorial_access_right_path do |f|
-      .card-body
-        p.fr-mb-3w.fr-mt-1w
-          |> Ces droits d'accès sont applicables
-          b
-            |> sur tout l'espace #{current_territory}
-          |> pour #{@agent}
-        = f.input :allow_to_manage_teams, as: :boolean, hint: "Créer, supprimer, modifier toutes les équipes de #{current_territory.name_for_agent}", disabled: !can_edit_access_rights
-        = f.input :allow_to_manage_access_rights, as: :boolean, hint: "Modifier les droits d'accès et les services de tous les agents de #{current_territory.name_for_agent}", disabled: !can_edit_access_rights
-        = f.input :allow_to_invite_agents, as: :boolean, hint: "Inviter de nouveaux agents, affecter ou retirer des agents des organisations, donner ou retirer le rôle admin d'organisation ou agent d’accueil", disabled: !can_edit_access_rights
-      .card-footer
-        .row
-          .col.text-right
-            - if can_edit_access_rights
-              = f.submit class: "fr-btn", value: "Enregistrer les droits d'accès"
-            - else
-              .fr-mb-0.fr-text--sm.fr-text-mention--grey
-                | Vous n’avez pas les droits nécessaires pour modifier les droits d’accès des agents
+.card
+  .card-body
+    h2.fr-h3 = t(".organisations_legend")
+    .fr-grid-row.fr-grid-row--gutters
+      - agent_organisations_of_current_territory = @agent.organisations.where(territory: current_territory)
+      - if agent_organisations_of_current_territory.empty?
+        = t(".empty_agent_organisations")
+      - agent_organisations_of_current_territory.each_with_index do |organisation, index|
+        .fr-col-6
+          .card
+            .card-body
+              h3.fr-h6= organisation.name
+              - role = @agent.role_in_organisation(organisation)
+              = simple_form_for role, namespace: role.id, url: admin_territory_agent_role_path(current_territory, role) do |f|
+                - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_invite_agents?
+                    = f.input :organisation_id, as: :hidden, input_html: { value: organisation.id }
+                    = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
+                    = f.input :access_level, as: :radio_buttons, collection: AgentRole::ACCESS_LEVELS, label_method: -> { AgentRole.human_attribute_value(:access_level, _1) }, checked: role&.access_level || "none"
+                    - if organisation.territory.services.any? || role&.agent_accueil?
+                      = f.input :agent_accueil, as: :boolean, label: "Agent d'accueil", hint: "Peut consulter et modifier les agendas de tous les agents de l'organisation"
+                .row
+                  .col.text-left
+                    = link_to t(".delete_agent_role"), admin_territory_agent_role_path(current_territory, role), class: "fr-btn fr-btn--tertiary", data: { confirm: "Vous confirmez retirer l'agent #{@agent.full_name_or_email} de l'organisation #{role.organisation.name} ?", method: :delete }
+                  .col.text-right
+                    = f.button :submit, t(".submit")
 
-  - if Agent::AgentTerritorialRolePolicy.new(current_agent, AgentTerritorialRole.new(agent: @agent, territory: current_territory)).create_or_destroy?
-    .card.m-2.rounded.agent-territorial
-      h2.card-header
-        = t(".agent_territorial_role_caption")
-
-      = simple_form_for @agent, url: create_or_destroy_admin_territory_agent_territorial_roles_path(current_territory, agent_id: @agent), method: :put do |f|
-        .card-body
-          = check_box_tag :territorial_admin, 1, @agent.territorial_admin_in?(current_territory)
-          span>
-          = label_tag :territorial_admin, "Administrateur de #{current_territory.name_for_agent}"
-          small.form-text.fr-text-mention--grey
-            | Ce status d'agent ouvre un large accès à la création d'organisation, la gestion de la sectorisation, la gestion des webhook, la configuration de ce qui est visible dans une fiche usager, une fiche RDV, la visiblité des catégories de motif, …
-
-        .card-footer
-          .row
-            .col.text-right
-              = f.submit class: "fr-btn"
-
-  - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_teams?
-    .card.m-2.rounded
-      h2.card-header
-        = t(".agent_teams_legend")
-      = simple_form_for @agent, url: update_teams_admin_territory_agent_path(current_territory, @agent) do |f|
-        .card-body
-          = f.input :team_ids, collection: Agent::TeamPolicy::Scope.apply(current_agent, current_territory.teams).ordered_by_name,
-                label: t(".teams"),
-                label_method: :name,
-                input_html: { \
-                  multiple: true, \
-                  class: "select2-input",\
-                }
-        .card-footer
-          .row
-            .col.text-right
-              = f.submit class: "fr-btn"
-
-  .card.m-2.rounded
-    h2.card-header
-      = t(".organisations_legend")
-    .card-body
-      .card-group
-        - agent_organisations_of_current_territory = @agent.organisations.where(territory: current_territory)
-        - if agent_organisations_of_current_territory.empty?
-          = t(".empty_agent_organisations")
-        - agent_organisations_of_current_territory.each_with_index do |organisation, index|
-          .card.m-1 *{ "style" => "min-width:17rem;" }
-            - role = @agent.role_in_organisation(organisation)
-            = simple_form_for role, namespace: role.id, url: admin_territory_agent_role_path(current_territory, role) do |f|
-              .card-header
-                = organisation.name
-              - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_invite_agents?
-                .card-body
-                  = f.input :organisation_id, as: :hidden, input_html: { value: organisation.id }
-                  = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
-                  = f.input :access_level, as: :radio_buttons, collection: AgentRole::ACCESS_LEVELS, label_method: -> { AgentRole.human_attribute_value(:access_level, _1) }, checked: role&.access_level || "none"
-                  - if organisation.territory.services.any? || role&.agent_accueil?
-                    = f.input :agent_accueil, as: :boolean, label: "Agent d'accueil", hint: "Peut consulter et modifier les agendas de tous les agents de l'organisation"
-                .card-footer
-                  .row
-                    .col.text-left
-                      = link_to t(".delete_agent_role"), admin_territory_agent_role_path(current_territory, role), class: "fr-btn fr-btn--tertiary", data: { confirm: "Vous confirmez retirer l'agent #{@agent.full_name_or_email} de l'organisation #{role.organisation.name} ?", method: :delete }
-                    .col.text-right
-                      = f.button :submit, t(".submit")
-
-    .card-footer
-      - available_other_organisations = (current_agent.organisations.where(territory: current_territory) - agent_organisations_of_current_territory)
-      - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_invite_agents? && available_other_organisations.any?
-        = simple_form_for AgentRole.new, url: admin_territory_agent_roles_path(current_territory) do |f|
-          = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
-          = f.input :access_level, as: :hidden, input_html: { value: AgentRole::ACCESS_LEVEL_BASIC }
-          = f.input :organisation_id, collection: available_other_organisations, include_blank: "-- sélectionner une organisation --",
-                  required: false,
-                  label: false
-          = f.submit "Affecter cette organisation", class: "fr-btn fr-btn--secondary"
-      - elsif Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
-        => t(".no_other_organisation")
-        = link_to t(".create_organisation"), new_admin_territory_organisation_path(current_territory)
+    - available_other_organisations = (current_agent.organisations.where(territory: current_territory) - agent_organisations_of_current_territory)
+    - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_invite_agents? && available_other_organisations.any?
+      = simple_form_for AgentRole.new, url: admin_territory_agent_roles_path(current_territory) do |f|
+        = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
+        = f.input :access_level, as: :hidden, input_html: { value: AgentRole::ACCESS_LEVEL_BASIC }
+        = f.input :organisation_id, collection: available_other_organisations, include_blank: "-- sélectionner une organisation --",
+                required: false,
+                label: false
+        = f.submit "Affecter cette organisation", class: "fr-btn fr-btn--secondary"
+    - elsif Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
+      => t(".no_other_organisation")
+      = link_to t(".create_organisation"), new_admin_territory_organisation_path(current_territory), class: "fr-btn fr-btn--tertiary"
