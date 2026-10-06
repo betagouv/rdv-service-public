@@ -75,13 +75,13 @@ RSpec.describe Participation::StatusChangeable, type: :concern do
       end
 
       describe "triggers webhook" do
-        let!(:webhook_endpoint) { create(:webhook_endpoint, organisation:, subscriptions: ["rdv"]) }
+        let!(:webhook_endpoint) { create(:webhook_endpoint, :bypassing_host_validation, organisation:, subscriptions: ["rdv"]) }
 
         it "sends a webhook" do
           rdv.reload
           expect do
             participation1.change_status_and_notify(agent, "noshow")
-          end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id).at_least(1).times
+          end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id, event_occurred_at: a_kind_of(Time)).at_least(1).times
         end
       end
     end

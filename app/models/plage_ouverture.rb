@@ -1,6 +1,9 @@
 class PlageOuverture < ApplicationRecord
   # Mixins
-  has_paper_trail
+  has_paper_trail(
+    meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
+  )
+
   include RecurrenceConcern
   include WebhookDeliverable
   include IcsPayloads::PlageOuverture
@@ -135,9 +138,12 @@ class PlageOuverture < ApplicationRecord
   def overlapping_plages_ouvertures_candidates
     return [] unless valid_date_and_times?
 
+    return [] if lieu.blank?
+
     candidate_pos = agent.plage_ouvertures
       .not_expired
       .where.not(id: id)
+      .where.not(lieu: [lieu, nil])
 
     if ponctuelle?
       candidate_pos.regulieres.where(first_day: ..first_day)
@@ -194,5 +200,11 @@ class PlageOuverture < ApplicationRecord
 
   def requires_lieu?
     motifs.any?(&:requires_lieu?)
+  end
+
+  def virtual_attributes_for_paper_trail
+    {
+      motif_ids: motifs.ids.sort,
+    }
   end
 end

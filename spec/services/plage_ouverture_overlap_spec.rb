@@ -12,7 +12,7 @@ RSpec.describe PlageOuvertureOverlap do
       :plage_ouverture,
       agent: agent,
       first_day: first_day,
-      recurrence_ends_at: (recurrence ? recurrence.ends_at : nil),
+      recurrence_ends_at: recurrence&.ends_at,
       start_time: Tod::TimeOfDay.new(start_hour),
       end_time: Tod::TimeOfDay.new(end_hour),
       **(recurrence ? { recurrence: recurrence.to_json } : {})

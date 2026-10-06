@@ -70,7 +70,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
   def set_services_and_motifs
     @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif).available_motifs_for_organisation_and_agent(current_organisation, @agent)
     @services = Service.where(id: @motifs.pluck(:service_id).uniq)
-    @rdv_wizard.service_id = @services.first.id if @services.count == 1
+    @rdv_wizard.service_id = @services.first.id if @services.one?
   end
 
   # Cette méthode est dans le controller plutôt que dans le visio_concern car la création du salon

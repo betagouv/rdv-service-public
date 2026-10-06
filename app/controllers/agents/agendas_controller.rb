@@ -4,11 +4,12 @@ class Agents::AgendasController < AgentAuthController
 
     accessible_organisations = policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope)
 
-    if accessible_organisations.count == 0
+    case accessible_organisations.count
+    when 0
       redirect_to authenticated_agent_root_path
-    elsif accessible_organisations.count == 1
+    when 1
       redirect_to admin_organisation_planning_agenda_path(accessible_organisations.first)
-    elsif accessible_organisations.count > 1
+    else
       redirect_to admin_organisations_path
     end
   end

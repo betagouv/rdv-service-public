@@ -681,7 +681,7 @@ RSpec.describe Rdv, type: :model do
   describe "#destroy" do
     it "dont call update webhook" do
       rdv = create(:rdv)
-      expect(rdv).not_to receive(:generate_payload_and_send_webhook)
+      expect(rdv).not_to receive(:enqueue_webhook_job)
       rdv.destroy
     end
 

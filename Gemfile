@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.4.10"
+ruby "3.4.11"
 
 # Full-stack web application framework.
 gem "rails", "8.0.5.1"
@@ -190,7 +190,7 @@ group :development do
   # Security vulnerability scanner for Ruby on Rails.
   gem "brakeman", require: false
   # Automatic Ruby code style checking tool.
-  gem "rubocop", require: false
+  gem "rubocop",  "= 1.76", require: false
   # Code style checking for RSpec files
   gem "rubocop-rspec", require: false
   # Automatic Rails code style checking tool.

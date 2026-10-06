@@ -17,8 +17,8 @@
 - if from_modal?
   = render "form", user: @user, user_form: @user_form
 - else
-  .row.justify-content-center
-    .col-md-6
+  .fr-grid-row.justify-content-center
+    .fr-col-12.fr-col-md-10.fr-col-lg-8.fr-col-xl-6
       .card
         .card-body
           = render "form", user: @user, user_form: @user_form
