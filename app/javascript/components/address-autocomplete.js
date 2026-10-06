@@ -2,6 +2,8 @@ import 'autocomplete.js/dist/autocomplete.jquery.js'
 import 'custom-event-polyfill'
 import 'whatwg-fetch'
 
+const DEBOUNCE_DELAY = 800
+
 class AddressAutocompleteInput {
   constructor(container) {
     if (container === null) return false;
@@ -19,24 +21,26 @@ class AddressAutocompleteInput {
       { hint: false },
       [{
         source: this.getSuggestions,
-        debounce: 800,
+        debounce: DEBOUNCE_DELAY,
         templates: { suggestion: this.suggestionTemplate }
       }]
-    ).on('autocomplete:selected', (_event, suggestion, _dataset, _context) => {
-      if (suggestion.type === 'no_address') {
-        this.setDependentInputs({})
-        if (this.addressWithoutGeocodingInput) this.addressWithoutGeocodingInput.value = "1"
-      } else {
-        this.setDependentInputs(suggestion)
-        if (this.addressWithoutGeocodingInput) this.addressWithoutGeocodingInput.value = "0"
-      }
-    });
+    ).on('autocomplete:selected', this.onConfirm);
 
     // clear dependent fields upon input event (before selecting suggestion)
     container.addEventListener("input", () => {
       this.setDependentInputs({})
       if (this.addressWithoutGeocodingInput) this.addressWithoutGeocodingInput.value = "0"
     })
+  }
+
+  onConfirm = (_event, suggestion, _dataset, _context) => {
+    if (suggestion.type === 'no_address') {
+      this.setDependentInputs({})
+      if (this.addressWithoutGeocodingInput) this.addressWithoutGeocodingInput.value = "1"
+    } else {
+      this.setDependentInputs(suggestion)
+      if (this.addressWithoutGeocodingInput) this.addressWithoutGeocodingInput.value = "0"
+    }
   }
 
   getSuggestions = (query, callback) => {
