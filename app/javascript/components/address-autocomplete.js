@@ -107,10 +107,10 @@ class AddressAutocompleteInput {
     const trimmedQuery = query.trim()
     if (trimmedQuery.length < MIN_QUERY_LENGTH) return populateResults([])
 
-    this.debounceTimeout = setTimeout(() => this.getSuggestions(trimmedQuery, populateResults), DEBOUNCE_DELAY)
+    this.debounceTimeout = setTimeout(() => this.fetchSuggestions(trimmedQuery, populateResults), DEBOUNCE_DELAY)
   }
 
-  getSuggestions = (query, callback) => {
+  fetchSuggestions = (query, populateResults) => {
     const url = "https://data.geopf.fr/geocodage/search/"
     const searchParams = new URLSearchParams()
     searchParams.append("q", query)
@@ -122,7 +122,7 @@ class AddressAutocompleteInput {
         if (this.addressWithoutGeocodingInput) suggestions.push({ type: 'no_address', value: query })
         return suggestions
       }).
-      then(callback)
+      then(populateResults)
   }
 
   setDependentInputs = suggestion =>
