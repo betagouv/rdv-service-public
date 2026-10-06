@@ -94,6 +94,27 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
       end
     end
 
+    context "quand le serveur CalDAV ne supporte pas la synchronisation incrémentale (sync-token)" do
+      before do
+        allow(caldav_calendars).to receive(:find).and_return(instance_double(Calendav::Calendar, sync_token: nil))
+      end
+
+      it "affiche un message d’erreur dédié" do
+        put :update, params: caldav_params
+
+        expect(response).to redirect_to(agents_calendar_sync_caldav_sync_path)
+        expect(flash[:alert]).to eq(
+          "Votre serveur CalDAV ne supporte pas la synchronisation incrémentale (sync-token), requise pour connecter " \
+          "votre agenda à RDV Service Public. Veuillez contacter votre fournisseur d’agenda ou utiliser un autre serveur CalDAV."
+        )
+      end
+
+      it "ne sauvegarde pas les identifiants" do
+        put :update, params: caldav_params
+        expect(agent.caldav_config).to be_nil
+      end
+    end
+
     context "quand l’écriture dans le calendrier échoue" do
       before do
         allow(caldav_events).to receive(:create).and_raise(StandardError.new("403 Forbidden"))
