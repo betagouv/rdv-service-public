@@ -1,6 +1,9 @@
 class PlageOuverture < ApplicationRecord
   # Mixins
-  has_paper_trail
+  has_paper_trail(
+    meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
+  )
+
   include RecurrenceConcern
   include WebhookDeliverable
   include IcsPayloads::PlageOuverture
@@ -197,5 +200,11 @@ class PlageOuverture < ApplicationRecord
 
   def requires_lieu?
     motifs.any?(&:requires_lieu?)
+  end
+
+  def virtual_attributes_for_paper_trail
+    {
+      motif_ids: motifs.ids.sort,
+    }
   end
 end

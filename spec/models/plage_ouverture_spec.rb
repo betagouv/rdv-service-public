@@ -382,4 +382,35 @@ RSpec.describe PlageOuverture, type: :model do
       expect(plage_ouverture_phone.overlapping_plages_ouvertures).to be_empty
     end
   end
+
+  describe "versions (PaperTrail)" do
+    it "records all attrs (including motifs)" do
+      organisation = create(:organisation)
+      orignal_motif = create(:motif, organisation:)
+      other_motif = create(:motif, organisation:)
+      plage = create(:plage_ouverture, organisation:, motifs: [orignal_motif])
+      new_lieu = create(:lieu, organisation:)
+      old_title = plage.title
+      old_first_day = plage.first_day
+      old_lieu_id = plage.lieu_id
+      plage.update(
+        title: "new_title",
+        first_day: plage.first_day + 1.day,
+        end_time: plage.end_time + 2.hours,
+        lieu_id: new_lieu.id,
+        motif_ids: [orignal_motif.id, other_motif.id]
+      )
+      expect(plage.versions.first.virtual_attributes).to eq("motif_ids" => [orignal_motif.id])
+      expect(plage.versions.last).to have_attributes(
+        event: "update",
+        object_changes: hash_including(
+          "title" => [old_title, "new_title"],
+          "first_day" => [old_first_day.to_s, (old_first_day + 1.day).to_s],
+          "end_time" => [hash_including("hour" => 12), hash_including("hour" => 14)],
+          "lieu_id" => [old_lieu_id, new_lieu.id]
+        ),
+        virtual_attributes: { "motif_ids" => [orignal_motif.id, other_motif.id].sort }
+      )
+    end
+  end
 end
