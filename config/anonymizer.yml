@@ -516,6 +516,7 @@ tables:
     anonymized_column_names:
       - url
       - raw_ical
+      - etag
     non_anonymized_column_names:
       - agent_id
       - starts_at
