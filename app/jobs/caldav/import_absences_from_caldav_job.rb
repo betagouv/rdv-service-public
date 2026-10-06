@@ -10,8 +10,8 @@ module Caldav
     before_enqueue { |job| throw :abort if job.class.synced_during_last_minute?(agent_id: job.arguments.first) }
     before_perform { |job| throw :abort if job.class.synced_during_last_minute?(agent_id: job.arguments.first) }
 
-    def self.store_latest_run_timestamp(agent_id:) = Redis.with_connection { _1.set("latest_caldav_import:#{agent_id}", Time.zone.now, ex: 1.second) }
-    def self.synced_during_last_minute?(agent_id:) = Redis.with_connection { _1.get("latest_caldav_import:#{agent_id}") }&.to_time&.after?(1.second.ago)
+    def self.store_latest_run_timestamp(agent_id:) = Redis.with_connection { _1.set("latest_caldav_import:#{agent_id}", Time.zone.now, ex: 1.minute) }
+    def self.synced_during_last_minute?(agent_id:) = Redis.with_connection { _1.get("latest_caldav_import:#{agent_id}") }&.to_time&.after?(1.minute.ago)
 
     # Pour comprendre l'usage de la gem Calendav, voir la doc très claire :
     # https://github.com/pat/calendav?tab=readme-ov-file#synchronising
