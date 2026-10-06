@@ -5,6 +5,13 @@
 .algolia-autocomplete {
   width: 100%;
 }
+// Depuis DSFR 1.15, .fr-search-bar est en flex-wrap: wrap et seul .fr-input a flex: 1.
+// Le wrapper ajouté autour de l’input doit donc prendre la place restante, sans forcer le retour à la ligne du bouton.
+.fr-search-bar .algolia-autocomplete {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+}
 .algolia-autocomplete .aa-input,
 .algolia-autocomplete .aa-hint {
   width: 100%;
