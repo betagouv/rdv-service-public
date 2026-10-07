@@ -10,7 +10,7 @@ module Users
     validates :behaviour, inclusion: { in: %w[upsert_user find_existing_user].freeze }
     validate :validate_not_sent_too_recently, if: -> { login_code.valid? }
     validates :first_name, :last_name, presence: true, if: -> { login_code.valid? && behaviour == "upsert_user" }
-    validate :validate_user_exists_or_suggest_agent, if: -> { login_code.valid? && behaviour == "find_existing_user" }
+    validate :validate_user_exists, if: -> { login_code.valid? && behaviour == "find_existing_user" }
 
     def initialize(login_code, behaviour: nil)
       @login_code = login_code
@@ -21,23 +21,14 @@ module Users
       errors.merge!(login_code) if login_code.invalid?
     end
 
-    def validate_user_exists_or_suggest_agent
+    def validate_user_exists
       return true if User.loginable_by_code_for_email(email).any?
 
-      error =
-        if Agent.exists?(email:)
-          <<~ERROR.squish
-            Cet email ne correspond à aucun compte usager utilisant la connexion par email.
-            Vous pouvez essayer la connexion par FranceConnect.
-            Si vous souhaitez vous connecter en tant qu’agent, veuillez vous rendre sur la page de connexion agent.
-          ERROR
-        else
-          <<~ERROR.squish
-            Cet email ne correspond à aucun compte usager utilisant la connexion par email.
-            Vous pouvez essayer la connexion par FranceConnect.
-          ERROR
-        end
-      errors.add(:base, error)
+      errors.add(:base, <<~ERROR.squish)
+        Cet email ne correspond à aucun compte usager utilisant la connexion par email.
+        Vous pouvez essayer la connexion par FranceConnect.
+        Si vous souhaitez vous connecter en tant qu’agent, veuillez vous rendre sur la page de connexion agent.
+      ERROR
     end
 
     def validate_not_sent_too_recently # doublon dans EmailChangeRequestForm
