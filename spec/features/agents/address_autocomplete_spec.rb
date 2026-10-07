@@ -122,4 +122,35 @@ RSpec.describe "Autocomplétion d’adresse côté agent", :js do
     expect(page).to have_field("zone_street_name", with: "Quai de la Gironde")
     expect(page).to have_field("zone_street_ban_id", with: "75119_4197")
   end
+
+  it "propose et gère l'option pour les adresses introuvables ou à l'étranger" do
+    page.driver.with_playwright_page do |playwright_page|
+      playwright_page.route("https://data.geopf.fr/geocodage/search/**", lambda { |route, _request|
+        route.fulfill(status: 200, contentType: "application/json", body: file_fixture("geocode_result.json").read)
+      })
+    end
+
+    # c'est important de se mettre sur RDVSP car sur RDVS on oblige le geocoding
+    visit new_admin_organisation_lieu_url(organisation, host: Domain::RDV_SERVICE_PUBLIC.host_name)
+    fill_in "Nom", with: "Lieu à l'étranger"
+    fill_in "Adresse", with: "adresse a l etranger"
+
+    # Attendre que les suggestions apparaissent
+    expect(page).to have_css(".autocomplete__option", count: 6, wait: 10)
+
+    # Sélectionner la suggestion avec execute_script (problème de pointer events dans Playwright)
+    option = find(:xpath, '//*[contains(text(), "Adresse introuvable")]', visible: false)
+    page.execute_script("arguments[0].click()", option.native)
+
+    # Attendre que le champ soit mis à jour par le JS
+    expect(find("#lieu_address_without_geocoding", visible: false).value).to eq("1")
+
+    # Soumettre le formulaire avec Entrée
+    find_button("Enregistrer").send_keys(:enter)
+    expect_page_title("Lieux")
+    expect(Lieu.find_by(name: "Lieu à l'étranger")).to have_attributes(
+      address: "adresse a l etranger",
+      address_without_geocoding: true
+    )
+  end
 end
