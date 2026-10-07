@@ -17,6 +17,8 @@ export default class extends Controller {
 
   updateAgent(event) {
     const agentId = event.target.value
+
+    document.getElementById('rdvPlanCalendarAgentIdField').value = agentId
     fetch(`/agents/rdv_plans/${this.data.element.getAttribute("data-rdv-plan-id")}/update_agent?rdv_plan[rdv_agent_id]=${agentId}`, {
       method: "PATCH",
       headers: {

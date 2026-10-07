@@ -202,6 +202,7 @@ tables:
       - external_id
       - verticale
       - ants_connectable
+      - ami_enabled
       - public_link_id
       - time_zone
       - disabled_at

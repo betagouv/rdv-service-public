@@ -26,6 +26,12 @@ RSpec.describe PhoneNumberValidation do
       expect(described_class.parsed_number("+596 6 96 00 00 00")).not_to be_nil # MQ
     end
 
+    it "formats DROM mobile numbers with their own country code" do
+      expect(described_class.parsed_number("06 90 12 34 56").e164).to eq("+590690123456") # GP
+      expect(described_class.parsed_number("06 94 12 34 56").e164).to eq("+594694123456") # GF
+      expect(described_class.parsed_number("06 96 60 00 00").e164).to eq("+596696600000") # MQ
+    end
+
     it "prevents DROM number with a wrong +33 prefix" do
       expect(described_class.parsed_number(" +33 6 90 00 00 00")).to be_nil
       expect(described_class.parsed_number(" +33 6 93 00 00 00")).to be_nil

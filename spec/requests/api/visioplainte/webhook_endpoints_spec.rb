@@ -1,6 +1,6 @@
 # Cette spec vérifie les aspects de sécurité liés à ces endpoints d'api. Le comportement de l'api est documenté par des specs swagger.
 RSpec.describe "Visioplainte Webhook Endpoints" do
-  stub_env_with(DB_SEEDS_USERS_AND_AGENTS_PASSWORD: "Rdvservicepublictest1!")
+  stub_env_with(DB_SEEDS_USERS_AND_AGENTS_PASSWORD: "Rdvservicepublictest1!", ALLOWED_WEBHOOK_HOSTS: "ALLOW_ALL_HOSTS")
   before { load Rails.root.join("db/seeds/visioplainte.rb") }
 
   include_context "Visioplainte Auth"
@@ -34,6 +34,20 @@ RSpec.describe "Visioplainte Webhook Endpoints" do
 
       expect(orga_gendarmerie.webhook_endpoints.first.target_url).to eq "https://exemple.fr/webhook_rdv_service_public"
       expect(organisation.reload.webhook_endpoints).to be_blank
+    end
+  end
+
+  describe "#create avec un domaine non autorisé" do
+    stub_env_with(ALLOWED_WEBHOOK_HOSTS: "rdvi.gouv.fr")
+
+    it "refuse la création" do
+      expect do
+        post "/api/visioplainte/webhook_endpoints", headers: auth_header, params: {
+          target_url: "https://exemple.fr/webhook_rdv_service_public", subscriptions: [:rdv], secret: "fake_test_secret_123",
+        }
+      end.to raise_error(ActiveRecord::RecordInvalid, /exemple.fr » ne fait pas partie des domaines autorisés/)
+
+      expect(orga_gendarmerie.webhook_endpoints).to be_blank
     end
   end
 

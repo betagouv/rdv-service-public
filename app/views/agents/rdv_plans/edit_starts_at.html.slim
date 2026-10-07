@@ -17,7 +17,7 @@
       h2.fr-h4.d-flex.rdv-align-items-baseline
         | Agenda de
         .fr-select-group.fr-col-4.fr-ml-1w
-          select.fr-select[data-action="change->rdv-plan#updateAgent"]
+          select.fr-select[data-action="change->rdv-plan#updateAgent" name="agent_id"]
             - agents.each do |agent|
               - if agent == @rdv_plan.rdv_agent
                 option[value="#{agent.id}" selected] #{agent.full_name_or_email}

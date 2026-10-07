@@ -37,6 +37,7 @@ class AdminUpdatesAgent
     agent_role.intervenant? && @new_access_level != "intervenant"
   end
 
+  # rubocop:disable Naming/PredicateMethod -- méthode d'action dont le retour alimente `result`, pas un prédicat
   def turn_intervenant_into_agent_with_account
     assign_agent_and_role_attributes
     set_agent_notifications_levels_to_default
@@ -47,6 +48,7 @@ class AdminUpdatesAgent
       true
     end
   end
+  # rubocop:enable Naming/PredicateMethod
 
   def assign_agent_and_role_attributes
     # Devise va essayer de confirmer l'agent car il y a un changement d'email hors on passe d'agent à intervenant, d'un email nil à un email d'invitation.

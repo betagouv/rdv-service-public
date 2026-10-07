@@ -10,7 +10,7 @@ class Api::ANCT::MetricsController < ActionController::Base # rubocop:disable Ra
   def index
     all_metrics = CartoANCT.cached_metrics
 
-    paginated_results = all_metrics.drop(params[:offset].presence.to_i || 0)
+    paginated_results = all_metrics.drop(params[:offset].to_i)
     paginated_results = paginated_results.take(params[:limit].to_i) if params[:limit].present?
 
     output = {

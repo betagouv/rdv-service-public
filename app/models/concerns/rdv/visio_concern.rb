@@ -11,6 +11,7 @@ module Rdv::VisioConcern
     zoom.us
     meet.jit.si
     kmeet.infomaniak.com
+    webex.com
   ].freeze
 
   VISIO_URL_TYPES = %w[default custom].freeze

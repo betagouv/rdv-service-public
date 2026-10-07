@@ -53,7 +53,7 @@ module SuperAdmins
 
     def toggle_feature
       authorize(:agent, :toggle_feature?, policy_class: SuperAdmin::AgentPolicy)
-      agent = Agent.find(params[:agent_id])
+      agent = Agent.find(params[:id])
       feature = params[:feature]
 
       if params[:set_to] == "true"

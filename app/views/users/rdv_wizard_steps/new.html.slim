@@ -11,7 +11,7 @@
 
           .fr-text--sm.fr-text-mention--grey Tous les champs sont obligatoires sauf mention contraire
 
-          = render "users/users/form_fields", f: f
+          = render "users/users/form_fields", f: f, unconfirmed_rdv: @rdv_booking_form.rdv_builder.rdv
 
           /! Section proches
           - if @skip_proches_step

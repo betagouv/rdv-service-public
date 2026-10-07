@@ -14,7 +14,7 @@ module Participation::StatusChangeable
       end
     end
 
-    rdv.generate_payload_and_send_webhook(:updated)
+    rdv.enqueue_webhook_job(:updated)
   end
 
   private

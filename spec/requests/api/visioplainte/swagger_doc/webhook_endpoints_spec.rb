@@ -1,7 +1,7 @@
 require "swagger_helper"
 
 RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
-  stub_env_with(DB_SEEDS_USERS_AND_AGENTS_PASSWORD: "Rdvservicepublictest1!")
+  stub_env_with(DB_SEEDS_USERS_AND_AGENTS_PASSWORD: "Rdvservicepublictest1!", ALLOWED_WEBHOOK_HOSTS: "ALLOW_ALL_HOSTS")
 
   before do
     load Rails.root.join("db/seeds/visioplainte.rb")

@@ -81,7 +81,7 @@ class Lieu < ApplicationRecord
 
     # Calculate square of half the chord length between latitude and longitude
     a = (Math.sin(dlat_rad / 2)**2) +
-        (Math.cos((latitude / 180 * Math::PI)) * Math.cos((lat / 180 * Math::PI)) *
+        (Math.cos(latitude / 180 * Math::PI) * Math.cos(lat / 180 * Math::PI) *
         (Math.sin(dlon_rad / 2)**2))
 
     # Calculate the angular distance in radians

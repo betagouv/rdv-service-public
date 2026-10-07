@@ -28,7 +28,7 @@ class Autodoc
       end
     )
 
-    if @categories.count == 1 && @categories.values.first.count == 1
+    if @categories.one? && @categories.values.first.one?
       index = @categories.values.first.first.index
       puts "La doc est accessible sur file://#{Rails.root.join('tmp/capybara/autodoc/')}scenario_#{index}.html"
     else

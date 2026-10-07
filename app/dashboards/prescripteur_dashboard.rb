@@ -7,7 +7,7 @@ class PrescripteurDashboard < Administrate::BaseDashboard
     last_name: Field::String,
     phone_number: Field::String,
     phone_number_formatted: Field::String,
-    email: Field::String,
+    email: CopyableEmailField,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     rdv: Field::HasOne,

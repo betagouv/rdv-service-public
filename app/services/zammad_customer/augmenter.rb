@@ -18,12 +18,12 @@ class ZammadCustomer
       elsif user = User.find_by(email:)
         augment_with_user(user)
         zammad_customer.note = "Usager trouvé avec l'email #{email}"
-      elsif matches_by_phone_number_formatted.count > 1
+      elsif matches_by_phone_number_formatted.many?
         zammad_customer.note = "Plusieurs usagers trouvés avec le numéro de téléphone formatté #{phone_number_formatted}"
       elsif user = matches_by_phone_number_formatted.first
         augment_with_user(user)
         zammad_customer.note = "Usager trouvé avec le numéro de téléphone formatté #{phone_number_formatted}"
-      elsif matches_by_phone_number_raw.count > 1
+      elsif matches_by_phone_number_raw.many?
         zammad_customer.note = "Plusieurs usagers trouvés avec le numéro de téléphone #{phone}"
       elsif user = matches_by_phone_number_raw.first
         augment_with_user(user)

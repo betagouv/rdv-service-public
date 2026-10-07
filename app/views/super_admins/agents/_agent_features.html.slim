@@ -15,10 +15,10 @@ section.main-content__body
         - if agent.feature_enabled?(feature)
           tr
             td= feature
-            td Activée
-            td= link_to "Désactiver", toggle_feature_super_admins_agent_path(agent_id: agent.id, feature: feature, set_to: "false"), method: :post, class: "button"
+            td Activée 🟢
+            td= button_to "Désactiver", toggle_feature_super_admins_agent_path(agent.id), params: { feature: feature, set_to: "false" }, class: "button"
         - else
           tr
             td= feature
-            td Désactivée
-            td= link_to "Activer", toggle_feature_super_admins_agent_path(agent_id: agent.id, feature: feature, set_to: "true"), method: :post, class: "button"
+            td Désactivée 🔴
+            td= button_to "Activer", toggle_feature_super_admins_agent_path(agent.id), params: { feature: feature, set_to: "true" }, class: "button"

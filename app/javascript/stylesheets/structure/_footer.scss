@@ -14,6 +14,10 @@
   left: $leftbar-width;
 }
 
+.footer.footer--full-width {
+  left: 0;
+}
+
 @include media-breakpoint-down(sm) {
   .footer {
     left: 0 !important;

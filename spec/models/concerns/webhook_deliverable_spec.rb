@@ -5,6 +5,7 @@ RSpec.describe WebhookDeliverable, type: :concern do
   let!(:webhook_endpoint) do
     create(
       :webhook_endpoint,
+      :bypassing_host_validation,
       organisation: organisation,
       subscriptions: %w[rdv absence plage_ouverture]
     )
@@ -22,14 +23,14 @@ RSpec.describe WebhookDeliverable, type: :concern do
         it "notifies the creation" do
           expect do
             rdv.save
-          end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :created, webhook_endpoint_id: webhook_endpoint.id)
+          end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :created, webhook_endpoint_id: webhook_endpoint.id, event_occurred_at: a_kind_of(Time))
         end
       end
 
       it "notifies on update" do
         expect do
           rdv.update(status: :excused)
-        end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id)
+        end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id, event_occurred_at: a_kind_of(Time))
       end
 
       it "notifies on deletion" do
@@ -69,6 +70,7 @@ RSpec.describe WebhookDeliverable, type: :concern do
       let!(:webhook_endpoint) do
         create(
           :webhook_endpoint,
+          :bypassing_host_validation,
           organisation: organisation,
           subscriptions: %w[absence plage_ouverture]
         )
@@ -135,5 +137,19 @@ RSpec.describe WebhookDeliverable, type: :concern do
         end.not_to have_enqueued_job(WebhookJob).with(json_payload_with_meta("model", "User"), webhook_endpoint.id)
       end
     end
+  end
+
+  it "envoie event_occurred_at à l'heure de la modification et payload_computed_at à l'heure d'exécution du job" do
+    sent_meta = nil
+    stub_request(:post, webhook_endpoint.target_url).to_return do |request|
+      sent_meta = JSON.parse(request.body)["meta"]
+      { status: 200 }
+    end
+
+    travel_to(Time.zone.parse("2026-09-29 10:00:00")) { rdv.update(status: :excused) }
+    travel_to(Time.zone.parse("2026-09-29 10:05:00")) { perform_enqueued_jobs(only: WebhookJob) }
+
+    expect(Time.zone.parse(sent_meta["event_occurred_at"])).to eq(Time.zone.parse("2026-09-29 10:00:00"))
+    expect(Time.zone.parse(sent_meta["payload_computed_at"])).to eq(Time.zone.parse("2026-09-29 10:05:00"))
   end
 end

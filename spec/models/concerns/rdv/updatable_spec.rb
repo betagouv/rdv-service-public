@@ -90,7 +90,7 @@ RSpec.describe Rdv::Updatable do
     end
 
     describe "triggers webhook" do
-      let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation, subscriptions: ["rdv"]) }
+      let!(:webhook_endpoint) { create(:webhook_endpoint, :bypassing_host_validation, organisation: organisation, subscriptions: ["rdv"]) }
 
       before do
         travel_to Time.zone.local(2026, 8, 6, 14, 0, 0)
@@ -100,7 +100,7 @@ RSpec.describe Rdv::Updatable do
         rdv.reload
         expect do
           rdv.update_and_notify(agent, starts_at: 5.days.from_now)
-        end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id)
+        end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id, event_occurred_at: a_kind_of(Time))
       end
     end
 

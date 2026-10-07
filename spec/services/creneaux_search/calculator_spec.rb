@@ -160,7 +160,7 @@ RSpec.describe CreneauxSearch::Calculator do
       end
 
       it "returns slots for both plage_ouverture" do
-        expect(available_slots.map(&:starts_at).map(&:hour)).to eq([9, 14])
+        expect(available_slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to contain_exactly("09:00", "14:00")
       end
     end
   end

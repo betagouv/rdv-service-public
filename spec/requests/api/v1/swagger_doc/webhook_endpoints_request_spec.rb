@@ -1,6 +1,8 @@
 require "swagger_helper"
 
 RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
+  stub_env_with(ALLOWED_WEBHOOK_HOSTS: "ALLOW_ALL_HOSTS")
+
   with_examples
 
   path "api/v1/organisations/{organisation_id}/webhook_endpoints" do

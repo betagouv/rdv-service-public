@@ -50,7 +50,7 @@ class Team < ApplicationRecord
   private
 
   def agent_from_same_territory
-    return if agents.flat_map(&:organisations).flat_map(&:territory).uniq.count == 1
+    return if agents.flat_map(&:organisations).flat_map(&:territory).uniq.one?
 
     errors.add(:agents, :not_from_same_territory)
   end

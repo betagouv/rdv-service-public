@@ -23,7 +23,7 @@ class Admin::LieuxController < AgentAuthController
     if @lieu.save
       flash[:success] = "Le lieu a été ajouté."
 
-      if current_organisation.lieux.enabled.count == 1
+      if current_organisation.lieux.enabled.one?
         flash[:onboarding] = "first_lieu_created"
       end
 
