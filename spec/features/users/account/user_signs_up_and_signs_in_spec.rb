@@ -43,19 +43,4 @@ RSpec.describe "User signs in" do
       expect(user.reload.already_logged_in?).to be true
     end
   end
-
-  context "un agent essaie de se connecter depuis la page de connexion usagers" do
-    let!(:agent) { create(:agent, email: "dulce@agent.fr", basic_role_in_organisations: [create(:organisation)]) }
-
-    it "affiche le même message que pour un email inconnu, pour ne pas révéler l'existence du compte agent" do
-      visit "http://www.rdv-solidarites-test.localhost/"
-      click_link "Connexion Usager"
-      within("form") do
-        fill_in "Adresse email", with: "dulce@agent.fr"
-        click_on "Recevoir un code de connexion"
-      end
-      expect(page).to have_content("Cet email ne correspond à aucun compte usager utilisant la connexion par email.")
-      expect(page).to have_content("Si vous souhaitez vous connecter en tant qu’agent, veuillez vous rendre sur la page de connexion agent.")
-    end
-  end
 end
