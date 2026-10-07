@@ -15,7 +15,7 @@ class UserDashboard < Administrate::BaseDashboard
     first_name: Field::String,
     last_name: Field::String,
     birth_name: Field::String,
-    email: Field::String,
+    email: CopyableEmailField,
     address: Field::String,
     phone_number: Field::String,
     responsible: Field::BelongsTo,
@@ -40,6 +40,7 @@ class UserDashboard < Administrate::BaseDashboard
     id
     first_name
     last_name
+    email
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES

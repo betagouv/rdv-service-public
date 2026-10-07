@@ -4,8 +4,6 @@ class SearchContext
     @query_params = query_params
   end
 
-  delegate :creneaux, to: :creneaux_search
-
   def geo_search
     Users::GeoSearch.new(departement: departement, city_code: city_code, street_ban_id: street_ban_id)
   end

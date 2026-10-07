@@ -6,35 +6,45 @@ RSpec.describe "Prise de RDV - le créneau devient indisponible" do
   let!(:organisation) { create(:organisation, territory:) }
   let!(:motif) { create(:motif, organisation:) }
   let!(:lieu) { create(:lieu, organisation:) }
-  let!(:user) { create(:user, organisations: [organisation]) }
 
-  before do
-    travel_to(now)
-    login_as(user, scope: :user)
-  end
+  context "pour un usager connecté" do
+    let!(:user) { create(:user, organisations: [organisation]) }
 
-  describe "#new" do
-    it "redirige vers le moteur de recherche avec un message d'erreur" do
-      visit new_users_rdv_wizard_step_path(motif_id: motif.id, lieu_id: lieu.id, starts_at: starts_at, departement: "92")
-      expect(page).to have_current_path(prendre_rdv_path, ignore_query: true)
-      expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en sélectionner un autre.")
+    before do
+      travel_to(now)
+      login_as(user, scope: :user)
+    end
+
+    describe "#new" do
+      it "redirige vers le moteur de recherche avec un message d'erreur" do
+        visit new_users_rdv_wizard_step_path(motif_id: motif.id, lieu_id: lieu.id, starts_at: starts_at, departement: "92")
+        expect(page).to have_current_path(prendre_rdv_path, ignore_query: true)
+        expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en sélectionner un autre.")
+      end
+    end
+
+    describe "#create" do
+      let!(:plage_ouverture) do
+        create(:plage_ouverture,
+               organisation:, motifs: [motif], lieu:, first_day: starts_at.to_date,
+               start_time: Tod::TimeOfDay.new(10, 30), end_time: Tod::TimeOfDay.new(12))
+      end
+
+      it "redirige vers le moteur de recherche avec un message d'erreur" do
+        visit new_users_rdv_wizard_step_path(motif_id: motif.id, lieu_id: lieu.id, starts_at: starts_at, departement: "92")
+        expect(page).to have_button("Confirmer mon RDV")
+        plage_ouverture.destroy
+        click_button "Confirmer mon RDV"
+        expect(page).to have_current_path(prendre_rdv_path, ignore_query: true)
+        expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en sélectionner un autre.")
+      end
     end
   end
 
-  describe "#create" do
-    let!(:plage_ouverture) do
-      create(:plage_ouverture,
-             organisation:, motifs: [motif], lieu:, first_day: starts_at.to_date,
-             start_time: Tod::TimeOfDay.new(10, 30), end_time: Tod::TimeOfDay.new(12))
-    end
-
-    it "redirige vers le moteur de recherche avec un message d'erreur" do
-      visit new_users_rdv_wizard_step_path(motif_id: motif.id, lieu_id: lieu.id, starts_at: starts_at, departement: "92")
-      expect(page).to have_button("Confirmer mon RDV")
-      plage_ouverture.destroy
-      click_button "Confirmer mon RDV"
-      expect(page).to have_current_path(prendre_rdv_path, ignore_query: true)
-      expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en sélectionner un autre.")
+  describe "quand on redirige vers la page de connexion" do
+    specify do
+      visit new_users_rdv_wizard_step_path(date: starts_at.to_date, departement: "92", motif_name_with_location_type: "#{motif.slug}-public_office")
+      expect(page).to have_content "Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé."
     end
   end
 end

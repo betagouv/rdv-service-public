@@ -333,21 +333,23 @@ application.secret_strategy.store_secret(application, :secret, test_secret)
 application.save!
 
 # WEBHOOKS
-WebhookEndpoint.create!(
-  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
-  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
-  organisation_id: org_drome1.id,
-  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
-)
-WebhookEndpoint.create!(
-  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
-  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
-  organisation_id: org_drome2.id,
-  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
-)
-WebhookEndpoint.create!(
-  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
-  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
-  organisation_id: org_yonne.id,
-  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
-)
+unless ENV["IS_REVIEW_APP"] == "true"
+  WebhookEndpoint.create!(
+    target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
+    secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
+    organisation_id: org_drome1.id,
+    subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
+  )
+  WebhookEndpoint.create!(
+    target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
+    secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
+    organisation_id: org_drome2.id,
+    subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
+  )
+  WebhookEndpoint.create!(
+    target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
+    secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
+    organisation_id: org_yonne.id,
+    subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
+  )
+end
