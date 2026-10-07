@@ -1,0 +1,25 @@
+- content_for :title, "Nouveautés"
+
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Accueil", href: root_path
+    = b.with_breadcrumb label: "Nouveautés"
+
+.fr-grid-row.fr-mb-6w
+  .fr-col-12.fr-col-md-10.fr-col-lg-8
+    p.fr-text--lead
+      | Les dernières évolutions de #{current_domain.name}.
+
+    - if @posts.any?
+      - @posts.group_by { _1.published_at.beginning_of_month }.each do |month, posts|
+        section.fr-mb-6w
+          h2.fr-h4 = l(month.to_date, format: "%B %Y").capitalize
+          ul.fr-raw-list
+            - posts.each do |post|
+              li.fr-mb-3w
+                = render "blog_posts/blog_post", post: post
+
+      = paginate @posts
+    - else
+      = dsfr_alert(type: :info, size: :sm) do
+        p Aucune nouveauté pour le moment.
