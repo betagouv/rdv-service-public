@@ -9,6 +9,9 @@ RSpec.describe "agent can export RDVs" do
 
   def complete_export_two_factor_step_up!
     expect(page).to have_current_path(new_agents_two_factor_verification_path)
+    click_on "Recevoir un code par email"
+
+    expect(page).to have_current_path(code_agents_two_factor_verification_path)
     fill_in("Code à 6 chiffres", with: LoginCode.last.code)
     click_on "Valider"
 
