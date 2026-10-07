@@ -92,18 +92,18 @@ h1.fr-h2
               .card-body
                 h3.fr-h6= organisation.name
                 - role = @agent.role_in_organisation(organisation)
-                = simple_form_for role, namespace: role.id, url: admin_territory_agent_role_path(current_territory, role) do |f|
-                  - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_invite_agents?
-                      = f.input :organisation_id, as: :hidden, input_html: { value: organisation.id }
-                      = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
-                      = f.input :access_level, as: :radio_buttons, collection: AgentRole::ACCESS_LEVELS, label_method: -> { AgentRole.human_attribute_value(:access_level, _1) }, checked: role&.access_level || "none"
-                      - if organisation.territory.services.any? || role&.agent_accueil?
-                        = f.input :agent_accueil, as: :boolean, label: "Agent d'accueil", hint: "Peut consulter et modifier les agendas de tous les agents de l'organisation"
-                  .row
-                    .col.text-left
-                      = link_to t(".delete_agent_role"), admin_territory_agent_role_path(current_territory, role), class: "fr-btn fr-btn--tertiary", data: { confirm: "Vous confirmez retirer l'agent #{@agent.full_name_or_email} de l'organisation #{role.organisation.name} ?", method: :delete }
-                    .col.text-right
-                      = f.button :submit, t(".submit")
+                - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_invite_agents?
+                  = simple_form_for role, namespace: role.id, url: admin_territory_agent_role_path(current_territory, role) do |f|
+                    = f.input :organisation_id, as: :hidden, input_html: { value: organisation.id }
+                    = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
+                    = f.input :access_level, as: :radio_buttons, collection: AgentRole::ACCESS_LEVELS, label_method: -> { AgentRole.human_attribute_value(:access_level, _1) }, checked: role&.access_level || "none"
+                    - if organisation.territory.services.any? || role&.agent_accueil?
+                      = f.input :agent_accueil, as: :boolean, label: "Agent d'accueil", hint: "Peut consulter et modifier les agendas de tous les agents de l'organisation"
+                    .row
+                      .col.text-left
+                        = link_to t(".delete_agent_role"), admin_territory_agent_role_path(current_territory, role), class: "fr-btn fr-btn--tertiary", data: { confirm: "Vous confirmez retirer l'agent #{@agent.full_name_or_email} de l'organisation #{role.organisation.name} ?", method: :delete }
+                      .col.text-right
+                        = f.button :submit, t(".submit")
 
       - available_other_organisations = (current_agent.organisations.where(territory: current_territory) - agent_organisations_of_current_territory)
       - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_invite_agents? && available_other_organisations.any?
