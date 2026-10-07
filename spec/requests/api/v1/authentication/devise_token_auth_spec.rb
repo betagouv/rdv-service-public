@@ -86,6 +86,12 @@ RSpec.describe "API authentication" do
     end
   end
 
+  it "ne monte que les routes de connexion et de validation de token" do
+    paths = Rails.application.routes.routes.map { it.path.spec.to_s }.grep(%r{\A/api/v1/auth/}).uniq
+
+    expect(paths).to contain_exactly("/api/v1/auth/sign_in(.:format)", "/api/v1/auth/sign_out(.:format)", "/api/v1/auth/validate_token(.:format)")
+  end
+
   context "when this type of authentication is not allowed (like on RDV Service Public)" do
     stub_env_with(AUTHORIZE_DEPRECATED_API_AUTH: nil)
     it "returns a 401 when trying to use the token" do

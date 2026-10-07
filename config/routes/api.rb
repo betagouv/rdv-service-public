@@ -27,7 +27,7 @@ namespace :api do
 
   # API utilisées uniquement sur l'instance RDV Solidarités
   namespace :v1 do
-    mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
+    mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth", skip: %i[omniauth_callbacks passwords confirmations invitations]
   end
 
   namespace :rdvinsertion do
