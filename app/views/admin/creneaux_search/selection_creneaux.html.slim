@@ -16,9 +16,6 @@
 
     - if @form.motif.individuel?
       .card-body
-        - if current_agent.feature_enabled?("rdv_invitations")
-          p.fr-mb-2w Vous pouvez #{link_to("inviter l'usager à choisir son créneau", new_admin_organisation_rdv_invitation_path(current_organisation, motif_id: params[:motif_id], lieu_id: params[:lieu_ids]&.first, user_id: params[:user_ids]&.first))}.
-
         = render "/admin/creneaux_search/slots", \
           lieu: @search_result.lieu, \
           creneaux: @search_result.creneaux, \
