@@ -151,16 +151,15 @@ Le code qui gère notre pipeline d'ETL est disponible [ici](https://github.com/b
 
 ### Mettre à jour Metabase
 
-Nous avons utilisé le déploiement en un clic décrit dans cette doc de Scalingo :
-https://doc.scalingo.com/platform/getting-started/getting-started-with-metabase
-
-Pour mettre à jour Metabase il faut déclencher un deploy en utilisant la commande ci-dessous.
-
 ⚠️ Attention, une mise à jour de Metabase peut mal se passer et rendre notre Metabase indisponible.
 
-```bash
-scalingo --app rdv-service-public-metabase deploy https://github.com/Scalingo/metabase-scalingo/archive/refs/heads/master.tar.gz
-```
+Pour mettre à jour Metabase, il faut relancer le déploiement depuis l’app Scalingo après avoir modifié la variable d’environnement `METABASE_VERSION`.
+
+Le repo utilisé est celui-ci : https://github.com/betagouv/rdv-service-public-metabase
+
+Il s’agit de celui proposé par Scalingo, avec deux modifications principales :
+- l’installation de oauth2_proxy pour sécuriser l’accès à Metabase
+- l’ajout d’éléments dans le script pour permettre l’authentification via HTTP Basic pour les jobs de production
 
 ## Debug des feature specs
 
