@@ -4,23 +4,32 @@ class Agents::TwoFactorVerificationsController < ApplicationController
 
   before_action :authenticate_agent!
 
-  def new
+  def new; end
+
+  def create
     if current_agent.pro_connect_2fa_active?
       redirect_to_pro_connect_step_up
     else
       Agents::LoginCodeSender.perform(email: current_agent.email, domain_id: current_domain.id)
-      @email = current_agent.email
-      @existing_login_code = LoginCode.most_recent_usable_for(email: @email)
+      redirect_to code_agents_two_factor_verification_path
     end
+  end
+
+  def code
+    @email = current_agent.email
+    @existing_login_code = LoginCode.most_recent_usable_for(email: @email)
+
+    # Le code n'est envoyé qu'après confirmation explicite de l'agent sur la page d'explication
+    redirect_to new_agents_two_factor_verification_path unless @existing_login_code
   end
 
   def resend
     resend_login_code!(current_agent.email)
-    redirect_to new_agents_two_factor_verification_path
+    redirect_to code_agents_two_factor_verification_path
   end
 
-  def create
-    submit_login_code!(current_agent.email) do
+  def verify
+    submit_login_code!(current_agent.email, failure_template: :code) do
       mark_two_factor_verified!
       redirect_after_two_factor_verification!(session.delete(RETURN_TO_SESSION_KEY))
     end

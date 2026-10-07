@@ -6,7 +6,7 @@ module Agents::LoginCodeVerificationConcern
     Agents::LoginCodeSender.perform(email:, domain_id: current_domain.id)
   end
 
-  def submit_login_code!(email)
+  def submit_login_code!(email, failure_template: :new)
     code = params.require(:login_code).expect(:code)
     validator = LoginCodeValidator.new(email:, code:)
 
@@ -17,7 +17,7 @@ module Agents::LoginCodeVerificationConcern
       @email = email
       @existing_login_code = LoginCode.most_recent_usable_for(email:)
       @existing_login_code&.errors&.add(:base, validator.error)
-      render :new
+      render failure_template
     end
   end
 end
