@@ -35,7 +35,7 @@ RSpec.describe "Un agent peut retirer des usagers d’un RDV Collectif", js: tru
       expect(current_email).to have_content("a bien été annulée à votre demande")
 
       open_email("bouba@service.fr")
-      expect(current_email).to have_content("La participation de Amine BENCHEIK au RDV collectif le mercredi 3/12 à 09h00 a été annulée par Noé Jacquet")
+      expect(current_email).to have_content("La participation de Amine BENCHEIK au RDV collectif le mercredi 3/12 à 09h00 a été annulée par Noé JACQUET")
     end
   end
 
@@ -55,7 +55,7 @@ RSpec.describe "Un agent peut retirer des usagers d’un RDV Collectif", js: tru
       open_email("amine@bencheik.com")
       expect(current_email).to have_content("a été annulée pour raison administrative")
       open_email("bouba@service.fr")
-      expect(current_email).to have_content("La participation de Amine BENCHEIK au RDV collectif le mercredi 3/12 à 09h00 a été annulée par Noé Jacquet")
+      expect(current_email).to have_content("La participation de Amine BENCHEIK au RDV collectif le mercredi 3/12 à 09h00 a été annulée par Noé JACQUET")
     end
   end
 end
