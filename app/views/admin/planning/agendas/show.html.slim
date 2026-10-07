@@ -38,7 +38,7 @@ ruby:
 .my-3
   = render partial: "admin/planning/agendas/preferences_modal", locals: { display_cancelled_rdv: true, display_saturdays: true }
 
-.mt-2
+.mt-2.d-print-none
   = link_to admin_organisation_rdvs_path(current_organisation, agent_id: @agent.id, start: @date, end: @date, breadcrumb_page: "agenda"), class: "js-link-print-rdvs" do
     - if current_agent == @agent
       |> 🖨 Liste détaillée des rendez-vous du
@@ -49,5 +49,5 @@ ruby:
       span.js-date>
       | pour #{@agent.full_name_or_email}
 
-.fr-mb-2v
+.fr-mb-2v.d-print-none
   = render "admin/rdvs/rdv_visibility"

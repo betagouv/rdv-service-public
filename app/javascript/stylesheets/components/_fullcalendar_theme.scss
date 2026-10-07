@@ -58,6 +58,14 @@
     margin: 0;
     margin-left: 0.5rem;
   }
+
+  .rdv-fc-toolbar-section {
+    .rdv-fc-button {
+      @media print {
+        display: none;
+      }
+    }
+  }
 }
 
 // En-têtes de colonnes : permet le retour à la ligne des noms d'agents en vue multi-agents.
