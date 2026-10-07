@@ -24,15 +24,9 @@ module Caldav
 
       sync_logger.start!
 
-      if caldav_config.caldav_sync_token
-        sync_logger.log("Sync token found: loading only new events")
-        updated_events, deleted_events, new_sync_token = changes_since_last_sync_of
-      else
-        sync_logger.log("First sync: loading all events (paginated)")
-        updated_events, deleted_events, new_sync_token = all_events_for
-      end
+      updated_events, deleted_events, new_sync_token, new_ctag = fetch_changes
 
-      update_local_events_of(updated_events:, deleted_events:, new_sync_token:)
+      update_local_events_of(updated_events:, deleted_events:, new_sync_token:, new_ctag:)
 
       sync_logger.finalize!(successful: true)
       self.class.store_latest_run_timestamp(agent_id:)
@@ -44,6 +38,32 @@ module Caldav
     end
 
     private
+
+    def fetch_changes
+      if caldav_config.caldav_sync_token
+        sync_logger.log("Sync token found: loading only new events")
+        return changes_since_last_sync_of
+      end
+
+      calendar = caldav_client.calendars.find(caldav_config.caldav_agenda_url, sync: true)
+
+      if calendar.sync_token.present?
+        sync_logger.log("First sync: loading all events (paginated)")
+        all_events_for(calendar)
+      # Certains serveurs (Zimbra notamment) ne supportent pas le report sync-collection (RFC 6578)
+      # et ne renvoient pas de sync token. On s'appuie alors sur le ctag du calendrier, qui change
+      # à chaque modification d'un de ses événements.
+      elsif calendar.ctag.present? && calendar.ctag == caldav_config.caldav_ctag
+        sync_logger.log("No sync token support: ctag unchanged, nothing to load")
+        [[], [], nil, calendar.ctag]
+      elsif calendar.ctag.present? && caldav_config.caldav_ctag.present?
+        sync_logger.log("No sync token support: ctag changed, loading only new or updated events")
+        changed_events_by_etag_for(calendar)
+      else
+        sync_logger.log("No sync token support: ctag changed, loading all events")
+        all_events_with_deletions_for(calendar)
+      end
+    end
 
     def changes_since_last_sync_of
       collection = caldav_client.calendars.sync(caldav_config.caldav_agenda_url, caldav_config.caldav_sync_token)
@@ -65,14 +85,44 @@ module Caldav
       [updated_events, deleted_events, new_sync_token]
     end
 
-    def all_events_for
-      new_sync_token = caldav_client.calendars.find(caldav_config.caldav_agenda_url, sync: true).sync_token
+    def all_events_for(calendar)
       updated_events = caldav_client.events.list(caldav_config.caldav_agenda_url) # Cette méthode ne récupère que les événements et rejette bien les VTODO
       deleted_events = []
-      [updated_events, deleted_events, new_sync_token]
+      [updated_events, deleted_events, calendar.sync_token]
     end
 
-    def update_local_events_of(updated_events:, deleted_events:, new_sync_token:)
+    def all_events_with_deletions_for(calendar)
+      updated_events = caldav_client.events.list(caldav_config.caldav_agenda_url)
+
+      # Sans sync token, le serveur ne nous signale pas les suppressions : on supprime donc les événements locaux
+      # qui ne sont plus présents sur le serveur, ou qui n'y sont plus considérés comme occupés (TRANSPARENT).
+      busy_urls = updated_events.select { consider_busy?(_1) }.map(&:url)
+      deleted_events = ExternalCalendarEvent.where(agent: @agent).where.not(url: busy_urls).pluck(:url)
+
+      [updated_events, deleted_events, nil, calendar.ctag]
+    end
+
+    # On compare les etags du serveur avec ceux stockés localement, pour ne télécharger que les événements
+    # nouveaux ou modifiés, et ne supprimer que ceux qui ont disparu du serveur.
+    def changed_events_by_etag_for(calendar)
+      remote_etags = caldav_etag_client.etags(caldav_config.caldav_agenda_url)
+      local_etags = ExternalCalendarEvent.where(agent: @agent).pluck(:url, :etag).to_h
+
+      # Les événements provenant de nos RDV sont ignorés : inutile de les télécharger
+      urls_of_rdvs = AgentsRdv.where(caldav_url: remote_etags.keys).pluck(:caldav_url)
+      changed_urls = remote_etags.reject { |url, etag| local_etags[url] == etag }.keys - urls_of_rdvs
+
+      # On rejette les ressources qui ne sont pas des événements (VTODO notamment)
+      changed_events = caldav_etag_client.events(caldav_config.caldav_agenda_url, changed_urls.sort)
+        .select { _1.calendar_data && _1.send(:inner_event) }
+      updated_events, not_busy_events = changed_events.partition { consider_busy?(_1) }
+
+      deleted_events = (local_etags.keys - remote_etags.keys) + (not_busy_events.map(&:url) & local_etags.keys)
+
+      [updated_events, deleted_events, nil, calendar.ctag]
+    end
+
+    def update_local_events_of(updated_events:, deleted_events:, new_sync_token:, new_ctag:)
       # On exclut le traitement des événements provenant d'un RDV de chez nous
       urls_of_rdvs = AgentsRdv.where(caldav_url: updated_events.map(&:url)).pluck(:caldav_url).to_set
       updated_events = updated_events.reject { _1.url.in?(urls_of_rdvs) }
@@ -90,6 +140,7 @@ module Caldav
             starts_at: event.dtstart,
             ends_at: event.dtend,
             raw_ical:,
+            etag: event.etag,
           }
         end
 
@@ -97,7 +148,7 @@ module Caldav
 
         ExternalCalendarEvent.where(agent: @agent, url: deleted_events).delete_all if deleted_events.any?
 
-        caldav_config.update_columns(caldav_sync_token: new_sync_token) # rubocop:disable Rails/SkipsModelValidations
+        caldav_config.update_columns(caldav_sync_token: new_sync_token, caldav_ctag: new_ctag) # rubocop:disable Rails/SkipsModelValidations
 
         sync_logger.log("New/updated: #{updated_events.size}, deleted : #{deleted_events.size}")
       end
@@ -125,6 +176,10 @@ module Caldav
 
     def caldav_client
       caldav_config.caldav_client
+    end
+
+    def caldav_etag_client
+      caldav_config.caldav_etag_client
     end
 
     def sync_logger
