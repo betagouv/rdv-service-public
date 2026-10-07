@@ -1,15 +1,52 @@
 RSpec.describe Agent::UserPolicy, type: :policy do
   subject { described_class }
 
-  describe "creating user is always allowed" do
-    let(:organisation) { create(:organisation) }
-    let(:user) { build(:user, organisations: [organisation]) }
-    let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:pundit_context) { AgentOrganisationContext.new(agent, organisation) }
+  it "création autorisée quand l'agent a accès à l'organisation de l'usager" do
+    organisation = create(:organisation)
+    agent = create(:agent, basic_role_in_organisations: [organisation])
+    user = build(:user)
+    user.user_profiles.build(organisation:) # comme dans Admin::UsersController#prepare_create
+    expect(described_class.new(agent, user).create?).to be(true)
+  end
 
-    permissions :create? do
-      it { is_expected.to permit(pundit_context, user) }
-    end
+  it "création refusée quand l'agent n'a pas accès à l'organisation de l'usager" do
+    organisation = create(:organisation)
+    agent = create(:agent, basic_role_in_organisations: [organisation])
+    user = build(:user)
+    user.user_profiles.build(organisation: create(:organisation))
+    expect(described_class.new(agent, user).create?).to be(false)
+  end
+
+  it "création refusée quand l'agent n'a accès qu’à certaines organisations de l'usager" do
+    organisation = create(:organisation)
+    agent = create(:agent, basic_role_in_organisations: [organisation])
+    user = build(:user)
+    user.user_profiles.build(organisation:)
+    user.user_profiles.build(organisation: create(:organisation))
+    expect(described_class.new(agent, user).create?).to be(false)
+  end
+
+  it "création refusée quand l'usager n'a pas de user_profiles" do
+    organisation = create(:organisation)
+    agent = create(:agent, basic_role_in_organisations: [organisation])
+    user = build(:user)
+    expect(described_class.new(agent, user).create?).to be(false)
+  end
+
+  it "création autorisée quand l'agent a accès à l'organisation de l'usager créée via l'API" do
+    organisation = create(:organisation)
+    agent = create(:agent, basic_role_in_organisations: [organisation])
+    user = User.new
+    user.assign_attributes(organisation_ids: [organisation.id]) # comme dans Api::V1::UsersController#create
+    expect(described_class.new(agent, user).create?).to be(true)
+  end
+
+  it "création refusée quand l'agent n'a pas accès à l'organisation de l'usager créée via l'API" do
+    organisation = create(:organisation)
+    agent = create(:agent, basic_role_in_organisations: [organisation])
+    user = User.new
+    user.assign_attributes(organisation_ids: [create(:organisation).id]) # comme dans Api::V1::UsersController#create
+    expect(described_class.new(agent, user).create?).to be(false)
   end
 
   describe "scope" do
