@@ -15,7 +15,7 @@ RSpec.describe Agents::ExportsController, type: :controller do
         get :download, params: { export_id: export.id }
 
         expect(response).to redirect_to(new_agents_two_factor_verification_path)
-        expect(session[:two_factor_step_up_return_to]).to eq(agents_export_download_path(export.id))
+        expect(session[:two_factor_verification_return_to]).to eq(agents_export_download_path(export.id))
       end
     end
 

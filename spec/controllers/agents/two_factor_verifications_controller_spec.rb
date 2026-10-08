@@ -54,7 +54,7 @@ RSpec.describe Agents::TwoFactorVerificationsController, type: :controller do
             },
           }.to_json
         )
-        expect(session["pro_connect"][:connection_for]).to eq("agent_step_up")
+        expect(session["pro_connect"][:connection_for]).to eq("agent_verify_2fa")
       end
     end
   end
@@ -100,17 +100,17 @@ RSpec.describe Agents::TwoFactorVerificationsController, type: :controller do
 
     context "avec un code valide" do
       it "marque la double authentification comme vérifiée et redirige vers la page demandée" do
-        session[:two_factor_step_up_return_to] = "/agents/edit"
+        session[:two_factor_verification_return_to] = "/agents/edit"
 
         post :verify, params: { login_code: { code: login_code.code } }
 
         expect(session[:agent_2fa_verified_at]).to be_present
         expect(response).to redirect_to("/agents/edit")
-        expect(session[:two_factor_step_up_return_to]).to be_nil
+        expect(session[:two_factor_verification_return_to]).to be_nil
       end
 
       it "redirige vers la liste des exports avec un message quand la page demandée était un téléchargement d'export" do
-        session[:two_factor_step_up_return_to] = "/agents/exports/42/download"
+        session[:two_factor_verification_return_to] = "/agents/exports/42/download"
 
         post :verify, params: { login_code: { code: login_code.code } }
 

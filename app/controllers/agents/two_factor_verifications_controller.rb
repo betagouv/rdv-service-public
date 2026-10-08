@@ -43,7 +43,7 @@ class Agents::TwoFactorVerificationsController < ApplicationController
       client_id: current_domain.pro_connect_client_id,
       client_secret: current_domain.pro_connect_client_secret
     )
-    session[:pro_connect] = { state: auth_client.state, nonce: auth_client.nonce, connection_for: "agent_step_up" }
+    session[:pro_connect] = { state: auth_client.state, nonce: auth_client.nonce, connection_for: "agent_verify_2fa" }
     redirect_to auth_client.redirect_url(pro_connect_callback_url, force_2fa: true), allow_other_host: true
   end
 
