@@ -5,6 +5,7 @@
 
 export const rdvTheme = {
   toolbarTitleClass: "rdv-fc-toolbar-title fr-h6",
+  toolbarSectionClass: "rdv-fc-toolbar-section",
   buttonClass: "rdv-fc-button",
   // hasSelection est true pour le groupe des sélecteurs de vue (Mois/Semaine/…),
   // false pour les groupes de navigation (Aujourd'hui/</>)
