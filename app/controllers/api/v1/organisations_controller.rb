@@ -1,5 +1,6 @@
 class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
   include DomainDetection
+
   before_action :set_organisation, only: %i[show update]
 
   def index

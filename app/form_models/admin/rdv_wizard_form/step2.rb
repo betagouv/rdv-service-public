@@ -1,5 +1,6 @@
 class Admin::RdvWizardForm::Step2
   include Admin::RdvWizardFormConcern
+
   validates :users, presence: true, unless: -> { rdv.collectif? }
   validate :phone_number_present_for_motif_by_phone
   validate :can_receive_notification_for_motif_by_visio

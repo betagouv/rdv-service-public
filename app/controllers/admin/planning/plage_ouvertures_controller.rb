@@ -1,5 +1,6 @@
 class Admin::Planning::PlageOuverturesController < AgentAuthController
   include Admin::Planning::PlanningConcern
+
   respond_to :html, :json
 
   before_action :set_plage_ouverture, only: %i[show edit update destroy]

@@ -1,6 +1,7 @@
 class Admin::ParticipationsController < AgentAuthController
   # Participation is @rdv.participations
   include ParticipationsHelper
+
   respond_to :js
 
   before_action :set_rdv

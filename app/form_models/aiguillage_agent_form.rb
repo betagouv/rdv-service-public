@@ -1,5 +1,6 @@
 class AiguillageAgentForm
   include ActiveModel::Model
+
   attr_accessor :raison
 
   def initialize(raison: nil)
