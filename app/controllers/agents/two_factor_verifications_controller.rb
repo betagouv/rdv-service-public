@@ -1,5 +1,5 @@
 class Agents::TwoFactorVerificationsController < ApplicationController
-  include Agents::TwoFactorFreshnessConcern
+  SUCCESS_NOTICE = "Votre identité a été vérifiée, vous pouvez maintenant continuer votre action.".freeze
 
   before_action :authenticate_agent!
 
@@ -31,8 +31,8 @@ class Agents::TwoFactorVerificationsController < ApplicationController
     @login_code_form = Agents::LoginCodeForm.new(email: current_agent.email, code: params.require(:login_code).expect(:code))
 
     if @login_code_form.submit!
-      mark_two_factor_verified!
-      redirect_after_two_factor_verification!(session.delete(RETURN_TO_SESSION_KEY))
+      AgentTwoFactorSessionState.mark_verified!(session)
+      redirect_to AgentTwoFactorSessionState.pop_return_to!(session), flash: { success: SUCCESS_NOTICE }
     else
       @email = @login_code_form.email
       @existing_login_code = @login_code_form.existing_login_code
