@@ -242,12 +242,10 @@ class Motif < ApplicationRecord
     where_id_in_subqueries([individual_motif_ids, collective_motif_ids])
   end
 
-  # rubocop:disable Naming/PredicateMethod -- nom exposé tel quel dans l'API (MotifBlueprint)
   def bookable_publicly
     # bookable_publicly has been renamed to bookable_by_everyone_or_bookable_by_invited_users. Keep this for API compatibility
     bookable_by_everyone_or_bookable_by_invited_users?
   end
-  # rubocop:enable Naming/PredicateMethod
 
   def bookable_by_everyone_or_bookable_by_invited_users?
     bookable_by_everyone? || bookable_by_invited_users?
