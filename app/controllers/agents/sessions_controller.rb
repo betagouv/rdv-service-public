@@ -79,7 +79,6 @@ class Agents::SessionsController < Devise::SessionsController
     pro_connect_id_token = session.delete(:pro_connect_id_token)
 
     sign_out(:agent)
-    AgentTwoFactorSessionState.clear!(session)
 
     # `sign_out` ne vide que les clés Warden internes de la session : les données applicatives qui y
     # auraient été stockées (jetons ProConnect, etc.) survivraient sinon à la déconnexion, avec un
