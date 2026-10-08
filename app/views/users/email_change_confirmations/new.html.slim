@@ -23,6 +23,7 @@
 
       - if @existing_login_code
         p
+          = icon("fr-icon-check-line")
           |> Un code à 6 chiffres a été envoyé à
           b> #{@email}
           | à #{l(@existing_login_code.created_at, format: :time_only)}

@@ -31,6 +31,7 @@ class Agents::SessionsController < Devise::SessionsController
 
     if resource.pro_connect_openid_sub.present?
       sign_out(resource)
+      AgentTwoFactorSessionState.clear!(session)
       redirect_to new_agent_session_path(pro_connect_required: resource.email)
       return
     end
@@ -42,6 +43,7 @@ class Agents::SessionsController < Devise::SessionsController
 
     if resource.sensitive_account? && !AgentTrustedDevice.trusted_by_cookie?(resource, cookies)
       sign_out(resource)
+      AgentTwoFactorSessionState.clear!(session)
       session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = resource.id
       Agents::LoginCodeSender.perform(email: resource.email, domain_id: current_domain.id)
       redirect_to new_agents_sessions_by_code_path
@@ -50,6 +52,7 @@ class Agents::SessionsController < Devise::SessionsController
 
     if should_redirect_to_domain_anct?(current_domain, resource)
       sign_out(resource)
+      AgentTwoFactorSessionState.clear!(session)
       redirect_to redirect_target_url_in_domain(Domain::RDV_SERVICE_PUBLIC), allow_other_host: true
       return
     end

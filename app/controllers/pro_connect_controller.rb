@@ -76,6 +76,8 @@ class ProConnectController < ApplicationController
         end
       when "agent"
         connect_agent(callback_client, pro_connect_session)
+      when "agent_verify_2fa"
+        verify_agent_2fa(callback_client)
       else
         Sentry.capture_message("Unknown connection_for: #{pro_connect_session[:connection_for].inspect}", extra: { session: session.to_h, pro_connect_session: })
         flash[:error] = generic_error_message
@@ -223,6 +225,7 @@ class ProConnectController < ApplicationController
     remember_device = session.delete(Agents::ProConnectStepUpController::SESSION_REMEMBER_DEVICE_KEY)
     session.delete(Agents::ProConnectStepUpController::SESSION_LOGIN_HINT_KEY)
 
+    AgentTwoFactorSessionState.clear!(session)
     bypass_sign_in agent, scope: :agent
     AgentTrustedDevice.remember_by_cookie!(agent, cookies) if remember_device
     session[:pro_connect_id_token] = callback_client.id_token_for_logout
@@ -234,17 +237,29 @@ class ProConnectController < ApplicationController
 
     if should_redirect_to_domain_etat?(current_domain, agent)
       sign_out(agent)
+      AgentTwoFactorSessionState.clear!(session)
       redirect_to redirect_target_url_in_domain(Domain::RDV_SERVICE_PUBLIC_ETAT), allow_other_host: true
       return
     end
 
     if should_redirect_to_domain_anct?(current_domain, agent)
       sign_out(agent)
+      AgentTwoFactorSessionState.clear!(session)
       redirect_to redirect_target_url_in_domain(Domain::RDV_SERVICE_PUBLIC), allow_other_host: true
       return
     end
 
     redirect_to after_sign_in_path_for(agent)
+  end
+
+  def verify_agent_2fa(callback_client)
+    unless agent_signed_in? && callback_client.went_through_2fa? && callback_client.openid_sub == current_agent.pro_connect_openid_sub
+      flash[:error] = "La double authentification n'a pas pu être vérifiée. Merci de réessayer."
+      redirect_to(new_agents_two_factor_verification_path) and return
+    end
+
+    AgentTwoFactorSessionState.mark_verified!(session)
+    redirect_to AgentTwoFactorSessionState.pop_return_to!(session), flash: { success: Agents::TwoFactorVerificationsController::SUCCESS_NOTICE }
   end
 
   def require_2fa_for_sensitive_agent(callback_client)
