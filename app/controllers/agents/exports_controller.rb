@@ -1,6 +1,4 @@
 class Agents::ExportsController < AgentAuthController
-  include Agents::TwoFactorFreshnessConcern
-
   layout "application_agent_config"
 
   before_action { @active_agent_preferences_menu_item = :exports }
@@ -19,6 +17,19 @@ class Agents::ExportsController < AgentAuthController
   end
 
   private
+
+  # Un super admin usurpant un agent n'a accès ni à sa boîte mail, ni à son compte ProConnect : lui
+  # demander le 2FA de l'agent le bloquerait. Sa propre connexion en tant que super admin a déjà
+  # nécessité un 2FA récent (cf. `ProConnectController#connect_super_admin`) et sa session est bornée
+  # dans le temps (cf. le timeout Devise sur les sessions SuperAdmin), donc on peut l'exempter ici.
+  # Idéalement on rajoutera la vérification du 2FA récent du SuperAdmin dans un second temps.
+  def require_recent_two_factor_authentication!
+    return if session[:super_admin_signed_in_as_agent]
+    return if AgentTwoFactorSessionState.fresh?(session)
+
+    AgentTwoFactorSessionState.store_return_to!(session, request.fullpath)
+    redirect_to new_agents_two_factor_verification_path
+  end
 
   def pundit_user
     current_agent

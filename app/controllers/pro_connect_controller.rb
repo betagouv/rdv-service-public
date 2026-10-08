@@ -2,7 +2,6 @@
 
 class ProConnectController < ApplicationController
   include DomainRedirectionAfterLogin
-  include Agents::TwoFactorFreshnessConcern
 
   # IDP ProConnect nécessitant une double authentification pour les agents qui ont des comptes sensibles.
   # Configurable via la variable d'environnement IDP_PRO_CONNECT_FORCE_2FA_ENABLED (liste séparée par des virgules).
@@ -226,7 +225,7 @@ class ProConnectController < ApplicationController
     remember_device = session.delete(Agents::ProConnectStepUpController::SESSION_REMEMBER_DEVICE_KEY)
     session.delete(Agents::ProConnectStepUpController::SESSION_LOGIN_HINT_KEY)
 
-    clear_two_factor_freshness!
+    AgentTwoFactorSessionState.clear!(session)
     bypass_sign_in agent, scope: :agent
     AgentTrustedDevice.remember_by_cookie!(agent, cookies) if remember_device
     session[:pro_connect_id_token] = callback_client.id_token_for_logout
@@ -238,14 +237,14 @@ class ProConnectController < ApplicationController
 
     if should_redirect_to_domain_etat?(current_domain, agent)
       sign_out(agent)
-      clear_two_factor_freshness!
+      AgentTwoFactorSessionState.clear!(session)
       redirect_to redirect_target_url_in_domain(Domain::RDV_SERVICE_PUBLIC_ETAT), allow_other_host: true
       return
     end
 
     if should_redirect_to_domain_anct?(current_domain, agent)
       sign_out(agent)
-      clear_two_factor_freshness!
+      AgentTwoFactorSessionState.clear!(session)
       redirect_to redirect_target_url_in_domain(Domain::RDV_SERVICE_PUBLIC), allow_other_host: true
       return
     end
@@ -254,15 +253,13 @@ class ProConnectController < ApplicationController
   end
 
   def verify_agent_2fa(callback_client)
-    return_to = session.delete(:two_factor_verification_return_to)
-
     unless agent_signed_in? && callback_client.went_through_2fa? && callback_client.openid_sub == current_agent.pro_connect_openid_sub
       flash[:error] = "La double authentification n'a pas pu être vérifiée. Merci de réessayer."
       redirect_to(new_agents_two_factor_verification_path) and return
     end
 
-    mark_two_factor_verified!
-    redirect_after_two_factor_verification!(return_to)
+    AgentTwoFactorSessionState.mark_verified!(session)
+    redirect_to AgentTwoFactorSessionState.pop_return_to!(session), flash: { success: Agents::TwoFactorVerificationsController::SUCCESS_NOTICE }
   end
 
   def require_2fa_for_sensitive_agent(callback_client)
