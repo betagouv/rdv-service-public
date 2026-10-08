@@ -32,6 +32,19 @@ RSpec.describe "Specs pour vérifier qu'il n'est pas possible de faire des injec
     end
   end
 
+  describe "update_starts_at" do
+    let(:rdv_plan) { create(:rdv_plan, planning_agent: agent, motif: create(:motif, organisation:)) }
+    let(:agent_from_other_organisation) { create(:agent) }
+
+    it "ne permet pas de mettre l'agent d'une autre organisation sur le rdv_plan" do
+      patch update_starts_at_agents_rdv_plan_path(rdv_plan, rdv_plan: { starts_at: 1.day.from_now, rdv_agent_id: agent_from_other_organisation.id })
+
+      expect(rdv_plan.reload.rdv_agent_id).not_to eq agent_from_other_organisation.id
+
+      expect(flash[:error]).to be_present
+    end
+  end
+
   describe "update_lieu" do
     let(:lieu_from_other_organisation) { create(:lieu) }
 

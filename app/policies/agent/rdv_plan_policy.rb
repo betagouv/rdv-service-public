@@ -2,6 +2,7 @@ class Agent::RdvPlanPolicy < ApplicationPolicy
   def create?
     authorized_lieu &&
       pundit_user == record.planning_agent &&
+      authorized_agent &&
       authorized_motif?
   end
   alias edit? create?
@@ -23,7 +24,8 @@ class Agent::RdvPlanPolicy < ApplicationPolicy
   end
 
   def authorized_agent
-    return true unless record.rdv_agent
+    # L'agent connecté peut toujours être l'agent du rdv, même s'il n'a pas encore d'organisation
+    return true if record.rdv_agent_id.nil? || record.rdv_agent_id == pundit_user.id
 
     Agent::AgentPolicy::Scope.new(pundit_user, Agent.active).resolve.find_by(id: record.rdv_agent_id).present?
   end
