@@ -277,6 +277,15 @@ Naming/BlockForwarding:
 Naming/VariableNumber:
   Enabled: false
 
+# Méthodes d'action qui renvoient un booléen de succès, pas des prédicats
+Naming/PredicateMethod:
+  AllowedMethods:
+    - call
+    - save
+    - upsert
+  AllowedPatterns:
+    - \Avalidate_
+
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 

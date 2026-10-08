@@ -37,11 +37,11 @@ module TextSearch
       search_query = search_query.strip
       return none if search_query.blank?
 
-      if column_names.include?("email") && looks_like_email(search_query)
+      if column_names.include?("email") && looks_like_email?(search_query)
         where("\"#{table_name}\".\"email\" LIKE ?", "#{search_query}%")
-      elsif self == User && looks_like_phone_number(search_query)
+      elsif self == User && looks_like_phone_number?(search_query)
         search_by_phone_number(search_query)
-      elsif self == User && looks_like_an_id(search_query)
+      elsif self == User && looks_like_an_id?(search_query)
         # Certains départements cherchent les usagers via l'ID RDV-S stocké dans leur logiciel de gestion
         where(id: search_query)
       else
@@ -49,11 +49,11 @@ module TextSearch
       end
     end
 
-    def looks_like_email(string)
+    def looks_like_email?(string)
       /^.*@.*$/.match?(string)
     end
 
-    def looks_like_phone_number(string)
+    def looks_like_phone_number?(string)
       return false unless string.starts_with?("+") || string.starts_with?("0")
 
       /^(\+\d{2})?[\d ]{3,20}$/.match?(string)
@@ -73,7 +73,7 @@ module TextSearch
       where(columns_name => query...query.succ)
     end
 
-    def looks_like_an_id(string)
+    def looks_like_an_id?(string)
       /^\d{3,}$/.match?(string)
     end
   end

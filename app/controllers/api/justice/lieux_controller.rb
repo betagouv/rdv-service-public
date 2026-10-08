@@ -27,7 +27,7 @@ class Api::Justice::LieuxController < ActionController::Base # rubocop:disable R
 
           {
             ee_id: ee_id,
-            reservation_en_ligne: reservation_en_ligne(lieu),
+            reservation_en_ligne: reservation_en_ligne?(lieu),
             url: url(lieu),
           }
         end.compact
@@ -39,7 +39,7 @@ class Api::Justice::LieuxController < ActionController::Base # rubocop:disable R
 
   private
 
-  def reservation_en_ligne(lieu)
+  def reservation_en_ligne?(lieu)
     lieu.plage_ouvertures.joins(:motifs).where(
       motifs: { bookable_by: :everyone },
       plage_ouvertures: { expired_cached: false }
