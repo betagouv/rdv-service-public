@@ -8,6 +8,7 @@ module SuperAdmins
   class ApplicationController < Administrate::ApplicationController
     include DomainDetection
     include Administrate::Punditize
+
     rescue_from Pundit::NotAuthorizedError, with: :super_admin_not_authorized
 
     helper all_helpers_from_path "app/helpers"

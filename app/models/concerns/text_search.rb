@@ -1,5 +1,6 @@
 module TextSearch
   extend ActiveSupport::Concern
+
   # Full Text Search support, using pg_search (https://github.com/Casecommons/pg_search).
   # See https://github.com/betagouv/rdv-solidarites.fr/pull/2791.
   #

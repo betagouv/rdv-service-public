@@ -2,6 +2,7 @@ module HumanAttributeValue
   # Like :human_attribute_name, but for attribute values.
   #
   extend ActiveSupport::Concern
+
   class_methods do
     # Returns a human-presentable version of the attribute value.
     # Uses the i18n key at `activerecord.attributes.<klass>/<attr_names>.<value>`
