@@ -5,6 +5,19 @@ module Agents::TwoFactorFreshnessConcern
   SESSION_KEY = :agent_2fa_verified_at
   RETURN_TO_SESSION_KEY = :two_factor_step_up_return_to
 
+  # Un super admin usurpant un agent n'a accès ni à sa boîte mail, ni à son compte ProConnect : lui
+  # demander le 2FA de l'agent le bloquerait. Sa propre connexion en tant que super admin a déjà
+  # nécessité un 2FA récent (cf. `ProConnectController#connect_super_admin`) et sa session est bornée
+  # dans le temps (cf. le timeout Devise sur les sessions SuperAdmin), donc on peut l'exempter ici.
+  # Idéalement on rajoutera la vérification du 2FA récent du SuperAdmin dans un second temps.
+  def require_recent_two_factor_authentication!
+    return if session[:super_admin_signed_in_as_agent]
+    return if two_factor_fresh?
+
+    session[RETURN_TO_SESSION_KEY] = request.fullpath
+    redirect_to new_agents_two_factor_verification_path
+  end
+
   def two_factor_fresh?
     verified_at = session[SESSION_KEY]
     verified_at.present? && Time.zone.parse(verified_at) > FRESHNESS_WINDOW.ago
@@ -20,19 +33,6 @@ module Agents::TwoFactorFreshnessConcern
   def clear_two_factor_freshness!
     session.delete(SESSION_KEY)
     session.delete(RETURN_TO_SESSION_KEY)
-  end
-
-  # Un super admin usurpant un agent n'a accès ni à sa boîte mail, ni à son compte ProConnect : lui
-  # demander le 2FA de l'agent le bloquerait. Sa propre connexion en tant que super admin a déjà
-  # nécessité un 2FA récent (cf. `ProConnectController#connect_super_admin`) et sa session est bornée
-  # dans le temps (cf. le timeout Devise sur les sessions SuperAdmin), donc on peut l'exempter ici.
-  # Idéalement on rajoutera la vérification du 2FA récent du SuperAdmin dans un second temps.
-  def require_recent_two_factor_authentication!
-    return if session[:super_admin_signed_in_as_agent]
-    return if two_factor_fresh?
-
-    session[RETURN_TO_SESSION_KEY] = request.fullpath
-    redirect_to new_agents_two_factor_verification_path
   end
 
   def redirect_after_two_factor_verification!(return_to)
