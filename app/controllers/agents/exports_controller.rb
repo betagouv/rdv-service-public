@@ -10,10 +10,11 @@ class Agents::ExportsController < AgentAuthController
   end
 
   def download
-    return redirect_to_two_factor_verification unless recent_two_factor_authentication?
-
     export = Export.find(params[:export_id])
     authorize(export, policy_class: Agent::ExportPolicy)
+
+    return redirect_to_two_factor_verification unless recent_two_factor_authentication?
+
     send_data export.load_file, filename: export.file_name, type: "application/vnd.ms-excel"
   end
 
