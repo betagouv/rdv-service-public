@@ -1,6 +1,6 @@
 class Agent::RdvPlanPolicy < ApplicationPolicy
   def create?
-    authorized_lieu &&
+    authorized_lieu? &&
       pundit_user == record.planning_agent &&
       authorized_motif?
   end
@@ -16,13 +16,13 @@ class Agent::RdvPlanPolicy < ApplicationPolicy
   private
 
   # TODO: ajouter une spec pour ce cas
-  def authorized_lieu
+  def authorized_lieu?
     return true unless record.lieu_id
 
     Agent::LieuPolicy::Scope.new(pundit_user, Lieu.enabled).resolve.find_by(id: record.lieu_id).present?
   end
 
-  def authorized_agent
+  def authorized_agent?
     return true unless record.rdv_agent
 
     Agent::AgentPolicy::Scope.new(pundit_user, Agent.active).resolve.find_by(id: record.rdv_agent_id).present?
