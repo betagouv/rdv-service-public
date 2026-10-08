@@ -1,7 +1,5 @@
-module Agents::LoginCodeVerificationConcern
-  extend ActiveSupport::Concern
-
-  def resend_login_code!(email)
+module Agents::LoginCodeForm
+  def resend_login_code!(email, current_domain)
     UnblockBrevoTransactionalContact.new(email).call
     Agents::LoginCodeSender.perform(email:, domain_id: current_domain.id)
   end

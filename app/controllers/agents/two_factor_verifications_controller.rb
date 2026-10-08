@@ -1,6 +1,5 @@
 class Agents::TwoFactorVerificationsController < ApplicationController
   include Agents::TwoFactorFreshnessConcern
-  include Agents::LoginCodeVerificationConcern
 
   before_action :authenticate_agent!
 
@@ -24,14 +23,21 @@ class Agents::TwoFactorVerificationsController < ApplicationController
   end
 
   def resend
-    resend_login_code!(current_agent.email)
+    Agents::LoginCodeForm.resend_login_code!(current_agent.email, current_domain)
     redirect_to code_agents_two_factor_verification_path
   end
 
   def verify
-    submit_login_code!(current_agent.email, failure_template: :code) do
+    @login_code_form = Agents::LoginCodeForm.new(email: current_agent.email, code: params.require(:login_code).expect(:code))
+
+    if @login_code_form.submit!
       mark_two_factor_verified!
       redirect_after_two_factor_verification!(session.delete(RETURN_TO_SESSION_KEY))
+    else
+      @email = @login_code_form.email
+      @existing_login_code = @login_code_form.existing_login_code
+
+      render :code
     end
   end
 
