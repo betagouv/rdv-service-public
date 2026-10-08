@@ -1,9 +1,9 @@
 module ConfigurationHelper
-  def needs_configuration(organisation)
-    organisation.motifs.active.none? || needs_lieu(organisation)
+  def needs_configuration?(organisation)
+    organisation.motifs.active.none? || needs_lieu?(organisation)
   end
 
-  def needs_lieu(organisation)
+  def needs_lieu?(organisation)
     organisation.motifs.active.where(location_type: :public_office).any? && organisation.lieux.enabled.none?
   end
 

@@ -32,7 +32,7 @@ class SearchController < ApplicationController
   end
 
   def search_rdv
-    if search_on_migrated_organisation
+    if search_on_migrated_organisation?
       redirect_to migrated_organisation_booking_url, allow_other_host: true
     elsif current_agent && params[:prescripteur] == Prescripteur::INTERNE && params[:current_organisation]
       redirect_to search_creneau_admin_organisation_prescription_path(params[:current_organisation], agent_search_params)
@@ -117,7 +117,7 @@ class SearchController < ApplicationController
     session[:rdv_insertion_invitation]&.symbolize_keys
   end
 
-  def search_on_migrated_organisation
+  def search_on_migrated_organisation?
     return false unless current_domain == Domain::RDV_AIDE_NUMERIQUE && params[:public_link_organisation_id]
 
     organisation = Organisation.find(params[:public_link_organisation_id])

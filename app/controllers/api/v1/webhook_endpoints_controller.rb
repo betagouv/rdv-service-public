@@ -17,7 +17,7 @@ class Api::V1::WebhookEndpointsController < Api::V1::AgentAuthBaseController
     authorize(@webhook_endpoint, policy_class: Agent::WebhookEndpointPolicy)
 
     @webhook_endpoint.save!
-    TriggerWebhookJob.perform_later(@webhook_endpoint.id) unless trigger_disabled
+    TriggerWebhookJob.perform_later(@webhook_endpoint.id) unless trigger_disabled?
     render_record @webhook_endpoint
   end
 
@@ -25,13 +25,13 @@ class Api::V1::WebhookEndpointsController < Api::V1::AgentAuthBaseController
     update_permitted_params = params.permit(:target_url, :secret, subscriptions: [])
 
     @webhook_endpoint.update!(update_permitted_params)
-    TriggerWebhookJob.perform_later(@webhook_endpoint.id) unless trigger_disabled
+    TriggerWebhookJob.perform_later(@webhook_endpoint.id) unless trigger_disabled?
     render_record @webhook_endpoint
   end
 
   private
 
-  def trigger_disabled
+  def trigger_disabled?
     params[:trigger].present? && params[:trigger] == false
   end
 
