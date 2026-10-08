@@ -524,13 +524,13 @@ RSpec.describe ProConnectController do
       end
     end
 
-    context "quand il s'agit d'une revérification du 2FA avant le téléchargement d'un export (agent_step_up)" do
+    context "quand il s'agit d'une revérification du 2FA avant le téléchargement d'un export (agent_verify_2fa)" do
       let!(:agent) { create(:agent, email: user_info["email"], pro_connect_openid_sub: user_info["sub"]) }
 
       before do
         sign_in agent
-        session[:pro_connect] = { state:, connection_for: "agent_step_up" }
-        session[:two_factor_step_up_return_to] = "/agents/exports/42/download"
+        session[:pro_connect] = { state:, connection_for: "agent_verify_2fa" }
+        session[:two_factor_verification_return_to] = "/agents/exports/42/download"
       end
 
       context "quand la double authentification a bien eu lieu" do

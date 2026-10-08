@@ -3,7 +3,7 @@ module Agents::TwoFactorFreshnessConcern
 
   FRESHNESS_WINDOW = 30.minutes
   SESSION_KEY = :agent_2fa_verified_at
-  RETURN_TO_SESSION_KEY = :two_factor_step_up_return_to
+  RETURN_TO_SESSION_KEY = :two_factor_verification_return_to
 
   # Un super admin usurpant un agent n'a accès ni à sa boîte mail, ni à son compte ProConnect : lui
   # demander le 2FA de l'agent le bloquerait. Sa propre connexion en tant que super admin a déjà
