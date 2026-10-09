@@ -1,12 +1,12 @@
 # API de notifications (webhooks)
 
-RDV-Solidarités peut notifier votre système d’information à l’aide de webhooks ou en envoyant des ics par email.
+RDV Service Public peut notifier votre système d’information à l’aide de webhooks ou en envoyant des ics par email.
 
-RDV-Solidarités peut notifier n'importe quel système d'information accessible en ligne lors de **modifications** (création, modification, suppression) sur les **RDV**, les **plages d'ouvertures**, les **absences** et les **usagers**.
+RDV Service Public peut notifier n'importe quel système d'information accessible en ligne lors de **modifications** (création, modification, suppression) sur les **RDV**, les **plages d'ouvertures**, les **absences** et les **usagers**.
 
 Pour cela, ce système d'informations doit :
 - être accessible à une URL publique par exemple [https://interconnexions.votre-departement.fr/rdv-solidarites](https://interconnexions.votre-departement.fr/rdv-solidarites)
-​- accepter des requêtes HTTP POST à cette URL.
+- accepter des requêtes HTTP POST à cette URL.
 
 Du code d’exemple est [disponible C# et en NodeJS](https://github.com/guillett/webhook).
 
@@ -17,6 +17,16 @@ Si vous avez les droits d'administration au niveau de l'espace, vous pouvez mett
 Pour des raisons de sécurité, seuls certains domaines sont autorisés comme destination des webhooks.
 Si le vôtre n'en fait pas partie, contactez-nous pour que nous l'ajoutions.
 
+## Structure des données envoyées
+
+Le body de la requête POST est un JSON avec deux clés à la racine : `data` et `meta`.
+- `data` contient un objet JSON qui représente l'objet modifié dans le même format que celui de notre [API REST](https://www.rdv.numerique.gouv.fr/api-docs/).
+- `meta` contient un objet JSON avec les champs suivants:
+  - `model` : le type de l'objet qui a été modifié, par exemple "Rdv" ou "User"
+  - `event` : le type d'évènement qui a causé l'envoi du webhook. Les valeurs possibles sont "created", "updated" et "destroyed".
+  - `event_occurred_at` : un timestamp ISO8601 de la date de l'évènement qui a causé l'envoi du webhook.
+  - `payload_computed_at`: le timestamp ISO8601 de la date à laquelle la représentation de l'objet dans le champs `data` a été générée. Les webhooks sont envoyés par un système asynchrone, donc ce timestamp peut-être quelques instants après `event_occurred_at`.
+
 ## Démonstration
 
 Dans notre environnement de démonstration, nous pouvons envoyer des notifications sur une URL de test. Pour obtenir un compte de test sur notre démo, [contactez-nous](mailto:contact@rdv-solidarites.fr) !
@@ -25,7 +35,7 @@ Dans notre environnement de démonstration, nous pouvons envoyer des notificatio
 
 Un secret partagé est associé à chacune de ces URLs pour vous permettre de vérifier que nous sommes bien à l'origine de l'envoi d'information. La requête envoyée en HTTP POST contient un entête `X-Lapin-Signature` qui contient une signature SHA256 hexadécimale du corps de la requête.
 
-Voilà quelques exemples et informations très pratiques pour valider la signature des corps de requêtes envoyées par RDV-Solidarités.
+Voilà quelques exemples et informations très pratiques pour valider la signature des corps de requêtes envoyées par RDV Service Public.
 
 ### En Ruby
 
@@ -123,15 +133,9 @@ namespace SignatureValidation
 }
 ```
 
-## Format des données
-
-Les RDV, les plages d’ouvertures, les absences et les usagers sont envoyés en json, une requête par évènement de création, modification ou suppression.
-
-Le format des données est détaillé dans [la documentation de l'API](https://www.rdv-solidarites.fr/api-docs/).
-
 ## Tests
 
-Il est possible de reproduire un appel fait par RDV-Solidarités vers un SI tiers (ici `http://127.0.0.1:3000`) en mettant le texte donné en exemple ci-dessus dans un fichier XXXX.json et d'utiliser la commande suivante :
+Il est possible de reproduire un appel fait par RDV Service Public vers un SI tiers (ici `http://127.0.0.1:3000`) en mettant le texte donné en exemple ci-dessus dans un fichier XXXX.json et d'utiliser la commande suivante :
 
 ```sh
 curl 'http://127.0.0.1:3000' --data @XXXX.json -H 'Content-Type: application/json; charset=utf-8'
@@ -139,11 +143,11 @@ curl 'http://127.0.0.1:3000' --data @XXXX.json -H 'Content-Type: application/jso
 
 ## Interconnexion par email et icalendar
 
-En plus des webhooks, RDV-Solidarités peut envoyer des emails aux agents après qu’un rendez-vous a été posé ou modifié, ou lorsqu’une plage d’ouverture est créée ou modifiée. De la même façon, un email est envoyé aux usagers concernés par un rendez-vous.
+En plus des webhooks, RDV Service Public peut envoyer des emails aux agents après qu’un rendez-vous a été posé ou modifié, ou lorsqu’une plage d’ouverture est créée ou modifiée. De la même façon, un email est envoyé aux usagers concernés par un rendez-vous.
 
 Ces emails contiennent les informations de l’_évènement_, c’est-à-dire le rendez-vous, la plage d’ouverture ou l’absence, au format icalendar. Elles sont incluses dans le mail en double: une fois en pièce jointe sous forme d’un fichier .ics, une fois en part `text/calendar`. Ce sont les mêmes informations, dupliquées : le but est d’assurer une meilleure compatibilité avec les différents logiciels de calendrier. N’hésitez pas à nous contacter si quelque chose ne fonctionne pas parfaitement chez vous.
 
-En images, le comportement sur Zimbra de l’ajout manuel d’une plage d’ouverture créée dans RDV-Solidarités :
+En images, le comportement sur Zimbra de l’ajout manuel d’une plage d’ouverture créée dans RDV Service Public :
 
 ![Zimbra 01](./zimbra_01.png)
 
@@ -163,13 +167,11 @@ Le département des Hauts-de-Seine travaille avec MAZAO et Microsoft pour automa
 
 ## FAQ
 
-### Est-ce que RDV-Solidarités envoie des requêtes PUT et ou DELETE pour la modification et la suppression de ressources (RDV, Absences, Plages d'ouvertures, etc) ?
+### Est-ce que RDV Service Public envoie des requêtes PUT et ou DELETE pour la modification et la suppression de ressources (RDV, Absences, Plages d'ouvertures, etc) ?
 
-Non, les notifications par webhooks ne sont pas prévues pour modifier des éléments dans votre SI mais pour signaler des modifications dans la base de données de RDV-Solidarités qui devraient être répercutées dans votre SI.
+Non, les notifications par webhooks ne sont pas prévues pour modifier des éléments dans votre SI mais pour signaler des modifications dans la base de données de RDV Service Public qui devraient être répercutées dans votre SI.
 
-### Est-ce que RDV-Solidarités traite les erreurs ? Par exemple, l’email, le nom et le prénom que vous nous fournissez n’existe pas chez nous, une erreur dans une date, l’adresse n’existe pas…
+### Est-ce que RDV Service Public traite les erreurs ? Par exemple, l’email, le nom et le prénom que vous nous fournissez n’existe pas chez nous, une erreur dans une date, l’adresse n’existe pas…
 
 Non, pas pour le moment. Cela serait prématuré. Vous pouvez enregistrer un log de votre côté et nous contacter quand cela arrivera. Nous verrons à ce moment-là si des développements supplémentaires sont nécessaires.
-
-
 
