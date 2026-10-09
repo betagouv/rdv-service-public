@@ -8,7 +8,8 @@ RSpec.describe "User signs in" do
       expect(page).not_to have_content("Inscription")
       fill_in "Adresse email", with: user.email
       click_on "Recevoir un code de connexion"
-      expect(page).to have_content("Cet email ne correspond à aucun compte usager utilisant la connexion par email. Vous pouvez essayer la connexion par FranceConnect.")
+      expect(page).to have_content("Cet email ne correspond à aucun compte usager utilisant la connexion par email.")
+      expect(page).to have_content("Si vous souhaitez vous connecter en tant qu’agent, veuillez vous rendre sur la page de connexion agent.")
     end
   end
 
@@ -40,20 +41,6 @@ RSpec.describe "User signs in" do
       click_on "Valider"
 
       expect(user.reload.already_logged_in?).to be true
-    end
-  end
-
-  context "un agent essaie de se connecter depuis la page de connexion usagers" do
-    let!(:agent) { create(:agent, email: "dulce@agent.fr", basic_role_in_organisations: [create(:organisation)]) }
-
-    it "redirige vers la page de connexion agent" do
-      visit "http://www.rdv-solidarites-test.localhost/"
-      click_link "Connexion Usager"
-      within("form") do
-        fill_in "Adresse email", with: "dulce@agent.fr"
-        click_on "Recevoir un code de connexion"
-      end
-      expect(page).to have_content(/Si vous souhaitez vous connecter en tant qu’agent/)
     end
   end
 end
