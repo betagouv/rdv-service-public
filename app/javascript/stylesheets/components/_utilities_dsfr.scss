@@ -52,11 +52,6 @@
   font-size: 1.6rem;
 }
 
-.rdv-fr-highlight-small-and-grey {
-  font-size: 14px;
-  color: $gray-800;
-}
-
 // FLEX
 .rdv-display-flex {
   display: flex;
@@ -228,4 +223,9 @@
   max-height: 326px;
   border-radius: 8px;
   box-shadow: 0 12px 30px 0 rgba(221, 221, 221, 0.4);
+}
+
+.rdv-fr-highlight-small-and-grey p {
+  font-size: 14px;
+  color: var(--grey-200-850);
 }
