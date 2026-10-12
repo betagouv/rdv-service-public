@@ -6,6 +6,7 @@ class Team < ApplicationRecord
   )
 
   include TextSearch
+
   def self.search_options
     {
       against:

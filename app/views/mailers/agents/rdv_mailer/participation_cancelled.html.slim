@@ -4,13 +4,10 @@ div
     - author = @author.full_name
     - if @author == @agent
       | Vous avez annulé la participation de #{@participation.user} au RDV collectif le #{l(@rdv.starts_at, format: :short)}.
-    - elsif @author.is_a? Agent
-      | La participation de #{@participation.user} au RDV collectif le #{l(@rdv.starts_at, format: :short)} a été annulée par #{@author}.
     - elsif @author == @participation.user
       | #{@participation.user} a annulé sa participation au RDV collectif le #{l(@rdv.starts_at, format: :short)}.
-    - else
-      - Sentry.capture_message("Mail d’annulation de participation à un RDV collectif dans un cas surprenant", level: :error)
-      | La participation de #{@participation.user} au RDV collectif le #{l(@rdv.starts_at, format: :short)} a été annulée.
+    - elsif @author.is_a? Agent
+      | La participation de #{@participation.user} au RDV collectif le #{l(@rdv.starts_at, format: :short)} a été annulée par #{author}.
 
     = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent, visio_url: @rdv.visio_join_url(@agent)
 

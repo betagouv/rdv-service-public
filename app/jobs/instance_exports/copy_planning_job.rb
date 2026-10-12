@@ -87,6 +87,7 @@ class InstanceExports::CopyPlanningJob < ApplicationJob
 
   class CopyRdvJob < ApplicationJob
     include GoodJob::ActiveJobExtensions::Concurrency
+
     good_job_control_concurrency_with(
       perform_limit: 3,
       # Pour éviter de spammer notre API, on limite le nombre de jobs
