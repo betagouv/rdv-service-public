@@ -3,41 +3,49 @@ RSpec.describe WebhookJob do
     let(:payload) { "{}" }
     let(:webhook_endpoint) { create(:webhook_endpoint, :bypassing_host_validation, secret: "bla", target_url: "https://example.com/rdv-s-endpoint") }
 
-    it "retries and notifies Sentry on the 3rd and 10th tries" do
-      stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "ERROR" })
+    context "when the receiver responds with a 500 status" do
+      before do
+        stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "ERROR" })
+      end
 
-      described_class.perform_later(payload, webhook_endpoint.id)
+      it "retries up to 10 times but never notifies Sentry" do
+        described_class.perform_later(payload, webhook_endpoint.id)
 
-      expect(enqueued_jobs.first["executions"]).to eq(0)
+        expect(enqueued_jobs.first["executions"]).to eq(0)
 
-      # first execution, error is not logged
-      perform_enqueued_jobs
-      expect(enqueued_jobs.first["executions"]).to eq(1)
-      expect(sentry_events).to be_empty
+        10.times { perform_enqueued_jobs }
 
-      # retry twice, nothing logged
-      2.times { perform_enqueued_jobs }
-      expect(enqueued_jobs.first["executions"]).to eq(3)
-      expect(sentry_events).to be_empty
+        expect(enqueued_jobs.first["executions"]).to eq(10)
+        expect(sentry_events).to be_empty
+      end
 
-      # retry again, the error is logged
-      perform_enqueued_jobs
-      expect(sentry_events.last.exception.values.last.type).to eq("OutgoingWebhookError")
+      it "retries with a lower priority" do
+        stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "ERROR" })
+        described_class.perform_later(payload, webhook_endpoint.id)
 
-      # retry again, no more errors
-      5.times { perform_enqueued_jobs }
-
-      # 10th execution, error is logged
-      perform_enqueued_jobs
-      expect(sentry_events.last.exception.values.last.type).to eq("OutgoingWebhookError")
+        perform_enqueued_jobs
+        expect(enqueued_jobs.first["priority"]).to eq(20)
+      end
     end
 
-    it "retries with a lower priority" do
-      stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "ERROR" })
-      described_class.perform_later(payload, webhook_endpoint.id)
+    context "when there is an error in the application code" do
+      let(:rdv) { create(:rdv) }
 
-      perform_enqueued_jobs
-      expect(enqueued_jobs.first["priority"]).to eq(20)
+      before do
+        stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 200, body: "" })
+        allow_any_instance_of(Rdv).to receive(:generate_webhook_payload).and_raise("Some error when generating the payload") # rubocop:disable RSpec/AnyInstance
+      end
+
+      it "retries and notifies sentry on the 3rd retry" do
+        described_class.perform_later(record: rdv, action: :update, webhook_endpoint_id: webhook_endpoint.id)
+        expect(sentry_events).to be_empty
+
+        2.times { perform_enqueued_jobs }
+        expect(sentry_events).to be_empty
+
+        perform_enqueued_jobs
+        expect(sentry_events.last.exception.values.last.value).to eq("Some error when generating the payload (RuntimeError)")
+      end
     end
 
     it "retries on timeout" do
@@ -46,26 +54,6 @@ RSpec.describe WebhookJob do
 
       perform_enqueued_jobs
       expect(enqueued_jobs.first["executions"]).to eq(1)
-    end
-
-    it "fingerprints the error by URL and HTTP status" do
-      stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "ERROR" })
-      described_class.perform_later(payload, webhook_endpoint.id)
-
-      4.times { perform_enqueued_jobs } # On ne loggue vers Sentry qu'au 4ème retry
-      expect(sentry_events.last.fingerprint).to eq(["OutgoingWebhookError", "https://example.com/rdv-s-endpoint", "500"])
-    end
-
-    context "payload n’est pas vide" do
-      let(:payload) { '{"rdv": "RDV secret"}' }
-
-      it "scrubs outgoing request body from sentry breadcrumbs" do
-        stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "ERROR" })
-        described_class.perform_later(payload, webhook_endpoint.id)
-
-        4.times { perform_enqueued_jobs } # On ne loggue vers Sentry qu'au 4ème retry
-        expect(sentry_events.last.breadcrumbs.first.data[:body]).not_to include("RDV secret")
-      end
     end
 
     # Le WAF du Pas-de-Calais bloque certaines requêtes et
