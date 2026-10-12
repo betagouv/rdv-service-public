@@ -1,9 +1,7 @@
 module ApiSpecSharedExamples
   RSpec.shared_context "an endpoint that returns 401 - unauthorized" do
     response 401, "Renvoie 'unauthorized' quand l'authentification est impossible" do
-      let(:"access-token") { "false" }
-
-      schema "$ref" => "#/components/schemas/error_authentication"
+      let(:authorization) { "Bearer false" }
 
       run_test!
     end
