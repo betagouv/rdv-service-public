@@ -1,6 +1,6 @@
 RSpec.describe "rate limiting de la connexion agent par l'API dépréciée devise_token_auth", type: :request do
   include_context "enable rack-attack"
-  stub_env_with(AUTHORIZE_DEPRECATED_API_AUTH: "true")
+  stub_env_with(AUTHORIZE_DEPRECATED_API_AUTH_FOR_EMAILS: "agent@example.fr")
 
   let!(:agent) { create(:agent, email: "agent@example.fr", password: "c0rrecThorse!") }
 
