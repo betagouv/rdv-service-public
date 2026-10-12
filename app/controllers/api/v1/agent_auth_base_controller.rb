@@ -76,8 +76,8 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   private
 
   def authenticate_agent
-    if request.headers["HTTP_ACCESS_TOKEN"] && request.headers["HTTP_UID"] && ENV["AUTHORIZE_DEPRECATED_API_AUTH"].present?
-      # Ce mode d'authentification est déprécié, et n'est autorisé que sur l'instance historique
+    if request.headers["HTTP_ACCESS_TOKEN"] && request.headers["HTTP_UID"] && ENV["AUTHORIZE_DEPRECATED_API_AUTH_FOR_EMAILS"].present?
+      # Ce mode d'authentification est déprécié, et n'est autorisé que sur l'instance historique, pour quelques agents
       authenticate_api_v1_agent_with_token_auth!
       @authentication_type = "DeviseTokenAuth"
     else

@@ -15,17 +15,7 @@ module ApiSpecMacros
     end
   end
 
-  def with_authentication
-    stub_env_with(AUTHORIZE_DEPRECATED_API_AUTH: "true")
-
-    parameter name: "access-token", in: :header, type: :string, description: "Token d'accès (authentification)", example: "SFYBngO55ImjD1HOcv-ivQ"
-    parameter name: "client", in: :header, type: :string, description: "Clé client d'accès (authentification)", example: "Z6EihQAY9NWsZByfZ47i_Q"
-    parameter name: "uid", in: :header, type: :string, description: "Identifiant d'accès (authentification)", example: "martine@demo.rdv-solidarites.fr"
-  end
-
   def with_oauth_token_authentication
-    security [{ "content-type": [], autorization: [] }]
-
     parameter name: "content-type", in: :header, type: :string
     parameter name: "authorization", in: :header, type: :string, description: "Token d'accès (authentification)", example: "Bearer 123456"
     let(:"content-type") { "application/json" }

@@ -5,7 +5,7 @@ RSpec.describe "Teams authentified API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/teams" do
     get "Lister les équipes" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "Teams"
       produces "application/json"
@@ -19,11 +19,6 @@ RSpec.describe "Teams authentified API", swagger_doc: "v1/api.json" do
       let(:agents) { create_list(:agent, 3, organisations: [organisation]) }
       let!(:team) { create(:team, territory: territory, agents: agents) }
       let!(:other_team) { create(:team, territory: other_territory) }
-
-      let(:access_basic_agent) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { access_basic_agent["access-token"].to_s }
-      let(:uid) { access_basic_agent["uid"].to_s }
-      let(:client) { access_basic_agent["client"].to_s }
 
       response 200, "Renvoie les équipes" do
         schema "$ref" => "#/components/schemas/teams"

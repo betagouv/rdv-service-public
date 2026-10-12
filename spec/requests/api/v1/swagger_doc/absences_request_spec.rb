@@ -5,7 +5,7 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/absences" do
     get "Lister les absences" do
-      with_authentication
+      with_oauth_token_authentication
       with_pagination
 
       tags "Absence"
@@ -24,11 +24,6 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
       let!(:absence2) { create(:absence, agent: agent2) }
       let!(:absence3) { create(:absence, agent: agent3) }
 
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
-
       response 200, "Renvoie les absences des organisations auxquelles l'agent.e a accès", document: false do
         schema "$ref" => "#/components/schemas/absences"
 
@@ -41,7 +36,7 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
     end
 
     post "Créer une absence" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "Absence"
       produces "application/json"
@@ -58,10 +53,6 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
       let(:organisation) { create(:organisation) }
       let!(:agent) { create(:agent, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       response 200, "Crée et renvoie une absence" do
         let(:agent_id) { agent.id }
@@ -191,7 +182,7 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/absences/{absence_id}" do
     get "Récupérer une absence" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "Absence"
       produces "application/json"
@@ -205,11 +196,6 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
       let!(:absence1) { create(:absence, agent: agent) }
       let!(:absence2) { create(:absence, agent: agent2) }
       let(:absence_id) { absence1.id }
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       response 200, "Renvoie l'absence" do
         schema "$ref" => "#/components/schemas/absence_with_root"
@@ -231,7 +217,7 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
     end
 
     patch "Modifier une absence" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "Absence"
       produces "application/json"
@@ -252,11 +238,6 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
       let!(:absence2) { create(:absence, agent: agent2, title: "Titre 2") }
       let(:absence_id) { absence1.id }
       let(:title) { "Nouveau titre" }
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       response 200, "Modifie et renvoie l'absence" do
         schema "$ref" => "#/components/schemas/absence_with_root"
@@ -280,7 +261,7 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
     end
 
     delete "Détruire une absence" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "Absence"
       produces "application/json"
@@ -294,11 +275,6 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
       let!(:absence1) { create(:absence, agent: agent) }
       let!(:absence2) { create(:absence, agent: agent2) }
       let(:absence_id) { absence1.id }
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       response 204, "Détruit l'absence" do
         let!(:absence_count_before) { Absence.count }

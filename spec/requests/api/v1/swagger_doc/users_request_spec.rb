@@ -8,7 +8,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/users/{user_id}" do
     get "Récupérer un·e usager·ère" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "User"
       produces "application/json"
@@ -16,11 +16,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       description "Renvoie un·e usager·ère"
 
       parameter name: :user_id, in: :path, type: :integer, description: "ID de l'usager·ère", example: 123
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       let!(:user_id) { user.id }
 
@@ -63,7 +58,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
     end
 
     patch "Mettre à jour un·e usager·ère" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "User"
       produces "application/json"
@@ -89,11 +84,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       parameter name: "notify_by_sms", in: :query, type: :boolean, description: "Accepte les notifications par SMS", example: "true", required: false
       parameter name: "notify_by_email", in: :query, type: :boolean, description: "Accepte les notifications par email", example: "true", required: false
       parameter name: "responsible_id", in: :query, type: :integer, description: "ID de l'usager·ère responsable", example: 123, required: false
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       let(:user) { create(:user, latest_login_at: nil, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
       let(:user_id) { user.id }
@@ -228,7 +218,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/users/{user_id}/rdv_invitation_token" do
     post "Récupérer le token d'invitation à prendre un rdv d'un usager·ère" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "User", "Invitation"
       produces "application/json"
@@ -236,11 +226,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       description "Renvoie le token d'invitation à prendre rdv de l'usager·ère"
 
       parameter name: :user_id, in: :path, type: :integer, description: "ID de l'usager·ère", example: 123
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       let!(:user_id) { user.id }
 
@@ -276,7 +261,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/users" do
     get "Récupérer une liste d'usager·rès" do
-      with_authentication
+      with_oauth_token_authentication
       with_pagination
 
       tags "User"
@@ -285,11 +270,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       description "Renvoie une liste paginée d'usager·ères"
 
       parameter name: "ids[]", in: :query, schema: { type: :array, items: { type: :string } }, description: "ID des usager·ères", example: "[123]", required: false
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       response 200, "Renvoie une liste paginée d'usager·ères" do
         let!(:user1) { create(:user, organisations: [organisation]) }
@@ -322,7 +302,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
     end
 
     post "Créer un·e usager·ère" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "User"
       produces "application/json"
@@ -348,11 +328,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       parameter name: "notify_by_sms", in: :query, type: :boolean, description: "Accepte les notifications par SMS", example: "true", required: false
       parameter name: "notify_by_email", in: :query, type: :boolean, description: "Accepte les notifications par email", example: "true", required: false
       parameter name: "responsible_id", in: :query, type: :integer, description: "ID de l'usager·ère responsable", example: 123, required: false
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       let(:"organisation_ids[]") { [organisation.id] }
       let(:"referent_agent_ids[]") { [agent.id] }
@@ -451,7 +426,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/organisations/{organisation_id}/users" do
     get "Récupérer une liste d'usager·rès d'une organisation" do
-      with_authentication
+      with_oauth_token_authentication
       with_pagination
 
       tags "User"
@@ -460,11 +435,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       description "Renvoie une liste paginée d'usager·ères d'une organisation"
 
       parameter name: :organisation_id, in: :path, type: :integer, description: "ID de l'organisation", example: 123
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       let(:organisation_id) { organisation.id }
 
@@ -498,7 +468,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/organisations/{organisation_id}/users/{user_id}" do
     get "Récupérer un·e usager·ère d'une organisation" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "User"
       produces "application/json"
@@ -507,11 +477,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
 
       parameter name: :user_id, in: :path, type: :integer, description: "ID de l'usager·ère", example: 123
       parameter name: :organisation_id, in: :path, type: :integer, description: "ID de l'organisation", example: 456
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       let(:organisation_id) { organisation.id }
       let(:user_id) { user.id }

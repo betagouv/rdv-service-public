@@ -5,7 +5,7 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/organisations" do
     get "Lister les organisations" do
-      with_authentication
+      with_oauth_token_authentication
       with_pagination
 
       tags "Organisation"
@@ -15,11 +15,6 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
 
       parameter name: "departement_number", in: :query, type: :string, description: "Le numéro ou code de département de l'espace concerné", example: "26", required: false
       parameter name: "city_code", in: :query, type: :string, description: "Le code INSEE de la localité", example: "26323", required: false
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       response 200, "Retourne des Organisations" do
         let!(:organisations) { create_list(:organisation, 5) }
@@ -78,7 +73,7 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
 
   path "api/v1/organisations/{organisation_id}" do
     get "Récupérer une organisation" do
-      with_authentication
+      with_oauth_token_authentication
       with_pagination
 
       tags "Organisation"
@@ -92,11 +87,6 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
       let!(:agent) { create(:agent, basic_role_in_organisations: Organisation.all) }
       let(:organisation_id) { organisation.id }
 
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
-
       response 200, "Retourne une Organisation" do
         schema "$ref" => "#/components/schemas/organisation_with_root"
 
@@ -109,7 +99,7 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
 
   path "api/v1/organisations/{organisation_id}" do
     patch "Mettre à jour une organisation" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "Organisation"
       produces "application/json"
@@ -124,11 +114,6 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
       let!(:organisation) { create(:organisation) }
       let(:organisation_id) { organisation.id }
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       response 200, "Met à jour et renvoie un·e usager·ère" do
         let(:name) { "Pole parcours" }
