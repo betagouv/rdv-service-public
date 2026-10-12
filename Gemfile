@@ -76,8 +76,7 @@ gem "omniauth-rails_csrf_protection"
 # OO authorization for Rails
 gem "pundit"
 # Token based authentication for rails. Uses Devise + OmniAuth.
-# until this is released on rubygems: https://github.com/lynndylanhurley/devise_token_auth/pull/1675
-gem "devise_token_auth", git: "https://github.com/lynndylanhurley/devise_token_auth", ref: "bcdc3a5"
+gem "devise_token_auth", "1.3.0"
 # List of frequently used passwords
 gem "common_french_passwords"
 
