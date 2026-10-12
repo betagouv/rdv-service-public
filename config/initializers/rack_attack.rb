@@ -33,6 +33,16 @@ class Rack::Attack
     end
   end
 
+  throttle("connexion agent par mot de passe - throttling par email", limit: Rails.env.test? ? 2 : 30, period: 10.minutes) do |request|
+    if request.path_without_format == "/agents/sign_in" && request.post? && request.params.dig("agent", "email").present?
+      request.params.dig("agent", "email").to_s.strip.downcase
+    end
+  end
+
+  throttle("connexion agent par mot de passe - throttling par IP", limit: Rails.env.test? ? 2 : 300, period: 10.minutes) do |request|
+    request.ip if request.path_without_format == "/agents/sign_in" && request.post?
+  end
+
   throttle("connexion via token d'auth restreinte - throttling par IP", limit: Rails.env.test? ? 2 : 600, period: 1.hour) do |request|
     next unless request.get?
 
