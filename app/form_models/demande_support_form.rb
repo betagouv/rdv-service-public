@@ -1,5 +1,6 @@
 class DemandeSupportForm
   include ActiveModel::Model
+
   ATTRIBUTES = %i[current_domain role sujet first_name last_name phone_number email message user_id agent_id].freeze
   attr_accessor(*ATTRIBUTES)
 

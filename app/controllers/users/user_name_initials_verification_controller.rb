@@ -33,6 +33,7 @@ class Users::UserNameInitialsVerificationController < ApplicationController
   class Form
     include ActiveModel::Model
     include ActiveModel::Attributes
+
     attribute :letters, :string
     attribute :user
 
