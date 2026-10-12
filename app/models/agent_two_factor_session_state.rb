@@ -5,7 +5,7 @@ module AgentTwoFactorSessionState
   RETURN_TO_SESSION_KEY = :two_factor_verification_return_to
 
   class << self
-    def fresh?(session)
+    def recent_2fa?(session)
       verified_at = session[SESSION_KEY]
       verified_at.present? && Time.zone.parse(verified_at) > FRESHNESS_WINDOW.ago
     end

@@ -1,19 +1,19 @@
 RSpec.describe AgentTwoFactorSessionState do
   let(:session) { {} }
 
-  describe ".fresh?" do
+  describe ".recent_2fa?" do
     it "est faux quand la double authentification n'a jamais été vérifiée" do
-      expect(described_class.fresh?(session)).to be(false)
+      expect(described_class.recent_2fa?(session)).to be(false)
     end
 
     it "est vrai pendant 30 minutes après la vérification" do
       described_class.mark_verified!(session)
 
       travel(29.minutes)
-      expect(described_class.fresh?(session)).to be(true)
+      expect(described_class.recent_2fa?(session)).to be(true)
 
       travel(2.minutes)
-      expect(described_class.fresh?(session)).to be(false)
+      expect(described_class.recent_2fa?(session)).to be(false)
     end
   end
 

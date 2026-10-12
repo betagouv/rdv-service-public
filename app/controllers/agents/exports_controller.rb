@@ -26,7 +26,7 @@ class Agents::ExportsController < AgentAuthController
   # dans le temps (cf. le timeout Devise sur les sessions SuperAdmin), donc on peut l'exempter ici.
   # Idéalement on rajoutera la vérification du 2FA récent du SuperAdmin dans un second temps.
   def recent_two_factor_authentication?
-    session[:super_admin_signed_in_as_agent] || AgentTwoFactorSessionState.fresh?(session)
+    session[:super_admin_signed_in_as_agent] || AgentTwoFactorSessionState.recent_2fa?(session)
   end
 
   def redirect_to_two_factor_verification
