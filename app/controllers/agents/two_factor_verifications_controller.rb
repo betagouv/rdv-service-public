@@ -7,7 +7,7 @@ class Agents::TwoFactorVerificationsController < ApplicationController
 
   def create
     if current_agent.pro_connect_2fa_active?
-      redirect_to_pro_connect_step_up
+      redirect_to_pro_connect_with_2fa
     else
       Agents::LoginCodeSender.perform(email: current_agent.email, domain_id: current_domain.id)
       redirect_to code_agents_two_factor_verification_path
@@ -43,7 +43,7 @@ class Agents::TwoFactorVerificationsController < ApplicationController
 
   private
 
-  def redirect_to_pro_connect_step_up
+  def redirect_to_pro_connect_with_2fa
     auth_client = ProConnectOpenIdClient::Auth.new(
       login_hint: current_agent.email,
       client_id: current_domain.pro_connect_client_id,
