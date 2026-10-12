@@ -41,9 +41,22 @@ Voilà quelques exemples et informations très pratiques pour valider la signatu
 
 ```ruby
 require 'openssl'
-secret = "secret"
-data = "content"
-mac = OpenSSL::HMAC.hexdige
+
+# Le controller qui reçoit les appels
+class RdvSolidaritesWebhooksController < ApplicationController
+  def create
+    auth = ActiveSupport::SecurityUtils.secure_compare(
+      OpenSSL::HMAC.hexdigest("SHA256", ENV["RDV_SERVICE_PUBLIC_SECRET"], request.body.read),
+      request.headers["X-Lapin-Signature"]
+    )
+    if auth
+      # La signature est valide, on peut traiter le contenu de l'appel
+    else
+      render plain: "webhook auth error", status: :bad_request
+    end
+  end
+end
+
 ```
 
 ### En Python
