@@ -1,5 +1,6 @@
 class Stat
   include ActiveModel::Model
+
   attr_accessor :agents, :organisations, :users, :rdvs, :receipts
 
   DEFAULT_FORMAT = "%d/%m/%Y".freeze

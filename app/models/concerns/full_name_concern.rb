@@ -1,5 +1,6 @@
 module FullNameConcern
   extend ActiveSupport::Concern
+
   # Relies on the attributes of the receiver:
   # :first_name, :last_name, and :birth_name (optionally)
 
