@@ -33,7 +33,6 @@ import { AgendaMultiAgent} from './components/calendar/agenda-multi-agent'
 import { AgendaPlageOuverture} from './components/agenda_plage_ouverture'
 import { ParticipationSelect } from './components/rdv-user-select'
 import RdvInvitationUserSelect from './components/rdv-invitation-user-select'
-import { Tooltips } from './components/tooltips'
 import { PlageOuvertureLieuSelection, PlageOuvertureSecondaryTimes } from './components/plage_ouverture.js'
 import { CheckAll, UnCheckAll } from './components/check-all'
 import './components/motifs_table'
@@ -139,6 +138,5 @@ document.addEventListener("DOMContentLoaded", function() {
   new CheckAll()
   new UnCheckAll()
 
-  Tooltips()
   DsfrAlertClose();
 })

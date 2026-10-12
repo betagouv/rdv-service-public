@@ -4,11 +4,9 @@ RSpec.describe Users::SessionsController do
 
     context "dans le contexte d'un rdv wizard, quand le créneau n'est plus disponible" do
       let(:motif) { create(:motif) }
-      let(:rdv_builder) { instance_double(Users::RdvBuilder, motif: motif, creneau: nil, to_query: {}) }
 
       before do
         travel_to(Time.zone.parse("2026-01-15 10:00:00"))
-        allow(Users::RdvBuilder).to receive(:new).and_return(rdv_builder)
         session[:user_return_to] = "/users/rdv_wizard_step/new?motif_id=#{motif.id}"
       end
 

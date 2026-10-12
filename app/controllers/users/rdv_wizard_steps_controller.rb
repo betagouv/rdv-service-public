@@ -101,7 +101,6 @@ class Users::RdvWizardStepsController < UserAuthController
       :notify_by_sms,
       :ants_pre_demande_number,
       :ignore_benign_errors,
-      { user_profiles_attributes: %i[logement id organisation_id] },
       { relatives_attributes: %i[id first_name last_name birth_date ants_pre_demande_number] },
     ]
     keys << :email if current_user.can_change_email_without_confirmation?

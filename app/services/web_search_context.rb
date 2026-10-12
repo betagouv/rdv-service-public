@@ -1,5 +1,5 @@
 class WebSearchContext < SearchContext
-  attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude, :departement, :ants_pre_demandes_count
+  attr_reader :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude, :departement, :ants_pre_demandes_count
 
   # departement est un cas particulier parce qu'il est aussi utilisé en dehors de addresse selection pour
   # passer cette première étape

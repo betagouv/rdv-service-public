@@ -64,6 +64,9 @@ fr:
               invalid: "Le numéro de téléphone est invalide. S'il s'agit d'un numéro étranger, saisissez l'indicatif du pays (ex : +32 pour la Belgique)."
               missing_for_phone_motif: "Le numéro de téléphone est obligatoire car le RDV aura lieu par téléphone"
               format: "%{message}"
+            address:
+              missing_for_home_motif: "L’adresse est obligatoire car le RDV aura lieu à domicile"
+              format: "%{message}"
     warnings:
       models:
         user:

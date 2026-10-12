@@ -1,5 +1,5 @@
 class WebInvitationSearchContext < InvitationSearchContext
-  attr_reader :errors, :query_params, :organisation_ids, :motif_category_short_name
+  attr_reader :query_params, :organisation_ids, :motif_category_short_name
 
   def initialize(user:, query_params: {})
     super
