@@ -4,9 +4,10 @@ class Agent::UserPolicy < DefaultAgentPolicy
   end
 
   def create?
-    return true if @record.organisations.none?
+    return false if @record.user_profiles.none?
 
-    @record.organisations.all? { |user_org| user_org.in?(current_agent.organisations) }
+    user_organisation_ids = @record.user_profiles.map(&:organisation_id)
+    (user_organisation_ids - pundit_user.organisation_ids).none?
   end
 
   def rdv_invitation_token?

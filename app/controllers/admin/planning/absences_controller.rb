@@ -1,5 +1,6 @@
 class Admin::Planning::AbsencesController < AgentAuthController
   include Admin::Planning::PlanningConcern
+
   respond_to :html, :json
 
   before_action :set_absence, only: %i[edit update destroy]

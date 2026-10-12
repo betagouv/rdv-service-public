@@ -97,7 +97,8 @@ class Agents::CaldavSyncController < AgentAuthController
       identifier = "rdvsp-connection-test-#{uuid}.ics"
       test_event = client.events.create(agenda_url, identifier, test_event_ics(uuid))
       client.events.delete(test_event.url) # On nettoie l’événement de test qu’on vient de créer
-    rescue StandardError
+    rescue StandardError => e
+      Sentry.capture_exception(e)
       return "L’accès en écriture au calendrier a échoué. Veuillez vérifier vos droits d’accès à l’agenda."
     end
 

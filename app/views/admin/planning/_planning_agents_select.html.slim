@@ -30,7 +30,7 @@
             = form.label :agent_id, "Planning de", class: "fr-label sr-only", for: "agent_id"
             = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: ["select2-input rdv-min-width-210"], data: }
 
-          .ml-2.d-flex[style="gap: 0 0.5em"]
+          .ml-2.d-flex.d-print-none[style="gap: 0 0.5em"]
             - if @agents.size == 1 && @multiple_agents_makes_sense && current_organisation.agents.count > 1
               button#multi_agent_enable.fr-btn.fr-btn--tertiary Sélectionner plusieurs agents
             #submit_agents[class=(@agents.size > 1 ? "" : "hidden")]
@@ -38,7 +38,7 @@
             #reset_agents[class=(@agents.size > 1 ? "" : "hidden")]
               = link_to "Revenir à mon agenda", admin_organisation_planning_agenda_path(current_organisation, agent_id: current_agent), class: "fr-btn fr-btn--tertiary"
 
-.container-fluid.fr-px-2w.d-flex[style="background-color: white; border-bottom: 1px solid #EEE;align-items: center;"]
+.container-fluid.fr-px-2w.d-flex.d-print-none[style="background-color: white; border-bottom: 1px solid #EEE;align-items: center;"]
   .flex-grow-1
     = render partial: "admin/planning/planning_tabs"
 

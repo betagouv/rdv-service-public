@@ -16,7 +16,7 @@ module CanHaveRdvWizardContext
 
     session.delete(:user_return_to)
     redirect_to(
-      prendre_rdv_path(rdv_wizard_from_session.to_query),
+      prendre_rdv_path(rdv_wizard_from_session.to_query_for_search_redirection),
       flash: { error: "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre ou refaire votre recherche ultérieurement." }
     )
   end
