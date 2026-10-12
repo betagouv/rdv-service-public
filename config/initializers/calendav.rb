@@ -10,7 +10,8 @@ module CalendavSurrogatePairsFix
   SURROGATE_PAIR_REGEX = /#{HIGH_SURROGATE}#{LOW_SURROGATE}/
 
   def self.fix(xml)
-    return xml unless xml.is_a?(String) && xml.include?("&#")
+    xml = xml.to_s # La gem nous transmet un HTTP::Response::Body pour les réponses HTTP
+    return xml unless xml.include?("&#")
 
     xml.gsub(SURROGATE_PAIR_REGEX) do
       match = Regexp.last_match

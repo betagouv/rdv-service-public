@@ -24,4 +24,16 @@ RSpec.describe CalendavSurrogatePairsFix do
   it "laisse intactes les références de caractères valides et les substituts isolés" do
     expect(described_class.fix("&#128205; &#233; &#55357;")).to eq("&#128205; &#233; &#55357;")
   end
+
+  # Ce correctif surcharge une méthode privée de Calendav : on vérifie via l'API publique de la gem
+  # qu'elle passe toujours par Calendav::Parsers::ResponseXML#parse.
+  it "s'applique aux réponses reçues par le client Calendav" do
+    calendar_url = "https://caldav.example.com/calendars/agent/"
+    stub_request(:report, calendar_url).to_return(status: 207, body: xml, headers: { "Content-Type" => "application/xml" })
+    client = Calendav::Client.new(
+      Calendav::Credentials::Standard.new(host: calendar_url, username: "agent", password: "secret", authentication: :basic_auth)
+    )
+
+    expect(client.events.list(calendar_url).first.calendar_data).to eq("LOCATION:📍 Mairie 🚗")
+  end
 end
