@@ -244,6 +244,8 @@ class ProConnectController < ApplicationController
       return
     end
 
+    Agents::CreateVisioRoomsJob.perform_later(agent, callback_client.access_token)
+
     redirect_to after_sign_in_path_for(agent)
   end
 
