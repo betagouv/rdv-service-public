@@ -28,14 +28,14 @@ class Agents::TwoFactorVerificationsController < ApplicationController
   end
 
   def verify
-    @login_code_form = Agents::LoginCodeForm.new(email: current_agent.email, code: params.require(:login_code).expect(:code))
+    login_code_form = Agents::LoginCodeForm.new(email: current_agent.email, code: params.require(:login_code).expect(:code))
 
-    if @login_code_form.submit!
+    if login_code_form.submit!
       AgentTwoFactorSessionState.mark_verified!(session)
       redirect_to AgentTwoFactorSessionState.pop_return_to!(session), flash: { success: SUCCESS_NOTICE }
     else
-      @email = @login_code_form.email
-      @existing_login_code = @login_code_form.existing_login_code
+      @email = login_code_form.email
+      @existing_login_code = login_code_form.existing_login_code
 
       render :code
     end
