@@ -33,7 +33,7 @@
 @import "bootstrap/scss/close";
 //@import "bootstrap/scss/toasts";
 @import "bootstrap/scss/modal";
-@import "bootstrap/scss/tooltip";
+//@import "bootstrap/scss/tooltip";
 @import "bootstrap/scss/popover";
 //@import "bootstrap/scss/carousel";
 @import "bootstrap/scss/spinners";
@@ -86,6 +86,7 @@
 @import "./components/utilities";
 @import "./components/utilities_dsfr";
 @import "./components/autocomplete";
+@import "./components/address-autocomplete";
 @import "./components/planning_agents_select";
 @import "./components/select2";
 @import "./components/zones_map";

@@ -1,0 +1,41 @@
+.autocomplete__wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.autocomplete__menu {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background-color: var(--background-default-grey);
+  border: 1px solid var(--border-default-grey);
+  border-top: none;
+}
+
+.autocomplete__menu--overlay {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+}
+
+.autocomplete__menu--hidden {
+  display: none;
+}
+
+.autocomplete__option {
+  display: block;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.autocomplete__option--focused {
+  background-color: var(--background-action-high-blue-france);
+  color: var(--text-inverted-blue-france);
+  outline: none;
+
+  .fr-text-mention--grey {
+    color: inherit;
+  }
+}

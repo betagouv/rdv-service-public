@@ -13,6 +13,7 @@ class CronJob < ApplicationJob
         # this upsert runs together with the check in events in the job runtime
         # NOTE: if you delete a CRON job, you have to manually delete it from Sentry
         include Sentry::Cron::MonitorCheckIns # does nothing until sentry_monitor_check_ins is called
+
         sentry_monitor_check_ins(
           monitor_config: Sentry::Cron::MonitorConfig.from_crontab(
             Fugit.parse(crontab).to_cron_s.sub(" Europe/Paris", ""),

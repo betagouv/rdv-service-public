@@ -14,7 +14,7 @@ import { Modal } from './components/modal'
 import DsfrAlertClose from "./components/dsfr-alert-close";
 import { ServiceFilterForMotifsSelects } from './components/service-filter-for-motifs-selects'
 import { SubmitOnChange } from './components/submit-on-change'
-import { PlacesInputs } from './components/places-inputs.js'
+import { AddressAutocomplete } from './components/address-autocomplete.js'
 import { RdvWizardStep2 } from './components/rdv_wizard_step2.js'
 import { RdvLieu } from './components/rdv_lieu.js'
 import { PastDateAlert } from './components/past-date-alert.js'
@@ -33,7 +33,6 @@ import { AgendaMultiAgent} from './components/calendar/agenda-multi-agent'
 import { AgendaPlageOuverture} from './components/agenda_plage_ouverture'
 import { ParticipationSelect } from './components/rdv-user-select'
 import RdvInvitationUserSelect from './components/rdv-invitation-user-select'
-import { Tooltips } from './components/tooltips'
 import { PlageOuvertureLieuSelection, PlageOuvertureSecondaryTimes } from './components/plage_ouverture.js'
 import { CheckAll, UnCheckAll } from './components/check-all'
 import './components/motifs_table'
@@ -84,7 +83,7 @@ $(document).on('hide.bs.modal', '.modal', function(e) {
 })
 
 $(document).on('show.bs.modal', '.modal', function(e) {
-  new PlacesInputs()
+  new AddressAutocomplete()
 })
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -96,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function() {
     e.preventDefault()
   })
 
-  new PlacesInputs()
+  new AddressAutocomplete()
 
   new Datetimepicker()
 
@@ -139,6 +138,5 @@ document.addEventListener("DOMContentLoaded", function() {
   new CheckAll()
   new UnCheckAll()
 
-  Tooltips()
   DsfrAlertClose();
 })
