@@ -101,7 +101,9 @@ RSpec.describe "API authentication" do
       )
       expect(response.status).to eq(401)
       expect(response.has_header?("access-token")).to be(false)
-      expect(parsed_response_body["errors"]).to eq(["Mot de passe ou identifiant invalide."])
+      expect(parsed_response_body["errors"]).to eq(
+        ["Mot de passe ou identifiant non reconnus. Si c'est la première fois que vous utilisez cette API, veuillez contacter l’équipe rdv-insertion@inclusion.gouv.fr"]
+      )
     end
 
     it "refuse un token émis avant la restriction" do
