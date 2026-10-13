@@ -4,7 +4,7 @@ import "@hotwired/turbo-rails"
 // Nous ne souhaitons pas utiliser Turbo Drive (voir #4790 et #5917)
 Turbo.session.drive = false
 
-import { PlacesInputs } from './components/places-inputs.js'
+import { AddressAutocomplete } from './components/address-autocomplete.js'
 import { Modal } from './components/modal';
 import CounterField from './components/counter-field';
 import DsfrNewPassword from "./components/dsfr-new-password";
@@ -20,7 +20,7 @@ import './stylesheets/print';
 new Modal();
 
 document.addEventListener("DOMContentLoaded", function() {
-  new PlacesInputs();
+  new AddressAutocomplete();
   CounterField();
   DsfrNewPassword();
   DsfrAlertClose();
