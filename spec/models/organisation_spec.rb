@@ -110,7 +110,7 @@ RSpec.describe Organisation, type: :model do
     it "refuse une URL sans protocole" do
       organisation = build(:organisation, website: "pasdecalais.fr")
       expect(organisation).to be_invalid
-      expect(organisation.errors[:website]).to be_present
+      expect(organisation.errors[:website]).to eq(["Le site web doit être une URL valide qui commence par http:// ou https://"])
     end
 
     it "refuse un mail" do

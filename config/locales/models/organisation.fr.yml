@@ -16,3 +16,8 @@ fr:
             phone_number:
               invalid: "Le numéro de téléphone est invalide. S'il s'agit d'un numéro étranger, saisissez l'indicatif du pays (ex : +32 pour la Belgique)."
               format: "%{message}"
+
+            website:
+              invalid: "Le site web doit être une URL valide qui commence par http:// ou https://"
+              format: "%{message}"
+
