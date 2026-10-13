@@ -51,7 +51,9 @@ module IcalFormatters
       end
       if payload[:attendees].present? # for Outlook we do not send attendees 🤷
         event.attendee = payload[:attendees].map do |attendee_email|
-          Icalendar::Values::CalAddress.new("mailto:#{attendee_email}", { "PARTSTAT" => "ACCEPTED" })
+          # RSVP=FALSE (valeur par défaut selon la RFC 5545) est explicité pour indiquer
+          # aux clients mail qu'aucune réponse n'est attendue à l'ORGANIZER.
+          Icalendar::Values::CalAddress.new("mailto:#{attendee_email}", { "PARTSTAT" => "ACCEPTED", "RSVP" => "FALSE" })
         end
       end
       event.transp = payload[:transp] if payload[:transp].present?
