@@ -35,8 +35,7 @@ class WebhookJob < ApplicationJob
       method: :post,
       headers: {
         "Content-Type" => "application/json; charset=utf-8",
-        "X-Lapin-Signature" => OpenSSL::HMAC.hexdigest("SHA256", webhook_endpoint.secret, payload),
-      },
+      }.merge(signature_header(webhook_endpoint, payload)),
       body: payload,
       timeout: TIMEOUT
     )
