@@ -10,6 +10,7 @@ class PlageOuverture < ApplicationRecord
   include Expiration
 
   include TextSearch
+
   def self.search_options
     {
       against:

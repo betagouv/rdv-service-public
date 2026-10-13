@@ -48,7 +48,7 @@
                     = t(".existing_lieu_hint_html")
 
             - elsif @rdv_form.motif.home?
-              = f.dsfr_text_field :address, label: "Lieu (RDV à domicile)", disabled: true, data: { "address-autocomplete": "on" }, dir: "ltr"
+              = f.dsfr_text_field :address, label: "Lieu (RDV à domicile)", disabled: true, dir: "ltr"
             .fr-input-group
               = f.label :agents, class: "fr-label"
               = f.select :agent_ids, @rdv_form.motif.authorized_agents.collect { |a| [a.full_name_and_service, a.id] }, { selected: @rdv.agent_ids }, multiple: true, class: "select2-input fr-select", data: { "auto-select-sole-option": true }

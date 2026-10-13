@@ -53,6 +53,14 @@ RSpec.describe "/api/v1/users" do
       end
     end
 
+    context "organisation_ids vide" do
+      let(:params) { { first_name: "Francis", last_name: "Factice", organisation_ids: [] } }
+
+      it "ne créé pas d'usager" do
+        expect { post "/api/v1/users", headers:, params:, as: :json }.not_to change(User, :count)
+      end
+    end
+
     context "when passing arbitrary referent_agent_ids" do
       let(:agent_from_my_org) { create(:agent, basic_role_in_organisations: [my_organisation]) }
       let(:agent_from_other_org) { create(:agent) }

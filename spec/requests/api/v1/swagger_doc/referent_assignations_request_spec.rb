@@ -5,7 +5,7 @@ RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.jso
 
   path "/api/v1/referent_assignations" do
     post "Créer une assignation à un référent" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "ReferentAssignation"
       produces "application/json"
@@ -20,10 +20,6 @@ RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.jso
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:user) { create(:user, organisations: [organisation]) }
       let!(:referent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
       let!(:agent_id) { referent.id }
       let!(:user_id) { user.id }
 
@@ -69,7 +65,7 @@ RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.jso
     end
 
     delete "Détruit une assignation à un référent" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "ReferentAssignation"
       produces "application/json"
@@ -85,10 +81,6 @@ RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.jso
       let!(:user) { create(:user, organisations: [organisation]) }
       let!(:referent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:referent_assignation) { create(:referent_assignation, user: user, agent: referent) }
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
       let!(:agent_id) { referent.id }
       let!(:user_id) { user.id }
 

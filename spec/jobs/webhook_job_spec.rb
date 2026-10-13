@@ -1,4 +1,4 @@
-RSpec.describe WebhookJob, type: :job do
+RSpec.describe WebhookJob do
   describe "#perform" do
     let(:payload) { "{}" }
     let(:webhook_endpoint) { create(:webhook_endpoint, :bypassing_host_validation, secret: "bla", target_url: "https://example.com/rdv-s-endpoint") }
