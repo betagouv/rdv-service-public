@@ -157,6 +157,8 @@ class AddressAutocompleteInput {
   setDependentInputs = suggestion =>
     this.dependentInputs.forEach(({ name, elt }) => {
       elt.value = suggestion[name] || ""
+      // l'assignation de .value ne déclenche pas change ; la homepage s'en sert pour activer le bouton Rechercher
+      elt.dispatchEvent(new CustomEvent("change"))
     })
 
   inputValueTemplate = suggestion => suggestion?.value
