@@ -33,7 +33,7 @@ Dans notre environnement de démonstration, nous pouvons envoyer des notificatio
 
 ## Gestion des erreurs
 
-Si le serveur qui reçoit les appels des webhooks renvoie une erreur 400 ou 500 ou un fait un timeout, notre système réessaiera l'appel. Nous essayons un maximum de 20 fois, avec une durée qui augmente entre chaque appel. Le dernier appel se fait 8 jours après l'évènement, ce qui laisse très largement le temps de le traiter. Vous êtes responsable du monitoring d'erreurs sur le serveur qui reçoit ces appels.
+Si le serveur qui reçoit les appels des webhooks renvoie un statut autre que 200 ou un fait un timeout, notre système réessaiera l'appel. Nous essayons un maximum de 20 fois, avec une durée qui augmente entre chaque appel. Le dernier appel se fait 8 jours après l'évènement, ce qui laisse très largement le temps de le traiter. Vous êtes responsable du monitoring d'erreurs sur le serveur qui reçoit ces appels.
 Nous vous conseillons de ne pas traiter ces appels en synchrone, mais de les mettre dans un système de queue pour que des workers asynchrone les traite ensuite.
 
 ## Signatures des requêtes
