@@ -11,6 +11,8 @@ Sentry.init do |config|
   # et https://docs.sentry.io/platforms/ruby/guides/rails/configuration/filtering/
   config.excluded_exceptions -= ["ActiveRecord::RecordNotFound", "ActionController::InvalidAuthenticityToken"]
 
+  config.excluded_exceptions += ["WebhookJob::OutgoingWebhookError"]
+
   # send_default_pii est désactivé par défaut
   # L’activer envoie par défaut pour toutes les requêtes HTTP : les params, le body, les cookies, l’IP.
   # On retire les cookies et l’IP dont on n’a pas d’utilité directe dans le before_send ci-dessous.

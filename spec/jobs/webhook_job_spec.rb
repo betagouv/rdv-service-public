@@ -8,14 +8,16 @@ RSpec.describe WebhookJob do
         stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "ERROR" })
       end
 
-      it "retries up to 10 times but never notifies Sentry" do
+      it "retries up to 20 times but never notifies Sentry" do
         described_class.perform_later(payload, webhook_endpoint.id)
 
         expect(enqueued_jobs.first["executions"]).to eq(0)
 
-        10.times { perform_enqueued_jobs }
+        19.times { perform_enqueued_jobs }
 
-        expect(enqueued_jobs.first["executions"]).to eq(10)
+        expect(enqueued_jobs.first["executions"]).to eq(19)
+
+        expect { perform_enqueued_jobs }.to raise_error(WebhookJob::OutgoingWebhookError)
         expect(sentry_events).to be_empty
       end
 
