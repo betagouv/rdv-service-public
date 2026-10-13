@@ -30,6 +30,15 @@ RSpec.describe "Autocomplétion d’adresse sur la page d’accueil de RDV Solid
     )
   end
 
+  it "affiche un message quand aucune adresse ne correspond à la recherche" do
+    stub_base_adresse_nationale_autocomplete_request(results: [])
+
+    visit "http://www.rdv-solidarites-test.localhost/"
+
+    fill_in "Saisissez votre adresse", with: "adresse qui nexiste pas"
+    expect(page).to have_css(".autocomplete__option--no-results", text: "Nous n’avons pas trouvé d’adresse correspondant à votre recherche")
+  end
+
   it "permet de choisir une suggestion au clavier" do
     stub_base_adresse_nationale_autocomplete_request(results: "16_quai_de_la_loire")
     visit "http://www.rdv-solidarites-test.localhost/"
