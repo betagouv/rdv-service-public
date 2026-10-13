@@ -1,3 +1,4 @@
+# Contrôleur utilisé pour la vérification du code (deuxième facteur) au moment de la connexion d’un agent.
 class Agents::SessionsByCodeController < ApplicationController
   SESSION_AGENT_ID_KEY = :pending_agent_login_id
   SESSION_PRO_CONNECT_ID_TOKEN_KEY = :pending_pro_connect_id_token

@@ -1,3 +1,4 @@
+# Contrôleur utilisé uniquement pour vérifier le deuxième facteur d'authentification des agents déjà connectés.
 class Agents::TwoFactorVerificationsController < ApplicationController
   SUCCESS_NOTICE = "Votre identité a été vérifiée, vous pouvez maintenant continuer votre action.".freeze
 
@@ -14,6 +15,7 @@ class Agents::TwoFactorVerificationsController < ApplicationController
     end
   end
 
+  # Permet d’afficher le formulaire de saisie du code de vérification envoyé par email.
   def code
     @email = current_agent.email
     @existing_login_code = LoginCode.most_recent_usable_for(email: @email)
