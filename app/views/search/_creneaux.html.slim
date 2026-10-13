@@ -64,7 +64,7 @@ div
                   | Prochaine disponibilité le
                   br
                   strong= l(next_availability.starts_at, format: :human)
-    - next_week = ((params[:date]&.to_date rescue nil) || Time.zone.now) + 6.days
+    - next_week = ((params[:date]&.to_date rescue nil) || Time.zone.now) + 6.days # rubocop:disable Style/RescueModifier
     - if params[:date].blank? || !creneau_selection_service.after_max_public_booking_delay?(next_week)
       .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
         = link_to "", creneau_selection_service.next_week_path, class: "fr-btn fr-icon-arrow-right-s-line fr-hidden fr-unhidden-md", aria: { label: "semaine suivante"}
