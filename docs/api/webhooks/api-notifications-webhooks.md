@@ -31,6 +31,11 @@ Le body de la requête POST est un JSON avec deux clés à la racine : `data` et
 
 Dans notre environnement de démonstration, nous pouvons envoyer des notifications sur une URL de test. Pour obtenir un compte de test sur notre démo, [contactez-nous](mailto:contact@rdv-solidarites.fr) !
 
+## Gestion des erreurs
+
+Si le serveur qui reçoit les appels des webhooks renvoie un statut autre que 200 ou un fait un timeout, notre système réessaiera l'appel. Nous essayons un maximum de 20 fois, avec une durée qui augmente entre chaque appel. Le dernier appel se fait 8 jours après l'évènement, ce qui laisse très largement le temps de le traiter. Vous êtes responsable du monitoring d'erreurs sur le serveur qui reçoit ces appels.
+Nous vous conseillons de ne pas traiter ces appels en synchrone, mais de les mettre dans un système de queue pour que des workers asynchrone les traite ensuite.
+
 ## Signatures des requêtes
 
 Un secret partagé est associé à chacune de ces URLs pour vous permettre de vérifier que nous sommes bien à l'origine de l'envoi d'information. La requête envoyée en HTTP POST contient un entête `X-Lapin-Signature` qui contient une signature SHA256 hexadécimale du corps de la requête.
@@ -183,8 +188,4 @@ Le département des Hauts-de-Seine travaille avec MAZAO et Microsoft pour automa
 ### Est-ce que RDV Service Public envoie des requêtes PUT et ou DELETE pour la modification et la suppression de ressources (RDV, Absences, Plages d'ouvertures, etc) ?
 
 Non, les notifications par webhooks ne sont pas prévues pour modifier des éléments dans votre SI mais pour signaler des modifications dans la base de données de RDV Service Public qui devraient être répercutées dans votre SI.
-
-### Est-ce que RDV Service Public traite les erreurs ? Par exemple, l’email, le nom et le prénom que vous nous fournissez n’existe pas chez nous, une erreur dans une date, l’adresse n’existe pas…
-
-Non, pas pour le moment. Cela serait prématuré. Vous pouvez enregistrer un log de votre côté et nous contacter quand cela arrivera. Nous verrons à ce moment-là si des développements supplémentaires sont nécessaires.
 

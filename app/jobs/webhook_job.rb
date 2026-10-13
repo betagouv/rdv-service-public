@@ -1,6 +1,6 @@
-class OutgoingWebhookError < StandardError; end
-
 class WebhookJob < ApplicationJob
+  class OutgoingWebhookError < StandardError; end
+
   TIMEOUT = 10
 
   queue_as :latency_30s
@@ -43,8 +43,7 @@ class WebhookJob < ApplicationJob
     request.scrub_from_sentry_breadcrumbs = [:body]
 
     request.on_failure do |response|
-      # Cela permet d'identifier singulièrement l'erreur selon l'URL et le code HTTP de la réponse
-      Sentry.get_current_scope.set_fingerprint(["OutgoingWebhookError", webhook_endpoint.target_url, response.code.to_s])
+      # On raise une erreur pour déclencher un retry, mais on ne l'enverra pas à Sentry
 
       if response.timed_out?
         raise OutgoingWebhookError, "HTTP Timeout, URL: #{webhook_endpoint.target_url}"
@@ -60,13 +59,11 @@ class WebhookJob < ApplicationJob
     request.run
   end
 
-  def capture_sentry_warning_for_retry?(_exception)
-    # Pour limiter le bruit dans Sentry, on ne veut pas avoir de notification pour chaque retry.
-    # On veut seulement :
-    # - un warning assez rapide s'il y a un problème (4e essai)
-    # - une error pour le dernier essai, avant que le job passe en "abandonnés"
-    # cette error est envoyée par sentry-rails nativement, qui ne passe pas par ce hook
-    executions == 4
+  def capture_sentry_warning_for_retry?(exception)
+    # On considère que c'est aux systèmes qui reçoivent nos webhooks de surveiller les erreurs qu'ils ont au moment
+    # de recevoir nos appels de webhooks.
+    # On souhaite donc éviter de notifier sentry pour une erreur lors de l'appel.
+    executions == 3 && !exception.is_a?(OutgoingWebhookError)
   end
 
   # La réponse de la Drôme est en JSON
