@@ -13,24 +13,19 @@ class Agents::ExportsController < AgentAuthController
     export = Export.find(params[:export_id])
     authorize(export, policy_class: Agent::ExportPolicy)
 
-    return redirect_to_two_factor_verification unless recent_two_factor_authentication?
+    return redirect_to_two_factor_verification unless AgentTwoFactorSessionState.recent_2fa?(session)
 
     send_data export.load_file, filename: export.file_name, type: "application/vnd.ms-excel"
   end
 
   private
 
-  # Un super admin usurpant un agent n'a accès ni à sa boîte mail, ni à son compte ProConnect : lui
-  # demander le 2FA de l'agent le bloquerait. Sa propre connexion en tant que super admin a déjà
-  # nécessité un 2FA récent (cf. `ProConnectController#connect_super_admin`) et sa session est bornée
-  # dans le temps (cf. le timeout Devise sur les sessions SuperAdmin), donc on peut l'exempter ici.
-  # Idéalement on rajoutera la vérification du 2FA récent du SuperAdmin dans un second temps.
-  def recent_two_factor_authentication?
-    session[:super_admin_signed_in_as_agent] || AgentTwoFactorSessionState.recent_2fa?(session)
-  end
-
+  # Un fichier envoyé via `send_data` ne remplace pas la page affichée par le navigateur (pas de
+  # rendu HTML) : rediriger directement vers le lien de téléchargement laisserait l'agent sur la page
+  # de vérification du code, sans retour visuel. On renvoie donc vers la liste des exports, où l'agent
+  # peut relancer lui-même le téléchargement.
   def redirect_to_two_factor_verification
-    AgentTwoFactorSessionState.store_return_to!(session, request.fullpath)
+    AgentTwoFactorSessionState.store_return_to!(session, agents_exports_path)
     redirect_to new_agents_two_factor_verification_path
   end
 

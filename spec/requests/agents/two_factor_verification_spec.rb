@@ -115,9 +115,9 @@ RSpec.describe "Vérification récente de la double authentification d'un agent"
         expect(flash[:success]).to be_present
       end
 
-      it "redirige vers la liste des exports quand aucune page n'a été demandée" do
+      it "redirige vers la page d'accueil agent quand aucune page n'a été demandée" do
         verify_two_factor_by_code!
-        expect(response).to redirect_to(agents_exports_path)
+        expect(response).to redirect_to(authenticated_agent_root_path)
       end
     end
 

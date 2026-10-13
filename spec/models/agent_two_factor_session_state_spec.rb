@@ -15,6 +15,11 @@ RSpec.describe AgentTwoFactorSessionState do
       travel(2.minutes)
       expect(described_class.recent_2fa?(session)).to be(false)
     end
+
+    it "est vrai quand un super admin usurpe l'identité de l'agent" do
+      session[:super_admin_signed_in_as_agent] = true
+      expect(described_class.recent_2fa?(session)).to be(true)
+    end
   end
 
   describe ".pop_return_to!" do
@@ -25,14 +30,8 @@ RSpec.describe AgentTwoFactorSessionState do
       expect(session[described_class::RETURN_TO_SESSION_KEY]).to be_nil
     end
 
-    it "renvoie la liste des exports quand aucune page n'est mémorisée" do
-      expect(described_class.pop_return_to!(session)).to eq("/agents/exports")
-    end
-
-    it "renvoie la liste des exports quand la page mémorisée est un téléchargement d'export" do
-      described_class.store_return_to!(session, "/agents/exports/42/download")
-
-      expect(described_class.pop_return_to!(session)).to eq("/agents/exports")
+    it "renvoie la page d'accueil agent quand aucune page n'est mémorisée" do
+      expect(described_class.pop_return_to!(session)).to eq("/")
     end
   end
 

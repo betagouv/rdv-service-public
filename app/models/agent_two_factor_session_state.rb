@@ -6,6 +6,10 @@ module AgentTwoFactorSessionState
 
   class << self
     def recent_2fa?(session)
+      # Un super admin usurpant un agent n'a accès ni à sa boîte mail, ni à son compte ProConnect.
+      # Idéalement on rajoutera la vérification du 2FA récent du SuperAdmin dans un second temps.
+      return true if session[:super_admin_signed_in_as_agent]
+
       verified_at = session[SESSION_KEY]
       verified_at.present? && Time.zone.parse(verified_at) > FRESHNESS_WINDOW.ago
     end
@@ -18,15 +22,8 @@ module AgentTwoFactorSessionState
       session[RETURN_TO_SESSION_KEY] = path
     end
 
-    # Un fichier envoyé via `send_data` ne remplace pas la page affichée par le navigateur (pas de
-    # rendu HTML) : rediriger directement vers ce lien laisserait l'agent sur la page de vérification
-    # du code, sans retour visuel. On renvoie donc vers la liste des exports, où l'agent peut relancer
-    # lui-même le téléchargement.
     def pop_return_to!(session)
-      return_to = session.delete(RETURN_TO_SESSION_KEY)
-      return Rails.application.routes.url_helpers.agents_exports_path if return_to.blank? || export_download_path?(return_to)
-
-      return_to
+      session.delete(RETURN_TO_SESSION_KEY).presence || Rails.application.routes.url_helpers.authenticated_agent_root_path
     end
 
     # `sign_out` ne vide pas la session Rails (seules les clés Warden sont retirées) : sans cet appel,
@@ -35,15 +32,6 @@ module AgentTwoFactorSessionState
     def clear!(session)
       session.delete(SESSION_KEY)
       session.delete(RETURN_TO_SESSION_KEY)
-    end
-
-    private
-
-    def export_download_path?(path)
-      route = Rails.application.routes.recognize_path(path)
-      route[:controller] == "agents/exports" && route[:action] == "download"
-    rescue ActionController::RoutingError
-      false
     end
   end
 end
