@@ -1,0 +1,17 @@
+- content_for :title, "Vérification de votre identité"
+
+.card
+  .card-body.fr-pt-4w
+    p
+      |> Pour télécharger cet export, nous devons vérifier à nouveau votre identité.
+      |> Pour des raisons de sécurité, une double authentification récente (moins de 30 minutes) est requise avant tout téléchargement.
+
+    - if current_agent.pro_connect_2fa_active?
+      p Vous allez être redirigé vers ProConnect pour confirmer votre identité avec votre second facteur d'authentification.
+      = button_to "Continuer vers ProConnect", agents_two_factor_verification_path, class: "fr-btn"
+    - else
+      p
+        |> Nous allons vous envoyer un code de vérification à 6 chiffres à l'adresse
+        b= current_agent.email
+        | .
+      = button_to "Recevoir un code par email", agents_two_factor_verification_path, class: "fr-btn"
