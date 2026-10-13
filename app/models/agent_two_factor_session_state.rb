@@ -2,7 +2,7 @@
 module AgentTwoFactorSessionState
   FRESHNESS_WINDOW = 30.minutes
   SESSION_KEY = :agent_2fa_verified_at
-  RETURN_TO_SESSION_KEY = :two_factor_verification_return_to
+  RETURN_TO_SESSION_KEY = :agent_2fa_return_to
 
   class << self
     def recent_2fa?(session)
