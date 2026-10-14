@@ -96,7 +96,6 @@ class Agent < ApplicationRecord
   has_many :external_calendar_sync_executions, dependent: :delete_all
   has_many :agent_trusted_devices, dependent: :delete_all
   has_many :rdv_plans_as_planner, class_name: "RdvPlan", foreign_key: :planning_agent_id, inverse_of: :planning_agent, dependent: :destroy
-  has_many :rdv_plans, class_name: "RdvPlan", foreign_key: :rdv_agent_id, inverse_of: :rdv_agent, dependent: :destroy
   has_many :rdv_invitations, foreign_key: :inviting_agent_id, inverse_of: :inviting_agent, dependent: :destroy
   has_one :territory_creation_request, dependent: :destroy
   has_one :caldav_config, dependent: :destroy
