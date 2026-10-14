@@ -11,6 +11,10 @@ class Agent::OrganisationPolicy < ApplicationPolicy
     current_agent.territorial_admin_in?(record.territory)
   end
 
+  def join?
+    territorial_admin? && !in_organisation? && record.disabled_at.nil?
+  end
+
   alias show? in_organisation?
   alias creneau_availability? in_organisation?
 

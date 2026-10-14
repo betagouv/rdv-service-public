@@ -22,7 +22,9 @@ class Admin::Territories::OrganisationsController < Admin::Territories::BaseCont
   end
 
   def index
-    @organisations = organisations.where(disabled_at: nil)
+    # L'accès à l'espace est vérifié dans set_territory : on y liste toutes ses organisations, y compris celles dont l'agent n'est pas membre
+    skip_policy_scope
+    @organisations = current_territory.organisations.where(disabled_at: nil).ordered_by_name
     @closed_organisations = current_territory.organisations.where.not(disabled_at: nil)
   end
 
@@ -68,11 +70,12 @@ class Admin::Territories::OrganisationsController < Admin::Territories::BaseCont
                 flash: { success: "Organisation rouverte ! Vous pouvez inviter des agents à la rejoindre." }
   end
 
-  private
-
-  def organisations
-    policy_scope(current_agent.organisations, policy_scope_class: Agent::OrganisationPolicy::Scope)
-      .where(territory: current_territory)
-      .ordered_by_name
+  def join
+    organisation = current_territory.organisations.find(params[:id])
+    authorize(organisation, :join?, policy_class: Agent::OrganisationPolicy)
+    AgentRole.create!(organisation: organisation, agent: current_agent, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+    AgentSensitiveAccountCalculator.refresh_agent!(current_agent)
+    redirect_to admin_organisation_configuration_path(organisation),
+                flash: { success: "Vous êtes maintenant administrateur de l'organisation #{organisation.name}." }
   end
 end
