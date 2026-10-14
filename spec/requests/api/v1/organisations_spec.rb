@@ -11,7 +11,7 @@ RSpec.describe "RDV API" do
       {
         name: "CCAS de Montreuil",
         phone_number: "01 22 33 44 55",
-        website: "www.montreuil.fr/ccas",
+        website: "https://www.montreuil.fr/ccas",
         email: "contact@exemple.montreuil.fr",
         external_reference: {
           external_id: 123,
@@ -27,7 +27,7 @@ RSpec.describe "RDV API" do
       expect(created_organisation).to have_attributes(
         name: "CCAS de Montreuil",
         phone_number: "01 22 33 44 55",
-        website: "www.montreuil.fr/ccas",
+        website: "https://www.montreuil.fr/ccas",
         email: "contact@exemple.montreuil.fr"
       )
 
