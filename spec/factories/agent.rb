@@ -18,9 +18,6 @@ FactoryBot.define do
       service { nil }
     end
 
-    trait :secretaire do
-      services { [Service.find_by(name: Service::SECRETARIAT) || build(:service, :secretariat)] }
-    end
     trait :cnfs do
       services { [Service.find_by(name: Service::CONSEILLER_NUMERIQUE) || build(:service, :conseiller_numerique)] }
     end
