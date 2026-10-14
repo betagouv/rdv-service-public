@@ -195,4 +195,42 @@ RSpec.describe "territory admin can manage agents", type: :feature do
       expect(page).to have_content "Droits d'accès mis à jour"
     end
   end
+
+  describe "organisations dont l'administrateur de l'espace n'est pas membre" do
+    let!(:organisation) { create(:organisation, name: "MDS de Valence", territory: territory) }
+    let!(:non_member_organisation) { create(:organisation, name: "MDS de Chambéry", territory: territory) }
+    let!(:closed_organisation) { create(:organisation, name: "MDS fermée", territory: territory, disabled_at: Time.zone.now) }
+    let!(:admin) { create(:agent, role_in_territories: [territory], admin_role_in_organisations: [organisation]) }
+    let!(:access_right) { create(:agent_territorial_access_right, agent: admin, territory: territory, allow_to_invite_agents: true) }
+    let!(:agent) { create(:agent, last_name: "Blot", basic_role_in_organisations: [organisation]) }
+    let!(:agent_access_right) { create(:agent_territorial_access_right, agent: agent, territory: territory) }
+
+    before { login_as(admin, scope: :agent) }
+
+    it "les propose lors de l'invitation d'un agent" do
+      visit new_admin_territory_agent_path(territory_id: territory.id)
+      expect(page).to have_field("MDS de Valence")
+      expect(page).to have_field("MDS de Chambéry")
+      expect(page).to have_no_field("MDS fermée")
+    end
+
+    it "permet d'y affecter un agent" do
+      visit edit_admin_territory_agent_path(territory, agent)
+      expect(page).to have_no_select("agent_role[organisation_id]", with_options: ["MDS fermée"])
+      select "MDS de Chambéry", from: "agent_role[organisation_id]"
+      click_on "Affecter cette organisation"
+
+      expect(page).to have_content("Les permissions de l'agent ont été mises à jour")
+      expect(agent.reload.organisations).to contain_exactly(organisation, non_member_organisation)
+    end
+
+    it "permet de s'y affecter soi-même" do
+      visit edit_admin_territory_agent_path(territory, admin)
+      select "MDS de Chambéry", from: "agent_role[organisation_id]"
+      click_on "Affecter cette organisation"
+
+      expect(page).to have_content("Les permissions de l'agent ont été mises à jour")
+      expect(admin.reload.organisations).to contain_exactly(organisation, non_member_organisation)
+    end
+  end
 end
