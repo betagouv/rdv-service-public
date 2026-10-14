@@ -80,19 +80,17 @@ RSpec.describe Territory, type: :model do
   end
 
   describe "special names" do
-    let(:mairies_territory) do
-      create(:territory, :mairies)
-    end
+    let(:mairies_territory) { create(:territory, name: Territory::VISIOPLAINTE_NAME) }
 
     it "doesn't allow changing the name of a territory with a special meaning" do
       expect(mairies_territory.update(name: "new name")).to be_falsey
-      expect(mairies_territory.reload.name).to eq Territory::MAIRIES_NAME
+      expect(mairies_territory.reload.name).to eq Territory::VISIOPLAINTE_NAME
     end
 
     it "doesn't allow changing to the name of a territory with a special meaning" do
       normal_territory = create(:territory, name: "Ardennes")
 
-      expect(normal_territory.update(name: Territory::MAIRIES_NAME)).to be_falsey
+      expect(normal_territory.update(name: Territory::VISIOPLAINTE_NAME)).to be_falsey
       expect(normal_territory.reload.name).to eq "Ardennes"
     end
   end
