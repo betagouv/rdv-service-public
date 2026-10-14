@@ -1,5 +1,5 @@
 # Les requêtes de l’autocomplétion d’adresse sont faites par le navigateur (fetch) :
-# WebMock ne les voit pas, il faut les intercepter avec Playwright (cf AGENTS.md).
+# WebMock ne les voit pas, il faut les intercepter avec Playwright.
 def stub_base_adresse_nationale_autocomplete_request(results: "16_quai_de_la_loire", sleep: 0, abort: false)
   body =
     if results == []
