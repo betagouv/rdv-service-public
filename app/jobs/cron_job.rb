@@ -67,9 +67,11 @@ class CronJob < ApplicationJob
 
       Receipt.where(created_at: ..two_years_ago).destroy_all
 
-      Rdv.where(starts_at: ..two_years_ago).each do |rdv|
+      Rdv.where(starts_at: ..two_years_ago).find_each do |rdv|
         rdv.webhook_reason = "rgpd"
-        rdv.destroy
+        rdv.destroy!
+      rescue StandardError => e
+        Sentry.capture_exception(e)
       end
 
       # La suppression d'utilisateurs inactifs a besoin que les vieux rdv soient supprimés
@@ -95,7 +97,9 @@ class CronJob < ApplicationJob
           profile.destroy
         end
         user.reload
-        user.destroy # l'utilisateur n'a plus d'orgnisation liée, donc aucun webhook ne sera envoyé
+        user.destroy! # l'utilisateur n'a plus d'organisation liée, donc aucun webhook ne sera envoyé
+      rescue StandardError => e
+        Sentry.capture_exception(e)
       end
     end
   end
@@ -127,7 +131,9 @@ class CronJob < ApplicationJob
     def perform(date_limit)
       inactive_agents(date_limit).where("account_deletion_warning_sent_at < ?", 30.days.ago).find_each do |agent|
         agent.webhook_reason = "rgpd"
-        agent.destroy
+        agent.destroy!
+      rescue StandardError => e
+        Sentry.capture_exception(e)
       end
     end
   end
@@ -136,17 +142,24 @@ class CronJob < ApplicationJob
     def perform
       po_ponctuelle_closed_since_1_year = PlageOuverture.where(recurrence: nil).where(first_day: ..1.year.ago)
       po_recurrent_closed_since_1_year = PlageOuverture.where(recurrence_ends_at: ..1.year.ago)
-      po_ponctuelle_closed_since_1_year.or(po_recurrent_closed_since_1_year).each do |po|
+      po_ponctuelle_closed_since_1_year.or(po_recurrent_closed_since_1_year).find_each do |po|
         po.webhook_reason = "rgpd"
-        po.destroy
+        po.destroy!
+      rescue StandardError => e
+        Sentry.capture_exception(e)
       end
     end
   end
 
   class DestroyOldAbsencesJob < CronJob
     def perform
-      Absence.where(recurrence: nil).where("end_day < ?", 2.years.ago).find_each(&:destroy)
-      Absence.where.not(recurrence: nil).where("recurrence_ends_at < ?", 2.years.ago).find_each(&:destroy)
+      recurring = Absence.where.not(recurrence: nil).where("recurrence_ends_at < ?", 2.years.ago)
+      non_recurring = Absence.where(recurrence: nil).where("end_day < ?", 2.years.ago)
+      (recurring + non_recurring).each do |absence|
+        absence.destroy!
+      rescue StandardError => e
+        Sentry.capture_exception(e)
+      end
     end
   end
 
