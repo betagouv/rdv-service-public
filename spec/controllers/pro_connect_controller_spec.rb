@@ -87,6 +87,37 @@ RSpec.describe ProConnectController do
     end
   end
 
+  describe "#callback quand ProConnect renvoie une erreur" do
+    let(:auth_client) do
+      ProConnectOpenIdClient::Auth.new(client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa", client_secret: "un faux secret de test")
+    end
+
+    before { session[:pro_connect] = { state: auth_client.state, connection_for: "agent" } }
+
+    it "redirige avec une erreur et notifie Sentry si l'endpoint token répond avec une erreur" do
+      stub_request(:post, "https://fca.integ01.dev-agentconnect.fr/api/v2/token").to_return(status: 500, body: "oops")
+
+      get :callback, params: { state: auth_client.state, code: "code" }
+
+      expect(response).to have_http_status(:redirect)
+      expect(flash[:error]).to be_present
+      expect(sentry_events.last.exception.values.first.value).to eq("code:500, body:oops (ProConnectOpenIdClient::Callback::ApiRequestError)")
+    end
+
+    it "redirige avec une erreur et notifie Sentry si l'endpoint userinfo répond avec une erreur" do
+      ProConnectStubs.stub_callback_requests("code", {})
+      stub_request(:get, "https://fca.integ01.dev-agentconnect.fr/api/v2/userinfo?schema=openid")
+        .with(headers: { "Authorization" => "Bearer fake proconnect access token" })
+        .to_return(status: 401, body: "unauthorized")
+
+      get :callback, params: { state: auth_client.state, code: "code" }
+
+      expect(response).to have_http_status(:redirect)
+      expect(flash[:error]).to be_present
+      expect(sentry_events.last.exception.values.first.value).to eq("code:401, body:unauthorized (ProConnectOpenIdClient::Callback::ApiRequestError)")
+    end
+  end
+
   describe "#callback" do
     let(:state) { auth_client.state }
     let(:auth_client) do

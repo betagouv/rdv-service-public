@@ -73,6 +73,35 @@ RSpec.describe FranceConnectV2Controller do
     end
   end
 
+  describe "#callback quand FranceConnect renvoie une erreur" do
+    let(:state) { "une_valeur_random_de_state" }
+
+    before { session[FranceConnectV2Controller::STATE_SESSION_KEY] = state }
+
+    it "redirige vers la connexion et notifie Sentry si l'endpoint token répond avec une erreur" do
+      stub_request(:post, "https://fcp-low.sbx.dev-franceconnect.fr/api/v2/token").to_return(status: 500, body: "oops")
+
+      get :callback, params: { state: state, code: "code" }
+
+      expect(response).to redirect_to(new_user_session_path)
+      expect(flash[:error]).to be_present
+      expect(sentry_events.last.exception.values.first.value).to eq("code:500, body:oops (FranceConnectV2OpenIdClient::Callback::ApiRequestError)")
+    end
+
+    it "redirige vers la connexion et notifie Sentry si l'endpoint userinfo répond avec une erreur" do
+      FranceConnectV2Stubs.stub_token_request("code")
+      stub_request(:get, "https://fcp-low.sbx.dev-franceconnect.fr/api/v2/userinfo?schema=openid")
+        .with(headers: { "Authorization" => "Bearer fake_france_connect_v2_access_token" })
+        .to_return(status: 401, body: "unauthorized")
+
+      get :callback, params: { state: state, code: "code" }
+
+      expect(response).to redirect_to(new_user_session_path)
+      expect(flash[:error]).to be_present
+      expect(sentry_events.last.exception.values.first.value).to eq("code:401, body:unauthorized (FranceConnectV2OpenIdClient::Callback::ApiRequestError)")
+    end
+  end
+
   describe "#post_logout" do
     it "redirects home" do
       session[:france_connect_v2_logout_state] = "une_valeur_random_de_state"

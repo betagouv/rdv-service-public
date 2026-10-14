@@ -50,6 +50,52 @@ RSpec.describe WebhookJob do
       end
     end
 
+    context "when the receiver responds with a 200 status" do
+      it "sends the payload as JSON with a HMAC signature and does not retry" do
+        stub = stub_request(:post, "https://example.com/rdv-s-endpoint")
+          .with(
+            body: payload,
+            headers: {
+              "Content-Type" => "application/json; charset=utf-8",
+              "X-Lapin-Signature" => OpenSSL::HMAC.hexdigest("SHA256", "bla", payload),
+            }
+          )
+          .to_return(status: 200, body: "{}")
+
+        described_class.perform_later(payload, webhook_endpoint.id)
+        perform_enqueued_jobs
+
+        expect(stub).to have_been_requested.once
+        expect(enqueued_jobs).to be_empty
+        expect(sentry_events).to be_empty
+      end
+
+      it "does not log the payload in Sentry breadcrumbs" do
+        stub_request(:post, "https://example.com/rdv-s-endpoint").to_return(status: 200, body: "{}")
+        breadcrumbs = []
+        allow(Sentry).to receive(:add_breadcrumb) { |breadcrumb| breadcrumbs << breadcrumb }
+
+        described_class.perform_later({ secret: "donnée personnelle" }.to_json, webhook_endpoint.id)
+        perform_enqueued_jobs
+
+        request_breadcrumb = breadcrumbs.find { _1.message == "HTTP request" }
+        expect(request_breadcrumb).to be_present
+        expect(request_breadcrumb.data.to_json).not_to include("donnée personnelle")
+      end
+    end
+
+    context "when the receiver responds with a 500 that is a known false negative from the Drôme" do
+      it "does not retry" do
+        stub_request(:post, "https://example.com/rdv-s-endpoint")
+          .to_return(status: 500, body: { message: "Appointment already deleted" }.to_json)
+
+        described_class.perform_later(payload, webhook_endpoint.id)
+        perform_enqueued_jobs
+
+        expect(enqueued_jobs).to be_empty
+      end
+    end
+
     it "retries on timeout" do
       stub_request(:post, "https://example.com/rdv-s-endpoint").to_timeout
       described_class.perform_later(payload, webhook_endpoint.id)

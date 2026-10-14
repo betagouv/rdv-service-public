@@ -97,4 +97,82 @@ RSpec.describe SmsSender, type: :service do
       end
     end
   end
+
+  describe "requêtes HTTP vers les fournisseurs" do
+    let(:perform_with) do
+      ->(provider, api_key) { described_class.perform_with("RdvSoli", "0612345678", "Bonjour", provider, api_key, receipt_params) }
+    end
+
+    context "avec netsize" do
+      let(:url) { "https://europe.ipx.com/restapi/v1/sms/send" }
+
+      it "envoie un formulaire en basic auth" do
+        stub = stub_request(:post, url)
+          .with(
+            basic_auth: %w[user pass],
+            headers: { "Content-Type" => "application/x-www-form-urlencoded; charset=UTF-8" },
+            body: {
+              "destinationAddress" => "0612345678",
+              "messageText" => "Bonjour",
+              "originatingAddress" => "RdvSoli",
+              "originatorTON" => "1",
+              "maxConcatenatedMessages" => "10",
+            }
+          )
+          .to_return(status: 200, body: { responseCode: 0, messageIds: [1, 2] }.to_json)
+
+        perform_with.call("netsize", "user:pass")
+
+        expect(stub).to have_been_requested
+        expect(Receipt.last).to have_attributes(result: "delivered", sms_count: 2)
+      end
+
+      it "enregistre un échec sur un timeout" do
+        stub_request(:post, url).to_timeout
+
+        expect { perform_with.call("netsize", "user:pass") }.to raise_error(SmsSender::SmsSenderFailure, "NetSize timeout")
+        expect(Receipt.last).to have_attributes(result: "failure", error_message: "NetSize timeout")
+      end
+
+      it "enregistre un échec sur une erreur HTTP" do
+        stub_request(:post, url).to_return(status: 503, body: "")
+
+        expect { perform_with.call("netsize", "user:pass") }.to raise_error(SmsSender::SmsSenderFailure, "NetSize HTTP error: 503")
+      end
+    end
+
+    context "avec clever technologies" do
+      let(:url) { "https://webservicesmultimedias.clever-is.fr/api/pushs" }
+
+      it "envoie un JSON avec un header Authorization Basic" do
+        stub = stub_request(:post, url)
+          .with(
+            headers: {
+              "Content-Type" => "application/json; charset=UTF-8",
+              "Authorization" => "Basic #{Base64.strict_encode64('user:pass')}",
+            }
+          ) { |req| JSON.parse(req.body) == { "datas" => { "text" => "Bonjour", "number_list" => "0612345678", "encodage" => 3 } } }
+          .to_return(status: 201, body: { push: { nb_sms: 1 } }.to_json)
+
+        perform_with.call("clever_technologies", "user:pass")
+
+        expect(stub).to have_been_requested
+        expect(Receipt.last).to have_attributes(result: "sent", sms_count: 1)
+      end
+
+      it "enregistre un échec quand le fournisseur renvoie une erreur HTTP" do
+        stub_request(:post, url).to_return(status: 402, body: { errors: { credit: "Pas de crédit" } }.to_json)
+
+        expect { perform_with.call("clever_technologies", "user:pass") }
+          .to raise_error(SmsSender::SmsSenderFailure, "Clever Technologies HTTP error: 402")
+      end
+
+      it "enregistre un échec sur un timeout" do
+        stub_request(:post, url).to_timeout
+
+        expect { perform_with.call("clever_technologies", "user:pass") }
+          .to raise_error(SmsSender::SmsSenderFailure, "Clever Technologies error: Timeout")
+      end
+    end
+  end
 end

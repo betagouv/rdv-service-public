@@ -43,6 +43,45 @@ RSpec.describe Outlook::ApiClient do
     allow(ENV).to receive(:fetch).with("AZURE_APPLICATION_CLIENT_SECRET", nil).and_return("fake_client_secret")
   end
 
+  describe "when calls succeed" do
+    let(:expected_headers) do
+      {
+        "Accept" => "application/json",
+        "Authorization" => "Bearer token",
+        "Content-Type" => "application/json",
+        "Return-Client-Request-Id" => "true",
+        "User-Agent" => "RDVSolidarites",
+      }
+    end
+
+    it "creates an event and returns its id" do
+      stub = stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
+        .with(body: expected_body, headers: expected_headers)
+        .to_return(status: 201, body: { id: "event_id" }.to_json)
+
+      expect(described_class.new(agent).create_event!(expected_body)).to eq("event_id")
+      expect(stub).to have_been_requested
+    end
+
+    it "updates an event with a PATCH" do
+      stub = stub_request(:patch, "https://graph.microsoft.com/v1.0/me/Events/abc")
+        .with(body: expected_body, headers: expected_headers)
+        .to_return(status: 200, body: { id: "abc" }.to_json)
+
+      described_class.new(agent).update_event!("abc", expected_body)
+      expect(stub).to have_been_requested
+    end
+
+    it "deletes an event, handling the empty 204 response" do
+      stub = stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")
+        .with(headers: expected_headers)
+        .to_return(status: 204, body: "")
+
+      expect { described_class.new(agent).delete_event!("abc") }.not_to raise_error
+      expect(stub).to have_been_requested
+    end
+  end
+
   context "when a call fails" do
     before do
       stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
