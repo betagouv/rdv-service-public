@@ -90,13 +90,14 @@ class Agent < ApplicationRecord
   has_many :territorial_roles, class_name: "AgentTerritorialRole", dependent: :destroy
   has_many :sector_attributions, dependent: :destroy
   has_many :agent_teams, dependent: :destroy
-  has_many :referent_assignations, dependent: :destroy
+  has_many :referent_assignations, dependent: :destroy # destroy is needed to trigger webhook callbacks
   has_many :instance_exports, dependent: :destroy
   has_many :exports, dependent: :destroy
   has_many :external_calendar_sync_executions, dependent: :delete_all
   has_many :agent_trusted_devices, dependent: :delete_all
-  has_many :rdv_plans_as_planner, class_name: "RdvPlan", foreign_key: :planning_agent_id, inverse_of: :planning_agent, dependent: :destroy
-  has_many :rdv_invitations, foreign_key: :inviting_agent_id, inverse_of: :inviting_agent, dependent: :destroy
+  has_many :rdv_plans_as_planner, class_name: "RdvPlan", foreign_key: :planning_agent_id, inverse_of: :planning_agent, dependent: :restrict_with_error
+  has_many :rdv_plans_as_rdv_agent, class_name: "RdvPlan", foreign_key: :rdv_agent_id, inverse_of: :rdv_agent, dependent: :restrict_with_error
+  has_many :rdv_invitations, foreign_key: :inviting_agent_id, inverse_of: :inviting_agent, dependent: :restrict_with_error
   has_one :territory_creation_request, dependent: :destroy
   has_one :caldav_config, dependent: :destroy
 
@@ -109,10 +110,8 @@ class Agent < ApplicationRecord
   has_many :rdvs, dependent: :restrict_with_error, through: :agents_rdvs
   has_many :territories, through: :territorial_roles
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
-  # we specify dependent: :destroy because by default it will be deleted (dependent: :delete)
-  # and we need to destroy to trigger the callbacks on the model
-  has_many :users, through: :referent_assignations, dependent: :destroy
-  has_many :organisations, through: :roles, dependent: :destroy
+  has_many :users, through: :referent_assignations
+  has_many :organisations, through: :roles
   has_many :territories_through_organisations, source: :territory, through: :organisations
   has_many :webhook_endpoints, through: :organisations
 
@@ -194,6 +193,7 @@ class Agent < ApplicationRecord
       external_calendar_sync_executions.destroy_all
       access_grants.destroy_all
       access_tokens.destroy_all
+      exports.destroy_all
 
       assign_attributes(
         deleted_at: Time.zone.now,
