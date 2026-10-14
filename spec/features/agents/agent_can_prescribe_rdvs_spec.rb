@@ -4,7 +4,7 @@ RSpec.describe "agents can prescribe rdvs" do
     stub_request(
       :get,
       "https://data.geopf.fr/geocodage/search/?q=16%20Quai%20de%20la%20Loire,%20Paris,%2075019"
-    ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
+    ).to_return(status: 200, body: file_fixture("base_adresse_nationale_search_16_quai_de_la_loire.json").read, headers: {})
   end
 
   let(:now) { Time.zone.parse("2024-01-05 16h00") }
@@ -277,7 +277,7 @@ RSpec.describe "agents can prescribe rdvs" do
       context "when sectorization is enabled on the street level and on city level on 2 different sectors" do
         before do
           stub_request(:get, "https://data.geopf.fr/geocodage/search/?q=#{user.address.gsub(' ', '%20')}")
-            .to_return(body: file_fixture("geocode_result.json").read)
+            .to_return(body: file_fixture("base_adresse_nationale_search_16_quai_de_la_loire.json").read)
         end
 
         it "show both services and motifs", js: true do

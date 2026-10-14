@@ -4,7 +4,7 @@ RSpec.describe GeoCoding do
       stub_request(
         :get,
         "https://data.geopf.fr/geocodage/search/?q=03%20Rue%20Lambert,%20Paris,%2075018"
-      ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
+      ).to_return(status: 200, body: file_fixture("base_adresse_nationale_search_16_quai_de_la_loire.json").read, headers: {})
     end
 
     it "returns the coordinates" do
