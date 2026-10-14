@@ -9,15 +9,16 @@
       = render "devise/shared/error_messages", resource: @agent
       = f.dsfr_email_field :email, label: "Email", placeholder: t(".email_placeholder"), autocomplete: "off"
 
-      fieldset.fr-fieldset
-        legend.fr-fieldset__legend--regular.fr-fieldset__legend
-          = Agent.human_attribute_name(:services)
-          span.fr-hint-text = t(".services_hint")
-        = f.collection_check_boxes :service_ids, @services_to_select, :id, :name, include_hidden: false do |cb|
-          .fr-fieldset__element
-            .fr-checkbox-group
-              = cb.check_box
-              = cb.label
+      - if @services_to_select.any?
+        fieldset.fr-fieldset
+          legend.fr-fieldset__legend--regular.fr-fieldset__legend
+            = Agent.human_attribute_name(:services)
+            span.fr-hint-text = t(".services_hint")
+          = f.collection_check_boxes :service_ids, @services_to_select, :id, :name, include_hidden: false do |cb|
+            .fr-fieldset__element
+              .fr-checkbox-group
+                = cb.check_box
+                = cb.label
 
       fieldset.fr-fieldset
         legend.fr-fieldset__legend--regular.fr-fieldset__legend

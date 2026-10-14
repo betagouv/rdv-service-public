@@ -68,6 +68,22 @@ RSpec.describe "territory admin can manage agents", type: :feature do
       end
     end
 
+    context "quand l'espace n'a aucun service" do
+      let!(:service) { nil }
+
+      it "n'affiche pas la section des services et permet d'inviter l'agent" do
+        visit new_admin_territory_agent_path(territory_id: territory.id)
+        expect(page).to have_no_content("Services")
+
+        fill_in "Email", with: "agent@ladrome.fr"
+        check "MDS de Valence"
+        click_on "Envoyer"
+
+        expect(page).to have_content "L’agent agent@ladrome.fr a été invité à rejoindre votre organisation"
+        expect(Agent.last).to have_attributes(email: "agent@ladrome.fr", services: [])
+      end
+    end
+
     context "when trying to cheat and invite an agent to an organisation in another territory" do
       let!(:organisation_in_another_territory) { create(:organisation, territory: create(:territory)) }
 
