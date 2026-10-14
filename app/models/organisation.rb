@@ -118,7 +118,7 @@ class Organisation < ApplicationRecord
     Phonelib.parse(phone_number).national
   end
 
-  # TODO: supprimer une fois que tous les organisations.website en prod sont valides
+  # TODO: rappatrier cette validation dans validate_website_url une fois que tous les organisations.website en prod sont valides
   def self.valid_website_url?(value)
     uri = URI.parse(value)
     uri.is_a?(URI::HTTP) && uri.host.present? # accepte aussi HTTPS
@@ -126,7 +126,7 @@ class Organisation < ApplicationRecord
     false
   end
 
-  # TODO: supprimer une fois que tous les organisations.website en prod sont valides
+  # TODO: remplacer par un alias vers website une fois que tous les organisations.website en prod sont valides
   def website_url
     return nil if website.blank?
 

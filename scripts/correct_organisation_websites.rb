@@ -33,7 +33,9 @@ Organisation.where.not(website: [nil, ""]).find_each do |organisation|
       PaperTrail.request(whodunnit: WHODUNNIT) { organisation.save(validate: false) }
       puts "  Site web mis à jour, enregistré."
     else
-      puts "  Passé, aucune écriture."
+      puts "  Erreur : la saisie n'est pas une URL valide, aucune écriture."
     end
+  else
+    puts "  Passé, aucune écriture."
   end
 end
