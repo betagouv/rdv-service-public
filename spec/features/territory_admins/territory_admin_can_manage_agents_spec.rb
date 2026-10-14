@@ -57,6 +57,17 @@ RSpec.describe "territory admin can manage agents", type: :feature do
       )
     end
 
+    context "quand l'espace n'a qu'une organisation et qu'un service" do
+      let(:admin) { create(:agent, role_in_territories: [territory], admin_role_in_organisations: [organisation]) }
+      let!(:other_organisation) { nil }
+
+      it "les présélectionne" do
+        visit new_admin_territory_agent_path(territory_id: territory.id)
+        expect(page).to have_checked_field("MDS de Valence")
+        expect(page).to have_checked_field("Service Social")
+      end
+    end
+
     context "when trying to cheat and invite an agent to an organisation in another territory" do
       let!(:organisation_in_another_territory) { create(:organisation, territory: create(:territory)) }
 

@@ -4,7 +4,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   respond_to :html, :json, only: :index
 
   before_action :set_agent, only: %i[edit update_teams update_services]
-  before_action :set_organisations_to_select, only: %i[new create]
+  before_action :set_organisations_to_select, :set_services_to_select, only: %i[new create]
 
   def index
     @agents = find_agents(params[:q]).page(page_number)
@@ -27,6 +27,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   def new
     @agent = Agent.new
     @agent.organisations = [@organisations_to_select.sole] if @organisations_to_select.size == 1
+    @agent.services = [@services_to_select.sole] if @services_to_select.size == 1
     skip_authorization
     # l’agent n’étant pas lié à un espace la policy ne fonctionne pas
     # Admin::Territories::BaseController#set_territory limite néanmoins l’accès à cette page aux admins du espace
@@ -96,6 +97,10 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def set_organisations_to_select
     @organisations_to_select = current_territory.organisations.where(disabled_at: nil).ordered_by_name
+  end
+
+  def set_services_to_select
+    @services_to_select = current_territory.services.reject(&:secretariat?)
   end
 
   def set_agent
