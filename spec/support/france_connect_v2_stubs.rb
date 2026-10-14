@@ -57,8 +57,6 @@ module FranceConnectV2Stubs
       .with(
         headers: {
           "Authorization" => "Bearer fake_france_connect_v2_access_token",
-          "Expect" => "",
-          "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
         }
       )
       .to_return(status: 200, body: response_body, headers: {})

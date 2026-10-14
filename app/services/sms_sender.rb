@@ -110,13 +110,14 @@ class SmsSender < BaseService
   # Fournisseur par défaut, utilisé presque partout, sauf exceptions historiques
   #
   def send_with_netsize
-    request = Typhoeus::Request.new(
-      "https://europe.ipx.com/restapi/v1/sms/send",
-      method: :post,
-      userpwd: @api_key,
-      headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+    response = HttpClient.connection(
+      basic_auth: @api_key,
+      headers: { "Content-Type" => "application/x-www-form-urlencoded; charset=UTF-8" },
       timeout: 5,
-      body: {
+      form: true
+    ).post(
+      "https://europe.ipx.com/restapi/v1/sms/send",
+      {
         destinationAddress: @phone_number,
         messageText: @content,
         originatingAddress: @sender_name,
@@ -125,7 +126,7 @@ class SmsSender < BaseService
       }
     )
 
-    request.on_success do |response|
+    if response.success?
       parsed_response = JSON.parse(response.body)
       # parsed_response is a hash. Relevant keys are:
       # responseCode: nonzero on error. 18 is “Too low balance”, 100 is “Invalid destination address”.
@@ -139,17 +140,15 @@ class SmsSender < BaseService
         retry_job = !parsed_response["responseCode"].in?(NETSIZE_PERMANENT_ERRORS)
         handle_failure(error_message: "NetSize error: #{parsed_response['responseMessage']}", retry_job: retry_job)
       end
+    else
+      handle_failure(error_message: "NetSize HTTP error: #{response.status}")
     end
-
-    request.on_failure do |response|
-      if response.timed_out?
-        handle_failure(error_message: "NetSize timeout")
-      elsif response.failure?
-        handle_failure(error_message: "NetSize HTTP error: #{response.code}")
-      end
+  rescue Faraday::Error => e
+    if HttpClient.timeout?(e)
+      handle_failure(error_message: "NetSize timeout")
+    else
+      handle_failure(error_message: "NetSize HTTP error: #{e.message}")
     end
-
-    request.run
   end
 
   # Clever Technologies
@@ -160,12 +159,12 @@ class SmsSender < BaseService
   # - le département de la Seine-et-Marne (77)
   #
   def send_with_clever_technologies
-    request = Typhoeus::Request.new(
+    response = HttpClient.connection(
+      headers: { "Content-Type" => "application/json; charset=UTF-8", "Authorization" => "Basic #{Base64.encode64(@api_key).chomp}" },
+      timeout: 5
+    ).post(
       "https://webservicesmultimedias.clever-is.fr/api/pushs",
-      method: :post,
-      headers: { "Content-Type": "application/json; charset=UTF-8", Authorization: "Basic #{Base64.encode64(@api_key).chomp}" },
-      timeout: 5,
-      body: {
+      {
         datas: {
           text: @content,
           number_list: @phone_number,
@@ -174,9 +173,9 @@ class SmsSender < BaseService
       }.to_json
     )
 
-    request.on_success do |response|
+    if response.success?
       parsed_response = JSON.parse(response.body)
-      if response.code == 201
+      if response.status == 201
         # 201 Created on success
         # parsed_response contains a hash under the "push" key. Relevant keys are:
         # :nb_sms, :error
@@ -186,17 +185,15 @@ class SmsSender < BaseService
         errors = parsed_response["errors"]&.values&.join("\n")
         handle_failure(error_message: "Clever Technologies HTTP error: #{errors}")
       end
+    else
+      handle_failure(error_message: "Clever Technologies HTTP error: #{response.status}")
     end
-
-    request.on_failure do |response|
-      if response.timed_out?
-        handle_failure(error_message: "Clever Technologies error: Timeout")
-      else
-        handle_failure(error_message: "Clever Technologies HTTP error: #{response.code}")
-      end
+  rescue Faraday::Error => e
+    if HttpClient.timeout?(e)
+      handle_failure(error_message: "Clever Technologies error: Timeout")
+    else
+      handle_failure(error_message: "Clever Technologies HTTP error: #{e.message}")
     end
-
-    request.run
   end
 
   # DebugLogger

@@ -142,7 +142,7 @@ RSpec.describe Users::RdvBookingForm do
   context "numéro de pré-demande ANTS valide mais l'API ANTS timeout" do
     let(:ants_pre_demande_number) { "VALID12345" }
 
-    before { allow(AntsApi).to receive(:status).and_raise(Typhoeus::Errors::TimeoutError) }
+    before { allow(AntsApi).to receive(:status).and_raise(AntsApi::TimeoutError) }
 
     it "empêche la création" do
       form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)

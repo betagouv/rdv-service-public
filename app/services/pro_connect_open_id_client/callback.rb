@@ -85,11 +85,12 @@ module ProConnectOpenIdClient
         redirect_uri: pro_connect_callback_url,
       }
 
-      response = Typhoeus.post(
-        URI("#{ENV['PRO_CONNECT_BASE_URL']}/token"),
-        body: data,
-        headers: { "Content-Type" => "application/x-www-form-urlencoded" }
-      )
+      # Le body contient le client_secret : on ne l'envoie pas dans les breadcrumbs Sentry.
+      response = HttpClient.connection(
+        headers: { "Content-Type" => "application/x-www-form-urlencoded" },
+        form: true,
+        scrub_request_body: true
+      ).post("#{ENV['PRO_CONNECT_BASE_URL']}/token", data)
 
       handle_response_error(response)
 
@@ -114,10 +115,11 @@ module ProConnectOpenIdClient
     end
 
     def fetch_user_info(token)
-      uri = URI("#{ENV['PRO_CONNECT_BASE_URL']}/userinfo")
-      uri.query = URI.encode_www_form({ schema: "openid" })
-
-      response = Typhoeus.get(uri, headers: { "Authorization" => "Bearer #{token}" })
+      response = HttpClient.connection.get(
+        "#{ENV['PRO_CONNECT_BASE_URL']}/userinfo",
+        { schema: "openid" },
+        { "Authorization" => "Bearer #{token}" }
+      )
 
       handle_response_error(response)
 
@@ -126,7 +128,7 @@ module ProConnectOpenIdClient
 
     def handle_response_error(response)
       unless response.success?
-        raise(ApiRequestError, "code:#{response.response_code}, body:#{response.response_body}")
+        raise(ApiRequestError, "code:#{response.status}, body:#{response.body}")
       end
     end
 

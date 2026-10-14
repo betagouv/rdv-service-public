@@ -21,8 +21,6 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     # ce sont ceux définis dans le context rdv_mairie_api_authentication
     {
       "Accept" => "application/json",
-      "Expect" => "",
-      "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
       "X-Rdv-Opt-Auth-Token" => "fake-token",
     }
   end

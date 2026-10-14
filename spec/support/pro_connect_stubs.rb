@@ -61,8 +61,6 @@ module ProConnectStubs
       .with(
         headers: {
           "Authorization" => "Bearer fake proconnect access token",
-          "Expect" => "",
-          "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
         }
       )
       .to_return(status: 200, body: response_body, headers: {})

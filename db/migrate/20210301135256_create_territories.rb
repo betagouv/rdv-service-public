@@ -72,7 +72,7 @@ class CreateTerritories < ActiveRecord::Migration[6.0]
     return if ENV["MIGRATION_AGENT_TERRITORIAL_ROLES_CSV_URL"].blank?
 
     CSV.parse(
-      Typhoeus.get(ENV["MIGRATION_AGENT_TERRITORIAL_ROLES_CSV_URL"]).body,
+      Faraday.get(ENV["MIGRATION_AGENT_TERRITORIAL_ROLES_CSV_URL"]).body,
       headers: :first_row
     ).each do |csv_row|
       agent = Agent.find_by(email: csv_row["agent_email"])

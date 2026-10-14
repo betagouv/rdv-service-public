@@ -44,7 +44,7 @@ RSpec.describe AntsApi, type: :service do
 
       expect do
         described_class.status(ants_pre_demande_number: "1122334455", meeting_point_id: "11")
-      end.to raise_error(Typhoeus::Errors::TimeoutError)
+      end.to raise_error(AntsApi::TimeoutError)
     end
   end
 

@@ -90,8 +90,6 @@ gem "good_job", "3.27.4"
 gem "jb"
 # Simple Fast Declarative Serialization Library
 gem "blueprinter"
-# Parallel HTTP library on top of libcurl multi.
-gem "typhoeus"
 
 # External services
 gem "notion-ruby-client", "~> 1.2"

@@ -45,7 +45,7 @@ class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
     return unless status_validated?(status, record)
 
     appointments_empty?(appointments, record)
-  rescue AntsApi::ApiRequestError, Typhoeus::Errors::TimeoutError => e
+  rescue AntsApi::ApiRequestError => e
     # Si l'API de l'ANTS est fiable, donc si elle renvoie une erreur ou un timeout,
     # on préfère bloquer la réservation et logguer l'erreur.
     record.errors.add(:ants_pre_demande_number, "n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.")

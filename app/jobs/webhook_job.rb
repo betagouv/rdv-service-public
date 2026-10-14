@@ -30,33 +30,32 @@ class WebhookJob < ApplicationJob
     # Les envois de webhooks en env de dev sont notamment utilisés par RDV-I.
     return if Rails.env.development? && webhook_endpoint.target_url !~ /localhost/
 
-    request = Typhoeus::Request.new(
-      webhook_endpoint.target_url,
-      method: :post,
+    connection = HttpClient.connection(
       headers: {
         "Content-Type" => "application/json; charset=utf-8",
         "X-Lapin-Signature" => OpenSSL::HMAC.hexdigest("SHA256", webhook_endpoint.secret, payload),
       },
-      body: payload,
-      timeout: TIMEOUT
+      timeout: TIMEOUT,
+      scrub_request_body: true
     )
-    request.scrub_from_sentry_breadcrumbs = [:body]
 
-    request.on_failure do |response|
+    begin
+      response = connection.post(webhook_endpoint.target_url, payload)
+    rescue Faraday::Error => e
       # On raise une erreur pour déclencher un retry, mais on ne l'enverra pas à Sentry
-
-      if response.timed_out?
+      if HttpClient.timeout?(e)
         raise OutgoingWebhookError, "HTTP Timeout, URL: #{webhook_endpoint.target_url}"
-      elsif !WebhookJob.false_negative_from_drome?(response.body)
-        raise OutgoingWebhookError, "HTTP #{response.code}, URL: #{webhook_endpoint.target_url}"
+      else
+        raise OutgoingWebhookError, "HTTP connection error (#{e.class}), URL: #{webhook_endpoint.target_url}"
       end
     end
 
-    request.on_success do |response|
+    if response.success?
       warn_on_html_response(response, webhook_endpoint)
+    elsif !WebhookJob.false_negative_from_drome?(response.body)
+      # On raise une erreur pour déclencher un retry, mais on ne l'enverra pas à Sentry
+      raise OutgoingWebhookError, "HTTP #{response.status}, URL: #{webhook_endpoint.target_url}"
     end
-
-    request.run
   end
 
   def capture_sentry_warning_for_retry?(exception)
@@ -93,9 +92,9 @@ class WebhookJob < ApplicationJob
   # Le WAF du Pas-de-Calais bloque certaines requêtes et
   # renvoie une réponse en HTML avec un statut 200.
   def warn_on_html_response(response, webhook_endpoint)
-    if response.body.include?("<html>")
-      fingerprint = ["OutgoingWebhookError HTML", webhook_endpoint.target_url, response.code.to_s]
-      Sentry.capture_message("HTML body in HTTP #{response.code} response in webhook to [#{webhook_endpoint.target_url}]", fingerprint: fingerprint)
+    if response.body.to_s.include?("<html>")
+      fingerprint = ["OutgoingWebhookError HTML", webhook_endpoint.target_url, response.status.to_s]
+      Sentry.capture_message("HTML body in HTTP #{response.status} response in webhook to [#{webhook_endpoint.target_url}]", fingerprint: fingerprint)
     end
   end
 end

@@ -4,20 +4,23 @@ class MetabaseApi
   HOST_URL = "https://rdv-service-public-metabase.osc-secnum-fr1.scalingo.io".freeze
   DATABASE_ID = 2 # l’ID de la base Prod ETL cf https://rdv-service-public-metabase.osc-secnum-fr1.scalingo.io/admin/databases
 
-  def self.sql_query(query, raw_json: false, timeout: DEFAULT_TYPHOEUS_TIMEOUT)
-    res = Typhoeus.post(
-      "#{HOST_URL}/api/dataset/json",
-      body: { query: { database: DATABASE_ID, native: { query: }, type: "native" } }.to_json,
-      userpwd: "#{ENV['METABASE_BASIC_AUTH_USER']}:#{ENV['METABASE_BASIC_AUTH_PASSWORD']}",
+  def self.sql_query(query, raw_json: false, timeout: HttpClient::DEFAULT_TIMEOUT)
+    connection = HttpClient.connection(
+      url: HOST_URL,
+      basic_auth: "#{ENV['METABASE_BASIC_AUTH_USER']}:#{ENV['METABASE_BASIC_AUTH_PASSWORD']}",
       headers: {
-        "x-api-key" => ENV["METABASE_API_KEY"],
+        "x-api-key" => ENV["METABASE_API_KEY"].to_s,
         "Content-Type" => "application/json",
         "Accept" => "application/json",
       },
       timeout:
     )
-    if res.code != 200
-      raise Error, "Statut #{res.code} retourné par l’API metabase dataset/json"
+    res = connection.post(
+      "/api/dataset/json",
+      { query: { database: DATABASE_ID, native: { query: }, type: "native" } }.to_json
+    )
+    if res.status != 200
+      raise Error, "Statut #{res.status} retourné par l’API metabase dataset/json"
     end
 
     if raw_json

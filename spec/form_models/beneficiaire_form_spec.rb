@@ -196,7 +196,7 @@ RSpec.describe BeneficiaireForm do
     end
 
     context "l’API ANTS timeoute" do
-      before { allow(AntsApi).to receive(:status).and_raise(Typhoeus::Errors::TimeoutError) }
+      before { allow(AntsApi).to receive(:status).and_raise(AntsApi::TimeoutError) }
 
       let(:ants_pre_demande_number) { "VALID12345" }
 

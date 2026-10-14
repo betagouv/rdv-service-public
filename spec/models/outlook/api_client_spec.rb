@@ -161,7 +161,7 @@ RSpec.describe Outlook::ApiClient do
       it "raises an exception" do
         expect do
           described_class.new(agent).create_event!(expected_body)
-        end.to raise_error(Typhoeus::Errors::TimeoutError)
+        end.to raise_error(Outlook::ApiClient::TimeoutError)
       end
     end
   end
@@ -172,7 +172,6 @@ RSpec.describe Outlook::ApiClient do
         "Accept" => "application/json",
         "Authorization" => "Bearer token",
         "Content-Type" => "application/json",
-        "Expect" => "",
         "Return-Client-Request-Id" => "true",
         "User-Agent" => "RDVSolidarites",
       }
@@ -183,7 +182,6 @@ RSpec.describe Outlook::ApiClient do
         "Accept" => "application/json",
         "Authorization" => "Bearer abc",
         "Content-Type" => "application/json",
-        "Expect" => "",
         "Return-Client-Request-Id" => "true",
         "User-Agent" => "RDVSolidarites",
       }

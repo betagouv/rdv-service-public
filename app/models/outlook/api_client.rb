@@ -5,6 +5,7 @@ module Outlook
     class AlreadyExistsError < ApiError; end
     class RefreshTokenError < ApiError; end
     class RateLimitingError < ApiError; end
+    class TimeoutError < ApiError; end
 
     USER_AGENT = "RDVSolidarites".freeze
     BASE_URL = "https://graph.microsoft.com/v1.0".freeze
@@ -61,40 +62,44 @@ module Outlook
 
       request_url = "#{BASE_URL}/#{path}"
 
+      connection = HttpClient.connection(headers: headers)
       response = case method.upcase
                  when "POST"
-                   Typhoeus.post(request_url, headers: headers, body: JSON.dump(event_payload))
+                   connection.post(request_url, JSON.dump(event_payload))
                  when "PATCH"
-                   Typhoeus.patch(request_url, headers: headers, body: JSON.dump(event_payload))
+                   connection.patch(request_url, JSON.dump(event_payload))
                  when "DELETE"
-                   Typhoeus.delete(request_url, headers: headers)
+                   connection.delete(request_url)
                  end
 
-      body_response = response.body == "" ? {} : JSON.parse(response.body)
+      body_response = response.body.blank? ? {} : JSON.parse(response.body)
       if body_response["error"].present?
-        if @agent.connected_to_outlook? && response.response_code == 401 # token expired
+        if @agent.connected_to_outlook? && response.status == 401 # token expired
           refresh_outlook_token!
           body_response = call_events_api(method, path, event_payload)
         else
           raise_exception(error_code: body_response["error"]["code"], error_message: body_response["error"]["message"])
         end
       end
-      response.response_code == 204 ? "" : body_response
+      response.status == 204 ? "" : body_response
+    rescue Faraday::Error => e
+      raise unless HttpClient.timeout?(e)
+
+      raise TimeoutError, "Timed out calling #{request_url}"
     end
 
     def refresh_outlook_token!
       refresh_token_query =
-        Typhoeus.post(
+        HttpClient.connection(form: true, scrub_request_body: true).post(
           # voir https://docs.microsoft.com/en-us/graph/use-the-api?view=graph-rest-1.0
           "https://login.microsoftonline.com/common/oauth2/v2.0/token",
-          headers: { "Content-Type" => "application/x-www-form-urlencoded" },
-          body: {
+          {
             client_id: ENV.fetch("AZURE_APPLICATION_CLIENT_ID", nil),
             client_secret: ENV.fetch("AZURE_APPLICATION_CLIENT_SECRET", nil),
             refresh_token: @agent.refresh_microsoft_graph_token, grant_type: "refresh_token",
           }
         )
-      refresh_token_response = JSON.parse(refresh_token_query.response_body)
+      refresh_token_response = JSON.parse(refresh_token_query.body)
 
       if refresh_token_response["error"].present?
         raise RefreshTokenError, refresh_token_response["error"]
