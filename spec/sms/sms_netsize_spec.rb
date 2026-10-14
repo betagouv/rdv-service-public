@@ -30,7 +30,7 @@ RSpec.describe "using netsize to send an SMS" do
       expect do
         Users::RdvSms.rdv_created(rdv, rdv.users.first).deliver_later
         3.times { perform_enqueued_jobs } # We only start sending errors to Sentry after 3rd failure
-      end.to change { sentry_events.last&.exception&.values&.first&.type }.from(nil).to("SmsSender::SmsSenderFailure")
+      end.to change { sentry_events.last&.exception&.values&.last&.type }.from(nil).to("SmsSender::SmsSenderFailure")
     end.to(change(Receipt, :count).by(3).and(change(sentry_events, :size).by(1)))
   end
 

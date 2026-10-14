@@ -15,7 +15,6 @@ RSpec.describe Outlook::EventSerializerAndListener do
       "Accept" => "application/json",
       "Authorization" => "Bearer token",
       "Content-Type" => "application/json",
-      "Expect" => "",
       "Return-Client-Request-Id" => "true",
       "User-Agent" => "RDVSolidarites",
     }

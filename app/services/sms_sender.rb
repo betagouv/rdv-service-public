@@ -110,12 +110,9 @@ class SmsSender < BaseService
   # Fournisseur par défaut, utilisé presque partout, sauf exceptions historiques
   #
   def send_with_netsize
-    response = HttpClient.connection(
-      basic_auth: @api_key,
-      headers: { "Content-Type" => "application/x-www-form-urlencoded; charset=UTF-8" },
-      timeout: 5,
-      form: true
-    ).post(
+    login, password = @api_key.to_s.split(":", 2)
+
+    response = Faraday.post(
       "https://europe.ipx.com/restapi/v1/sms/send",
       {
         destinationAddress: @phone_number,
@@ -123,8 +120,12 @@ class SmsSender < BaseService
         originatingAddress: @sender_name,
         originatorTON: 1,
         maxConcatenatedMessages: 10,
+      },
+      {
+        "Authorization" => Faraday::Utils.basic_header_from(login.to_s, password.to_s),
+        "Content-Type" => "application/x-www-form-urlencoded; charset=UTF-8",
       }
-    )
+    ) { |req| req.options.timeout = 5 }
 
     if response.success?
       parsed_response = JSON.parse(response.body)
@@ -143,12 +144,10 @@ class SmsSender < BaseService
     else
       handle_failure(error_message: "NetSize HTTP error: #{response.status}")
     end
+  rescue Faraday::TimeoutError
+    handle_failure(error_message: "NetSize timeout")
   rescue Faraday::Error => e
-    if HttpClient.timeout?(e)
-      handle_failure(error_message: "NetSize timeout")
-    else
-      handle_failure(error_message: "NetSize HTTP error: #{e.message}")
-    end
+    handle_failure(error_message: "NetSize HTTP error: #{e.message}")
   end
 
   # Clever Technologies
@@ -159,10 +158,7 @@ class SmsSender < BaseService
   # - le département de la Seine-et-Marne (77)
   #
   def send_with_clever_technologies
-    response = HttpClient.connection(
-      headers: { "Content-Type" => "application/json; charset=UTF-8", "Authorization" => "Basic #{Base64.encode64(@api_key).chomp}" },
-      timeout: 5
-    ).post(
+    response = Faraday.post(
       "https://webservicesmultimedias.clever-is.fr/api/pushs",
       {
         datas: {
@@ -170,8 +166,9 @@ class SmsSender < BaseService
           number_list: @phone_number,
           encodage: 3,
         },
-      }.to_json
-    )
+      }.to_json,
+      { "Content-Type" => "application/json; charset=UTF-8", "Authorization" => "Basic #{Base64.encode64(@api_key).chomp}" }
+    ) { |req| req.options.timeout = 5 }
 
     if response.success?
       parsed_response = JSON.parse(response.body)
@@ -188,12 +185,10 @@ class SmsSender < BaseService
     else
       handle_failure(error_message: "Clever Technologies HTTP error: #{response.status}")
     end
+  rescue Faraday::TimeoutError
+    handle_failure(error_message: "Clever Technologies error: Timeout")
   rescue Faraday::Error => e
-    if HttpClient.timeout?(e)
-      handle_failure(error_message: "Clever Technologies error: Timeout")
-    else
-      handle_failure(error_message: "Clever Technologies HTTP error: #{e.message}")
-    end
+    handle_failure(error_message: "Clever Technologies HTTP error: #{e.message}")
   end
 
   # DebugLogger

@@ -30,24 +30,21 @@ class WebhookJob < ApplicationJob
     # Les envois de webhooks en env de dev sont notamment utilisés par RDV-I.
     return if Rails.env.development? && webhook_endpoint.target_url !~ /localhost/
 
-    connection = HttpClient.connection(
-      headers: {
-        "Content-Type" => "application/json; charset=utf-8",
-        "X-Lapin-Signature" => OpenSSL::HMAC.hexdigest("SHA256", webhook_endpoint.secret, payload),
-      },
-      timeout: TIMEOUT,
-      scrub_request_body: true
-    )
+    headers = {
+      "Content-Type" => "application/json; charset=utf-8",
+      "X-Lapin-Signature" => OpenSSL::HMAC.hexdigest("SHA256", webhook_endpoint.secret, payload),
+    }
 
     begin
-      response = connection.post(webhook_endpoint.target_url, payload)
-    rescue Faraday::Error => e
-      # On raise une erreur pour déclencher un retry, mais on ne l'enverra pas à Sentry
-      if HttpClient.timeout?(e)
-        raise OutgoingWebhookError, "HTTP Timeout, URL: #{webhook_endpoint.target_url}"
-      else
-        raise OutgoingWebhookError, "HTTP connection error (#{e.class}), URL: #{webhook_endpoint.target_url}"
+      response = Faraday.post(webhook_endpoint.target_url, payload, headers) do |req|
+        req.options.timeout = TIMEOUT
+        req.options.context = { scrub_request_body: true } # le payload contient des données personnelles
       end
+    rescue Faraday::TimeoutError
+      # On raise une erreur pour déclencher un retry, mais on ne l'enverra pas à Sentry
+      raise OutgoingWebhookError, "HTTP Timeout, URL: #{webhook_endpoint.target_url}"
+    rescue Faraday::Error => e
+      raise OutgoingWebhookError, "HTTP connection error (#{e.class}), URL: #{webhook_endpoint.target_url}"
     end
 
     if response.success?

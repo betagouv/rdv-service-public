@@ -55,12 +55,11 @@ module FranceConnectV2OpenIdClient
         redirect_uri: pro_connect_callback_url,
       }
 
-      # Le body contient le client_secret : on ne l'envoie pas dans les breadcrumbs Sentry.
-      response = HttpClient.connection(
-        headers: { "Content-Type" => "application/x-www-form-urlencoded" },
-        form: true,
-        scrub_request_body: true
-      ).post("#{ENV['FRANCECONNECT_V2_BASE_URL']}/token", data)
+      response = Faraday.post(
+        "#{ENV['FRANCECONNECT_V2_BASE_URL']}/token",
+        data,
+        { "Content-Type" => "application/x-www-form-urlencoded" }
+      ) { |req| req.options.context = { scrub_request_body: true } } # le body contient le client_secret
 
       handle_response_error(response)
 
@@ -82,7 +81,7 @@ module FranceConnectV2OpenIdClient
     end
 
     def fetch_user_info(token)
-      response = HttpClient.connection.get(
+      response = Faraday.get(
         "#{ENV['FRANCECONNECT_V2_BASE_URL']}/userinfo",
         { schema: "openid" },
         { "Authorization" => "Bearer #{token}" }

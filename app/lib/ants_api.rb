@@ -58,25 +58,23 @@ class AntsApi
 
     def request(method, resource, params:, timeout: nil)
       url = "#{ENV['ANTS_RDV_API_URL']}/#{resource}"
-      connection = HttpClient.connection(
-        headers: {
-          "Accept" => "application/json",
-          "x-rdv-opt-auth-token" => ENV["ANTS_RDV_OPT_AUTH_TOKEN"].to_s,
-        },
-        timeout:
-      )
+      headers = {
+        "Accept" => "application/json",
+        "x-rdv-opt-auth-token" => ENV["ANTS_RDV_OPT_AUTH_TOKEN"].to_s,
+      }
 
       # Les paramètres nil sont envoyés sous la forme "cle=" (et non "cle"), comme le faisait Typhoeus.
-      response = connection.run_request(method, url, nil, nil) { |req| req.params.update(params.transform_values(&:to_s)) }
+      response = Faraday.run_request(method, url, nil, headers) do |req|
+        req.params.update(params.transform_values(&:to_s))
+        req.options.timeout = timeout if timeout
+      end
 
       unless response.success?
         raise(ApiRequestError, "code:#{response.status}, body:#{response.body}")
       end
 
       JSON.parse(response.body)
-    rescue Faraday::Error => e
-      raise unless HttpClient.timeout?(e)
-
+    rescue Faraday::TimeoutError
       raise TimeoutError, "Timed out calling #{url}"
     end
   end

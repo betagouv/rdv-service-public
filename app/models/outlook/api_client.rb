@@ -62,14 +62,13 @@ module Outlook
 
       request_url = "#{BASE_URL}/#{path}"
 
-      connection = HttpClient.connection(headers: headers)
       response = case method.upcase
                  when "POST"
-                   connection.post(request_url, JSON.dump(event_payload))
+                   Faraday.post(request_url, JSON.dump(event_payload), headers)
                  when "PATCH"
-                   connection.patch(request_url, JSON.dump(event_payload))
+                   Faraday.patch(request_url, JSON.dump(event_payload), headers)
                  when "DELETE"
-                   connection.delete(request_url)
+                   Faraday.delete(request_url, nil, headers)
                  end
 
       body_response = response.body.blank? ? {} : JSON.parse(response.body)
@@ -82,23 +81,22 @@ module Outlook
         end
       end
       response.status == 204 ? "" : body_response
-    rescue Faraday::Error => e
-      raise unless HttpClient.timeout?(e)
-
+    rescue Faraday::TimeoutError
       raise TimeoutError, "Timed out calling #{request_url}"
     end
 
     def refresh_outlook_token!
       refresh_token_query =
-        HttpClient.connection(form: true, scrub_request_body: true).post(
+        Faraday.post(
           # voir https://docs.microsoft.com/en-us/graph/use-the-api?view=graph-rest-1.0
           "https://login.microsoftonline.com/common/oauth2/v2.0/token",
           {
             client_id: ENV.fetch("AZURE_APPLICATION_CLIENT_ID", nil),
             client_secret: ENV.fetch("AZURE_APPLICATION_CLIENT_SECRET", nil),
             refresh_token: @agent.refresh_microsoft_graph_token, grant_type: "refresh_token",
-          }
-        )
+          },
+          { "Content-Type" => "application/x-www-form-urlencoded" }
+        ) { |req| req.options.context = { scrub_request_body: true } } # le body contient le client_secret
       refresh_token_response = JSON.parse(refresh_token_query.body)
 
       if refresh_token_response["error"].present?
