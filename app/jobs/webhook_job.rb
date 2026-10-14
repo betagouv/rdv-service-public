@@ -47,13 +47,9 @@ class WebhookJob < ApplicationJob
 
       if response.timed_out?
         raise OutgoingWebhookError, "HTTP Timeout, URL: #{webhook_endpoint.target_url}"
-      elsif !WebhookJob.false_negative_from_drome?(response.body)
+      else
         raise OutgoingWebhookError, "HTTP #{response.code}, URL: #{webhook_endpoint.target_url}"
       end
-    end
-
-    request.on_success do |response|
-      warn_on_html_response(response, webhook_endpoint)
     end
 
     request.run
@@ -64,38 +60,5 @@ class WebhookJob < ApplicationJob
     # de recevoir nos appels de webhooks.
     # On souhaite donc éviter de notifier sentry pour une erreur lors de l'appel.
     executions == 3 && !exception.is_a?(OutgoingWebhookError)
-  end
-
-  # La réponse de la Drôme est en JSON
-  # mais leur serveur nous renvoie des erreurs
-  # quand il n'arrive pas à faire son boulot.
-  # Nous ne pouvons pas y faire grand chose,
-  # c'est en général lié à une mise à jour
-  # ou une suppression qui ne fonctionne pas
-  #
-  # Ce petit palliatif est là en attendant qu'ils
-  # fassent évoluer leur système.
-  def self.false_negative_from_drome?(body)
-    body = JSON.parse(body)
-    error_messages_from_drome = [
-      /^Can't update appointment/,
-      /^Appointment already deleted/,
-      /^Appointment id doesn't exist/,
-      /^Can't create appointment/,
-    ]
-    body["message"]&.match?(Regexp.union(error_messages_from_drome))
-  rescue StandardError
-    false
-  end
-
-  private
-
-  # Le WAF du Pas-de-Calais bloque certaines requêtes et
-  # renvoie une réponse en HTML avec un statut 200.
-  def warn_on_html_response(response, webhook_endpoint)
-    if response.body.include?("<html>")
-      fingerprint = ["OutgoingWebhookError HTML", webhook_endpoint.target_url, response.code.to_s]
-      Sentry.capture_message("HTML body in HTTP #{response.code} response in webhook to [#{webhook_endpoint.target_url}]", fingerprint: fingerprint)
-    end
   end
 end
