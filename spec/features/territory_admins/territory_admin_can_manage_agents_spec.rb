@@ -41,7 +41,7 @@ RSpec.describe "territory admin can manage agents", type: :feature do
       fill_in "Email", with: "agent@ladrome.fr"
       check "MDS de Valence"
       check "MDS de Chambéry"
-      select "Service Social"
+      check "Service Social"
       click_on "Envoyer"
 
       expect(page).to have_content "L’agent agent@ladrome.fr a été invité à rejoindre votre organisation"
@@ -63,11 +63,11 @@ RSpec.describe "territory admin can manage agents", type: :feature do
       it "doesn't add the agent to the other organisation", js: true do
         visit new_admin_territory_agent_path(territory_id: territory.id)
         fill_in "Email", with: "agent@ladrome.fr"
-        check "MDS de Valence"
-        select "Service Social"
+        check "MDS de Valence", allow_label_click: true
+        check "Service Social", allow_label_click: true
 
         # On modifie le html pour simuler une attaque
-        page.execute_script("document.querySelector('input[value=\"#{organisation.id}\"]').value = #{organisation_in_another_territory.id}")
+        page.execute_script("document.querySelector('input[name=\"admin_agent[organisation_ids][]\"][value=\"#{organisation.id}\"]').value = #{organisation_in_another_territory.id}")
         click_on "Envoyer"
 
         expect(organisation_in_another_territory.agents).to be_empty
