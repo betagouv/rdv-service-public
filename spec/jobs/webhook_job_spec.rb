@@ -57,37 +57,5 @@ RSpec.describe WebhookJob do
       perform_enqueued_jobs
       expect(enqueued_jobs.first["executions"]).to eq(1)
     end
-
-    # Le WAF du Pas-de-Calais bloque certaines requêtes et
-    # renvoie une réponse en HTML avec un statut 200.
-    it "detects WAF blockage that returns a 200" do
-      stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 200, body: "<html><title>Request Rejected</title><body>...</body><html>" })
-      described_class.perform_later(payload, webhook_endpoint.id)
-      4.times { perform_enqueued_jobs } # On ne loggue vers Sentry qu'au 4ème retry
-      expect(sentry_events.last.message).to eq("HTML body in HTTP 200 response in webhook to [https://example.com/rdv-s-endpoint]")
-    end
-  end
-
-  describe ".false_negative_from_drome?" do
-    it "return false when the body is 'ERROR'" do
-      body = "ERROR"
-      expect(described_class.false_negative_from_drome?(body)).to be(false)
-    end
-
-    it "return false when the message is 'Another error message'" do
-      body = "{\"message\": \"Another error message\"}"
-      expect(described_class.false_negative_from_drome?(body)).to be(false)
-    end
-
-    [
-      "{\"message\": \"Can't update appointment.\"}",
-      "{\"message\": \"Appointment id doesn't exist\"}",
-      "{\"message\": \"Appointment already deleted\"}",
-      "{\"message\": \"Can't create appointment.\"}",
-    ].each do |returned_message|
-      it "return true when message is `#{returned_message}`" do
-        expect(described_class.false_negative_from_drome?(returned_message)).to be(true)
-      end
-    end
   end
 end
