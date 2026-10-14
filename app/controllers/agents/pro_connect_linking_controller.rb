@@ -10,6 +10,7 @@ class Agents::ProConnectLinkingController < AgentAuthController
 
     email = current_agent.email
     sign_out(current_agent)
+    AgentTwoFactorSessionState.clear!(session)
     redirect_to pro_connect_auth_path(login_hint: email, user_type: "agent")
   end
 

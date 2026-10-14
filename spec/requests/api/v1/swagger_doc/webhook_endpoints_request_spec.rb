@@ -7,7 +7,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
 
   path "api/v1/organisations/{organisation_id}/webhook_endpoints" do
     get "Lister les webhook_endpoints d'une organisation" do
-      with_authentication
+      with_oauth_token_authentication
       with_pagination
 
       tags "WebhookEndpoint"
@@ -17,11 +17,6 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
 
       parameter name: :organisation_id, in: :path, type: :integer, description: "ID de l'organisation", example: 123
       parameter name: "target_url", in: :query, type: :string, description: "L'url de destination du webhook endpoint", example: "https://www.rdv-insertion.fr/rdvs_webhooks", required: false
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       let!(:organisation) { create(:organisation) }
       let(:organisation_id) { organisation.id }
@@ -76,7 +71,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
     end
 
     post "Créer un webhook_endpoint" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "WebhookEndpoint"
       produces "application/json"
@@ -93,11 +88,6 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       let!(:organisation) { create(:organisation, territory: territory) }
       let(:organisation_id) { organisation.id }
       let(:agent) { create(:agent, role_in_territories: [territory], admin_role_in_organisations: [organisation]) }
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       let(:target_url) { "https://www.rdv-insertion.fr/rdv_solidarites_webhooks" }
       let(:secret) { "abc123" }
@@ -138,7 +128,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
 
   path "api/v1/organisations/{organisation_id}/webhook_endpoints/{webhook_endpoint_id}" do
     patch "Mettre à jour un webhook_endpoint" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "WebhookEndpoint"
       produces "application/json"
@@ -158,11 +148,6 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation) }
       let(:webhook_endpoint_id) { webhook_endpoint.id }
       let(:agent) { create(:agent, role_in_territories: [territory], admin_role_in_organisations: [organisation]) }
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       let(:target_url) { "https://www.rdv-insertion.fr/rdv_solidarites_webhooks" }
       let(:"subscriptions[]") { %w[rdv user user_profile organisation motif lieu agent agent_role] }

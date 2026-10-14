@@ -107,6 +107,19 @@ RSpec.describe "Search", type: :request do
       get "http://www.rdv-solidarites-test.localhost/prendre_rdv"
       expect(response).to be_successful
     end
+
+    context "when an attacker tries to inject an attack as the date param" do
+      let(:motif) { create(:motif, public_link_id: "KNLKRbg9", location_type: :phone) }
+      let(:agent) { create(:agent, admin_role_in_organisations: [motif.organisation]) }
+
+      before { create(:plage_ouverture, motifs: [motif], agent:) }
+
+      it "doesn't raise an error to avoid adding noise to Sentry" do
+        get "http://www.rdv-service-public-test.localhost/prendre_rdv?date=%7C%7Csleep%205&preselected_motif=KNLKRbg9&public_link_organisation_id=#{motif.organisation_id}&departement=#{motif.organisation.territory.departement_number}"
+
+        expect(response).to be_successful
+      end
+    end
   end
 
   describe "GET /prendre_rdv sur les domaines sans recherche géographique" do

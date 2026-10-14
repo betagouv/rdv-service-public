@@ -65,23 +65,6 @@ RSpec.configure do |config|
         description: Rails.root.join("docs/api/v1/description_api.md").read,
       },
       components: {
-        securitySchemes: {
-          access_token: {
-            type: :apiKey,
-            name: "access-token",
-            in: :header,
-          },
-          uid: {
-            type: :apiKey,
-            name: "uid",
-            in: :header,
-          },
-          client: {
-            type: :apiKey,
-            name: "client",
-            in: :header,
-          },
-        },
         schemas: {
           rdvs: {
             type: "object",
@@ -497,16 +480,6 @@ RSpec.configure do |config|
             required: %w[errors],
           },
           error_too_many_request: {
-            type: "object",
-            properties: {
-              errors: {
-                type: "array",
-                items: { type: "string" },
-              },
-            },
-            required: %w[errors],
-          },
-          error_authentication: {
             type: "object",
             properties: {
               errors: {

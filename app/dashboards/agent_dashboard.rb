@@ -21,6 +21,7 @@ class AgentDashboard < Administrate::BaseDashboard
     agent_services: Field::HasMany,
     rdvs: Field::HasMany.with_options(sort_by: :starts_at, direction: :desc),
     invitation_sent_at: Field::DateTime,
+    last_sign_in_at: Field::DateTime,
     pro_connect_openid_sub: Field::String,
     pro_connect_idp_id: Field::String,
     pro_connect_2fa_active: Field::Boolean,
@@ -55,6 +56,7 @@ class AgentDashboard < Administrate::BaseDashboard
     agent_territorial_access_rights
     rdvs
     invitation_sent_at
+    last_sign_in_at
     pro_connect_openid_sub
     pro_connect_idp_id
     pro_connect_2fa_active

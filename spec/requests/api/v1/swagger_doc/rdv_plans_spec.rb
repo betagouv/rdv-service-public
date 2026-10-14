@@ -5,7 +5,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/rdv_plans" do
     post "Créer un brouillon de rendez-vous" do
-      with_authentication
+      with_oauth_token_authentication
       description "Permet de créer un brouillon de rendez-vous"
 
       parameter(
@@ -46,10 +46,6 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
       let(:organisation) { create(:organisation) }
       let!(:agent) { create(:agent, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       response 201, "Crée le rdv plan" do
         run_test!
@@ -93,7 +89,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/rdv_plans/{rdv_plan_id}" do
     get "Consulter un rdv plan" do
-      with_authentication
+      with_oauth_token_authentication
       description "Permet de savoir si un rendez-vous a été pris pour ce rdv plan"
 
       with_examples
@@ -103,10 +99,6 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
       let(:organisation) { create(:organisation) }
       let!(:agent) { create(:agent, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       response 200, "Retourne un rdv plan" do
         run_test!

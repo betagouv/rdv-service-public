@@ -15,6 +15,7 @@ fr:
     updated_at: Modification
     invitation_sent_at: Invitation envoyée
     invitation_accepted_at: Invitation acceptée
+    last_sign_in_at: Dernière connexion
     confirmed_at: Confirmation
     city_name: Nom de la commune
     city_code: Code commune INSEE

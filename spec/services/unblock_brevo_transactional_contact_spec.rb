@@ -27,12 +27,18 @@ RSpec.describe UnblockBrevoTransactionalContact, type: :service do
 
     it "fait l'appel Faraday" do
       stub = instance_double(Faraday::Response, status: 204)
-      faraday_double = instance_double(Faraday::Connection, headers: {})
-      allow(faraday_double).to receive(:headers=)
+      faraday_double = instance_double(Faraday::Request, headers: {}, options: Faraday::RequestOptions.new)
       expect(Faraday).to receive(:delete).with("https://api.brevo.com/v3/smtp/blockedContacts/#{CGI.escape(email)}")
         .and_yield(faraday_double)
         .and_return(stub)
       subject.call
+    end
+
+    it "notifie Sentry sans lever d'erreur si l'appel à Brevo échoue" do
+      error = Faraday::TimeoutError.new("timeout")
+      allow(Faraday).to receive(:delete).and_raise(error)
+      expect(Sentry).to receive(:capture_exception).with(error, extra: { email: })
+      expect { subject.call }.not_to raise_error
     end
   end
 end

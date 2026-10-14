@@ -8,7 +8,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       operationId "getMotifs"
       description "Renvoie tous les motifs à partir d'une organisation"
 
-      with_authentication
+      with_oauth_token_authentication
       with_pagination
 
       parameter name: :organisation_id, in: :path, type: :integer, description: "Identifiant de l'organisation", example: "1"
@@ -19,11 +19,6 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
                 description: "filtre sur les services. Il est possible de passer ce parametre avec une valeur vide pour filtrer les motifs sans services", example: "1", required: false
 
       with_examples
-
-      let!(:access_agent) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { access_agent["access-token"].to_s }
-      let(:uid) { access_agent["uid"].to_s }
-      let(:client) { access_agent["client"].to_s }
 
       context "sans filtres" do
         response 200, "Renvoie les motifs", document: false do

@@ -5,7 +5,7 @@ RSpec.describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
 
   path "api/v1/participations/{id}/" do
     patch "Mettre à jour une participation" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "RDV"
       produces "application/json"
@@ -36,10 +36,7 @@ RSpec.describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
         let!(:organisation) { create(:organisation) }
         let!(:service) { create(:service) }
         let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
-        let(:access_admin_agent) { api_auth_headers_for_agent(admin_agent) }
-        let(:"access-token") { access_admin_agent["access-token"].to_s }
-        let(:uid) { access_admin_agent["uid"].to_s }
-        let(:client) { access_admin_agent["client"].to_s }
+        let(:oauth_token) { create(:access_token, resource_owner_id: admin_agent.id) }
         let(:user) { build(:user, first_name: "Jean") }
         let!(:participation_object) { create(:participation, status: "seen", user: user, rdv: rdv) }
         let!(:territorial_role) { AgentTerritorialRole.create(territory: organisation.territory, agent: admin_agent) }

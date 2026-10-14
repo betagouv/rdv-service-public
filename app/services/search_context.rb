@@ -13,7 +13,11 @@ class SearchContext
   end
 
   def start_date
-    query_params[:date]&.to_date || Time.zone.today
+    begin
+      query_params[:date]&.to_date
+    rescue StandardError
+      nil
+    end || Time.zone.today
   end
 
   def first_matching_motif

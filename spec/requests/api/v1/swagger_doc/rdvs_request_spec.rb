@@ -5,7 +5,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/rdvs" do
     get "Lister les rendez-vous" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "RDV"
       produces "application/json"
@@ -68,10 +68,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
                 description: "Filtre les rendez-vous avec un starts_at avant cette date. Accepte des formats date ou time (iso8601).",
                 example: "2020-01-01", required: false
 
-      let(:access_basic_agent) { api_auth_headers_for_agent(basic_agent) }
-      let(:"access-token") { access_basic_agent["access-token"].to_s }
-      let(:uid) { access_basic_agent["uid"].to_s }
-      let(:client) { access_basic_agent["client"].to_s }
+      let(:oauth_token) { create(:access_token, resource_owner_id: basic_agent.id) }
 
       let!(:rdv) { create(:rdv, organisation: organisation, motif: motif, starts_at: "2022-01-01 09:00:00 +0200") }
 
@@ -91,7 +88,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/organisations/{organisation_id}/rdvs" do
     get "Lister les rendez-vous d'une organisation" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "RDV"
       produces "application/json"
@@ -114,10 +111,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
                 description: "Filtre les rendez-vous avec un starts_at avant cette date. Accepte des formats date ou time (iso8601).",
                 example: "2020-01-01", required: false
 
-      let(:access_basic_agent) { api_auth_headers_for_agent(basic_agent) }
-      let(:"access-token") { access_basic_agent["access-token"].to_s }
-      let(:uid) { access_basic_agent["uid"].to_s }
-      let(:client) { access_basic_agent["client"].to_s }
+      let(:oauth_token) { create(:access_token, resource_owner_id: basic_agent.id) }
 
       let!(:organisationA) { create(:organisation) }
       let!(:organisationB) { create(:organisation) }
@@ -214,10 +208,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
       response 200, "returns policy scoped RDVs when agent is admin", document: false do
         let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisationA], service: service) }
-        let(:access_admin_agent) { api_auth_headers_for_agent(admin_agent) }
-        let(:"access-token") { access_admin_agent["access-token"].to_s }
-        let(:uid) { access_admin_agent["uid"].to_s }
-        let(:client) { access_admin_agent["client"].to_s }
+        let(:oauth_token) { create(:access_token, resource_owner_id: admin_agent.id) }
 
         run_test!
 

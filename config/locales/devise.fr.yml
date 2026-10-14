@@ -93,6 +93,9 @@ fr:
       send_instructions: "Vous allez recevoir les instructions nécessaires au déverrouillage de votre compte dans quelques instants"
       send_paranoid_instructions: "Si votre compte existe, vous allez bientôt recevoir un email contenant les instructions pour le déverrouiller."
       unlocked: "Votre compte a été déverrouillé avec succès, votre connexion est désormais active."
+  devise_token_auth:
+    sessions:
+      bad_credentials: "Mot de passe ou identifiant non reconnus. Si c'est la première fois que vous utilisez cette API, veuillez contacter l’équipe rdv-insertion@inclusion.gouv.fr"
   errors:
     messages:
       already_confirmed: "a déjà été validé·e, veuillez essayer de vous connecter"

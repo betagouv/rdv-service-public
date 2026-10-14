@@ -13,7 +13,11 @@ RSpec.describe Users::LoginCodeRequestForm, type: :form_model do
     it "le form est valide et la sauvegarde créé le login_code" do
       form = described_class.new(LoginCode.new(email: "new@user.fr", first_name: "Nina", last_name: "Personne", domain_id: "RDV_SERVICE_PUBLIC"))
       expect(form).to be_invalid
-      expect(form.errors[:base]).to include("Cet email ne correspond à aucun compte usager utilisant la connexion par email. Vous pouvez essayer la connexion par FranceConnect.")
+      expect(form.errors[:base]).to include(<<~ERROR.squish)
+        Cet email ne correspond à aucun compte usager utilisant la connexion par email.
+        Vous pouvez essayer la connexion par FranceConnect.
+        Si vous souhaitez vous connecter en tant qu’agent, veuillez vous rendre sur la page de connexion agent.
+      ERROR
     end
   end
 

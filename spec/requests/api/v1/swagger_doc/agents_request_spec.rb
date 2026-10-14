@@ -5,7 +5,7 @@ RSpec.describe "Agents API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/agents" do
     get "Lister les agent·es" do
-      with_authentication
+      with_oauth_token_authentication
       with_pagination
 
       tags "Agent"
@@ -21,11 +21,6 @@ RSpec.describe "Agents API", swagger_doc: "v1/api.json" do
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation, organisation2]) }
       let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation2]) }
       let!(:agent3) { create(:agent, basic_role_in_organisations: [organisation3]) }
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
 
       response 200, "Renvoie les agent·es" do
         let(:organisation_id) { organisation.id }

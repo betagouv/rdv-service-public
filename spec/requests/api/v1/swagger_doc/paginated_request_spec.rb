@@ -2,10 +2,6 @@ require "swagger_helper"
 
 RSpec.describe "paginated requests", swagger_doc: "v1/api.json", type: :request do
   let(:agent) { create(:agent) }
-  let(:auth_headers) { api_auth_headers_for_agent(agent) }
-  let(:"access-token") { auth_headers["access-token"].to_s }
-  let(:uid) { auth_headers["uid"].to_s }
-  let(:client) { auth_headers["client"].to_s }
 
   before do
     stub_const("Api::V1::BaseController::PAGINATE_PER", 3)
@@ -15,7 +11,7 @@ RSpec.describe "paginated requests", swagger_doc: "v1/api.json", type: :request 
   describe "default pagination" do
     path "/api/v1/organisations", document: false do
       get "La pagination fonctionne bien" do
-        with_authentication
+        with_oauth_token_authentication
         with_pagination
 
         response 200, "Renvoie bien le meta de pagination" do

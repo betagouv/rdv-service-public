@@ -25,9 +25,11 @@ namespace :api do
     resources :teams, only: %i[index]
   end
 
-  # API utilisées uniquement sur l'instance RDV Solidarités
+  # routes dépréciées d'authentification email - mdp pour l'API
+  # utilisées uniquement sur l'instance RDV Solidarités, pour certains agents
+  # TODO: supprimer après le 15/01/2027, avec la gem correspondante et le code
   namespace :v1 do
-    mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
+    mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth", skip: %i[omniauth_callbacks passwords confirmations invitations]
   end
 
   namespace :rdvinsertion do

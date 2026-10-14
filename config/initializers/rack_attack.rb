@@ -43,6 +43,25 @@ class Rack::Attack
     request.ip if request.path_without_format == "/agents/sign_in" && request.post?
   end
 
+  throttle("connexion agent par l'API dépréciée - throttling par email", limit: Rails.env.test? ? 2 : 30, period: 10.minutes) do |request|
+    next unless request.path_without_format == "/api/v1/auth/sign_in" && request.post?
+
+    # L'API reçoit du JSON, que Rack::Request#params ne parse pas
+    ActionDispatch::Request.new(request.env).request_parameters["email"].to_s.strip.downcase.presence
+  rescue ActionDispatch::Http::Parameters::ParseError
+    nil
+  end
+
+  throttle("connexion agent par l'API dépréciée - throttling par IP", limit: Rails.env.test? ? 2 : 300, period: 10.minutes) do |request|
+    request.ip if request.path_without_format == "/api/v1/auth/sign_in" && request.post?
+  end
+
+  throttle("saisie de code de vérification 2FA agent - throttling par agent connecté", limit: Rails.env.test? ? 2 : 60, period: 10.minutes) do |request|
+    if request.path.match(%r{agents/two_factor_verification}) && request.post?
+      request.session["warden.user.agent.key"]&.first&.first
+    end
+  end
+
   throttle("connexion via token d'auth restreinte - throttling par IP", limit: Rails.env.test? ? 2 : 600, period: 1.hour) do |request|
     next unless request.get?
 

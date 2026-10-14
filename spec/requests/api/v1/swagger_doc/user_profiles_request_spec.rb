@@ -5,7 +5,7 @@ RSpec.describe "User Profile authentified API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/user_profiles" do
     delete "Détruit le profil utilisateur de l'organisation" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "UserProfile"
       produces "application/json"
@@ -18,10 +18,6 @@ RSpec.describe "User Profile authentified API", swagger_doc: "v1/api.json" do
       let!(:organisation) { create(:organisation) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:user) { create(:user, organisations: [organisation]) }
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
       let!(:organisation_id) { organisation.id }
       let!(:user_id) { user.id }
 
