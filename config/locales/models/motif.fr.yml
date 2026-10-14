@@ -88,7 +88,7 @@ fr:
         visio: Par visioconférence
       motif/location_types/hint:
         public_office: L'agent reçoit l'usager sur place, au lieu sélectionné (MDS…).
-        visio: L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV. Pour les RDV individuels, l'agent se connecte au service de webconférence de l'État avec ProConnect pour démarrer la visioconférence.
+        visio: L’agent et l’usager se retrouvent sur un lien de visioconférence unique pour chaque RDV, via le service Visio.
         phone: L’agent appelle le numéro indiqué sur la fiche de l'usager.
         home: L’agent se rend à l'adresse indiquée sur la fiche de l'usager.
       motif/bookable_by/radio_label_html:
