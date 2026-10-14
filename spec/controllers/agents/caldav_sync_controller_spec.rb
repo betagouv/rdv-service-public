@@ -20,7 +20,7 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
     allow(caldav_client).to receive(:principal_url).and_return("https://caldav.example.fr/dav/principals/user")
     allow(caldav_client).to receive(:events).and_return(caldav_events)
     allow(caldav_client).to receive(:calendars).and_return(caldav_calendars)
-    allow(caldav_calendars).to receive(:find).and_return(instance_double(Calendav::Calendar, sync_token: "some-sync-token"))
+    allow(caldav_calendars).to receive(:find).and_return(instance_double(Calendav::Calendar, sync_token: "some-sync-token", ctag: nil))
     allow(caldav_events).to receive(:create).and_return(instance_double(Calendav::Event, url: "https://caldav.example.fr/dav/calendars/user/default/test.ics"))
     allow(caldav_events).to receive(:delete)
   end
@@ -94,9 +94,22 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
       end
     end
 
-    context "quand le serveur CalDAV ne supporte pas la synchronisation incrémentale (sync-token)" do
+    context "quand le serveur CalDAV ne supporte pas le sync-token mais fournit un ctag (Zimbra typiquement)" do
       before do
-        allow(caldav_calendars).to receive(:find).and_return(instance_double(Calendav::Calendar, sync_token: nil))
+        allow(caldav_calendars).to receive(:find).and_return(instance_double(Calendav::Calendar, sync_token: nil, ctag: "1-32"))
+      end
+
+      it "enregistre les identifiants" do
+        put :update, params: caldav_params
+
+        expect(flash[:alert]).to be_nil
+        expect(agent.caldav_config.reload.caldav_username).to eq("user@example.fr")
+      end
+    end
+
+    context "quand le serveur CalDAV ne supporte pas la synchronisation incrémentale (ni sync-token, ni ctag)" do
+      before do
+        allow(caldav_calendars).to receive(:find).and_return(instance_double(Calendav::Calendar, sync_token: nil, ctag: nil))
       end
 
       it "affiche un message d’erreur dédié" do
@@ -104,7 +117,7 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
 
         expect(response).to redirect_to(agents_calendar_sync_caldav_sync_path)
         expect(flash[:alert]).to eq(
-          "Votre serveur CalDAV ne supporte pas la synchronisation incrémentale (sync-token), requise pour connecter " \
+          "Votre serveur CalDAV ne supporte pas la synchronisation incrémentale (sync-token ou ctag), requise pour connecter " \
           "votre agenda à RDV Service Public. Veuillez contacter votre fournisseur d’agenda ou utiliser un autre serveur CalDAV."
         )
       end
