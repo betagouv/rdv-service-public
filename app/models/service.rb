@@ -5,7 +5,6 @@ class Service < ApplicationRecord
   # Attributes
   auto_strip_attributes :name, :short_name
 
-  SECRETARIAT = "Secrétariat".freeze
   SERVICE_SOCIAL = "Service social".freeze
   PMI = "PMI (Protection Maternelle Infantile)".freeze
   CONSEILLER_NUMERIQUE = "Conseiller Numérique".freeze
@@ -29,10 +28,6 @@ class Service < ApplicationRecord
   scope :filter_by_name, ->(filter) { where(%[unaccent("#{table_name}"."name") ILIKE ?], "%#{filter}%").or(where(%[unaccent("#{table_name}"."short_name") ILIKE ?], "%#{filter}%")) }
 
   ## -
-
-  def secretariat?
-    name == SECRETARIAT
-  end
 
   def service_social?
     name == SERVICE_SOCIAL

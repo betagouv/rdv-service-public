@@ -9,7 +9,7 @@ h1.fr-h2
     h2.fr-h3 = t(".agent_services_legend")
     = simple_form_for @agent, url: update_services_admin_territory_agent_path(current_territory, @agent) do |f|
       = f.input :service_ids,
-            collection: (current_territory.services + @agent.services).uniq.reject(&:secretariat?),
+            collection: (current_territory.services + @agent.services).uniq,
             label: t(".services"),
             label_method: lambda { |service| [service.name, (current_territory.services.include?(service) ? nil : "(désactivé dans l'espace courant)") ].compact.join(" ") },
             input_html: { \

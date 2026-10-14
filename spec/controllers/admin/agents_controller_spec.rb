@@ -46,8 +46,6 @@ RSpec.describe Admin::AgentsController, type: :controller do
                        invitation_accepted_at: nil, service: create(:service, :conseiller_numerique))
       end
 
-      before { create(:service, :secretariat) }
-
       it "only allows inviting agents for the secretariat" do
         get :new, params: { organisation_id: organisation.id }
         expect(response).not_to have_content("Admin")
@@ -127,7 +125,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
     end
 
     context "when trying to invite an admin as a conseiller numerique" do
-      let(:service_id) { create(:service, name: Service::SECRETARIAT).id }
+      let(:service_id) { create(:service).id }
       let(:params) do
         {
           organisation_id: organisation.id,
@@ -150,9 +148,8 @@ RSpec.describe Admin::AgentsController, type: :controller do
 
       context "when the agent already exists" do
         let!(:agent2) do
-          create(:agent, basic_role_in_organisations: [organisation2], service: secretariat)
+          create(:agent, basic_role_in_organisations: [organisation2], service: create(:service))
         end
-        let(:secretariat) { create(:service, name: Service::SECRETARIAT) }
 
         let(:params) do
           {
