@@ -4,6 +4,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   respond_to :html, :json, only: :index
 
   before_action :set_agent, only: %i[edit update_teams update_services]
+  before_action :set_organisations_to_select, only: %i[new create]
 
   def index
     @agents = find_agents(params[:q]).page(page_number)
@@ -24,7 +25,6 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   end
 
   def new
-    @organisations_to_select = current_agent.organisations.where(territory: current_territory).ordered_by_name
     @agent = Agent.new
     @agent.organisations = [@organisations_to_select.sole] if @organisations_to_select.size == 1
     skip_authorization
@@ -93,6 +93,10 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   end
 
   private
+
+  def set_organisations_to_select
+    @organisations_to_select = current_territory.organisations.where(disabled_at: nil).ordered_by_name
+  end
 
   def set_agent
     @agent = Agent.active.find(params[:id])
