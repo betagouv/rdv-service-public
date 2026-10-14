@@ -105,7 +105,7 @@ h1.fr-h2
                       .col.text-right
                         = f.button :submit, t(".submit")
 
-      - available_other_organisations = (current_agent.organisations.where(territory: current_territory) - agent_organisations_of_current_territory)
+      - available_other_organisations = current_territory.organisations.where(disabled_at: nil).where.not(id: agent_organisations_of_current_territory).ordered_by_name
       - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_invite_agents? && available_other_organisations.any?
         = simple_form_for AgentRole.new, url: admin_territory_agent_roles_path(current_territory) do |f|
           = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
