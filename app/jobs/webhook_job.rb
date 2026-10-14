@@ -60,4 +60,14 @@ class WebhookJob < ApplicationJob
     # On souhaite donc éviter de notifier sentry pour une erreur lors de l'appel.
     executions == 3 && !exception.is_a?(OutgoingWebhookError)
   end
+
+  private
+
+  def signature_header(webhook_endpoint, payload)
+    if webhook_endpoint.version == "1"
+      { "X-Lapin-Signature" => OpenSSL::HMAC.hexdigest("SHA256", webhook_endpoint.secret, payload) }
+    elsif webhook_endpoint.version == "2"
+      { "X-RDV-Service-Public-Signature" => OpenSSL::HMAC.hexdigest("SHA256", webhook_endpoint.secret, payload) }
+    end
+  end
 end
