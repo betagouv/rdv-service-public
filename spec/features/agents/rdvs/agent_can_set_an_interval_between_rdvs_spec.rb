@@ -99,7 +99,7 @@ RSpec.describe "un agent peut définir un temps de battement entre chaque RDV" d
 
     before do
       stub_request(:get, "https://data.geopf.fr/geocodage/search/?q=#{user.address.gsub(' ', '%20')}")
-        .to_return(body: file_fixture("geocode_result.json").read)
+        .to_return(body: file_fixture("base_adresse_nationale_search_16_quai_de_la_loire.json").read)
     end
 
     it "respecte le temps de battement dans le calcul de créneaux et enregistre le temps de battement dans le RDV créé" do

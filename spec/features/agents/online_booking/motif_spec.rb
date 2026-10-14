@@ -34,8 +34,8 @@ RSpec.describe "Réservation en ligne pour un motif en particulier" do
   it "permet de modifier les consignes pour les usagers" do
     visit admin_organisation_online_booking_motif_path(organisation, motif)
 
-    expect(page).to have_content "Pas d'instructions à accepter avant la prise de rendez-vous"
-    expect(page).to have_content "Pas d'instructions à afficher après la prise de rendez-vous"
+    expect(page).to have_content "Instructions à accepter avant la prise de rendez-vous\nNon renseigné"
+    expect(page).to have_content "Instructions à afficher après la prise de rendez-vous\nNon renseigné"
 
     visit edit_instructions_admin_organisation_online_booking_motif_path(organisation, motif)
     fill_in :motif_restriction_for_rdv, with: "Rendez-vous réservé aux usagers élibibles"

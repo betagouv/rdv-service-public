@@ -87,8 +87,8 @@
             h2.fr-h4 Consignes pour les usagers
             - if policy(@motif, policy_class: Agent::MotifPolicy).edit_instructions?
               = link_to "Modifier", edit_instructions_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
-          = render "admin/motifs/restriction_for_rdv_recap", motif: @motif
-          = render "admin/motifs/instruction_for_rdv_recap", motif: @motif
+          = render "admin/motifs/show/restriction_for_rdv", motif: @motif
+          = render "admin/motifs/show/instruction_for_rdv", motif: @motif
 
     - if current_territory.sectors.any? && @motif.bookable_outside_of_organisation?
       .card.card-body

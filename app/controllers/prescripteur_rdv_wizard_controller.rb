@@ -113,7 +113,6 @@ class PrescripteurRdvWizardController < ApplicationController
 
   def check_rdv_wizard_attributes
     if session[:rdv_wizard_attributes].blank?
-      Sentry.capture_message("Prescripteur sans infos de creneau. Voir https://github.com/betagouv/rdv-solidarites.fr/issues/3420", fingerprint: ["presc_sans_creneau"])
       flash[:error] = "Nous n'avons pas trouvé le créneau pour lequel vous souhaitiez prendre rendez-vous."
       redirect_to prendre_rdv_path(prescripteur: 1)
     end
