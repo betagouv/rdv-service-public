@@ -3,7 +3,7 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
 
   def index
     @current_tab = params[:current_tab] == "archived" ? :archived : :active
-    @services = current_territory.services.reject(&:secretariat?)
+    @services = current_territory.services
 
     unfiltered_motifs = policy_scope(Motif, policy_scope_class: Agent::MotifPolicy::Scope)
     @filtered_motifs = filter_motifs(unfiltered_motifs)
