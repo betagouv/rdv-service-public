@@ -4,15 +4,7 @@ RSpec.describe "Autocomplétion d’adresse côté agent", :js do
   let(:agent) { create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory]) }
 
   before do
-    page.driver.with_playwright_page do |playwright_page|
-      playwright_page.route("https://data.geopf.fr/geocodage/search/**", lambda { |route, _request|
-        route.fulfill(
-          status: 200,
-          contentType: "application/json",
-          body: file_fixture("geocode_result.json").read
-        )
-      })
-    end
+    stub_base_adresse_nationale_autocomplete_request
     login_as(agent, scope: :agent)
   end
 
@@ -51,11 +43,7 @@ RSpec.describe "Autocomplétion d’adresse côté agent", :js do
   end
 
   it "indique quand aucune adresse ne correspond à la recherche" do
-    page.driver.with_playwright_page do |playwright_page|
-      playwright_page.route("https://data.geopf.fr/geocodage/search/**", lambda { |route, _request|
-        route.fulfill(status: 200, contentType: "application/json", body: { type: "FeatureCollection", features: [] }.to_json)
-      })
-    end
+    stub_base_adresse_nationale_autocomplete_request(results: [])
 
     visit new_admin_organisation_lieu_path(organisation)
     fill_in "Adresse", with: "adresse inexistante"
@@ -64,12 +52,7 @@ RSpec.describe "Autocomplétion d’adresse côté agent", :js do
   end
 
   it "indique le chargement pendant la recherche" do
-    page.driver.with_playwright_page do |playwright_page|
-      playwright_page.route("https://data.geopf.fr/geocodage/search/**", lambda { |route, _request|
-        sleep 2
-        route.fulfill(status: 200, contentType: "application/json", body: file_fixture("geocode_result.json").read)
-      })
-    end
+    stub_base_adresse_nationale_autocomplete_request(sleep: 2)
 
     visit new_admin_organisation_lieu_path(organisation)
     fill_in "Adresse", with: "16 quai de la Loire"
@@ -83,9 +66,7 @@ RSpec.describe "Autocomplétion d’adresse côté agent", :js do
   end
 
   it "indique une erreur quand la recherche échoue" do
-    page.driver.with_playwright_page do |playwright_page|
-      playwright_page.route("https://data.geopf.fr/geocodage/search/**", ->(route, _request) { route.abort })
-    end
+    stub_base_adresse_nationale_autocomplete_request(abort: true)
 
     visit new_admin_organisation_lieu_path(organisation)
     fill_in "Adresse", with: "16 quai de la Loire"
@@ -124,11 +105,7 @@ RSpec.describe "Autocomplétion d’adresse côté agent", :js do
   end
 
   it "propose et gère l'option pour les adresses introuvables ou à l'étranger" do
-    page.driver.with_playwright_page do |playwright_page|
-      playwright_page.route("https://data.geopf.fr/geocodage/search/**", lambda { |route, _request|
-        route.fulfill(status: 200, contentType: "application/json", body: file_fixture("geocode_result.json").read)
-      })
-    end
+    stub_base_adresse_nationale_autocomplete_request
 
     # c'est important de se mettre sur RDVSP car sur RDVS on oblige le geocoding
     visit new_admin_organisation_lieu_url(organisation, host: Domain::RDV_SERVICE_PUBLIC.host_name)
