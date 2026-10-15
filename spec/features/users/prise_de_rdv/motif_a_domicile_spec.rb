@@ -31,4 +31,21 @@ RSpec.describe "Prise de RDV usager pour un motif à domicile" do
     expect(page).to have_content("Votre rendez vous a été confirmé")
     expect(user.reload.address).to eq("20 avenue de Ségur, Paris, 75007")
   end
+
+  it "propose des suggestions d'adresses autocomplétées", js: true do
+    stub_base_adresse_nationale_autocomplete_request
+
+    visit public_link_to_motif_path(public_link_id: motif.public_link_id)
+    click_link "08:00", match: :first
+    expect(page).to have_content("Vos informations")
+
+    fill_in "Adresse", with: "16 quai de la Loi"
+    find("[role=option]", text: "16 Quai de la Loire").click # clic sur la suggestion
+    expect(page).to have_field("Adresse", with: "16 Quai de la Loire, Paris, 75019")
+
+    click_button "Confirmer mon RDV"
+    expect(page).to have_content("Votre rendez vous a été confirmé")
+
+    expect(user.reload.address).to eq("16 Quai de la Loire, Paris, 75019")
+  end
 end

@@ -4,7 +4,7 @@ import "@hotwired/turbo-rails"
 // Nous ne souhaitons pas utiliser Turbo Drive (voir #4790 et #5917)
 Turbo.session.drive = false
 
-import { PlacesInputs } from './components/places-inputs.js'
+import { AddressAutocomplete } from './components/address-autocomplete.js'
 import { Modal } from './components/modal';
 import CounterField from './components/counter-field';
 import DsfrNewPassword from "./components/dsfr-new-password";
@@ -20,7 +20,7 @@ import './stylesheets/print';
 new Modal();
 
 document.addEventListener("DOMContentLoaded", function() {
-  new PlacesInputs();
+  new AddressAutocomplete();
   CounterField();
   DsfrNewPassword();
   DsfrAlertClose();
@@ -30,12 +30,17 @@ document.addEventListener("DOMContentLoaded", function() {
   const whereInput = document.querySelector('#search_where');
   const submitButton = document.querySelector('#search_submit');
   const departementInput = document.querySelector('#search_departement')
+  const whereErrorMessage = document.querySelector('#search-where-error')
   if (departementInput) {
-    departementInput.addEventListener('change', event => {
+    // le champ caché departement n'est rempli que lorsqu'une suggestion d'adresse a été choisie
+    departementInput.addEventListener('change', () => {
       const valid = [2, 3].includes(departementInput.value.length)
       whereInput.classList.toggle('fr-input--valid', valid)
       whereInput.classList.toggle('fr-input--error', !valid)
-      $(submitButton).attr('disabled', !valid)
+      whereInput.setAttribute('aria-invalid', String(!valid))
+      whereErrorMessage.classList.toggle('fr-hidden', valid)
+      if (!valid) whereErrorMessage.textContent = "Veuillez sélectionner votre adresse dans la liste de suggestions"
+      submitButton.disabled = !valid
     })
   }
 });
