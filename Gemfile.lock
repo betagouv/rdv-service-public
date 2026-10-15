@@ -256,7 +256,6 @@ GEM
     faraday-net_http (3.4.4)
       net-http (~> 0.5)
     fast_interval_tree (0.2.2)
-    ffi (1.17.2)
     ffi (1.17.2-aarch64-linux-gnu)
     ffi (1.17.2-arm64-darwin)
     ffi (1.17.2-x86_64-linux-gnu)
@@ -268,7 +267,7 @@ GEM
       raabro (~> 1.4)
     globalid (1.3.0)
       activesupport (>= 6.1)
-    good_job (4.13.3)
+    good_job (4.22.1)
       activejob (>= 6.1.0)
       activerecord (>= 6.1.0)
       concurrent-ruby (>= 1.3.1)
@@ -470,7 +469,6 @@ GEM
     parser (3.3.7.3)
       ast (~> 2.4.1)
       racc
-    pg (1.6.2)
     pg (1.6.2-aarch64-linux)
     pg (1.6.2-arm64-darwin)
     pg (1.6.2-x86_64-linux)
@@ -802,7 +800,7 @@ DEPENDENCIES
   dsfr-view-components
   factory_bot
   faker
-  good_job (= 4.13.3)
+  good_job (= 4.22.1)
   groupdate (~> 6.1)
   hirb
   hotwire-rails
@@ -953,14 +951,13 @@ CHECKSUMS
   faraday-multipart (1.1.0) sha256=856b0f1c7316a4d6c052dd2eef5c42f887d56d93a171fe8880da1af064ca0751
   faraday-net_http (3.4.4) sha256=0e78af151747ed1b00f33e25973b4bc220d7f16c00c39676817c8b12331eb588
   fast_interval_tree (0.2.2) sha256=6ace1eb84e443c8100f7bbd50bce248db117af2bd1ec4f328827c8a69b67fd7e
-  ffi (1.17.2) sha256=297235842e5947cc3036ebe64077584bff583cd7a4e94e9a02fdec399ef46da6
   ffi (1.17.2-aarch64-linux-gnu) sha256=c910bd3cae70b76690418cce4572b7f6c208d271f323d692a067d59116211a1a
   ffi (1.17.2-arm64-darwin) sha256=54dd9789be1d30157782b8de42d8f887a3c3c345293b57ffb6b45b4d1165f813
   ffi (1.17.2-x86_64-linux-gnu) sha256=05d2026fc9dbb7cfd21a5934559f16293815b7ce0314846fee2ac8efbdb823ea
   ffi-compiler (1.3.2) sha256=a94f3d81d12caf5c5d4ecf13980a70d0aeaa72268f3b9cc13358bcc6509184a0
   fugit (1.11.1) sha256=e89485e7be22226d8e9c6da411664d0660284b4b1c08cacb540f505907869868
   globalid (1.3.0) sha256=05c639ad6eb4594522a0b07983022f04aa7254626ab69445a0e493aa3786ff11
-  good_job (4.13.3) sha256=37478710dddd2630ed055f2159111ce6f7f14482d8ccb412142ee04674151e2e
+  good_job (4.22.1) sha256=20b0531f49167786e4ddbe68ddc1c249079dfc9bbd674866fdc289375cfa62d2
   groupdate (6.7.0) sha256=beaa8d5bf3856814681914a1d4a20e77436a2214b85d0017dc2ea5c355fb6777
   hashdiff (1.0.1) sha256=2cd4d04f5080314ecc8403c4e2e00dbaa282dff395e2d031bc16c8d501bdd6db
   hashie (5.1.0) sha256=c266471896f323c446ea8207f8ffac985d2718df0a0ba98651a3057096ca3870
@@ -1039,7 +1036,6 @@ CHECKSUMS
   parallel (1.26.3) sha256=d86babb7a2b814be9f4b81587bf0b6ce2da7d45969fab24d8ae4bf2bb4d4c7ef
   parallel_tests (5.5.0) sha256=783c1e4da27c4096a7b360f080ae03cf1122cb0dfdb4fe827013e0521642f666
   parser (3.3.7.3) sha256=5803acc132cf1155fac2656bf02d3fb9223dccd66f1aa538dac095b785fa4d64
-  pg (1.6.2) sha256=58614afd405cc9c2c9e15bffe8432e0d6cfc58b722344ad4a47c73a85189c875
   pg (1.6.2-aarch64-linux) sha256=0503c6be5b0ca5ca3aaf91f2ed638f90843313cb81e8e7d7b60ad4bb62c3d131
   pg (1.6.2-arm64-darwin) sha256=4d44500b28d5193b26674583d199a6484f80f1f2ea9cf54f7d7d06a1b7e316b6
   pg (1.6.2-x86_64-linux) sha256=525f438137f2d1411a1ebcc4208ec35cb526b5a3b285a629355c73208506a8ea
