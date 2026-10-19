@@ -16,22 +16,10 @@ class Caldav::FetchEvents
       sync_logger.log("First sync: loading all events (paginated)")
       updated_events = initial_fetch_for_sync_token
       new_sync_token = calendar.sync_token
+    elsif calendar.ctag.present?
+      updated_events, deleted_event_urls, new_ctag = fetch_by_ctag(calendar)
     else
-      # Certains serveurs (Zimbra notamment) ne supportent pas le report sync-collection (RFC 6578)
-      # et ne renvoient pas de sync token. On s'appuie alors sur le ctag du calendrier, qui change
-      # à chaque modification d'un de ses événements.
-      if calendar.ctag.present? && calendar.ctag == caldav_config.caldav_ctag
-        sync_logger.log("No sync token support: ctag unchanged, nothing to load")
-      elsif calendar.ctag.present? && caldav_config.caldav_ctag.present?
-        sync_logger.log("No sync token support: ctag changed, loading only new or updated events")
-        updated_events, deleted_event_urls = changed_events_by_etag
-      elsif calendar.ctag.present?
-        sync_logger.log("No sync token support: ctag changed, loading all events")
-        updated_events, deleted_event_urls = all_events_with_deletions
-      else
-        raise "pas de ctag sur le calendrier distant"
-      end
-      new_ctag = calendar.ctag
+      raise "pas de sync token ni de ctag sur le calendrier distant"
     end
 
     updated_events = (updated_events || []).select { consider_busy?(_1) }
@@ -42,6 +30,23 @@ class Caldav::FetchEvents
   private
 
   attr_reader :sync_logger
+
+  # Certains serveurs (Zimbra notamment) ne supportent pas le report sync-collection (RFC 6578)
+  # et ne renvoient pas de sync token. On s'appuie alors sur le ctag du calendrier, qui change
+  # à chaque modification d'un de ses événements.
+  def fetch_by_ctag(calendar)
+    if calendar.ctag == caldav_config.caldav_ctag
+      sync_logger.log("No sync token support: ctag unchanged, nothing to load")
+    elsif caldav_config.caldav_ctag.present?
+      sync_logger.log("No sync token support: ctag changed, loading only new or updated events")
+      updated_events, deleted_event_urls = changed_events_by_etag
+    else
+      sync_logger.log("No sync token support: ctag changed, loading all events")
+      updated_events, deleted_event_urls = all_events_with_deletions
+    end
+    new_ctag = calendar.ctag
+    [updated_events, deleted_event_urls, new_ctag]
+  end
 
   def changes_since_last_sync
     collection = caldav_client.calendars.sync(caldav_config.caldav_agenda_url, caldav_config.caldav_sync_token)
