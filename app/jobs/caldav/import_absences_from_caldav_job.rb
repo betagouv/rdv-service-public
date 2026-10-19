@@ -30,14 +30,18 @@ module Caldav
       sync_logger.start!
 
       fetch_events_service = Caldav::FetchEvents.new(@agent, sync_logger)
+      fetch_events_service.fetch_changes
 
-      updated_events, deleted_event_urls, new_sync_token, new_ctag = fetch_events_service.fetch_changes
-
-      update_local_events_of(updated_events:, deleted_event_urls:, new_sync_token:, new_ctag:)
+      update_local_events_of(
+        updated_events: fetch_events_service.updated_events,
+        deleted_event_urls: fetch_events_service.deleted_event_urls,
+        new_sync_token: fetch_events_service.new_sync_token,
+        new_ctag: fetch_events_service.new_ctag
+      )
 
       sync_logger.finalize!(successful: true)
       self.class.store_latest_run_timestamp(agent_id:)
-      AgendaChannel.broadcast_to(agent_id, model: "ExternalCalendarEvent") if updated_events.any? || deleted_event_urls.any?
+      AgendaChannel.broadcast_to(agent_id, model: "ExternalCalendarEvent") if fetch_events_service.any_changes?
     rescue StandardError => e
       sync_logger.log("Error: #{e.message}")
       sync_logger.finalize!(successful: false)
@@ -51,20 +55,7 @@ module Caldav
       urls_of_rdvs = AgentsRdv.where(caldav_url: updated_events.map(&:url)).pluck(:caldav_url).to_set
       updated_events = updated_events.reject { _1.url.in?(urls_of_rdvs) }
 
-      # Les événements sans DTEND (anniversaires, rappels...) ne sont pas bloquants et sont ignorés
-      updated_events = updated_events.select { _1.dtend.present? }
-
-      hashes_to_upsert = updated_events.map do |event|
-        raw_ical = recurring?(event) ? Ical::Scrubber.new(event.calendar_data).scrubbed : nil
-        {
-          agent_id: @agent.id,
-          url: event.url,
-          starts_at: event.dtstart,
-          ends_at: event.dtend,
-          raw_ical:,
-          etag: event.etag,
-        }
-      end
+      hashes_to_upsert = updated_events.map { _1.to_external_calendar_event_hash(@agent.id) }
 
       ExternalCalendarEvent.transaction do
         ExternalCalendarEvent.upsert_all(hashes_to_upsert, unique_by: :index_external_calendar_events_on_agent_id_and_url) # rubocop:disable Rails/SkipsModelValidations
