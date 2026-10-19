@@ -4,8 +4,6 @@ class Caldav::FetchEvents
     @sync_logger = sync_logger
   end
 
-  attr_reader :sync_logger
-
   def fetch_changes
     if caldav_config.caldav_sync_token
       sync_logger.log("Sync token found: loading only new events")
@@ -31,7 +29,7 @@ class Caldav::FetchEvents
         sync_logger.log("No sync token support: ctag changed, loading all events")
         updated_events, deleted_event_urls = all_events_with_deletions
       else
-        raise "pas de ctag sur le calendrier distan"
+        raise "pas de ctag sur le calendrier distant"
       end
       new_ctag = calendar.ctag
     end
@@ -42,6 +40,8 @@ class Caldav::FetchEvents
   end
 
   private
+
+  attr_reader :sync_logger
 
   def changes_since_last_sync
     collection = caldav_client.calendars.sync(caldav_config.caldav_agenda_url, caldav_config.caldav_sync_token)
