@@ -11,7 +11,7 @@
           li.mb-2
             strong> Email&nbsp;:
             | #{mail_to(organisation.email)}
-        - if organisation.website.present?
+        - if organisation.website_url.present?
           li.mb-2
             strong> Site web&nbsp;:
-            = link_to organisation.website, organisation.website, target: "_blank"
+            = link_to organisation.website_url, organisation.website_url, target: "_blank"

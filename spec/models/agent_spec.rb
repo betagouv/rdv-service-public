@@ -41,29 +41,64 @@ RSpec.describe Agent, type: :model do
 
     it "delete associations" do
       territory = create(:territory)
-      create(:agent_territorial_role, territory: territory, agent: create(:agent)) # le territory doit avoir au moins un admin
+      create(:agent_territorial_role, territory:, agent: create(:agent)) # le territory doit avoir au moins un admin
       agent = create(:agent, basic_role_in_organisations: [])
 
-      create(:absence, agent: agent)
-      create(:plage_ouverture, agent: agent)
+      create(:rdv, agents: [agent])
+      create(:absence, agent:)
+      create(:plage_ouverture, agent:)
       agent.services << create(:service)
-      create(:agent_territorial_access_right, agent: agent)
-      create(:agent_territorial_role, agent: agent, territory: territory)
+      create(:agent_territorial_access_right, agent:)
+      create(:agent_territorial_role, agent:, territory:)
       agent.teams << create(:team)
-      create(:referent_assignation, agent: agent)
-      create(:sector_attribution, :level_agent, agent: agent)
+      create(:referent_assignation, agent:)
+      create(:sector_attribution, :level_agent, agent:)
+      create(:export, agent:)
 
       agent.soft_delete
       agent.reload
 
-      expect(agent.absences).to be_empty
-      expect(agent.plage_ouvertures).to be_empty
-      expect(agent.services).to be_empty
-      expect(agent.agent_territorial_access_rights).to be_empty
-      expect(agent.territorial_roles).to be_empty
-      expect(agent.teams).to be_empty
-      expect(agent.referent_assignations).to be_empty
-      expect(agent.sector_attributions).to be_empty
+      expect(agent.rdvs.count).to eq(1)
+      expect(agent.absences.count).to eq(0)
+      expect(agent.plage_ouvertures.count).to eq(0)
+      expect(agent.services.count).to eq(0)
+      expect(agent.agent_territorial_access_rights.count).to eq(0)
+      expect(agent.territorial_roles.count).to eq(0)
+      expect(agent.teams.count).to eq(0)
+      expect(agent.referent_assignations.count).to eq(0)
+      expect(agent.sector_attributions.count).to eq(0)
+      expect(agent.exports.count).to eq(0)
+    end
+  end
+
+  describe "#destroy" do
+    it "deletes associations as well" do
+      territory = create(:territory)
+      create(:agent_territorial_role, territory:, agent: create(:agent)) # le territory doit avoir au moins un admin
+      agent = create(:agent, basic_role_in_organisations: [])
+
+      create(:absence, agent:)
+      create(:plage_ouverture, agent:)
+      agent.services << create(:service)
+      create(:agent_territorial_access_right, agent:)
+      create(:agent_territorial_role, agent:, territory:)
+      agent.teams << create(:team)
+      create(:referent_assignation, agent:)
+      create(:sector_attribution, :level_agent, agent:)
+      create(:export, agent:)
+
+      agent.destroy
+      expect(agent).to be_destroyed
+
+      expect(agent.absences.count).to eq(0)
+      expect(agent.plage_ouvertures.count).to eq(0)
+      expect(agent.services.count).to eq(0)
+      expect(agent.agent_territorial_access_rights.count).to eq(0)
+      expect(agent.territorial_roles.count).to eq(0)
+      expect(agent.teams.count).to eq(0)
+      expect(agent.referent_assignations.count).to eq(0)
+      expect(agent.sector_attributions.count).to eq(0)
+      expect(agent.exports.count).to eq(0)
     end
   end
 

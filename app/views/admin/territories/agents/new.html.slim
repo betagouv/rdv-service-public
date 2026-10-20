@@ -5,12 +5,29 @@
     - if current_territory.services.any?(&:secretariat?)
       = dsfr_callout do
         | Le service secrétariat a été remplacé par une nouvelle permission « Agent d’accueil » que vous pouvez activer pour chaque agent dans les paramètres de l’organisation.
-    = simple_form_for [:admin, @agent], as: :admin_agent, url: admin_territory_agents_path(current_territory), html: { method: :post } do |f|
+    = form_for [:admin, @agent], as: :admin_agent, url: admin_territory_agents_path(current_territory), html: { method: :post }, builder: Dsfr::FormBuilder do |f|
       = render "devise/shared/error_messages", resource: @agent
-      = f.input :email, placeholder: t(".email_placeholder"), input_html: { autocomplete: "off"}
-      = f.association :services, collection: current_territory.services.reject(&:secretariat?), input_html: { class: "select2-input", data: { "auto-select-sole-option": true } }, hint: t(".services_hint")
+      = f.dsfr_email_field :email, label: "Email", placeholder: t(".email_placeholder"), autocomplete: "off"
 
-      = f.association :organisations, as: :check_boxes, collection: @organisations_to_select, label: t(".organisations"), include_hidden: false
+      - if @services_to_select.any?
+        fieldset.fr-fieldset
+          legend.fr-fieldset__legend--regular.fr-fieldset__legend
+            = Agent.human_attribute_name(:services)
+            span.fr-hint-text = t(".services_hint")
+          = f.collection_check_boxes :service_ids, @services_to_select, :id, :name, include_hidden: false do |cb|
+            .fr-fieldset__element
+              .fr-checkbox-group
+                = cb.check_box
+                = cb.label
+
+      fieldset.fr-fieldset
+        legend.fr-fieldset__legend--regular.fr-fieldset__legend
+          = t(".organisations")
+        = f.collection_check_boxes :organisation_ids, @organisations_to_select, :id, :name, include_hidden: false do |cb|
+          .fr-fieldset__element
+            .fr-checkbox-group
+              = cb.check_box
+              = cb.label
 
       .text-right
-        = f.button :submit, t("devise.invitations.new.submit_button")
+        = f.submit t("devise.invitations.new.submit_button"), class: "fr-btn"

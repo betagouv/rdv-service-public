@@ -5,7 +5,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   let(:organisation_rdv_aide_num) do
     create(:organisation, name: "France Service de Montreuil",
                           phone_number: "01 22 33 44 55",
-                          website: "www.montreuil.fr/france-service",
+                          website: "https://www.montreuil.fr/france-service",
                           email: "contact@exemple.montreuil.fr")
   end
   let!(:absence) { create(:absence, :no_recurrence, agent: agent_rdv_aide_num) }
@@ -137,7 +137,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     expect(created_organisation).to have_attributes(
       name: "France Service de Montreuil",
       phone_number: "01 22 33 44 55",
-      website: "www.montreuil.fr/france-service",
+      website: "https://www.montreuil.fr/france-service",
       email: "contact@exemple.montreuil.fr",
       verticale: "rdv_mairie"
     )
