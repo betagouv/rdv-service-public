@@ -10,6 +10,22 @@ class StaticPagesController < ApplicationController
 
   def accessibilite; end
 
+  def fonctionnalites
+    if current_domain.rdv_service_public?
+      render layout: "application_base"
+    else
+      redirect_to root_path
+    end
+  end
+
+  def integrations
+    if current_domain.rdv_service_public?
+      render layout: "application_base"
+    else
+      redirect_to root_path
+    end
+  end
+
   def presentation_for_agents
     render current_domain.presentation_for_agents_template_name, layout: "application_base"
   end

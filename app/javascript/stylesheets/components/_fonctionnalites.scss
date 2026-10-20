@@ -1,0 +1,42 @@
+// Page fonctionnalités
+
+ul.rdv-feature-list {
+  list-style-type: none;
+  padding-left: 0;
+
+  li {
+    margin-bottom: 0.5rem;
+    padding-left: 1.75rem;
+    position: relative;
+
+    // icône DSFR icons/system/check-line.svg, inlinée car le pipeline css n'expose pas les assets de la gem dsfr-assets
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0.375rem;
+      left: 0;
+      width: 1rem;
+      height: 1rem;
+      background-color: var(--text-default-success);
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m10 15.172 9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414 4.95 4.95Z'/%3E%3C/svg%3E")
+        center / 100% 100% no-repeat;
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m10 15.172 9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414 4.95 4.95Z'/%3E%3C/svg%3E")
+        center / 100% 100% no-repeat;
+    }
+  }
+}
+
+.rdv-feature-screenshot {
+  border-radius: 8px;
+  box-shadow: 0 12px 30px 0 rgba(221, 221, 221, 0.4);
+}
+
+.rdv-feature-media-offset {
+  @media (min-width: 48em) {
+    margin-top: 2.5rem;
+  }
+}
+
+.rdv-feature-card {
+  border-radius: 8px;
+}

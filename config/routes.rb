@@ -520,6 +520,8 @@ Rails.application.routes.draw do
 
   get "accueil_mds", to: redirect("presentation_agent", status: 307)
   get "presentation_agent" => "static_pages#presentation_for_agents"
+  get "fonctionnalites" => "static_pages#fonctionnalites"
+  get "integrations" => "static_pages#integrations"
 
   resource :onboarding, controller: :onboarding do
     get "step_1"
