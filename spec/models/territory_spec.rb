@@ -80,19 +80,22 @@ RSpec.describe Territory, type: :model do
   end
 
   describe "special names" do
-    let(:mairies_territory) do
-      create(:territory, :mairies)
+    let(:visioplainte_territory) do
+      create(:territory).tap do |t|
+        # Les contraintes de validations sur les noms spéciaux obligent à faire un update_columns ici
+        t.update_columns(name: Territory::VISIOPLAINTE_NAME) # rubocop:disable Rails/SkipsModelValidations
+      end
     end
 
     it "doesn't allow changing the name of a territory with a special meaning" do
-      expect(mairies_territory.update(name: "new name")).to be_falsey
-      expect(mairies_territory.reload.name).to eq Territory::MAIRIES_NAME
+      expect(visioplainte_territory.update(name: "new name")).to be_falsey
+      expect(visioplainte_territory.reload.name).to eq Territory::VISIOPLAINTE_NAME
     end
 
     it "doesn't allow changing to the name of a territory with a special meaning" do
       normal_territory = create(:territory, name: "Ardennes")
 
-      expect(normal_territory.update(name: Territory::MAIRIES_NAME)).to be_falsey
+      expect(normal_territory.update(name: Territory::VISIOPLAINTE_NAME)).to be_falsey
       expect(normal_territory.reload.name).to eq "Ardennes"
     end
   end

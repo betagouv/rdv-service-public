@@ -5,7 +5,6 @@ class Territory < ApplicationRecord
     .to_h { [_1["number"], _1["name"]] }.freeze
 
   SPECIAL_NAMES = [
-    MAIRIES_NAME = "Mairies".freeze,
     CNFS_NAME = "Conseillers Numériques".freeze,
     VISIOPLAINTE_NAME = "Visioplainte".freeze,
   ].freeze
@@ -107,10 +106,6 @@ class Territory < ApplicationRecord
   LEGACY_TOGGLES = OPTIONAL_FIELD_TOGGLES.except(*legitimate_toggle_keys).freeze
 
   def to_s = name
-
-  def mairies?
-    name == MAIRIES_NAME
-  end
 
   def cn?
     name == CNFS_NAME
