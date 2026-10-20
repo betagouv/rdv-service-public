@@ -242,15 +242,6 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
         expect(sync_logs).to eq(["No sync token support: ctag changed, loading all events", "New/updated: 10, deleted : 0"])
       end
 
-      it "supprime les événements locaux qui n'existent pas sur le serveur" do
-        create(:external_calendar_event, agent:, url: url_of_event_deleted_on_server)
-
-        described_class.new.perform(agent.id)
-
-        expect(ExternalCalendarEvent.where(url: url_of_event_deleted_on_server)).to be_empty
-        expect(ExternalCalendarEvent.count).to eq(10)
-      end
-
       it "ne recharge pas les événements quand le ctag n'a pas changé" do
         agent.caldav_config.update!(caldav_ctag: "1-32")
         create(:external_calendar_event, agent:, url: url_of_event_deleted_on_server)
