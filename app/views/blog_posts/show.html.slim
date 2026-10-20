@@ -1,0 +1,25 @@
+- content_for :title, @post.title
+
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Accueil", href: root_path
+    = b.with_breadcrumb label: "Nouveautés", href: blog_posts_path
+    = b.with_breadcrumb label: @post.title
+
+.fr-grid-row.fr-mb-6w
+  .fr-col-12.fr-col-md-10.fr-col-lg-8
+    article
+      .fr-mb-3w
+        - if @post.categories.any?
+          ul.fr-tags-group
+            - @post.categories.each do |category|
+              li = dsfr_tag(title: category, size: :sm)
+        p.fr-text--sm.fr-icon-calendar-line.fr-mb-0
+          |  Publié le
+          time<> datetime=@post.published_at.to_date.iso8601
+            = l(@post.published_at.to_date, format: :long)
+
+      .rdv-blog-post-content
+        = sanitize @post.content_html, tags: BlogPost::CONTENT_HTML_ALLOWED_TAGS, attributes: BlogPost::CONTENT_HTML_ALLOWED_ATTRIBUTES
+
+      = link_to "Toutes les nouveautés", blog_posts_path, class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-arrow-left-line fr-mt-4w"
