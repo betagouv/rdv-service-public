@@ -68,10 +68,6 @@ module Caldav
       end
     end
 
-    def recurring?(event)
-      event.send(:inner_event).rrule&.first&.valid?
-    end
-
     def caldav_config
       @agent.caldav_config
     end
