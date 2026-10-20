@@ -88,7 +88,7 @@ class Agents::CaldavSyncController < AgentAuthController
     end
 
     # Sans sync token (RFC 6578), on peut synchroniser de façon incrémentale grâce au ctag (Zimbra notamment)
-    if calendar.sync_token.blank? && calendar.ctag.blank?
+    if calendar.sync_token.blank? && calendar.ctag.blank? # voir Caldav::FetchEvents#fetch_changes
       return "Votre serveur CalDAV ne supporte pas la synchronisation incrémentale (sync-token ou ctag), requise pour connecter " \
              "votre agenda à RDV Service Public. Veuillez contacter votre fournisseur d’agenda ou utiliser un autre serveur CalDAV."
     end
