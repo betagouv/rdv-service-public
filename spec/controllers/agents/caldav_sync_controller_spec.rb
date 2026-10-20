@@ -104,6 +104,7 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
 
         expect(flash[:alert]).to be_nil
         expect(agent.caldav_config.reload.caldav_username).to eq("user@example.fr")
+        expect(agent.caldav_config.reload.caldav_ctag).to be_nil # le ctag n'est pas persisté à ce moment, mais lors de la première synchro
       end
     end
 
