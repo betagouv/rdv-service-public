@@ -9,7 +9,6 @@ class Service < ApplicationRecord
   SERVICE_SOCIAL = "Service social".freeze
   PMI = "PMI (Protection Maternelle Infantile)".freeze
   CONSEILLER_NUMERIQUE = "Conseiller Numérique".freeze
-  MAIRIE = "Mairie".freeze
 
   # Relations
   has_many :agent_services, dependent: :restrict_with_error
@@ -44,10 +43,6 @@ class Service < ApplicationRecord
 
   def conseiller_numerique?
     name == CONSEILLER_NUMERIQUE
-  end
-
-  def mairie?
-    name == MAIRIE
   end
 
   def user_field_groups

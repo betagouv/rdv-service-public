@@ -47,7 +47,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
     def resolve
       # On a un seul espace pour tous les CNFS, idem pour les mairies,
       # on veut donc *pas* décloisonner la recherche sur tout l'espace.
-      if current_organisation.territory.mairies? || current_organisation.territory.cn?
+      if current_organisation.territory.cn?
         super
       else
         scope.joins(:territories).where(territories: current_organisation.territory)
