@@ -90,8 +90,7 @@ RSpec.describe BeneficiaireForm do
 
   context "pour un motif demandant un numéro de pré-demande ANTS" do
     include_context "rdv_mairie_api_authentication"
-    let!(:territory) { create(:territory, :mairies) }
-    let!(:organisation) { create(:organisation, territory:, name: "Mairie de Wavignies") }
+    let!(:organisation) { create(:organisation, name: "Mairie de Wavignies") }
     let!(:motif_category) { create(:motif_category, :passeport) }
     let!(:motif) { create(:motif, organisation:, motif_category:) }
     let(:params) do
