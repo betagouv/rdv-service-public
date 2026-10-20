@@ -43,10 +43,10 @@ motif_passeport = Motif.create!(
 
 # Agent
 agent_mairie_de_sannois = Agent.new(
-  email: "alain.mairie@rdv-mairie-demo.fr",
-  uid: "alain.mairie@rdv-mairie-demo.fr",
+  email: "aferreira@mairie.rdv.fr",
+  uid: "aferreira@mairie.rdv.fr",
   first_name: "Alain",
-  last_name: "Mairie",
+  last_name: "Ferreira",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   services: [service_titres],
   invitation_accepted_at: 10.days.ago,
@@ -91,9 +91,9 @@ _plage_ouverture_org_drome_lieu_mairie_de_sannois = PlageOuverture.create!(
 
 user_mairie_sannois = User.create!(
   organisations: [org_mairie_de_sannois],
-  first_name: "Louis-Ken",
-  last_name: "de PENTECOTE",
-  email: "loulou@exemple.fr",
+  first_name: "Youssef",
+  last_name: "Benamar",
+  email: "ybenamar@mairie.rdv.fr",
   ants_pre_demande_number: "ABCDE12345"
 )
 

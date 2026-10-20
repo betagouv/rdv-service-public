@@ -270,10 +270,150 @@ end
 
 # USERS
 
+# Prénoms et noms générés avec la gem Faker (locale fr) et complétés à la main pour refléter la
+# diversité des origines des noms en France, puis figés pour garder des seeds déterministes.
+# Les emails sont dérivés du nom (<initiale><nom>@<acronyme_du_service>.rdv.fr) : le domaine .rdv.fr
+# n'existe pas, ce qui évite tout envoi accidentel de mail depuis une base de démo.
+noms_usagers = <<~NOMS.split("\n").map { _1.split("|").map(&:strip) }
+  Virginie|Le Roux
+  Ruth|Lacroix
+  Thomas|Antoine
+  Karim|Benali
+  Louis|Bouvier
+  Marianne|Dumas
+  Ronan|Meunier
+  Yasmine|El Amrani
+  Marjorie|Colin
+  Cyrielle|Moreau
+  Lauriane|Masson
+  Mehdi|Chérif
+  Jade|Lucas
+  Arielle|Denis
+  Philippe|Andre
+  Sarah|Bensoussan
+  Jocelyne|Monnier
+  Christelle|Robin
+  Florent|Jacquet
+  Nadia|Haddad
+  Esther|Brunet
+  Eugénie|Guillot
+  Daniel|Carpentier
+  Rachida|Meddour
+  Émile|Renault
+  Zoé|Fernandez
+  Vivien|Lefèvre
+  Aminata|Diallo
+  Serge|Rey
+  Manon|Tessier
+  Guy|Leblanc
+  Moussa|Traoré
+  Cécile|Blanc
+  Agathe|Marie
+  Ludivine|Faure
+  Fatou|Ndiaye
+  Soline|Bouchet
+  Adeline|Girard
+  Charles|Schmitt
+  Awa|Sarr
+  Rose|Andre
+  Gérard|André
+  Jeanne|Rémy
+  Ismaël|Camara
+  Moïse|Bernard
+  Adèle|Thomas
+  Florence|Lévêque
+  Emre|Yilmaz
+  Gabin|Leger
+  Arian|Schneider
+  Geneviève|Gautier
+  Elif|Demir
+  Yvonne|Renaud
+  Bertrand|Durand
+  Sandrine|Dubois
+  Mariana|Ferreira
+  Rachel|Bertin
+  Tiphaine|Méunier
+  Alix|Lemaire
+  Gonçalo|Pereira
+  Caroline|Dupont
+  Laureline|Maillard
+  Annette|Martinez
+  Sofia|Almeida
+  Dominique|Mallet
+  Léonie|Moulin
+  Robert|Rolland
+  Giulia|Rossi
+  Chloé|Klein
+  Blandine|Dumont
+  Justine|Laurent
+  Marco|Colombo
+  Céleste|Olivier
+  Armelle|Pichon
+  Yvette|Boucher
+  Chiara|Bianchi
+  Irène|Lambert
+  Béatrice|Michel
+  Armeline|Laporte
+  Camila|Rodriguez
+  Ernest|Perrier
+  Roger|Da Silva
+  Laure|Menard
+  Diego|Hernandez
+  Basile|Clément
+  Véronique|Philippe
+  Mélodie|Fabre
+  Wei|Nguyen
+  Corinne|Henry
+  Jérémie|Fournier
+  Amandine|Francois
+  Linh|Pham
+  Gwendoline|Weber
+  Claude|Mercier
+  Émeric|Robert
+  Mei|Chen
+  Gaspard|Bonnet
+  Fabrice|Marchal
+  Cédric|David
+  Anna|Kowalska
+  Henriette|Noël
+  Paule|Lejeune
+  Emmanuel|Guérin
+  Marek|Nowak
+  Armand|Barre
+  Isaac|Adam
+  Maximilien|Clement
+  Marie-Claire|Petit
+  Bernard|Chauvin
+  Alphonse|Hamon
+  Mélanie|Martin
+  Jean-Baptiste|Roche
+  Stéphanie|Paris
+  Bérangère|Benoit
+  Gabriel|Deschamps
+  Anne-Sophie|Vidal
+  Gwenaëlle|Roux
+  Arsène|Gaillard
+  Benoît|Jean
+  Paul-Henri|Marchand
+  Thierry|Hubert
+  Agnès|Lemoine
+  Mireille|Gerard
+  Laura|Martin-Bernard
+  Maxime|Legrand
+  Iris|Poirier
+  Laurence|Besson
+  Aymeric|Vincent
+  Doriane|Collet
+  Raphaëlle|Leveque
+  Alain|Morel
+  Frédéric|Marchand
+  Adélaïde|Laine
+NOMS
+
 user_org_paris_nord_patricia = User.new(
   first_name: "Patricia",
   last_name: "Duroy",
-  email: "patricia_duroy@demo.rdv-solidarites.fr",
+  email: "pduroy@pmi.rdv.fr",
   birth_date: Date.parse("20/06/1975"),
   phone_number: "0101010101",
   organisation_ids: [org_paris_nord.id, org_arques.id],
@@ -297,7 +437,7 @@ user_org_paris_nord_josephine.save!
 user_org_paris_nord_lea = User.new(
   first_name: "Léa",
   last_name: "Dupont",
-  email: "lea_dupont@demo.rdv-solidarites.fr",
+  email: "ldupont@pmi.rdv.fr",
   birth_date: Date.parse("01/12/1982"),
   phone_number: "0101010102",
   organisation_ids: [org_paris_nord.id],
@@ -310,8 +450,8 @@ user_org_paris_nord_lea.update!(logement: 2)
 
 user_org_paris_nord_jean = User.new(
   first_name: "Jean",
-  last_name: "Moustache",
-  email: "jean_moustache@demo.rdv-solidarites.fr",
+  last_name: "Chevalier",
+  email: "jchevalier@pmi.rdv.fr",
   birth_date: Date.parse("10/01/1973"),
   phone_number: "0101010103",
   organisation_ids: [org_paris_nord.id, org_bapaume.id, org_arques.id],
@@ -325,7 +465,7 @@ user_org_paris_nord_jean.update!(logement: 2)
 user_org_paris_sud = User.new(
   first_name: "Francis",
   last_name: "Factice",
-  email: "francis.factice@demo.rdv-solidarites.fr",
+  email: "francis.factice@rdv.fr",
   birth_date: Date.parse("10/01/1973"),
   phone_number: "0101010103",
   organisation_ids: [org_paris_sud.id],
@@ -350,7 +490,7 @@ user_org_arques.save!
 user_org_bapaume = User.new(
   first_name: "François",
   last_name: "Factice",
-  email: "francois@factice.cool",
+  email: "francois.factice@rdv.fr",
   organisation_ids: [org_bapaume.id],
   created_through: "user_sign_up",
   latest_login_at: Time.zone.now
@@ -362,12 +502,13 @@ user_org_bapaume.save!
 # rubocop:disable Rails/SkipsModelValidations
 now = Time.zone.now
 users_attributes = 10_000.times.map do |i|
+  prenom, nom = noms_usagers[i % noms_usagers.size]
   {
     created_at: now,
     updated_at: now,
-    first_name: "first_name_#{i}",
-    last_name: "last_name_#{i}",
-    email: "email_#{i}@test.com",
+    first_name: prenom,
+    last_name: nom,
+    email: "#{prenom[0]}#{nom}".parameterize.tr("-", "") + "#{i}@pmi.rdv.fr",
     phone_number: (format "+336%08d", i),
     phone_number_formatted: (format "+336%08d", i),
     created_through: "user_sign_up",
@@ -382,8 +523,8 @@ UserProfile.insert_all!(user_organisation_attributes)
 # AGENTS
 
 agent_org_paris_nord_pmi_martine = Agent.new(
-  email: "martine@demo.rdv-solidarites.fr",
-  uid: "martine@demo.rdv-solidarites.fr",
+  email: "mvaliday@pmi.rdv.fr",
+  uid: "mvaliday@pmi.rdv.fr",
   first_name: "Martine",
   last_name: "Validay",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -402,8 +543,8 @@ agent_org_paris_nord_pmi_martine.save!
 agent_org_paris_nord_pmi_martine.territorial_roles.create!(territory: territory75)
 
 agent_org_paris_nord_pmi_marco = Agent.new(
-  email: "marco@demo.rdv-solidarites.fr",
-  uid: "marco@demo.rdv-solidarites.fr",
+  email: "mdurand@pmi.rdv.fr",
+  uid: "mdurand@pmi.rdv.fr",
   first_name: "Marco",
   last_name: "Durand",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -422,8 +563,8 @@ agent_org_paris_nord_pmi_marco.skip_confirmation!
 agent_org_paris_nord_pmi_marco.save!
 
 agent_org_paris_nord_pmi_elsa = Agent.new(
-  email: "Elsa@demo.rdv-solidarites.fr",
-  uid: "Elsa@demo.rdv-solidarites.fr",
+  email: "edeck@pmi.rdv.fr",
+  uid: "edeck@pmi.rdv.fr",
   first_name: "Elsa",
   last_name: "Deck",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -442,8 +583,8 @@ agent_org_paris_nord_pmi_elsa.skip_confirmation!
 agent_org_paris_nord_pmi_elsa.save!
 
 agent_org_paris_nord_social_polo = Agent.new(
-  email: "polo@demo.rdv-solidarites.fr",
-  uid: "polo@demo.rdv-solidarites.fr",
+  email: "pdurant@social.rdv.fr",
+  uid: "pdurant@social.rdv.fr",
   first_name: "Polo",
   last_name: "Durant",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -461,8 +602,8 @@ agent_org_paris_nord_social_polo.skip_confirmation!
 agent_org_paris_nord_social_polo.save!
 
 org_arques_pmi_maya = Agent.new(
-  email: "maya@demo.rdv-solidarites.fr",
-  uid: "maya@demo.rdv-solidarites.fr",
+  email: "mpatrick@pmi.rdv.fr",
+  uid: "mpatrick@pmi.rdv.fr",
   first_name: "Maya",
   last_name: "Patrick",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -481,8 +622,8 @@ org_arques_pmi_maya.save!
 org_arques_pmi_maya.territorial_roles.create!(territory: territory62)
 
 agent_org_bapaume_pmi_bruno = Agent.new(
-  email: "bruno@demo.rdv-solidarites.fr",
-  uid: "bruno@demo.rdv-solidarites.fr",
+  email: "bfrangi@pmi.rdv.fr",
+  uid: "bfrangi@pmi.rdv.fr",
   first_name: "Bruno",
   last_name: "Frangi",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -501,8 +642,8 @@ agent_org_bapaume_pmi_bruno.save!
 AgentTerritorialRole.create!(agent: agent_org_bapaume_pmi_bruno, territory: territory62)
 
 agent_org_bapaume_pmi_gina = Agent.new(
-  email: "gina@demo.rdv-solidarites.fr",
-  uid: "gina@demo.rdv-solidarites.fr",
+  email: "gleone@pmi.rdv.fr",
+  uid: "gleone@pmi.rdv.fr",
   first_name: "Gina",
   last_name: "Leone",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -524,31 +665,31 @@ agent_org_bapaume_pmi_gina.save!
 [
   ["Audran", "Lemaire"],
   ["Perrine", "Gay"],
-  ["Pie", "Le gall"],
-  ["Agathon", "Laine"],
+  ["Malik", "Ziani"],
+  ["Fatima", "Bensalem"],
   ["Paule", "Roussel"],
   ["Armeline", "Garcia"],
-  ["Adolphie", "Perrin"],
+  ["Awa", "Diop"],
   ["Georgette", "Le Gall"],
   ["Octave", "Arnaud"],
   ["Séverine", "Marechal"],
-  ["Odilon", "Riviere"],
-  ["Arsinoé", "Girard"],
-  ["Amandin", "Royer"],
+  ["Ibrahim", "Coulibaly"],
+  ["Hakim", "Belkacem"],
+  ["Deniz", "Kaya"],
   ["Aurelle", "Guillot"],
-  ["Amarande", "Le Goff"],
+  ["Inès", "Toumi"],
   ["Archange", "Gay"],
   ["Adeline", "Colin"],
   ["Régine", "Lemaire"],
   ["Blandine", "Berger"],
-  ["Améthyste", "Laine"],
+  ["João", "Carvalho"],
   ["Armand", "Klein"],
   ["Vital", "Bertrand"],
-  ["Libère", "Lefevre"],
-  ["Waleran", "Lopéz"],
+  ["Helena", "Santos"],
+  ["Thanh", "Nguyen"],
   ["Didier", "Da Silva"],
 ].map do |first_name, last_name|
-  email = ["#{first_name} #{last_name}".parameterize, "@demo.rdv-solidarites.fr"].join
+  email = ["#{first_name[0]}#{last_name}".parameterize.tr("-", ""), "@social.rdv.fr"].join
   Agent.new(
     first_name:, last_name:,
     created_at: now, updated_at: now,
@@ -568,9 +709,9 @@ end
 # bypass validations since this mirrors AdminCreatesAgent behavior with allow_blank_name
 # the agent is in "invited, not yet accepted" state so name is optional
 %w[
-  adeline-caron@demo.rdv-solidarites.fr
-  denis-fabre@demo.rdv-solidarites.fr
-  fabre-guyot@demo.rdv-solidarites.fr
+  acaron@social.rdv.fr
+  dfabre@social.rdv.fr
+  fguyot@social.rdv.fr
 ].each do |email|
   agent = Agent.new(
     email: email, uid: email,
@@ -710,22 +851,26 @@ end
 
 # RDVs
 
+# RDVs à venir pour Martine : quelques RDVs espacés sur les deux prochaines semaines,
+# posés sur des jours ouvrés quel que soit le jour où les seeds sont exécutés
+prochains_jours_ouvres = (Date.tomorrow..Date.tomorrow + 3.weeks).select(&:on_weekday?)
+
 Rdv.create!(
-  starts_at: Time.zone.today + 3.days + 10.hours,
+  starts_at: prochains_jours_ouvres[0].in_time_zone + 10.hours + 30.minutes,
   duration_in_min: 30,
   motif_id: motif_org_paris_nord_pmi_rappel.id,
-  lieu: lieu_org_paris_nord_bolivar,
+  lieu: nil,
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_patricia.id],
-  context: "Visite de courtoisie",
+  context: "Rappel suite à la consultation prénatale",
   created_by: agent_org_paris_nord_pmi_martine
 )
 Rdv.create!(
-  starts_at: Time.zone.today + 4.days + 15.hours,
+  starts_at: prochains_jours_ouvres[2].in_time_zone + 15.hours,
   duration_in_min: 30,
   motif_id: motif_org_paris_nord_pmi_suivi.id,
-  lieu: lieu_org_paris_nord_bd_aubervilliers,
+  lieu: lieu_org_paris_nord_bolivar,
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
@@ -733,26 +878,47 @@ Rdv.create!(
   created_by: agent_org_paris_nord_pmi_martine
 )
 Rdv.create!(
-  starts_at: Time.zone.today + 5.days + 11.hours,
-  duration_in_min: 30,
+  starts_at: prochains_jours_ouvres[4].in_time_zone + 11.hours,
+  duration_in_min: 60,
   motif_id: motif_org_paris_nord_pmi_securite.id,
-  lieu: lieu_org_paris_nord_bd_aubervilliers,
+  lieu: nil,
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
-  user_ids: [user_org_paris_nord_josephine.id],
+  user_ids: [user_org_paris_nord_jean.id],
   context: "Visite à domicile",
   created_by: agent_org_paris_nord_pmi_martine
 )
-
 Rdv.create!(
-  starts_at: Time.zone.today + 5.days + 11.hours,
+  starts_at: prochains_jours_ouvres[5].in_time_zone + 9.hours + 30.minutes,
+  duration_in_min: 45,
+  motif_id: motif_org_paris_nord_pmi_prenatale.id,
+  lieu: lieu_org_paris_nord_bolivar,
+  organisation_id: org_paris_nord.id,
+  agent_ids: [agent_org_paris_nord_pmi_martine.id],
+  user_ids: [user_org_paris_nord_lea.id],
+  context: "Première consultation prénatale",
+  created_by: agent_org_paris_nord_pmi_martine
+)
+Rdv.create!(
+  starts_at: prochains_jours_ouvres[6].in_time_zone + 16.hours,
   duration_in_min: 30,
-  motif_id: motif_org_paris_nord_pmi_securite.id,
+  motif_id: motif_org_paris_nord_pmi_gyneco.id,
+  lieu: nil,
+  organisation_id: org_paris_nord.id,
+  agent_ids: [agent_org_paris_nord_pmi_martine.id],
+  user_ids: [user_org_paris_nord_lea.id],
+  context: "Renouvellement contraception",
+  created_by: agent_org_paris_nord_pmi_martine
+)
+Rdv.create!(
+  starts_at: prochains_jours_ouvres[8].in_time_zone + 14.hours,
+  duration_in_min: 30,
+  motif_id: motif_org_paris_nord_pmi_suivi.id,
   lieu: lieu_org_paris_nord_bd_aubervilliers,
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
-  context: "Visite à domicile",
+  context: "Bilan de santé de l'enfant",
   created_by: agent_org_paris_nord_pmi_martine
 )
 
@@ -782,48 +948,89 @@ Rdv.create!(
   )
 end
 
-# 11 RDVs binôme Martine+Marco il y a 1 mois : ils apparaissent en tête de liste (tri starts_at ASC)
-# s'il y a des bugs de dedoublonnage ils seront visibles dans la pagination en dev
-11.times do |i|
+# 11 RDVs en binôme Martine+Marco sur le mois écoulé : s'il y a des bugs de dédoublonnage
+# (des RDVs en double, des participations orphelines) ils seront visibles dans la pagination en dev
+jours_ouvres_binome = (1.month.ago.to_date - 4..1.month.ago.to_date + 20).select(&:on_weekday?).first(11)
+[
+  [jours_ouvres_binome[0].in_time_zone + 9.hours, 45, motif_org_paris_nord_pmi_prenatale, user_org_paris_nord_patricia, lieu_org_paris_nord_bolivar, "Consultation prénatale"],
+  [jours_ouvres_binome[1].in_time_zone + 11.hours, 30, motif_org_paris_nord_pmi_suivi, user_org_paris_nord_josephine, lieu_org_paris_nord_bolivar, "Suivi vaccins"],
+  [jours_ouvres_binome[2].in_time_zone + 14.hours + 30.minutes, 30, motif_org_paris_nord_pmi_gyneco, user_org_paris_nord_lea, nil, "Renouvellement contraception"],
+  [jours_ouvres_binome[3].in_time_zone + 10.hours, 60, motif_org_paris_nord_pmi_securite, user_org_paris_nord_jean, nil, "Visite à domicile"],
+  [jours_ouvres_binome[4].in_time_zone + 16.hours, 45, motif_org_paris_nord_pmi_prenatale, user_org_paris_nord_patricia, lieu_org_paris_nord_bolivar, "Suivi de grossesse"],
+  [jours_ouvres_binome[5].in_time_zone + 9.hours + 30.minutes, 30, motif_org_paris_nord_pmi_suivi, user_org_paris_nord_josephine, lieu_org_paris_nord_bolivar, "Suivi après naissance"],
+  [jours_ouvres_binome[6].in_time_zone + 15.hours, 30, motif_org_paris_nord_pmi_gyneco, user_org_paris_nord_lea, nil, "Consultation gynécologie"],
+  [jours_ouvres_binome[7].in_time_zone + 10.hours, 60, motif_org_paris_nord_pmi_securite, user_org_paris_nord_jean, nil, "Conseils sécurité du domicile"],
+  [jours_ouvres_binome[8].in_time_zone + 14.hours, 45, motif_org_paris_nord_pmi_prenatale, user_org_paris_nord_patricia, lieu_org_paris_nord_bolivar, "Consultation prénatale"],
+  [jours_ouvres_binome[9].in_time_zone + 11.hours, 30, motif_org_paris_nord_pmi_suivi, user_org_paris_nord_josephine, lieu_org_paris_nord_bolivar, "Bilan de santé de l'enfant"],
+  [jours_ouvres_binome[10].in_time_zone + 9.hours, 15, motif_org_paris_nord_pmi_rappel, user_org_paris_nord_lea, nil, "Rappel téléphonique"],
+].each do |starts_at, duration_in_min, motif, user, lieu, context|
   Rdv.create!(
-    starts_at: 1.month.ago.beginning_of_day + 8.hours + (i * 30.minutes),
-    duration_in_min: 30,
-    motif_id: motif_org_paris_nord_pmi_suivi.id,
-    lieu: lieu_org_paris_nord_bolivar,
+    starts_at:,
+    duration_in_min:,
+    motif_id: motif.id,
+    lieu:,
     organisation_id: org_paris_nord.id,
     agent_ids: [agent_org_paris_nord_pmi_martine.id, agent_org_paris_nord_pmi_marco.id],
-    user_ids: [user_org_paris_nord_patricia.id],
+    user_ids: [user.id],
+    status: "seen",
+    context:,
     created_by: agent_org_paris_nord_pmi_martine
   )
 end
 
-# Insert a lot of rdvs in the past 2 years
+# Beaucoup de RDVs sur les deux dernières années, pour un agenda réaliste : journées sans RDV,
+# créneaux irréguliers, usagers, motifs, lieux et statuts variés.
+# Les tirages passent par un PRNG seedé pour que les données générées soient déterministes.
 # rubocop:disable Rails/SkipsModelValidations
-rdv_attributes = 1000.times.flat_map do |i|
-  day = 2.years.ago.beginning_of_day + i.days
-  (9..16).map do |hour|
-    {
+rng = Random.new(42)
+planning_user_ids = [user_org_paris_nord_patricia, user_org_paris_nord_josephine, user_org_paris_nord_lea, user_org_paris_nord_jean].map(&:id) +
+                    user_ids.sample(150, random: rng)
+planning_motifs = [
+  [motif_org_paris_nord_pmi_prenatale, lieu_org_paris_nord_bolivar.id, 45, ["Consultation prénatale", "Suivi de grossesse"]],
+  [motif_org_paris_nord_pmi_suivi, lieu_org_paris_nord_bolivar.id, 30, ["Suivi vaccins", "Bilan de santé de l'enfant", "Suivi après naissance"]],
+  [motif_org_paris_nord_pmi_securite, nil, 60, ["Visite à domicile", "Conseils sécurité du domicile"]],
+  [motif_org_paris_nord_pmi_gyneco, nil, 30, ["Renouvellement contraception", "Consultation gynécologie"]],
+  [motif_org_paris_nord_pmi_rappel, nil, 15, ["Rappel téléphonique", "Renseignements administratifs"]],
+]
+planning_statuses = %w[seen seen seen seen seen seen unknown unknown unknown excused noshow revoked]
+rdv_attributes = []
+rdv_user_ids = []
+2.years.ago.to_date.upto(Time.zone.yesterday.to_date) do |day|
+  next if day.on_weekend?
+  next if rng.rand(6).zero? # journée sans rdv, pour aérer l'agenda
+
+  starts_at = day.in_time_zone + 9.hours + rng.rand(3).hours + [0, 15, 30, 45].sample(random: rng).minutes
+  while starts_at.hour < 17
+    motif, lieu_id, duration_in_min, contexts = planning_motifs.sample(random: rng)
+    status = planning_statuses.sample(random: rng)
+    rdv_attributes << {
       created_at: now,
       updated_at: now,
-      starts_at: day + hour.hours,
-      ends_at: day + hour.hours + 30.minutes,
-      motif_id: motif_org_paris_nord_pmi_securite.id,
-      lieu_id: lieu_org_paris_nord_bd_aubervilliers.id,
+      starts_at:,
+      ends_at: starts_at + duration_in_min.minutes,
+      motif_id: motif.id,
+      lieu_id:,
+      status:,
+      cancelled_at: status.in?(%w[excused noshow revoked]) ? starts_at - 1.day : nil,
+      context: contexts.sample(random: rng),
       organisation_id: org_paris_nord.id,
-      context: "Context #{day} #{hour}",
       created_by_type: "Agent",
       created_by_id: agent_org_paris_nord_pmi_martine.id,
     }
+    rdv_user_ids << planning_user_ids.sample(random: rng)
+    starts_at += duration_in_min.minutes + rng.rand(15..75).minutes
   end
 end
 results = Rdv.insert_all!(rdv_attributes, returning: Arel.sql("id")) # [{"id"=>1}, {"id"=>2}, ...]
 rdv_ids = results.flat_map(&:values) # [1, 2, ...]
 agent_rdv_attributes = rdv_ids.map { |id| { agent_id: agent_org_paris_nord_pmi_martine.id, rdv_id: id } }
 AgentsRdv.insert_all!(agent_rdv_attributes)
-participations_attributes = rdv_ids.map do |id|
+participations_attributes = rdv_ids.each_with_index.map do |id, index|
   {
-    user_id: user_org_paris_nord_josephine.id,
-    rdv_id: id, send_lifecycle_notifications: true,
+    user_id: rdv_user_ids[index],
+    rdv_id: id,
+    status: rdv_attributes[index][:status],
+    send_lifecycle_notifications: true,
     send_reminder_notification: true,
     created_by_type: "Agent",
     created_by_id: agent_org_paris_nord_pmi_martine.id,
@@ -831,14 +1038,14 @@ participations_attributes = rdv_ids.map do |id|
 end
 Participation.insert_all!(participations_attributes)
 events = %w[new_creneau_available rdv_cancelled rdv_created rdv_date_updated rdv_upcoming_reminder]
-receipts_attributes = rdv_ids.map do |id|
+receipts_attributes = rdv_ids.each_with_index.map do |id, index|
   {
     rdv_id: id,
-    user_id: user_org_paris_nord_josephine.id,
+    user_id: rdv_user_ids[index],
     organisation_id: org_paris_nord.id,
-    event: events.sample,
-    channel: Receipt.channels.values.sample,
-    result: Receipt.results.values.sample,
+    event: events.sample(random: rng),
+    channel: Receipt.channels.values.sample(random: rng),
+    result: Receipt.results.values.sample(random: rng),
     created_at: now, updated_at: now,
   }
 end
