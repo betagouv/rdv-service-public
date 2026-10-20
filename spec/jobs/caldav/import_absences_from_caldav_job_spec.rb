@@ -193,7 +193,7 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
 
     it "enregistre une exécution en échec avec le message d'erreur" do
       job = described_class.new
-      allow(job).to receive(:update_local_events_of).and_raise(StandardError, "boom")
+      allow(job).to receive(:update_local_events!).and_raise(StandardError, "boom")
 
       VCR.use_cassette("caldav/event_list_weekly_and_daily") do
         expect { job.perform(agent.id) }.to raise_error(StandardError, "boom")
