@@ -1,4 +1,6 @@
 class CaldavConfig < ApplicationRecord
+  has_paper_trail
+
   encrypts :caldav_password, deterministic: true
 
   belongs_to :agent
