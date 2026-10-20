@@ -1,24 +1,25 @@
 class ChangeBlogPostsIdToUuid < ActiveRecord::Migration[8.0]
-  # La table contient une dizaine de lignes, recréées régulièrement par RefreshBlogPostsFromDocsJob :
-  # pas de souci de blocage d'écriture.
-  def up
+  def change
     safety_assured do
-      # On réutilise l'UUID du document Docs, présent à la fin de external_url
-      add_column :blog_posts, :uuid, :uuid
-      execute "UPDATE blog_posts SET uuid = substring(external_url from '[^/]+$')::uuid"
+      # CronJob::RefreshBlogPostsFromDocsJob sera appelé en fin de job pour re-remplir la table
+      execute "TRUNCATE blog_posts" # rubocop:disable Rails/ReversibleMigration
 
-      remove_column :blog_posts, :id
-      rename_column :blog_posts, :uuid, :id # rubocop:disable Rails/DangerousColumnNames
-      change_column_null :blog_posts, :id, false
-      execute "ALTER TABLE blog_posts ADD PRIMARY KEY (id)"
-    end
-  end
+      rename_column :blog_posts, :description, :content_truncated_text
+      add_column :blog_posts, :content_html, :text, null: false, default: ""
+      change_column_default :blog_posts, :content_html, from: "", to: nil
 
-  def down
-    safety_assured do
-      execute "TRUNCATE blog_posts"
-      remove_column :blog_posts, :id
-      add_column :blog_posts, :id, :primary_key # rubocop:disable Rails/DangerousColumnNames
+      remove_column :blog_posts, :id # rubocop:disable Rails/ReversibleMigration
+      reversible do |direction|
+        direction.up do
+          add_column :blog_posts, :id, :uuid, null: false # rubocop:disable Rails/DangerousColumnNames, Rails/NotNullColumn
+          execute "ALTER TABLE blog_posts ADD PRIMARY KEY (id)"
+        end
+        direction.down do
+          add_column :blog_posts, :id, :primary_key # rubocop:disable Rails/DangerousColumnNames
+        end
+      end
+
+      CronJob::RefreshBlogPostsFromDocsJob.perform_later
     end
   end
 end
