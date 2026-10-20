@@ -15,13 +15,19 @@ class Caldav::FetchEvents
 
     if calendar.sync_token.present?
       sync_logger.log("First sync: loading all events (paginated)")
-      @updated_events = initial_fetch_for_sync_token
+      @updated_events = initial_fetch
+      @deleted_event_urls = []
       @new_sync_token = calendar.sync_token
-    elsif calendar.ctag.present?
-      @updated_events, @deleted_event_urls, @new_ctag = fetch_by_ctag(calendar)
-    else
-      raise "pas de sync token ni de ctag sur le calendrier distant"
+      return
     end
+
+    if calendar.ctag.present?
+      @updated_events, @deleted_event_urls = fetch_by_ctag(calendar)
+      @new_ctag = calendar.ctag
+      return
+    end
+
+    raise "pas de sync token ni de ctag sur le calendrier distant"
   end
 
   def updated_events
@@ -53,10 +59,10 @@ class Caldav::FetchEvents
       updated_events, deleted_event_urls = changed_events_by_etag
     else
       sync_logger.log("No sync token support: ctag changed, loading all events")
-      updated_events, deleted_event_urls = all_events_with_deletions
+      updated_events = initial_fetch
+      deleted_event_urls = []
     end
-    new_ctag = calendar.ctag
-    [updated_events, deleted_event_urls, new_ctag]
+    [updated_events, deleted_event_urls]
   end
 
   def changes_since_last_sync
@@ -77,19 +83,8 @@ class Caldav::FetchEvents
     [updated_events, deleted_event_urls, new_sync_token]
   end
 
-  def initial_fetch_for_sync_token
+  def initial_fetch
     caldav_client.events.list(caldav_config.caldav_agenda_url).map { Caldav::Event.new(_1) } # Cette méthode ne récupère que les événements et rejette bien les VTODO
-  end
-
-  def all_events_with_deletions
-    updated_events = caldav_client.events.list(caldav_config.caldav_agenda_url).map { Caldav::Event.new(_1) }
-
-    # Sans sync token, le serveur ne nous signale pas les suppressions : on supprime donc les événements locaux
-    # qui ne sont plus présents sur le serveur, ou qui n'y sont plus considérés comme occupés (TRANSPARENT).
-    busy_urls = updated_events.select(&:consider_busy?).map(&:url)
-    deleted_event_urls = ExternalCalendarEvent.where(agent: @agent).where.not(url: busy_urls).pluck(:url)
-
-    [updated_events, deleted_event_urls]
   end
 
   # On compare les etags du serveur avec ceux stockés localement, pour ne télécharger que les événements
