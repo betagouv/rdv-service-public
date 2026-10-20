@@ -1,0 +1,136 @@
+- contact_team_url = Agents::PagesController::CONTACT_TEAM_URL
+
+- content_for :title do
+  | S’inscrire à une démo
+
+nav.fr-breadcrumb role="navigation" aria-label="vous êtes ici :"
+  .fr-container
+    button.fr-breadcrumb__button aria-expanded="false" aria-controls="breadcrumb-webinaire"
+      | Voir le fil d’Ariane
+    .fr-collapse id="breadcrumb-webinaire"
+      ol.fr-breadcrumb__list
+        li
+          = link_to "Accueil", root_path, class: "fr-breadcrumb__link"
+        li
+          a.fr-breadcrumb__link aria-current="page"
+            | S’inscrire à une démo
+
+/ Titre et bouton à gauche, illustration à droite
+section.fr-py-4w
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters
+      .fr-col-12.fr-col-md-6
+        h1
+          | Participez à nos prochains webinaires de présentation
+        p.fr-text--lead
+          | Ou bénéficiez d’un accompagnement plus spécifique en fonction de votre profil et de vos besoins.
+        .fr-btns-group.fr-btns-group--inline-md.fr-mt-3w
+          = link_to "S’inscrire à une démo", onboarding_path, class: "fr-btn"
+      .fr-col-12.fr-col-md-6
+        = image_tag "rdv_mairie/webinaire-hero.svg", alt: "", class: "fr-responsive-img rdv-object-fit-contain"
+
+    / Trois cas d’usage selon le profil
+    .fr-grid-row.fr-grid-row--gutters.fr-mt-6w
+      .fr-col-12.fr-col-md-4
+        .rdv-card-with-box-shadow.rdv-height-100
+          h2.fr-h5
+            | Vous n’avez pas encore de compte ?
+          p
+            | Découvrez comment fonctionne l’outil et posez toutes vos questions.
+      .fr-col-12.fr-col-md-4
+        .rdv-card-with-box-shadow.rdv-height-100
+
+          h2.fr-h5
+            | Vous avez un compte mais ne l’avez pas encore utilisé ?
+          p
+            | Venez approfondir vos connaissances et faites-nous part de vos doutes.
+      .fr-col-12.fr-col-md-4
+        .rdv-card-with-box-shadow.rdv-height-100
+
+          h2.fr-h5
+            | Vous avez un compte et l’utilisez déjà ?
+          p
+            | C’est l’occasion pour vous de nous partager votre expérience !
+
+section#infos-presentees.fr-py-6w
+  .fr-container
+    h2
+      | Quelles infos seront présentées ?
+    .fr-grid-row.fr-grid-row--gutters.fr-mt-3w
+      .fr-col-12.fr-col-md-3
+        .fr-tile
+          .fr-tile__body
+            .fr-tile__content
+              h3.fr-tile__title
+                | Découvrir RDV Service Public
+              p.fr-tile__desc
+                | Notre mission, notre impact, nos chiffres clés
+          .fr-tile__header
+            .fr-tile__pictogram
+              = dsfr_svg "artwork/pictograms/digital/ecosystem"
+      .fr-col-12.fr-col-md-3
+        .fr-tile
+          .fr-tile__body
+            .fr-tile__content
+              h3.fr-tile__title
+                | Fonctionnement de l’outil
+              p.fr-tile__desc
+                | Principes clés, cas d’usage et parcours agents comme usagers.
+          .fr-tile__header
+            .fr-tile__pictogram
+              = dsfr_svg "artwork/pictograms/digital/calendar"
+      .fr-col-12.fr-col-md-3
+        .fr-tile
+          .fr-tile__body
+            .fr-tile__content
+              h3.fr-tile__title
+                | Démo en direct
+              p.fr-tile__desc
+                | Aperçu des fonctionnalités : rappels SMS, RDV collectifs, réservation...
+          .fr-tile__header
+            .fr-tile__pictogram
+              = dsfr_svg "artwork/pictograms/digital/application"
+      .fr-col-12.fr-col-md-3
+        .fr-tile
+          .fr-tile__body
+            .fr-tile__content
+              h3.fr-tile__title
+                | Questions / Réponses
+              p.fr-tile__desc
+                | Notre équipe produit répond à toutes vos questions.
+          .fr-tile__header
+            .fr-tile__pictogram
+              = dsfr_svg "artwork/pictograms/system/information"
+    p.fr-mt-4w
+      |> Vous pouvez aussi retrouver ces informations dans
+      = link_to "notre documentation", "https://aide.rdv-service-public.fr/", title: "Documentation", class: "fr-link"
+      | .
+
+section.fr-py-6w
+  .fr-container
+    .fr-background-alt--blue-ecume.rdv-border-radius-8px.fr-py-6w.fr-px-6w
+      .rdv-display-md-flex.rdv-align-items-center.rdv-gap-2rem
+        = dsfr_svg "artwork/pictograms/buildings/city-hall", class: "rdv-width-200px rdv-height-200px"
+        div
+          h2
+            | Vous êtes une grande administration ?
+          p
+            |> Si vous avez des besoins spécifiques de déploiement à grande échelle ou d’interconnexion (API),
+            |> le format webinaire pourrait ne pas suffire.
+            | Discutez directement avec l’équipe de votre besoin.
+          .fr-btns-group.fr-btns-group--inline-md.fr-mt-3w
+            = link_to "Planifier un temps d’échange", contact_team_url, class: "fr-btn fr-btn--secondary", title: "Planifier un temps d’échange"
+
+section.fr-py-6w.fr-background-alt--grey
+  .fr-container
+    .rdv-display-md-flex.rdv-align-items-center.rdv-gap-2rem
+      = dsfr_svg "artwork/pictograms/system/error", class: "rdv-height-200px rdv-width-200px"
+      div
+        h2
+          | Vous êtes un particulier et vous souhaitez trouver un rendez-vous ?
+        p
+          |> Vous êtes ici sur le site de présentation de l’outil destiné aux agents publics.
+          |> Pour des raisons de confidentialité et de sécurité,
+          |> nous n’avons aucun accès aux plannings des administrations
+          | et ne pouvons malheureusement pas vous aider à gérer vos rendez-vous.
+        = link_to "Trouver les coordonnées d’un service public", "https://lannuaire.service-public.gouv.fr/", class: "fr-link", target: "_blank", rel: "noopener", title: "Trouver les coordonnées d’un service public - nouvelle fenêtre"
