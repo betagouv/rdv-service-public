@@ -9,12 +9,6 @@ class CaldavConfig < ApplicationRecord
     @caldav_client ||= Calendav::Client.new(caldav_credentials)
   end
 
-  def caldav_etag_client
-    @caldav_etag_client ||= Caldav::EtagClient.new(caldav_credentials)
-  end
-
-  private
-
   def caldav_credentials
     Calendav::Credentials::Standard.new(
       host: caldav_agenda_url,

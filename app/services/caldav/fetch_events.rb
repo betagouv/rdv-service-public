@@ -117,6 +117,6 @@ class Caldav::FetchEvents
   end
 
   def caldav_etag_client
-    caldav_config.caldav_etag_client
+    @caldav_etag_client ||= Caldav::EtagClient.new(caldav_config.caldav_credentials)
   end
 end
