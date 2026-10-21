@@ -36,7 +36,8 @@
   outline: none;
 
   .fr-text-mention--grey {
-    color: inherit;
+    // il y a déjà un important dans le DSFR :(
+    color: var(--text-inverted-blue-france) !important;
   }
 }
 
