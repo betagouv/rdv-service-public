@@ -77,7 +77,7 @@ RSpec.describe "Lister les organisations et y naviguer" do
     let!(:organisation) { create(:organisation, territory: territory, name: "MDS de Paris Nord") }
     let!(:other_organisation) { create(:organisation, territory: territory, name: "MDS de Paris Sud") }
     let!(:another_organisation) { create(:organisation, territory: territory, name: "MDS de Paris Est") }
-    let!(:closed_organisation) { create(:organisation, territory: territory, disabled_at: Time.zone.now) }
+    let!(:closed_organisation) { create(:organisation, territory: territory, name: "MDS de Paris Ouest", disabled_at: Time.zone.now) }
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory]) }
 
     before { login_as(agent, scope: :agent) }
@@ -89,6 +89,14 @@ RSpec.describe "Lister les organisations et y naviguer" do
       expect(page).to have_current_path(admin_organisation_configuration_path(other_organisation))
       expect(page).to have_content("Vous êtes maintenant administrateur de l'organisation MDS de Paris Sud.")
       expect(agent.reload.admin_in_organisation?(other_organisation)).to be(true)
+    end
+
+    it "ne propose pas de rejoindre une organisation fermée" do
+      visit admin_territory_organisations_path(territory)
+
+      expect(page).to have_button("Rejoindre l'organisation MDS de Paris Sud")
+      expect(page).to have_content("MDS de Paris Ouest")
+      expect(page).to have_no_button("Rejoindre l'organisation MDS de Paris Ouest")
     end
   end
 end
