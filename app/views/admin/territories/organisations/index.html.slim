@@ -10,26 +10,24 @@
         .fr-grid-row.fr-grid-row--gutters
           - @organisations.each do |organisation|
             .fr-col-12.fr-col-md-6.fr-col-lg-4.fr-mb-2w
-              - organisation_policy = policy(organisation, policy_class: Agent::OrganisationPolicy)
-              - member = organisation_policy.show?
-              .fr-tile class=("fr-enlarge-link" if member)
-                .fr-tile__body
-                  .fr-tile__content
-                    h3.fr-tile__title
-                      - if member
-                        = link_to organisation.name, admin_organisation_configuration_path(organisation)
-                      - else
-                        = organisation.name
-                    .fr-tile__desc
-                      - agents_count = organisation.agent_roles.count
-                      | #{agents_count} #{"agents".pluralize(agents_count)}
-                    - unless member
+              - agents_count = organisation.agent_roles.count
+              - if policy(organisation, policy_class: Agent::OrganisationPolicy).join?
+                .fr-tile
+                  .fr-tile__body
+                    .fr-tile__content
+                      h3.fr-tile__title = organisation.name
+                      .fr-tile__desc #{agents_count} #{"agents".pluralize(agents_count)}
                       .fr-tile__detail.flex-column.align-items-center
                         p.fr-mb-0 Vous n'êtes pas membre de cette organisation
-                        - if organisation_policy.join?
-                          = button_to "Rejoindre", join_admin_territory_organisation_path(current_territory, organisation),
-                            class: "fr-btn fr-btn--sm fr-btn--secondary fr-mt-1w",
-                            title: "Rejoindre l'organisation #{organisation.name}"
+                        = button_to "Rejoindre", join_admin_territory_organisation_path(current_territory, organisation),
+                          class: "fr-btn fr-btn--sm fr-btn--secondary fr-mt-1w",
+                          title: "Rejoindre l'organisation #{organisation.name}"
+              - else
+                .fr-tile.fr-enlarge-link
+                  .fr-tile__body
+                    .fr-tile__content
+                      h3.fr-tile__title = link_to organisation.name, admin_organisation_configuration_path(organisation)
+                      .fr-tile__desc #{agents_count} #{"agents".pluralize(agents_count)}
 
         - if policy(Organisation.new(territory: current_territory), policy_class: Agent::OrganisationPolicy).new?
           .fr-mt-4w
