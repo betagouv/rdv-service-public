@@ -147,5 +147,36 @@ RSpec.describe SynchronizeCrmPageJob, type: :job do
         expect(notion_client).not_to have_received(:update_page)
       end
     end
+
+    context "gestion des erreurs de l'API Notion" do
+      let(:territory) { create(:territory) }
+      let(:organisation) { create(:organisation, territory:) }
+      let(:job_args) do
+        {
+          notion_page_id: "page_id",
+          account_url: "https://demo.rdv-solidarites.fr/organisations/#{organisation.id}",
+          notion_page_url: "https://notion.so/page",
+          notion_page_title: "Mon projet",
+        }
+      end
+
+      it "retente le job toutes les 5 minutes en cas de 429 (TooManyRequests)" do
+        allow(notion_client).to receive(:update_page).and_raise(Notion::Api::Errors::TooManyRequests.new(Faraday::Response.new))
+        described_class.perform_later(**job_args)
+        expect(enqueued_jobs.size).to eq(1)
+        perform_enqueued_jobs
+        expect(enqueued_jobs.size).to eq(1)
+        expect(enqueued_jobs.first["executions"]).to eq(1)
+        expect(Time.zone.parse(enqueued_jobs.first["scheduled_at"])).to be > 4.minutes.from_now
+      end
+
+      it "descarte le job en cas d'erreur 404 (ObjectNotFound)" do
+        allow(notion_client).to receive(:update_page).and_raise(Notion::Api::Errors::ObjectNotFound.new("not found", nil))
+        described_class.perform_later(**job_args)
+        expect(enqueued_jobs.size).to eq(1)
+        perform_enqueued_jobs
+        expect(enqueued_jobs).to be_empty
+      end
+    end
   end
 end
