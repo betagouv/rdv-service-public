@@ -31,7 +31,7 @@ class Caldav::FetchEvents
   end
 
   def updated_events
-    (@updated_events || []).select(&:blocks_calendar?)
+    @memoized_updated_events ||= (@updated_events || []).select(&:blocks_calendar?)
   end
 
   def deleted_event_urls
