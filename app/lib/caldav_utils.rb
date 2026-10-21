@@ -18,10 +18,7 @@ module CaldavUtils
     return false if privileges.blank?
     return true if privileges.intersect?(FULL_WRITE_PRIVILEGES)
 
-    privileges.include?("write-properties") &&
-      privileges.include?("write-content") &&
-      privileges.include?("write-bind") &&
-      privileges.include?("write-unbind")
+    privileges.to_set.superset?(WRITE_COMPONENT_PRIVILEGES.to_set)
   end
 
   def self.generate_test_event_uid
