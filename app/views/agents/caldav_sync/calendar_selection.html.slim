@@ -26,7 +26,7 @@ p Veuillez sélectionner ci-dessous l'agenda que vous souhaitez synchroniser ave
           input type="radio" name="caldav_agenda_url" id="calendar_#{calendar.url.parameterize}" value=calendar.url required=true checked=(calendar.url.chomp("/") == preselected_url)
           label.fr-label for="calendar_#{calendar.url.parameterize}"
             = calendar.display_name
-            - unless CaldavUtils.writable?(calendar)
+            - unless CaldavUtils.fully_writable?(calendar)
               span.fr-hint-text Vous n’avez peut-être pas les droits d’écriture sur cet agenda.
 
   = submit_tag "Valider", class: "fr-btn fr-mt-2w"

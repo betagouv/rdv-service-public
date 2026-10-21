@@ -1,0 +1,1087 @@
+---
+http_interactions:
+- request:
+    method: propfind
+    uri: https://messagerie.numerique.gouv.fr/dav/caldav/Y2FsOi8vMC8yMjg0OA
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <dav:propfind xmlns:dav="DAV:" xmlns:caldav="urn:ietf:params:xml:ns:caldav" xmlns:cs="http://calendarserver.org/ns/" xmlns:apple="http://apple.com/ns/ical/">
+          <dav:prop>
+            <dav:current-user-principal/>
+          </dav:prop>
+        </dav:propfind>
+    headers:
+      Authorization: "[Filtered in vcr.rb -> before_record]"
+      Depth:
+      - '0'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Connection:
+      - close
+      Host:
+      - messagerie.numerique.gouv.fr
+      User-Agent:
+      - http.rb/5.3.1
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Wed, 21 Oct 2026 13:23:06 GMT
+      Content-Type:
+      - text/xml; charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - close
+      X-Robots-Tag:
+      - none
+      X-Powered-By:
+      - Open-Xchange
+      X-Envoy-Upstream-Service-Time:
+      - '3'
+      Set-Cookie: "[Filtered in vcr.rb -> before_record]"
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <D:multistatus xmlns:D="DAV:" xmlns:APPLE="http://apple.com/ns/ical/" xmlns:CAL="urn:ietf:params:xml:ns:caldav" xmlns:CS="http://calendarserver.org/ns/">
+          <D:response>
+            <D:href>/dav/caldav/Y2FsOi8vMC8yMjg0OA/</D:href>
+            <D:propstat>
+              <D:prop>
+                <D:current-user-principal>
+                  <D:href>/dav/principals/users/1408</D:href>
+                </D:current-user-principal>
+              </D:prop>
+              <D:status>HTTP/1.1 200 OK</D:status>
+            </D:propstat>
+          </D:response>
+        </D:multistatus>
+  recorded_at: Wed, 21 Oct 2026 13:23:06 GMT
+- request:
+    method: propfind
+    uri: https://messagerie.numerique.gouv.fr/dav/principals/users/1408
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <dav:propfind xmlns:dav="DAV:" xmlns:caldav="urn:ietf:params:xml:ns:caldav" xmlns:cs="http://calendarserver.org/ns/" xmlns:apple="http://apple.com/ns/ical/">
+          <dav:prop>
+            <caldav:calendar-home-set/>
+          </dav:prop>
+        </dav:propfind>
+    headers:
+      Authorization: "[Filtered in vcr.rb -> before_record]"
+      Depth:
+      - '0'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Connection:
+      - close
+      Host:
+      - messagerie.numerique.gouv.fr
+      User-Agent:
+      - http.rb/5.3.1
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Wed, 21 Oct 2026 13:23:06 GMT
+      Content-Type:
+      - text/xml; charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - close
+      X-Robots-Tag:
+      - none
+      X-Powered-By:
+      - Open-Xchange
+      X-Envoy-Upstream-Service-Time:
+      - '1'
+      Set-Cookie: "[Filtered in vcr.rb -> before_record]"
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <D:multistatus xmlns:D="DAV:" xmlns:APPLE="http://apple.com/ns/ical/" xmlns:CAL="urn:ietf:params:xml:ns:caldav" xmlns:CS="http://calendarserver.org/ns/">
+          <D:response>
+            <D:href>/dav/principals/users/1408</D:href>
+            <D:propstat>
+              <D:prop>
+                <calendar-home-set xmlns="urn:ietf:params:xml:ns:caldav">
+                  <D:href>/dav/caldav/</D:href>
+                </calendar-home-set>
+              </D:prop>
+              <D:status>HTTP/1.1 200 OK</D:status>
+            </D:propstat>
+          </D:response>
+        </D:multistatus>
+  recorded_at: Wed, 21 Oct 2026 13:23:06 GMT
+- request:
+    method: propfind
+    uri: https://messagerie.numerique.gouv.fr/dav/caldav/
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <dav:propfind xmlns:dav="DAV:" xmlns:caldav="urn:ietf:params:xml:ns:caldav" xmlns:cs="http://calendarserver.org/ns/" xmlns:apple="http://apple.com/ns/ical/">
+          <dav:prop>
+            <dav:displayname/>
+            <dav:resourcetype/>
+            <dav:getetag/>
+            <cs:getctag/>
+            <apple:calendar-color/>
+            <dav:supported-report-set/>
+            <caldav:supported-calendar-component-set/>
+            <dav:current-user-privilege-set/>
+          </dav:prop>
+        </dav:propfind>
+    headers:
+      Authorization: "[Filtered in vcr.rb -> before_record]"
+      Depth:
+      - '1'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Connection:
+      - close
+      Host:
+      - messagerie.numerique.gouv.fr
+      User-Agent:
+      - http.rb/5.3.1
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Wed, 21 Oct 2026 13:23:06 GMT
+      Content-Type:
+      - text/xml; charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - close
+      X-Robots-Tag:
+      - none
+      X-Powered-By:
+      - Open-Xchange
+      X-Envoy-Upstream-Service-Time:
+      - '60'
+      Set-Cookie: "[Filtered in vcr.rb -> before_record]"
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <D:multistatus xmlns:D="DAV:" xmlns:APPLE="http://apple.com/ns/ical/" xmlns:CAL="urn:ietf:params:xml:ns:caldav" xmlns:CS="http://calendarserver.org/ns/">
+          <D:response>
+            <D:href>/dav/caldav/</D:href>
+            <D:propstat>
+              <D:prop>
+                <D:current-user-privilege-set>
+                  <D:privilege>
+                    <D:read/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:read-acl/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:read-current-user-privilege-set/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:bind/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:unbind/>
+                  </D:privilege>
+                </D:current-user-privilege-set>
+                <D:displayname>Calendars</D:displayname>
+                <D:supported-report-set>
+                  <D:supported-report>
+                    <D:report>
+                      <CAL:calendar-multiget/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:acl-principal-prop-set/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-match/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-property-search/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:expand-property/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <CS:calendarserver-principal-search/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:sync-collection/>
+                    </D:report>
+                  </D:supported-report>
+                </D:supported-report-set>
+                <D:resourcetype>
+                  <D:collection/>
+                </D:resourcetype>
+              </D:prop>
+              <D:status>HTTP/1.1 200 OK</D:status>
+            </D:propstat>
+            <D:propstat>
+              <D:prop>
+                <D:getetag/>
+                <calendar-color xmlns="http://apple.com/ns/ical/"/>
+                <supported-calendar-component-set xmlns="urn:ietf:params:xml:ns:caldav"/>
+                <getctag xmlns="http://calendarserver.org/ns/"/>
+              </D:prop>
+              <D:status>HTTP/1.1 404 NOT FOUND</D:status>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/caldav/Y2FsOi8vMC85NDYx/</D:href>
+            <D:propstat>
+              <D:prop>
+                <D:current-user-privilege-set>
+                  <D:privilege>
+                    <D:read-acl/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:read-current-user-privilege-set/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:read/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-content/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-properties/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-acl/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:bind/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:unbind/>
+                  </D:privilege>
+                </D:current-user-privilege-set>
+                <D:displayname>François, Ferrandis</D:displayname>
+                <calendar-color xmlns="http://apple.com/ns/ical/" symbolic-color="custom">#CC73E1FF</calendar-color>
+                <D:supported-report-set>
+                  <D:supported-report>
+                    <D:report>
+                      <CAL:calendar-multiget/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <CAL:calendar-query/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:acl-principal-prop-set/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-match/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-property-search/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:expand-property/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <CS:calendarserver-principal-search/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:sync-collection/>
+                    </D:report>
+                  </D:supported-report>
+                </D:supported-report-set>
+                <D:resourcetype>
+                  <D:collection/>
+                  <CAL:calendar/>
+                  <CS:shared-owner/>
+                </D:resourcetype>
+                <supported-calendar-component-set xmlns="urn:ietf:params:xml:ns:caldav">
+                  <CAL:comp name="VEVENT"/>
+                </supported-calendar-component-set>
+                <getctag xmlns="http://calendarserver.org/ns/">cal://0/9461-1792511020909.0.70</getctag>
+              </D:prop>
+              <D:status>HTTP/1.1 200 OK</D:status>
+            </D:propstat>
+            <D:propstat>
+              <D:prop>
+                <D:getetag/>
+              </D:prop>
+              <D:status>HTTP/1.1 404 NOT FOUND</D:status>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/caldav/Y2FsOi8vMC8yMjg0OA/</D:href>
+            <D:propstat>
+              <D:prop>
+                <D:current-user-privilege-set>
+                  <D:privilege>
+                    <D:read-acl/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:read-current-user-privilege-set/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:read/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-content/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-properties/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-acl/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:bind/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:unbind/>
+                  </D:privilege>
+                </D:current-user-privilege-set>
+                <D:displayname>test sync</D:displayname>
+                <calendar-color xmlns="http://apple.com/ns/ical/" symbolic-color="custom">#CEE7FFFF</calendar-color>
+                <D:supported-report-set>
+                  <D:supported-report>
+                    <D:report>
+                      <CAL:calendar-multiget/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <CAL:calendar-query/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:acl-principal-prop-set/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-match/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-property-search/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:expand-property/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <CS:calendarserver-principal-search/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:sync-collection/>
+                    </D:report>
+                  </D:supported-report>
+                </D:supported-report-set>
+                <D:resourcetype>
+                  <D:collection/>
+                  <CAL:calendar/>
+                  <CS:shared-owner/>
+                </D:resourcetype>
+                <supported-calendar-component-set xmlns="urn:ietf:params:xml:ns:caldav">
+                  <CAL:comp name="VEVENT"/>
+                </supported-calendar-component-set>
+                <getctag xmlns="http://calendarserver.org/ns/">cal://0/22848-1792588857975.0.4</getctag>
+              </D:prop>
+              <D:status>HTTP/1.1 200 OK</D:status>
+            </D:propstat>
+            <D:propstat>
+              <D:prop>
+                <D:getetag/>
+              </D:prop>
+              <D:status>HTTP/1.1 404 NOT FOUND</D:status>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/caldav/Y2FsOi8vNzY5LzA/</D:href>
+            <D:propstat>
+              <D:prop>
+                <D:current-user-privilege-set>
+                  <D:privilege>
+                    <D:read-acl/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:read-current-user-privilege-set/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:read/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-properties/>
+                  </D:privilege>
+                </D:current-user-privilege-set>
+                <D:displayname>Anniversaires</D:displayname>
+                <calendar-color xmlns="http://apple.com/ns/ical/" symbolic-color="custom">#CEE7FFFF</calendar-color>
+                <D:supported-report-set>
+                  <D:supported-report>
+                    <D:report>
+                      <CAL:calendar-multiget/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <CAL:calendar-query/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:acl-principal-prop-set/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-match/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-property-search/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:expand-property/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <CS:calendarserver-principal-search/>
+                    </D:report>
+                  </D:supported-report>
+                </D:supported-report-set>
+                <D:resourcetype>
+                  <D:collection/>
+                  <CAL:calendar/>
+                </D:resourcetype>
+                <supported-calendar-component-set xmlns="urn:ietf:params:xml:ns:caldav">
+                  <CAL:comp name="VEVENT"/>
+                </supported-calendar-component-set>
+                <getctag xmlns="http://calendarserver.org/ns/">1792584183591-56074771</getctag>
+              </D:prop>
+              <D:status>HTTP/1.1 200 OK</D:status>
+            </D:propstat>
+            <D:propstat>
+              <D:prop>
+                <D:getetag/>
+              </D:prop>
+              <D:status>HTTP/1.1 404 NOT FOUND</D:status>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/caldav/Y2FsOi8vMC8xNTU3MA/</D:href>
+            <D:propstat>
+              <D:prop>
+                <D:current-user-privilege-set>
+                  <D:privilege>
+                    <D:read-acl/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:read-current-user-privilege-set/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:read/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-content/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-properties/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-acl/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:bind/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:unbind/>
+                  </D:privilege>
+                </D:current-user-privilege-set>
+                <D:displayname>RDVSP Absences Vigie Autres</D:displayname>
+                <calendar-color xmlns="http://apple.com/ns/ical/" symbolic-color="custom">#5A66E2FF</calendar-color>
+                <D:supported-report-set>
+                  <D:supported-report>
+                    <D:report>
+                      <CAL:calendar-multiget/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <CAL:calendar-query/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:acl-principal-prop-set/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-match/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-property-search/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:expand-property/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <CS:calendarserver-principal-search/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:sync-collection/>
+                    </D:report>
+                  </D:supported-report>
+                </D:supported-report-set>
+                <D:resourcetype>
+                  <D:collection/>
+                  <CAL:calendar/>
+                  <CS:shared-owner/>
+                </D:resourcetype>
+                <supported-calendar-component-set xmlns="urn:ietf:params:xml:ns:caldav">
+                  <CAL:comp name="VEVENT"/>
+                </supported-calendar-component-set>
+                <getctag xmlns="http://calendarserver.org/ns/">cal://0/15570-1792498483100.0.162</getctag>
+              </D:prop>
+              <D:status>HTTP/1.1 200 OK</D:status>
+            </D:propstat>
+            <D:propstat>
+              <D:prop>
+                <D:getetag/>
+              </D:prop>
+              <D:status>HTTP/1.1 404 NOT FOUND</D:status>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/caldav/OTQ2Mw/</D:href>
+            <D:propstat>
+              <D:prop>
+                <D:current-user-privilege-set>
+                  <D:privilege>
+                    <D:read-acl/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:read-current-user-privilege-set/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:read/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-content/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-properties/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-acl/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:bind/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:unbind/>
+                  </D:privilege>
+                </D:current-user-privilege-set>
+                <D:displayname>François, Ferrandis</D:displayname>
+                <calendar-color xmlns="http://apple.com/ns/ical/" symbolic-color="custom">#CEE7FFFF</calendar-color>
+                <D:supported-report-set>
+                  <D:supported-report>
+                    <D:report>
+                      <CAL:calendar-multiget/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <CAL:calendar-query/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:acl-principal-prop-set/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-match/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-property-search/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:expand-property/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <CS:calendarserver-principal-search/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:sync-collection/>
+                    </D:report>
+                  </D:supported-report>
+                </D:supported-report-set>
+                <D:resourcetype>
+                  <D:collection/>
+                  <CAL:calendar/>
+                </D:resourcetype>
+                <supported-calendar-component-set xmlns="urn:ietf:params:xml:ns:caldav">
+                  <CAL:comp name="VTODO"/>
+                </supported-calendar-component-set>
+                <getctag xmlns="http://calendarserver.org/ns/">9463-0</getctag>
+              </D:prop>
+              <D:status>HTTP/1.1 200 OK</D:status>
+            </D:propstat>
+            <D:propstat>
+              <D:prop>
+                <D:getetag/>
+              </D:prop>
+              <D:status>HTTP/1.1 404 NOT FOUND</D:status>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/caldav/schedule-outbox/</D:href>
+            <D:propstat>
+              <D:prop>
+                <D:getetag/>
+                <D:displayname>Schedule Outbox</D:displayname>
+                <D:resourcetype>
+                  <D:collection/>
+                  <CAL:schedule-outbox/>
+                </D:resourcetype>
+              </D:prop>
+              <D:status>HTTP/1.1 200 OK</D:status>
+            </D:propstat>
+            <D:propstat>
+              <D:prop>
+                <D:current-user-privilege-set/>
+                <calendar-color xmlns="http://apple.com/ns/ical/"/>
+                <D:supported-report-set/>
+                <supported-calendar-component-set xmlns="urn:ietf:params:xml:ns:caldav"/>
+                <getctag xmlns="http://calendarserver.org/ns/"/>
+              </D:prop>
+              <D:status>HTTP/1.1 404 NOT FOUND</D:status>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/caldav/schedule-inbox/</D:href>
+            <D:propstat>
+              <D:prop>
+                <D:getetag/>
+                <D:displayname>Schedule Inbox</D:displayname>
+                <D:resourcetype>
+                  <D:collection/>
+                  <CAL:schedule-inbox/>
+                </D:resourcetype>
+                <supported-calendar-component-set xmlns="urn:ietf:params:xml:ns:caldav">
+                  <CAL:comp name="VAVAILABILITY"/>
+                </supported-calendar-component-set>
+              </D:prop>
+              <D:status>HTTP/1.1 200 OK</D:status>
+            </D:propstat>
+            <D:propstat>
+              <D:prop>
+                <D:current-user-privilege-set/>
+                <calendar-color xmlns="http://apple.com/ns/ical/"/>
+                <D:supported-report-set/>
+                <getctag xmlns="http://calendarserver.org/ns/"/>
+              </D:prop>
+              <D:status>HTTP/1.1 404 NOT FOUND</D:status>
+            </D:propstat>
+          </D:response>
+        </D:multistatus>
+  recorded_at: Wed, 21 Oct 2026 13:23:06 GMT
+- request:
+    method: propfind
+    uri: https://messagerie.numerique.gouv.fr/dav/caldav/Y2FsOi8vMC8yMjg0OA/
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <dav:propfind xmlns:dav="DAV:" xmlns:caldav="urn:ietf:params:xml:ns:caldav" xmlns:cs="http://calendarserver.org/ns/" xmlns:apple="http://apple.com/ns/ical/">
+          <dav:prop>
+            <dav:current-user-principal/>
+          </dav:prop>
+        </dav:propfind>
+    headers:
+      Authorization: "[Filtered in vcr.rb -> before_record]"
+      Depth:
+      - '0'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Connection:
+      - close
+      Host:
+      - messagerie.numerique.gouv.fr
+      User-Agent:
+      - http.rb/5.3.1
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Wed, 21 Oct 2026 13:23:06 GMT
+      Content-Type:
+      - text/xml; charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - close
+      X-Robots-Tag:
+      - none
+      X-Powered-By:
+      - Open-Xchange
+      X-Envoy-Upstream-Service-Time:
+      - '1'
+      Set-Cookie: "[Filtered in vcr.rb -> before_record]"
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <D:multistatus xmlns:D="DAV:" xmlns:APPLE="http://apple.com/ns/ical/" xmlns:CAL="urn:ietf:params:xml:ns:caldav" xmlns:CS="http://calendarserver.org/ns/">
+          <D:response>
+            <D:href>/dav/caldav/Y2FsOi8vMC8yMjg0OA/</D:href>
+            <D:propstat>
+              <D:prop>
+                <D:current-user-principal>
+                  <D:href>/dav/principals/users/1408</D:href>
+                </D:current-user-principal>
+              </D:prop>
+              <D:status>HTTP/1.1 200 OK</D:status>
+            </D:propstat>
+          </D:response>
+        </D:multistatus>
+  recorded_at: Wed, 21 Oct 2026 13:23:06 GMT
+- request:
+    method: propfind
+    uri: https://messagerie.numerique.gouv.fr/dav/caldav/Y2FsOi8vMC8yMjg0OA/
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <dav:propfind xmlns:dav="DAV:" xmlns:caldav="urn:ietf:params:xml:ns:caldav" xmlns:cs="http://calendarserver.org/ns/" xmlns:apple="http://apple.com/ns/ical/">
+          <dav:prop>
+            <dav:displayname/>
+            <dav:resourcetype/>
+            <dav:getetag/>
+            <cs:getctag/>
+            <apple:calendar-color/>
+            <dav:sync-token/>
+            <dav:supported-report-set/>
+            <caldav:supported-calendar-component-set/>
+            <dav:current-user-privilege-set/>
+          </dav:prop>
+        </dav:propfind>
+    headers:
+      Authorization: "[Filtered in vcr.rb -> before_record]"
+      Depth:
+      - '0'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Connection:
+      - close
+      Host:
+      - messagerie.numerique.gouv.fr
+      User-Agent:
+      - http.rb/5.3.1
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Wed, 21 Oct 2026 13:23:06 GMT
+      Content-Type:
+      - text/xml; charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - close
+      X-Robots-Tag:
+      - none
+      X-Powered-By:
+      - Open-Xchange
+      X-Envoy-Upstream-Service-Time:
+      - '4'
+      Set-Cookie: "[Filtered in vcr.rb -> before_record]"
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <D:multistatus xmlns:D="DAV:" xmlns:APPLE="http://apple.com/ns/ical/" xmlns:CAL="urn:ietf:params:xml:ns:caldav" xmlns:CS="http://calendarserver.org/ns/">
+          <D:response>
+            <D:href>/dav/caldav/Y2FsOi8vMC8yMjg0OA/</D:href>
+            <D:propstat>
+              <D:prop>
+                <D:current-user-privilege-set>
+                  <D:privilege>
+                    <D:read-acl/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:read-current-user-privilege-set/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:read/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-content/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-properties/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-acl/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:bind/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:unbind/>
+                  </D:privilege>
+                </D:current-user-privilege-set>
+                <D:displayname>test sync</D:displayname>
+                <calendar-color xmlns="http://apple.com/ns/ical/" symbolic-color="custom">#CEE7FFFF</calendar-color>
+                <D:sync-token>1792588857975.0.4</D:sync-token>
+                <D:supported-report-set>
+                  <D:supported-report>
+                    <D:report>
+                      <CAL:calendar-multiget/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <CAL:calendar-query/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:acl-principal-prop-set/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-match/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-property-search/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:expand-property/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <CS:calendarserver-principal-search/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:sync-collection/>
+                    </D:report>
+                  </D:supported-report>
+                </D:supported-report-set>
+                <D:resourcetype>
+                  <D:collection/>
+                  <CAL:calendar/>
+                  <CS:shared-owner/>
+                </D:resourcetype>
+                <supported-calendar-component-set xmlns="urn:ietf:params:xml:ns:caldav">
+                  <CAL:comp name="VEVENT"/>
+                </supported-calendar-component-set>
+                <getctag xmlns="http://calendarserver.org/ns/">cal://0/22848-1792588857975.0.4</getctag>
+              </D:prop>
+              <D:status>HTTP/1.1 200 OK</D:status>
+            </D:propstat>
+            <D:propstat>
+              <D:prop>
+                <D:getetag/>
+              </D:prop>
+              <D:status>HTTP/1.1 404 NOT FOUND</D:status>
+            </D:propstat>
+          </D:response>
+        </D:multistatus>
+  recorded_at: Wed, 21 Oct 2026 13:23:06 GMT
+- request:
+    method: put
+    uri: https://messagerie.numerique.gouv.fr/dav/caldav/Y2FsOi8vMC8yMjg0OA/rdvsp-connection-test-3121bd24-5bda-4bcb-985f-0b96049031de.ics
+    body:
+      encoding: UTF-8
+      string: "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Service Public\r\nCALSCALE:GREGORIAN\r\nBEGIN:VEVENT\r\nDTSTAMP:20261021T132306Z\r\nUID:rdvsp-connection-test-3121bd24-5bda-4bcb-985f-0b96049031de\r\nDTSTART:20261020T220000\r\nDTEND:20261020T230000\r\nSUMMARY:Test
+        de connexion RDV Service Public\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
+    headers:
+      Authorization: "[Filtered in vcr.rb -> before_record]"
+      Content-Type:
+      - text/calendar
+      Connection:
+      - close
+      Host:
+      - messagerie.numerique.gouv.fr
+      User-Agent:
+      - http.rb/5.3.1
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Wed, 21 Oct 2026 13:23:06 GMT
+      Content-Length:
+      - '0'
+      Connection:
+      - close
+      X-Robots-Tag:
+      - none
+      X-Powered-By:
+      - Open-Xchange
+      X-Envoy-Upstream-Service-Time:
+      - '50'
+      Set-Cookie: "[Filtered in vcr.rb -> before_record]"
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+  recorded_at: Wed, 21 Oct 2026 13:23:06 GMT
+- request:
+    method: delete
+    uri: https://messagerie.numerique.gouv.fr/dav/caldav/Y2FsOi8vMC8yMjg0OA/rdvsp-connection-test-3121bd24-5bda-4bcb-985f-0b96049031de.ics
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    headers:
+      Authorization: "[Filtered in vcr.rb -> before_record]"
+      Connection:
+      - close
+      Host:
+      - messagerie.numerique.gouv.fr
+      User-Agent:
+      - http.rb/5.3.1
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Wed, 21 Oct 2026 13:23:06 GMT
+      Connection:
+      - close
+      X-Robots-Tag:
+      - none
+      X-Powered-By:
+      - Open-Xchange
+      X-Envoy-Upstream-Service-Time:
+      - '16'
+      Set-Cookie: "[Filtered in vcr.rb -> before_record]"
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+  recorded_at: Wed, 21 Oct 2026 13:23:06 GMT
+recorded_with: VCR 6.4.0

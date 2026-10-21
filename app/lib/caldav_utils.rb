@@ -23,4 +23,20 @@ module CaldavUtils
       privileges.include?("write-bind") &&
       privileges.include?("write-unbind")
   end
+
+  def self.generate_test_event_uid
+    "rdvsp-connection-test-#{SecureRandom.uuid}"
+  end
+
+  def self.generate_test_event(event_uid)
+    Icalendar::Calendar.new.tap do |cal|
+      cal.prodid = "RDV Service Public"
+      cal.event do |event|
+        event.uid = "rdvsp-connection-test-#{event_uid}"
+        event.dtstart = Icalendar::Values::DateTime.new(Time.now.change(hour: 0).utc)
+        event.dtend = Icalendar::Values::DateTime.new(Time.now.change(hour: 1).utc)
+        event.summary = "Test de connexion RDV Service Public"
+      end
+    end
+  end
 end
