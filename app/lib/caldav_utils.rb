@@ -16,7 +16,11 @@ module CaldavUtils
   def self.fully_writable?(calendar)
     privileges = calendar.current_user_privilege_set
     return false if privileges.blank?
+    return true if privileges.intersect?(FULL_WRITE_PRIVILEGES)
 
-    privileges.intersect?(FULL_WRITE_PRIVILEGES) || WRITE_COMPONENT_PRIVILEGES.all? { |privilege| privileges.include?(privilege) }
+    privileges.include?("write-properties") &&
+      privileges.include?("write-content") &&
+      privileges.include?("write-bind") &&
+      privileges.include?("write-unbind")
   end
 end
