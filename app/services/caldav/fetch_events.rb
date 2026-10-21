@@ -1,4 +1,6 @@
 class Caldav::FetchEvents
+  BATCH_SIZE = 200
+
   def initialize(agent, sync_logger)
     @agent = agent
     @sync_logger = sync_logger
@@ -7,7 +9,8 @@ class Caldav::FetchEvents
   def fetch_changes
     if caldav_config.caldav_sync_token
       sync_logger.log("Sync token found: loading only new events")
-      @updated_events, @deleted_event_urls, @new_sync_token = changes_since_last_sync
+      updated_events, @deleted_event_urls, @new_sync_token = changes_since_last_sync
+      @event_batches = updated_events.each_slice(BATCH_SIZE)
       return
     end
 
@@ -15,14 +18,14 @@ class Caldav::FetchEvents
 
     if calendar.sync_token.present?
       sync_logger.log("First sync: loading all events (paginated)")
-      @updated_events = initial_fetch
+      @event_batches = initial_fetch
       @deleted_event_urls = []
       @new_sync_token = calendar.sync_token
       return
     end
 
     if calendar.ctag.present?
-      @updated_events, @deleted_event_urls = fetch_by_ctag(calendar)
+      @event_batches = fetch_by_ctag(calendar)
       @new_ctag = calendar.ctag
       return
     end
@@ -30,8 +33,16 @@ class Caldav::FetchEvents
     raise "pas de sync token ni de ctag sur le calendrier distant"
   end
 
-  def updated_events
-    (@updated_events || []).select(&:blocks_calendar?)
+  # Les événements sont traités par lots pour ne pas garder tous les iCal parsés en mémoire.
+  # À n'appeler qu'une fois : les lots sont produits à la volée, et deleted_event_urls n'est
+  # complet qu'une fois tous les lots consommés.
+  def each_updated_batch
+    @updated_count = 0
+    (@event_batches || []).each do |events|
+      updated_events = events.select(&:blocks_calendar?)
+      @updated_count += updated_events.size
+      yield updated_events
+    end
   end
 
   def deleted_event_urls
@@ -39,7 +50,7 @@ class Caldav::FetchEvents
   end
 
   def any_changes?
-    updated_events.any? || deleted_event_urls.any?
+    @updated_count.to_i.positive? || deleted_event_urls.any?
   end
 
   attr_reader :new_sync_token, :new_ctag
@@ -54,15 +65,16 @@ class Caldav::FetchEvents
   def fetch_by_ctag(calendar)
     if calendar.ctag == caldav_config.caldav_ctag
       sync_logger.log("No sync token support: ctag unchanged, nothing to load")
+      @deleted_event_urls = []
+      []
     elsif caldav_config.caldav_ctag.present?
       sync_logger.log("No sync token support: ctag changed, loading only new or updated events")
-      updated_events, deleted_event_urls = changed_events_by_etag
+      changed_events_by_etag
     else
       sync_logger.log("No sync token support: ctag changed, loading all events")
-      updated_events = initial_fetch
-      deleted_event_urls = []
+      @deleted_event_urls = []
+      initial_fetch
     end
-    [updated_events, deleted_event_urls]
   end
 
   def changes_since_last_sync
@@ -84,7 +96,18 @@ class Caldav::FetchEvents
   end
 
   def initial_fetch
-    caldav_client.events.list(caldav_config.caldav_agenda_url).map { Caldav::Event.new(_1) } # Cette méthode ne récupère que les événements et rejette bien les VTODO
+    # Cette méthode ne récupère que les événements et rejette bien les VTODO
+    calendav_events = caldav_client.events.list(caldav_config.caldav_agenda_url)
+
+    # Calendav garde l'iCal parsé dans chaque événement, donc tant que ce tableau les référence, rien de ce
+    # qui a été parsé ne peut être libéré. On vide donc chaque case au fur et à mesure (et on évite shift/slice!
+    # qui partagent le tampon d'origine et le gardent en mémoire en entier).
+    Enumerator.new do |batches|
+      (0...calendav_events.size).step(BATCH_SIZE) do |start|
+        indexes = start...[start + BATCH_SIZE, calendav_events.size].min
+        batches << indexes.map { |i| Caldav::Event.new(calendav_events[i]).tap { calendav_events[i] = nil } }
+      end
+    end
   end
 
   # On compare les etags du serveur avec ceux stockés localement, pour ne télécharger que les événements
@@ -97,15 +120,16 @@ class Caldav::FetchEvents
     urls_of_rdvs = AgentsRdv.where(caldav_url: remote_etags.keys).pluck(:caldav_url)
     changed_urls = remote_etags.reject { |url, etag| local_etags[url] == etag }.keys - urls_of_rdvs
 
-    # On rejette les ressources qui ne sont pas des événements (VTODO notamment)
-    changed_events = caldav_etag_client.events(caldav_config.caldav_agenda_url, changed_urls.sort)
-      .select { _1.calendar_data && _1.send(:inner_event) }
-      .map { Caldav::Event.new(_1) }
-    updated_events, not_busy_events = changed_events.partition(&:consider_busy?)
+    # Les événements à supprimer ne sont connus en entier qu'une fois tous les lots consommés
+    @deleted_event_urls = local_etags.keys - remote_etags.keys
 
-    deleted_event_urls = (local_etags.keys - remote_etags.keys) + (not_busy_events.map(&:url) & local_etags.keys)
-
-    [updated_events, deleted_event_urls]
+    caldav_etag_client.events_in_batches(caldav_config.caldav_agenda_url, changed_urls.sort).map do |calendav_events|
+      # On rejette les ressources qui ne sont pas des événements (VTODO notamment)
+      events = calendav_events.map { Caldav::Event.new(_1) }.select { _1.calendar_data && _1.inner_event }
+      busy_events, not_busy_events = events.partition(&:consider_busy?)
+      @deleted_event_urls += not_busy_events.map(&:url) & local_etags.keys
+      busy_events
+    end
   end
 
   def caldav_config
