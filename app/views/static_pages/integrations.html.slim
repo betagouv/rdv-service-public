@@ -1,0 +1,117 @@
+- content_for :title do
+  | Intégrations
+
+.fr-container.fr-py-6w
+  h1
+    | Intégrations
+  p.fr-text--lead
+    | RDV Service Public se branche sur les outils déjà en place, côté agents comme côté partenaires.
+
+/ Texte à gauche, capture à droite
+section#demarches-numeriques.fr-py-8w.fr-background-alt--grey
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle
+      .fr-col-12.fr-col-md-5
+        h2
+          | Démarches Numériques
+        p.fr-text--lg
+          |> L’agent instruit le dossier dans
+          = link_to "Démarches Numériques", "https://demarche.numerique.gouv.fr/", target: "_blank", rel: "noopener", title: "Démarches Numériques - nouvelle fenêtre"
+          | , puis propose le rendez-vous au bon moment, sans quitter son outil.
+        ul
+          li Bouton « Prendre rendez-vous » depuis le dossier
+          li Usager pré-rempli à partir du dossier
+          li Rendez-vous fixé par l’instructeur, ou invitation de l’usager à choisir son créneau
+          li Lien vers le dossier sur le rendez-vous et dans l’invitation agenda
+          li Retour au dossier après confirmation
+          li Salle de visio créée automatiquement
+      .fr-col-12.fr-col-md-7
+        / TODO : capture du bouton de prise de rendez-vous dans un dossier
+        .fr-background-contrast--grey.fr-p-8w.rdv-text-align-center
+          span.fr-h5
+            | Capture à venir
+
+/ Titre centré, liste et capture à droite
+section#titres-identite.fr-py-8w
+  .fr-container
+    .fr-grid-row.fr-grid-row--center.fr-grid-row--gutters
+      .fr-col-12.fr-col-md-8.rdv-text-align-center
+        = dsfr_svg "artwork/pictograms/document/national-identity-card-passport"
+        h2.fr-h4.fr-mt-2w
+          | Titres d’identité
+        p.fr-text--lg
+          |> Pour les mairies qui délivrent passeports et cartes d’identité, avec
+          = link_to "l’ANTS", "https://ants.gouv.fr/", target: "_blank", rel: "noopener", title: "ANTS - Agence nationale des titres sécurisés - nouvelle fenêtre"
+          | .
+      .fr-col-12.fr-col-md-6
+        ul
+          li Rendez-vous passeport et carte d’identité en ligne
+          li Saisie du numéro de pré-demande ANTS par l’usager
+          li Vérification du numéro auprès de l’ANTS
+          li Plusieurs personnes dans un même rendez-vous
+          li Rendez-vous déclarés à l’ANTS : création, modification, annulation
+          li Créneaux visibles sur le moteur de recherche national de l’ANTS
+      .fr-col-12.fr-col-md-6
+        figure.fr-content-media
+          = image_tag "rdv_mairie/ants.webp", alt: "Saisie du numéro de pré-demande ANTS par l’usager, pendant la prise de rendez-vous passeport en ligne", class: "fr-responsive-img"
+
+/ Fond bleu, deux cartes
+section#outils-metiers.fr-background-alt--blue-france.fr-py-8w
+  .fr-container
+    .fr-grid-row.fr-grid-row--center
+      .fr-col-12.fr-col-md-8.rdv-text-align-center
+        h2.fr-h4
+          | Outils métiers partenaires
+        p.fr-text--lg
+          | Les agents prennent rendez-vous sans quitter leur outil habituel.
+    .fr-grid-row.fr-grid-row--gutters
+      .fr-col-12.fr-col-md-6
+        .fr-card
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                = link_to "Mon Suivi Social", "https://monsuivisocial.incubateur.anct.gouv.fr/", target: "_blank", rel: "noopener", title: "Mon Suivi Social - nouvelle fenêtre"
+              .fr-card__desc
+                ul
+                  li Prise de rendez-vous depuis la fiche bénéficiaire
+                  li Bénéficiaire pré-rempli
+                  li Lien vers la fiche bénéficiaire sur le rendez-vous
+                  li Retour à la fiche après confirmation
+                  li Comptes agents créés à la volée via ProConnect
+          .fr-card__header
+            .fr-card__img.fr-p-4w
+              = dsfr_svg "artwork/pictograms/environment/human-cooperation", class: "fr-responsive-img"
+      .fr-col-12.fr-col-md-6
+        .fr-card
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                = link_to "RDV Insertion", "https://www.rdv-insertion.fr/", target: "_blank", rel: "noopener", title: "RDV Insertion - nouvelle fenêtre"
+              .fr-card__desc
+                ul
+                  li Invitations envoyées depuis RDV Insertion aux usagers à orienter
+                  li Lien d’invitation vers les créneaux du bon motif
+                  li Usagers, profils et référents synchronisés par API
+                  li Catégories de motifs partagées
+                  li Suivi des rendez-vous en temps réel par webhooks
+          .fr-card__header
+            .fr-card__img.fr-p-4w
+              = dsfr_svg "artwork/pictograms/digital/mail-send", class: "fr-responsive-img"
+
+/ Texte à gauche, illustration à droite
+section#api.fr-py-8w
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle
+      .fr-col-12.fr-col-md-6
+        h2
+          | API et webhooks
+        p.fr-text--lg
+          | Pour les équipes techniques.
+        ul
+          li API pour lire et créer des rendez-vous, des usagers, des plages d’ouverture, des absences
+          li Bouton de prise de rendez-vous à intégrer dans tout outil métier (OAuth)
+          li Webhooks pour être notifié de chaque changement
+        .fr-btns-group.fr-btns-group--inline-md.fr-mt-2w
+          = link_to "Consulter la documentation technique", "https://aide.rdv-service-public.fr/documentation-technique/api", class: "fr-btn fr-btn--secondary"
+      .fr-col-12.fr-col-md-6
+        = image_tag "rdv_mairie/api.svg", alt: "", class: "fr-responsive-img"
