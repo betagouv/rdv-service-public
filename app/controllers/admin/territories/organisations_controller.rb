@@ -22,9 +22,12 @@ class Admin::Territories::OrganisationsController < Admin::Territories::BaseCont
   end
 
   def index
-    # L'accès à l'espace est vérifié dans set_territory : on y liste toutes ses organisations, y compris celles dont l'agent n'est pas membre
-    skip_policy_scope
-    @organisations = current_territory.organisations.where(disabled_at: nil).ordered_by_name
+    member_organisations = policy_scope(current_territory.organisations, policy_scope_class: Agent::OrganisationPolicy::Scope)
+    joinable_organisations = policy_scope(current_territory.organisations, policy_scope_class: Agent::OrganisationPolicy::JoinableScope)
+    @organisations = current_territory.organisations
+      .where_id_in_subqueries([member_organisations, joinable_organisations])
+      .where(disabled_at: nil)
+      .ordered_by_name
     @closed_organisations = current_territory.organisations.where.not(disabled_at: nil)
   end
 

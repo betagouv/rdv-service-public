@@ -12,7 +12,7 @@ class Agent::OrganisationPolicy < ApplicationPolicy
   end
 
   def join?
-    territorial_admin? && !in_organisation? && record.disabled_at.nil?
+    JoinableScope.new(current_agent, Organisation.where(id: record.id)).resolve.exists?
   end
 
   alias show? in_organisation?
@@ -39,5 +39,14 @@ class Agent::OrganisationPolicy < ApplicationPolicy
     end
 
     alias current_agent pundit_user
+  end
+
+  # Organisations qu'un admin d'espace peut rejoindre : celles de ses espaces, encore ouvertes, dont il n'est pas membre
+  class JoinableScope < Scope
+    def resolve
+      scope
+        .where(territory_id: current_agent.territorial_roles.select(:territory_id), disabled_at: nil)
+        .where.not(id: current_agent.organisations.select(:id))
+    end
   end
 end
