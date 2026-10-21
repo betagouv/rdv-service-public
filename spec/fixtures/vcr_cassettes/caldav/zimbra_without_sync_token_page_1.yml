@@ -168,23 +168,18 @@ http_interactions:
         </D:multistatus>
   recorded_at: Mon, 05 Oct 2026 12:21:20 GMT
 - request:
-    method: report
+    method: propfind
     uri: https://webmail.genci.fr/dav/pbrdv@genci.fr/Calendar
     body:
       encoding: UTF-8
       string: |
         <?xml version="1.0"?>
-        <caldav:calendar-query xmlns:dav="DAV:" xmlns:caldav="urn:ietf:params:xml:ns:caldav" xmlns:cs="http://calendarserver.org/ns/" xmlns:apple="http://apple.com/ns/ical/">
+        <dav:propfind xmlns:dav="DAV:" xmlns:caldav="urn:ietf:params:xml:ns:caldav" xmlns:cs="http://calendarserver.org/ns/" xmlns:apple="http://apple.com/ns/ical/">
           <dav:prop>
+            <dav:resourcetype/>
             <dav:getetag/>
-            <caldav:calendar-data/>
           </dav:prop>
-          <caldav:filter>
-            <caldav:comp-filter name="VCALENDAR">
-              <caldav:comp-filter name="VEVENT"/>
-            </caldav:comp-filter>
-          </caldav:filter>
-        </caldav:calendar-query>
+        </dav:propfind>
     headers:
       Authorization: "[Filtered in vcr.rb -> before_record]"
       Depth:
@@ -204,7 +199,199 @@ http_interactions:
       message: Multi-Status
     headers:
       Date:
-      - Mon, 05 Oct 2026 12:21:20 GMT
+      - Mon, 05 Oct 2026 12:49:40 GMT
+      Content-Type:
+      - text/xml; charset="UTF-8"
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - close
+      Dav:
+      - 1, 2, 3, access-control, calendar-access, calendar-auto-schedule
+      - calendarserver-principal-property-search
+      - version-control, addressbook, extended-mkcol, calendar-proxy
+      X-Content-Options:
+      - nosniff
+      Content-Security-Policy:
+      - 'default-src ''self''; frame-src ''self'' https://*.renater.fr; img-src https:
+        data:; object-src ''none''; script-src ''self'' ''report-sample'' ''unsafe-inline''
+        ''unsafe-eval''; style-src ''self'' ''report-sample'' ''unsafe-inline''; worker-src
+        ''self'';'
+      Expect-Ct:
+      - max-age=86400, enforce
+      X-Frame-Options:
+      - sameorigin
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      X-Robots-Tag:
+      - noindex
+      Strict-Transport-Security:
+      - max-age=16070400; includeSubDomains
+      Set-Cookie: "[Filtered in vcr.rb -> before_record]"
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <D:multistatus xmlns:D="DAV:">
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <D:resourcetype>
+                  <D:collection/>
+                  <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
+                </D:resourcetype>
+                <D:getetag>"1-1"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/3aacf91a-88ee-4f1b-8ae6-93a674aaf9bd.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <D:resourcetype/>
+                <D:getetag>"25-25"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/459a4266-1c9d-4b33-a6c0-93c7adf010fb.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <D:resourcetype/>
+                <D:getetag>"27-27"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/28684abf-a7d0-4c1a-9594-cbd5d0ac4058.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <D:resourcetype/>
+                <D:getetag>"26-26"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/dca8df82-7d0e-48af-9b77-376c02533874.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <D:resourcetype/>
+                <D:getetag>"28-28"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/b52d3853-fcb8-418d-8179-6afafe816d63.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <D:resourcetype/>
+                <D:getetag>"31-31"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/6ac1bb57-ba53-442b-953d-68ee9d06ea98.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <D:resourcetype/>
+                <D:getetag>"23-23"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/381397dd-d5eb-4955-af83-f91ebfe9ba99.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <D:resourcetype/>
+                <D:getetag>"29-29"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/c04a78ba-e0ec-48da-89b3-755069e7b09a.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <D:resourcetype/>
+                <D:getetag>"30-30"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/1c4f8a8c-92ee-4129-a713-eed72e0af0f4.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <D:resourcetype/>
+                <D:getetag>"32-32"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/589fdf37-b531-4387-a707-a1eb4e00b9fa.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <D:resourcetype/>
+                <D:getetag>"24-24"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+        </D:multistatus>
+  recorded_at: Mon, 05 Oct 2026 12:49:40 GMT
+- request:
+    method: report
+    uri: https://webmail.genci.fr/dav/pbrdv@genci.fr/Calendar
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <caldav:calendar-multiget xmlns:dav="DAV:" xmlns:caldav="urn:ietf:params:xml:ns:caldav" xmlns:cs="http://calendarserver.org/ns/" xmlns:apple="http://apple.com/ns/ical/">
+          <dav:prop>
+            <dav:getetag/>
+            <caldav:calendar-data/>
+          </dav:prop>
+          <dav:href>/dav/pbrdv%40genci.fr/Calendar/1c4f8a8c-92ee-4129-a713-eed72e0af0f4.ics</dav:href>
+          <dav:href>/dav/pbrdv%40genci.fr/Calendar/28684abf-a7d0-4c1a-9594-cbd5d0ac4058.ics</dav:href>
+          <dav:href>/dav/pbrdv%40genci.fr/Calendar/381397dd-d5eb-4955-af83-f91ebfe9ba99.ics</dav:href>
+          <dav:href>/dav/pbrdv%40genci.fr/Calendar/3aacf91a-88ee-4f1b-8ae6-93a674aaf9bd.ics</dav:href>
+          <dav:href>/dav/pbrdv%40genci.fr/Calendar/459a4266-1c9d-4b33-a6c0-93c7adf010fb.ics</dav:href>
+          <dav:href>/dav/pbrdv%40genci.fr/Calendar/589fdf37-b531-4387-a707-a1eb4e00b9fa.ics</dav:href>
+          <dav:href>/dav/pbrdv%40genci.fr/Calendar/6ac1bb57-ba53-442b-953d-68ee9d06ea98.ics</dav:href>
+          <dav:href>/dav/pbrdv%40genci.fr/Calendar/b52d3853-fcb8-418d-8179-6afafe816d63.ics</dav:href>
+          <dav:href>/dav/pbrdv%40genci.fr/Calendar/c04a78ba-e0ec-48da-89b3-755069e7b09a.ics</dav:href>
+          <dav:href>/dav/pbrdv%40genci.fr/Calendar/dca8df82-7d0e-48af-9b77-376c02533874.ics</dav:href>
+        </caldav:calendar-multiget>
+    headers:
+      Authorization: "[Filtered in vcr.rb -> before_record]"
+      Depth:
+      - '1'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Connection:
+      - close
+      Host:
+      - webmail.genci.fr
+      User-Agent:
+      - http.rb/5.3.1
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Date:
+      - Mon, 05 Oct 2026 12:49:40 GMT
       Content-Type:
       - text/xml; charset="UTF-8"
       Transfer-Encoding:
@@ -720,5 +907,6 @@ http_interactions:
             </D:propstat>
           </D:response>
         </D:multistatus>
-  recorded_at: Mon, 05 Oct 2026 12:21:20 GMT
+  recorded_at: Mon, 05 Oct 2026 12:49:40 GMT
+recorded_at:
 recorded_with: VCR 6.4.0

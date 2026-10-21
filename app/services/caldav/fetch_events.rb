@@ -54,13 +54,19 @@ class Caldav::FetchEvents
   def fetch_by_ctag(calendar)
     if calendar.ctag == caldav_config.caldav_ctag
       sync_logger.log("No sync token support: ctag unchanged, nothing to load")
-    elsif caldav_config.caldav_ctag.present?
-      sync_logger.log("No sync token support: ctag changed, loading only new or updated events")
-      updated_events, deleted_event_urls = changed_events_by_etag
     else
-      sync_logger.log("No sync token support: ctag changed, loading all events")
-      updated_events = initial_fetch
-      deleted_event_urls = []
+      # Même à la première synchro, on passe par les etags : initial_fetch charge tout
+      # l'agenda dans une réponse unique, ce qui fait OOM les workers sur les gros agendas.
+      # Comme le ctag n'est enregistré qu'à la fin de la synchro, un échec à la première
+      # tentative ferait alors retélécharger tout l'agenda à chaque retry.
+      message =
+        if caldav_config.caldav_ctag.blank?
+          "No sync token support: ctag changed, loading all events"
+        else
+          "No sync token support: ctag changed, loading only new or updated events"
+        end
+      sync_logger.log(message)
+      updated_events, deleted_event_urls = changed_events_by_etag
     end
     [updated_events, deleted_event_urls]
   end

@@ -212,6 +212,8 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
   # Les cassettes ont été enregistrées en deux temps sur un vrai serveur Zimbra :
   # - page 1 : 10 événements, ctag "1-32"
   # - page 2 : 6 événements ajoutés depuis, ctag "1-38"
+  # La page 1 a été retouchée à la main quand la première synchro est passée
+  # par les etags (PROPFIND Depth 1 + multiget, sans re-contacter le serveur).
   context "quand l'agent utilise un système ne supportant pas le sync token (Zimbra typiquement)" do
     # Toutes les requêtes (PROPFIND Depth 0 et 1, REPORT) visent l'URL du calendrier : on les distingue par leur body
     def with_zimbra_cassette(page, &)
@@ -275,6 +277,10 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
 
       it "ne demande au serveur que les événements nouveaux ou modifiés" do
         urls_before_sync = ExternalCalendarEvent.pluck(:url)
+
+        # La première synchro émet elle aussi une requête multiget : on repart
+        # de zéro pour ne compter que les requêtes de la synchro suivante
+        WebMock::RequestRegistry.instance.reset!
 
         with_zimbra_cassette(2) { described_class.new.perform(agent.id) }
 

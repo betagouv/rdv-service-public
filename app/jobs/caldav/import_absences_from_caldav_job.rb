@@ -2,6 +2,10 @@ module Caldav
   class ImportAbsencesFromCaldavJob < Caldav::BaseJob
     include GoodJob::ActiveJobExtensions::Concurrency
 
+    # On insère par lots : un seul upsert de tout l'agenda produirait une requête
+    # SQL géante, facteur d'OOM sur les workers pour les gros agendas
+    UPSERT_BATCH_SIZE = 500
+
     good_job_control_concurrency_with(
       total_limit: 1,
       key: -> { "Caldav::ImportAbsencesFromCaldavJob-#{arguments.first}" }
@@ -56,7 +60,9 @@ module Caldav
       deleted_event_urls = fetch_events_service.deleted_event_urls
 
       ExternalCalendarEvent.transaction do
-        ExternalCalendarEvent.upsert_all(hashes_to_upsert, unique_by: :index_external_calendar_events_on_agent_id_and_url) # rubocop:disable Rails/SkipsModelValidations
+        hashes_to_upsert.each_slice(UPSERT_BATCH_SIZE) do |batch|
+          ExternalCalendarEvent.upsert_all(batch, unique_by: :index_external_calendar_events_on_agent_id_and_url) # rubocop:disable Rails/SkipsModelValidations
+        end
 
         ExternalCalendarEvent.where(agent: @agent, url: deleted_event_urls).delete_all if deleted_event_urls.any?
 
