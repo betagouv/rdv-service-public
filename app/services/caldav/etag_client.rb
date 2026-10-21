@@ -25,8 +25,10 @@ class Caldav::EtagClient
       .to_h { |node| [Calendav::ContextualURL.call(calendar_url, node.xpath("./dav:href").text), node.xpath(".//dav:getetag").text] }
   end
 
-  def events(calendar_url, event_urls)
-    event_urls.each_slice(MULTIGET_BATCH_SIZE).flat_map do |batch|
+  # Retourne un Enumerator paresseux de lots (Array) d'événements : chaque requête multiget n'est
+  # faite que quand le lot est consommé, ce qui évite de garder tous les événements en mémoire.
+  def events_in_batches(calendar_url, event_urls)
+    event_urls.each_slice(MULTIGET_BATCH_SIZE).lazy.map do |batch|
       @endpoint.report(multiget_request(batch).to_xml, url: calendar_url, depth: 1)
         .reject { |node| node.xpath(".//caldav:calendar-data").text.empty? }
         .map { |node| Calendav::Event.from_xml(calendar_url, node) }

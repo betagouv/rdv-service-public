@@ -46,23 +46,31 @@ module Caldav
     private
 
     def update_local_events!(fetch_events_service)
-      updated_events = fetch_events_service.updated_events
-      # On exclut le traitement des événements provenant d'un RDV de chez nous
-      urls_of_rdvs = AgentsRdv.where(caldav_url: updated_events.map(&:url)).pluck(:caldav_url).to_set
-      updated_events = updated_events.reject { _1.url.in?(urls_of_rdvs) }
+      upserted_count = 0
 
-      hashes_to_upsert = updated_events.map { _1.to_external_calendar_event_hash(@agent.id) }
+      # Les lots sont produits à la volée (avec des requêtes HTTP pour certains serveurs) : on les upserte
+      # hors transaction pour ne pas garder une connexion à la base ouverte pendant ces appels réseau.
+      # Chaque upsert est atomique et idempotent, et le ctag / sync token n'est mis à jour qu'à la fin :
+      # en cas d'échec en cours de route, la prochaine synchro reprend ce qui manque.
+      fetch_events_service.each_updated_batch do |updated_events|
+        # On exclut le traitement des événements provenant d'un RDV de chez nous
+        urls_of_rdvs = AgentsRdv.where(caldav_url: updated_events.map(&:url)).pluck(:caldav_url).to_set
+        hashes_to_upsert = updated_events.reject { _1.url.in?(urls_of_rdvs) }.map { _1.to_external_calendar_event_hash(@agent.id) }
+        next if hashes_to_upsert.empty?
 
+        ExternalCalendarEvent.upsert_all(hashes_to_upsert, unique_by: :index_external_calendar_events_on_agent_id_and_url) # rubocop:disable Rails/SkipsModelValidations
+        upserted_count += hashes_to_upsert.size
+      end
+
+      # Les suppressions ne sont connues en entier qu'une fois tous les lots traités
       deleted_event_urls = fetch_events_service.deleted_event_urls
 
       ExternalCalendarEvent.transaction do
-        ExternalCalendarEvent.upsert_all(hashes_to_upsert, unique_by: :index_external_calendar_events_on_agent_id_and_url) # rubocop:disable Rails/SkipsModelValidations
-
         ExternalCalendarEvent.where(agent: @agent, url: deleted_event_urls).delete_all if deleted_event_urls.any?
 
         caldav_config.update!(caldav_sync_token: fetch_events_service.new_sync_token, caldav_ctag: fetch_events_service.new_ctag)
 
-        sync_logger.log("New/updated: #{updated_events.size}, deleted : #{deleted_event_urls.size}")
+        sync_logger.log("New/updated: #{upserted_count}, deleted : #{deleted_event_urls.size}")
       end
     end
 

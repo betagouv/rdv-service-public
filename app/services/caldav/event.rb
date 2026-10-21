@@ -3,14 +3,15 @@ class Caldav::Event
     @calendav_event = calendav_event
   end
 
-  delegate :url, :calendar_data, :dtend, to: :@calendav_event
+  delegate :url, :calendar_data, to: :@calendav_event
+  delegate :dtstart, :dtend, :transp, to: :inner_event
 
   def to_external_calendar_event_hash(agent_id)
     {
       agent_id:,
       url:,
-      starts_at: @calendav_event.dtstart,
-      ends_at: @calendav_event.dtend,
+      starts_at: dtstart,
+      ends_at: dtend,
       raw_ical: recurring? ? Ical::Scrubber.new(calendar_data).scrubbed : nil,
       etag: @calendav_event.etag,
     }
@@ -24,7 +25,7 @@ class Caldav::Event
       # mais avoir des occurrences exceptionnellement OPAQUE
       @calendav_event.calendar_data.include?("TRANSP:OPAQUE")
     else
-      @calendav_event.transp != "TRANSPARENT"
+      transp != "TRANSPARENT"
     end
   end
 
@@ -33,7 +34,8 @@ class Caldav::Event
   end
 
   def inner_event
-    # inner_event est coûteux à obtenir dans Calendav donc on memoize
+    # inner_event est coûteux à obtenir dans Calendav (l'iCal est re-parsé à chaque appel, y compris via dtstart,
+    # dtend et transp) donc on memoize et on lit toutes les propriétés depuis cet objet.
     @inner_event ||= @calendav_event.send(:inner_event)
   end
 
@@ -43,7 +45,7 @@ class Caldav::Event
     # On met à jour les événements modifiés qui sont « OPAQUE » (considérés comme occupés)
     #
     # Les événements sans DTEND (anniversaires, rappels...) ne sont pas bloquants et sont ignorés
-    @calendav_event.dtend.present?
+    dtend.present?
   end
 
   def blocks_calendar?
