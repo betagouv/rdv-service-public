@@ -157,7 +157,7 @@ class SplitTerritory
 
       territory_ids = (territory_ids_from_organisation_attributions + territory_ids_from_agent_attributions).uniq
 
-      if territory_ids.count > 1
+      if territory_ids.many?
         raise "Shared sector #{sector.id} can't be handled"
       end
 
@@ -173,7 +173,7 @@ class SplitTerritory
     @old_territory.teams.each do |team|
       territory_ids = team.agents.map(&:agent_territorial_access_rights).flatten.map(&:territory_id).uniq
 
-      if territory_ids.count > 1
+      if territory_ids.many?
         raise "L'équipe #{team.id} est partagée entre les deux territories"
       elsif territory_ids == [@new_territory.id]
         puts "Déplacement de l'équipe #{team.id} dans le nouveau territory"
