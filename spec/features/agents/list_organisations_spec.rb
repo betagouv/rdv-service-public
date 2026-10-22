@@ -82,6 +82,21 @@ RSpec.describe "Lister les organisations et y naviguer" do
 
     before { login_as(agent, scope: :agent) }
 
+    it "affiche une notice indiquant le nombre d'organisations dont il n'est pas membre" do
+      visit "/admin/organisations"
+      expect(page).to have_content("Il y a 2 autres organisations dans cet espace dont vous n'êtes pas membre.")
+      click_on("Gérer les organisations")
+      expect(page).to have_content("MDS de Paris Sud")
+    end
+
+    it "indique dans les paramètres de l'espace les organisations dont il n'est pas membre, sans lien vers leur configuration" do
+      visit admin_territory_organisations_path(territory)
+      expect(page).to have_link("MDS de Paris Nord", href: admin_organisation_configuration_path(organisation))
+      expect(page).to have_no_link("MDS de Paris Sud")
+      expect(page).to have_no_link("MDS de Paris Est")
+      expect(page).to have_content("Vous n'êtes pas membre de cette organisation", count: 2)
+    end
+
     it "permet de rejoindre une organisation depuis sa tuile" do
       visit admin_territory_organisations_path(territory)
       click_on("Rejoindre l'organisation MDS de Paris Sud")
@@ -97,6 +112,43 @@ RSpec.describe "Lister les organisations et y naviguer" do
       expect(page).to have_button("Rejoindre l'organisation MDS de Paris Sud")
       expect(page).to have_content("MDS de Paris Ouest")
       expect(page).to have_no_button("Rejoindre l'organisation MDS de Paris Ouest")
+    end
+  end
+
+  context "quand l'agent est administrateur de l'espace et membre de plusieurs organisations", :js do
+    let!(:territory) { create(:territory) }
+    let!(:organisation) { create(:organisation, territory: territory, name: "MDS de Paris Nord") }
+    let!(:other_organisation) { create(:organisation, territory: territory, name: "MDS de Paris Sud") }
+    let!(:joinable_organisation) { create(:organisation, territory: territory, name: "MDS de Paris Est") }
+    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation, other_organisation], role_in_territories: [territory]) }
+
+    before { login_as(agent, scope: :agent) }
+
+    it "affiche dans la modale de changement d'organisation une notice vers les organisations qu'il peut rejoindre" do
+      visit admin_organisation_planning_agenda_path(organisation)
+      click_on("Changer d'organisation")
+
+      within("#organisation-switcher-modal") do
+        expect(page).to have_content("Il y a 1 autre organisation dans cet espace dont vous n'êtes pas membre.")
+        click_on("Voir les organisations de l'espace")
+      end
+
+      expect(page).to have_current_path(admin_territory_organisations_path(territory))
+      expect(page).to have_button("Rejoindre l'organisation MDS de Paris Est")
+    end
+  end
+
+  context "quand l'agent n'est pas administrateur de l'espace" do
+    let!(:territory) { create(:territory) }
+    let!(:organisation) { create(:organisation, territory: territory) }
+    let!(:other_organisation) { create(:organisation, territory: territory) }
+    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+
+    before { login_as(agent, scope: :agent) }
+
+    it "n'affiche pas la notice" do
+      visit "/admin/organisations"
+      expect(page).to have_no_content("dont vous n'êtes pas membre")
     end
   end
 end
