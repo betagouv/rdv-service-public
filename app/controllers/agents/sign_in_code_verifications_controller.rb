@@ -1,5 +1,5 @@
 # Contrôleur utilisé pour la vérification du code (deuxième facteur) au moment de la connexion d’un agent.
-class Agents::SessionsByCodeController < ApplicationController
+class Agents::SignInCodeVerificationsController < ApplicationController
   SESSION_AGENT_ID_KEY = :pending_agent_login_id
   SESSION_PRO_CONNECT_ID_TOKEN_KEY = :pending_pro_connect_id_token
 
@@ -12,7 +12,7 @@ class Agents::SessionsByCodeController < ApplicationController
 
   def resend
     Agents::LoginCodeForm.resend_login_code!(pending_agent.email, current_domain)
-    redirect_to new_agents_sessions_by_code_path
+    redirect_to new_agents_sign_in_code_verification_path
   end
 
   def create

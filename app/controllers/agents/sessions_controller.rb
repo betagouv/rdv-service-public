@@ -44,9 +44,9 @@ class Agents::SessionsController < Devise::SessionsController
     if resource.sensitive_account? && !AgentTrustedDevice.trusted_by_cookie?(resource, cookies)
       sign_out(resource)
       AgentTwoFactorSessionState.clear!(session)
-      session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = resource.id
+      session[Agents::SignInCodeVerificationsController::SESSION_AGENT_ID_KEY] = resource.id
       Agents::LoginCodeSender.perform(email: resource.email, domain_id: current_domain.id)
-      redirect_to new_agents_sessions_by_code_path
+      redirect_to new_agents_sign_in_code_verification_path
       return
     end
 

@@ -11,11 +11,11 @@ RSpec.describe "rate limiting de la saisie de code de connexion agent (compte se
 
   it "throttle après quelques tentatives même quand le code est correct" do
     2.times do
-      post agents_sessions_by_code_path, params: { login_code: { code: "000000" } }
+      post agents_sign_in_code_verification_path, params: { login_code: { code: "000000" } }
       expect(response).not_to redirect_to("/500.html")
     end
 
-    post agents_sessions_by_code_path, params: { login_code: { code: "000000" } }
+    post agents_sign_in_code_verification_path, params: { login_code: { code: "000000" } }
     expect(response).to redirect_to("/500.html")
     expect(sentry_events.last.level).to eq(:warning)
     expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
