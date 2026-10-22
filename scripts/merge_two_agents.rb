@@ -21,7 +21,7 @@ dest_id_or_email = ARGV[1]
 source = Agent.where(id: source_id_or_email).or(Agent.where(email: source_id_or_email)).sole
 dest = Agent.where(id: dest_id_or_email).or(Agent.where(email: dest_id_or_email)).sole
 
-if source.organisations.count > 1 || dest.organisations.count > 1
+if source.organisations.many? || dest.organisations.many?
   puts "Both Agents must belong to only one organisation"
   exit 1
 end
