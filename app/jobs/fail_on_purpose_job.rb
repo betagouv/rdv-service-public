@@ -1,6 +1,6 @@
-class FailOnPurposeError < StandardError; end
-
 class FailOnPurposeJob < ApplicationJob
+  class FailOnPurposeError < StandardError; end
+
   queue_as :latency_30s
 
   # self.log_arguments = false

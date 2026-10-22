@@ -1,8 +1,10 @@
 DEFAULT_TYPHOEUS_TIMEOUT = 15
-class Typhoeus::Errors::TimeoutError < Typhoeus::Errors::TyphoeusError; end
+module Typhoeus
+  class Errors::TimeoutError < Errors::TyphoeusError; end
 
-class Typhoeus::Request
-  attr_accessor :scrub_from_sentry_breadcrumbs
+  class Request
+    attr_accessor :scrub_from_sentry_breadcrumbs
+  end
 end
 
 #
