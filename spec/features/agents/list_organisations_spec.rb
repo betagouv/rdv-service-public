@@ -130,7 +130,7 @@ RSpec.describe "Lister les organisations et y naviguer" do
 
       within("#organisation-switcher-modal") do
         expect(page).to have_content("Il y a 1 autre organisation dans cet espace dont vous n'êtes pas membre.")
-        click_on("Voir les organisations de l'espace")
+        click_on("Voir les organisations de l’espace")
       end
 
       expect(page).to have_current_path(admin_territory_organisations_path(territory))

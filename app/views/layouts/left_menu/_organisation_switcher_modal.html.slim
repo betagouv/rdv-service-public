@@ -35,4 +35,4 @@ dialog#organisation-switcher-modal.fr-modal[aria-labelledby="organisation-switch
                 = dsfr_alert type: :info, size: :sm, html_attributes: { class: "fr-mb-3w" } do
                   = t(".joinable_organisations_notice", count: joinable_organisations_count)
                   br
-                  = link_to t(".joinable_organisations_link"), admin_territory_organisations_path(territory), class: "fr-link fr-link--sm"
+                  = link_to "Voir les organisations de l’espace", admin_territory_organisations_path(territory), class: "fr-link fr-link--sm"
