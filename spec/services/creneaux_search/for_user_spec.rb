@@ -2,7 +2,7 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
   let(:organisation) { create(:organisation) }
   let(:creneau_double) { instance_double(Creneau, starts_at: 1.hour.from_now) }
   let(:lieu) { create(:lieu, organisation: organisation) }
-  let(:date_range) { (Date.parse("2020-10-20")..Date.parse("2020-10-23")) }
+  let(:date_range) { Date.parse("2020-10-20")..Date.parse("2020-10-23") }
   let(:now) { Time.zone.parse("2020-10-19 15:34") }
 
   before do
