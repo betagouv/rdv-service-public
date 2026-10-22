@@ -159,7 +159,7 @@ RSpec.describe BeneficiaireForm do
         expect(form).to be_invalid
         expect(form.errors.first.attribute).to eq(:_benign)
         expect(form.errors.first.message).to eq(
-          <<-TXT.squish
+          <<~TXT.squish
             Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Montrouge.
             Veuillez <a href="http://rdvsympa.fr/123" target="_blank">annuler ce RDV</a> avant d'en prendre un nouveau.
           TXT
