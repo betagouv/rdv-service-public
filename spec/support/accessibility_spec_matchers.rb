@@ -3,7 +3,7 @@
 class AxeRunner
   attr_reader :page
 
-  Violation = Data.define(:id, :impact, :tags, :description, :help, :helpUrl, :nodes) do
+  Violation = Data.define(:id, :impact, :tags, :description, :help, :helpUrl, :nodes) do # rubocop:disable Naming/MethodName
     def to_s
       node_details = nodes.map { |node| "  - #{node['target'].join(', ')}\n    #{node['html']}\n    #{node['failureSummary']}" }.join("\n")
 
