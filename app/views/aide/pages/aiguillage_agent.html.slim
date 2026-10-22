@@ -25,7 +25,7 @@
           | L’équipe technique de #{current_domain} ne réalisera pas de modification à leur place.
       - if current_agent
         - roles = current_agent.roles.joins(:organisation)
-        - if roles.count > 0
+        - if roles.any?
           ul.fr-btns-group
             - roles.each do |role|
               - organisation = role.organisation

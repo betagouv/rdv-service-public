@@ -5,7 +5,7 @@
   = I18n.t("rdvs.participants", count: rdv.users_count)
   - if selected_users
     - selected_users_already_participating = selected_users.to_set.intersection(rdv.users)
-    - if selected_users_already_participating.count > 0
+    - if selected_users_already_participating.any?
       =< "dont #{selected_users_already_participating.to_a.to_sentence}"
 
 .d-flex.card-text.mb-3
