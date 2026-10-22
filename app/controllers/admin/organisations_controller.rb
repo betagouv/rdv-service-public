@@ -8,6 +8,9 @@ class Admin::OrganisationsController < AgentAuthController
       .includes(:territory)
       .ordered_by_name
       .to_a.group_by(&:territory)
+    @joinable_organisations_count_by_territory_id = policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::JoinableScope)
+      .group(:territory_id)
+      .count
     @active_agent_preferences_menu_item = :organisations
     render layout: "application_agent_config"
   end

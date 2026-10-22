@@ -5,3 +5,9 @@ fr:
       link_to_unknown_past_rdv: Voir ces RDV
     application_configuration:
       title: Configuration
+    left_menu:
+      organisation_switcher_modal:
+        joinable_organisations_notice:
+          one: Il y a 1 autre organisation dans cet espace dont vous n'êtes pas membre.
+          other: Il y a %{count} autres organisations dans cet espace dont vous n'êtes pas membre.
+        joinable_organisations_link: Voir les organisations de l'espace
