@@ -71,9 +71,9 @@ RSpec.describe Users::RdvBookingForm do
       expect(form.errors.count).to eq(1)
       expect(form.errors.first.attribute).to eq(:_benign)
       expect(form.errors.first.message).to eq(
-        <<-TXT.squish
-              Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Montrouge.
-              Veuillez <a href="http://rdvsympa.fr/123" target="_blank">annuler ce RDV</a> avant d'en prendre un nouveau.
+        <<~TXT.squish
+          Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Montrouge.
+          Veuillez <a href="http://rdvsympa.fr/123" target="_blank">annuler ce RDV</a> avant d'en prendre un nouveau.
         TXT
       )
     end
@@ -121,9 +121,9 @@ RSpec.describe Users::RdvBookingForm do
       expect(form.errors_are_all_benign?).to be true
       expect(form.benign_errors).to eq(
         [
-          <<-TXT.squish,
-                Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Montrouge.
-                Veuillez <a href="http://rdvsympa.fr/123" target="_blank">annuler ce RDV</a> avant d'en prendre un nouveau.
+          <<~TXT.squish,
+            Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Montrouge.
+            Veuillez <a href="http://rdvsympa.fr/123" target="_blank">annuler ce RDV</a> avant d'en prendre un nouveau.
           TXT
         ]
       )

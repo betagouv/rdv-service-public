@@ -79,7 +79,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
   end
 
   def create_attributes_rdvs
-    [agent_ids: [], lieu_attributes: %i[name address latitude longitude]]
+    [{ agent_ids: [], lieu_attributes: %i[name address latitude longitude] }]
   end
 
   def create_params
