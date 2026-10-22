@@ -1,5 +1,3 @@
-class TeamsInMultipleTerritoriesError < StandardError; end
-
 class Admin::Territories::AgentsController < Admin::Territories::BaseController
   respond_to :html, :json, only: :index
 
