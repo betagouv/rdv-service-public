@@ -150,7 +150,7 @@ Rails.application.routes.draw do
     put "agents/mot_de_passe" => "agents/mot_de_passes#update", as: "agent_mot_de_passes"
 
     namespace :agents do
-      resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code" do
+      resource :sign_in_code_verification, only: %i[new create] do
         post :resend, on: :collection
       end
       resource :pro_connect_step_up, only: %i[new create], controller: "pro_connect_step_up"

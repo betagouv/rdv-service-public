@@ -1,4 +1,4 @@
-RSpec.describe Agents::SessionsByCodeController, type: :controller do
+RSpec.describe Agents::SignInCodeVerificationsController, type: :controller do
   let(:agent) { create(:agent, sensitive_account: true) }
 
   describe "#new" do
@@ -10,7 +10,7 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
     end
 
     context "quand il y a une connexion en attente dans la session" do
-      before { session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = agent.id }
+      before { session[Agents::SignInCodeVerificationsController::SESSION_AGENT_ID_KEY] = agent.id }
 
       it "affiche le formulaire de saisie du code" do
         get :new
@@ -33,7 +33,7 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
 
     context "quand il y a une connexion en attente dans la session" do
       before do
-        session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = agent.id
+        session[Agents::SignInCodeVerificationsController::SESSION_AGENT_ID_KEY] = agent.id
         allow(UnblockBrevoTransactionalContact).to receive(:new).and_return(instance_double(UnblockBrevoTransactionalContact, call: true))
       end
 
@@ -53,7 +53,7 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
 
       it "redirige vers le formulaire de saisie du code" do
         post :resend
-        expect(response).to redirect_to(new_agents_sessions_by_code_path)
+        expect(response).to redirect_to(new_agents_sign_in_code_verification_path)
       end
     end
   end
@@ -69,7 +69,7 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
     end
 
     context "quand il y a une connexion en attente dans la session" do
-      before { session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = agent.id }
+      before { session[Agents::SignInCodeVerificationsController::SESSION_AGENT_ID_KEY] = agent.id }
 
       context "avec un code valide" do
         it "connecte l'agent" do
@@ -79,7 +79,7 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
 
         it "supprime la connexion en attente de la session" do
           post :create, params: { login_code: { code: login_code.code } }
-          expect(session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY]).to be_nil
+          expect(session[Agents::SignInCodeVerificationsController::SESSION_AGENT_ID_KEY]).to be_nil
         end
 
         it "redirige après la connexion" do
@@ -93,12 +93,12 @@ RSpec.describe Agents::SessionsByCodeController, type: :controller do
         end
 
         context "quand un token ProConnect en attente est présent dans la session" do
-          before { session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY] = "fake_pro_connect_token" }
+          before { session[Agents::SignInCodeVerificationsController::SESSION_PRO_CONNECT_ID_TOKEN_KEY] = "fake_pro_connect_token" }
 
           it "transfère le token vers pro_connect_id_token et supprime le pending" do
             post :create, params: { login_code: { code: login_code.code } }
             expect(session[:pro_connect_id_token]).to eq("fake_pro_connect_token")
-            expect(session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY]).to be_nil
+            expect(session[Agents::SignInCodeVerificationsController::SESSION_PRO_CONNECT_ID_TOKEN_KEY]).to be_nil
           end
         end
 
