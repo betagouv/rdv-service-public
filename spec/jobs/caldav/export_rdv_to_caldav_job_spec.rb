@@ -1,13 +1,12 @@
 RSpec.describe Caldav::ExportRdvToCaldavJob do
   let(:agent) { create(:agent, :with_caldav_config) }
   let(:agents_rdv) { create(:agents_rdv, agent:) }
+
   let(:caldav_client) { instance_double(Calendav::Client, events: caldav_events) }
   let(:caldav_events) { instance_double(Calendav::Clients::EventsClient) }
-  let(:ics_formatter) { instance_double(Icalendar::Calendar, to_ical: "BEGIN:VCALENDAR...") }
 
-  before do
+  def stub_client
     allow_any_instance_of(CaldavConfig).to receive(:caldav_client).and_return(caldav_client) # rubocop:disable RSpec/AnyInstance
-    allow(IcalFormatters::Ics).to receive(:from_payload).and_return(ics_formatter)
   end
 
   context "quand l'agent n'existe pas" do
@@ -29,10 +28,13 @@ RSpec.describe Caldav::ExportRdvToCaldavJob do
   context "quand l'agents_rdv existe sans caldav_url (création)" do
     let(:created_event) { instance_double(Calendav::Event, url: "https://caldav.example.com/event.ics") }
 
-    before { allow(caldav_events).to receive(:create).and_return(created_event) }
+    before do
+      stub_client
+      allow(caldav_events).to receive(:create).and_return(created_event)
+    end
 
     it "crée l'événement sur le serveur caldav" do
-      expect(caldav_events).to receive(:create).with(agent.caldav_config.caldav_agenda_url, "#{agents_rdv.rdv.uuid}.ics", "BEGIN:VCALENDAR...")
+      expect(caldav_events).to receive(:create).with(agent.caldav_config.caldav_agenda_url, "#{agents_rdv.rdv.uuid}.ics", /\ABEGIN:VCALENDAR/)
       described_class.new.perform(agents_rdv.id, agent.id)
     end
 
@@ -45,10 +47,13 @@ RSpec.describe Caldav::ExportRdvToCaldavJob do
   context "quand l'agents_rdv existe avec une caldav_url (mise à jour)" do
     let(:agents_rdv) { create(:agents_rdv, agent:, caldav_url: "https://caldav.example.com/event.ics") }
 
-    before { allow(caldav_events).to receive(:update) }
+    before do
+      stub_client
+      allow(caldav_events).to receive(:update)
+    end
 
     it "met à jour l'événement sur le serveur caldav" do
-      expect(caldav_events).to receive(:update).with("https://caldav.example.com/event.ics", "BEGIN:VCALENDAR...")
+      expect(caldav_events).to receive(:update).with("https://caldav.example.com/event.ics", /\ABEGIN:VCALENDAR/)
       described_class.new.perform(agents_rdv.id, agent.id)
     end
   end
@@ -56,7 +61,10 @@ RSpec.describe Caldav::ExportRdvToCaldavJob do
   context "quand l'agents_rdv n'existe plus et qu'un caldav_event_url est fourni (suppression)" do
     let(:caldav_event_url) { "https://caldav.example.com/event.ics" }
 
-    before { allow(caldav_events).to receive(:delete) }
+    before do
+      stub_client
+      allow(caldav_events).to receive(:delete)
+    end
 
     it "supprime l'événement sur le serveur caldav" do
       expect(caldav_events).to receive(:delete).with(caldav_event_url)
