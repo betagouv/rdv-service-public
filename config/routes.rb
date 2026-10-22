@@ -255,6 +255,7 @@ Rails.application.routes.draw do
             patch :close
             get :confirm_reopen
             post :reopen
+            post :join
           end
         end
         resources :agents, only: %i[index new create edit] do

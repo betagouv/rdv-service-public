@@ -22,7 +22,12 @@ class Admin::Territories::OrganisationsController < Admin::Territories::BaseCont
   end
 
   def index
-    @organisations = organisations.where(disabled_at: nil)
+    member_organisations = policy_scope(current_territory.organisations, policy_scope_class: Agent::OrganisationPolicy::Scope)
+    joinable_organisations = policy_scope(current_territory.organisations, policy_scope_class: Agent::OrganisationPolicy::JoinableScope)
+    @organisations = current_territory.organisations
+      .where_id_in_subqueries([member_organisations, joinable_organisations])
+      .where(disabled_at: nil)
+      .ordered_by_name
     @closed_organisations = current_territory.organisations.where.not(disabled_at: nil)
   end
 
@@ -68,11 +73,15 @@ class Admin::Territories::OrganisationsController < Admin::Territories::BaseCont
                 flash: { success: "Organisation rouverte ! Vous pouvez inviter des agents à la rejoindre." }
   end
 
-  private
-
-  def organisations
-    policy_scope(current_agent.organisations, policy_scope_class: Agent::OrganisationPolicy::Scope)
-      .where(territory: current_territory)
-      .ordered_by_name
+  def join
+    organisation = current_territory.organisations.find(params[:id])
+    authorize(organisation, :join?, policy_class: Agent::OrganisationPolicy)
+    # create_or_find_by! évite une erreur d'unicité en cas de double clic sur le bouton
+    AgentRole.create_or_find_by!(organisation: organisation, agent: current_agent) do |agent_role|
+      agent_role.access_level = AgentRole::ACCESS_LEVEL_ADMIN
+    end
+    AgentSensitiveAccountCalculator.refresh_agent!(current_agent)
+    redirect_to admin_organisation_configuration_path(organisation),
+                flash: { success: "Vous êtes maintenant administrateur de l'organisation #{organisation.name}." }
   end
 end
