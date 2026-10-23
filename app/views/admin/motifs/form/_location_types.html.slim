@@ -1,14 +1,25 @@
 .d-flex.flex-column
-  ruby:
-    location_types = Motif.location_types.each_key.map do |value|
-      {
+  - visio_disabled = current_agent.pro_connect_openid_sub.blank?
+  / On construit le fieldset à la main car dsfr_radio_buttons ne permet pas de désactiver une seule option
+  fieldset.fr-fieldset
+    legend.fr-fieldset__legend--regular.fr-fieldset__legend
+      = Motif.human_attribute_name(:location_type)
+      = f.hint_tag("Choisissez le type du rendez-vous")
+    - Motif.location_types.each_key do |value|
+      = f.dsfr_radio_option :location_type,
               value:,
               checked: @motif.location_type == value,
-              label: content_tag(:span, location_type_icon(value, class: "fr-mr-1w") + Motif.human_attribute_value(:location_type, value)),
+              label_text: content_tag(:span, location_type_icon(value, class: "fr-mr-1w") + Motif.human_attribute_value(:location_type, value)),
               hint: sanitize(Motif.human_attribute_value(:location_type, value, context: :hint), scrubber: :prune),
-      }
-    end
-  = f.dsfr_radio_buttons :location_type, location_types, disabled:, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "locationTypeRadios", hint: "Choisissez le type du rendez-vous", rich: true, class: "fr-mb-0"
+              disabled: disabled || (value == "visio" && visio_disabled),
+              "data-action": "change->motif-form#refreshSections",
+              "data-motif-form-target": "locationTypeRadios",
+              rich: true,
+              class: "fr-mb-0"
+  - if visio_disabled
+    = dsfr_alert type: :info, size: :sm, html_attributes: { class: "fr-mb-3w" } do
+      p Il n’est possible de proposer des rendez-vous en visioconférence que si votre compte #{current_domain.name} est lié à un compte ProConnect.
+      = link_to "Lier mon compte à ProConnect", agents_pro_connect_linking_path, class: "fr-btn fr-btn--secondary fr-btn--sm fr-mt-1w"
   - motif = f.object
   - if motif.persisted?
     p.fr-text-mention--grey.font-14
@@ -16,7 +27,3 @@
       |> Pour permettre plusieurs types de rendez-vous, vous pouvez
       = link_to("dupliquer ce motif", new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id))
       | .
-
-- if disabled
-  = dsfr_alert type: :warning, size: :sm, html_attributes: { class: "fr-mb-3w" } do
-    | Ce motif est déjà utilisé dans au moins un RDV, il n'est pas possible de changer le type
