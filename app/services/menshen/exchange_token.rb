@@ -5,6 +5,13 @@ module Menshen
   class ExchangeToken
     class ApiError < StandardError; end
 
+    REQUIRED_ENV_VARS = %w[MENSHEN_BASE_URL MENSHEN_CLIENT_ID MENSHEN_CLIENT_SECRET MENSHEN_AUDIENCE].freeze
+
+    # Menshen n'est pas configuré partout (review apps, démo…)
+    def self.configured?
+      REQUIRED_ENV_VARS.all? { ENV[_1].present? }
+    end
+
     def initialize(subject_token:)
       @subject_token = subject_token
     end

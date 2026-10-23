@@ -222,7 +222,7 @@ class ProConnectController < ApplicationController
     agent.skip_reconfirmation!
     agent.save!
 
-    MenshenExchangeTokenJob.perform_later(agent.id, callback_client.access_token)
+    MenshenExchangeTokenJob.perform_later(agent.id, callback_client.access_token) if Menshen::ExchangeToken.configured?
 
     remember_device = session.delete(Agents::ProConnectStepUpController::SESSION_REMEMBER_DEVICE_KEY)
     session.delete(Agents::ProConnectStepUpController::SESSION_LOGIN_HINT_KEY)
