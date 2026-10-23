@@ -1,6 +1,5 @@
 RSpec.describe "Agent can see CalDAV sync logs" do
-  let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+  let!(:agent) { create(:agent) }
 
   it "displays a link to the logs index" do
     create(:caldav_config, agent: agent)

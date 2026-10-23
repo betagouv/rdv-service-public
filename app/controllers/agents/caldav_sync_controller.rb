@@ -21,9 +21,8 @@ class Agents::CaldavSyncController < AgentAuthController
       # CalDAV peut retourner des calendriers (VEVENT) et des listes de tâches (VTODO), on ne veut que les calendriers.
       calendars = client.calendars.list.select { |c| c.components.include?("VEVENT") }
       preselected_url = params[:caldav_agenda_url].to_s.chomp("/")
-      render locals: { calendars: calendars, preselected_url: preselected_url }
     rescue Calendav::RequestError => e
-      Sentry.capture_exception(e)
+      Sentry.capture_exception(e, level: "debug")
       flash[:alert] = case e.response.status
                       when 401, 403
                         "L'authentification a échoué : #{e.message}. Veuillez vérifier votre identifiant et votre mot de passe."
@@ -34,9 +33,11 @@ class Agents::CaldavSyncController < AgentAuthController
                       end
       redirect_to agents_calendar_sync_caldav_sync_path
     rescue StandardError => e
-      Sentry.capture_exception(e)
+      Sentry.capture_exception(e, level: "debug")
       flash[:alert] = "Une erreur inattendue a été rencontrée, l'équipe de développement a été prévenue. Si l'erreur persiste veuillez contacter le support."
       redirect_to agents_calendar_sync_caldav_sync_path
+    else
+      render locals: { calendars: calendars, preselected_url: preselected_url }
     end
   end
 
@@ -77,44 +78,34 @@ class Agents::CaldavSyncController < AgentAuthController
 
     begin
       client.principal_url
-    rescue StandardError
+    rescue StandardError => e
+      Sentry.capture_exception(e, level: "debug")
       return "L’authentification a échoué. Veuillez vérifier votre identifiant et votre mot de passe."
     end
 
     begin
       calendar = client.calendars.find(agenda_url, sync: true)
-    rescue StandardError
+    rescue StandardError => e
+      Sentry.capture_exception(e, level: "debug")
       return "L’accès en lecture au calendrier a échoué. Veuillez vérifier l’URL de l’agenda."
     end
 
     if calendar.sync_token.blank? && calendar.ctag.blank? # voir Caldav::FetchEvents#fetch_changes
+      Sentry.capture_message("Debug : serveur CalDAV sans sync-token ni ctag", level: "debug")
       return "Votre serveur CalDAV ne supporte pas la synchronisation incrémentale (sync-token ou ctag), requise pour connecter " \
              "votre agenda à RDV Service Public. Veuillez contacter votre fournisseur d’agenda ou utiliser un autre serveur CalDAV."
     end
 
     begin
-      uuid = SecureRandom.uuid
-      identifier = "rdvsp-connection-test-#{uuid}.ics"
-      test_event = client.events.create(agenda_url, identifier, test_event_ics(uuid))
+      event_uid = CaldavUtils.generate_test_event_uid
+      test_event = client.events.create(agenda_url, "#{event_uid}.ics", CaldavUtils.generate_test_event(event_uid).to_ical)
       client.events.delete(test_event.url) # On nettoie l’événement de test qu’on vient de créer
     rescue StandardError => e
-      Sentry.capture_exception(e)
+      Sentry.capture_exception(e, level: "debug")
       return "L’accès en écriture au calendrier a échoué. Veuillez vérifier vos droits d’accès à l’agenda."
     end
 
     nil
-  end
-
-  def test_event_ics(uuid)
-    cal = Icalendar::Calendar.new
-    cal.prodid = "RDV Service Public"
-    cal.event do |event|
-      event.uid = "rdvsp-connection-test-#{uuid}"
-      event.dtstart = Icalendar::Values::DateTime.new(Time.now.change(hour: 0).utc)
-      event.dtend = Icalendar::Values::DateTime.new(Time.now.change(hour: 1).utc)
-      event.summary = "Test de connexion RDV Service Public"
-    end
-    cal.to_ical
   end
 
   def caldav_config
