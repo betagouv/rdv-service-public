@@ -4,6 +4,7 @@
 module Menshen
   class ExchangeToken
     class ApiError < StandardError; end
+    class ClientError < ApiError; end
 
     REQUIRED_ENV_VARS = %w[MENSHEN_BASE_URL MENSHEN_CLIENT_ID MENSHEN_CLIENT_SECRET MENSHEN_AUDIENCE].freeze
 
@@ -27,6 +28,7 @@ module Menshen
         }
       end
 
+      raise ClientError, "HTTP #{response.status}: #{response.body}" if response.status.in?(400..499)
       raise ApiError, "HTTP #{response.status}: #{response.body}" unless response.success?
 
       response.body
