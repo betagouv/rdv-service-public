@@ -47,12 +47,23 @@ RSpec.describe Menshen::ExchangeToken do
       expect(response_breadcrumb.data[:body]).to eq("[SCRUBBED]")
     end
 
-    context "quand Menshen retourne une erreur" do
-      it "lève une ApiError" do
+    context "quand Menshen retourne une erreur 4xx" do
+      it "lève une ClientError" do
         stub_request(:post, "https://menshen.example.org/auth/token/exchange/")
           .to_return(status: 400, body: "invalid_grant")
 
-        expect { service.call }.to raise_error(Menshen::ExchangeToken::ApiError, /HTTP 400/)
+        expect { service.call }.to raise_error(Menshen::ExchangeToken::ClientError, /HTTP 400/)
+      end
+    end
+
+    context "quand Menshen retourne une erreur 5xx" do
+      it "lève une ApiError qui n'est pas une ClientError" do
+        stub_request(:post, "https://menshen.example.org/auth/token/exchange/")
+          .to_return(status: 503, body: "Service Unavailable")
+
+        expect { service.call }.to raise_error(Menshen::ExchangeToken::ApiError, /HTTP 503/) do |error|
+          expect(error).not_to be_a(Menshen::ExchangeToken::ClientError)
+        end
       end
     end
   end

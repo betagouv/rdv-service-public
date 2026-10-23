@@ -3,7 +3,7 @@ class MenshenExchangeTokenJob < ApplicationJob
   # L'access token ProConnect ne doit pas fuiter dans les logs/Sentry
   self.log_arguments = false
 
-  discard_on(ActiveRecord::RecordNotFound) { |_job, error| Sentry.capture_exception(error) }
+  discard_on(ActiveRecord::RecordNotFound, Menshen::ExchangeToken::ClientError) { |_job, error| Sentry.capture_exception(error) }
 
   def perform(agent_id, subject_token)
     agent = Agent.find(agent_id)
