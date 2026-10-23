@@ -40,9 +40,6 @@ module Menshen
       Faraday.new(ENV.fetch("MENSHEN_BASE_URL")) do |f|
         f.request :url_encoded
         f.request :authorization, :basic, ENV.fetch("MENSHEN_CLIENT_ID"), ENV.fetch("MENSHEN_CLIENT_SECRET")
-        # Affiche la requête/réponse complète (dont le header Authorization en clair) : à activer
-        # uniquement en local pour débugger, jamais en production.
-        f.response :logger, Rails.logger, bodies: true if ENV["MENSHEN_DEBUG_HTTP"]
         f.response :json
         f.options.timeout = 5
         f.options.open_timeout = 2
