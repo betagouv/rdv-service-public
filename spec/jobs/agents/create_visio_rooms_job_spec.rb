@@ -54,6 +54,28 @@ RSpec.describe Agents::CreateVisioRoomsJob do
     expect(rdvs.map { _1.reload.visio_url_custom }).to all(be_nil)
   end
 
+  context "quand l'agent a un jeton Menshen valide" do
+    let(:agent) do
+      create(:agent, basic_role_in_organisations: [organisation], menshen_access_token: "un-jeton-menshen", menshen_access_token_expires_at: 1.hour.from_now)
+    end
+
+    it "crée les salons avec le jeton Menshen plutôt qu'avec l'access token ProConnect" do
+      create_visio_rdv(agents: [agent])
+
+      described_class.perform_now(agent, "un-token")
+
+      expect(WebMock).to have_requested(:post, rooms_api_url).with(headers: { "Authorization" => "Bearer un-jeton-menshen" }).once
+    end
+
+    it "crée les salons même sans access token ProConnect" do
+      create_visio_rdv(agents: [agent])
+
+      described_class.perform_now(agent, nil)
+
+      expect(WebMock).to have_requested(:post, rooms_api_url).with(headers: { "Authorization" => "Bearer un-jeton-menshen" }).once
+    end
+  end
+
   context "quand la Visio est désactivée" do
     stub_env_with(VISIO_NUMERIQUE_DISABLED: "true")
 
