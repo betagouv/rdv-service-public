@@ -74,9 +74,8 @@ class RdvPlan < ApplicationRecord
   def visio_url_custom(pro_connect_access_token)
     return unless motif&.visio?
     return if ENV["VISIO_NUMERIQUE_DISABLED"]
-    return if pro_connect_access_token.blank?
 
-    VisioNumerique::CreateRoom.new(access_token: pro_connect_access_token).visio_url
+    VisioNumerique::CreateRoom.new(agent: planning_agent, pro_connect_access_token:).visio_url
   end
 
   def return_url_is_authorized

@@ -4,13 +4,17 @@ module VisioNumerique
 
     DEFAULT_API_URL = "https://visio.numerique.gouv.fr/external-api/v1.0".freeze
 
-    def initialize(access_token:)
-      @access_token = access_token
+    # L'access token ProConnect n'est disponible que lorsque l'agent vient de se connecter
+    def initialize(agent:, pro_connect_access_token: nil)
+      @agent = agent
+      @pro_connect_access_token = pro_connect_access_token
     end
 
     def visio_url
+      return if token.blank?
+
       response = connection.post("rooms/") do |req|
-        req.headers["Authorization"] = "Bearer #{@access_token}"
+        req.headers["Authorization"] = "Bearer #{token}"
       end
 
       raise ApiError, "HTTP #{response.status}: #{response.body}" unless response.success?
@@ -23,6 +27,15 @@ module VisioNumerique
     end
 
     private
+
+    # Le jeton Menshen ne dépend pas de la session de l'agent : on le privilégie tant qu'il est valide
+    def token
+      if @agent.menshen_access_token.present? && @agent.menshen_access_token_expires_at&.future?
+        @agent.menshen_access_token
+      else
+        @pro_connect_access_token
+      end
+    end
 
     def connection
       Faraday.new("#{api_url}/") do |f|
