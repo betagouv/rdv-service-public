@@ -18,11 +18,17 @@ class FaradaySentryBreadcrumbsMiddleware < Faraday::Middleware
       data: {
         method: request_env.method,
         url: request_env.url,
-        headers: request_env.request_headers,
+        headers: request_headers(request_env),
         body: options[:scrub_request_body] ? "[SCRUBBED]" : request_env.body,
       },
     }
     Sentry.add_breadcrumb(Sentry::Breadcrumb.new(**breadcrumb))
+  end
+
+  def request_headers(request_env)
+    return request_env.request_headers unless options[:scrub_authorization_header] && request_env.request_headers.key?("Authorization")
+
+    request_env.request_headers.merge("Authorization" => "[SCRUBBED]")
   end
 
   def add_response_breadcrumb(response_env)
@@ -31,7 +37,7 @@ class FaradaySentryBreadcrumbsMiddleware < Faraday::Middleware
       data: {
         status: response_env.status,
         headers: response_env.response_headers,
-        body: response_env.response_body,
+        body: options[:scrub_response_body] ? "[SCRUBBED]" : response_env.response_body,
       },
     }
     Sentry.add_breadcrumb(Sentry::Breadcrumb.new(**breadcrumb))
