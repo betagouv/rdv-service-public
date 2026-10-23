@@ -44,7 +44,8 @@ module Menshen
         f.response :json
         f.options.timeout = 5
         f.options.open_timeout = 2
-        f.use :sentry_breadcrumbs, scrub_request_body: true
+        # Le header Authorization contient le client secret, et la réponse le jeton Menshen
+        f.use :sentry_breadcrumbs, scrub_request_body: true, scrub_authorization_header: true, scrub_response_body: true
       end
     end
   end

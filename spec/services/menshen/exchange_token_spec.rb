@@ -30,6 +30,23 @@ RSpec.describe Menshen::ExchangeToken do
       expect(service.call).to eq("access_token" => "fake menshen token", "expires_in" => 3600)
     end
 
+    it "n'expose ni le client secret ni le jeton Menshen dans les breadcrumbs Sentry" do
+      stub_request(:post, "https://menshen.example.org/auth/token/exchange/")
+        .to_return(
+          status: 200,
+          body: { access_token: "fake menshen token", expires_in: 3600 }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      service.call
+      Sentry.capture_message("woops")
+
+      request_breadcrumb, response_breadcrumb = sentry_events.last.breadcrumbs.compact
+      expect(request_breadcrumb.data[:headers]["Authorization"]).to eq("[SCRUBBED]")
+      expect(request_breadcrumb.data[:body]).to eq("[SCRUBBED]")
+      expect(response_breadcrumb.data[:body]).to eq("[SCRUBBED]")
+    end
+
     context "quand Menshen retourne une erreur" do
       it "lève une ApiError" do
         stub_request(:post, "https://menshen.example.org/auth/token/exchange/")
