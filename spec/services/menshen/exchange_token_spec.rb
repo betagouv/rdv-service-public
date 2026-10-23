@@ -18,6 +18,7 @@ RSpec.describe Menshen::ExchangeToken do
             "subject_token" => "fake proconnect access token",
             "subject_token_type" => "urn:ietf:params:oauth:token-type:access_token",
             "audience" => "visio",
+            "scope" => "action:create-meet-room",
           }
         )
         .to_return(
