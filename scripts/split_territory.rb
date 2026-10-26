@@ -2,12 +2,12 @@
 # Example:
 # load "scripts/split_territory.rb"; SplitTerritory.new(4, 530, "Drôme Insertion", dry_run: true).split!
 
-class MotifCategoriesTerritory < ApplicationRecord
-  belongs_to :motif_category
-  belongs_to :territory
-end
-
 class SplitTerritory
+  class MotifCategoriesTerritory < ApplicationRecord
+    belongs_to :motif_category
+    belongs_to :territory
+  end
+
   def initialize(old_territory_id, main_territory_admin_id, new_territory_name, dry_run: true)
     @old_territory_id = old_territory_id
     @old_territory ||= Territory.find(@old_territory_id)

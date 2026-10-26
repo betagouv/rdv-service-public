@@ -1,8 +1,8 @@
-class JobsNotScheduledCorrectly < StandardError; end
-class JobsCongestionError < StandardError; end
-class OnPurposeError < StandardError; end
-
 class HealthController < ApplicationController
+  class JobsNotScheduledCorrectly < StandardError; end
+  class JobsCongestionError < StandardError; end
+  class OnPurposeError < StandardError; end
+
   # this HTACCESS should be set on production to avoid DDOS of our Sentry
   basic_auth_name, basic_auth_password = ENV["HEALTH_CONTROLLER_BASIC_AUTH"]&.split(":")
   if basic_auth_name && basic_auth_password
