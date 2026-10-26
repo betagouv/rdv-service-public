@@ -14,8 +14,8 @@ class Agents::RdvsController < AgentAuthController
     end
   end
 
-  # La création du salon nécessite l'access token ProConnect de session, disponible uniquement quand l'agent
-  # s'est connecté via ProConnect
+  # Une partie de la logique est dupliquée avec app/controllers/admin/rdv_wizard_steps_controller.rb#assign_visio_numerique_room_if_applicable
+  # TODO: factoriser dans une prochaine PR
   def create_visio_room
     if !@rdv.motif.visio? || ENV["VISIO_NUMERIQUE_DISABLED"]
       flash[:error] = "Ce RDV n'a pas de visioconférence associée"
@@ -25,7 +25,6 @@ class Agents::RdvsController < AgentAuthController
       flash[:error] = "Pour générer le lien de visioconférence, connectez-vous via ProConnect"
     elsif (visio_url = VisioNumerique::CreateRoom.new(access_token: session[:pro_connect_access_token]).visio_url)
       # Mise à jour silencieuse : pas de notification, de webhook ni de synchro d'agenda.
-      # Les liens déjà envoyés pointent vers une URL stable qui redirige vers le nouveau salon.
       @rdv.update_columns(visio_url_custom: visio_url, updated_at: Time.zone.now) # rubocop:disable Rails/SkipsModelValidations
       flash[:success] = "Le lien de visioconférence a été généré"
     else
