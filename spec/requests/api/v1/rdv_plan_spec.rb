@@ -82,17 +82,17 @@ RSpec.describe "API RDV Plan" do
     end
 
     context "quand on passe un external_id pour faire un upsert" do
-      context "quand aucun usager n'existe pour ce external_id" do
-        let(:params) do
-          {
-            user: {
-              external_id: "123456AB",
-              first_name: "Francis",
-              last_name: "Factice",
-            },
-          }
-        end
+      let(:params) do
+        {
+          user: {
+            external_id: "123456AB",
+            first_name: "Francis",
+            last_name: "Factice",
+          },
+        }
+      end
 
+      context "quand aucun usager n'existe pour ce external_id" do
         it "enregistre l'usager" do
           expect do
             post "/api/v1/rdv_plans", headers:, params:, as: :json
@@ -112,11 +112,28 @@ RSpec.describe "API RDV Plan" do
       end
 
       context "quand il y a déjà un usager visible pour cet agent avec ce external_id" do
-        it "met à jour l'usager" do
+        let(:user) { create(:user, first_name: "Françoise") }
+
+        before do
+          create(:external_reference, item: user, external_id: "123456AB", oauth_application: application)
+        end
+
+        context "et qu'il est visible pour cet agent" do
+          before { create(:user_profile, user:, organisation: agent.organisations.first) }
+
+          it "met à jour l'usager" do
+            expect do
+              post "/api/v1/rdv_plans", headers:, params:, as: :json
+            end.to change(RdvPlan, :count).by(1)
+
+            expect(user.reload.first_name).to eq("Francis")
+          end
         end
       end
 
       context "quand il y a déjà un usager avec ce external_id mais que cet agent n'a pas le droit d'y accéder" do
+        it "crée un nouvel usager" do
+        end
       end
     end
 
