@@ -6,7 +6,7 @@ RSpec.describe "API RDV Plan" do
   end
   let(:application) do
     create(:oauth_application,
-           name: "Démarches Simplifiées",
+           name: "Démarche Numérique",
            redirect_uri: "http://localhost:4567/omniauth/rdvservicepublic/callback\nhttp://demo.demarches-simplifiees.fr/omniauth/rdvservicepublic/callback",
            post_logout_redirect_uri: "http://localhost:4567/")
   end

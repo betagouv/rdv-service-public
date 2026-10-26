@@ -8,7 +8,7 @@ Ce bouton déclenchera une connexion par OAuth avec RDV Service Public, puis red
 
 ## Interface recommandée
 
-Vous pouvez vous inspirer des interfaces proposées par Démarches Simplifiées ou Mon Suivi Social pour cette intégration.
+Vous pouvez vous inspirer des interfaces proposées par Démarche Numérique ou Mon Suivi Social pour cette intégration.
 
 Le parcours utilisateur pour les agents est généralement en deux temps :
 
