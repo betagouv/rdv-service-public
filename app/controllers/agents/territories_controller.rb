@@ -11,6 +11,8 @@ class Agents::TerritoriesController < AgentAuthController
     @compte_form.agent = current_agent
 
     if @compte_form.save!
+      AutoImportTerritoryToCrmJob.perform_later(@compte_form.territory.id)
+
       latest_rdv_plan = RdvPlan.where(planning_agent: current_agent).order("created_at desc").first
 
       if latest_rdv_plan

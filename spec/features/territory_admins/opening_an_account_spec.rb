@@ -44,6 +44,16 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         expect(Territory.last.category).to eq "Commune"
       end
 
+      it "enqueue l'import CRM automatique du nouvel espace" do
+        visit new_agents_territory_path
+
+        fill_in("Nom de votre organisation", with: "Préfecture de Montreuil")
+        click_on "Enregistrer"
+
+        expect(page).to have_content "Configuration"
+        expect(AutoImportTerritoryToCrmJob).to have_been_enqueued.with(Territory.last.id)
+      end
+
       context "et qu'il a un rdv plan qui a été créé par intégration" do
         before do
           create(:rdv_plan, planning_agent: agent, rdv_agent: agent)
