@@ -22,15 +22,10 @@ module Rdv::VisioConcern
     validate :validate_visio_url_custom, if: -> { visio_url_custom.present? }
   end
 
+  # Webconf a fermé : sans URL custom (générée via Visio ou fournie par l'agent), il n'y a pas encore de lien
+  # Il faudra certainement refacto cette méthode à terme
   def visio_url
-    if !motif.visio?
-      nil
-    elsif visio_url_custom.present?
-      visio_url_custom
-    else
-      # webconf = Jitsi et Jitsi n'autorise pas les - et _ dans les liens de visio
-      "https://webconf.numerique.gouv.fr/RdvServicePublic#{uuid}".gsub(/[-_]/, "")
-    end
+    visio_url_custom.presence if motif.visio?
   end
 
   # On préfère renvoyer un lien stable vers le RDV (qui redirige vers visio_url) plutôt que le lien

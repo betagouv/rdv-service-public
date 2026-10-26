@@ -6,8 +6,8 @@
 
     = f.dsfr_radio_option :visio_url_type,
       value: "default",
-      label_text: "Par défaut : Webconf",
-      hint: "Une URL unique sera créée via webconf.numerique.gouv.fr",
+      label_text: "Par défaut : Visio",
+      hint: "Un lien unique pourra être généré via visio.numerique.gouv.fr depuis la page du RDV",
       checked: rdv.visio_url_type == "default",
       "data-action": "change->dependent-input#toggle"
 

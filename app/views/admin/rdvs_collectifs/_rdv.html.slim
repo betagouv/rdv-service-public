@@ -17,7 +17,7 @@
             = rdv.lieu.name
           - elsif rdv.visio?
             = visio_icon(class: "fr-mr-1w")
-            = link_to("Visioconférence", rdv.visio_url, target: :_blank)
+            = render "admin/rdvs/visio_link", rdv:, label: "Visioconférence"
 
         .d-flex.card-text.mb-2
           = user_icon(class: "fr-mr-1w")

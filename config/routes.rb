@@ -173,6 +173,7 @@ Rails.application.routes.draw do
       resources :rdvs, only: %i[show] do
         member do
           get :visio
+          post :create_visio_room
         end
       end
 

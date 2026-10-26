@@ -48,7 +48,10 @@
     div.row-result
       span.title = "RDV par visioconférence"
       div.alignright
-        = link_to("rejoindre la visioconférence", local_assigns[:visio_url] || rdv.visio_url)
+        - if (visio_url = local_assigns[:visio_url] || rdv.visio_url).present?
+          = link_to("rejoindre la visioconférence", visio_url)
+        - else
+          = t("rdvs.visio_link_not_yet_available")
   - else
     div.row-result
       span.title Adresse :
