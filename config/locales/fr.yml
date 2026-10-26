@@ -4,6 +4,9 @@ fr:
     organisations:
       index:
         territory_configuration: Paramètres
+        joinable_organisations_notice:
+          one: Il y a 1 autre organisation dans cet espace dont vous n'êtes pas membre. Vous pouvez la voir et la rejoindre en cliquant sur « Gérer les organisations ».
+          other: Il y a %{count} autres organisations dans cet espace dont vous n'êtes pas membre. Vous pouvez les voir et les rejoindre en cliquant sur « Gérer les organisations ».
         create: Créer
     rdvs:
       message:
