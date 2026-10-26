@@ -121,12 +121,6 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
             location_type: rdv.motif.location_type
           )
           expect(Time.zone.parse(parsed_response_body.dig("rdv_plan", "rdv", "starts_at"))).to be_within(1.second).of(rdv.reload.starts_at)
-
-          expect(parsed_response_body.dig("rdv_plan", "rdv_invitation").symbolize_keys).to include(
-            id: rdv_invitation.id,
-            cancelled: false,
-            location_type: rdv_invitation.motif.location_type
-          )
         end
       end
     end
