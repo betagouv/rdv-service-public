@@ -121,4 +121,9 @@ Rails.application.configure do
   config.hosts << "www.rdv-aide-numerique.localhost" # http://rdv-aide-numerique.localhost:3000/
   config.hosts << "www.rdv-mairie.localhost" # http://rdv-mairie.localhost:3000/
   config.hosts << "www.rdv-etat.localhost" # http://www.rdv-etat.localhost:3000/
+
+  # Live reload en dev : les changements de vues, helpers, locales et de builds esbuild rechargent la page via Turbo,
+  config.hotwire_livereload.skip_listen_paths << Rails.root.join("app/assets/stylesheets") # c'est le build fini qu'on watch pas la source.
+  # changement JS : il faut recharger la page car les <script> n'ont pas de data-turbo-track et ne sont pas ré-exécutés par un Turbo.visit
+  config.hotwire_livereload.force_reload_paths << Rails.root.join("app/assets/builds/.*\\.js")
 end

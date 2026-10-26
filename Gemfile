@@ -177,6 +177,9 @@ group :development do
 
   #  Hot reload
 
+  # Rechargement automatique du navigateur en dev (CSS hot-swap, re-rendu des vues Slim)
+  gem "hotwire-livereload"
+
   # Rails application preloader
   gem "spring", require: false
   # Listen to file modifications
