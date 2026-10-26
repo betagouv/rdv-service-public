@@ -131,10 +131,7 @@ RSpec.describe "API RDV Plan" do
         end
       end
 
-      context "quand il y a déjà un usager avec ce external_id mais que cet agent n'a pas le droit d'y accéder" do
-        it "crée un nouvel usager" do
-        end
-      end
+      # TODO: affiner cette logique avec les territory ids
     end
 
     context "quand certains paramètres sont manquants" do
