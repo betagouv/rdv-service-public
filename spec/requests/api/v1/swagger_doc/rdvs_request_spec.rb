@@ -40,6 +40,9 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       parameter name: :user_id, in: :query, type: :integer,
                 description: "Filtre pour obtenir uniquement les rendez-vous de l'usager qui a cet id",
                 example: 123, required: false
+      parameter name: :user_external_id, in: :query, type: :string,
+                description: "Filtre pour obtenir uniquement les rendez-vous de l'usager qui a cet id dans votre systeme.",
+                example: "123AB", required: false
       parameter name: :agent_id, in: :query, type: :integer,
                 description: "Filtre pour obtenir uniquement les rendez-vous de l'agent qui a cet id",
                 example: 456, required: false
