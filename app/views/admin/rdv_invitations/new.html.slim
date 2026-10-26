@@ -20,7 +20,7 @@
         | à domicile
       |< pour <b>#{@rdv_invitation.motif.name}</b>
       span
-        = icon_link_to "Changer de motif", edit_motif_admin_organisation_rdv_invitations_path(current_organisation, params.permit(:motif_id)), class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-btn--icon-left fr-icon-edit-line fr-pr-0"
+        = icon_link_to "Changer de motif", edit_motif_admin_organisation_rdv_invitations_path(current_organisation, params.permit(:user_id)), class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-btn--icon-left fr-icon-edit-line fr-pr-0"
       | .
 
     - next_available_date = @rdv_invitation.next_available_date
