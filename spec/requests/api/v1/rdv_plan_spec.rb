@@ -1,9 +1,7 @@
 RSpec.describe "API RDV Plan" do
   let(:headers) { oauth_client_headers(oauth_token) }
 
-  let!(:oauth_token) do
-    create(:access_token, resource_owner_id: agent.id, application:)
-  end
+  let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application:) }
   let(:application) do
     create(:oauth_application,
            name: "Démarche Numérique",
@@ -11,9 +9,7 @@ RSpec.describe "API RDV Plan" do
            post_logout_redirect_uri: "http://localhost:4567/")
   end
 
-  let(:agent) do
-    create(:agent, basic_role_in_organisations: [create(:organisation)])
-  end
+  let(:agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
 
   describe "#create" do
     let(:params) do
@@ -28,8 +24,9 @@ RSpec.describe "API RDV Plan" do
     context "quand l'usager n'existe pas encore" do
       it "crée l'usager et le rdv plan" do
         expect do
-          post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
+          post "/api/v1/rdv_plans", headers:, params:, as: :json
         end.to change(User, :count).by(1)
+
         rdv_plan = RdvPlan.last
         expect(rdv_plan.planning_agent).to eq agent
         expect(rdv_plan.user).to have_attributes(
@@ -40,7 +37,7 @@ RSpec.describe "API RDV Plan" do
 
       context "quand on réutilise l'id de l'usager pour un second rdv_plan, même si le premier n'a pas été finalisé" do
         before do
-          post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
+          post "/api/v1/rdv_plans", headers:, params:, as: :json
         end
 
         it "associe aussi l'usager au second rdv plan" do
@@ -62,22 +59,18 @@ RSpec.describe "API RDV Plan" do
       end
 
       context "quand l'usager n'est dans aucune des organisations de l'agent" do
-        let(:user) do
-          create(:user, organisations: [other_organisation])
-        end
+        let(:user) { create(:user, organisations: [other_organisation]) }
         let(:other_organisation) { create(:organisation) }
 
         it "lève une erreur" do
-          post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
+          post "/api/v1/rdv_plans", headers:, params:, as: :json
           expect(RdvPlan.last).to be_nil
           expect(response.status).to eq 403
         end
       end
 
       context "quand l'usager est dans une des organisations de l'agent" do
-        let(:user) do
-          create(:user, organisations: [agent.organisations.last])
-        end
+        let(:user) { create(:user, organisations: [agent.organisations.last]) }
 
         it "crée le rdv plan avec l'usager" do
           post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
@@ -85,6 +78,45 @@ RSpec.describe "API RDV Plan" do
           expect(User.all.to_a).to eq [user]
           expect(RdvPlan.last.user).to eq user
         end
+      end
+    end
+
+    context "quand on passe un external_id pour faire un upsert" do
+      context "quand aucun usager n'existe pour ce external_id" do
+        let(:params) do
+          {
+            user: {
+              external_id: "123456AB",
+              first_name: "Francis",
+              last_name: "Factice",
+            },
+          }
+        end
+
+        it "enregistre l'usager" do
+          expect do
+            post "/api/v1/rdv_plans", headers:, params:, as: :json
+          end.to change(User, :count).by(1)
+
+          user = User.last
+          expect(user).to have_attributes(first_name: "Francis", last_name: "Factice")
+
+          expect(user.external_references.count).to eq 1
+
+          expect(user.external_references.last).to have_attributes(
+            item: user,
+            territory: nil, # Pour le moment on n'ajoute pas de scope par territory
+            oauth_application_id: application.id
+          )
+        end
+      end
+
+      context "quand il y a déjà un usager visible pour cet agent avec ce external_id" do
+        it "met à jour l'usager" do
+        end
+      end
+
+      context "quand il y a déjà un usager avec ce external_id mais que cet agent n'a pas le droit d'y accéder" do
       end
     end
 

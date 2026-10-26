@@ -3,7 +3,11 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
     rdv_plan = RdvPlan.transaction do
       user_params = params.require(:user)
 
-      user = find_or_build_user(user_params)
+      user = if user_params[:external_id].present?
+               upsert_user(user_params)
+             else
+               find_or_build_user(user_params)
+             end
 
       user.save!
       RdvPlan.create!(
@@ -30,12 +34,38 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
     current_agent
   end
 
+  def upsert_user(user_params)
+    external_reference = ExternalReference.where(item_type: "User", oauth_application: doorkeeper_token&.application).find_by(user_params.permit[:external_id])
+
+    user = external_reference&.item
+
+    if user && agent_has_access_to_user?(user)
+      user.assign_attributes(permitted_user_params(user_params))
+
+    else
+      user = build_user(user_params)
+    end
+
+    if external_reference.nil?
+      user.external_references.build(
+        oauth_application: doorkeeper_token&.application,
+        external_id: user_params[:external_id]
+      )
+    end
+
+    user
+  end
+
+  def permitted_user_params(user_params)
+    user_params.permit(:first_name, :last_name, :email, :address, :phone_number, :birth_date)
+  end
+
   def find_or_build_user(user_params)
     find_user(user_params) || build_user(user_params)
   end
 
   def build_user(user_params)
-    User.new(user_params.permit(:first_name, :last_name, :email, :address, :phone_number, :birth_date))
+    User.new(permitted_user_params(user_params))
   end
 
   def find_user(user_params)
