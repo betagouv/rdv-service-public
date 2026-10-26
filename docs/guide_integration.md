@@ -48,12 +48,14 @@ Ils seront redirigés vers la création d'un nouvel espace ou la configuration d
 
 Après avoir obtenu un token d'accès à l'api, vous pouvez faire un appel à l'api de création de "RDV Plan", qui permet de créer un brouillon de rendez-vous.
 
+
 Exemple :
 ```
 POST /api/v1/rdv_plans
 {
     "user": {
-        "id": 123
+        "external_id": "123456", // facultatif. L'id de l'usager dans votre système. Permet de faire un "upsert" et d'éviter de re-créer le même usager plusieurs fois.
+        // Si vous avez l'id de l'usager dans RDV Service Public, vous pouvez aussi le passer
         "first_name": "Francis", // obligatoire
         "last_name": "Factice", // obligatoire
         "email": "francis.factice@gmail.com",
@@ -67,6 +69,7 @@ POST /api/v1/rdv_plans
 ```
 
 Seuls les champs `user.first_name` et `user.last_name` sont obligatoires, les autres sont facultatifs.
+Cependant, nous recommandons
 
 Vous obtiendrez une réponse à ce format :
 ```
