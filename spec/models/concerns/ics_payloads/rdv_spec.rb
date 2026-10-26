@@ -72,10 +72,10 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
             create(:rdv_plan, rdv: rdv, dossier_url: "http://demarches-simplifies.test/exemple", oauth_application:)
           end
 
-          let(:oauth_application) { create(:oauth_application, name: "Démarches Simplifiées") }
+          let(:oauth_application) { create(:oauth_application, name: "Démarche Numérique") }
 
           it "provides the link in the description" do
-            expect(rdv.payload(recipient: agent)[:description]).to include("Voir sur Démarches Simplifiées: http://demarches-simplifies.test/exemple")
+            expect(rdv.payload(recipient: agent)[:description]).to include("Voir sur Démarche Numérique: http://demarches-simplifies.test/exemple")
           end
         end
       end

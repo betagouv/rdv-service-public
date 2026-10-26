@@ -1,4 +1,4 @@
-L'API de RDV Service Public permet à nos partenaires, comme par exemple Démarches Simplifiées et RDV Insertion, d'ajouter de la gestion de rendez-vous dans leurs applications métier.
+L'API de RDV Service Public permet à nos partenaires, comme par exemple Démarche Numérique et RDV Insertion, d'ajouter de la gestion de rendez-vous dans leurs applications métier.
 Elle peut aussi être utilisée pour synchroniser les calendriers des agents de votre administration avec ceux qu'ils ont sur leur compte RDV Service Public.
 
 L'API est disponible pour nos trois marques : RDV Service Public, RDV Solidarités, et RDV Aide Numérique.
