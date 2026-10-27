@@ -214,7 +214,9 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
     end
   end
 
-  path "/api/v1/users/{user_id}/rdv_invitation_token" do
+  # Cet endpoint est utilisé uniquement par les invitations legacy de RDV Insertion, et n'a pas vocation à être réutilisé par d'autres partenaires
+  # Pour éviter la confusion avec le nouveau système de rdv_invitations, on ne les documente pas.
+  path "/api/v1/users/{user_id}/rdv_invitation_token", document: false do
     post "Récupérer le token d'invitation à prendre un rdv d'un usager·ère" do
       with_oauth_token_authentication
 
@@ -226,8 +228,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
 
       let!(:user_id) { user.id }
 
-      # Cet endpoint est utilisé uniquement par les invitations legacy de RDV Insertion, et n'a pas vocation à être réutilisé par d'autres partenaires
-      # Pour éviter la confusion avec le nouveau système de rdv_invitations, on ne les documente pas.
       response 200, "Renvoie le token d'invitation à prendre rdv de l'usager·ère", document: false do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
 
