@@ -117,9 +117,6 @@ Rails.application.configure do
   # https://github.com/JackC/tod/#activemodel-serializable-attribute-support
   config.active_record.time_zone_aware_types = [:datetime]
 
-  # Only use :id for inspections in production.
-  config.active_record.attributes_for_inspect = [:id]
-
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com
