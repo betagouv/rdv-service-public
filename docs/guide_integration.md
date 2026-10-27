@@ -48,7 +48,6 @@ Ils seront redirigés vers la création d'un nouvel espace ou la configuration d
 
 Après avoir obtenu un token d'accès à l'api, vous pouvez faire un appel à l'api de création de "RDV Plan", qui permet de créer un brouillon de rendez-vous.
 
-
 Exemple :
 ```
 POST /api/v1/rdv_plans
