@@ -8,6 +8,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
       description "Permet de créer un brouillon de rendez-vous"
 
+      tags "RDV Plan"
       parameter(
         name: :params, # ce nom n'est pas utilisé, car tous les paramètres sont dans le body de la requête
         in: :body,
