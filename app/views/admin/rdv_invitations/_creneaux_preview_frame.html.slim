@@ -7,7 +7,7 @@ turbo-frame id="rdv-invitation-creneaux"
     - if previous_date >= 1.week.ago
       = link_to "", creneaux_preview_frame_admin_organisation_rdv_invitations_path(current_organisation, date: previous_date, motif_id: params[:motif_id]), class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-arrow-left-s-line fr-mt-8w", aria: { label: "Semaine précédente" }, data: { turbo_stream: true }
 
-    - (first_day..first_day + 4.days).each do |day|
+    - (first_day..(first_day + 4.days)).each do |day|
       .fr-col.rdv-text-align-center
         = l(day, format: "%A")
         br
