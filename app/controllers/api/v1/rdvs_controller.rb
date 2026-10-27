@@ -32,6 +32,14 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
       rdvs = rdvs.includes(participations: [:user]).where(participations: { user_id: params[:user_id] })
     end
 
+    if params[:user_external_id].present?
+      rdvs = rdvs.includes(participations: { user: :external_references })
+        .where(participations: { users: { external_references: {
+                 oauth_application: doorkeeper_token&.application,
+                 external_id: params[:user_external_id],
+               } } })
+    end
+
     if params[:agent_id].present?
       rdvs = rdvs.includes(:agents).where(agents: { id: params[:agent_id] })
     end
