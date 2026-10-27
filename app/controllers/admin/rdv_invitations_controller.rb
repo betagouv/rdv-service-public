@@ -13,7 +13,8 @@ class Admin::RdvInvitationsController < AgentAuthController
     if user.save
       redirect_to edit_motif_admin_organisation_rdv_invitations_path(current_organisation, user_id: user.id)
     else
-      render :new
+      @rdv_invitation = RdvInvitation.new(inviting_agent: current_agent, user:)
+      render :edit_user
     end
   end
 

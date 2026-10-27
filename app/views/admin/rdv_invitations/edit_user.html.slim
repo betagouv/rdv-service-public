@@ -23,7 +23,7 @@
           span.fr-text-mention--grey.fr-text--sm
             | Vous ne trouvez pas l'usager ?&nbsp;
 
-          button[data-fr-opened="#{@user.present?}" aria-controls="new-user-modal" type="button" class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-ml-1w js-rdv-invitation-user-picker__new-user-btn"]
+          button[data-fr-opened="#{@rdv_invitation.user.present?}" aria-controls="new-user-modal" type="button" class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-ml-1w js-rdv-invitation-user-picker__new-user-btn"]
             | Ajouter un usager
 
 dialog#new-user-modal.fr-modal[aria-labelledby="new-user-modal-title"]
@@ -37,9 +37,8 @@ dialog#new-user-modal.fr-modal[aria-labelledby="new-user-modal-title"]
             h2.fr-modal__title#new-user-modal-title
               = user_icon(class: "fr-mr-1w")
               | Nouvel usager
-            - user = @user || User.new
             = form_for @rdv_invitation, url: create_user_admin_organisation_rdv_invitations_path(current_organisation), method: :patch, builder: Dsfr::FormBuilder do |f|
-              = f.fields_for :user, User.new do |ff|
+              = f.fields_for :user, @rdv_invitation.user || User.new do |ff|
                 .fr-grid-row.fr-grid-row--gutters
                   .fr-col-6
                     = ff.dsfr_text_field :first_name, required: true

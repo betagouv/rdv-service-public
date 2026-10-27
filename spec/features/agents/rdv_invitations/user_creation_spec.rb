@@ -24,4 +24,19 @@ RSpec.describe "Création d'usager lors des invitations" do
       organisations: [organisation]
     )
   end
+
+  context "avec un usager invalide" do
+    it "affiche un message d'erreur" do
+      visit edit_user_admin_organisation_rdv_invitations_path(organisation)
+      click_on "Ajouter un usager"
+
+      fill_in "Prénom", with: "Francis"
+      fill_in "Nom d’usage", with: "Factice"
+
+      fill_in "Téléphone", with: "numéro invalide"
+      click_on "Enregistrer"
+
+      expect(page).to have_content "Le numéro de téléphone est invalide."
+    end
+  end
 end
