@@ -18,7 +18,8 @@
               class: "fr-mb-0"
   - if visio_disabled
     = dsfr_alert type: :info, size: :sm, html_attributes: { class: "fr-mb-3w" } do
-      p Il n’est possible de proposer des rendez-vous en visioconférence que si votre compte #{current_domain.name} est lié à un compte ProConnect.
+      p
+        | Pour proposer des rendez-vous en visioconférence, veuillez connecter votre compte #{current_domain.name} à votre compte ProConnect.
       = link_to "Lier mon compte à ProConnect", agents_pro_connect_linking_path, class: "fr-btn fr-btn--secondary fr-btn--sm fr-mt-1w"
   - motif = f.object
   - if motif.persisted?

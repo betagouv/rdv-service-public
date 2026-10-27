@@ -162,7 +162,7 @@ RSpec.describe "Agent can CRUD motifs" do
         visit edit_admin_organisation_motif_path(organisation, motif)
         expect(page).to have_field "Par visioconférence", disabled: true
         expect(page).to have_field "Par téléphone", disabled: false
-        expect(page).to have_content "Il n’est possible de proposer des rendez-vous en visioconférence que si votre compte"
+        expect(page).to have_content "Pour proposer des rendez-vous en visioconférence, veuillez connecter votre compte"
         click_link "Lier mon compte à ProConnect"
         expect(page).to have_current_path(agents_pro_connect_linking_path)
       end
