@@ -69,7 +69,7 @@ POST /api/v1/rdv_plans
 ```
 
 Seuls les champs `user.first_name` et `user.last_name` sont obligatoires, les autres sont facultatifs.
-Cependant, nous recommandons d'utiliser `user.external_id` : vous pouvez passer n'importe quelle chaine de caractères qui correspond à l'id de l'usager dans votre système. Cela permettra
+Cependant, nous recommandons d'utiliser `user.external_id` : vous pouvez passer n'importe quelle chaine de caractères qui correspond à l'id de l'usager dans votre système. Cela permettra d'éviter de créer des usagers en doublons. Par exemple lorsque vous créez deux rdv_plans successif pour la même personne physique en réutilisant le même `user.external_id`, le compte usager créé la première fois sera réutilisé pour le deuxième rdv_plan.
 
 Vous obtiendrez une réponse à ce format :
 ```

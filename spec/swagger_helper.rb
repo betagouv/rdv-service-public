@@ -536,13 +536,10 @@ RSpec.configure do |config|
       },
       tags: [
         {
-          name: "Invitation",
-          description: "Désigner un jeton d'invitation. Il est lié à un·e usager·ère, et il est unique.",
-        },
-        {
           name: "User",
           description:
-            "Désigne le compte unique d'un·e usager·ère.
+          "Le compte unique d'un·e usager·ère. Les usager·ères sont les personnes qui prennent rendez-vous avec le service public.
+          C'est souvent des particuliers, mais ça peut aussi être des professionnels, et parfois même certains agents du service public.
             Il contient les informations de l'état civil ainsi que des informations communes comme les préférences de notifications.
             Il contient également un profil (voir UserProfile).",
         },
@@ -550,12 +547,11 @@ RSpec.configure do |config|
           name: "UserProfile",
           description:
             "Un profil lie un·e usager·ère à une organisation.
-            La plupart des usager·ères n'ont un lien qu'avec une seule organisation, mais une partie interagit avec plusieurs.
-            Ce profil contient aussi quelques informations sur l'usager·ère, indépendantes et non-partagées entre organisations.",
+            La plupart des usager·ères n'ont un lien qu'avec une seule organisation, mais une partie interagit avec plusieurs.",
         },
         {
           name: "Agent",
-          description: "Désigne un·e agent·e. Un·e agent·e est lié·e à une ou plusieurs organisations.",
+          description: "Un·e agent·e est une personne qui travaille pour le service public et gère des rendez-vous, soit en recevant du public, soit en faisant du secrétariat ou de l'administration. Un·e agent·e est lié·e à une ou plusieurs organisations.",
         },
         {
           name: "RDV",
@@ -566,25 +562,17 @@ RSpec.configure do |config|
         {
           name: "Motif",
           description:
-            "Désigne le motif d'un rendez-vous.
+          "Le motif d'un rendez-vous.
             Il contient des informations telles que le nom du motif, s'il est téléphonique, sur place ou à domicile, ainsi que des détails annexes (collectif ou non, catégorie).",
         },
         {
           name: "Organisation",
-          description: "Désigne une organisation. Une organisation contient des agent·es.",
-        },
-        {
-          name: "PublicLink",
-          description:
-          <<~DESCRIPTION,
-            Utilisé pour faire la correspondance entre des ids externes et des liens de prises de RDV au sein d'un espace. Ces liens permettent d'accéder directement à la recherche de créneaux pour une organisation donnée.
-            Cet endpoint est limité à 50 appels par minute par adresse IP.
-          DESCRIPTION
+          description: "Une organisation regroupe des agent·es qui travaillent ensemble, avec une configuration commune (motifs, lieux, etc...).",
         },
         {
           name: "Absence",
           description:
-            "Désigne une absence d'un·e agent·e.
+          "Aussi appelées Indisponibilités dans l'interface graphique. Une absence indique que l'agent·e associé·e ne peut pas assurer de rendez-vous pendant la période indiquée.
             Elle contient des informations telles que le début et la fin de l'absence, son titre et l'agent·e concerné·e.
             L'absence y est aussi représentée au format iCal.",
         },

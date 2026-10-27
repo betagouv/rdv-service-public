@@ -15,7 +15,17 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do # rubocop:d
         let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
         let!(:organisation) { create(:organisation) }
 
-        schema "$ref" => "#/components/schemas/rdv_invitations"
+        schema({
+                 type: "object",
+                 properties: {
+                   rdv_invitations: {
+                     type: "array",
+                     items: { type: "object" },
+                   },
+                   meta: { "$ref" => "#/components/schemas/meta" },
+                 },
+                 required: %w[rdv_invitations meta],
+               })
 
         run_test!
       end
