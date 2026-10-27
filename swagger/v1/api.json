@@ -1115,7 +1115,7 @@
           }
         ],
         "tags": [
-          "RDV Invitations"
+          "RDV Invitation"
         ],
         "operationId": "getRdvInvitations",
         "description": "Renvoie toutes les invitations à prendre rendez-vous accessibles à l'agent·e authentifié·e, de manière paginée",
@@ -1124,6 +1124,28 @@
             "description": "Renvoie des invitations",
             "content": {
               "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "rdv_invitations": [
+                        {
+                          "id": 28,
+                          "cancelled": false,
+                          "created_at": "2026-10-27 10:59:11 +0100",
+                          "rdv_id": null,
+                          "updated_at": "2026-10-27 10:59:11 +0100"
+                        }
+                      ],
+                      "meta": {
+                        "current_page": 1,
+                        "next_page": null,
+                        "prev_page": null,
+                        "total_pages": 1,
+                        "total_count": 1
+                      }
+                    }
+                  }
+                },
                 "schema": {
                   "type": "object",
                   "properties": {
