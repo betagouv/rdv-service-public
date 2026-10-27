@@ -98,7 +98,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   end
 
   def set_services_to_select
-    @services_to_select = current_territory.services.reject(&:secretariat?)
+    @services_to_select = current_territory.services
   end
 
   def set_agent
