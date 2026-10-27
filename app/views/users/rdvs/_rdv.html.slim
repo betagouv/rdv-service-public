@@ -42,7 +42,9 @@ ul.list-group.list-group-flush.fr-mb-3w.fr-mt-0
         = visio_icon(class: "fr-mr-1w")
         = "RDV par visioconférence "
       .fr-ml-4w
-        - if rdv.visio_url.present?
+        - if rdv.starts_at.to_date > Time.zone.today
+          = t("rdvs.visio_link_available_on_rdv_day")
+        - elsif rdv.visio_url.present?
           = link_to("rejoindre la visioconférence", rdv.visio_url, target: :_blank)
         - else
           = t("rdvs.visio_link_not_yet_available")
