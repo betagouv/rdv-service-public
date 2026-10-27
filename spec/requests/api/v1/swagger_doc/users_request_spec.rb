@@ -11,7 +11,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "User"
-      produces "application/json"
       operationId "getUser"
       description "Renvoie un·e usager·ère"
 
@@ -61,7 +60,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "User"
-      produces "application/json"
       operationId "updateUser"
       description "Met à jour un·e usager·ère"
 
@@ -222,8 +220,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
     post "Récupérer le token d'invitation à prendre un rdv d'un usager·ère" do
       with_oauth_token_authentication
 
-      tags "User", "Invitation"
-      produces "application/json"
+      tags "User"
       operationId "createUserInvitation"
       description "Renvoie le token d'invitation à prendre rdv de l'usager·ère"
 
@@ -267,7 +264,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       with_pagination
 
       tags "User"
-      produces "application/json"
       operationId "getUsers"
       description "Renvoie une liste paginée d'usager·ères"
 
@@ -307,7 +303,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "User"
-      produces "application/json"
       operationId "createUser"
       description "Crée un·e usager·ère"
 
@@ -432,7 +427,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       with_pagination
 
       tags "User"
-      produces "application/json"
       operationId "getUsersFromOrganisation"
       description "Renvoie une liste paginée d'usager·ères d'une organisation"
 
@@ -473,7 +467,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "User"
-      produces "application/json"
       operationId "getUserFromOrganisation"
       description "Renvoie un·e usager·ère"
 

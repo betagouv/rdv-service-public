@@ -9,7 +9,6 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
       with_pagination
 
       tags "Absence"
-      produces "application/json"
       operationId "getAbsences"
       description "Renvoie les absences des agents de mes organisations, de manière paginée"
 
@@ -39,7 +38,6 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "Absence"
-      produces "application/json"
       operationId "createAbsence"
       description "Crée une absence"
 
@@ -185,7 +183,6 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "Absence"
-      produces "application/json"
       operationId "getAbsence"
       description "Renvoie une absence"
 
@@ -220,7 +217,6 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "Absence"
-      produces "application/json"
       operationId "updateAbsence"
       description "Modifie une absence"
 
@@ -264,7 +260,6 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "Absence"
-      produces "application/json"
       operationId "deleteAbsence"
       description "Détruit une absence"
 

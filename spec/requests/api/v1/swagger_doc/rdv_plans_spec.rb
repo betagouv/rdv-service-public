@@ -42,8 +42,6 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       )
 
       with_examples
-      produces "application/json"
-      consumes "application/json"
 
       let(:organisation) { create(:organisation) }
       let!(:agent) { create(:agent, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
@@ -94,8 +92,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       description "Permet de savoir si un rendez-vous a été pris pour ce rdv plan"
 
       with_examples
-      produces "application/json"
-      consumes "application/json"
+      tags "RDV Plan"
       parameter name: :rdv_plan_id, in: :path, type: :integer, example: 123
 
       let(:organisation) { create(:organisation) }

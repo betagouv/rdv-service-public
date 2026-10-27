@@ -11,7 +11,6 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       with_pagination
 
       tags "WebhookEndpoint"
-      produces "application/json"
       operationId "getWebhookEndpoints"
       description "Renvoie tous les webhook_endpoints d'une organisation accessibles à l'agent·e authentifié·e, de manière paginée"
 
@@ -74,7 +73,6 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "WebhookEndpoint"
-      produces "application/json"
       operationId "createWebhookEndpoint"
       description "Crée un webhook_endpoint et le renvoie"
 
@@ -131,7 +129,6 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "WebhookEndpoint"
-      produces "application/json"
       operationId "updateWebhookEndpoint"
       description "Met à jour un webhook_endpoint"
 

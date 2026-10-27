@@ -9,7 +9,6 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
       with_pagination
 
       tags "Lieux"
-      produces "application/json"
       operationId "listLieux"
       description "Liste tous les lieux accessibles par l’agent connecté. N’inclut pas les lieux ponctuels ni les lieux désactivés."
 
@@ -27,7 +26,6 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "Lieux"
-      produces "application/json"
       operationId "createLieu"
       description "Crée un lieu"
 
