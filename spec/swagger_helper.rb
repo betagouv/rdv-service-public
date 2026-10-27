@@ -551,7 +551,11 @@ RSpec.configure do |config|
         },
         {
           name: "Agent",
-          description: "Un·e agent·e est une personne qui travaille pour le service public et gère des rendez-vous, soit en recevant du public, soit en faisant du secrétariat ou de l'administration. Un·e agent·e est lié·e à une ou plusieurs organisations.",
+          description: <<~TEXT,
+            Un·e agent·e est une personne qui travaille pour le service public et gère des rendez-vous,
+            soit en recevant du public, soit en faisant du secrétariat ou de l'administration.
+            Un·e agent·e est lié·e à une ou plusieurs organisations.,
+          TEXT
         },
         {
           name: "RDV",
@@ -566,7 +570,11 @@ RSpec.configure do |config|
 
         {
           name: "RDV Invitation",
-          description: "Une invitation à prendre rendez-vous. Les invitations permettent aux agents de proposer aux usagers de prendre rendez-vous à l'horaire qui les arrange sans avoir à ouvrir la réservation en ligne à tout le monde.",
+          description: <<~TEXT,
+            Une invitation à prendre rendez-vous.
+            Les invitations permettent aux agents de proposer aux usagers de prendre rendez-vous
+            à l'horaire qui les arrange sans avoir à ouvrir la réservation en ligne à tout le monde.
+          TEXT
         },
 
         {
