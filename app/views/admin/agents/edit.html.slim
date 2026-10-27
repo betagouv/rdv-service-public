@@ -15,9 +15,9 @@
 
           - if current_territory.services.any? || @agent.agent_services.any?
             p
-              - if @agent.services.count == 0
+              - if @agent.services.none?
                 | #{@agent.full_name_or_email} n'appartient à aucun service
-              - elsif @agent.services.count == 1
+              - elsif @agent.services.one?
                 = "#{@agent.full_name_or_email} appartient au service "
                 b #{@agent.services.first.name}
               - else

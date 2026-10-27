@@ -2,7 +2,7 @@ class InvitationSearchContext < SearchContext
   attr_reader :departement, :city_code, :street_ban_id, :address, :latitude, :longitude
 
   INVITATION_PARAMS = %i[city_code departement street_ban_id address latitude longitude motif_category_short_name lieu_id].freeze + [
-    organisation_ids: [], referent_ids: [],
+    { organisation_ids: [], referent_ids: [] },
   ].freeze
 
   def initialize(user:, query_params: {})

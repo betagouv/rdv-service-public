@@ -11,7 +11,7 @@
         user_ids: @rdv.user_ids, agent_ids: @rdv.agent_ids,
         lieu_attributes: @rdv.nested_lieu_attributes
 
-      - if @services.count > 1
+      - if @services.many?
         = f.input :service_id, \
           collection: @services, \
           input_html: { \
@@ -33,7 +33,7 @@
         label_method: -> { motif_name_with_location_and_group_type(_1) }, \
         input_html: { \
           data: { placeholder: "Sélectionnez un motif", "auto-select-sole-option": true, "select2-config": { disableSearch: @motifs.count <= 5  } },
-          class: @services.count > 1 ? "js-filtered-motifs" : "select2-input", \
+          class: @services.many? ? "js-filtered-motifs" : "select2-input", \
         }
 
       = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f

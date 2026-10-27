@@ -17,7 +17,7 @@ class AddCreatedByFields < ActiveRecord::Migration[7.0]
     # --- Migration des participations ---
     #
     # On utilise les memes valeurs pour le nouveau champ created_by_type du polymorphisme que pour l'ancien champ created_by
-    ActiveRecord::Base.connection.execute <<-SQL.squish
+    ActiveRecord::Base.connection.execute <<~SQL.squish
       UPDATE participations
       SET created_by_type = CASE
         WHEN created_by = 'agent' THEN 'Agent'
@@ -29,14 +29,14 @@ class AddCreatedByFields < ActiveRecord::Migration[7.0]
     # POUR L'INSTANT, PAS DE MIGRATION DE L'HISTORIQUE POUR LES AGENTS (VOIR PR)
 
     # Dans le cas des users, on utilise le user de la participation
-    ActiveRecord::Base.connection.execute <<-SQL.squish
+    ActiveRecord::Base.connection.execute <<~SQL.squish
       UPDATE participations
       SET created_by_id = user_id
       WHERE created_by = 'user'
     SQL
 
     # Dans le cas des prescripteurs, on utilise le prescripteur de la participation
-    ActiveRecord::Base.connection.execute <<-SQL.squish
+    ActiveRecord::Base.connection.execute <<~SQL.squish
       UPDATE participations
       SET created_by_id = (
         SELECT prescripteurs.id FROM prescripteurs
@@ -46,7 +46,7 @@ class AddCreatedByFields < ActiveRecord::Migration[7.0]
     SQL
 
     # ROLLBACK
-    ActiveRecord::Base.connection.execute <<-SQL.squish
+    ActiveRecord::Base.connection.execute <<~SQL.squish
       UPDATE participations
       SET created_by = CASE
         WHEN created_by_type = 'Agent' THEN (CAST('agent' AS created_by))
@@ -59,7 +59,7 @@ class AddCreatedByFields < ActiveRecord::Migration[7.0]
 
     # On utilise les memes valeurs pour le nouveau champ created_by_type du polymorphisme que pour l'ancien champ created_by
     # enum created_by: { agent: 0, user: 1, file_attente: 2, prescripteur: 3 }, _prefix: :created_by
-    ActiveRecord::Base.connection.execute <<-SQL.squish
+    ActiveRecord::Base.connection.execute <<~SQL.squish
       UPDATE rdvs
       SET created_by_type = CASE
         WHEN created_by = 0 THEN 'Agent'
@@ -72,7 +72,7 @@ class AddCreatedByFields < ActiveRecord::Migration[7.0]
     # POUR L'INSTANT, PAS DE MIGRATION DE L'HISTORIQUE POUR LES AGENTS (VOIR PR)
     #
     # Dans le cas des created_by users, on utilise le user de la plus ancienne participation
-    ActiveRecord::Base.connection.execute <<-SQL.squish
+    ActiveRecord::Base.connection.execute <<~SQL.squish
       UPDATE rdvs
       SET created_by_id = (
         SELECT participations.user_id FROM participations
@@ -84,7 +84,7 @@ class AddCreatedByFields < ActiveRecord::Migration[7.0]
     SQL
 
     # Dans le cas des created_by file_attentes, on utilise la file d'attente la plus ancienne
-    ActiveRecord::Base.connection.execute <<-SQL.squish
+    ActiveRecord::Base.connection.execute <<~SQL.squish
       UPDATE rdvs
       SET created_by_id = (
         SELECT file_attentes.id FROM file_attentes
@@ -96,7 +96,7 @@ class AddCreatedByFields < ActiveRecord::Migration[7.0]
     SQL
 
     # Dans le cas des created_by prescripteurs, on utilise le prescripteur le plus ancien parmis les participations
-    ActiveRecord::Base.connection.execute <<-SQL.squish
+    ActiveRecord::Base.connection.execute <<~SQL.squish
       UPDATE rdvs
       SET created_by_id = (
         SELECT prescripteurs.id FROM prescripteurs
@@ -109,7 +109,7 @@ class AddCreatedByFields < ActiveRecord::Migration[7.0]
     SQL
 
     # ROLLBACK
-    ActiveRecord::Base.connection.execute <<-SQL.squish
+    ActiveRecord::Base.connection.execute <<~SQL.squish
       UPDATE rdvs
       SET created_by = CASE
         WHEN created_by_type = 'Agent' THEN 0

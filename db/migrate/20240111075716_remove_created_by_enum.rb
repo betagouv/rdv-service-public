@@ -1,7 +1,7 @@
 class RemoveCreatedByEnum < ActiveRecord::Migration[7.0]
   def up
     safety_assured do
-      execute <<-SQL.squish
+      execute <<~SQL.squish
         DROP TYPE created_by;
       SQL
     end

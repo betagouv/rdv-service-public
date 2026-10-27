@@ -39,7 +39,7 @@
                 - if sector.attributions.any?
                   ul.pl-2.mb-0
                     - sector.attributions.to_a.group_by(&:organisation).each do |organisation, attributions|
-                      - if attributions.count == 1 && attributions.all?(&:level_organisation?)
+                      - if attributions.one? && attributions.all?(&:level_organisation?)
                         li= "Organisation entière #{organisation.name}"
                       - if attributions.all?(&:level_agent?)
                         li

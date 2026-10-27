@@ -51,7 +51,7 @@ RSpec.describe CreneauxSearch::Range do
       travel_to(friday)
       date_range = friday..(friday + 7.days)
       motif = build(:motif, min_public_booking_delay: (3 * 24 * 60 * 60), max_public_booking_delay: (8 * 24 * 60 * 60))
-      expected_range = friday + 3.days..(friday + 7.days)
+      expected_range = (friday + 3.days)..(friday + 7.days)
       expect(described_class.reduce_range_to_delay(motif, date_range)).to eq(expected_range)
     end
 
