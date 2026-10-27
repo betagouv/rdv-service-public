@@ -1,21 +1,11 @@
-- contact_team_url = Agents::PagesController::CONTACT_TEAM_URL
-
 - content_for :title do
   | S’inscrire à une démo
 
-nav.fr-breadcrumb role="navigation" aria-label="vous êtes ici :"
-  .fr-container
-    button.fr-breadcrumb__button aria-expanded="false" aria-controls="breadcrumb-webinaire"
-      | Voir le fil d’Ariane
-    .fr-collapse id="breadcrumb-webinaire"
-      ol.fr-breadcrumb__list
-        li
-          = link_to "Accueil", root_path, class: "fr-breadcrumb__link"
-        li
-          a.fr-breadcrumb__link aria-current="page"
-            | S’inscrire à une démo
+.fr-container
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Accueil", href: root_path
+    = b.with_breadcrumb label: "S’inscrire à une démo"
 
-/ Titre et bouton à gauche, illustration à droite
 section.fr-py-4w
   .fr-container
     .fr-grid-row.fr-grid-row--gutters
@@ -29,7 +19,6 @@ section.fr-py-4w
       .fr-col-12.fr-col-md-6
         = image_tag "rdv_mairie/webinaire-hero.svg", alt: "", class: "fr-responsive-img rdv-object-fit-contain"
 
-    / Trois cas d’usage selon le profil
     .fr-grid-row.fr-grid-row--gutters.fr-mt-6w
       .fr-col-12.fr-col-md-4
         .rdv-card-with-box-shadow.rdv-height-100
@@ -39,14 +28,12 @@ section.fr-py-4w
             | Découvrez comment fonctionne l’outil et posez toutes vos questions.
       .fr-col-12.fr-col-md-4
         .rdv-card-with-box-shadow.rdv-height-100
-
           h2.fr-h5
             | Vous avez un compte mais ne l’avez pas encore utilisé ?
           p
             | Venez approfondir vos connaissances et faites-nous part de vos doutes.
       .fr-col-12.fr-col-md-4
         .rdv-card-with-box-shadow.rdv-height-100
-
           h2.fr-h5
             | Vous avez un compte et l’utilisez déjà ?
           p
@@ -75,7 +62,7 @@ section#infos-presentees.fr-py-6w
               h3.fr-tile__title
                 | Fonctionnement de l’outil
               p.fr-tile__desc
-                | Principes clés, cas d’usage et parcours agents comme usagers.
+                | Principes clés, cas d’usage et parcours agents comme usagers
           .fr-tile__header
             .fr-tile__pictogram
               = dsfr_svg "artwork/pictograms/digital/calendar"
@@ -86,7 +73,7 @@ section#infos-presentees.fr-py-6w
               h3.fr-tile__title
                 | Démo en direct
               p.fr-tile__desc
-                | Aperçu des fonctionnalités : rappels SMS, RDV collectifs, réservation...
+                | Aperçu des fonctionnalités : rappels SMS, RDV collectifs, réservation…
           .fr-tile__header
             .fr-tile__pictogram
               = dsfr_svg "artwork/pictograms/digital/application"
@@ -97,7 +84,7 @@ section#infos-presentees.fr-py-6w
               h3.fr-tile__title
                 | Questions / Réponses
               p.fr-tile__desc
-                | Notre équipe produit répond à toutes vos questions.
+                | Notre équipe produit répond à toutes vos questions
           .fr-tile__header
             .fr-tile__pictogram
               = dsfr_svg "artwork/pictograms/system/information"
@@ -119,7 +106,7 @@ section.fr-py-6w
             |> le format webinaire pourrait ne pas suffire.
             | Discutez directement avec l’équipe de votre besoin.
           .fr-btns-group.fr-btns-group--inline-md.fr-mt-3w
-            = link_to "Planifier un temps d’échange", contact_team_url, class: "fr-btn fr-btn--secondary", title: "Planifier un temps d’échange"
+            = link_to "Planifier un temps d’échange", Agents::PagesController::CONTACT_TEAM_URL, class: "fr-btn fr-btn--secondary", title: "Planifier un temps d’échange"
 
 section.fr-py-6w.fr-background-alt--grey
   .fr-container
