@@ -64,26 +64,25 @@ class Admin::RdvInvitationsController < AgentAuthController
   end
 
   def show_confirmation
-    set_and_authorize_invitation(:show?)
+    @rdv_invitation = RdvInvitation.find(params[:id])
+    authorize(@rdv_invitation, :show?, policy_class: Agent::RdvInvitationPolicy)
   end
 
   def show
-    set_and_authorize_invitation
+    @rdv_invitation = RdvInvitation.find(params[:id])
+    authorize(@rdv_invitation, policy_class: Agent::RdvInvitationPolicy)
   end
 
   def cancel
-    set_and_authorize_invitation(:update?)
+    @rdv_invitation = RdvInvitation.find(params[:id])
+    authorize(@rdv_invitation, policy_class: Agent::RdvInvitationPolicy)
+
     @rdv_invitation.update!(cancelled: true)
     flash[:notice] = "Invitation résiliée"
     redirect_to admin_organisation_rdv_invitation_path(current_organisation, @rdv_invitation)
   end
 
   private
-
-  def set_and_authorize_invitation(action_name = nil)
-    @rdv_invitation = RdvInvitation.find(params[:id])
-    authorize(@rdv_invitation, action_name, policy_class: Agent::RdvInvitationPolicy)
-  end
 
   def pundit_user
     current_agent
