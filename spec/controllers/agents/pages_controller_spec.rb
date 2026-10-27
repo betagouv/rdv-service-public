@@ -37,6 +37,17 @@ RSpec.describe Agents::PagesController, type: :controller do
           end
         end
       end
+
+      context "mais que l’agent est déjà admin territorial d’un espace" do
+        # ce cas peut arriver si un agent self-onboardé supprime l'orga qu'il vient de créer
+        let(:territory) { create(:territory) }
+        let(:agent) { create(:agent, role_in_territories: [territory]) }
+
+        it "redirige vers la liste des organisations de cet espace" do
+          get :home
+          expect(response).to redirect_to(admin_territory_organisations_path(territory))
+        end
+      end
     end
 
     context "quand l’agent a une seule organisation accessible" do
