@@ -1,422 +1,181 @@
 - content_for :title do
   | Fonctionnalités
 
-.fr-container.fr-py-6w
-  h1
-    | Fonctionnalités
-  p.fr-text--lead
-    | Ce que RDV Service Public permet de faire, pour les agents comme pour les usagers.
-
-/ Capture pleine largeur, détails sur deux colonnes
-section#agenda.fr-py-8w.fr-background-alt--blue-ecume
+section.fr-py-8w.fr-background-alt--grey
   .fr-container
     .fr-grid-row.fr-grid-row--center
       .fr-col-12.fr-col-md-8.rdv-text-align-center
-        p
-          span.fr-badge
-            | Agenda
-        h2
-          | Agenda des agents
-    figure.fr-content-media
-      = image_tag "rdv_mairie/calendrier.png", alt: "Agenda d’un agent en vue semaine", class: "fr-responsive-img rdv-feature-screenshot"
-    .fr-grid-row.fr-grid-row--gutters.fr-mt-4w
+        h1
+          | Tout pour organiser vos rendez-vous et mieux accueillir vos usagers
+        p.fr-text--lead
+          | RDV Service Public réunit dans un seul outil ce dont votre administration a besoin, de l’accueil des usagers au pilotage de l’activité.
+        = link_to "S’inscrire à une démo", onboarding_path, class: "fr-btn fr-mt-3w"
+        / TODO: remplacer onboarding_path par webinaire_path une fois la page en ligne
+
+section#agenda.fr-py-8w
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle
       .fr-col-12.fr-col-md-6
-        p
-          |> Les plages d’ouvertures représentent les disponibilités des agents pour réaliser certains motifs de rendez-vous.
-          |> Elles peuvent-être récurrentes ou ponctuelles.
-          |> Des indisponibilités peuvent être positionnées par dessus : congés, réunions…
-        p
-          |> L'affichage peut inclure les samedis ou des horaires étendus
+        h2
+          | Un agenda au cœur du service
+        p.fr-text--lg
+          |> Chaque agent dispose de son agenda dédié à la prise de rendez-vous, et peut y indiquer ses disponibilités pour recevoir des usagers.
+          | Les agendas de plusieurs agents peuvent être visualisés côte à côte.
+        ul.rdv-list-with-dsfr-arrows
+          li Posez un rendez-vous directement depuis l’agenda
+          li Renseignez vos disponibilités et vos absences
+          li Consultez le planning des autres agents de votre organisation
       .fr-col-12.fr-col-md-6
-        p
-          |> Les agendas de plusieurs agents peuvent être visualisés côte à côte.
-        p
-          |> Chaque agent a son agenda, consultable par ses collègues.
-          |> L’agent est prévenu quand un collègue modifie son agenda.
-
-/ Texte à gauche, capture à droite
-section#motifs.fr-py-8w
-  .fr-container
-    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle
-      .fr-col-12.fr-col-md-5
-        p
-          span.fr-badge
-            | Prendre rendez-vous
-        h2
-          | Motifs de rendez-vous
-        p.fr-text--lg
-          | Chaque type de rendez-vous est configurable
-        ul.rdv-feature-list
-          li Sur place, par téléphone, à domicile ou en visio
-          li Durée par défaut et couleur dans l’agenda
-          li Délais minimum et maximum de réservation
-          li Possibilité d’ouvrir à la réservation publique par les usagers
-          li Consignes affichées à l’usager avant et après la réservation
-          / li Possibilité d'autoriser ou non la modification et l’annulation par l’usager
-          / li Motifs réservés au secrétariat ou au suivi par un référent
-      .fr-col-12.fr-col-md-7
         figure.fr-content-media
-          = image_tag "rdv_mairie/motifs.webp", alt: "Formulaire de configuration d’un motif de rendez-vous", class: "fr-responsive-img"
+          = image_tag "rdv_mairie/calendrier.png", alt: "Agenda d’un agent en vue semaine", class: "fr-responsive-img rdv-feature-screenshot"
 
-/ Capture à gauche, texte à droite
-section#prise-de-rdv-en-ligne.fr-py-8w.fr-background-alt--grey
+section#prise-de-rdv-en-ligne.fr-py-8w
   .fr-container
-    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle
-      .fr-col-12.fr-col-md-7
-        figure.fr-content-media.rdv-feature-media-offset
-          = image_tag "rdv_mairie/prise-rdv-en-ligne.webp", alt: "Choix d’un créneau par l’usager pour un rendez-vous passeport", class: "fr-responsive-img rdv-feature-screenshot"
-      .fr-col-12.fr-col-md-5
-        p
-          span.fr-badge
-            | Prendre rendez-vous
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle.rdv-flex-wrap-wrap-reverse
+      .fr-col-12.fr-col-md-4
+        figure.fr-content-media.rdv-screenshot-with-smartphone-frame
+          = image_tag "rdv_mairie/prise-rdv-en-ligne.webp", alt: "Choix d’un créneau par l’usager pour un rendez-vous passeport"
+      .fr-col-12.fr-col-md-8
         h2
-          | Prise de rendez-vous publique par les usagers
+          | Vos usagers prennent rendez-vous en toute autonomie
         p.fr-text--lg
-          | Si vous le souhaitez, les usagers peuvent réserver eux-mêmes via un lien public.
-        ul.rdv-feature-list
-          li Lien de réservation par organisation, lieu ou motif
-          / li Sectorisation : l’adresse de l’usager l’oriente vers le bon service
-          li Choix du lieu, puis du créneau
-          li Connexion par FranceConnect ou par email
-          li Possibilité de réserver pour un proche
-          li Modification et annulation en autonomie depuis l’espace usager
-          li Liste d’attente : l’usager peut-être prévenu si un créneau se libère
+          |> Ouvrez vos disponibilités en ligne et permettez la prise de rendez-vous en toute autonomie pour vos usagers, grâce à un lien propre à votre organisation, à intégrer sur votre site ou dans vos emails.
+          | Vous choisissez précisément les lieux, services et motifs ouverts à la réservation.
+        ul.rdv-list-with-dsfr-arrows
+          li Un parcours accessible, aux couleurs de l’État
+          li Connexion via FranceConnect ou ProConnect
+          li Modification et annulation possible par l’usager
 
-/ Texte à gauche, capture à droite
-section#recherche-creneau.fr-py-8w
-  .fr-container
-    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle
-      .fr-col-12.fr-col-md-5
-        p
-          span.fr-badge
-            | Agenda
-        h2
-          | Recherche de créneau
-        p.fr-text--lg
-          | Un agent peut trouver le prochain créneau libre facilement, sans parcourir les agendas de ses collègues un par un.
-        p
-          | Il peut filtrer sa recherche de créneau par motif de rendez-vous, lieu, équipe ou agent.
-      .fr-col-12.fr-col-md-7
-        figure.fr-content-media
-          = image_tag "rdv_mairie/recherche-creneau.webp", alt: "Sélection d’un créneau dans la recherche, pour un rendez-vous passeport à la Mairie de Sannois", class: "fr-responsive-img rdv-feature-screenshot"
-
-/ Capture à gauche, texte à droite
-section#statut-rdv.fr-py-8w.fr-background-alt--grey
-  .fr-container
-    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle
-      .fr-col-12.fr-col-md-7
-        figure.fr-content-media.rdv-feature-media-offset
-          = image_tag "rdv_mairie/statut-rdv.webp", alt: "Renseignement du statut d’un rendez-vous passé : honoré, absence non excusée, annulé", class: "fr-responsive-img rdv-feature-screenshot"
-      .fr-col-12.fr-col-md-5
-        p
-          span.fr-badge
-            | Agenda
-        h2
-          | Statut des rendez-vous
-        p.fr-text--lg
-          | Savoir ce qui s’est passé, sans relancer les collègues.
-        ul.rdv-feature-list
-          li Statuts : honoré, annulé par l’usager, annulé par le service, absence non excusée
-          li Liste des rendez-vous passés à renseigner
-
-/ Tableau
 section#notifications.fr-py-8w
   .fr-container
-    p
-      span.fr-badge
-        | Prendre rendez-vous
-    h2
-      | Notifications et rappels
-    .fr-grid-row.fr-grid-row--gutters
-      .fr-col-12.fr-col-md-6
-        p.fr-text--lg
-          |> Les rappels par SMS permettent de diminuer le nombre de rendez-vous non honorés.
-          |> Les usagers peuvent annuler en autonomie depuis un lien dans le SMS, sans avoir à créer un compte ou définir un mot de passe.
-        figure.fr-content-media
-          = image_tag "rdv_mairie/annulation-sms.webp", alt: "SMS de rappel reçu par l’usager, avec un lien d’annulation du rendez-vous", class: "fr-responsive-img rdv-feature-screenshot"
-          figcaption.fr-content-media__caption
-            | Exemple de SMS reçu par l’usager
-      .fr-col-12.fr-col-md-6
-        .fr-table
-          .fr-table__wrapper
-            .fr-table__container
-              .fr-table__content
-                table
-                  thead
-                    tr
-                      th scope="col" Événement
-                      th scope="col" Quand
-                      th scope="col" Canal
-                  tbody
-                    tr
-                      td Confirmation
-                      td À la prise de rendez-vous
-                      td SMS et email
-                    tr
-                      td Rappel
-                      td 48 h avant
-                      td SMS et email
-                    tr
-                      td Modification par l’agent
-                      td Immédiatement
-                      td SMS et email
-                    tr
-                      td Annulation par l’agent
-                      td Immédiatement
-                      td SMS et email
-
-/ Texte à gauche, capture à droite
-section#rdv-collectifs.fr-py-8w.fr-background-alt--grey
-  .fr-container
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle
-      .fr-col-12.fr-col-md-5
-        p
-          span.fr-badge
-            | Accompagner
+      .fr-col-12.fr-col-md-6
         h2
-          | Rendez-vous collectifs
+          | Moins de rendez-vous non honorés, grâce aux notifications de rappel
         p.fr-text--lg
-          | Ateliers, réunions d’information, sessions de groupe.
-        ul.rdv-feature-list
-          li Nombre de places limité ou illimité
-          li Inscription par l’agent ou par l’usager en ligne
-          li Désinscription d’un participant
-          li Présence suivie participant par participant
-          li Notifications à chaque inscription ou annulation
-      .fr-col-12.fr-col-md-7
-        figure.fr-content-media
-          = image_tag "rdv_mairie/rdv-collectifs.webp", alt: "Fiche d’un rendez-vous collectif « Réunion d’information » avec la liste des participantes", class: "fr-responsive-img rdv-feature-screenshot"
-
-/ Deux colonnes
-section#prescription.fr-py-8w
-  .fr-container
-    p
-      span.fr-badge
-        | Accompagner
-    h2
-      | Prescription
-    p.fr-text--lg
-      | Un agent ou un partenaire prend rendez-vous pour un usager.
-    .fr-grid-row.fr-grid-row--gutters
+          |> Dès qu’un rendez-vous est créé, modifié ou annulé, l’usager est prévenu automatiquement par SMS et par email.
+          | Un rappel lui est envoyé 48h avant son rendez-vous, et un créneau annulé redevient disponible pour quelqu’un d’autre.
+        ul.rdv-list-with-dsfr-arrows
+          li Une confirmation envoyée dès la prise du rendez-vous
+          li Un rappel SMS et/ou email 48h avant le rendez-vous
+          li Vous pouvez paramétrer les conditions d’annulation
       .fr-col-12.fr-col-md-6
-        h3.fr-h5
-          | Prescription interne
-        ul.rdv-feature-list
-          li L’agent réserve pour un usager de son espace
-          li Dans son organisation ou dans une autre organisation de l’espace
-          li L’usager est notifié du rendez-vous
-      .fr-col-12.fr-col-md-6
-        h3.fr-h5
-          | Prescription externe
-        ul.rdv-feature-list
-          li Un partenaire d’un autre espace réserve pour un usager
-          li Depuis le lien public, sans compte
-          li L’usager et le prescripteur sont notifiés
+        figure.fr-content-media.rdv-screenshot-with-smartphone-frame
+          = image_tag "rdv_mairie/sms-confirmation.webp", alt: "SMS de rappel reçu par l’usager, avec un lien d’annulation du rendez-vous", class: "rdv-max-width-400px "
 
-/ Texte à gauche, capture à droite
-section#usagers.fr-py-8w.fr-background-alt--grey
+section#usagers.fr-py-8w
   .fr-container
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle
       .fr-col-12.fr-col-md-5
-        p
-          span.fr-badge
-            | Accompagner
         h2
           | Suivi des usagers
         p.fr-text--lg
-          | Une fiche par usager, partagée par l’équipe.
-        ul.rdv-feature-list
-          li Coordonnées, proches et responsable légal
-          li Historique des rendez-vous
-          li Agents référents : certains motifs de suivi ne sont réservables qu’avec son référent
+          | Une fiche par usager pour centraliser ses informations et son historique de rendez-vous.
+        ul.rdv-list-with-dsfr-arrows
+          li Coordonnées de contact
           li Fusion des usagers doublons
-          li Salle d’attente : signaler l’arrivée de l’usager
+          li Agents référents : certains motifs de suivi ne sont réservables qu’avec son référent
+          li Paramétrage des préférences de notifications par usager
+          / li Salle d’attente : signaler l’arrivée de l’usager
       .fr-col-12.fr-col-md-7
         figure.fr-content-media
           = image_tag "rdv_mairie/usagers.webp", alt: "Fiche usager avec ses coordonnées, référents et historique de rendez-vous", class: "fr-responsive-img rdv-feature-screenshot"
 
-/ Tuiles
-section#organisation.fr-py-8w
-  .fr-container
-    p
-      span.fr-badge
-        | Équipes et comptes
-    h2
-      | Organisation des équipes
-    p.fr-text--lg
-      | De la petite équipe au réseau national.
-    .fr-grid-row.fr-grid-row--gutters
-      .fr-col-12.fr-col-md-4
-        .fr-tile
-          .fr-tile__body
-            .fr-tile__content
-              h3.fr-tile__title
-                | Multi-sites
-              p.fr-tile__desc
-                | Espaces, organisations et lieux
-          .fr-tile__header
-            .fr-tile__pictogram
-              = dsfr_svg "artwork/pictograms/map/map"
-      .fr-col-12.fr-col-md-4
-        .fr-tile
-          .fr-tile__body
-            .fr-tile__content
-              h3.fr-tile__title
-                | Services et équipes
-              p.fr-tile__desc
-                | Agents regroupés par services et par équipes
-          .fr-tile__header
-            .fr-tile__pictogram
-              = dsfr_svg "artwork/pictograms/environment/human-cooperation"
-      .fr-col-12.fr-col-md-4
-        .fr-tile
-          .fr-tile__body
-            .fr-tile__content
-              h3.fr-tile__title
-                | Droits d’accès
-              p.fr-tile__desc
-                | Agent, administrateur d’organisation, administrateur de l’espace
-          .fr-tile__header
-            .fr-tile__pictogram
-              = dsfr_svg "artwork/pictograms/system/padlock"
-      .fr-col-12.fr-col-md-4
-        .fr-tile
-          .fr-tile__body
-            .fr-tile__content
-              h3.fr-tile__title
-                | Champs configurables
-              p.fr-tile__desc
-                | Fiches usagers et rendez-vous adaptées à l’espace
-          .fr-tile__header
-            .fr-tile__pictogram
-              = dsfr_svg "artwork/pictograms/system/flow-settings"
-      .fr-col-12.fr-col-md-4
-        .fr-tile
-          .fr-tile__body
-            .fr-tile__content
-              h3.fr-tile__title
-                | Invitation des agents
-              p.fr-tile__desc
-                | Ajout de collègues par email
-          .fr-tile__header
-            .fr-tile__pictogram
-              = dsfr_svg "artwork/pictograms/digital/mail-send"
-      .fr-col-12.fr-col-md-4
-        .fr-tile
-          .fr-tile__body
-            .fr-tile__content
-              h3.fr-tile__title
-                | Statistiques et exports
-              p.fr-tile__desc
-                | Rendez-vous par statut, motif et agent ; exports par email
-          .fr-tile__header
-            .fr-tile__pictogram
-              = dsfr_svg "artwork/pictograms/digital/data-visualization"
-
-/ Bloc court : les intégrations détaillées et l'API ont leur propre page
-section#integrations.fr-py-8w.fr-background-alt--grey
-  .fr-container
-    .fr-grid-row.fr-grid-row--gutters
-      .fr-col-12.fr-col-md-5
-        p
-          span.fr-badge
-            | Écosystème
-        h2
-          | Intégrations
-        p.fr-text--lg
-          | RDV Service Public se branche sur les outils déjà en place, pour les agents comme pour les partenaires.
-      .fr-col-12.fr-col-md-7
-        ul
-          li Démarches Numériques
-          li Titres d’identité, avec l’ANTS
-          li Mon Suivi Social
-          li RDV Insertion
-        p.fr-mt-2w
-          | Une API et des webhooks permettent aussi de brancher vos propres outils.
-        .fr-btns-group.fr-btns-group--inline-md.fr-mt-1w
-          = link_to "Découvrir les intégrations", integrations_path, class: "fr-btn fr-btn--secondary"
-
-/ Deux colonnes, une par sens de synchronisation, puis mise en exergue
-section#synchronisation-agenda.fr-py-8w
-  .fr-container
-    p
-      span.fr-badge
-        | Écosystème
-    h2
-      |> Synchronisation d’agenda
-    p.fr-text--lg
-      |> RDV Service Public et l’agenda professionnel de l’agent se synchronisent dans les deux sens.
-      |> Compatible avec
-      => link_to "l’agenda de La Suite numérique", "https://messagerie.numerique.gouv.fr/home", target: "_blank"
-      |> , Zimbra et tout agenda CalDAV.
-    .fr-grid-row.fr-grid-row--gutters
-      .fr-col-12.fr-col-md-6
-        h3.fr-h5
-          span.fr-icon-arrow-right-line.fr-mr-1w aria-hidden="true"
-          | Vers l’agenda de l’agent
-        p
-          |> Les créations, modifications et annulations de rendez-vous sont répercutées automatiquement.
-          |> Une option permet d'afficher les détails de l’usager sur l'agenda externe.
-      .fr-col-12.fr-col-md-6
-        h3.fr-h5
-          span.fr-icon-arrow-left-line.fr-mr-1w aria-hidden="true"
-          | Depuis l’agenda de l’agent
-        ul.rdv-feature-list
-          li
-            |> Les événements (réunions, absences etc…) sont importés automatiquement et considérés comme des indisponibilités.
-            | Les créneaux correspondants deviennent non réservables.
-    p.fr-text--sm
-      |> Pour Outlook version Office 365 une solution alternative et moins complète de synchronisation est proposée.
-      | Pour tous les autres agendas qui ne supportent pas le protocole ouvert CalDav, comme Google, des mails avec pièces jointes ICS permettent la synchronisation
-
-/ Deux colonnes avec pictogrammes
-/ Texte à gauche, capture à droite
 section#visio.fr-py-8w.fr-background-alt--grey
   .fr-container
-    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle.rdv-flex-wrap-wrap-reverse
+      .fr-col-12.fr-col-md-7
+        figure.fr-content-media.rdv-feature-media-offset
+          = image_tag "rdv_mairie/visio.webp", alt: "Une visioconférence dans Visio, l’outil de visioconférence de l’État", class: "fr-responsive-img rdv-feature-screenshot"
       .fr-col-12.fr-col-md-5
-        p
-          span.fr-badge
-            | Équipes et comptes
         h2
           | Visioconférence
         p.fr-text--lg
           |> Des rendez-vous à distance avec
           = link_to "la visio de l’État", "https://visio.numerique.gouv.fr/", target: "_blank", rel: "noopener", title: "Visio, la visioconférence souveraine de l’État - nouvelle fenêtre"
           | .
-        ul.rdv-feature-list
+        ul.rdv-list-with-dsfr-arrows
           li Salle créée automatiquement pour chaque rendez-vous en visio
           li Lien envoyé à l’usager dans la confirmation et les rappels
           li Lien visible dans l’agenda de l’agent et dans l’espace usager
-          li Agents connectés avec ProConnect
-      .fr-col-12.fr-col-md-7
-        figure.fr-content-media.rdv-feature-media-offset
-          = image_tag "rdv_mairie/visio.webp", alt: "Une visioconférence dans Visio, l’outil de visioconférence de l’État", class: "fr-responsive-img rdv-feature-screenshot"
 
-/ Colonne centrée, à venir
 section#invitations.fr-py-8w
   .fr-container
-    .fr-grid-row.fr-grid-row--center.fr-grid-row--gutters.fr-grid-row--middle
-      .fr-col-12.fr-col-md-5
-        p
-          span.fr-badge
-            | Confiance
+    .fr-grid-row.fr-grid-row--gutters
+      .fr-col-12.fr-col-md-6
+        = image_tag "rdv_mairie/invitations.svg", alt: "Choix d’un créneau par l’usager, depuis le lien d’invitation envoyé par l’agent", class: "fr-responsive-img"
         h2
           |> Invitations
           span.fr-badge.fr-badge--info
             | À venir
         p
-          |> Les invitations sont utiles pour les motifs que vous ne souhaitez pas ouvrir publiquement à la réservation en ligne.
           |> Les agents peuvent envoyer des liens d’invitations uniques à certains usagers.
           |> Ces usagers pourront alors sélectionner un créneau et le réserver en autonomie.
-      .fr-col-12.fr-col-md-7
-        figure.fr-content-media
-          = image_tag "rdv_mairie/invitations.webp", alt: "Choix d’un créneau par l’usager, depuis le lien d’invitation envoyé par l’agent", class: "fr-responsive-img rdv-feature-screenshot"
+      .fr-col-12.fr-col-md-6#synchronisation-agenda
+        = image_tag "rdv_mairie/synchronisation-agendas.svg", alt: "Échanges entre un agenda RDV Service Public et un agenda pro de l'agent", class: "fr-responsive-img"
+        h2
+          | Synchronisation d’agenda
+        p
+          | Synchronisez votre agenda RDV Service Public, avec vos autres agendas professionnels, comme celui de La Suite numérique, Zimbra, ou tout agenda CalDAV.
 
-section#confiance.fr-py-8w.fr-background-alt--grey
+section#fonctionnalites-complementaires.fr-py-8w.fr-background-alt--grey
   .fr-container
-    h2
-      | Confiance
+    .fr-grid-row.fr-grid-row--gutters
+      .fr-col-12.fr-col-md-10
+        h2
+          | Et aussi d’autres fonctionnalités pour faciliter la gestion de vos rendez-vous
+        p.fr-text--lg.fr-mt-2w
+          | RDV Service Public s’adapte à plusieurs typologies d’administrations, de la petite équipe aux services ministériels de plusieurs dizaines d’agents.
+    .fr-grid-row.fr-grid-row--gutters.fr-mt-4w
+      .fr-col-12.fr-col-md-6.fr-col-lg-3
+        .fr-tile.rdv-feature-tile
+          .fr-tile__body
+            .fr-tile__content
+              .rdv-feature-icon-badge.fr-mb-2w
+                span.fr-icon-calendar-line aria-hidden="true"
+              h3.fr-tile__title
+                | Des rendez-vous sur place, au téléphone, en visio ou à domicile
+              p.fr-tile__desc
+                | Proposez pour chaque motif la modalité de rendez-vous la plus adaptée.
+      .fr-col-12.fr-col-md-6.fr-col-lg-3
+        .fr-tile.rdv-feature-tile
+          .fr-tile__body
+            .fr-tile__content
+              .rdv-feature-icon-badge.fr-mb-2w
+                span.fr-icon-community-line aria-hidden="true"
+              h3.fr-tile__title
+                | Des espaces avec plusieurs organisations et services
+              p.fr-tile__desc
+                | Gérez les plannings de plusieurs lieux et équipes depuis un même espace.
+      .fr-col-12.fr-col-md-6.fr-col-lg-3
+        .fr-tile.rdv-feature-tile
+          .fr-tile__body
+            .fr-tile__content
+              .rdv-feature-icon-badge.fr-mb-2w
+                span.fr-icon-line-chart-line aria-hidden="true"
+              h3.fr-tile__title
+                | Statistiques et export des données
+              p.fr-tile__desc
+                | Visualisez l’activité de vos services à partir de données centralisées et exportez vos listes de rendez-vous et statistiques pour vos bilans d’activité.
+      .fr-col-12.fr-col-md-6.fr-col-lg-3
+        .fr-tile.rdv-feature-tile
+          .fr-tile__body
+            .fr-tile__content
+              .rdv-feature-icon-badge.fr-mb-2w
+                span.fr-icon-code-line aria-hidden="true"
+              h3.fr-tile__title
+                | API et webhooks
+              p.fr-tile__desc
+                | Intégrez la prise de rendez-vous et vos disponibilités à votre système d’information.
+    p.fr-mt-4w
+      = link_to "Consultez la documentation pour en savoir plus", "https://aide.rdv-service-public.fr/", target: "_blank", rel: "noopener", title: "Centre d’aide de RDV Service Public - nouvelle fenêtre", class: "fr-link"
+
+section#confiance.fr-py-8w
+  .fr-container
+    .fr-grid-row.fr-grid-row--center
+      .fr-col-12.fr-col-md-8.rdv-text-align-center
+        h2
+          | Nos engagements
     .fr-grid-row.fr-grid-row--gutters
       .fr-col-12.fr-col-md-4
         .fr-tile
@@ -460,21 +219,18 @@ section#ecosysteme.fr-py-8w
   .fr-container
     .fr-grid-row.fr-grid-row--center
       .fr-col-12.fr-col-md-8.rdv-text-align-center
-        p
-          span.fr-badge
-            | Confiance
         h2
           | Standards des sites du Service Public
     .fr-grid-row.fr-grid-row--gutters.fr-mt-2w
       .fr-col-12.fr-col-md-4
-        .fr-background-alt--grey.fr-p-3w.rdv-feature-card
-          = image_tag "rdv_mairie/logo-proconnect.webp", alt: "Logo ProConnect", height: 48
+        .fr-background-alt--grey.fr-p-3w.rdv-border-radius-8px
+          = image_tag "rdv_mairie/logo-proconnect.svg", alt: "Logo ProConnect", height: 48
           p.fr-text--sm.fr-mt-1w
             |> Connexion des agents avec
             = link_to "ProConnect", "https://proconnect.gouv.fr/", target: "_blank", rel: "noopener", title: "ProConnect - nouvelle fenêtre"
             |> , l’authentification des usagers par ProConnect est également possible, sur activation.
       .fr-col-12.fr-col-md-4
-        .fr-background-alt--grey.fr-p-3w.rdv-feature-card
+        .fr-background-alt--grey.fr-p-3w.rdv-border-radius-8px
           = image_tag "rdv_mairie/logo-franceconnect.svg", alt: "Logo FranceConnect", height: 48
           p.fr-text--sm.fr-mt-1w
             |> Connexion des usagers avec
@@ -482,19 +238,53 @@ section#ecosysteme.fr-py-8w
             |> , ou par code reçu par email.
             | Réservation possible sans créer de compte depuis une invitation.
       .fr-col-12.fr-col-md-4
-        .fr-background-alt--grey.fr-p-3w.rdv-feature-card
-          = dsfr_svg "artwork/pictograms/digital/coding"
+        .fr-background-alt--grey.fr-p-3w.rdv-border-radius-8px
+          = image_tag "/assets/artwork/pictograms/digital/coding.svg", height: 60, alt: ""
           p.fr-text--sm.fr-mt-1w
             |> Interface construite avec le
             = link_to "Système de design de l’État (DSFR)", "https://www.systeme-de-design.gouv.fr/", target: "_blank", rel: "noopener", title: "Système de design de l’État (DSFR) - nouvelle fenêtre"
             | .
 
-section.fr-py-8w.fr-background-alt--blue-france
+section.rdv-fonctionnalites-cta.fr-py-8w
   .fr-container
-    .fr-grid-row.fr-grid-row--center
-      .fr-col-12.fr-col-md-8.rdv-text-align-center
-        h2
-          | Envie d’essayer ?
-        .fr-btns-group.fr-btns-group--inline-md.fr-btns-group--center
-          = link_to "S’inscrire à une démo", onboarding_path, class: "fr-btn"
-          = link_to "Consulter le centre d’aide", "https://aide.rdv-service-public.fr/", class: "fr-btn fr-btn--secondary"
+    h2
+      | Prêt à simplifier la gestion de vos rendez-vous ?
+    p.fr-text--lead.fr-mt-2w
+      | Notre équipe étudie vos besoins, configure la solution avec vous et vous accompagne jusqu’à l’autonomie complète de vos équipes.
+    .fr-grid-row.fr-grid-row--gutters.fr-mt-5w
+      .fr-col-12.fr-col-md-6.fr-col-lg-3
+        .rdv-feature-step
+          .rdv-feature-icon-badge.fr-mb-2w
+            span.fr-icon-user-add-line aria-hidden="true"
+          h3.fr-h5
+            | Créer votre espace
+          p
+            | Identifiez vous avec ProConnect et envoyez votre demande d’ouverture d’espace, nous la validerons sous 24h maximum.
+      .fr-col-12.fr-col-md-6.fr-col-lg-3
+        .rdv-feature-step
+          .rdv-feature-icon-badge.fr-mb-2w
+            span.fr-icon-mail-line aria-hidden="true"
+          h3.fr-h5
+            | Connectez-vous
+          p
+            | Une fois la demande validée, vous recevrez un mail de confirmation avec un lien pour vous connecter.
+      .fr-col-12.fr-col-md-6.fr-col-lg-3
+        .rdv-feature-step
+          .rdv-feature-icon-badge.fr-mb-2w
+            span.fr-icon-settings-5-line aria-hidden="true"
+          h3.fr-h5
+            | Paramétrez
+          p
+            | Paramétrez votre premier motif de rendez-vous, puis renseignez vos disponibilités, invitez vos collègues ...
+      .fr-col-12.fr-col-md-6.fr-col-lg-3
+        .rdv-feature-step
+          .rdv-feature-icon-badge.fr-mb-2w
+            span.fr-icon-calendar-check-line aria-hidden="true"
+          h3.fr-h5
+            | Créez votre premier rendez-vous
+          p
+            | Vous êtes prêt pour créer votre premier rendez-vous !
+    .fr-btns-group.fr-btns-group--inline-md.fr-mt-5w
+      = link_to "Ouvrir mon espace", presentation_agent_path, class: "fr-btn rdv-btn-fond-blanc"
+      = link_to "S’inscrire à une démo", onboarding_path, class: "fr-btn fr-btn--outline-white"
+      / TODO: remplacer onboarding_path par webinaire_path une fois la page en ligne
