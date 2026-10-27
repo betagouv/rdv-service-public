@@ -11,7 +11,8 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do # rubocop:d
       description "Renvoie toutes les invitations à prendre rendez-vous accessibles à l'agent·e authentifié·e, de manière paginée"
 
       response 200, "Renvoie des invitations" do
-        let!(:rdv_invitation) { create(:rdv_invitation) }
+        let!(:rdv_invitation) { create(:rdv_invitation, motif:, inviting_agent: agent) }
+        let(:motif) { create(:motif, organisation:) }
         let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
         let!(:organisation) { create(:organisation) }
 

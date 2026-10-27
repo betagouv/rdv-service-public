@@ -560,6 +560,16 @@ RSpec.configure do |config|
             Il contient des informations sur le rendez-vous lui-même, le ou les agent·es, le ou les usager·ères, le lieu, le motif, l'organisation.",
         },
         {
+          name: "RDV Plan",
+          description: "Un brouillon de rendez-vous créé dans le cadre d'une intégration. Permet de lier un rendez-vous à un dossier dans un autre système.",
+        },
+
+        {
+          name: "RDV Invitation",
+          description: "Une invitation à prendre rendez-vous. Les invitations permettent aux agents de proposer aux usagers de prendre rendez-vous à l'horaire qui les arrange sans avoir à ouvrir la réservation en ligne à tout le monde.",
+        },
+
+        {
           name: "Motif",
           description:
           "Le motif d'un rendez-vous.
