@@ -75,7 +75,7 @@ class Admin::RdvInvitationsController < AgentAuthController
 
   def cancel
     @rdv_invitation = RdvInvitation.find(params[:id])
-    authorize(@rdv_invitation, policy_class: Agent::RdvInvitationPolicy)
+    authorize(@rdv_invitation, :update?, policy_class: Agent::RdvInvitationPolicy)
 
     @rdv_invitation.update!(cancelled: true)
     flash[:notice] = "Invitation résiliée"
