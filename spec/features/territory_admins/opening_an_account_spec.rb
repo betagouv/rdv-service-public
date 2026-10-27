@@ -148,4 +148,19 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
       end
     end
   end
+
+  context "quand l'agent a des droits d'accès vides sur un espace et n'est pas admin d'espace" do
+    # cas très limite d'un agent à qui on aurait décoché les trois droits au niveau territorial et qui n'aurait plus accès à aucune organisation
+    let(:territory) { create(:territory) }
+    let(:agent) { create(:agent) }
+
+    before { create(:agent_territorial_access_right, agent:, territory:) } # aucun droit activé
+
+    it "la page d'accueil ne lui propose pas de demander à ouvrir un espace, mais de contacter l’équipe" do
+      login_as(agent, scope: :agent)
+      visit authenticated_agent_root_path
+      expect(page).not_to have_link("Demander à ouvrir un espace")
+      expect(page).to have_link("Contacter l’équipe")
+    end
+  end
 end
