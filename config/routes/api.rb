@@ -22,6 +22,7 @@ namespace :api do
     end
     resources :participations, only: %i[update]
     resources :rdv_plans, only: %i[create show]
+    resources :rdv_invitations, only: %i[index]
     resources :teams, only: %i[index]
   end
 
