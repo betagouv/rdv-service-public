@@ -112,7 +112,7 @@ Rails.application.routes.draw do
     resources :login_codes, only: %i[create]
     get "login_codes", to: redirect(path: "/users/sign_in")
   end
-  namespace :stats, controller: "stats" do
+  namespace :stats, controller: "stats", module: nil do
     get "/", action: "index"
     get :territories
     get :territory
