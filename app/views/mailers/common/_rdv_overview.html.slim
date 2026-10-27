@@ -5,7 +5,7 @@
     span.float-right= l(rdv.starts_at, format: (rdv.home? ? :human_approx : :human))
     .clear
   div.row-result
-    - if rdv.collectif? && for_role == :user
+    - if rdv.collectif? && for_role.in?(%i[user prescripteur])
       span.title= "#{User.model_name.human} :"
       span.float-right= @user.full_name
     - else
@@ -48,14 +48,17 @@
     div.row-result
       span.title = "RDV par visioconférence"
       div.alignright
-        = link_to("rejoindre la visioconférence", local_assigns[:visio_url] || rdv.visio_url)
+        - if for_role == :prescripteur
+          | Le lien de visioconférence sera communiqué à l’usager.
+        - else
+          = link_to("rejoindre la visioconférence", local_assigns[:visio_url] || rdv.visio_url)
   - else
     div.row-result
       span.title Adresse :
       span.float-right
         = rdv.full_address
       .clear
-  - if rdv.motif.instruction_for_rdv.present? && for_role == :user
+  - if rdv.motif.instruction_for_rdv.present? && for_role.in?(%i[user prescripteur])
     .div.row-result.no-border
       span.title Informations supplémentaires&nbsp;:
       = auto_link_text(rdv.motif.instruction_for_rdv)

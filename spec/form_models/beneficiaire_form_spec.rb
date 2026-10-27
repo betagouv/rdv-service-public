@@ -90,8 +90,7 @@ RSpec.describe BeneficiaireForm do
 
   context "pour un motif demandant un numéro de pré-demande ANTS" do
     include_context "rdv_mairie_api_authentication"
-    let!(:territory) { create(:territory, :mairies) }
-    let!(:organisation) { create(:organisation, territory:, name: "Mairie de Wavignies") }
+    let!(:organisation) { create(:organisation, name: "Mairie de Wavignies") }
     let!(:motif_category) { create(:motif_category, :passeport) }
     let!(:motif) { create(:motif, organisation:, motif_category:) }
     let(:params) do
@@ -160,7 +159,7 @@ RSpec.describe BeneficiaireForm do
         expect(form).to be_invalid
         expect(form.errors.first.attribute).to eq(:_benign)
         expect(form.errors.first.message).to eq(
-          <<-TXT.squish
+          <<~TXT.squish
             Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Montrouge.
             Veuillez <a href="http://rdvsympa.fr/123" target="_blank">annuler ce RDV</a> avant d'en prendre un nouveau.
           TXT

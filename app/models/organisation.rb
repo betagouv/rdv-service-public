@@ -45,7 +45,7 @@ class Organisation < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :territory }
   validates :external_id, uniqueness: { scope: :territory, allow_nil: true }
   validate :validate_organisation_phone_number
-  validate :validate_website_url, if: -> { will_save_change_to_website? }
+  validate :validate_website_url
   validate :validate_at_least_one_user_authentication_type
   validates :time_zone,
             presence: true,
@@ -118,20 +118,8 @@ class Organisation < ApplicationRecord
     Phonelib.parse(phone_number).national
   end
 
-  # TODO: rappatrier cette validation dans validate_website_url une fois que tous les organisations.website en prod sont valides
-  def self.valid_website_url?(value)
-    uri = URI.parse(value)
-    uri.is_a?(URI::HTTP) && uri.host.present? # accepte aussi HTTPS
-  rescue URI::InvalidURIError
-    false
-  end
-
-  # TODO: remplacer par un alias vers website une fois que tous les organisations.website en prod sont valides
-  def website_url
-    return nil if website.blank?
-
-    self.class.valid_website_url?(website) ? website : nil
-  end
+  # cet alias nous a permis de valider progressivement le champ, et est plus explicite que le nom de la colonne
+  def website_url = website
 
   def sectorized?
     sector_attributions.any? && motifs.active.sectorized.any?
@@ -150,8 +138,13 @@ class Organisation < ApplicationRecord
   end
 
   def validate_website_url
-    return if website.blank? || self.class.valid_website_url?(website)
+    return if website.blank?
 
+    uri = URI.parse(website)
+    return if uri.is_a?(URI::HTTP) && uri.host.present?
+
+    errors.add(:website, :invalid)
+  rescue URI::InvalidURIError
     errors.add(:website, :invalid)
   end
 end

@@ -4,7 +4,7 @@ class CreneauWizardForUsers::Steps::MotifSelection
   end
 
   def service_selected?
-    services.count == 1
+    services.size == 1
   end
 
   def services

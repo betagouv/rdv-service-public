@@ -177,6 +177,9 @@ group :development do
 
   #  Hot reload
 
+  # Rechargement automatique du navigateur en dev (CSS hot-swap, re-rendu des vues Slim)
+  gem "hotwire-livereload"
+
   # Rails application preloader
   gem "spring", require: false
   # Listen to file modifications
@@ -189,7 +192,7 @@ group :development do
   # Security vulnerability scanner for Ruby on Rails.
   gem "brakeman", require: false
   # Automatic Ruby code style checking tool.
-  gem "rubocop",  "= 1.76", require: false
+  gem "rubocop",  "= 1.80", require: false
   # Code style checking for RSpec files
   gem "rubocop-rspec", require: false
   # Automatic Rails code style checking tool.
