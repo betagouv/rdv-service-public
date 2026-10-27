@@ -37,7 +37,7 @@ RSpec.describe "Un agent peut créer et éditer un RDV collectif en visio en pas
 
     # on vérifie que c’est le bon radio qui est coché et que le champ URL personnalisée est visible
     expect(find(:radio_button, "Outil de votre choix", visible: false)).to be_checked
-    expect(find(:radio_button, "Par défaut : Webconf", visible: false)).not_to be_checked
+    expect(find(:radio_button, "Par défaut : Visio", visible: false)).not_to be_checked
     expect(page).to have_selector(:field, "URL de visioconférence", visible: true)
 
     # on rentre une URL valide
@@ -54,15 +54,16 @@ RSpec.describe "Un agent peut créer et éditer un RDV collectif en visio en pas
 
     # on vérifie que c’est le bon radio qui est coché et que le champ URL personnalisée est visible
     expect(page).to have_selector(:radio_button, "Outil de votre choix", visible: false, checked: true)
-    expect(page).to have_selector(:radio_button, "Par défaut : Webconf", visible: false, checked: false)
+    expect(page).to have_selector(:radio_button, "Par défaut : Visio", visible: false, checked: false)
     expect(page).to have_selector(:field, "URL de visioconférence", visible: true)
 
     # on modifie pour utiliser l’outil par défaut
-    find("label", text: "Par défaut : Webconf").click
+    find("label", text: "Par défaut : Visio").click
     expect { click_on "Enregistrer" }.to change { Rdv.collectif.last.visio_url_custom }.to(nil)
 
-    # on se retrouve sur le rdvs#show, on vérifie que le lien a été modifié
+    # on se retrouve sur le rdvs#show, le lien doit maintenant être généré via Visio, ce qui nécessite d'être ProConnecté
     expect(page).to have_content("Le rendez-vous a été modifié")
-    expect(find("a", text: /démarrer la visioconférence/)[:href]).to match(%r{https://webconf\.numerique\.gouv\.fr})
+    expect(page).to have_no_link("démarrer la visioconférence")
+    expect(page).to have_link("Associer mon compte à ProConnect")
   end
 end

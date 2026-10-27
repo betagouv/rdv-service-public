@@ -1,4 +1,24 @@
 RSpec.describe Rdv::VisioConcern, type: :concern do
+  describe "#visio_url" do
+    it "retourne l'URL custom pour un motif en visio" do
+      rdv = build(:rdv, motif: build(:motif, location_type: :visio), visio_url_custom: "https://visio.numerique.gouv.fr/salon")
+
+      expect(rdv.visio_url).to eq("https://visio.numerique.gouv.fr/salon")
+    end
+
+    it "ne retourne plus de lien Webconf quand il n'y a pas d'URL custom" do
+      rdv = build(:rdv, motif: build(:motif, location_type: :visio), visio_url_custom: nil)
+
+      expect(rdv.visio_url).to be_nil
+    end
+
+    it "ne retourne rien pour un motif qui n'est pas en visio" do
+      rdv = build(:rdv, visio_url_custom: "https://visio.numerique.gouv.fr/salon")
+
+      expect(rdv.visio_url).to be_nil
+    end
+  end
+
   describe "validation des URL custom" do
     subject { rdv }
 

@@ -149,12 +149,28 @@ RSpec.describe "Agent can see RDV details correctly" do
     let(:motif) { create(:motif, location_type: :visio, organisation:) }
     let(:user) { create(:user, organisations: [organisation]) }
 
-    let(:rdv) { create(:rdv, agents: [agent], users: [user], motif: motif, organisation: organisation, starts_at: starts_at) }
+    let(:rdv) { create(:rdv, agents: [agent], users: [user], motif: motif, organisation: organisation, starts_at: starts_at, visio_url_custom:) }
 
-    it "shows the link to start the visio" do
-      visit admin_organisation_rdv_path(organisation, rdv)
-      expect(page).to have_content "démarrer la visioconférence"
-      expect(page).to have_content "Par visioconférence"
+    context "quand le lien de visio a été généré" do
+      let(:visio_url_custom) { "https://visio.numerique.gouv.fr/abc-defg-hij" }
+
+      it "affiche le lien pour démarrer la visio" do
+        visit admin_organisation_rdv_path(organisation, rdv)
+        expect(page).to have_content "Par visioconférence"
+        expect(page).to have_link("démarrer la visioconférence", href: "https://visio.numerique.gouv.fr/abc-defg-hij")
+      end
+    end
+
+    context "quand le lien de visio n'a pas encore été généré" do
+      let(:visio_url_custom) { nil }
+
+      it "invite l'agent non connecté via ProConnect à associer son compte pour générer le lien" do
+        visit admin_organisation_rdv_path(organisation, rdv)
+        expect(page).to have_content "Par visioconférence"
+        expect(page).to have_no_link("démarrer la visioconférence")
+        expect(page).to have_no_link("Générer le lien de visioconférence")
+        expect(page).to have_link("Associer mon compte à ProConnect", href: agents_pro_connect_linking_path)
+      end
     end
   end
 end

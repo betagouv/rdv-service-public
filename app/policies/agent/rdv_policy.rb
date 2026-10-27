@@ -10,6 +10,7 @@ class Agent::RdvPolicy < ApplicationPolicy
     same_agent_or_has_access? && users_and_agents_authorized?
   end
   alias status? update?
+  alias create_visio_room? update?
 
   def edit?
     same_agent_or_has_access? && users_authorized?
