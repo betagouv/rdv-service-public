@@ -17,11 +17,7 @@ export default () => {
         dataType: "json",
         delay: 250,
         processResults: function(data, params) {
-          if (data.results.length == 0) {
-            newUserBtn.classList.remove("fr-btn--tertiary-no-outline")
-          } else {
-            newUserBtn.classList.add("fr-btn--tertiary-no-outline")
-          }
+          newUserBtn.classList.toggle("fr-btn--tertiary-no-outline", data.results.length > 0)
           return data
         }
       }
