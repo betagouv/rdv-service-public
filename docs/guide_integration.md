@@ -53,7 +53,8 @@ Exemple :
 POST /api/v1/rdv_plans
 {
     "user": {
-        "id": 123
+        "external_id": "123456", // facultatif. L'id de l'usager dans votre système. Permet de faire un "upsert" et d'éviter de re-créer le même usager plusieurs fois.
+        // Si vous avez l'id de l'usager dans RDV Service Public, vous pouvez aussi le passer
         "first_name": "Francis", // obligatoire
         "last_name": "Factice", // obligatoire
         "email": "francis.factice@gmail.com",
@@ -67,6 +68,7 @@ POST /api/v1/rdv_plans
 ```
 
 Seuls les champs `user.first_name` et `user.last_name` sont obligatoires, les autres sont facultatifs.
+Cependant, nous recommandons d'utiliser `user.external_id` : vous pouvez passer n'importe quelle chaine de caractères qui correspond à l'id de l'usager dans votre système. Cela permettra d'éviter de créer des usagers en doublons. Par exemple lorsque vous créez deux rdv_plans successif pour la même personne physique en réutilisant le même `user.external_id`, le compte usager créé la première fois sera réutilisé pour le deuxième rdv_plan.
 
 Vous obtiendrez une réponse à ce format :
 ```
@@ -82,7 +84,12 @@ Vous obtiendrez une réponse à ce format :
 
 Vous pouvez ensuite rediriger votre agent à l'url indiquée pour qu'il prenne le rendez-vous.
 
-Après ce premier appel, vous pouvez faire des requêtes sur le RDV Plan pour savoir si le rendez-vous associé a été crée: `GET /api/v1/rdv_plans/23`.
+Si vous avez utilisé le champs `user.external_id`, il n'est pas nécessaire de sauvegarder les données de cette réponse.
+
+Vous pourrez ensuite retrouver les rendez-vous et/ou les invitations à prendre rendez-vous en attente avec les endpoints de listes de rendez-vous et de liste des invitations à prendre rendez-vous.
+
+
+Vous pouvez faire des requêtes sur le RDV Plan pour savoir si le rendez-vous associé a été crée (`GET /api/v1/rdv_plans/23`), mais ce n'est pas forcément nécessaire.
 
 ### Obtenir des informations sur les rendez-vous après leur création
 

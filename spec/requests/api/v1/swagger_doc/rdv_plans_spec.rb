@@ -105,9 +105,11 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
         let(:rdv_plan_id) { rdv_plan.id }
         let!(:rdv_plan) do
-          create(:rdv_plan, planning_agent: agent, rdv: rdv)
+          create(:rdv_plan, planning_agent: agent, rdv:, rdv_invitation:, motif:)
         end
-        let(:rdv) { create(:rdv) }
+        let(:rdv) { create(:rdv, organisation:, motif:) }
+        let(:rdv_invitation) { create(:rdv_invitation, motif:) }
+        let(:motif) { create(:motif, organisation:) }
 
         specify do
           expect(parsed_response_body.dig("rdv_plan", "url")).to eq "http://www.rdv-service-public-test.localhost/agents/rdv_plans/#{rdv_plan.id}"
