@@ -26,7 +26,7 @@ class ApplicationSms
       # 3. return the sms
       #
       # Note: args are passed both to initialize and to the message method
-      if public_instance_methods(true).include?(symbol)
+      if public_method_defined?(symbol)
         sms = new(*args)
         sms.receipt_params[:event] = symbol
         sms.public_send(symbol, *args)
@@ -37,7 +37,7 @@ class ApplicationSms
     end
 
     def respond_to_missing?(symbol, include_all = false)
-      public_instance_methods(true).include?(symbol) || super
+      public_method_defined?(symbol) || super
     end
   end
 

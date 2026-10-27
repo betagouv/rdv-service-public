@@ -6,7 +6,7 @@ RSpec.describe Users::FileAttenteMailer, type: :mailer do
     let(:mail) { described_class.with(rdv:, user:, token:).new_creneau_available }
 
     specify do
-      expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9\-]+@reply\.rdv-solidarites-test\.localhost>/)
+      expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9-]+@reply\.rdv-solidarites-test\.localhost>/)
       expect(mail.to).to eq([user.email])
       expect(mail.reply_to).to be_nil
       expect(mail.subject).to eq("Un créneau vient de se liberer !")

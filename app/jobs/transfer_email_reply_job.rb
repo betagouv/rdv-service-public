@@ -19,7 +19,7 @@ class TransferEmailReplyJob < ApplicationJob
     "rdv+#{rdv.uuid}@#{rdv.domain.reply_host_name}"
   end
 
-  UUID_EXTRACTOR = /rdv\+([a-f0-9\-]*)@reply\.[a-z\-\.]+$/
+  UUID_EXTRACTOR = /rdv\+([a-f0-9-]*)@reply\.[a-z\-.]+$/
 
   def self.uuid_from_email_address(email_address)
     email_address.match(UUID_EXTRACTOR)&.captures&.first

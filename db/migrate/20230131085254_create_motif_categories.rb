@@ -48,7 +48,7 @@ class CreateMotifCategories < ActiveRecord::Migration[7.0]
     drop_join_table :motif_categories, :territories
     add_column :motifs, :category, :motif_category
 
-    execute(<<-SQL.squish
+    execute(<<~SQL.squish
       UPDATE motifs
       SET category = (
         SELECT motif_categories.short_name::motif_category from motif_categories
@@ -130,7 +130,7 @@ class CreateMotifCategories < ActiveRecord::Migration[7.0]
     end
 
     # Filled motif_category_id on motifs with existing category enum column
-    execute(<<-SQL.squish
+    execute(<<~SQL.squish
       UPDATE motifs
       SET motif_category_id = (
         SELECT motif_categories.id from motif_categories

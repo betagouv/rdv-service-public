@@ -4,7 +4,7 @@ class AddVerticaleToOrganisations < ActiveRecord::Migration[7.0]
 
     add_column :organisations, :verticale, :verticale, default: :rdv_solidarites, null: false
 
-    execute(<<-SQL.squish
+    execute(<<~SQL.squish
       UPDATE organisations
       SET verticale = 'rdv_aide_numerique'
       WHERE new_domain_beta = TRUE
@@ -21,7 +21,7 @@ class AddVerticaleToOrganisations < ActiveRecord::Migration[7.0]
     add_column :organisations, :new_domain_beta, :boolean, default: false, null: false,
                                                            comment: "en mettant ce boolean a true, on active l'utilisation du nouveau domaine pour les conseillers numeriques de cette organisation"
 
-    execute(<<-SQL.squish
+    execute(<<~SQL.squish
       UPDATE organisations
       SET new_domain_beta = (verticale = 'rdv_aide_numerique')
     SQL

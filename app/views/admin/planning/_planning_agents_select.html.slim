@@ -31,7 +31,7 @@
             = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: ["select2-input rdv-min-width-210"], data: }
 
           .ml-2.d-flex.d-print-none[style="gap: 0 0.5em"]
-            - if @agents.size == 1 && @multiple_agents_makes_sense && current_organisation.agents.count > 1
+            - if @agents.size == 1 && @multiple_agents_makes_sense && current_organisation.agents.many?
               button#multi_agent_enable.fr-btn.fr-btn--tertiary Sélectionner plusieurs agents
             #submit_agents[class=(@agents.size > 1 ? "" : "hidden")]
               = form.submit "Appliquer", {class: "fr-btn  "}

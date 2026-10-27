@@ -8,7 +8,7 @@
     .fr-callout.fr-pb-2w
       h2.fr-h6 🎉 Vous y êtes presque !
 
-      - if @banner.motifs_with_missing_availabilities.count == 1
+      - if @banner.motifs_with_missing_availabilities.one?
         p Le motif <b>#{@banner.motifs_with_missing_availabilities.first.name}</b> est ouvert à la réservation en ligne.
       - else
         - bold_motif_names = @banner.motifs_with_missing_availabilities.pluck(:name).map { |name| tag.b(name) }
