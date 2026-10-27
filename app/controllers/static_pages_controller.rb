@@ -14,6 +14,14 @@ class StaticPagesController < ApplicationController
     render current_domain.presentation_for_agents_template_name, layout: "application_base"
   end
 
+  def integrations
+    if current_domain.rdv_service_public?
+      render layout: "application_base"
+    else
+      redirect_to root_path
+    end
+  end
+
   def microsoft_domain_verification
     # see https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-configure-publisher-domain#select-a-verified-domain
     response.headers["Content-Type"] = "application/json"

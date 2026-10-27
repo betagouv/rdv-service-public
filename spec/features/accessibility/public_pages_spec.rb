@@ -36,6 +36,12 @@ RSpec.describe "public pages", js: true do
     expect(page).to be_axe_clean
   end
 
+  it "la page intégrations est accessible" do
+    visit "http://www.rdv-service-public-test.localhost/integrations"
+    expect(page).to have_current_path("/integrations")
+    expect(page).to be_axe_clean
+  end
+
   it "mds_path page is accessible" do
     expect_page_to_be_axe_clean(mds_path)
   end
