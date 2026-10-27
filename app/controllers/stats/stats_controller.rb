@@ -1,4 +1,4 @@
-class StatsController < ApplicationController
+class Stats::StatsController < ApplicationController
   before_action :set_territory_and_records, only: %i[territory territory_rdvs]
   before_action -> { @site_vitrine_page = true }
 
