@@ -139,15 +139,33 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(motif.follow_up).to be_truthy
     end
 
-    it "allows changing the motif's location_type to :visio" do
-      motif = create(:motif, organisation: organisation, location_type: :public_office, service:)
+    context "quand l'agent est lié à ProConnect" do
+      before { agent.update!(pro_connect_openid_sub: "sub-123") }
 
-      visit admin_organisation_motifs_path(organisation)
-      click_on motif.name
-      click_link "Modifier", match: :first
-      expect(page).to have_content "L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV."
-      choose "Par visioconférence"
-      expect { click_on "Enregistrer" }.to change { motif.reload.location_type }.from("public_office").to("visio")
+      it "permet de passer le type du motif en visioconférence" do
+        motif = create(:motif, organisation: organisation, location_type: :public_office, service:)
+
+        visit admin_organisation_motifs_path(organisation)
+        click_on motif.name
+        click_link "Modifier", match: :first
+        expect(page).to have_content "via le service Visio."
+        expect(page).to have_no_link "Lier mon compte à ProConnect"
+        choose "Par visioconférence"
+        expect { click_on "Enregistrer" }.to change { motif.reload.location_type }.from("public_office").to("visio")
+      end
+    end
+
+    context "quand l'agent n'est pas lié à ProConnect" do
+      it "désactive le choix de la visioconférence et propose de lier son compte" do
+        motif = create(:motif, organisation: organisation, location_type: :public_office, service:)
+
+        visit edit_admin_organisation_motif_path(organisation, motif)
+        expect(page).to have_field "Par visioconférence", disabled: true
+        expect(page).to have_field "Par téléphone", disabled: false
+        expect(page).to have_content "Pour proposer des rendez-vous en visioconférence, veuillez connecter votre compte"
+        click_link "Lier mon compte à ProConnect"
+        expect(page).to have_current_path(agents_pro_connect_linking_path)
+      end
     end
   end
 
