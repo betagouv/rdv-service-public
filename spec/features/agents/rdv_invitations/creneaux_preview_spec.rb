@@ -19,13 +19,10 @@ RSpec.describe "Aperçu des créneaux avant la confirmation" do
   end
 
   context "avec des créneaux disponibles" do
-    let(:now) { Time.zone.local(2026, 9, 30, 14, 0, 0) }
-
-    let!(:plage_ouverture) do
+    before do
+      travel_to(Time.zone.local(2026, 9, 30, 14, 0, 0))
       create(:plage_ouverture, :weekdays, motifs: [motif], lieu: lieu, organisation: organisation, first_day: 7.days.ago)
     end
-
-    context "à partir de la semaine courante"
 
     it "affiche les créneaux que l'usager va voir", js: true do
       visit new_admin_organisation_rdv_invitation_path(organisation, motif_id: motif.id, user_id: user.id)
