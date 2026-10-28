@@ -35,7 +35,7 @@ module SuperAdmins
         return false
       end
 
-      # rubocop:disable Rails/SkipsModelValidations
+      # rubocop:disable-next Rails/SkipsModelValidations
       ActiveRecord::Base.transaction do
         # migrer les plages d'ouverture
         plage_ouvertures_for_organisation = PlageOuverture.where(agent_id: agent.id)
@@ -67,7 +67,6 @@ module SuperAdmins
         AgentRole.create!(agent_id: agent.id, organisation: new_organisation, access_level: old_role.access_level)
         old_role.delete
       end
-      # rubocop:enable Rails/SkipsModelValidations
     end
 
     def rdvs_with_other_agents(agent, old_organisation)
