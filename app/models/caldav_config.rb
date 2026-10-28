@@ -32,7 +32,7 @@ class CaldavConfig < ApplicationRecord
   end
 
   def broken?
-    latest_successful_execution.ended_at < 6.hours.ago
+    latest_successful_execution && latest_successful_execution.ended_at < 6.hours.ago
   end
 
   def disconnect_in_progress?
