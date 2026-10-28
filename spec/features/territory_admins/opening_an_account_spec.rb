@@ -20,7 +20,11 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         visit "/admin/organisations/configuration" # Les pages de paramètres des applications externes mènent à cette url
 
         fill_in("Nom de votre organisation", with: "CCAS de Montreuil")
-        click_on "Enregistrer"
+        expect { click_on "Enregistrer" }.to change(Territory, :count).by(1)
+
+        # la catégorisation et l'ajout au CRM auto ne se fait que quand l'email est en gouv.fr
+        expect(Territory.last.category).to be_blank
+        expect(CreateCrmPageJob).not_to have_been_enqueued
 
         expect(page).to have_content "Configuration"
 
@@ -42,16 +46,6 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
 
         expect(page).to have_content("Catégorie ajoutée à l'espace")
         expect(Territory.last.category).to eq "Commune"
-      end
-
-      it "enqueue l'import CRM automatique du nouvel espace" do
-        visit new_agents_territory_path
-
-        fill_in("Nom de votre organisation", with: "Préfecture de Montreuil")
-        click_on "Enregistrer"
-
-        expect(page).to have_content "Configuration"
-        expect(AutoImportTerritoryToCrmJob).to have_been_enqueued.with(Territory.last.id)
       end
 
       context "et qu'il a un rdv plan qui a été créé par intégration" do
@@ -156,6 +150,21 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
           end
         end
       end
+    end
+  end
+
+  context "email agent en ademe.gouv.fr" do
+    let(:agent) { create(:agent, email: "francis@ademe.gouv.fr") }
+
+    it "catégorise automatiquement l’espace État et ajoute au CRM" do
+      login_as(agent, scope: :agent)
+      visit "/admin/organisations/configuration" # Les pages de paramètres des applications externes mènent à cette url
+      fill_in("Nom de votre organisation", with: "ADEME de Crest")
+      click_on "Enregistrer"
+      expect(page).to have_content "Configuration"
+      territory = Territory.last
+      expect(territory.category).to eq("État")
+      expect(CreateCrmPageJob).to have_been_enqueued.with(territory.id)
     end
   end
 end

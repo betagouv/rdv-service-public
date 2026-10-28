@@ -9,9 +9,12 @@ class Agents::TerritoriesController < AgentAuthController
     authorize(Territory.new, policy_class: Agent::TerritoryPolicy)
     @compte_form = Compte.new(compte_params, current_domain:)
     @compte_form.agent = current_agent
+    if current_agent.email&.ends_with?(".gouv.fr") && !VerifiedServicePublicDomainNames.france_service?(current_agent.email)
+      @compte_form.territory.category = "État"
+    end
 
     if @compte_form.save!
-      AutoImportTerritoryToCrmJob.perform_later(@compte_form.territory.id)
+      CreateCrmPageJob.perform_later(@compte_form.territory.id) if @compte_form.territory.category.present?
 
       latest_rdv_plan = RdvPlan.where(planning_agent: current_agent).order("created_at desc").first
 
