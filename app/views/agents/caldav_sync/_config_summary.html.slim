@@ -26,8 +26,6 @@
           .fr-mt-1v
             = link_to("Consulter l'historique de synchronisation", agents_calendar_sync_logs_path)
 
-
-
     .fr-grid-row.fr-grid-row--gutters.fr-mt-2w
       .fr-col-4 Nom d'utilisateur
       .fr-col-8 = config.caldav_username
@@ -50,6 +48,11 @@
           | Transmises au calendrier externe
         - else
           | Anonymisées
+
+    .fr-grid-row.fr-grid-row--gutters.fr-mt-2w
+      .fr-col-4 URL de l'agenda
+      .fr-col-8
+        pre = config.caldav_agenda_url
 
   - unless config.disconnect_in_progress?
     .fr-btns-group.fr-btns-group--inline.fr-ml-2w
