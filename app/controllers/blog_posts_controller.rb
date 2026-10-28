@@ -1,4 +1,6 @@
 class BlogPostsController < ApplicationController
+  before_action -> { @site_vitrine_page = true }
+
   # Les images des posts sont hébergées sur docs.numerique.gouv.fr
   content_security_policy only: :show do |policy|
     policy.img_src(*policy.directives["img-src"], "https://docs.numerique.gouv.fr/media/")
