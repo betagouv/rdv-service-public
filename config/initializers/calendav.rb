@@ -39,7 +39,7 @@ Calendav::Parsers::ResponseXML.prepend(CalendavSurrogatePairsFix)
 # (`@inner_event = …` au lieu de `||=`) et `inner_calendar` non plus. Sur un gros calendrier, cela représente une
 # dizaine de parses par événement, avec beaucoup de mémoire allouée et un temps de synchro très allongé.
 # On mémoïse donc au plus bas, pour que tous les appels d'un même événement partagent le même objet parsé.
-# TODO: supprimer quand la memoization est ajoutée à la gem (contribution en cours)
+# TODO: supprimer quand la memoization est ajoutée à la gem : https://github.com/pat/calendav/pull/17
 module CalendavInnerEventMemoization
   private
 
