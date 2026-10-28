@@ -11,7 +11,13 @@
       | Les dernières évolutions de #{current_domain.name}.
 
     - if @posts.any?
-      = render partial: "blog_posts/blog_post", collection: @posts, as: :post, spacer_template: "blog_posts/separator"
+      - @posts.group_by { _1.published_at.beginning_of_month }.each do |month, posts|
+        section.fr-mb-6w
+          h2.fr-h4 = l(month.to_date, format: "%B %Y").capitalize
+          ul.fr-raw-list
+            - posts.each do |post|
+              li.fr-mb-3w
+                = render "blog_posts/blog_post", post: post
 
       = paginate @posts
     - else
