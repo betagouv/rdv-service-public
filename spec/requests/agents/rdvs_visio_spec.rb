@@ -71,6 +71,23 @@ RSpec.describe "Génération du lien de visioconférence d'un RDV par l'agent", 
       expect(rdv.reload.visio_url_custom).to be_nil
       expect(flash[:error]).to eq("Le lien de visioconférence n'a pas pu être généré, veuillez réessayer")
     end
+
+    context "quand l'agent peut voir le RDV mais pas le modifier" do
+      let(:other_agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
+      let(:rdv) { create(:rdv, organisation:, motif:, lieu: nil, agents: [agent, other_agent], visio_url_custom: nil) }
+
+      it "affiche le bouton de génération du lien" do
+        get admin_organisation_rdv_path(organisation, rdv)
+
+        expect(response.body).to include("Générer le lien de visioconférence")
+      end
+
+      it "crée un salon Visio" do
+        post create_visio_room_agents_rdv_path(rdv)
+
+        expect(rdv.reload.visio_url_custom).to eq("https://visio.numerique.gouv.fr/salon")
+      end
+    end
   end
 
   context "quand l'agent ne s'est pas connecté via ProConnect" do

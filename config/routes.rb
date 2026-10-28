@@ -112,7 +112,7 @@ Rails.application.routes.draw do
     resources :login_codes, only: %i[create]
     get "login_codes", to: redirect(path: "/users/sign_in")
   end
-  namespace :stats, controller: "stats", module: nil do
+  scope path: "stats", as: :stats, controller: "stats" do
     get "/", action: "index"
     get :territories
     get :territory
@@ -354,7 +354,12 @@ Rails.application.routes.draw do
 
       resources :rdv_invitations, only: %i[new create show] do
         collection do
-          post :create_user
+          get :edit_user
+          patch :create_user
+
+          get :edit_motif
+
+          get :creneaux_preview_frame
         end
         member do
           get :show_confirmation
@@ -524,6 +529,7 @@ Rails.application.routes.draw do
 
   get "accueil_mds", to: redirect("presentation_agent", status: 307)
   get "presentation_agent" => "static_pages#presentation_for_agents"
+  get "webinaire" => "static_pages#webinaire"
 
   resource :onboarding, controller: :onboarding do
     get "step_1"

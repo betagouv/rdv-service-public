@@ -9,7 +9,6 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
       with_pagination
 
       tags "Organisation"
-      produces "application/json"
       operationId "getOrganisations"
       description "Renvoie toutes les organisations accessibles à l'agent·e authentifié·e, de manière paginée"
 
@@ -77,7 +76,6 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
       with_pagination
 
       tags "Organisation"
-      produces "application/json"
       operationId "getOrganisation"
       description "Renvoie une organisation"
 
@@ -102,7 +100,6 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "Organisation"
-      produces "application/json"
       operationId "updateOrganisation"
       description "Met à jour une organisation"
 

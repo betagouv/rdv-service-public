@@ -31,7 +31,7 @@
   - if stats_cached.values.all?
     .fr-grid-row.fr-grid-row--gutters.fr-mb-8w
       .fr-col-12.fr-col-md-4
-        .rdv-stats-hero-card
+        .rdv-card-with-box-shadow
           .fr-mb-1w.fr-display--xs= number_with_delimiter(stats_cached["stats.both_instances.1_month.rdvs_count"], delimiter: " ")
           .rdv-display-flex.rdv-align-items-center
             p.fr-mb-0 Rendez-vous par mois
@@ -40,7 +40,7 @@
             span.fr-tooltip.fr-placement#rdv-tooltip-stats-rdvs role="tooltip"
               | Nombre de rendez-vous planifiés sur les 30 derniers jours
       .fr-col-12.fr-col-md-4
-        .rdv-stats-hero-card
+        .rdv-card-with-box-shadow
           .fr-mb-1w.fr-display--xs= number_with_delimiter(stats_cached["stats.both_instances.1_month.active_agents_count"], delimiter: " ")
           .rdv-display-flex.rdv-align-items-center
             p.fr-mb-0 Agents actifs par mois
@@ -49,7 +49,7 @@
             span.fr-tooltip.fr-placement#rdv-tooltip-stats-agents role="tooltip"
               | Nombre d’agents qui se sont connectés à l’application dans les 30 derniers jours
       .fr-col-12.fr-col-md-4
-        .rdv-stats-hero-card
+        .rdv-card-with-box-shadow
           .fr-mb-1w.fr-display--xs= number_with_delimiter(stats_cached["stats.both_instances.1_month.active_organisations_count"], delimiter: " ")
           .rdv-display-flex.rdv-align-items-center
             p.fr-mb-0 Organisations actives par mois

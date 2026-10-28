@@ -95,6 +95,8 @@ tables:
       - pro_connect_2fa_active
       - pro_connect_idp_id
       - sensitive_account
+      - menshen_access_token
+      - menshen_access_token_expires_at
     non_anonymized_column_names:
       - reset_password_sent_at
       - last_sign_in_at

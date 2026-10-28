@@ -284,14 +284,14 @@ RSpec.describe Outlook::EventSerializerAndListener do
       create(:rdv_plan, dossier_url: "http://demarches-simplifies.test/exemple", oauth_application: oauth_application)
     end
     let(:oauth_application) do
-      create(:oauth_application, name: "Démarches Simplifiées")
+      create(:oauth_application, name: "Démarche Numérique")
     end
 
     it "adds a link to the dossier_url" do
       rdv = create(:rdv, rdv_plan: rdv_plan)
 
       # On triche en testant directement la méthode qui donne la description pour éviter de passer par des stubs trop compliqués
-      expect(rdv.agents_rdvs.first.send(:event_description)).to include("<a href=\"http://demarches-simplifies.test/exemple\">Voir sur Démarches Simplifiées</a><br />")
+      expect(rdv.agents_rdvs.first.send(:event_description)).to include("<a href=\"http://demarches-simplifies.test/exemple\">Voir sur Démarche Numérique</a><br />")
     end
   end
 end
