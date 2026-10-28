@@ -156,7 +156,7 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
         let!(:absence_count_before) { Absence.count }
 
-        it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent·e est dans un service différent" do
+        it_behaves_like "an endpoint that returns 404 - not found", "l'agent·e est dans un service différent" do
           let!(:agent) { create(:agent, service: create(:service)) }
           let!(:agent_role) { create(:agent_role, agent: agent, access_level: AgentRole::ACCESS_LEVEL_BASIC, organisation: organisation) }
         end

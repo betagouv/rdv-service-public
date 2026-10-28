@@ -515,9 +515,9 @@ RSpec.configure do |config|
           error_not_found: {
             type: "object",
             properties: {
-              not_found: { type: "string" },
+              errors: { type: "array", items: { type: "string" } },
             },
-            required: %w[not_found],
+            required: %w[errors],
           },
           error_unprocessable_entity: {
             type: "object",
