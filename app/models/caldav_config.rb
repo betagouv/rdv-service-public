@@ -26,4 +26,22 @@ class CaldavConfig < ApplicationRecord
       authentication: :basic_auth
     )
   end
+
+  def latest_successful_execution
+    sync_executions.successful.order(:ended_at).last
+  end
+
+  def broken?
+    latest_successful_execution.ended_at < 6.hours.ago
+  end
+
+  def disconnect_in_progress?
+    caldav_disconnect_started_at.present?
+  end
+
+  private
+
+  def sync_executions
+    ExternalCalendarSyncExecution.where(agent_id:, calendar_url: caldav_agenda_url)
+  end
 end

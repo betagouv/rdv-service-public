@@ -7,6 +7,10 @@ class ExternalCalendarSyncExecution < ApplicationRecord
   validates :started_at, presence: true
   validate :ended_at_cant_be_before_started_at
 
+  # Scopes
+  scope :successful, -> { where(successful: true) }
+  scope :ended, -> { where.not(ended_at: nil) }
+
   def status
     if ended_at?
       successful ? "Succès" : "Échec"
