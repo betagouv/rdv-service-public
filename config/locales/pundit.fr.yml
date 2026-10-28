@@ -1,6 +1,6 @@
 fr:
   pundit:
-    default: Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action
+    default: Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action
     agent/organisation_policy:
       show?: Vous n’avez pas les droits suffisants pour accéder à cette organisation
     agent/agent_agenda_policy:

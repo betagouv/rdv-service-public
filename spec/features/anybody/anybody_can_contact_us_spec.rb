@@ -1,5 +1,5 @@
 RSpec.describe "Tout le monde peut nous contacter" do
-  context "un usager nous contacte car il n’arrive pas à annuler son RDV" do
+  context "un usager nous contacte car il n’arrive pas à annuler son RDV" do
     it "créé un ticket Zammad" do
       visit "/"
       click_on "Contact"

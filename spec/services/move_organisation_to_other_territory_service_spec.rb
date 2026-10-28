@@ -106,7 +106,7 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
       create(:agent_territorial_access_right, agent: agent_lea, territory: territory_origin, allow_to_manage_teams: true)
       create(:agent_territorial_access_right, agent: agent_jean, territory: territory_origin, allow_to_manage_teams: true)
       create(:agent_territorial_access_right, agent: agent_jean, territory: territory_target, allow_to_invite_agents: true)
-      # Wu a des accès au territoire d’origine mais n’appartient pas à l’orga d’origine
+      # Wu a des accès au territoire d’origine mais n’appartient pas à l’orga d’origine
       create(:agent_territorial_access_right, agent: agent_wu, territory: territory_origin, allow_to_invite_agents: true)
     end
 
@@ -138,7 +138,7 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
       create(:agent_territorial_role, agent: agent1, territory: territory_origin)
       create(:agent_territorial_role, agent: agent2, territory: territory_origin)
       create(:agent_territorial_role, agent: agent2, territory: territory_target)
-      # Wu a un rôle dans le territoire d’origine mais n’appartient pas à l’orga d’origine
+      # Wu a un rôle dans le territoire d’origine mais n’appartient pas à l’orga d’origine
       create(:agent_territorial_role, agent: agent_wu, territory: territory_origin)
     end
 

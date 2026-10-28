@@ -39,6 +39,6 @@
         |> Vous pouvez choisir un autre mode de connexion depuis la
         => link_to "page de connexion", new_user_session_path(login_code_request_form: { email: @email }), class: "fr-link"
       - else
-        |> Si vous n’avez pas reçu l’email contenant le code, vous pouvez en demander un nouveau depuis la
+        |> Si vous n’avez pas reçu l’email contenant le code, vous pouvez en demander un nouveau depuis la
         => link_to "page de connexion", new_user_session_path(login_code_request_form: { email: @email }), class: "fr-link"
         |> Vous pouvez aussi choisir un autre mode de connexion depuis cette page.
