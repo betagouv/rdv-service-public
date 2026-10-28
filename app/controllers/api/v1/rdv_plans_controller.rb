@@ -1,6 +1,14 @@
 class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
   def create
-    rdv_plan = RdvPlan.transaction do
+    rdv_plan = RdvPlan.new(
+      rdv_agent: current_agent,
+      planning_agent: current_agent,
+      oauth_application: doorkeeper_token&.application,
+      return_url: params[:return_url],
+      dossier_url: params[:dossier_url]
+    )
+
+    RdvPlan.transaction do
       user_params = params.require(:user)
 
       user = if user_params[:external_id].present?
@@ -10,20 +18,17 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
              end
 
       user.save!
-      RdvPlan.create!(
-        rdv_agent: current_agent,
-        planning_agent: current_agent,
-        user: user,
-        oauth_application: doorkeeper_token&.application,
-        return_url: params[:return_url],
-        dossier_url: params[:dossier_url]
-      )
+      rdv_plan.user = user
+      authorize(rdv_plan, policy_class: Agent::RdvPlanPolicy)
+
+      rdv_plan.save!
     end
     render json: RdvPlanBlueprint.render(rdv_plan, root: "rdv_plan"), status: :created
   end
 
   def show
     rdv_plan = policy_scope(RdvPlan, policy_scope_class: Agent::RdvPlanPolicy::Scope).includes(rdv: :organisation).find(params[:id])
+    authorize(rdv_plan, policy_class: Agent::RdvPlanPolicy)
 
     render_record rdv_plan
   end

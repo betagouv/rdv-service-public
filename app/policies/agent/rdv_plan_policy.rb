@@ -7,6 +7,7 @@ class Agent::RdvPlanPolicy < ApplicationPolicy
   end
   alias edit? create?
   alias update? create?
+  alias show? create?
 
   class Scope < Scope
     def resolve
