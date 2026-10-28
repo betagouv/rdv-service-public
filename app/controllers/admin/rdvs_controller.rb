@@ -43,6 +43,7 @@ class Admin::RdvsController < AgentAuthController
   def a_renseigner
     skip_authorization # on fait un policy scope à la ligne suivante
     @rdvs = policy_scope(current_agent.rdvs.a_renseigner, policy_scope_class: Agent::RdvPolicy::Scope)
+      .distinct # dédoublonnage des RDV renvoyés par Agent::RdvPolicy::Scope (INNER JOIN sur les agents)
       .order({ starts_at: :desc }).page(page_number).per(20)
   end
 
