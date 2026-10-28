@@ -104,7 +104,10 @@ ruby:
 
     - if current_agent.feature_enabled?("rdv_invitations")
       .card
-        .card-header Invitations en attente
+        .card-header
+          .d-flex.justify-content-between.rdv-align-items-baseline
+            span Invitations en attente
+            = link_to "Inviter à prendre rendez-vous", edit_motif_admin_organisation_rdv_invitations_path(current_organisation, user_id: @user.id), class: "fr-btn fr-btn--tertiary fr-btn--sm", title: "Voir tous les RDV de l’usager #{@user.full_name}"
         .card-body
           = render "admin/users/pending_invitations", user: @user
     .card
