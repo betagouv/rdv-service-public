@@ -10,7 +10,6 @@ class Agent::RdvPolicy < ApplicationPolicy
     same_agent_or_has_access? && users_and_agents_authorized?
   end
   alias status? update?
-  alias create_visio_room? update?
 
   def edit?
     same_agent_or_has_access? && users_authorized?
@@ -24,6 +23,8 @@ class Agent::RdvPolicy < ApplicationPolicy
   alias versions? show?
   alias download_participants? show?
   alias visio? show?
+  # On accepte d’être permissif ici pour lever les points de blocage à l’utilisation de Visio
+  alias create_visio_room? show?
 
   def destroy?
     current_agent.admin_in_organisation?(@record.organisation)
