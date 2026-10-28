@@ -9,8 +9,7 @@ section.fr-py-8w.fr-background-alt--grey
           | Tout pour organiser vos rendez-vous et mieux accueillir vos usagers
         p.fr-text--lead
           | RDV Service Public réunit dans un seul outil ce dont votre administration a besoin, de l’accueil des usagers au pilotage de l’activité.
-        = link_to "S’inscrire à une démo", onboarding_path, class: "fr-btn fr-mt-3w"
-        / TODO: remplacer onboarding_path par webinaire_path une fois la page en ligne
+        = link_to "S’inscrire à une démo", webinaire_path, class: "fr-btn fr-mt-3w"
 
 section#agenda.fr-py-8w
   .fr-container
@@ -286,5 +285,4 @@ section.rdv-section-fond-bleu.fr-py-8w
             | Vous êtes prêt pour créer votre premier rendez-vous !
     .fr-btns-group.fr-btns-group--inline-md.fr-mt-5w
       = link_to "Ouvrir mon espace", presentation_agent_path, class: "fr-btn rdv-btn-fond-blanc-texte-bleu"
-      = link_to "S’inscrire à une démo", onboarding_path, class: "fr-btn fr-btn--outline-white"
-      / TODO: remplacer onboarding_path par webinaire_path une fois la page en ligne
+      = link_to "S’inscrire à une démo", webinaire_path, class: "fr-btn fr-btn--outline-white"
