@@ -3,7 +3,7 @@
 set -ex
 
 DEFAULT_EXCEPT_TABLES="versions,good_jobs,good_job_executions,good_job_settings,good_job_batches,good_job_processes"
-USER_DATA_TABLES="receipts,users,participations,user_profile,referent_assignations,file_attentes"
+USER_DATA_TABLES="receipts,users,participations,user_profiles,referent_assignations,annotations,file_attentes"
 
 if (( $# == 0 )); then
   echo "Load Postgres dump into Rails develoment DB."
@@ -53,4 +53,4 @@ bundle exec rails db:environment:set
 # vous devez au moins anonymiser les données usager avec :
 # bundle exec rails runner scripts/devtools/anonymize_user_data.rb
 
-bundle exec rails runner scripts/devtools/anonymize_database.rb
+#bundle exec rails runner scripts/devtools/anonymize_database.rb
