@@ -23,11 +23,16 @@
           - if Agent::TerritoryPolicy.new(current_agent, Territory.new).new?
             p Vous pouvez ouvrir un espace pour votre organisation.
             = link_to "Ouvrir un espace", new_agents_territory_path, class: "fr-btn"
-          - else
+          - elsif policy(TerritoryCreationRequest.new, policy_class: Agent::TerritoryCreationRequestPolicy).new?
             p Vous pouvez demander à ouvrir un espace pour votre organisation. Notre équipe fera les vérifications nécessaires et vous ouvrira un espace.
             ul.fr-btns-group.fr-btns-group--center.fr-btns-group--inline-md
               li
                 = link_to "Demander à ouvrir un espace", new_agents_territory_creation_request_path, class: "fr-btn"
+          - else
+            p
+              |> Vous ne pouvez ni ouvrir un espace ni en faire la demande.
+              | Contactez l’administrateur de votre espace ou notre équipe.
+            = link_to "Contacter l’équipe", new_aide_demande_support_path(role: "agent"), class: "fr-btn fr-btn--secondary"
 - else
   .fr-grid-row.fr-grid-row--gutters.fr-pb-8w
     .fr-col-12.fr-pb-8w
