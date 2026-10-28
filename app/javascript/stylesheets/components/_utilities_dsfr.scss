@@ -99,6 +99,10 @@
   gap: 1rem;
 }
 
+.rdv-gap-2rem {
+  gap: 2rem;
+}
+
 .rdv-gap-05rem {
   gap: 0.5rem;
 }
@@ -115,6 +119,18 @@
 
 .rdv-width-100 {
   width: 100%;
+}
+
+.rdv-height-100 {
+  height: 100%;
+}
+
+.rdv-width-200px {
+  width: 200px;
+}
+
+.rdv-height-200px {
+  height: 200px;
 }
 
 .rdv-width-md-auto {
@@ -223,6 +239,26 @@
   max-height: 326px;
   border-radius: 8px;
   box-shadow: 0 12px 30px 0 rgba(221, 221, 221, 0.4);
+}
+
+.rdv-card-with-box-shadow {
+  border-radius: 8px;
+  box-shadow: 0 12px 30px 0 rgba(214, 214, 255, 0.4);
+
+  padding: 32px;
+  @include media-breakpoint-up(md) {
+    padding: 32px 40px;
+  }
+
+  .fr-btn--tooltip {
+    &:hover {
+      color: inherit;
+    }
+  }
+}
+
+.rdv-border-radius-8px {
+  border-radius: 8px;
 }
 
 .rdv-fr-highlight-small-and-grey p {

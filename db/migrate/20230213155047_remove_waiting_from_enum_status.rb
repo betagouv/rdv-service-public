@@ -9,7 +9,7 @@ class RemoveWaitingFromEnumStatus < ActiveRecord::Migration[7.0]
     # Remove status and enum
     remove_column :rdvs, :status, :rdv_status
     remove_column :rdvs_users, :status, :rdv_status
-    execute(<<-SQL.squish
+    execute(<<~SQL.squish
       DROP TYPE rdv_status
     SQL
            )
@@ -24,13 +24,13 @@ class RemoveWaitingFromEnumStatus < ActiveRecord::Migration[7.0]
     add_index :rdvs, :status
 
     # Copy back temp_status to status
-    execute(<<-SQL.squish
+    execute(<<~SQL.squish
       UPDATE rdvs
       SET status = temp_status::rdv_status
     SQL
            )
 
-    execute(<<-SQL.squish
+    execute(<<~SQL.squish
       UPDATE rdvs_users
       SET status = temp_status::rdv_status
     SQL
@@ -42,13 +42,13 @@ class RemoveWaitingFromEnumStatus < ActiveRecord::Migration[7.0]
   end
 
   def migrate_waiting_statuses_to_unknown
-    execute(<<-SQL.squish
+    execute(<<~SQL.squish
       UPDATE rdvs
       SET status = 'unknown'
       WHERE status = 'waiting'
     SQL
            )
-    execute(<<-SQL.squish
+    execute(<<~SQL.squish
       UPDATE rdvs_users
       SET status = 'unknown'
       WHERE status = 'waiting'
@@ -60,13 +60,13 @@ class RemoveWaitingFromEnumStatus < ActiveRecord::Migration[7.0]
     add_column :rdvs, :temp_status, :string
     add_column :rdvs_users, :temp_status, :string
 
-    execute(<<-SQL.squish
+    execute(<<~SQL.squish
       UPDATE rdvs
       SET temp_status = status
     SQL
            )
 
-    execute(<<-SQL.squish
+    execute(<<~SQL.squish
       UPDATE rdvs_users
       SET temp_status = status
     SQL

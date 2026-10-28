@@ -2,6 +2,8 @@ fr:
   rdvs:
     title: "Le %{starts_at} (durée : %{duration} minutes)"
     title_time_only: "Aujourd’hui à %{starts_at} (durée : %{duration} minutes)"
+    visio_link_not_yet_available: "Le lien de visioconférence n’est pas encore disponible : revenez ultérieurement pour l’obtenir."
+    visio_link_available_on_rdv_day: "Le lien de visioconférence sera disponible sur cette page le jour du rendez-vous."
     available_seats:
       one: 1 place restante
       other: "%{count} places restantes"

@@ -174,10 +174,6 @@ class Agent < ApplicationRecord
     invitation_sent_at.nil? || invitation_accepted_at.present?
   end
 
-  def should_link_pro_connect_for_visio?
-    pro_connect_openid_sub.blank? && plage_ouvertures.joins(:motifs).merge(Motif.visio).exists?
-  end
-
   def soft_delete
     raise SoftDeleteError, "agent still has attached orgs: #{organisations.ids.inspect}" if organisations.any?
 

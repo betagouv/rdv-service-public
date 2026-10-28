@@ -181,7 +181,7 @@ class ProConnectController < ApplicationController
         # Si l'agent ne s'était jamais connecté et qu'on l'a connecté automatiquement, c'était sans doute une erreur, donc on lui propose le login classique.
         redirect_to new_agent_session_path and return
       elsif current_domain.allow_self_onboarding
-        agent ||= Agent.new(email: callback_client.user_email, password: SecureRandom.base64(32))
+        agent ||= Agent.new(email: callback_client.user_email, password: "#{SecureRandom.base64(32)}Aa1!")
       else
         # On pourrait améliorer le cas d'erreur décrit dans https://github.com/betagouv/rdv-service-public/issues/4360
         flash[:error] = <<~ERROR
@@ -195,10 +195,10 @@ class ProConnectController < ApplicationController
       if IDP_PRO_CONNECT_FORCE_2FA_ENABLED.include?(callback_client.user_idp_id)
         require_2fa_for_sensitive_agent(callback_client) and return
       else
-        session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY] = agent.id
-        session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY] = callback_client.id_token_for_logout
+        session[Agents::SignInCodeVerificationsController::SESSION_AGENT_ID_KEY] = agent.id
+        session[Agents::SignInCodeVerificationsController::SESSION_PRO_CONNECT_ID_TOKEN_KEY] = callback_client.id_token_for_logout
         Agents::LoginCodeSender.perform(email: agent.email, domain_id: current_domain.id)
-        redirect_to new_agents_sessions_by_code_path and return
+        redirect_to new_agents_sign_in_code_verification_path and return
       end
     end
 

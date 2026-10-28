@@ -84,11 +84,11 @@
           div Usager: #{@form.user}
         - if @form.lieux.present?
           div
-            |> Lieu#{"x" if @form.lieux.count > 1}
+            |> Lieu#{"x" if @form.lieux.many?}
             | : #{@form.lieux.map(&:name).to_sentence}
         - if @form.motifs.present?
           div
-            |> Motif#{"s" if @form.motifs.count > 1}
+            |> Motif#{"s" if @form.motifs.many?}
             | : #{@form.motifs.map(&:name).to_sentence}
         - if @form.status.present?
           div Statut: #{Rdv.human_attribute_value(:status, @form.status)}

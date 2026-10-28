@@ -16,9 +16,9 @@ div.d-flex.justify-content-center.align-items-center.flex-wrap
         |> Les événements de votre agenda externe sont utilisés pour vérifier les conflits et éviter toute double réservation.
       div.rdv-text-align-center
         - if current_agent.caldav_configured?
-          = link_to "Gérer la connexion avec mon agenda Caldav", agents_calendar_sync_caldav_sync_path, class: "fr-btn fr-btn--secondary"
+          = link_to "Gérer la connexion avec mon agenda CalDAV", agents_calendar_sync_caldav_sync_path, class: "fr-btn fr-btn--secondary"
         - else
-          = link_to "Connecter mon agenda via Caldav", agents_calendar_sync_caldav_sync_path, class: "fr-btn fr-btn--primary"
+          = link_to "Connecter mon agenda via CalDAV", agents_calendar_sync_caldav_sync_path, class: "fr-btn fr-btn--primary"
 
   div.card.w-100
     div.card-body

@@ -4,7 +4,7 @@ class AddOrganisationToReceipts < ActiveRecord::Migration[7.0]
 
     reversible do |direction|
       direction.up do
-        execute <<-SQL.squish
+        execute <<~SQL.squish
           UPDATE receipts
           SET organisation_id = rdvs.organisation_id
           FROM rdvs

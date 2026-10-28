@@ -112,7 +112,7 @@ Rails.application.routes.draw do
     resources :login_codes, only: %i[create]
     get "login_codes", to: redirect(path: "/users/sign_in")
   end
-  namespace :stats, controller: "stats", module: nil do
+  scope path: "stats", as: :stats, controller: "stats" do
     get "/", action: "index"
     get :territories
     get :territory
@@ -150,7 +150,7 @@ Rails.application.routes.draw do
     put "agents/mot_de_passe" => "agents/mot_de_passes#update", as: "agent_mot_de_passes"
 
     namespace :agents do
-      resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code" do
+      resource :sign_in_code_verification, only: %i[new create] do
         post :resend, on: :collection
       end
       resource :pro_connect_step_up, only: %i[new create], controller: "pro_connect_step_up"
@@ -173,6 +173,7 @@ Rails.application.routes.draw do
       resources :rdvs, only: %i[show] do
         member do
           get :visio
+          post :create_visio_room
         end
       end
 
@@ -521,6 +522,7 @@ Rails.application.routes.draw do
 
   get "accueil_mds", to: redirect("presentation_agent", status: 307)
   get "presentation_agent" => "static_pages#presentation_for_agents"
+  get "webinaire" => "static_pages#webinaire"
 
   resource :onboarding, controller: :onboarding do
     get "step_1"
