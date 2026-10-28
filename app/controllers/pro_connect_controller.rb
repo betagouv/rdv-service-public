@@ -181,7 +181,7 @@ class ProConnectController < ApplicationController
         # Si l'agent ne s'était jamais connecté et qu'on l'a connecté automatiquement, c'était sans doute une erreur, donc on lui propose le login classique.
         redirect_to new_agent_session_path and return
       elsif current_domain.allow_self_onboarding
-        agent ||= Agent.new(email: callback_client.user_email, password: SecureRandom.base64(32))
+        agent ||= Agent.new(email: callback_client.user_email, password: "#{SecureRandom.base64(32)}Aa1!")
       else
         # On pourrait améliorer le cas d'erreur décrit dans https://github.com/betagouv/rdv-service-public/issues/4360
         flash[:error] = <<~ERROR
