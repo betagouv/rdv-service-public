@@ -1,0 +1,36 @@
+@import "./smartphone_frame";
+
+// carré arrondi bleu très clair, icône bleu foncé
+.rdv-icone-sur-fond-bleu-arrondi {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--blue-ecume-950-100);
+  color: var(--text-action-high-blue-france);
+  font-size: 1.5rem;
+}
+
+.rdv-section-fond-bleu {
+  background-color: #3e5de7;
+  color: #fff;
+
+  h2 {
+    color: #fff;
+  }
+
+  .rdv-tuile-blanche-arrondie {
+    background-color: var(--background-default-grey);
+    border-radius: 0.5rem;
+    height: 100%;
+    padding: 1.5rem;
+
+    p {
+      color: var(--text-default-grey);
+      margin-bottom: 0;
+    }
+  }
+}

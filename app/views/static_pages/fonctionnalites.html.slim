@@ -27,7 +27,7 @@ section#agenda.fr-py-8w
           li Consultez le planning des autres agents de votre organisation
       .fr-col-12.fr-col-md-6
         figure.fr-content-media
-          = image_tag "rdv_mairie/calendrier.png", alt: "Agenda d’un agent en vue semaine", class: "fr-responsive-img rdv-feature-screenshot"
+          = image_tag "rdv_mairie/calendrier.png", alt: "Agenda d’un agent en vue semaine", class: "fr-responsive-img rdv-border-radius-8px rdv-box-shadow-1"
 
 section#prise-de-rdv-en-ligne.fr-py-8w
   .fr-container
@@ -61,7 +61,7 @@ section#notifications.fr-py-8w
           li Vous pouvez paramétrer les conditions d’annulation
       .fr-col-12.fr-col-md-6
         figure.fr-content-media.rdv-screenshot-with-smartphone-frame
-          = image_tag "rdv_mairie/sms-confirmation.webp", alt: "SMS de rappel reçu par l’usager, avec un lien d’annulation du rendez-vous", class: "rdv-max-width-400px "
+          = image_tag "rdv_mairie/sms-confirmation.webp", alt: "SMS de rappel reçu par l’usager, avec un lien d’annulation du rendez-vous", class: "rdv-max-width-400px"
 
 section#usagers.fr-py-8w
   .fr-container
@@ -79,14 +79,14 @@ section#usagers.fr-py-8w
           / li Salle d’attente : signaler l’arrivée de l’usager
       .fr-col-12.fr-col-md-7
         figure.fr-content-media
-          = image_tag "rdv_mairie/usagers.webp", alt: "Fiche usager avec ses coordonnées, référents et historique de rendez-vous", class: "fr-responsive-img rdv-feature-screenshot"
+          = image_tag "rdv_mairie/usagers.webp", alt: "Fiche usager avec ses coordonnées, référents et historique de rendez-vous", class: "fr-responsive-img rdv-border-radius-8px rdv-box-shadow-1"
 
 section#visio.fr-py-8w.fr-background-alt--grey
   .fr-container
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle.rdv-flex-wrap-wrap-reverse
       .fr-col-12.fr-col-md-7
-        figure.fr-content-media.rdv-feature-media-offset
-          = image_tag "rdv_mairie/visio.webp", alt: "Une visioconférence dans Visio, l’outil de visioconférence de l’État", class: "fr-responsive-img rdv-feature-screenshot"
+        figure.fr-content-media
+          = image_tag "rdv_mairie/visio.webp", alt: "Une visioconférence dans Visio, l’outil de visioconférence de l’État", class: "fr-responsive-img rdv-border-radius-8px rdv-box-shadow-1"
       .fr-col-12.fr-col-md-5
         h2
           | Visioconférence
@@ -128,40 +128,40 @@ section#fonctionnalites-complementaires.fr-py-8w.fr-background-alt--grey
           | RDV Service Public s’adapte à plusieurs typologies d’administrations, de la petite équipe aux services ministériels de plusieurs dizaines d’agents.
     .fr-grid-row.fr-grid-row--gutters.fr-mt-4w
       .fr-col-12.fr-col-md-6.fr-col-lg-3
-        .fr-tile.rdv-feature-tile
+        .fr-tile
           .fr-tile__body
-            .fr-tile__content
-              .rdv-feature-icon-badge.fr-mb-2w
+            .fr-tile__content.rdv-align-items-flex-start.rdv-text-align-left
+              .rdv-icone-sur-fond-bleu-arrondi
                 span.fr-icon-calendar-line aria-hidden="true"
               h3.fr-tile__title
                 | Des rendez-vous sur place, au téléphone, en visio ou à domicile
               p.fr-tile__desc
                 | Proposez pour chaque motif la modalité de rendez-vous la plus adaptée.
       .fr-col-12.fr-col-md-6.fr-col-lg-3
-        .fr-tile.rdv-feature-tile
+        .fr-tile
           .fr-tile__body
-            .fr-tile__content
-              .rdv-feature-icon-badge.fr-mb-2w
+            .fr-tile__content.rdv-align-items-flex-start.rdv-text-align-left
+              .rdv-icone-sur-fond-bleu-arrondi
                 span.fr-icon-community-line aria-hidden="true"
               h3.fr-tile__title
                 | Des espaces avec plusieurs organisations et services
               p.fr-tile__desc
                 | Gérez les plannings de plusieurs lieux et équipes depuis un même espace.
       .fr-col-12.fr-col-md-6.fr-col-lg-3
-        .fr-tile.rdv-feature-tile
+        .fr-tile
           .fr-tile__body
-            .fr-tile__content
-              .rdv-feature-icon-badge.fr-mb-2w
+            .fr-tile__content.rdv-align-items-flex-start.rdv-text-align-left
+              .rdv-icone-sur-fond-bleu-arrondi
                 span.fr-icon-line-chart-line aria-hidden="true"
               h3.fr-tile__title
                 | Statistiques et export des données
               p.fr-tile__desc
                 | Visualisez l’activité de vos services à partir de données centralisées et exportez vos listes de rendez-vous et statistiques pour vos bilans d’activité.
       .fr-col-12.fr-col-md-6.fr-col-lg-3
-        .fr-tile.rdv-feature-tile
+        .fr-tile
           .fr-tile__body
-            .fr-tile__content
-              .rdv-feature-icon-badge.fr-mb-2w
+            .fr-tile__content.rdv-align-items-flex-start.rdv-text-align-left
+              .rdv-icone-sur-fond-bleu-arrondi
                 span.fr-icon-code-line aria-hidden="true"
               h3.fr-tile__title
                 | API et webhooks
@@ -245,7 +245,7 @@ section#ecosysteme.fr-py-8w
             = link_to "Système de design de l’État (DSFR)", "https://www.systeme-de-design.gouv.fr/", target: "_blank", rel: "noopener", title: "Système de design de l’État (DSFR) - nouvelle fenêtre"
             | .
 
-section.rdv-fonctionnalites-cta.fr-py-8w
+section.rdv-section-fond-bleu.fr-py-8w
   .fr-container
     h2
       | Prêt à simplifier la gestion de vos rendez-vous ?
@@ -253,38 +253,38 @@ section.rdv-fonctionnalites-cta.fr-py-8w
       | Notre équipe étudie vos besoins, configure la solution avec vous et vous accompagne jusqu’à l’autonomie complète de vos équipes.
     .fr-grid-row.fr-grid-row--gutters.fr-mt-5w
       .fr-col-12.fr-col-md-6.fr-col-lg-3
-        .rdv-feature-step
-          .rdv-feature-icon-badge.fr-mb-2w
+        .rdv-tuile-blanche-arrondie
+          .rdv-icone-sur-fond-bleu-arrondi
             span.fr-icon-user-add-line aria-hidden="true"
           h3.fr-h5
             | Créer votre espace
           p
             | Identifiez vous avec ProConnect et envoyez votre demande d’ouverture d’espace, nous la validerons sous 24h maximum.
       .fr-col-12.fr-col-md-6.fr-col-lg-3
-        .rdv-feature-step
-          .rdv-feature-icon-badge.fr-mb-2w
+        .rdv-tuile-blanche-arrondie
+          .rdv-icone-sur-fond-bleu-arrondi
             span.fr-icon-mail-line aria-hidden="true"
           h3.fr-h5
             | Connectez-vous
           p
             | Une fois la demande validée, vous recevrez un mail de confirmation avec un lien pour vous connecter.
       .fr-col-12.fr-col-md-6.fr-col-lg-3
-        .rdv-feature-step
-          .rdv-feature-icon-badge.fr-mb-2w
+        .rdv-tuile-blanche-arrondie
+          .rdv-icone-sur-fond-bleu-arrondi
             span.fr-icon-settings-5-line aria-hidden="true"
           h3.fr-h5
             | Paramétrez
           p
             | Paramétrez votre premier motif de rendez-vous, puis renseignez vos disponibilités, invitez vos collègues ...
       .fr-col-12.fr-col-md-6.fr-col-lg-3
-        .rdv-feature-step
-          .rdv-feature-icon-badge.fr-mb-2w
+        .rdv-tuile-blanche-arrondie
+          .rdv-icone-sur-fond-bleu-arrondi
             span.fr-icon-calendar-check-line aria-hidden="true"
           h3.fr-h5
             | Créez votre premier rendez-vous
           p
             | Vous êtes prêt pour créer votre premier rendez-vous !
     .fr-btns-group.fr-btns-group--inline-md.fr-mt-5w
-      = link_to "Ouvrir mon espace", presentation_agent_path, class: "fr-btn rdv-btn-fond-blanc"
+      = link_to "Ouvrir mon espace", presentation_agent_path, class: "fr-btn rdv-btn-fond-blanc-texte-bleu"
       = link_to "S’inscrire à une démo", onboarding_path, class: "fr-btn fr-btn--outline-white"
       / TODO: remplacer onboarding_path par webinaire_path une fois la page en ligne
