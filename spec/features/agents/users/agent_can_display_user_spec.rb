@@ -19,14 +19,14 @@ RSpec.describe "Agent can display user" do
   context "when the user has an external reference" do
     let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application:) }
     let!(:user) { create(:user, organisations: [organisation]) }
-    let(:application) { create(:oauth_application, name: "Démarches Simplifiées") }
+    let(:application) { create(:oauth_application, name: "Démarche Numérique") }
     let!(:external_reference) do
       create(:external_reference, oauth_application: application, territory: organisation.territory, item: user)
     end
 
     it "shows a link to the external reference" do
       visit admin_organisation_user_path(organisation, user)
-      expect(page).to have_content("Voir sur Démarches Simplifiées")
+      expect(page).to have_content("Voir sur Démarche Numérique")
     end
 
     context "quand l'agent peut voir l'usager, mais qu'il n'a pas fait de connexion oauth explicite (ça arrive pour les migrations de Conums pour les agents qui sont invités automatiquement)" do
@@ -34,7 +34,7 @@ RSpec.describe "Agent can display user" do
 
       it "shows a link to the external reference" do
         visit admin_organisation_user_path(organisation, user)
-        expect(page).to have_content("Voir sur Démarches Simplifiées")
+        expect(page).to have_content("Voir sur Démarche Numérique")
       end
     end
   end

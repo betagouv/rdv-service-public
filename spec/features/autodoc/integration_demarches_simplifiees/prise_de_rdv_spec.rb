@@ -2,7 +2,7 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
   include ActionView::Helpers::SanitizeHelper
 
   let(:oauth_application) do
-    create(:oauth_application, name: "Démarches Simplifiées",
+    create(:oauth_application, name: "Démarche Numérique",
                                logo_base64: file_fixture("logo_demarches_simplifiees_base_64.txt").read)
   end
   let!(:user) do
@@ -33,20 +33,20 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
   stub_env_for_proconnect
 
   specify do
-    doc = Autodoc.start_scenario("3) Prise de RDV par un instructeur", self, accessibility_checks: false, category: "4) Intégration à Démarches Simplifiées")
+    doc = Autodoc.start_scenario("3) Prise de RDV par un instructeur", self, accessibility_checks: false, category: "4) Intégration à Démarche Numérique")
 
     doc.start_section("Première prise de rendez-vous")
 
     text = <<~TEXT
       <p>
-        Je suis un instructeur qui utilise Démarches Simplifiées.
+        Je suis un instructeur qui utilise Démarche Numérique.
       </p>
       <p>
         Je n'ai jamais utilisé RDV Service Public, mais j'ai vu que l'administrateur m'a invité à rejoindre un espace RDV Service Public.
         J'ai l'habitude d'utiliser ProConnect.
       </p>
       <p>
-        Je suis en train d'instruire un dossier, et je vois que j'ai la possibilité de prendre un rendez-vous. Je clique dessus depuis Démarches Simplifiées, et j'arrive sur ces écrans de RDV Service Public.
+        Je suis en train d'instruire un dossier, et je vois que j'ai la possibilité de prendre un rendez-vous. Je clique dessus depuis Démarche Numérique, et j'arrive sur ces écrans de RDV Service Public.
       </p>
     TEXT
     doc.add_text(sanitize(text))
@@ -63,7 +63,7 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
 
     doc.add_screenshot(page,
                        text: "On me demande de confirmer que j'accepte de connecter les deux applications.",
-                       wait_for: "vous allez permettre à Démarches Simplifiées")
+                       wait_for: "vous allez permettre à Démarche Numérique")
 
     rdv_plan = create(:rdv_plan,
                       user: user,
@@ -109,7 +109,7 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
 
     Capybara.page.current_window.resize_to(1280, 720)
     doc.add_screenshot(page,
-                       text: "J'ai un récapitulatif du rendez-vous, et je peux retourner sur Démarches Simplifiées",
+                       text: "J'ai un récapitulatif du rendez-vous, et je peux retourner sur Démarche Numérique",
                        wait_for: "Rendez-vous confirmé")
 
     doc.start_section("Deuxième prise de rendez-vous")

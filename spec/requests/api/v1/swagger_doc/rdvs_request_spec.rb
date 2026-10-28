@@ -8,7 +8,6 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "RDV"
-      produces "application/json"
       operationId "getRdvs"
 
       # L'usage du paramètre `include` est expliqué dans la description plutôt qu'en tant qu'un paramètre séparé, parce que la
@@ -40,6 +39,9 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       parameter name: :user_id, in: :query, type: :integer,
                 description: "Filtre pour obtenir uniquement les rendez-vous de l'usager qui a cet id",
                 example: 123, required: false
+      parameter name: :user_external_id, in: :query, type: :string,
+                description: "Filtre pour obtenir uniquement les rendez-vous de l'usager qui a cet id dans votre systeme.",
+                example: "123AB", required: false
       parameter name: :agent_id, in: :query, type: :integer,
                 description: "Filtre pour obtenir uniquement les rendez-vous de l'agent qui a cet id",
                 example: 456, required: false
@@ -91,7 +93,6 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "RDV"
-      produces "application/json"
       operationId "getRdvs"
       description "Renvoie les RDVs du service dont l'agent fait partie dans cette organisation. Si l'agent est administrateurice ou secrétaire, renvoie tous les RDVs de l'organisation en question."
 
@@ -226,8 +227,6 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       let!(:agent) { create(:agent, :francis_factice, admin_role_in_organisations: [rdv.organisation]) }
 
       tags "RDV"
-      produces "application/json"
-      consumes "application/json"
       operationId "updateRdvStatus"
 
       humanized_status_values = Rdv.statuses.keys.map do |status|

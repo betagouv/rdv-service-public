@@ -34,6 +34,20 @@ RSpec.describe "RDV API" do
       expect(parsed_response_body["rdvs"].first["id"]).to eq rdv_with_user_and_agent.id
     end
 
+    it "filters by user external_id" do
+      create(:external_reference, item: user, oauth_application: application, external_id: "123AB")
+
+      get "/api/v1/rdvs", headers: headers, params: { user_external_id: "123AB" }, as: :json
+      expect(parsed_response_body["rdvs"].count).to eq 2
+
+      response_ids = [
+        parsed_response_body["rdvs"].first["id"],
+        parsed_response_body["rdvs"].second["id"],
+      ]
+
+      expect(response_ids).to contain_exactly(rdv_with_user_and_agent.id, rdv_with_user_and_other_agent.id)
+    end
+
     it "allows filtering by agent and restricting the included fields" do
       get "/api/v1/rdvs", headers: headers, params: { agent_id: agent.id, include: [:agents] }, as: :json
       expect(parsed_response_body["rdvs"].count).to eq 3

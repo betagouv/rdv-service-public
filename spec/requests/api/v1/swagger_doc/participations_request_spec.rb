@@ -8,7 +8,6 @@ RSpec.describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "RDV"
-      produces "application/json"
       operationId "putParticipations"
       description "Permet de modifier une participation à un rdv. Seul le champ `status` est modifiable."
 
