@@ -138,6 +138,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
     let(:pundit_context) { AgentOrganisationContext.new(agent1, organisation) }
 
     it_behaves_like "not permit actions", :rdv, :update?, :status?
+    it_behaves_like "permit actions", :rdv, :show?, :create_visio_room?
   end
 
   # Certains controllers ajoutent des usagers à un RDV à travers

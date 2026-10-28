@@ -37,12 +37,12 @@ RSpec.describe Agents::SessionsController do
 
       it "stocke l'id de l'agent dans la session comme connexion en attente" do
         post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
-        expect(session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY]).to eq(agent.id)
+        expect(session[Agents::SignInCodeVerificationsController::SESSION_AGENT_ID_KEY]).to eq(agent.id)
       end
 
       it "redirige vers le formulaire de vérification par code" do
         post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
-        expect(response).to redirect_to(new_agents_sessions_by_code_path)
+        expect(response).to redirect_to(new_agents_sign_in_code_verification_path)
       end
 
       it "crée et envoie un code de connexion par email" do
@@ -82,7 +82,7 @@ RSpec.describe Agents::SessionsController do
 
         it "redemande un code de connexion" do
           post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
-          expect(response).to redirect_to(new_agents_sessions_by_code_path)
+          expect(response).to redirect_to(new_agents_sign_in_code_verification_path)
         end
       end
     end

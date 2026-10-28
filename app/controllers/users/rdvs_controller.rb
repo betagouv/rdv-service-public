@@ -63,6 +63,9 @@ class Users::RdvsController < UserAuthController
   def visio
     if @rdv.visio_url.present?
       redirect_to @rdv.visio_url, allow_other_host: true
+    elsif @rdv.motif.visio?
+      flash[:notice] = I18n.t("rdvs.visio_link_not_yet_available")
+      redirect_to users_rdv_path(@rdv)
     else
       flash[:error] = "Ce RDV n'a pas de visioconférence associée"
       redirect_to users_rdv_path(@rdv)

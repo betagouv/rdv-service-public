@@ -1,0 +1,724 @@
+---
+http_interactions:
+- request:
+    method: propfind
+    uri: https://webmail.genci.fr/dav/pbrdv@genci.fr/Calendar
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <dav:propfind xmlns:dav="DAV:" xmlns:caldav="urn:ietf:params:xml:ns:caldav" xmlns:cs="http://calendarserver.org/ns/" xmlns:apple="http://apple.com/ns/ical/">
+          <dav:prop>
+            <dav:displayname/>
+            <dav:resourcetype/>
+            <dav:getetag/>
+            <cs:getctag/>
+            <apple:calendar-color/>
+            <dav:sync-token/>
+            <dav:supported-report-set/>
+            <caldav:supported-calendar-component-set/>
+            <dav:current-user-privilege-set/>
+          </dav:prop>
+        </dav:propfind>
+    headers:
+      Authorization: "[Filtered in vcr.rb -> before_record]"
+      Depth:
+      - '0'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Connection:
+      - close
+      Host:
+      - webmail.genci.fr
+      User-Agent:
+      - http.rb/5.3.1
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Date:
+      - Mon, 05 Oct 2026 12:21:20 GMT
+      Content-Type:
+      - text/xml; charset="UTF-8"
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - close
+      Dav:
+      - 1, 2, 3, access-control, calendar-access, calendar-auto-schedule
+      - calendarserver-principal-property-search
+      - version-control, addressbook, extended-mkcol, calendar-proxy
+      X-Content-Options:
+      - nosniff
+      Content-Security-Policy:
+      - 'default-src ''self''; frame-src ''self'' https://*.renater.fr; img-src https:
+        data:; object-src ''none''; script-src ''self'' ''report-sample'' ''unsafe-inline''
+        ''unsafe-eval''; style-src ''self'' ''report-sample'' ''unsafe-inline''; worker-src
+        ''self'';'
+      Expect-Ct:
+      - max-age=86400, enforce
+      X-Frame-Options:
+      - sameorigin
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      X-Robots-Tag:
+      - noindex
+      Strict-Transport-Security:
+      - max-age=16070400; includeSubDomains
+      Set-Cookie: "[Filtered in vcr.rb -> before_record]"
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <D:multistatus xmlns:D="DAV:">
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 404 Not Found</D:status>
+              <D:prop>
+                <dav:sync-token xmlns:dav="DAV:"/>
+              </D:prop>
+            </D:propstat>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <D:resourcetype>
+                  <D:collection/>
+                  <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
+                </D:resourcetype>
+                <C:supported-calendar-component-set xmlns:C="urn:ietf:params:xml:ns:caldav">
+                  <C:comp name="VEVENT"/>
+                  <C:comp name="VFREEBUSY"/>
+                </C:supported-calendar-component-set>
+                <D:supported-report-set>
+                  <D:supported-report>
+                    <D:report>
+                      <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav"/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <C:calendar-multiget xmlns:C="urn:ietf:params:xml:ns:caldav"/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <C:free-busy-query xmlns:C="urn:ietf:params:xml:ns:caldav"/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:acl-principal-prop-set/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-match/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-property-search/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:principal-search-property-set/>
+                    </D:report>
+                  </D:supported-report>
+                  <D:supported-report>
+                    <D:report>
+                      <D:expand-property/>
+                    </D:report>
+                  </D:supported-report>
+                </D:supported-report-set>
+                <CS:getctag xmlns:CS="http://calendarserver.org/ns/">1-32</CS:getctag>
+                <D:getetag>"1-1"</D:getetag>
+                <D:displayname>Calendar</D:displayname>
+                <A:calendar-color xmlns:A="http://apple.com/ns/ical/">#F57802FF</A:calendar-color>
+                <D:current-user-privilege-set>
+                  <D:privilege>
+                    <D:read-current-user-privilege-set/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:read/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-content/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:write-properties/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:bind/>
+                  </D:privilege>
+                  <D:privilege>
+                    <D:unbind/>
+                  </D:privilege>
+                </D:current-user-privilege-set>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+        </D:multistatus>
+  recorded_at: Mon, 05 Oct 2026 12:21:20 GMT
+- request:
+    method: report
+    uri: https://webmail.genci.fr/dav/pbrdv@genci.fr/Calendar
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <caldav:calendar-query xmlns:dav="DAV:" xmlns:caldav="urn:ietf:params:xml:ns:caldav" xmlns:cs="http://calendarserver.org/ns/" xmlns:apple="http://apple.com/ns/ical/">
+          <dav:prop>
+            <dav:getetag/>
+            <caldav:calendar-data/>
+          </dav:prop>
+          <caldav:filter>
+            <caldav:comp-filter name="VCALENDAR">
+              <caldav:comp-filter name="VEVENT"/>
+            </caldav:comp-filter>
+          </caldav:filter>
+        </caldav:calendar-query>
+    headers:
+      Authorization: "[Filtered in vcr.rb -> before_record]"
+      Depth:
+      - '1'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Connection:
+      - close
+      Host:
+      - webmail.genci.fr
+      User-Agent:
+      - http.rb/5.3.1
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Date:
+      - Mon, 05 Oct 2026 12:21:20 GMT
+      Content-Type:
+      - text/xml; charset="UTF-8"
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - close
+      Dav:
+      - 1, 2, 3, access-control, calendar-access, calendar-auto-schedule
+      - calendarserver-principal-property-search
+      - version-control, addressbook, extended-mkcol, calendar-proxy
+      X-Content-Options:
+      - nosniff
+      Content-Security-Policy:
+      - 'default-src ''self''; frame-src ''self'' https://*.renater.fr; img-src https:
+        data:; object-src ''none''; script-src ''self'' ''report-sample'' ''unsafe-inline''
+        ''unsafe-eval''; style-src ''self'' ''report-sample'' ''unsafe-inline''; worker-src
+        ''self'';'
+      Expect-Ct:
+      - max-age=86400, enforce
+      X-Frame-Options:
+      - sameorigin
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      X-Robots-Tag:
+      - noindex
+      Strict-Transport-Security:
+      - max-age=16070400; includeSubDomains
+      Set-Cookie: "[Filtered in vcr.rb -> before_record]"
+      X-Service-Auth: "[Filtered in vcr.rb -> before_record]"
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <D:multistatus xmlns:D="DAV:">
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/3aacf91a-88ee-4f1b-8ae6-93a674aaf9bd.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav">BEGIN:VCALENDAR
+        PRODID:Zimbra-Calendar-Provider
+        VERSION:2.0
+        BEGIN:VTIMEZONE
+        TZID:Europe/Brussels
+        BEGIN:STANDARD
+        DTSTART:16010101T030000
+        TZOFFSETTO:+0100
+        TZOFFSETFROM:+0200
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=10;BYDAY=-1SU
+        TZNAME:CET
+        END:STANDARD
+        BEGIN:DAYLIGHT
+        DTSTART:16010101T020000
+        TZOFFSETTO:+0200
+        TZOFFSETFROM:+0100
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=3;BYDAY=-1SU
+        TZNAME:CEST
+        END:DAYLIGHT
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        UID:3aacf91a-88ee-4f1b-8ae6-93a674aaf9bd
+        SUMMARY:c
+        ORGANIZER:mailto:pbrdv@genci.fr
+        DTSTART;TZID="Europe/Brussels":20261007T103000
+        DTEND;TZID="Europe/Brussels":20261007T123000
+        STATUS:CONFIRMED
+        CLASS:PUBLIC
+        TRANSP:OPAQUE
+        LAST-MODIFIED:20261005T121409Z
+        DTSTAMP:20261005T121409Z
+        SEQUENCE:0
+        BEGIN:VALARM
+        ACTION:DISPLAY
+        TRIGGER;RELATED=START:-PT15M
+        DESCRIPTION:Reminder
+        END:VALARM
+        END:VEVENT
+        END:VCALENDAR</C:calendar-data>
+                <D:getetag>"25-25"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/459a4266-1c9d-4b33-a6c0-93c7adf010fb.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav">BEGIN:VCALENDAR
+        PRODID:Zimbra-Calendar-Provider
+        VERSION:2.0
+        BEGIN:VTIMEZONE
+        TZID:Europe/Brussels
+        BEGIN:STANDARD
+        DTSTART:16010101T030000
+        TZOFFSETTO:+0100
+        TZOFFSETFROM:+0200
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=10;BYDAY=-1SU
+        TZNAME:CET
+        END:STANDARD
+        BEGIN:DAYLIGHT
+        DTSTART:16010101T020000
+        TZOFFSETTO:+0200
+        TZOFFSETFROM:+0100
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=3;BYDAY=-1SU
+        TZNAME:CEST
+        END:DAYLIGHT
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        UID:459a4266-1c9d-4b33-a6c0-93c7adf010fb
+        SUMMARY:e
+        ORGANIZER:mailto:pbrdv@genci.fr
+        DTSTART;TZID="Europe/Brussels":20261009T113000
+        DTEND;TZID="Europe/Brussels":20261009T133000
+        STATUS:CONFIRMED
+        CLASS:PUBLIC
+        TRANSP:OPAQUE
+        LAST-MODIFIED:20261005T121414Z
+        DTSTAMP:20261005T121414Z
+        SEQUENCE:0
+        BEGIN:VALARM
+        ACTION:DISPLAY
+        TRIGGER;RELATED=START:-PT15M
+        DESCRIPTION:Reminder
+        END:VALARM
+        END:VEVENT
+        END:VCALENDAR</C:calendar-data>
+                <D:getetag>"27-27"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/28684abf-a7d0-4c1a-9594-cbd5d0ac4058.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav">BEGIN:VCALENDAR
+        PRODID:Zimbra-Calendar-Provider
+        VERSION:2.0
+        BEGIN:VTIMEZONE
+        TZID:Europe/Brussels
+        BEGIN:STANDARD
+        DTSTART:16010101T030000
+        TZOFFSETTO:+0100
+        TZOFFSETFROM:+0200
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=10;BYDAY=-1SU
+        TZNAME:CET
+        END:STANDARD
+        BEGIN:DAYLIGHT
+        DTSTART:16010101T020000
+        TZOFFSETTO:+0200
+        TZOFFSETFROM:+0100
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=3;BYDAY=-1SU
+        TZNAME:CEST
+        END:DAYLIGHT
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        UID:28684abf-a7d0-4c1a-9594-cbd5d0ac4058
+        SUMMARY:d
+        ORGANIZER:mailto:pbrdv@genci.fr
+        DTSTART;TZID="Europe/Brussels":20261008T110000
+        DTEND;TZID="Europe/Brussels":20261008T123000
+        STATUS:CONFIRMED
+        CLASS:PUBLIC
+        TRANSP:OPAQUE
+        LAST-MODIFIED:20261005T121412Z
+        DTSTAMP:20261005T121412Z
+        SEQUENCE:0
+        BEGIN:VALARM
+        ACTION:DISPLAY
+        TRIGGER;RELATED=START:-PT15M
+        DESCRIPTION:Reminder
+        END:VALARM
+        END:VEVENT
+        END:VCALENDAR</C:calendar-data>
+                <D:getetag>"26-26"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/dca8df82-7d0e-48af-9b77-376c02533874.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav">BEGIN:VCALENDAR
+        PRODID:Zimbra-Calendar-Provider
+        VERSION:2.0
+        BEGIN:VTIMEZONE
+        TZID:Europe/Brussels
+        BEGIN:STANDARD
+        DTSTART:16010101T030000
+        TZOFFSETTO:+0100
+        TZOFFSETFROM:+0200
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=10;BYDAY=-1SU
+        TZNAME:CET
+        END:STANDARD
+        BEGIN:DAYLIGHT
+        DTSTART:16010101T020000
+        TZOFFSETTO:+0200
+        TZOFFSETFROM:+0100
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=3;BYDAY=-1SU
+        TZNAME:CEST
+        END:DAYLIGHT
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        UID:dca8df82-7d0e-48af-9b77-376c02533874
+        SUMMARY:f
+        ORGANIZER:mailto:pbrdv@genci.fr
+        DTSTART;TZID="Europe/Brussels":20261012T110000
+        DTEND;TZID="Europe/Brussels":20261012T123000
+        STATUS:CONFIRMED
+        CLASS:PUBLIC
+        TRANSP:OPAQUE
+        LAST-MODIFIED:20261005T121418Z
+        DTSTAMP:20261005T121418Z
+        SEQUENCE:0
+        BEGIN:VALARM
+        ACTION:DISPLAY
+        TRIGGER;RELATED=START:-PT15M
+        DESCRIPTION:Reminder
+        END:VALARM
+        END:VEVENT
+        END:VCALENDAR</C:calendar-data>
+                <D:getetag>"28-28"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/b52d3853-fcb8-418d-8179-6afafe816d63.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav">BEGIN:VCALENDAR
+        PRODID:Zimbra-Calendar-Provider
+        VERSION:2.0
+        BEGIN:VTIMEZONE
+        TZID:Europe/Brussels
+        BEGIN:STANDARD
+        DTSTART:16010101T030000
+        TZOFFSETTO:+0100
+        TZOFFSETFROM:+0200
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=10;BYDAY=-1SU
+        TZNAME:CET
+        END:STANDARD
+        BEGIN:DAYLIGHT
+        DTSTART:16010101T020000
+        TZOFFSETTO:+0200
+        TZOFFSETFROM:+0100
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=3;BYDAY=-1SU
+        TZNAME:CEST
+        END:DAYLIGHT
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        UID:b52d3853-fcb8-418d-8179-6afafe816d63
+        SUMMARY:i
+        ORGANIZER:mailto:pbrdv@genci.fr
+        DTSTART;TZID="Europe/Brussels":20261015T143000
+        DTEND;TZID="Europe/Brussels":20261015T160000
+        STATUS:CONFIRMED
+        CLASS:PUBLIC
+        TRANSP:OPAQUE
+        LAST-MODIFIED:20261005T121424Z
+        DTSTAMP:20261005T121424Z
+        SEQUENCE:0
+        BEGIN:VALARM
+        ACTION:DISPLAY
+        TRIGGER;RELATED=START:-PT15M
+        DESCRIPTION:Reminder
+        END:VALARM
+        END:VEVENT
+        END:VCALENDAR</C:calendar-data>
+                <D:getetag>"31-31"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/6ac1bb57-ba53-442b-953d-68ee9d06ea98.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav">BEGIN:VCALENDAR
+        PRODID:Zimbra-Calendar-Provider
+        VERSION:2.0
+        BEGIN:VTIMEZONE
+        TZID:Europe/Brussels
+        BEGIN:STANDARD
+        DTSTART:16010101T030000
+        TZOFFSETTO:+0100
+        TZOFFSETFROM:+0200
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=10;BYDAY=-1SU
+        TZNAME:CET
+        END:STANDARD
+        BEGIN:DAYLIGHT
+        DTSTART:16010101T020000
+        TZOFFSETTO:+0200
+        TZOFFSETFROM:+0100
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=3;BYDAY=-1SU
+        TZNAME:CEST
+        END:DAYLIGHT
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        UID:6ac1bb57-ba53-442b-953d-68ee9d06ea98
+        SUMMARY:a
+        ORGANIZER:mailto:pbrdv@genci.fr
+        DTSTART;TZID="Europe/Brussels":20261005T100000
+        DTEND;TZID="Europe/Brussels":20261005T113000
+        STATUS:CONFIRMED
+        CLASS:PUBLIC
+        TRANSP:OPAQUE
+        LAST-MODIFIED:20261005T121405Z
+        DTSTAMP:20261005T121405Z
+        SEQUENCE:0
+        BEGIN:VALARM
+        ACTION:DISPLAY
+        TRIGGER;RELATED=START:-PT15M
+        DESCRIPTION:Reminder
+        END:VALARM
+        END:VEVENT
+        END:VCALENDAR</C:calendar-data>
+                <D:getetag>"23-23"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/381397dd-d5eb-4955-af83-f91ebfe9ba99.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav">BEGIN:VCALENDAR
+        PRODID:Zimbra-Calendar-Provider
+        VERSION:2.0
+        BEGIN:VTIMEZONE
+        TZID:Europe/Brussels
+        BEGIN:STANDARD
+        DTSTART:16010101T030000
+        TZOFFSETTO:+0100
+        TZOFFSETFROM:+0200
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=10;BYDAY=-1SU
+        TZNAME:CET
+        END:STANDARD
+        BEGIN:DAYLIGHT
+        DTSTART:16010101T020000
+        TZOFFSETTO:+0200
+        TZOFFSETFROM:+0100
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=3;BYDAY=-1SU
+        TZNAME:CEST
+        END:DAYLIGHT
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        UID:381397dd-d5eb-4955-af83-f91ebfe9ba99
+        SUMMARY:g
+        ORGANIZER:mailto:pbrdv@genci.fr
+        DTSTART;TZID="Europe/Brussels":20261013T113000
+        DTEND;TZID="Europe/Brussels":20261013T133000
+        STATUS:CONFIRMED
+        CLASS:PUBLIC
+        TRANSP:OPAQUE
+        LAST-MODIFIED:20261005T121420Z
+        DTSTAMP:20261005T121420Z
+        SEQUENCE:0
+        BEGIN:VALARM
+        ACTION:DISPLAY
+        TRIGGER;RELATED=START:-PT15M
+        DESCRIPTION:Reminder
+        END:VALARM
+        END:VEVENT
+        END:VCALENDAR</C:calendar-data>
+                <D:getetag>"29-29"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/c04a78ba-e0ec-48da-89b3-755069e7b09a.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav">BEGIN:VCALENDAR
+        PRODID:Zimbra-Calendar-Provider
+        VERSION:2.0
+        BEGIN:VTIMEZONE
+        TZID:Europe/Brussels
+        BEGIN:STANDARD
+        DTSTART:16010101T030000
+        TZOFFSETTO:+0100
+        TZOFFSETFROM:+0200
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=10;BYDAY=-1SU
+        TZNAME:CET
+        END:STANDARD
+        BEGIN:DAYLIGHT
+        DTSTART:16010101T020000
+        TZOFFSETTO:+0200
+        TZOFFSETFROM:+0100
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=3;BYDAY=-1SU
+        TZNAME:CEST
+        END:DAYLIGHT
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        UID:c04a78ba-e0ec-48da-89b3-755069e7b09a
+        SUMMARY:h
+        ORGANIZER:mailto:pbrdv@genci.fr
+        DTSTART;TZID="Europe/Brussels":20261014T130000
+        DTEND;TZID="Europe/Brussels":20261014T150000
+        STATUS:CONFIRMED
+        CLASS:PUBLIC
+        TRANSP:OPAQUE
+        LAST-MODIFIED:20261005T121422Z
+        DTSTAMP:20261005T121422Z
+        SEQUENCE:0
+        BEGIN:VALARM
+        ACTION:DISPLAY
+        TRIGGER;RELATED=START:-PT15M
+        DESCRIPTION:Reminder
+        END:VALARM
+        END:VEVENT
+        END:VCALENDAR</C:calendar-data>
+                <D:getetag>"30-30"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/1c4f8a8c-92ee-4129-a713-eed72e0af0f4.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav">BEGIN:VCALENDAR
+        PRODID:Zimbra-Calendar-Provider
+        VERSION:2.0
+        BEGIN:VTIMEZONE
+        TZID:Europe/Brussels
+        BEGIN:STANDARD
+        DTSTART:16010101T030000
+        TZOFFSETTO:+0100
+        TZOFFSETFROM:+0200
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=10;BYDAY=-1SU
+        TZNAME:CET
+        END:STANDARD
+        BEGIN:DAYLIGHT
+        DTSTART:16010101T020000
+        TZOFFSETTO:+0200
+        TZOFFSETFROM:+0100
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=3;BYDAY=-1SU
+        TZNAME:CEST
+        END:DAYLIGHT
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        UID:1c4f8a8c-92ee-4129-a713-eed72e0af0f4
+        SUMMARY:j
+        ORGANIZER:mailto:pbrdv@genci.fr
+        DTSTART;TZID="Europe/Brussels":20261016T153000
+        DTEND;TZID="Europe/Brussels":20261016T173000
+        STATUS:CONFIRMED
+        CLASS:PUBLIC
+        TRANSP:OPAQUE
+        LAST-MODIFIED:20261005T121426Z
+        DTSTAMP:20261005T121426Z
+        SEQUENCE:0
+        BEGIN:VALARM
+        ACTION:DISPLAY
+        TRIGGER;RELATED=START:-PT15M
+        DESCRIPTION:Reminder
+        END:VALARM
+        END:VEVENT
+        END:VCALENDAR</C:calendar-data>
+                <D:getetag>"32-32"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+          <D:response>
+            <D:href>/dav/pbrdv%40genci.fr/Calendar/589fdf37-b531-4387-a707-a1eb4e00b9fa.ics</D:href>
+            <D:propstat>
+              <D:status>HTTP/1.1 200 OK</D:status>
+              <D:prop>
+                <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav">BEGIN:VCALENDAR
+        PRODID:Zimbra-Calendar-Provider
+        VERSION:2.0
+        BEGIN:VTIMEZONE
+        TZID:Europe/Brussels
+        BEGIN:STANDARD
+        DTSTART:16010101T030000
+        TZOFFSETTO:+0100
+        TZOFFSETFROM:+0200
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=10;BYDAY=-1SU
+        TZNAME:CET
+        END:STANDARD
+        BEGIN:DAYLIGHT
+        DTSTART:16010101T020000
+        TZOFFSETTO:+0200
+        TZOFFSETFROM:+0100
+        RRULE:FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=3;BYDAY=-1SU
+        TZNAME:CEST
+        END:DAYLIGHT
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        UID:589fdf37-b531-4387-a707-a1eb4e00b9fa
+        SUMMARY:b
+        ORGANIZER:mailto:pbrdv@genci.fr
+        DTSTART;TZID="Europe/Brussels":20261006T100000
+        DTEND;TZID="Europe/Brussels":20261006T113000
+        STATUS:CONFIRMED
+        CLASS:PUBLIC
+        TRANSP:OPAQUE
+        LAST-MODIFIED:20261005T121407Z
+        DTSTAMP:20261005T121407Z
+        SEQUENCE:0
+        BEGIN:VALARM
+        ACTION:DISPLAY
+        TRIGGER;RELATED=START:-PT15M
+        DESCRIPTION:Reminder
+        END:VALARM
+        END:VEVENT
+        END:VCALENDAR</C:calendar-data>
+                <D:getetag>"24-24"</D:getetag>
+              </D:prop>
+            </D:propstat>
+          </D:response>
+        </D:multistatus>
+  recorded_at: Mon, 05 Oct 2026 12:21:20 GMT
+recorded_with: VCR 6.4.0

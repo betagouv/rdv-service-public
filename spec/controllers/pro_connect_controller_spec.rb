@@ -167,6 +167,33 @@ RSpec.describe ProConnectController do
         end
       end
 
+      context "échange du jeton Menshen" do
+        context "quand Menshen est configuré" do
+          stub_env_with(
+            MENSHEN_BASE_URL: "https://menshen.example.org",
+            MENSHEN_CLIENT_ID: "rdv-service-public",
+            MENSHEN_CLIENT_SECRET: "un faux secret de test",
+            MENSHEN_AUDIENCE: "visio"
+          )
+
+          it "enqueue un job d'échange du jeton Menshen en asynchrone, pour ne pas ralentir la ProConnexion" do
+            agent = create(:agent, email: user_info["email"])
+            expect do
+              get :callback, params: { state:, code: }
+            end.to have_enqueued_job(MenshenExchangeTokenJob).with(agent.id, "fake proconnect access token")
+          end
+        end
+
+        context "quand Menshen n'est pas configuré" do
+          it "n'enqueue pas de job d'échange du jeton Menshen" do
+            create(:agent, email: user_info["email"])
+            expect do
+              get :callback, params: { state:, code: }
+            end.not_to have_enqueued_job(MenshenExchangeTokenJob)
+          end
+        end
+      end
+
       context "when an agent exists with the given email address and no sub" do
         it "updates the existing agent's sub" do
           agent = create(:agent, email: user_info["email"])
@@ -337,20 +364,20 @@ RSpec.describe ProConnectController do
           it "stocke l’id de l’agent dans la session comme connexion en attente" do
             agent = create(:agent, email: user_info["email"], sensitive_account: true)
             get :callback, params: { state:, code: }
-            expect(session[Agents::SessionsByCodeController::SESSION_AGENT_ID_KEY]).to eq(agent.id)
+            expect(session[Agents::SignInCodeVerificationsController::SESSION_AGENT_ID_KEY]).to eq(agent.id)
           end
 
           it "stocke le token ProConnect comme pending et non comme token actif" do
             create(:agent, email: user_info["email"], sensitive_account: true)
             get :callback, params: { state:, code: }
-            expect(session[Agents::SessionsByCodeController::SESSION_PRO_CONNECT_ID_TOKEN_KEY]).to be_present
+            expect(session[Agents::SignInCodeVerificationsController::SESSION_PRO_CONNECT_ID_TOKEN_KEY]).to be_present
             expect(session[:pro_connect_id_token]).to be_nil
           end
 
           it "redirige vers le formulaire de vérification par code" do
             create(:agent, email: user_info["email"], sensitive_account: true)
             get :callback, params: { state:, code: }
-            expect(response).to redirect_to(new_agents_sessions_by_code_path)
+            expect(response).to redirect_to(new_agents_sign_in_code_verification_path)
           end
 
           it "crée et envoie un code de connexion par email" do

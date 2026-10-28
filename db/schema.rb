@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_15_134863) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_23_154605) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -162,6 +162,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_15_134863) do
     t.string "pro_connect_idp_id", comment: "Fournisseur d'identité ProConnect (identity provider)"
     t.boolean "sensitive_account", default: false, null: false
     t.boolean "display_extended_hours", default: false, null: false
+    t.text "menshen_access_token"
+    t.datetime "menshen_access_token_expires_at"
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -231,6 +233,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_15_134863) do
     t.datetime "updated_at", null: false
     t.string "caldav_calendar_name"
     t.string "caldav_calendar_color", limit: 7
+    t.string "caldav_ctag"
     t.index ["agent_id"], name: "index_caldav_configs_on_agent_id", unique: true
   end
 
@@ -262,6 +265,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_15_134863) do
     t.datetime "ends_at", null: false
     t.string "url", null: false
     t.text "raw_ical"
+    t.string "etag"
     t.index ["agent_id", "starts_at"], name: "index_external_calendar_events_on_agent_id_and_starts_at"
     t.index ["agent_id", "url"], name: "index_external_calendar_events_on_agent_id_and_url", unique: true
   end

@@ -1,5 +1,6 @@
 - organisations_by_territory = organisations_grouped_by_territory_for_switcher
 - multiple_territories = organisations_by_territory.size > 1
+- joinable_organisations_count_by_territory_id = Agent::OrganisationPolicy::JoinableScope.new(current_agent, Organisation).resolve.group(:territory_id).count
 
 dialog#organisation-switcher-modal.fr-modal[aria-labelledby="organisation-switcher-modal-title" data-fr-concealing-backdrop="true"]
   .fr-container.fr-container--fluid.fr-container-md
@@ -29,3 +30,9 @@ dialog#organisation-switcher-modal.fr-modal[aria-labelledby="organisation-switch
                         span.d-flex.align-items-center
                           = organisation.name
                         = icon("fr-icon-arrow-right-s-line")
+              - joinable_organisations_count = joinable_organisations_count_by_territory_id.fetch(territory.id, 0)
+              - if joinable_organisations_count.positive?
+                = dsfr_alert type: :info, size: :sm, html_attributes: { class: "fr-mb-3w" } do
+                  = t(".joinable_organisations_notice", count: joinable_organisations_count)
+                  br
+                  = link_to "Voir les organisations de l’espace", admin_territory_organisations_path(territory), class: "fr-link fr-link--sm"

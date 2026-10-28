@@ -36,6 +36,23 @@
   outline: none;
 
   .fr-text-mention--grey {
-    color: inherit;
+    // il y a déjà un important dans le DSFR :(
+    color: var(--text-inverted-blue-france) !important;
+  }
+}
+
+/* Règles spécifiques à l'affichage côté usager sur l’accueil de RDVS */
+
+.fr-search-bar {
+  // accessible-autocomplete imbrique l'input dans un div
+  & > div {
+    flex: 1; // nécessaire pour que le bouton Rechercher reste sur la même ligne
+    min-width: 0;
+    width: auto;
+
+    .autocomplete__wrapper,
+    .autocomplete__input {
+      height: 100%; // nécessaire pour que l'input s'étire à la hauteur du bouton (align-items: stretch du fr-search-bar)
+    }
   }
 }

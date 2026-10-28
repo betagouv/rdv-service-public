@@ -30,7 +30,7 @@
           .card-body
             - if @instance_export.new_instance_organisations.empty?
               h3.fr-h5= @instance_export.source_organisation.name
-            - elsif @instance_export.new_instance_organisations.count == 1
+            - elsif @instance_export.new_instance_organisations.one?
               h3.fr-h5= @instance_export.source_organisation.name
               = form.hidden_field :destination_organisation_id, value: @instance_export.new_instance_organisations.first["id"]
             - else

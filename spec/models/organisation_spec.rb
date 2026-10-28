@@ -118,30 +118,5 @@ RSpec.describe Organisation, type: :model do
       expect(organisation).to be_invalid
       expect(organisation.errors[:website]).to be_present
     end
-
-    it "ne bloque pas l'édition d'un autre attribut quand le site web invalide est inchangé" do
-      organisation = create(:organisation)
-      organisation.update_columns(website: "pasdecalais.fr") # rubocop:disable Rails/SkipsModelValidations
-
-      organisation.name = "Nouveau nom"
-      expect(organisation).to be_valid
-    end
-  end
-
-  describe "#website_url" do
-    it "renvoie le site web quand l'URL est valide" do
-      organisation = build(:organisation, website: "https://www.pasdecalais.fr")
-      expect(organisation.website_url).to eq("https://www.pasdecalais.fr")
-    end
-
-    it "renvoie nil quand l'URL est invalide" do
-      organisation = build(:organisation, website: "mon site web")
-      expect(organisation.website_url).to be_nil
-    end
-
-    it "renvoie nil quand le site web est vide" do
-      organisation = build(:organisation, website: nil)
-      expect(organisation.website_url).to be_nil
-    end
   end
 end

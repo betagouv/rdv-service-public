@@ -1,8 +1,8 @@
 # See https://www.bigbinary.com/blog/rails-5-2-allows-mailers-to-use-custom-active-job-class
 
-class MailArgumentError < StandardError; end
-
 class ApplicationMailerDeliveryJob < ActionMailer::MailDeliveryJob
+  class MailArgumentError < StandardError; end
+
   include DefaultJobBehaviour
 
   queue_as :latency_30s

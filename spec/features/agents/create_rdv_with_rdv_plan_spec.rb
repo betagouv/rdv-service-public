@@ -2,7 +2,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
   let!(:organisation) { create(:organisation, name: "CCAS de Montreuil") }
   let(:application) do
     create(:oauth_application,
-           name: "Démarches Simplifiées",
+           name: "Démarche Numérique",
            redirect_uri: "http://localhost:4567/omniauth/rdvservicepublic/callback\nhttp://demo.demarches-simplifiees.fr/omniauth/rdvservicepublic/callback")
   end
   let!(:agent) do
@@ -79,7 +79,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     expect(emails.map { [_1.to, _1.subject] }).to include([["newaddress@exemple.com"], a_string_matching(/RDV confirmé le/)])
     expect(emails.map { [_1.to, _1.subject] }).to include([[agent.email], a_string_matching(/Nouveau RDV ajouté pour .+ sur votre agenda/)])
 
-    expect(page).to have_content("Retour sur Démarches Simplifiées")
+    expect(page).to have_content("Retour sur Démarche Numérique")
   end
 
   context "quand il y a d'autres agents dans l'organisation" do

@@ -62,6 +62,8 @@ class Agent < ApplicationRecord
   # on retire les espaces parfois présents dans les SIRET ProConnect
   normalizes :proconnect_siret, with: -> { _1.presence&.gsub(/\s/, "") }
 
+  encrypts :menshen_access_token
+
   enum :rdv_notifications_level, {
     all: "all",       # notify of all rdv changes
     others: "others", # notify of changes made by other agents or users
@@ -172,10 +174,6 @@ class Agent < ApplicationRecord
     # Les agents complets sont soit des intervenant qui n'ont pas reçu d'invitation,
     # soit des agents normaux qui ont reçu et accepté leur invitation
     invitation_sent_at.nil? || invitation_accepted_at.present?
-  end
-
-  def should_link_pro_connect_for_visio?
-    pro_connect_openid_sub.blank? && plage_ouvertures.joins(:motifs).merge(Motif.visio).exists?
   end
 
   def soft_delete

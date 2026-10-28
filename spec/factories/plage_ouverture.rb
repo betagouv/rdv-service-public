@@ -66,11 +66,10 @@ FactoryBot.define do
 
     trait :expired do
       # Used to avoid refresh_expired_cached callback when needed for test
-      # rubocop:disable Rails/SkipsModelValidations
+      # rubocop:disable-next Rails/SkipsModelValidations
       after(:create) do |plage_ouverture|
         plage_ouverture.update_column(:expired_cached, true)
       end
-      # rubocop:enable Rails/SkipsModelValidations
     end
   end
 end

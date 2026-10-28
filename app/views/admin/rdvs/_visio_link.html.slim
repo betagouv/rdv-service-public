@@ -1,0 +1,9 @@
+/# locals: (rdv:, label:)
+- if rdv.visio_url.present?
+  = link_to(label, rdv.visio_url, target: :_blank)
+- elsif session[:pro_connect_access_token].present?
+  = link_to("Générer le lien de visioconférence", create_visio_room_agents_rdv_path(rdv), class: "fr-btn fr-btn--sm fr-btn--secondary", data: { turbo_method: :post })
+- else
+  = dsfr_alert type: :info, size: :sm, html_attributes: { class: "fr-mt-1w" } do
+    | Pour générer le lien de visioconférence, vous devez être connecté·e via ProConnect.
+    =< link_to("Associer mon compte à ProConnect", agents_pro_connect_linking_path)

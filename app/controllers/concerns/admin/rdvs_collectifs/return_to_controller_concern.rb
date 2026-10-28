@@ -9,12 +9,11 @@
 module Admin::RdvsCollectifs::ReturnToControllerConcern
   extend ActiveSupport::Concern
 
-  # rubocop:disable Rails/LexicallyScopedActionFilter
+  # rubocop:disable-next Rails/LexicallyScopedActionFilter
   included do
     before_action :store_return_to, only: :edit
     before_action :fetch_return_to, only: :update
   end
-  # rubocop:enable Rails/LexicallyScopedActionFilter
 
   private
 

@@ -8,7 +8,7 @@ class AddCreatedByToRdvsUsers < ActiveRecord::Migration[7.0]
     add_column :rdvs_users, :created_by, :created_by, null: true
 
     # migrate created_by :agent
-    execute(<<-SQL.squish
+    execute(<<~SQL.squish
       UPDATE rdvs_users
       SET created_by = 'agent'
       FROM rdvs
@@ -18,7 +18,7 @@ class AddCreatedByToRdvsUsers < ActiveRecord::Migration[7.0]
            )
 
     # migrate created_by :user
-    execute(<<-SQL.squish
+    execute(<<~SQL.squish
       UPDATE rdvs_users
       SET created_by = 'user'
       FROM rdvs
@@ -28,7 +28,7 @@ class AddCreatedByToRdvsUsers < ActiveRecord::Migration[7.0]
            )
 
     # migrate created_by :file_attente to user
-    execute(<<-SQL.squish
+    execute(<<~SQL.squish
       UPDATE rdvs_users
       SET created_by = 'user'
       FROM rdvs
@@ -38,7 +38,7 @@ class AddCreatedByToRdvsUsers < ActiveRecord::Migration[7.0]
            )
 
     # migrate created_by :prescripteur
-    execute(<<-SQL.squish
+    execute(<<~SQL.squish
       UPDATE rdvs_users
       SET created_by = 'prescripteur'
       FROM rdvs
@@ -48,7 +48,7 @@ class AddCreatedByToRdvsUsers < ActiveRecord::Migration[7.0]
            )
 
     add_timestamps :rdvs_users, null: true
-    execute(<<-SQL.squish
+    execute(<<~SQL.squish
       UPDATE rdvs_users SET
       created_at = (SELECT created_at FROM rdvs WHERE rdvs_users.rdv_id = rdvs.id),
       updated_at = (SELECT updated_at FROM rdvs WHERE rdvs_users.rdv_id = rdvs.id)

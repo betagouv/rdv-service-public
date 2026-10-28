@@ -16,5 +16,9 @@
             - if current_agent.admin_in_organisation?(organisation)
               = icon("fr-icon-user-setting-fill", class: "fr-icon--sm fr-text-mention--grey", title: "Vous administrez cette organisation")
       - if policy(Organisation.new(territory: territory), policy_class: Agent::OrganisationPolicy).new?
+        - joinable_organisations_count = @joinable_organisations_count_by_territory_id.fetch(territory.id, 0)
+        - if joinable_organisations_count.positive?
+          = dsfr_alert type: :info, size: :sm, html_attributes: { class: "fr-mt-4w fr-mx-2w" } do
+            = t(".joinable_organisations_notice", count: joinable_organisations_count)
         .fr-mt-4w.fr-ml-2w
           = link_to "Gérer les organisations", admin_territory_organisations_path(territory), class: "fr-btn fr-btn--secondary"

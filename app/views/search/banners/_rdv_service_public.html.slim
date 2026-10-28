@@ -7,7 +7,7 @@ span Prenez rendez-vous
     = context.public_link_organisation.name
 - else
   - territories = Territory.where(departement_number: context.departement)
-  - territory = territories.count == 1 ? territories.first : nil
+  - territory = territories.one? ? territories.first : nil
   - if territory&.name.present?
     = " avec "
     br.fr-hidden.fr-unhidden-md

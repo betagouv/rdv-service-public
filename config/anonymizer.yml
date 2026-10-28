@@ -98,6 +98,8 @@ tables:
       - pro_connect_2fa_active
       - pro_connect_idp_id
       - sensitive_account
+      - menshen_access_token
+      - menshen_access_token_expires_at
     non_anonymized_column_names:
       - reset_password_sent_at
       - last_sign_in_at
@@ -519,6 +521,7 @@ tables:
     anonymized_column_names:
       - url
       - raw_ical
+      - etag
     non_anonymized_column_names:
       - agent_id
       - starts_at

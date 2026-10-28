@@ -11,7 +11,7 @@ ruby:
   = render "common/fil_ariane", titles_and_paths:, current_page_title: @user.full_name
 
 - content_for :right_of_page_title do
-  - @user.external_references.each do |reference|
+  - @user.external_references.where.not(external_url: nil).each do |reference|
     = link_to("Voir sur #{reference.oauth_application.name}", reference.external_url, target: :_blank, class: "fr-btn fr-btn--secondary fr-mr-2w")
 
   = link_to "Trouver un RDV pour l’usager", admin_organisation_creneaux_search_path(current_organisation, user_ids: [@user.id]), class: "fr-btn fr-btn--secondary", title: "Trouver un RDV pour l’usager #{@user.full_name}"
@@ -104,7 +104,10 @@ ruby:
 
     - if current_agent.feature_enabled?("rdv_invitations")
       .card
-        .card-header Invitations en attente
+        .card-header
+          .d-flex.justify-content-between.rdv-align-items-baseline
+            span Invitations en attente
+            = link_to "Inviter à prendre rendez-vous", edit_motif_admin_organisation_rdv_invitations_path(current_organisation, user_id: @user.id), class: "fr-btn fr-btn--tertiary fr-btn--sm", title: "Voir tous les RDV de l’usager #{@user.full_name}"
         .card-body
           = render "admin/users/pending_invitations", user: @user
     .card
@@ -118,7 +121,7 @@ ruby:
           .mt-1
             | Statuts
             small.fr-text-mention--grey< sur #{@participations.count} RDV
-          - if @user.rdvs.count > 0
+          - if @user.rdvs.any?
             = link_to "Voir tous les RDV de l’usager", admin_organisation_rdvs_path(current_organisation, user_id: @user.id), class: "fr-btn fr-btn--tertiary fr-btn--sm", title: "Voir tous les RDV de l’usager #{@user.full_name}"
       .card-body
         .row

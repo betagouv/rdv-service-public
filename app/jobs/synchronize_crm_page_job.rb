@@ -1,4 +1,17 @@
 class SynchronizeCrmPageJob < ApplicationJob
+  include GoodJob::ActiveJobExtensions::Concurrency
+
+  good_job_control_concurrency_with(perform_limit: 1) # NOTE: le rate limit 3 req/s est partagé avec le cron parent
+
+  # Le 429 est transitoire : on attend 5 minutes entre chaque tentative,
+  # sans épuiser les 13 tentatives du retry_on StandardError du DefaultJobBehaviour
+  retry_on Notion::Api::Errors::TooManyRequests, wait: 5.minutes, attempts: 10, priority: DefaultJobBehaviour::PRIORITY_OF_RETRIES
+
+  # Les erreurs Notion définitives ne méritent pas d'être retentées
+  discard_on(Notion::Api::Errors::ObjectNotFound) { |_job, error| Sentry.capture_exception(error) }
+  discard_on(Notion::Api::Errors::Unauthorized) { |_job, error| Sentry.capture_exception(error) }
+  discard_on(Notion::Api::Errors::Forbidden) { |_job, error| Sentry.capture_exception(error) }
+
   queue_as :latency_whenever
 
   def perform(notion_page_id:, account_url:, notion_page_url:, notion_page_title:)

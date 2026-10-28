@@ -63,7 +63,6 @@ class AddCommentsForMetabase < ActiveRecord::Migration[7.0]
       from: nil, to: <<~COMMENT
         Instructions à accepter avant la prise du rendez-vous par l'usager
       COMMENT
-
     )
     change_column_comment(
       :motifs, :instruction_for_rdv,

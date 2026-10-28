@@ -83,4 +83,39 @@ RSpec.describe FaradaySentryBreadcrumbsMiddleware do
       expect(request_breadcrumb.data[:body]).to eq("[SCRUBBED]")
     end
   end
+
+  describe "scrub_authorization_header option" do
+    it "scrubs the Authorization header when set to true" do
+      stub_request(:post, "https://example.com/posts")
+
+      connection = Faraday.new("https://example.com") do |builder|
+        builder.use :sentry_breadcrumbs, scrub_authorization_header: true
+      end
+
+      connection.post("/posts", nil, { Authorization: "Token token=abcd1234efgh" })
+      Sentry.capture_message("woops")
+
+      request_breadcrumb, _response_breadcrumb = sentry_events.last.breadcrumbs.compact
+
+      expect(request_breadcrumb.data[:headers]).to eq({ "Authorization" => "[SCRUBBED]", "User-Agent" => "Faraday v2.14.3" })
+    end
+  end
+
+  describe "scrub_response_body option" do
+    it "scrubs the response body when set to true" do
+      stub_request(:post, "https://example.com/posts")
+        .to_return(status: 200, body: '{"access_token": "secret"}')
+
+      connection = Faraday.new("https://example.com") do |builder|
+        builder.use :sentry_breadcrumbs, scrub_response_body: true
+      end
+
+      connection.post("/posts")
+      Sentry.capture_message("woops")
+
+      _request_breadcrumb, response_breadcrumb = sentry_events.last.breadcrumbs.compact
+
+      expect(response_breadcrumb.data[:body]).to eq("[SCRUBBED]")
+    end
+  end
 end
