@@ -1,0 +1,8 @@
+.rdv-blog-post-meta.fr-mb-2w
+  p.fr-text--sm.fr-icon-calendar-line.fr-icon--sm.fr-mb-0
+    time<> datetime=post.published_at.to_date.iso8601
+      = l(post.published_at.to_date, format: :long)
+  - if post.categories.any?
+    ul.fr-tags-group.fr-mt-2v
+      - post.categories.each do |category|
+        li = dsfr_tag(title: category, size: :sm)

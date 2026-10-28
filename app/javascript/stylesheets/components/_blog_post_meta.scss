@@ -1,0 +1,16 @@
+// Date et catégories d'une nouveauté, sur une seule ligne
+.rdv-blog-post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1rem;
+  color: var(--text-mention-grey);
+
+  .fr-tags-group {
+    margin: 0;
+
+    > li {
+      line-height: normal;
+    }
+  }
+}
