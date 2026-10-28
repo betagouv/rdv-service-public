@@ -44,11 +44,15 @@ module CalendavInnerEventMemoization
   private
 
   def inner_calendar
-    @inner_calendar ||= super
+    return @inner_calendar if defined?(@inner_calendar)
+
+    @inner_calendar = super
   end
 
   def inner_event
-    @inner_event ||= super
+    return @inner_event if defined?(@inner_event)
+
+    @inner_event = super
   end
 end
 
