@@ -141,6 +141,20 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
     it_behaves_like "permit actions", :rdv, :show?, :create_visio_room?
   end
 
+  context "quand le scope s’applique aux RDV de l’agent et que le RDV a plusieurs agents assignés" do
+    let(:organisation) { create(:organisation) }
+    let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+    let(:autre_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+    let(:motif) { create(:motif, organisation: organisation, service: nil) }
+    let!(:rdv) { create(:rdv, agents: [agent, autre_agent], motif: motif, organisation: organisation) }
+    let(:pundit_context) { AgentOrganisationContext.new(agent, organisation) }
+
+    it "ne renvoie pas le RDV en double" do
+      scope = Agent::RdvPolicy::Scope.new(pundit_context, agent.rdvs).resolve
+      expect(scope.to_a).to eq([rdv])
+    end
+  end
+
   # Certains controllers ajoutent des usagers à un RDV à travers
   # `@rdv.participations.build(...)`, puis appellent cette policy.
   # Cette section teste ce cas de figure.

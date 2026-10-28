@@ -51,4 +51,18 @@ RSpec.describe "Les agents peuvent renseigner le statut des rendez-vous pour nou
     expect(page).to have_content("Rendez-vous mis à jour")
     expect(rdv.reload.status).to eq("unknown")
   end
+
+  context "quand un rendez-vous a plusieurs agents assignés" do
+    let(:autre_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+    let!(:rdv_multi_agents) do
+      create(:rdv, :past, status: :unknown, agents: [agent, autre_agent], motif: create(:motif, organisation:), organisation:)
+    end
+
+    it "affiche le bon compteur et la page ne liste ce RDV qu'une fois" do
+      visit root_path
+      expect(page).to have_link("2 RDV à renseigner") # il y a aussi le RDV du contexte partagé l.27
+      click_on "2 RDV à renseigner"
+      expect(page).to have_css("#rdv-#{rdv_multi_agents.id}", count: 1)
+    end
+  end
 end
