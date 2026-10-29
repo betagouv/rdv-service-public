@@ -6,7 +6,7 @@ RSpec.describe "Agent can see CalDAV sync logs" do
     login_as(agent, scope: :agent)
     visit agents_calendar_sync_caldav_sync_path
 
-    click_on "l'historique de synchro"
+    click_on "Consulter l'historique de synchronisation"
 
     expect(page).to have_current_path(agents_calendar_sync_logs_path)
     expect(page).to have_content("Historique des synchronisations")
