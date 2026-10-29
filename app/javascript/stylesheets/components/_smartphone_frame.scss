@@ -1,0 +1,82 @@
+// Cadre de smartphone Android photoréaliste pour les captures d’écran mobile :
+// - rond noir en haut pour la caméra frontale
+// - boutons volume et power sur les côtés
+// fichier 100% généré par une LLM
+
+.rdv-screenshot-with-smartphone-frame {
+  position: relative;
+  width: 300px;
+  // centrer le téléphone dans sa colonne (le margin vertical vient du .fr-content-media)
+  margin-left: auto;
+  margin-right: auto;
+  padding: 12px;
+  border-radius: 40px;
+  background: linear-gradient(
+    145deg,
+    #9a9a9f 0%,
+    #48484a 35%,
+    #1c1c1e 75%,
+    #000 100%
+  );
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.2),
+    0 30px 60px rgba(0, 0, 0, 0.35),
+    0 10px 20px rgba(0, 0, 0, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.6);
+
+  img {
+    display: block;
+    width: 100%;
+    border-radius: 28px;
+    // liseré noir entre la dalle et le châssis
+    box-shadow: 0 0 0 2px #000;
+  }
+
+  // reflet du verre de l’écran + punch hole de la caméra frontale
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border-radius: 28px;
+    background: linear-gradient(
+        115deg,
+        transparent 42%,
+        rgba(255, 255, 255, 0.3) 47%,
+        rgba(255, 255, 255, 0.08) 56%,
+        transparent 62%
+      ),
+      linear-gradient(
+        115deg,
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0.1) 25%,
+        transparent 45%
+      ),
+      radial-gradient(
+        circle 6px at 50% 8px,
+        #4a4a4c 0,
+        #4a4a4c 1.5px,
+        #000 2.5px,
+        #000 5.5px,
+        transparent 6px
+      );
+    // écran en retrait dans le châssis
+    box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+  }
+
+  // bouton power à droite, boutons volume à gauche (copies par box-shadow)
+  &::after {
+    content: "";
+    position: absolute;
+    top: 90px;
+    right: -3px;
+    width: 4px;
+    height: 44px;
+    border-radius: 2px;
+    background: #3a3a3c;
+    box-shadow:
+      -302px -48px 0 0 #3a3a3c,
+      -302px 4px 0 0 #3a3a3c;
+  }
+}
