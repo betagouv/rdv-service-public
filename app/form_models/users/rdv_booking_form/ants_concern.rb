@@ -20,7 +20,7 @@ module Users::RdvBookingForm::AntsConcern
 
   # method override
   def selectable_existing_relatives
-    # dans le cas ANTS, on peut modifier des proches existants à la volée pour définir leur numéro de pré-demande
+    # dans le cas ANTS, on peut modifier des proches existants à la volée pour définir leur numéro de pré-demande
     # il faut donc afficher les proches déjà chargés et modifiés via les relatives_attributes + les autres
     r = @user.relatives.target.select(&:persisted?)
     r += User.where(responsible_id: @user.id).where.not(id: r.pluck(:id)).to_a
@@ -38,7 +38,7 @@ module Users::RdvBookingForm::AntsConcern
         sc.validates :ants_pre_demande_number, presence: true
         sc.validates_with AntsPreDemandeNumberStatusValidation
       end
-      # Problème: responsible pointe vers @user, qui est en cours de modif, et donc re-validé, et on perd les erreurs déjà ajoutées
+      # Problème: responsible pointe vers @user, qui est en cours de modif, et donc re-validé, et on perd les erreurs déjà ajoutées
       # Solution : On force le rechargement de :responsible sur chaque proche juste avant de valider @user. responsible pointe alors vers une copie non modifiée qui ne déclenche rien.
       # Plus tard : quand accepts_nested_attributes_for :responsible sera supprimé, on pourra simplifier ce hack
       relative.association(:responsible).reset

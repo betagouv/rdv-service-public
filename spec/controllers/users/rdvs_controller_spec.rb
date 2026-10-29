@@ -45,7 +45,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
           put :cancel, params: { id: rdv.id }
           expect(response).to redirect_to(users_rdvs_path)
-          expect(flash[:error]).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action")
+          expect(flash[:error]).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action")
         end
       end
     end
@@ -280,7 +280,7 @@ RSpec.describe Users::RdvsController, type: :controller do
           get :index
 
           expect(response).to redirect_to(root_path)
-          expect(flash[:error]).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action")
+          expect(flash[:error]).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action")
         end
       end
     end
@@ -350,7 +350,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       before { subject }
 
       it { expect(response).to redirect_to(users_rdvs_path) }
-      it { expect(flash[:error]).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action") }
+      it { expect(flash[:error]).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action") }
     end
   end
 

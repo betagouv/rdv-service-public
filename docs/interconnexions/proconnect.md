@@ -82,7 +82,7 @@ DOMAIN=demo.rdv-solidarites.fr bundle exec rails runner "puts URI.decode_www_for
 
 Un compte pré-existant utilisable : `user@yopmail.com` : mot de passe `user@yopmail.com` a accès à de nombreuses organisations
 
-Vous pouvez aussi utiliser n’importe quelle adresse mail à laquelle vous avez accès pour créer un nouveau compte.
+Vous pouvez aussi utiliser n’importe quelle adresse mail à laquelle vous avez accès pour créer un nouveau compte.
 Il faudra en effet valider la création du compte en recopiant un code de confirmation reçu par email.
 
 cf https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/identifiants-fi-test

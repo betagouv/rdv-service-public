@@ -7,7 +7,7 @@ Pour tester FranceConnect en local, il y a 2 possibilités :
 1. utiliser les credentials de test des apps FS bac à sable partagées
 2. créer des nouvelles apps FS bac à sable
 
-### 1. utiliser les credentials de test des apps FS bac à sable partagées
+### 1. utiliser les credentials de test des apps FS bac à sable partagées
 
 - Récupérer toutes les clés secrètes des applis FS bac à sable FranceConnect de dev depuis Vaultwarden.
   L’entrée Vaultwarden s’appelle : «  FranceConnect v2 (local) - tous domaines - .env ».
@@ -36,7 +36,7 @@ Par exemple :
 FranceConnect ne supporte QUE l'identifier type `pairwise`
 
 Les FI doivent renvoyer des `sub` différents pour un même usager mais pour 2 FS différents.
-Le mécanisme de `sector_identification_uri` permet de palier à ça et de demander à FranceConnect de renvoyer les mêmes subs pour plusieurs FS.
+Le mécanisme de `sector_identification_uri` permet de palier à ça et de demander à FranceConnect de renvoyer les mêmes subs pour plusieurs FS.
 C'est le domaine de cette URL qui est utilisé comme salt des sub.
 
 On a configuré cette valeur sur nos FS cf https://github.com/betagouv/rdv-service-public/pull/5492

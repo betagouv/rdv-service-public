@@ -115,7 +115,7 @@ RSpec.describe "Agent can update a RDV", js: true do
       expect(current_email).to be_nil
     end
 
-    context "un RDV existe à la même heure pour l’agent ajouté" do
+    context "un RDV existe à la même heure pour l’agent ajouté" do
       before { create(:rdv, agents: [agent_jungyoon], starts_at: rdv.starts_at) }
 
       it "affiche un avertissement, une fois contourné l’agent est bien ajouté" do

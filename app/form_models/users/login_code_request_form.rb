@@ -34,7 +34,7 @@ module Users
     def validate_not_sent_too_recently # doublon dans EmailChangeRequestForm
       if LoginCode.most_recent_usable_for(email:)&.very_recent?
         errors.add(:base, <<~ERROR)
-          Un code a été envoyé à #{email} il y a moins de deux minutes.
+          Un code a été envoyé à #{email} il y a moins de deux minutes.
           Vous devriez recevoir ce code d’ici peu de temps.
         ERROR
       end

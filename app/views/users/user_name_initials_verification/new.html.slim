@@ -2,7 +2,7 @@
 
 p.fr-mt-2w
   |> Pour sécuriser l’accès à vos données, veuillez entrer les 3 premières lettres de votre
-  b> nom de famille.
+  b> nom de famille.
 
 .fr-my-4w.rdv-legible-code-form.rdv-three-letters-form
   = form_for @form, url: users_user_name_initials_verification_path, builder: Dsfr::FormBuilder, as: "", display_required_tags: false do |f|
@@ -14,4 +14,4 @@ p.fr-mt-2w
         autocomplete: "off"
     = f.submit "Valider", class: "fr-btn"
 
-p Par exemple : DUP pour Sophie Dupont, DEL pour Jean De La Fontaine ou XI pour Edwige Xi
+p Par exemple : DUP pour Sophie Dupont, DEL pour Jean De La Fontaine ou XI pour Edwige Xi
