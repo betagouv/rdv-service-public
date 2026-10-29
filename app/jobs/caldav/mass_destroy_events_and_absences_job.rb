@@ -11,6 +11,7 @@ module Caldav
       mass_destroy_events(agent)
 
       ExternalCalendarEvent.where(agent:).delete_all
+      AgendaChannel.broadcast_to(agent.id, model: "ExternalCalendarEvent")
 
       agent.caldav_config.destroy!
     end
