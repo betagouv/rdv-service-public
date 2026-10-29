@@ -61,7 +61,7 @@ class Organisation < ApplicationRecord
   scope :attributed_to_sectors, lambda { |sectors:, most_relevant: false|
     attributions = SectorAttribution
       .level_organisation
-      .where(sector_id: sectors.pluck(:id))
+      .where(sector_id: sectors.select(:id))
 
     # if most relevant we take the attributions from the sector with the least
     # attributed organisations
