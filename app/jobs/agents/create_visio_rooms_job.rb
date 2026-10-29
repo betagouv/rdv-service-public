@@ -8,11 +8,10 @@ module Agents
 
     def perform(agent, pro_connect_access_token)
       return if ENV["VISIO_NUMERIQUE_DISABLED"]
-      return if pro_connect_access_token.blank?
 
       rdvs_without_visio_room(agent).find_each do |rdv|
-        visio_url = VisioNumerique::CreateRoom.new(access_token: pro_connect_access_token).visio_url
-        break if visio_url.nil? # jeton expiré ou API indisponible : inutile d'insister
+        visio_url = VisioNumerique::CreateRoom.new(agent:, pro_connect_access_token:).visio_url
+        break if visio_url.nil? # pas de jeton, jeton expiré ou API indisponible : inutile d'insister
 
         # Mise à jour silencieuse : pas de notification, de webhook ni de synchro d'agenda.
         # Les liens déjà envoyés pointent vers une URL stable qui redirige vers la nouvelle salle.
