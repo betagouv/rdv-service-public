@@ -29,6 +29,11 @@ RSpec.describe Caldav::MassDestroyEventsAndAbsencesJob do
     expect(agent.reload.caldav_config).to be_nil
   end
 
+  it "broadcast la nouvelle aux agendas" do
+    expect(AgendaChannel).to receive(:broadcast_to).with(agent.id, model: "ExternalCalendarEvent").and_call_original
+    described_class.new.perform(agent)
+  end
+
   context "quand le serveur répond 404 à la suppression d'un événement" do
     before do
       allow(caldav_events).to receive(:delete)
