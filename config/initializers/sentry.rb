@@ -19,7 +19,11 @@ Sentry.init do |config|
   # Ça a été discuté et validé en termes de protection des données sensibles.
   # cf https://docs.sentry.io/platforms/ruby/guides/rack/migration/#removed-processors
   # cf https://github.com/betagouv/rdv-service-public/pull/5762
-  config.send_default_pii = true
+  # config.data_collection = true
+  config.data_collection.cookies = false
+  config.data_collection.user_info = false # on ne veut pas inclure l'IP
+  config.data_collection.url_query_params = true
+  config.data_collection.http_bodies = [:incoming_request, :outgoing_request]
 
   config.before_send = lambda do |event, _hint|
     return event if !event.respond_to?(:exception) || !event.exception
@@ -39,11 +43,6 @@ Sentry.init do |config|
       redirected_from_sign_in = referer == agent_sign_in_url
       return if record_not_found && redirected_from_sign_in
     end
-
-    # on retire les cookies et l’IP qui viennent de send_default_pii mais qu’on ne veut pas conserver
-    # les IP sont aussi filtrées côté serveur Sentry, c’est une protection supplémentaire ici
-    Sentry::RequestInterface::IP_HEADERS.each { event.request&.headers&.delete(_1) }
-    event.request&.cookies = []
 
     event
   rescue StandardError

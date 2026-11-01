@@ -57,7 +57,7 @@ gem "connection_pool"
 # Flexible authentication solution for Rails with Warden
 gem "devise", "5.0.4"
 # An invitation strategy for Devise
-gem "devise_invitable"
+gem "devise_invitable", "2.0.9"
 # Deliver Devise's emails in the background using ActiveJob.
 gem "devise-async"
 # omniauth provider for Microsoft Graph
