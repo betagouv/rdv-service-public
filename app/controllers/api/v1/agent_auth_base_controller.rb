@@ -9,8 +9,8 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   before_action :set_sentry_context
   before_action :detect_param_injection
 
-  after_action :verify_authorized, except: :index
-  after_action :verify_policy_scoped, only: :index
+  after_action :verify_authorized, except: :index # rubocop:disable Rails/LexicallyScopedActionFilter
+  after_action :verify_policy_scoped, only: :index # rubocop:disable Rails/LexicallyScopedActionFilter
 
   def pundit_user
     AgentOrganisationContext.new(current_agent, current_organisation)
