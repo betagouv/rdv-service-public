@@ -11,11 +11,7 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
 
   # Cet endpoint n'est pas encore documenté, puisqu'il ne permet que de créer une nouvelle organisation pour les comptes sans espace
   def create
-    policy = Agent::TerritoryPolicy.new(current_agent, Territory.new)
-
-    unless policy.new?
-      render(status: :unauthorized, json: {}) and return
-    end
+    authorize(Territory.new, :create?, policy_class: Agent::TerritoryPolicy)
 
     ActiveRecord::Base.transaction do
       @organisation = Organisation.new(organisation_params)
