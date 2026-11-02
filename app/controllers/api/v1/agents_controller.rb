@@ -27,7 +27,7 @@ class Api::V1::AgentsController < Api::V1::AgentAuthBaseController
   end
 
   def me
-    authorize(current_agent, action: :show?, policy_class: Agent::AgentPolicy)
+    authorize(current_agent, :show?, policy_class: Agent::AgentPolicy)
     render_record current_agent
   end
 end
