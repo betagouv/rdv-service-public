@@ -2,7 +2,7 @@ RSpec.describe DocsNumeriqueChangelog do
   let(:doc1_id) { "0b0c5b3e-1f4d-4c2a-9e8f-111111111111" }
   let(:doc2_id) { "0b0c5b3e-1f4d-4c2a-9e8f-222222222222" }
   let(:doc3_id) { "0b0c5b3e-1f4d-4c2a-9e8f-333333333333" }
-  let(:children_url) { "#{DocsNumeriqueChangelog::BASE_URL}/documents/#{DocsNumeriqueChangelog::PARENT_DOCUMENT_ID}/children/" }
+  let(:children_url) { "#{DocsNumeriqueChangelog::BASE_URL}/documents/#{DocsNumeriqueChangelog::PARENT_DOCUMENT_ID}/children/?page_size=1000" }
 
   context "l'API retourne des documents" do
     before do

@@ -10,11 +10,12 @@ module DocsNumeriqueChangelog
     include Singleton
 
     def fetch_and_parse_children_documents(parent_document_id)
-      connection.get("documents/#{parent_document_id}/children/")
+      connection.get("documents/#{parent_document_id}/children/?page_size=1000")
         .body["results"]
         .map { ChildDoc.new(**_1.slice("id", "title").symbolize_keys) }
-        .sort_by(&:published_at).reverse.first(10) # on affiche seulement les 10 derniers dans le produit
-        .each(&:fetch_and_parse_content) # ce découplage permet d'éviter des fetch_content inutiles
+        .sort_by(&:published_at)
+        .reverse
+        .each(&:fetch_and_parse_content) # on lance le fetch du contenu après le parsing du titre pour éviter des requêtes inutiles si le titre est mal formatté
     end
 
     def fetch_content(document_id)

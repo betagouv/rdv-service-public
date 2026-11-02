@@ -1,5 +1,5 @@
 RSpec.describe CronJob::RefreshBlogPostsFromDocsJob do
-  let(:children_url) { "#{DocsNumeriqueChangelog::BASE_URL}/documents/#{DocsNumeriqueChangelog::PARENT_DOCUMENT_ID}/children/" }
+  let(:children_url) { "#{DocsNumeriqueChangelog::BASE_URL}/documents/#{DocsNumeriqueChangelog::PARENT_DOCUMENT_ID}/children/?page_size=1000" }
 
   context "l'API docs.numerique.gouv.fr est disponible (fixtures)" do
     before do
