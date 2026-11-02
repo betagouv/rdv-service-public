@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_23_154605) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_28_180000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -213,12 +213,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_154605) do
     t.string "param_names", default: [], array: true
   end
 
-  create_table "blog_posts", force: :cascade do |t|
+  create_table "blog_posts", id: :uuid, default: nil, force: :cascade do |t|
     t.string "title", null: false
-    t.string "description", null: false
+    t.string "content_truncated_text", null: false
     t.string "categories", default: [], array: true
     t.string "external_url", null: false
     t.datetime "published_at", null: false
+    t.text "content_html", null: false
   end
 
   create_table "caldav_configs", force: :cascade do |t|

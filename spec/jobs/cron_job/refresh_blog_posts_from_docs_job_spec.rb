@@ -1,5 +1,5 @@
 RSpec.describe CronJob::RefreshBlogPostsFromDocsJob do
-  let(:children_url) { "#{DocsNumeriqueChangelog::BASE_URL}/documents/#{DocsNumeriqueChangelog::PARENT_DOCUMENT_ID}/children/" }
+  let(:children_url) { "#{DocsNumeriqueChangelog::BASE_URL}/documents/#{DocsNumeriqueChangelog::PARENT_DOCUMENT_ID}/children/?page_size=1000" }
 
   context "l'API docs.numerique.gouv.fr est disponible (fixtures)" do
     before do
@@ -28,7 +28,8 @@ RSpec.describe CronJob::RefreshBlogPostsFromDocsJob do
       expect(most_recent).to have_attributes(
         title: "Vos RDV collectifs, désormais aussi en visioconférence",
         categories: ["Nouveauté"],
-        description: start_with("Vous pouvez désormais proposer des rendez-vous collectifs en visioconférence."),
+        content_truncated_text: start_with("Vous pouvez désormais proposer des rendez-vous collectifs en visioconférence."),
+        content_html: include("Vous pouvez désormais proposer des rendez-vous collectifs en visioconférence."),
         external_url: "https://docs.numerique.gouv.fr/docs/3cc750d1-9bcf-4b3d-82bd-d9d232cc9de7",
         published_at: Time.zone.local(2026, 1, 15)
       )

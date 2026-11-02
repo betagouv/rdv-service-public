@@ -10,11 +10,12 @@ module DocsNumeriqueChangelog
     include Singleton
 
     def fetch_and_parse_children_documents(parent_document_id)
-      connection.get("documents/#{parent_document_id}/children/")
-        .body["results"]
+      connection.get("documents/#{parent_document_id}/children/?page_size=1000")
+        .body.fetch("results")
         .map { ChildDoc.new(**_1.slice("id", "title").symbolize_keys) }
-        .sort_by(&:published_at).reverse.first(10) # on affiche seulement les 10 derniers dans le produit
-        .each(&:fetch_and_parse_content) # ce découplage permet d'éviter des fetch_content inutiles
+        .sort_by(&:published_at)
+        .reverse
+        .each(&:fetch_and_parse_content) # on lance le fetch du contenu après le parsing du titre pour éviter des requêtes inutiles si le titre est mal formatté
     end
 
     def fetch_content(document_id)
@@ -35,7 +36,7 @@ module DocsNumeriqueChangelog
   end
 
   class ChildDoc
-    attr_reader :id, :title, :categories, :description, :published_at
+    attr_reader :id, :title, :categories, :content_html, :content_truncated_text, :published_at
 
     def initialize(id:, title:)
       @id = id
@@ -43,14 +44,16 @@ module DocsNumeriqueChangelog
     end
 
     def fetch_and_parse_content
-      @content = parse_content(Client.instance.fetch_content(id))
+      parse_content(Client.instance.fetch_content(id))
     end
 
     def to_blog_post
       BlogPost.new(
+        id:,
         title:,
         categories:,
-        description:,
+        content_html:,
+        content_truncated_text:,
         external_url: "https://docs.numerique.gouv.fr/docs/#{id}",
         published_at:
       )
@@ -82,8 +85,11 @@ module DocsNumeriqueChangelog
     end
 
     def parse_content(html_content)
-      doc = Nokogiri::HTML.fragment(html_content)
-      @description = doc.children.map(&:text).join(" ").squish.truncate(500)
+      # Docs fonctionne par blocs : un bloc vide est exporté sous la forme d'un paragraphe
+      # contenant le caractère U+FFFC (OBJECT REPLACEMENT CHARACTER), qu'on remplace par une ligne vide.
+      @content_html = html_content.gsub("<p>\u{FFFC}</p>", "<br>")
+      doc = Nokogiri::HTML.fragment(@content_html)
+      @content_truncated_text = doc.children.map(&:text).join(" ").squish.truncate(500)
     end
   end
 
