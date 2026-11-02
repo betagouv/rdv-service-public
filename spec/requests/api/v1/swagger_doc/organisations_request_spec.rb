@@ -25,12 +25,14 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
       }
 
       parameter(
-        name: :params, # ce nom n'est pas utilisé, car tous les paramètres sont dans le body de la requête
+        name: :_params,
         in: :body,
         schema: {
           type: :object,
           properties: {
-            name: { type: :string },
+            name: { type: :string, required: true, description: "Le nom de l'organisation. Il sera affiché aux agents et aux usagers." },
+            email: { type: :string, required: false,
+                     description: "L'email de contact de l'organisation, qui sera affiché aux usagers lors de la prise de rendez-vous en ligne si aucun créneau n'est disponible.", },
           },
         },
         example: example_params

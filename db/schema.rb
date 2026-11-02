@@ -999,6 +999,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_180000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "subscriptions", default: ["rdv", "absence", "plage_ouverture"], array: true
+    t.string "version", default: "1", null: false
     t.index ["organisation_id", "target_url"], name: "index_webhook_endpoints_on_organisation_id_and_target_url", unique: true
   end
 
