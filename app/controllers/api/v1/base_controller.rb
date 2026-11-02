@@ -18,7 +18,7 @@ class Api::V1::BaseController < ActionController::Base
     record_klass = record.class
     blueprint_klass = "#{record_klass.name}Blueprint".constantize
     root = record.class.model_name.element
-    render json: blueprint_klass.render(record, root: root, **options)
+    render json: blueprint_klass.render(record, root: root, **options), **options
   end
 
   def render_collection(objects, root: nil, blueprint_klass: nil, options: nil)
