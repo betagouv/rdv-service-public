@@ -59,8 +59,7 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
   def create_params
     # Allow creating an absence for an agent identified by their email.
     if params[:agent_id].blank? && params[:agent_email].present?
-      agent = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find_by(email: params[:agent_email])
-      raise ActiveRecord::RecordNotFound unless agent
+      agent = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find_by!(email: params[:agent_email])
 
       params[:agent_id] = agent.id
       params.delete(:agent_email)
