@@ -116,7 +116,7 @@ h1.fr-h3.fr-pt-4w.fr-pb-2w Paramètres avancés
           .fr-tile__header
             .fr-tile__pictogram
               = dsfr_svg "artwork/pictograms/system/flow-list"
-    - if Agent::SectorPolicy.allowed_to_manage_sectors_in?(current_territory, current_agent)
+    - if Agent::SectorPolicy.allowed_to_manage_sectors_in?(current_territory, current_agent) && current_domain.provides_address_selection?
       .fr-col-12.fr-col-md-6.fr-col-lg-4.fr-mb-2w
         .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
           .fr-tile__body
