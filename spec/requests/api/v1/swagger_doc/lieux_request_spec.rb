@@ -29,43 +29,51 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
       operationId "createLieu"
       description "Crée un lieu"
 
-      parameter name: "organisation_id", in: :query, type: :integer, description: "ID de l'organisation", example: 12
-      parameter name: "name", in: :query, type: :string, description: "Le nom de l'organisation", example: "Maison France Service de Montreuil"
-      parameter name: "address", in: :query, type: :string, description: "L'adresse au format 123 Rue Exemple, 12345 Ville", example: "77 avenue de Ségur, 75015 Paris"
-      parameter name: "latitude", in: :query, type: :float
-      parameter name: "longitude", in: :query, type: :float
-      parameter name: "phone_number", in: :query, type: :string, description: "Numéro de téléphone", example: "33600008012", required: false
-      parameter name: "external_reference", in: :query, schema: {
-        type: :object,
-        properties: { external_reference: {
+      parameter(
+        name: :params,
+        in: :body,
+        schema: {
           type: :object,
-          properties: { external_id: { type: :string } },
-        } },
-      }, description: "L'id du lieu dans votre système pour éviter la création de doublons", required: false
+          properties: {
+            organisation_id: { type: :integer, description: "ID de l'organisation", example: 12 },
+            name: { type: :string, description: "Le nom de l'organisation", example: "Maison France Service de Montreuil" },
+            address: { type: :string, description: "L'adresse au format 123 Rue Exemple, 12345 Ville", example: "77 avenue de Ségur, 75015 Paris" },
+            latitude: { type: :number, required: true, example: "48.8475271" },
+            longitude: { type: :number, required: true, example: "2.3036545" },
+            phone_number: { type: :string, description: "Numéro de téléphone", example: "33600008012", required: false },
+            external_reference: { type: :object, schema: {
+              type: :object,
+              properties: { external_reference: {
+                type: :object,
+                properties: { external_id: { type: :string } },
+              } },
+            }, description: "L'id du lieu dans votre système pour éviter la création de doublons", required: false, },
+          },
+        }
+      )
 
       let!(:organisation) { create(:organisation) }
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
       response 200, "Crée et renvoie un lieu" do
-        let(:organisation_id) { organisation.id }
-        let(:latitude) { 44.5569244 }
-        let(:longitude) { 4.7521632 }
-        let(:name) { "Maison France Service de Montreuil" }
-        let(:address) { "77 avenue de Ségur, 75015 Paris" }
-        let(:phone_number) { "01 22 33 44 55" }
-        let(:external_reference) do
+        let(:params) do
           {
+            organisation_id: organisation.id,
+            latitude: 44.5569244,
+            longitude: 4.7521632,
+            name: "Maison France Service de Montreuil",
+            address: "77 avenue de Ségur, 75015 Paris",
+            phone_number: "01 22 33 44 55",
             external_reference: { external_id: "123ABC" },
           }
         end
-
         schema "$ref" => "#/components/schemas/lieu"
 
         run_test!
 
         specify do
           expect(Lieu.last).to have_attributes(
-            address:, name:, latitude:, longitude:, organisation_id:, phone_number:
+            params.slice(:address, :name, :latitude, :longitude, :organisation_id, :phone_number)
           )
 
           expect(Lieu.last.external_references.last).to have_attributes(
