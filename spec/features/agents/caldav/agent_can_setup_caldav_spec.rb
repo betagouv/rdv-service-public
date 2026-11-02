@@ -18,7 +18,8 @@ RSpec.describe "agent can setup CalDAV" do
       click_on "Valider"
 
       expect(page).to have_content("Synchronisation active")
-      expect(page).to have_content("Votre agenda est synchronisé avec l'agenda CalDAV francois.ferrandis.ext@beta.gouv.fr.")
+      expect(page).to have_content("Nom d'utilisateur\nfrancois.ferrandis.ext@beta.gouv.fr")
+      expect(page).to have_content("Nom d’affichage\nMon agenda externe")
 
       expected_attrs = {
         caldav_agenda_url: "https://messagerie.numerique.gouv.fr/dav/caldav/Y2FsOi8vMC8yMjg0OA/",
