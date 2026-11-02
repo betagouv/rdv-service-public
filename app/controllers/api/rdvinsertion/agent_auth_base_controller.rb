@@ -6,6 +6,10 @@ class Api::Rdvinsertion::AgentAuthBaseController < Api::V1::AgentAuthBaseControl
   # - les vérifications ajoutées dans #6719
   skip_before_action :detect_param_injection
 
+  # Cette API n'est pas encore prête à ce qu'on ajoute ces vérifications, mais il faudra le faire
+  skip_after_action :verify_authorized
+  skip_after_action :verify_policy_scoped
+
   private
 
   # L'authentification par secret partagé est faite via un secret partagé avec rdv-insertion qui se trouve

@@ -55,8 +55,6 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   def set_user
     @user = @organisation.present? ? @organisation.users.find(params[:id]) : User.find(params[:id])
     authorize(@user, policy_class: Agent::UserPolicy)
-  rescue ActiveRecord::RecordNotFound
-    render_error :not_found, not_found: :user
   end
 
   def params_for_create

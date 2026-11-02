@@ -13,6 +13,7 @@ class Api::V1::PlageOuverturesController < Api::V1::AgentAuthBaseController
       plage_ouverture.lieu_id = ExternalReference.find_by(item_type: "Lieu", external_id: params[:lieu_external_id])&.item_id
 
       if plage_ouverture.lieu_id.nil?
+        skip_authorization
         render status: :not_found, json: { error_messages: ["Aucun lieu trouvé pour le lieu_external_id #{params[:lieu_external_id]}"] }
         return
       end
@@ -22,6 +23,7 @@ class Api::V1::PlageOuverturesController < Api::V1::AgentAuthBaseController
       plage_ouverture.motif_ids = ExternalReference.where(item_type: "Motif", external_id: params[:motif_external_ids]).pluck(:item_id)
 
       if plage_ouverture.motif_ids.count != params[:motif_external_ids].count
+        skip_authorization
         render status: :not_found, json: { error_messages: ["Certains motifs n'ont pas été trouvés pour les motif_external_ids #{params[:motif_external_ids].join(', ')}"] }
         return
       end

@@ -64,4 +64,13 @@ RSpec.describe "Agents API" do
       end
     end
   end
+
+  describe "/me" do
+    it "sends info about the authenticated agent" do
+      get "/api/v1/agents/me", headers:, as: :json
+
+      expect(response.status).to eq 200
+      expect(parsed_response_body["agent"]["email"]).to eq agent.email
+    end
+  end
 end

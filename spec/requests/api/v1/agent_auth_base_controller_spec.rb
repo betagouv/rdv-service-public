@@ -2,6 +2,7 @@ RSpec.describe Api::V1::AgentAuthBaseController, type: :request do
   before do
     klass = Class.new(described_class) do
       def fake_action
+        skip_authorization
         render plain: "current agent id is #{current_agent.id}"
       end
     end
