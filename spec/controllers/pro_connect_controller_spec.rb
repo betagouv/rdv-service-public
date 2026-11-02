@@ -171,16 +171,16 @@ RSpec.describe ProConnectController do
         context "quand Menshen est configuré" do
           stub_env_with(
             MENSHEN_BASE_URL: "https://menshen.example.org",
-            MENSHEN_CLIENT_ID: "rdv-service-public",
-            MENSHEN_CLIENT_SECRET: "un faux secret de test",
-            MENSHEN_AUDIENCE: "visio"
+            MENSHEN_AUDIENCE: "visio",
+            MENSHEN_RDVSP_CLIENT_ID: "rdv-service-public",
+            MENSHEN_RDVSP_CLIENT_SECRET: "un faux secret de test"
           )
 
           it "enqueue un job d'échange du jeton Menshen en asynchrone, pour ne pas ralentir la ProConnexion" do
             agent = create(:agent, email: user_info["email"])
             expect do
               get :callback, params: { state:, code: }
-            end.to have_enqueued_job(MenshenExchangeTokenJob).with(agent.id, "fake proconnect access token")
+            end.to have_enqueued_job(MenshenExchangeTokenJob).with(agent.id, "fake proconnect access token", Domain::RDV_SERVICE_PUBLIC.id)
           end
         end
 

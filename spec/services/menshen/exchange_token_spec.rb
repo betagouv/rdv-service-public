@@ -1,12 +1,22 @@
 RSpec.describe Menshen::ExchangeToken do
-  subject(:service) { described_class.new(subject_token: "fake proconnect access token") }
+  subject(:service) { described_class.new(subject_token: "fake proconnect access token", domain: Domain::RDV_SERVICE_PUBLIC) }
 
   stub_env_with(
     MENSHEN_BASE_URL: "https://menshen.example.org",
-    MENSHEN_CLIENT_ID: "rdv-service-public",
-    MENSHEN_CLIENT_SECRET: "un faux secret de test",
-    MENSHEN_AUDIENCE: "visio"
+    MENSHEN_AUDIENCE: "visio",
+    MENSHEN_RDVSP_CLIENT_ID: "rdv-service-public",
+    MENSHEN_RDVSP_CLIENT_SECRET: "un faux secret de test"
   )
+
+  describe ".configured?" do
+    it "est vrai quand le domaine a ses identifiants Menshen" do
+      expect(described_class.configured?(Domain::RDV_SERVICE_PUBLIC)).to be(true)
+    end
+
+    it "est faux quand le domaine n'a pas ses identifiants Menshen" do
+      expect(described_class.configured?(Domain::RDV_SOLIDARITES)).to be(false)
+    end
+  end
 
   describe "#call" do
     it "échange le token ProConnect contre un jeton Menshen" do

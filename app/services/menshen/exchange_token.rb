@@ -6,15 +6,16 @@ module Menshen
     class ApiError < StandardError; end
     class ClientError < ApiError; end
 
-    REQUIRED_ENV_VARS = %w[MENSHEN_BASE_URL MENSHEN_CLIENT_ID MENSHEN_CLIENT_SECRET MENSHEN_AUDIENCE].freeze
+    REQUIRED_ENV_VARS = %w[MENSHEN_BASE_URL MENSHEN_AUDIENCE].freeze
 
-    # Menshen n'est pas configuré partout (review apps, démo…)
-    def self.configured?
-      REQUIRED_ENV_VARS.all? { ENV[_1].present? }
+    # Menshen n'est pas configuré partout (review apps, démo…), ni forcément pour tous les domaines
+    def self.configured?(domain)
+      REQUIRED_ENV_VARS.all? { ENV[_1].present? } && domain.menshen_client_id.present? && domain.menshen_client_secret.present?
     end
 
-    def initialize(subject_token:)
+    def initialize(subject_token:, domain:)
       @subject_token = subject_token
+      @domain = domain
     end
 
     def call
@@ -39,7 +40,7 @@ module Menshen
     def connection
       Faraday.new(ENV.fetch("MENSHEN_BASE_URL")) do |f|
         f.request :url_encoded
-        f.request :authorization, :basic, ENV.fetch("MENSHEN_CLIENT_ID"), ENV.fetch("MENSHEN_CLIENT_SECRET")
+        f.request :authorization, :basic, @domain.menshen_client_id, @domain.menshen_client_secret
         f.response :json
         f.options.timeout = 5
         f.options.open_timeout = 2
