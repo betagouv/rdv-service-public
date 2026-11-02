@@ -1,6 +1,6 @@
 require "icalendar/tzinfo"
 
-# rubocop:disable Rails/ApplicationController
+# rubocop:disable-next Rails/ApplicationController
 class IcsCalendarController < ActionController::Base
   include RdvsHelper
 
@@ -74,4 +74,3 @@ class IcsCalendarController < ActionController::Base
     super.merge(host: @agent.domain.host_name)
   end
 end
-# rubocop:enable Rails/ApplicationController

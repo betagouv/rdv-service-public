@@ -8,7 +8,6 @@ RSpec.describe "User Profile authentified API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "UserProfile"
-      produces "application/json"
       operationId "deleteUserProfile"
       description "Détruit le profil utilisateur de l'organisation"
 

@@ -1,7 +1,7 @@
 RSpec.describe "OAuth provider", js: true do
   # On fait quelque chose d'un peu inhabituel dans cette spec pour avoir un test d'intégration sur l'oauth
   # dans un contexte où notre application est le fournisseur d'oauth : on démarre une petite application
-  # Sinatra qui joue le rôle d'une application externe (comme Démarches Simplifiées) qui propose un
+  # Sinatra qui joue le rôle d'une application externe (comme Démarche Numérique) qui propose un
   # oauth vers notre appli.
   around do |example|
     pid = Process.fork do
@@ -31,7 +31,7 @@ RSpec.describe "OAuth provider", js: true do
 
   before do
     application = Doorkeeper::Application.new(
-      name: "Démarches Simplifiées",
+      name: "Démarche Numérique",
       uid: "fake_app_id",
       redirect_uri: "http://localhost:4567/omniauth/rdvservicepublic/callback",
       post_logout_redirect_uri: "http://localhost:4567/",
@@ -50,7 +50,7 @@ RSpec.describe "OAuth provider", js: true do
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
 
-    expect(page).to have_content("En continuant, vous allez permettre à Démarches Simplifiées d'accéder à votre compte RDV Solidarités")
+    expect(page).to have_content("En continuant, vous allez permettre à Démarche Numérique d'accéder à votre compte RDV Solidarités")
     click_on "Continuer"
     expect(page).to have_content("Votre email est francis@factice.org")
 

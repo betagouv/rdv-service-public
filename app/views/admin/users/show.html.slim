@@ -11,7 +11,7 @@ ruby:
   = render "common/fil_ariane", titles_and_paths:, current_page_title: @user.full_name
 
 - content_for :right_of_page_title do
-  - @user.external_references.each do |reference|
+  - @user.external_references.where.not(external_url: nil).each do |reference|
     = link_to("Voir sur #{reference.oauth_application.name}", reference.external_url, target: :_blank, class: "fr-btn fr-btn--secondary fr-mr-2w")
 
   = link_to "Trouver un RDV pour l’usager", admin_organisation_creneaux_search_path(current_organisation, user_ids: [@user.id]), class: "fr-btn fr-btn--secondary", title: "Trouver un RDV pour l’usager #{@user.full_name}"

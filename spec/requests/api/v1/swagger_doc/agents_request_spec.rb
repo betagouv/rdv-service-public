@@ -9,7 +9,6 @@ RSpec.describe "Agents API", swagger_doc: "v1/api.json" do
       with_pagination
 
       tags "Agent"
-      produces "application/json"
       operationId "getAgents"
       description "Renvoie les agent·es des organisations accessibles, de manière paginée"
 

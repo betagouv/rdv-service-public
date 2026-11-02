@@ -1,9 +1,9 @@
-RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par un admin", js: true do
+RSpec.describe "Connexion de Démarche Numérique à RDV Service Public par un admin", js: true do
   let!(:agent) do
     create(:agent, :francis_factice, password: "RdvServicePublicTest1!")
   end
   let(:oauth_application) do
-    create(:oauth_application, name: "Démarches Simplifiées",
+    create(:oauth_application, name: "Démarche Numérique",
                                logo_base64: file_fixture("logo_demarches_simplifiees_base_64.txt").read)
   end
 
@@ -16,12 +16,12 @@ RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par u
 
   # On fait quelque chose d'un peu inhabituel dans cette spec pour avoir un test d'intégration sur l'oauth
   # dans un contexte où notre application est le fournisseur d'oauth : on démarre une petite application
-  # Sinatra qui joue le rôle d'une application externe (comme Démarches Simplifiées) qui propose un
+  # Sinatra qui joue le rôle d'une application externe (comme Démarche Numérique) qui propose un
   # oauth vers notre appli.
   stub_env_for_proconnect
 
   specify do
-    doc = Autodoc.start_scenario("1) Connexion de à RDV Service Public par un admin", self, category: "4) Intégration à Démarches Simplifiées")
+    doc = Autodoc.start_scenario("1) Connexion de à RDV Service Public par un admin", self, category: "4) Intégration à Démarche Numérique")
 
     login_as(agent, scope: :agent)
 
@@ -35,14 +35,14 @@ RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par u
     # Pour simplifier cette spec, on s'est connecté au préalable
 
     doc.add_text <<~TEXT
-      Depuis Démarches Simplifiées, l'administrateur connecte RDV Service Public.
+      Depuis Démarche Numérique, l'administrateur connecte RDV Service Public.
       Il n'a pas besoin d'avoir un compte sur RDV Service Public : il peut directement utiliser ProConnect.
     TEXT
 
     doc.add_screenshot(page,
                        text: "On me demande de confirmer que j'accepte de connecter les deux applications.",
-                       wait_for: "vous allez permettre à Démarches Simplifiées")
+                       wait_for: "vous allez permettre à Démarche Numérique")
 
-    doc.add_text("Je suis ensuite redirigé vers Démarches Simplifiées.")
+    doc.add_text("Je suis ensuite redirigé vers Démarche Numérique.")
   end
 end

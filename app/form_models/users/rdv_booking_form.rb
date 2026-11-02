@@ -92,7 +92,7 @@ class Users::RdvBookingForm
   end
 
   def rewrite_selected_users_new_relatives_index!
-    # lorsque les nouveaux proches 1-3-4 sont sélectionnés mais pas le 2, on force la sélection à 1-2-3
+    # lorsque les nouveaux proches 1-3-4 sont sélectionnés mais pas le 2, on force la sélection à 1-2-3
     # pour aligner avec le filtre fait dans filter_and_prepare_relatives_attributes!
     new_relatives_count = selected_users_params.count(&:new_relative?)
     @selected_users = selected_users_params

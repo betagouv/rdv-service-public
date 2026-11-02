@@ -130,7 +130,7 @@ RSpec.describe "Agent is automatically logged in with pro connect" do
 
   context "when logging in through an OAuth client app" do
     let(:oauth_application) do
-      create(:oauth_application, name: "Démarches Simplifiées")
+      create(:oauth_application, name: "Démarche Numérique")
     end
 
     it "also allows silently logging in even if the agent doesn't already exist" do

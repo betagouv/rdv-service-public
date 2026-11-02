@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.4.11"
+ruby "3.4.12"
 
 # Full-stack web application framework.
 gem "rails", "8.1.4"
@@ -82,7 +82,7 @@ gem "common_french_passwords"
 
 # Jobs
 # A multithreaded, Postgres-based ActiveJob backend for Ruby on Rails
-gem "good_job", "3.27.4"
+gem "good_job", "4.22.1"
 
 # JSON serialization and queries
 
@@ -128,7 +128,7 @@ gem "rails_autolink"
 gem "active_link_to"
 gem "dsfr-assets"
 gem "dsfr-view-components"
-gem "dsfr-form_builder", "= 0.0.14" # On fixe la version tant qu’on est pas en 1.0
+gem "dsfr-form_builder", "= 0.0.15" # On fixe la version tant qu’on est pas en 1.0
 
 # Easily create styled HTML emails in Rails.
 gem "premailer-rails" # Mail formatting
@@ -192,7 +192,7 @@ group :development do
   # Security vulnerability scanner for Ruby on Rails.
   gem "brakeman", require: false
   # Automatic Ruby code style checking tool.
-  gem "rubocop",  "= 1.80", require: false
+  gem "rubocop",  "= 1.92.1", require: false
   # Code style checking for RSpec files
   gem "rubocop-rspec", require: false
   # Automatic Rails code style checking tool.

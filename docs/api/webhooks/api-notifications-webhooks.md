@@ -20,7 +20,7 @@ Si le vôtre n'en fait pas partie, contactez-nous pour que nous l'ajoutions.
 ## Structure des données envoyées
 
 Le body de la requête POST est un JSON avec deux clés à la racine : `data` et `meta`.
-- `data` contient un objet JSON qui représente l'objet modifié dans le même format que celui de notre [API REST](https://www.rdv.numerique.gouv.fr/api-docs/).
+- `data` contient un objet JSON qui représente l'objet modifié dans le même format que celui de notre [API REST](https://rdv.numerique.gouv.fr/api-docs/index.html).
 - `meta` contient un objet JSON avec les champs suivants:
   - `model` : le type de l'objet qui a été modifié, par exemple "Rdv" ou "User"
   - `event` : le type d'évènement qui a causé l'envoi du webhook. Les valeurs possibles sont "created", "updated" et "destroyed".

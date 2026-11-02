@@ -11,7 +11,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "User"
-      produces "application/json"
       operationId "getUser"
       description "Renvoie un·e usager·ère"
 
@@ -61,7 +60,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "User"
-      produces "application/json"
       operationId "updateUser"
       description "Met à jour un·e usager·ère"
 
@@ -216,12 +214,13 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
     end
   end
 
-  path "/api/v1/users/{user_id}/rdv_invitation_token" do
+  # Cet endpoint est utilisé uniquement par les invitations legacy de RDV Insertion, et n'a pas vocation à être réutilisé par d'autres partenaires
+  # Pour éviter la confusion avec le nouveau système de rdv_invitations, on ne les documente pas.
+  path "/api/v1/users/{user_id}/rdv_invitation_token", document: false do
     post "Récupérer le token d'invitation à prendre un rdv d'un usager·ère" do
       with_oauth_token_authentication
 
-      tags "User", "Invitation"
-      produces "application/json"
+      tags "User"
       operationId "createUserInvitation"
       description "Renvoie le token d'invitation à prendre rdv de l'usager·ère"
 
@@ -241,7 +240,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(user.reload.invited_through).to eq("external") }
       end
 
-      response 200, "when the user doesn't have an email", document: false do
+      response 200, "when the user doesn't have an email" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", email: nil, organisations: [organisation]) }
 
         schema "$ref" => "#/components/schemas/invitation"
@@ -265,7 +264,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       with_pagination
 
       tags "User"
-      produces "application/json"
       operationId "getUsers"
       description "Renvoie une liste paginée d'usager·ères"
 
@@ -305,7 +303,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "User"
-      produces "application/json"
       operationId "createUser"
       description "Crée un·e usager·ère"
 
@@ -430,7 +427,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       with_pagination
 
       tags "User"
-      produces "application/json"
       operationId "getUsersFromOrganisation"
       description "Renvoie une liste paginée d'usager·ères d'une organisation"
 
@@ -471,7 +467,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "User"
-      produces "application/json"
       operationId "getUserFromOrganisation"
       description "Renvoie un·e usager·ère"
 

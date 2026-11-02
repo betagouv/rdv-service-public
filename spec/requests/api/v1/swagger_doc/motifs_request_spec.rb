@@ -4,7 +4,6 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
   path "/api/v1/organisations/{organisation_id}/motifs" do
     get "Lister les motifs" do
       tags "Motif"
-      produces "application/json"
       operationId "getMotifs"
       description "Renvoie tous les motifs à partir d'une organisation"
 

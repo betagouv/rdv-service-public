@@ -49,7 +49,7 @@ RSpec.describe "/api/v1/users" do
         expect do
           post "/api/v1/users", headers:, params:, as: :json
         end.not_to change(User, :count)
-        expect(response.parsed_body["error_messages"].first).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action")
+        expect(response.parsed_body["error_messages"].first).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action")
       end
     end
 

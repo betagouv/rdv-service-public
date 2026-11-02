@@ -1,7 +1,7 @@
 RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
   include ActionView::Helpers::SanitizeHelper
 
-  let(:oauth_application) { create(:oauth_application, name: "Démarches Simplifiées") }
+  let(:oauth_application) { create(:oauth_application, name: "Démarche Numérique") }
   let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, agent:, motifs: [motif, phone_motif], first_day: 2.weeks.ago) }
   let!(:user) do
     create(:user, latest_login_at: nil, organisations: [organisation],
@@ -31,13 +31,13 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
   stub_env_for_proconnect
 
   specify do
-    doc = Autodoc.start_scenario("4) Prise de RDV avec invitation par un instructeur", self, accessibility_checks: false, category: "4) Intégration à Démarches Simplifiées")
+    doc = Autodoc.start_scenario("4) Prise de RDV avec invitation par un instructeur", self, accessibility_checks: false, category: "4) Intégration à Démarche Numérique")
 
     doc.start_section("Prise de rendez-vous par invitation")
 
     text = <<~TEXT
       <p>
-        Je suis un instructeur qui utilise Démarches Simplifiées, et qui a déjà pris des rendez-vous avec l'intégration.
+        Je suis un instructeur qui utilise Démarche Numérique, et qui a déjà pris des rendez-vous avec l'intégration.
       </p>
       <p>
         J'ai déjà déclaré une plage d'ouverture pour mes motifs.
@@ -77,7 +77,7 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
 
     Capybara.page.current_window.resize_to(1280, 720)
     doc.add_screenshot(page,
-                       text: "J'ai un récapitulatif du rendez-vous, et je peux retourner sur Démarches Simplifiées",
+                       text: "J'ai un récapitulatif du rendez-vous, et je peux retourner sur Démarche Numérique",
                        wait_for: "Invitation envoyée")
   end
 end

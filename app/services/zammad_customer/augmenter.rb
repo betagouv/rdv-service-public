@@ -10,7 +10,7 @@ class ZammadCustomer
       @zammad_customer = zammad_customer
     end
 
-    # rubocop:disable Lint/AssignmentInCondition
+    # rubocop:disable-next Lint/AssignmentInCondition
     def run
       if agent = Agent.find_by(email:)
         augment_with_agent(agent)
@@ -32,7 +32,6 @@ class ZammadCustomer
         zammad_customer.note = "Aucun usager ni agent trouvé"
       end
     end
-    # rubocop:enable Lint/AssignmentInCondition
 
     def augment_with_agent(agent)
       zammad_customer.super_admin_url = super_admins_agent_url(id: agent.id, host:)

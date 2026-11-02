@@ -35,7 +35,7 @@ RSpec.describe User::SoftDeleteConcern do
       expect(user.versions.last.object_changes.keys).to eq ["deleted_at"]
     end
 
-    it "interdit lorsqu’un RDV à venir existe" do
+    it "interdit lorsqu’un RDV à venir existe" do
       user = create(:user)
       rdv = create(:rdv, starts_at: 3.days.from_now, users: [user], context: "des détails sur le RDV")
       expect { user.soft_delete! }.to raise_error(StandardError, /RDV à venir/)

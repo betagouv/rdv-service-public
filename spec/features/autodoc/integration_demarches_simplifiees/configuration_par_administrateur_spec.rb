@@ -1,5 +1,5 @@
 RSpec.describe "Configuration de RDV Service Public par un administrateur de DS", js: true do
-  let(:application) { create(:oauth_application, name: "Démarches Simplifiées", grants_autonomous_signup: true) }
+  let(:application) { create(:oauth_application, name: "Démarche Numérique", grants_autonomous_signup: true) }
   let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application:) }
   let!(:agent) { create(:agent, :francis_factice) }
 
@@ -8,7 +8,7 @@ RSpec.describe "Configuration de RDV Service Public par un administrateur de DS"
   end
 
   specify do
-    doc = Autodoc.start_scenario("2) Configuration de RDV Service Public par un admin", self, accessibility_checks: false, category: "4) Intégration à Démarches Simplifiées")
+    doc = Autodoc.start_scenario("2) Configuration de RDV Service Public par un admin", self, accessibility_checks: false, category: "4) Intégration à Démarche Numérique")
 
     login_as(agent, scope: :agent)
     visit configuration_admin_organisations_url(host: "http://www.rdv-service-public-test.localhost")
@@ -60,8 +60,8 @@ RSpec.describe "Configuration de RDV Service Public par un administrateur de DS"
 
     doc.start_section("Inviter les agents qui vont gérer les rendez-vous (facultatif)")
     doc.add_text <<~TEXT
-      Dans la plupart des cas, les rendez-vous seront assurés par des gens qui sont aussi instructeurs dans Démarches Simplifiées.
-      Mais il peut arriver que ça ne soit pas le cas, et que l'agent qui assure le rendez-vous n'ai même pas de compte sur Démarches Simplifiées. Il suffit alors d'inviter ces agents dans RDV Service Public, comme on l'a déjà fait pour les agents.
+      Dans la plupart des cas, les rendez-vous seront assurés par des gens qui sont aussi instructeurs dans Démarche Numérique.
+      Mais il peut arriver que ça ne soit pas le cas, et que l'agent qui assure le rendez-vous n'ai même pas de compte sur Démarche Numérique. Il suffit alors d'inviter ces agents dans RDV Service Public, comme on l'a déjà fait pour les agents.
     TEXT
 
     doc.start_section("Personaliser les motifs de rendez-vous (facultatif)")

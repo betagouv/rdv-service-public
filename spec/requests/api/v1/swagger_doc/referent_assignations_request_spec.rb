@@ -8,7 +8,6 @@ RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.jso
       with_oauth_token_authentication
 
       tags "ReferentAssignation"
-      produces "application/json"
       operationId "createReferentAssignation"
       description "Crée une assignation à un référent"
 
@@ -68,7 +67,6 @@ RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.jso
       with_oauth_token_authentication
 
       tags "ReferentAssignation"
-      produces "application/json"
       operationId "deleteReferentAssignation"
       description "Détruit une assignation à un référent"
 

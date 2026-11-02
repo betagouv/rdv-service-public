@@ -8,6 +8,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
       description "Permet de créer un brouillon de rendez-vous"
 
+      tags "RDV Plan"
       parameter(
         name: :params, # ce nom n'est pas utilisé, car tous les paramètres sont dans le body de la requête
         in: :body,
@@ -41,8 +42,6 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       )
 
       with_examples
-      produces "application/json"
-      consumes "application/json"
 
       let(:organisation) { create(:organisation) }
       let!(:agent) { create(:agent, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
@@ -93,8 +92,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       description "Permet de savoir si un rendez-vous a été pris pour ce rdv plan"
 
       with_examples
-      produces "application/json"
-      consumes "application/json"
+      tags "RDV Plan"
       parameter name: :rdv_plan_id, in: :path, type: :integer, example: 123
 
       let(:organisation) { create(:organisation) }
@@ -105,9 +103,11 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
         let(:rdv_plan_id) { rdv_plan.id }
         let!(:rdv_plan) do
-          create(:rdv_plan, planning_agent: agent, rdv: rdv)
+          create(:rdv_plan, planning_agent: agent, rdv:, rdv_invitation:, motif:)
         end
-        let(:rdv) { create(:rdv) }
+        let(:rdv) { create(:rdv, organisation:, motif:) }
+        let(:rdv_invitation) { create(:rdv_invitation, motif:) }
+        let(:motif) { create(:motif, organisation:) }
 
         specify do
           expect(parsed_response_body.dig("rdv_plan", "url")).to eq "http://www.rdv-service-public-test.localhost/agents/rdv_plans/#{rdv_plan.id}"

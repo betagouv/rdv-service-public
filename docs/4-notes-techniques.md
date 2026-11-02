@@ -95,7 +95,7 @@ Pour tester en local **depuis RDVSP** vous pouvez utiliser le script `scripts/in
 ## Montée en version des dépendances
 
 ### Version de Ruby
-Pas de politique très clairement décidée mais la pratique est d’essayer de coller à la version la plus récente. Lors de la mise à jour de Ruby, il faut penser à mettre à jour la version cible de la gem `parser` dans le `Gemfile`, cf [le README de parser](https://github.com/whitequark/parser#compatibility-with-ruby-mri).
+Pas de politique très clairement décidée mais la pratique est d’essayer de coller à la version la plus récente. Lors de la mise à jour de Ruby, il faut penser à mettre à jour la version cible de la gem `parser` dans le `Gemfile`, cf [le README de parser](https://github.com/whitequark/parser#compatibility-with-ruby-mri).
 
 ### Version de Rails
 Pas de politique très clairement décidée mais la pratique est d’essayer de coller à la version la plus récente.
@@ -108,7 +108,7 @@ cf [l’ADR 2023-04-24](https://github.com/betagouv/rdv-service-public/blob/prod
 ### Version de Playwright
 
 Playwright est notre système d’instrumentalisation du navigateur pour les tests E2E.
-On utilise à la fois des gems et un package NPM, avec des contraintes de compatibilité entre les deux.
+On utilise à la fois des gems et un package NPM, avec des contraintes de compatibilité entre les deux.
 Il faut donc les mettre à jour simultanément. Un script permet de faire ça : `./scripts/devtools/update_playwright.sh`
 
 ## Review apps

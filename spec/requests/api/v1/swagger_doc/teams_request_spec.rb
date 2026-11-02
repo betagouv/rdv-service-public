@@ -8,7 +8,6 @@ RSpec.describe "Teams authentified API", swagger_doc: "v1/api.json" do
       with_oauth_token_authentication
 
       tags "Teams"
-      produces "application/json"
       operationId "getTeams"
       description "Renvoie toutes les équipes de tous les espaces auquel l'agent authentifié a accès."
 

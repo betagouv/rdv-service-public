@@ -24,9 +24,15 @@ class Agents::PagesController < AgentAuthController
       if current_agent.possible_duplicate_organisations.empty?
         redirect_to new_agents_territory_path
       end
+    elsif agent_territories.any?
+      redirect_to admin_territory_organisations_path(agent_territories.first)
     elsif current_domain != Domain::RDV_SERVICE_PUBLIC_ETAT
       redirect_via_anct_router
     end
+  end
+
+  def agent_territories
+    @agent_territories ||= policy_scope(Territory, policy_scope_class: Agent::TerritoryPolicy::Scope)
   end
 
   def redirect_via_anct_router

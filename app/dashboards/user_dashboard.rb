@@ -24,7 +24,7 @@ class UserDashboard < Administrate::BaseDashboard
     family_situation: EnumField,
     affiliation_number: Field::String,
     number_of_children: Field::Number,
-    birth_date: Field::DateTime,
+    birth_date: Field::Date,
     logged_once_with_franceconnect: Field::Boolean,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,

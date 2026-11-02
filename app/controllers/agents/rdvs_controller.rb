@@ -23,7 +23,7 @@ class Agents::RdvsController < AgentAuthController
       # Le lien a déjà été généré (double clic, autre onglet…) : rien à faire
     elsif session[:pro_connect_access_token].blank?
       flash[:error] = "Pour générer le lien de visioconférence, connectez-vous via ProConnect"
-    elsif (visio_url = VisioNumerique::CreateRoom.new(access_token: session[:pro_connect_access_token]).visio_url)
+    elsif (visio_url = VisioNumerique::CreateRoom.new(agent: current_agent, pro_connect_access_token: session[:pro_connect_access_token]).visio_url)
       # Mise à jour silencieuse : pas de notification, de webhook ni de synchro d'agenda.
       @rdv.update_columns(visio_url_custom: visio_url, updated_at: Time.zone.now) # rubocop:disable Rails/SkipsModelValidations
       flash[:success] = "Le lien de visioconférence a été généré"

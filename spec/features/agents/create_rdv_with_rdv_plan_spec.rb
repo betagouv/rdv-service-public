@@ -2,7 +2,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
   let!(:organisation) { create(:organisation, name: "CCAS de Montreuil") }
   let(:application) do
     create(:oauth_application,
-           name: "Démarches Simplifiées",
+           name: "Démarche Numérique",
            redirect_uri: "http://localhost:4567/omniauth/rdvservicepublic/callback\nhttp://demo.demarches-simplifiees.fr/omniauth/rdvservicepublic/callback")
   end
   let!(:agent) do
@@ -29,6 +29,8 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
   end
 
   it "permet de prendre un rendez-vous", js: true do
+    travel_to(Time.zone.parse("2026-06-08 07:00"))
+
     visit agents_rdv_plan_path(rdv_plan.id)
 
     expect(page).to have_content "Pour quel motif souhaitez-vous prendre rendez-vous ?"
@@ -39,9 +41,6 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
 
     # On agrandit la taille de la page pour que le calendrier soit visible en entier
     Capybara.page.current_window.resize_to(1280, 1300)
-    # On se place sur la semaine suivante pour être certain que le créneau cliqué est dans le futur,
-    # quels que soient le jour et l'heure d'exécution du test.
-    find('button[aria-label="Semaine suivante"]').click
     page.driver.with_playwright_page do |pw|
       slot = pw.locator('[data-time="08:30:00"]').last
       box = slot.bounding_box
@@ -79,7 +78,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     expect(emails.map { [_1.to, _1.subject] }).to include([["newaddress@exemple.com"], a_string_matching(/RDV confirmé le/)])
     expect(emails.map { [_1.to, _1.subject] }).to include([[agent.email], a_string_matching(/Nouveau RDV ajouté pour .+ sur votre agenda/)])
 
-    expect(page).to have_content("Retour sur Démarches Simplifiées")
+    expect(page).to have_content("Retour sur Démarche Numérique")
   end
 
   context "quand il y a d'autres agents dans l'organisation" do

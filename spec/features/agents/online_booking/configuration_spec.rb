@@ -163,9 +163,9 @@ RSpec.describe "Agents can configure online booking" do
     end
 
     it "permet de passer de particulier à professionnel" do
-      find("label", text:  "Avec une adresse email").click
-      find("label", text:  "FranceConnect").click
-      find("label", text:  "ProConnect").click
+      find("label", text: "Avec une adresse email").click
+      find("label", text: "FranceConnect").click
+      find("label", text: "ProConnect").click
       click_on "Enregistrer"
 
       expect(page).to have_content "Modes d'authentification mis à jour"
@@ -179,8 +179,8 @@ RSpec.describe "Agents can configure online booking" do
 
     context "si on ne remplit aucune des options" do
       it "affiche un message d'erreur" do
-        find("label", text:  "FranceConnect").click
-        find("label", text:  "Avec une adresse email").click
+        find("label", text: "FranceConnect").click
+        find("label", text: "Avec une adresse email").click
         click_on "Enregistrer"
         expect(page).to have_content "Vous devez autoriser au moins un mode d'authentification."
 
