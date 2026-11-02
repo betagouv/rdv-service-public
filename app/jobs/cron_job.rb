@@ -194,6 +194,17 @@ class CronJob < ApplicationJob
     end
   end
 
+  class DestroyExternalCalendarSyncExecutionJob < CronJob
+    RETENTION_PERIOD = 3.days
+
+    def perform
+      ActiveRecord::Base.transaction do
+        ExternalCalendarSyncExecutionLog.where(emitted_at: ..RETENTION_PERIOD.ago).delete_all
+        ExternalCalendarSyncExecution.where(ended_at: ..RETENTION_PERIOD.ago).delete_all
+      end
+    end
+  end
+
   class WarnAboutExpiringAzureAppSecrets < CronJob
     def perform
       return if ENV["AZURE_APPLICATION_CLIENT_ID"].blank?
