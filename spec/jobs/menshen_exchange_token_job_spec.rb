@@ -20,11 +20,11 @@ RSpec.describe MenshenExchangeTokenJob do
       allow(exchange_token).to receive(:call).and_raise(Menshen::ExchangeToken::ClientError, "HTTP 400")
       allow(Menshen::ExchangeToken).to receive(:new).and_return(exchange_token)
 
-      expect(Sentry).to receive(:capture_exception).with(instance_of(Menshen::ExchangeToken::ClientError))
-
       expect { perform_enqueued_jobs { described_class.perform_later(agent.id, "fake proconnect access token", Domain::RDV_SERVICE_PUBLIC.id) } }
         .not_to raise_error
       expect(agent.reload.menshen_access_token).to be_nil
+      expect(sentry_events.last.exception.values.first.type).to eq("Menshen::ExchangeToken::ClientError")
+      expect(sentry_events.last.user).to eq({ email: agent.email, id: agent.id, role: "Agent" })
     end
   end
 
