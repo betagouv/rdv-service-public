@@ -154,7 +154,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
     post "Créer un motif" do
       with_oauth_token_authentication
 
-      tags "Motifs"
+      tags "Motif"
       operationId "createMotif"
       description "Crée un motif"
 
