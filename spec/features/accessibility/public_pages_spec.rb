@@ -30,6 +30,12 @@ RSpec.describe "public pages", js: true do
     # expect(page).to be_axe_clean
   end
 
+  it "la page fonctionnalités est accessible" do
+    visit "http://www.rdv-service-public-test.localhost/fonctionnalites"
+    expect(page).to have_current_path("/fonctionnalites")
+    expect(page).to be_axe_clean
+  end
+
   it "home page for RDV Mairie is accessible" do
     visit "http://www.rdv-service-public-test.localhost/"
     expect(page).to have_current_path("/")

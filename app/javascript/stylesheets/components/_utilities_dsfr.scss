@@ -4,6 +4,10 @@
   text-align: center;
 }
 
+.rdv-text-align-left {
+  text-align: left;
+}
+
 .rdv-justify-content-center {
   justify-content: center;
 }
@@ -95,6 +99,10 @@
   align-items: end;
 }
 
+.rdv-align-items-flex-start {
+  align-items: flex-start;
+}
+
 .rdv-gap-1rem {
   gap: 1rem;
 }
@@ -141,6 +149,9 @@
 
 .rdv-max-width-100 {
   max-width: 100%;
+}
+.rdv-max-width-400px {
+  max-width: 400px;
 }
 
 .rdv-max-width-md-100 {
@@ -192,6 +203,19 @@
   margin-left: -0.5rem;
 }
 
+// BOUTONS
+
+// bouton primaire blanc sur fond blanc (pas de variante native DSFR)
+.rdv-btn-fond-blanc-texte-bleu.fr-btn {
+  background-color: #fff;
+  color: var(--text-action-high-blue-france);
+
+  &.fr-btn.rdv-btn-fond-blanc-texte-bleu:hover {
+    background-color: var(--background-default-grey-hover);
+    color: var(--text-action-high-blue-france);
+  }
+}
+
 // OTHERS
 
 // utile pour désactiver le soulignement des liens du DSFR
@@ -231,6 +255,14 @@
   border-color: var(--blue-france-main-525);
 }
 
+.rdv-border-radius-8px {
+  border-radius: 8px;
+}
+
+.rdv-box-shadow-1 {
+  box-shadow: 0 12px 30px 0 rgba(221, 221, 221, 0.4);
+}
+
 .rdv-display-inline-block {
   display: inline-block;
 }
@@ -264,4 +296,30 @@
 .rdv-fr-highlight-small-and-grey p {
   font-size: 14px;
   color: $gray-800;
+}
+
+ul.rdv-list-with-dsfr-arrows {
+  list-style-type: none;
+  padding-left: 0;
+
+  li {
+    margin-bottom: 1rem;
+    padding-left: 1.75rem;
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0.25rem;
+      left: 0;
+      width: 1rem;
+      height: 1rem;
+      background-color: currentColor;
+      // icône DSFR arrow-right-line, inlinée en data URI car Propshaft ne réécrit pas les url() dans le CSS
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m16.172 11-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2h12.172Z'/%3E%3C/svg%3E")
+        center / 100% 100% no-repeat;
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m16.172 11-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2h12.172Z'/%3E%3C/svg%3E")
+        center / 100% 100% no-repeat;
+    }
+  }
 }
