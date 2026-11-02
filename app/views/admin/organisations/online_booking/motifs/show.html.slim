@@ -90,7 +90,7 @@
           = render "admin/motifs/show/restriction_for_rdv", motif: @motif
           = render "admin/motifs/show/instruction_for_rdv", motif: @motif
 
-    - if current_territory.sectors.any? && @motif.bookable_outside_of_organisation?
+    - if current_domain.provides_address_selection? && current_territory.sectors.any? && @motif.bookable_outside_of_organisation?
       .card.card-body
         .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
           h2.fr-h4 Sectorisation
