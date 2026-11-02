@@ -74,16 +74,15 @@ class Admin::RdvWizardStepsController < AgentAuthController
   end
 
   # Cette méthode est dans le controller plutôt que dans le visio_concern car la création du salon
-  # nécessite l'access token ProConnect de session, disponible uniquement quand c'est l'agent qui initie le RDV.
-  # Quand l'API proposera un token longue durée spécifique à Visio, cette logique pourra être déplacée
-  # dans le visio_concern pour couvrir aussi les RDV initiés par un usager ou un autre agent.
+  # peut nécessiter l'access token ProConnect de session (à défaut de jeton Menshen), disponible uniquement
+  # quand c'est l'agent qui initie le RDV. Quand tous les agents auront un jeton Menshen, cette logique pourra être
+  # déplacée dans le visio_concern pour couvrir aussi les RDV initiés par un usager ou un autre agent.
   def assign_visio_numerique_room_if_applicable
     return unless current_step == "step4"
     return unless @rdv.motif&.visio?
     return if ENV["VISIO_NUMERIQUE_DISABLED"]
-    return if session[:pro_connect_access_token].blank?
 
-    @rdv.visio_url_custom = VisioNumerique::CreateRoom.new(access_token: session[:pro_connect_access_token]).visio_url
+    @rdv.visio_url_custom = VisioNumerique::CreateRoom.new(agent: current_agent, pro_connect_access_token: session[:pro_connect_access_token]).visio_url
   end
 
   def rdv_params
