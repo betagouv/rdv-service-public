@@ -150,7 +150,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(response.parsed_body["error_messages"]).to include("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action") }
+        it { expect(response.parsed_body["error_messages"]).to include("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action") }
 
         it "logs the API call" do
           expect(ApiCall.first.attributes.symbolize_keys).to include(

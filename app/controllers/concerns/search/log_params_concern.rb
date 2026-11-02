@@ -1,7 +1,7 @@
 module Search::LogParamsConcern
   extend ActiveSupport::Concern
 
-  # on recopie ici et on commente explicitement les params à ne pas logger
+  # on recopie ici et on commente explicitement les params à ne pas logger
   LOGGABLE_SEARCH_PARAMS = [
     # -- from WebSearchContext::ADDRESS_SELECTION_PARAMS
     # "latitude",

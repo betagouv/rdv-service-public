@@ -25,7 +25,7 @@ RSpec.describe "Un agent peut ajouter des usagers à un RDV Collectif", js: true
       expect(find("input[type=submit]")).not_to be_disabled
       click_on "Enregistrer"
 
-      # aucun email n’est envoyé à l'agent car on ne partage pas l’info sur les usagers
+      # aucun email n’est envoyé à l'agent car on ne partage pas l’info sur les usagers
       # dans les emails ni les PJ ICS
       perform_enqueued_jobs
       expect(rdv.reload.users).to eq([user_celeste])
@@ -57,7 +57,7 @@ RSpec.describe "Un agent peut ajouter des usagers à un RDV Collectif", js: true
     end
   end
 
-  describe "Injection d’un ID d’usager qui n’appartient pas à l’orga" do
+  describe "Injection d’un ID d’usager qui n’appartient pas à l’orga" do
     let!(:user) do
       create(:user, organisations: [organisation], first_name: "Francis", last_name: "Factice")
     end
@@ -81,7 +81,7 @@ RSpec.describe "Un agent peut ajouter des usagers à un RDV Collectif", js: true
     end
   end
 
-  context "l'agent désactive les notifications pour cette participation à ce RDV" do
+  context "l'agent désactive les notifications pour cette participation à ce RDV" do
     let!(:user) { create(:user, phone_number: "+33611223344", email: "test@exemple.fr", organisations: [organisation]) }
 
     before do

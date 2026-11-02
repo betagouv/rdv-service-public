@@ -7,6 +7,8 @@ tables:
     truncated: true
   - table_name: good_job_settings
     truncated: true
+  - table_name: good_job_concurrency_claims
+    truncated: true
   - table_name: good_job_batches
     anonymized_column_names:
       - description
@@ -20,6 +22,7 @@ tables:
       - finished_at
       - discarded_at
       - enqueued_at
+      - jobs_finished_at
       - callback_queue_name
       - callback_priority
   - table_name: good_job_processes

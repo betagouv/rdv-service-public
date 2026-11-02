@@ -2,7 +2,7 @@
 
 ## Historique et besoins exprimés
 
-La Gendarmerie et la police nationale nous ont contacté en 2024 pour leur fournir une solution de prise de RDV en ligne pour le dépôt de plainte à distance.
+La Gendarmerie et la police nationale nous ont contacté en 2024 pour leur fournir une solution de prise de RDV en ligne pour le dépôt de plainte à distance.
 Finalement, la police a décidé de ne pas utiliser les services de RDVSP.
 
 Des discussions de spécification ont eu lieu.
@@ -12,7 +12,7 @@ On s’est mis d’accords sur cette API et le fichier [swagger a été défini]
 
 Le service de Visioplainte fonctionne en décidant d’un nombre de guichets ouverts a priori puis assigne les agents à ces guichets tardivement selon les RDV pris.
 On a décidé de modéliser ça en créant des agents anonymes « Guichet 1 » qui ont des plages d’ouvertures.
-Ces agents anonymes sont des « intervenants », c’est à dire des agents sans email.
+Ces agents anonymes sont des « intervenants », c’est à dire des agents sans email.
 Ils et elles ne peuvent donc pas se connecter à RDV Service Public.
 
 Un autre besoin identifié est un environnement de staging pouvant être réinitialisé sur demande.

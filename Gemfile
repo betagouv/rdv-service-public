@@ -82,7 +82,7 @@ gem "common_french_passwords"
 
 # Jobs
 # A multithreaded, Postgres-based ActiveJob backend for Ruby on Rails
-gem "good_job", "3.27.4"
+gem "good_job", "4.22.1"
 
 # JSON serialization and queries
 
@@ -128,7 +128,7 @@ gem "rails_autolink"
 gem "active_link_to"
 gem "dsfr-assets"
 gem "dsfr-view-components"
-gem "dsfr-form_builder", "= 0.0.14" # On fixe la version tant qu’on est pas en 1.0
+gem "dsfr-form_builder", "= 0.0.15" # On fixe la version tant qu’on est pas en 1.0
 
 # Easily create styled HTML emails in Rails.
 gem "premailer-rails" # Mail formatting
