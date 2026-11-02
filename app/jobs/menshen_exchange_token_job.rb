@@ -5,9 +5,9 @@ class MenshenExchangeTokenJob < ApplicationJob
 
   discard_on(ActiveRecord::RecordNotFound, Menshen::ExchangeToken::ClientError) { |_job, error| Sentry.capture_exception(error) }
 
-  def perform(agent_id, subject_token)
+  def perform(agent_id, subject_token, domain_id)
     agent = Agent.find(agent_id)
-    response = Menshen::ExchangeToken.new(subject_token:).call
+    response = Menshen::ExchangeToken.new(subject_token:, domain: Domain.find(domain_id)).call
 
     agent.update!(
       menshen_access_token: response["access_token"],

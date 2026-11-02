@@ -126,6 +126,24 @@ class Domain
     }.fetch(self)
   end
 
+  def menshen_client_id
+    {
+      RDV_SOLIDARITES => ENV["MENSHEN_RDVS_CLIENT_ID"],
+      RDV_AIDE_NUMERIQUE => ENV["MENSHEN_RDVAN_CLIENT_ID"],
+      RDV_SERVICE_PUBLIC => ENV["MENSHEN_RDVSP_CLIENT_ID"],
+      RDV_SERVICE_PUBLIC_ETAT => ENV["MENSHEN_RDVSP_ETAT_CLIENT_ID"],
+    }.fetch(self)
+  end
+
+  def menshen_client_secret
+    {
+      RDV_SOLIDARITES => ENV["MENSHEN_RDVS_CLIENT_SECRET"],
+      RDV_AIDE_NUMERIQUE => ENV["MENSHEN_RDVAN_CLIENT_SECRET"],
+      RDV_SERVICE_PUBLIC => ENV["MENSHEN_RDVSP_CLIENT_SECRET"],
+      RDV_SERVICE_PUBLIC_ETAT => ENV["MENSHEN_RDVSP_ETAT_CLIENT_SECRET"],
+    }.fetch(self)
+  end
+
   def france_connect_v2_client_id
     {
       RDV_SOLIDARITES => ENV["FRANCECONNECT_V2_RDVS_CLIENT_ID"],

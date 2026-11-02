@@ -3,11 +3,11 @@ RSpec.describe MenshenExchangeTokenJob do
 
   it "stocke le jeton Menshen échangé sur l'agent" do
     allow(Menshen::ExchangeToken).to receive(:new)
-      .with(subject_token: "fake proconnect access token")
+      .with(subject_token: "fake proconnect access token", domain: Domain::RDV_SERVICE_PUBLIC)
       .and_return(instance_double(Menshen::ExchangeToken, call: { "access_token" => "fake menshen token", "expires_in" => 3600 }))
 
     freeze_time do
-      described_class.perform_now(agent.id, "fake proconnect access token")
+      described_class.perform_now(agent.id, "fake proconnect access token", Domain::RDV_SERVICE_PUBLIC.id)
 
       expect(agent.reload.menshen_access_token).to eq("fake menshen token")
       expect(agent.menshen_access_token_expires_at).to eq(3600.seconds.from_now)
@@ -22,7 +22,7 @@ RSpec.describe MenshenExchangeTokenJob do
 
       expect(Sentry).to receive(:capture_exception).with(instance_of(Menshen::ExchangeToken::ClientError))
 
-      expect { perform_enqueued_jobs { described_class.perform_later(agent.id, "fake proconnect access token") } }
+      expect { perform_enqueued_jobs { described_class.perform_later(agent.id, "fake proconnect access token", Domain::RDV_SERVICE_PUBLIC.id) } }
         .not_to raise_error
       expect(agent.reload.menshen_access_token).to be_nil
     end
@@ -34,7 +34,7 @@ RSpec.describe MenshenExchangeTokenJob do
       allow(exchange_token).to receive(:call).and_raise(Menshen::ExchangeToken::ApiError, "HTTP 503")
       allow(Menshen::ExchangeToken).to receive(:new).and_return(exchange_token)
 
-      expect { described_class.perform_now(agent.id, "fake proconnect access token") }
+      expect { described_class.perform_now(agent.id, "fake proconnect access token", Domain::RDV_SERVICE_PUBLIC.id) }
         .to have_enqueued_job(described_class)
     end
   end
@@ -45,7 +45,7 @@ RSpec.describe MenshenExchangeTokenJob do
 
       expect(Sentry).to receive(:capture_exception).with(instance_of(ActiveRecord::RecordNotFound))
 
-      expect { perform_enqueued_jobs { described_class.perform_later(agent.id, "fake proconnect access token") } }
+      expect { perform_enqueued_jobs { described_class.perform_later(agent.id, "fake proconnect access token", Domain::RDV_SERVICE_PUBLIC.id) } }
         .not_to raise_error
     end
   end
