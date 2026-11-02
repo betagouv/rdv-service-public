@@ -13,7 +13,8 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
         Ouvre une nouvelle organisation sur laquelle l'agent aura des droits d'administration.
         <br />
         Cet endpoint est uniquement destiné à la création d'une première organisation pour un agent qui
-        n'est dans aucune organisation.
+        n'est dans aucune organisation. Il ne permet pas de créer de nouvelles organisations pour un agent qui est déjà
+        admin d'un espace.
         <br />
         Cette organisation sera dans un espace sans titre dont l'agent sera aussi admin.
         <br />
@@ -113,7 +114,7 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
     end
   end
 
-  path "api/v1/organisations/{organisation_id}" do
+  path "/api/v1/organisations/{organisation_id}" do
     get "Récupérer une organisation" do
       with_oauth_token_authentication
       with_pagination
@@ -136,9 +137,7 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body[:organisation]).to match(OrganisationBlueprint.render_as_hash(organisation)) }
       end
     end
-  end
 
-  path "api/v1/organisations/{organisation_id}" do
     patch "Mettre à jour une organisation" do
       with_oauth_token_authentication
 
