@@ -11,7 +11,7 @@ module DocsNumeriqueChangelog
 
     def fetch_and_parse_children_documents(parent_document_id)
       connection.get("documents/#{parent_document_id}/children/?page_size=1000")
-        .body["results"]
+        .body.fetch("results")
         .map { ChildDoc.new(**_1.slice("id", "title").symbolize_keys) }
         .sort_by(&:published_at)
         .reverse
