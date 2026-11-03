@@ -1,4 +1,6 @@
 class Agents::LoginCodeMailer < ApplicationMailer
+  self.delivery_job = HighPriorityMailerDeliveryJob
+
   attr_reader :domain
 
   def login_code
