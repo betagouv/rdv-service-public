@@ -27,6 +27,19 @@ RSpec.describe "Accès à la visioconférence d'un RDV via le lien avec token", 
       get visio_from_token_path(rdv.signed_id(purpose: :visio))
 
       expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Ce rendez-vous a été annulé.")
+      expect(response.body).not_to include("https://visio.numerique.gouv.fr/salon")
+    end
+  end
+
+  context "quand le RDV n'est pas en visio" do
+    let(:motif) { create(:motif, location_type: :public_office) }
+    let(:rdv) { create(:rdv, motif:, organisation: motif.organisation, visio_url_custom:) }
+
+    it "ne redirige pas vers le salon" do
+      get visio_from_token_path(rdv.signed_id(purpose: :visio))
+
+      expect(response).to have_http_status(:ok)
       expect(response.body).to include("Ce rendez-vous n’a pas de visioconférence associée.")
       expect(response.body).not_to include("https://visio.numerique.gouv.fr/salon")
     end

@@ -4,8 +4,10 @@ class VisiosController < ApplicationController
   def show
     @rdv = Rdv.find_signed(params[:token], purpose: :visio) or raise ActiveRecord::RecordNotFound
 
-    if @rdv.cancelled? || !@rdv.motif.visio?
+    if !@rdv.motif.visio?
       @message = "Ce rendez-vous n’a pas de visioconférence associée."
+    elsif @rdv.cancelled?
+      @message = "Ce rendez-vous a été annulé."
     elsif @rdv.visio_url.present?
       redirect_to @rdv.visio_url, allow_other_host: true
     else
