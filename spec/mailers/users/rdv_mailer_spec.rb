@@ -84,10 +84,10 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       let(:motif) { create(:motif, :collectif, organisation:, location_type: :visio) }
       let(:rdv) { create(:rdv, motif:, organisation:, visio_url_custom: nil) }
 
-      it "contient un lien stable vers la visio (permettant l'authentification par token)" do
+      it "contient un lien stable vers la visio, transférable à un tiers" do
         mail = described_class.with(rdv:, user:).rdv_created
         expect(mail.html_part.body.encoded).not_to include(%r{https://webconf.numerique.gouv.fr/RdvServicePublic})
-        expect(mail.html_part.body.raw_source).to include("/users/rdvs/#{rdv.id}/visio?invitation_token=12345")
+        expect(mail.html_part.body.raw_source).to include(rdv.visio_join_url)
       end
     end
 
@@ -96,10 +96,10 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       let(:motif) { create(:motif, :collectif, organisation:, location_type: :visio) }
       let(:rdv) { create(:rdv, motif:, organisation:, visio_url_custom: "https://webinaire.numerique.gouv.fr/test123") }
 
-      it "contient un lien stable vers la visio (permettant l'authentification par token)" do
+      it "contient un lien stable vers la visio, transférable à un tiers" do
         mail = described_class.with(rdv:, user:).rdv_created
         expect(mail.html_part.body.encoded).not_to include(%r{https://webinaire.numerique.gouv.fr/test123})
-        expect(mail.html_part.body.raw_source).to include("/users/rdvs/#{rdv.id}/visio?invitation_token=12345")
+        expect(mail.html_part.body.raw_source).to include(rdv.visio_join_url)
       end
     end
   end

@@ -19,6 +19,17 @@ RSpec.describe Rdv::VisioConcern, type: :concern do
     end
   end
 
+  describe "#visio_join_url" do
+    it "retourne un lien public avec un token permettant de retrouver le RDV" do
+      motif = create(:motif, location_type: :visio)
+      rdv = create(:rdv, motif:, organisation: motif.organisation, lieu: nil)
+
+      token = rdv.visio_join_url.split("/v/").last
+      expect(rdv.visio_join_url).to start_with("http://www.rdv-solidarites-test.localhost/v/")
+      expect(Rdv.find_signed(token, purpose: :visio)).to eq(rdv)
+    end
+  end
+
   describe "validation des URL custom" do
     subject { rdv }
 

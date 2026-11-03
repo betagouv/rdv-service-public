@@ -18,7 +18,7 @@ class AddRdvToCalendar
       end_datetime: @rdv.ends_at,
       timezone: @rdv.organisation.time_zone,
       title: "RDV #{@rdv.motif.name}",
-      location: @rdv.ics_location(recipient: @current_user),
+      location: @rdv.ics_location,
       url: Rails.application.routes.url_helpers.users_rdv_url(@rdv, invitation_token: token, host: @rdv.domain.host_name),
       description: @rdv.ics_description(@current_user)
     )

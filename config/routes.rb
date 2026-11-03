@@ -499,6 +499,8 @@ Rails.application.routes.draw do
   get "r/:id/:tkn" => "redirect#rdv_short", as: "rdv_short"
   # >> REMOVE AFTER 01/01/2027
 
+  get "v/:token" => "visios#show", as: "visio_from_token"
+
   # Rate limité par IP (voir config/initializers/rack_attack.rb)
   get "prdv", to: "redirect#reprendre_rdv_from_participation_invitation_token", as: "reprendre_rdv_from_participation_invitation_token_short"
 
