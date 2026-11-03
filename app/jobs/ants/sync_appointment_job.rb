@@ -6,9 +6,10 @@ module Ants
     include GoodJob::ActiveJobExtensions::Concurrency
     include ExtendedRetryStrategyConcern
 
-    good_job_control_concurrency_with(
-      perform_limit: 1,
-      key: -> { "#{self.class.name}-rdv-#{arguments.last[:ants_pre_demande_number]}" }
+    good_job_concurrency_rule(
+      label: -> { "#{self.class.name}-rdv-#{arguments.last[:ants_pre_demande_number]}" },
+      apply_label: true,
+      perform_limit: 1
     )
     discard_on(MissingMeetingPointId) { |_job, error| Sentry.capture_exception(error) }
     # useful to debug tests and avoid retries

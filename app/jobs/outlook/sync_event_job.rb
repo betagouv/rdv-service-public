@@ -2,11 +2,12 @@ module Outlook
   class SyncEventJob < ApplicationJob
     include GoodJob::ActiveJobExtensions::Concurrency
 
-    good_job_control_concurrency_with(
-      perform_limit: 1,
+    good_job_concurrency_rule(
       # Pour limiter les risque d'une race condition de deux création d'event en même temps
       # on limite les exécutions concurrentes à un job pour un agents_rdv.
-      key: -> { "Outlook::SyncEventJob-#{arguments.first}" }
+      label: -> { "Outlook::SyncEventJob-#{arguments.first}" },
+      apply_label: true,
+      perform_limit: 1
     )
 
     queue_as :latency_30s

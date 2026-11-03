@@ -2,9 +2,10 @@ module Caldav
   class ImportAbsencesFromCaldavJob < Caldav::BaseJob
     include GoodJob::ActiveJobExtensions::Concurrency
 
-    good_job_control_concurrency_with(
-      total_limit: 1,
-      key: -> { "Caldav::ImportAbsencesFromCaldavJob-#{arguments.first}" }
+    good_job_concurrency_rule(
+      label: -> { "Caldav::ImportAbsencesFromCaldavJob-#{arguments.first}" },
+      apply_label: true,
+      total_limit: 1
     )
 
     before_enqueue { |job| throw :abort if job.class.synced_during_last_minute?(agent_id: job.arguments.first) }
