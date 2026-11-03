@@ -9,6 +9,8 @@ module Agents
     def perform(agent, pro_connect_access_token)
       return if ENV["VISIO_NUMERIQUE_DISABLED"]
 
+      Sentry.set_user({ id: agent.id, role: "Agent", email: agent.email })
+
       rdvs_without_visio_room(agent).find_each do |rdv|
         visio_url = VisioNumerique::CreateRoom.new(agent:, pro_connect_access_token:).visio_url
         break if visio_url.nil? # pas de jeton, jeton expiré ou API indisponible : inutile d'insister

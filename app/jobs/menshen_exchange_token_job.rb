@@ -7,6 +7,7 @@ class MenshenExchangeTokenJob < ApplicationJob
 
   def perform(agent_id, subject_token, domain_id)
     agent = Agent.find(agent_id)
+    Sentry.set_user({ id: agent.id, role: "Agent", email: agent.email })
     response = Menshen::ExchangeToken.new(subject_token:, domain: Domain.find(domain_id)).call
 
     agent.update!(
