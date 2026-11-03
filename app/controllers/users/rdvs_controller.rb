@@ -60,6 +60,9 @@ class Users::RdvsController < UserAuthController
               disposition: "attachment"
   end
 
+  # << REMOVE AFTER 03/02/2027
+  # Remplacée par VisiosController, on la garde pour les notifications déjà envoyées.
+  # Penser à retirer :visio des before_action ci-dessus et de User::RdvPolicy.
   def visio
     if @rdv.visio_url.present?
       redirect_to @rdv.visio_url, allow_other_host: true
@@ -71,6 +74,7 @@ class Users::RdvsController < UserAuthController
       redirect_to users_rdv_path(@rdv)
     end
   end
+  # >> REMOVE AFTER 03/02/2027
 
   def creneaux
     next_availability_creneau_search = CreneauxSearch::ForUser.new(

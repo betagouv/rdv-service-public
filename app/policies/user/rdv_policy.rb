@@ -38,7 +38,9 @@ class User::RdvPolicy < ApplicationPolicy
   end
 
   alias ics? show?
+  # << REMOVE AFTER 03/02/2027
   alias visio? show?
+  # >> REMOVE AFTER 03/02/2027
   alias creneaux? edit?
   alias update? edit?
 

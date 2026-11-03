@@ -73,7 +73,7 @@ class Rack::Attack
                   (path == "/prendre_rdv" && request.params["invitation_token"].present?) || # search#search_rdv
                   (path.match?(%r{\A/users/rdvs/[^/]+\z}) && request.params["invitation_token"].present?) ||
                   (path.match?(%r{\A/users/rdvs/[^/]+/creneaux\z}) && request.params["invitation_token"].present?) ||
-                  (path.match?(%r{\A/users/rdvs/[^/]+/visio\z}) && request.params["invitation_token"].present?)
+                  (path.match?(%r{\A/users/rdvs/[^/]+/visio\z}) && request.params["invitation_token"].present?) # REMOVE AFTER 03/02/2027 (users/rdvs#visio)
   end
 
   Rack::Attack.throttled_responder = lambda do |request|

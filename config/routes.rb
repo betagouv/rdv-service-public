@@ -90,7 +90,10 @@ Rails.application.routes.draw do
         get :creneaux
         get :ics
         put :cancel
+        # << REMOVE AFTER 03/02/2027
+        # Remplacée par visio_from_token, on la garde pour les notifications déjà envoyées
         get :visio
+        # >> REMOVE AFTER 03/02/2027
       end
     end
 
@@ -172,7 +175,10 @@ Rails.application.routes.draw do
 
       resources :rdvs, only: %i[show] do
         member do
+          # << REMOVE AFTER 03/02/2027
+          # Remplacée par visio_from_token, on la garde pour les notifications déjà envoyées
           get :visio
+          # >> REMOVE AFTER 03/02/2027
           post :create_visio_room
         end
       end
