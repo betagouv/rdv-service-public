@@ -1,14 +1,21 @@
-# Détermine si le compte d'un agent est "sensible" (accès à un volume important de RDVs),
-# ce qui déclenche une exigence de double authentification renforcée (cf. sessions_controller
-# et pro_connect_controller). Utilisé à la fois par le job quotidien qui recalcule tous les
-# agents (CronJob::RefreshAgentsSensitiveAccountJob) et par AdminCreatesAgent pour recalculer
-# immédiatement le statut d'un agent au moment de son invitation, sans attendre le job du lendemain.
+# Détermine si le compte d'un agent est "sensible" (accès à un volume important de RDVs, ou
+# appartenance à un espace dont l'admin impose la double authentification), ce qui déclenche
+# une exigence de double authentification renforcée (cf. sessions_controller et pro_connect_controller).
+# Utilisé à la fois par le job quotidien qui recalcule tous les agents (CronJob::RefreshAgentsSensitiveAccountJob)
+# et par AdminCreatesAgent pour recalculer immédiatement le statut d'un agent au moment de son invitation,
+# sans attendre le job du lendemain.
 class AgentSensitiveAccountCalculator
   SENSITIVE_RDV_THRESHOLD = 5_000
 
   class << self
     def refresh_all!
-      sensitive_ids = (sensitive_agent_roles.pluck(:agent_id) + sensitive_territory_admins.pluck(:agent_id) + rdv_insertion_admin_agents.pluck(:agent_id)).uniq
+      sensitive_ids = (
+        sensitive_agent_roles.pluck(:agent_id) +
+        sensitive_territory_admins.pluck(:agent_id) +
+        rdv_insertion_admin_agents.pluck(:agent_id) +
+        agent_roles_in_territories_forcing_2fa.pluck(:agent_id) +
+        territorial_roles_in_territories_forcing_2fa.pluck(:agent_id)
+      ).uniq
 
       # rubocop:disable Rails/SkipsModelValidations
       Agent.where(id: sensitive_ids).in_batches.update_all(sensitive_account: true)
@@ -24,7 +31,9 @@ class AgentSensitiveAccountCalculator
     def sensitive?(agent)
       sensitive_agent_roles.exists?(agent_id: agent.id) ||
         sensitive_territory_admins.exists?(agent_id: agent.id) ||
-        rdv_insertion_admin_agents.exists?(agent_id: agent.id)
+        rdv_insertion_admin_agents.exists?(agent_id: agent.id) ||
+        agent_roles_in_territories_forcing_2fa.exists?(agent_id: agent.id) ||
+        territorial_roles_in_territories_forcing_2fa.exists?(agent_id: agent.id)
     end
 
     private
@@ -67,6 +76,16 @@ class AgentSensitiveAccountCalculator
         .joins(:organisation)
         .where(organisations: { verticale: :rdv_insertion })
         .distinct
+    end
+
+    # L'admin d'un espace peut imposer la double authentification à tous les agents de son espace,
+    # quel que soit leur rôle. Un agent présent dans plusieurs espaces y est soumis dès qu'un seul l'impose.
+    def agent_roles_in_territories_forcing_2fa
+      AgentRole.joins(:organisation).where(organisations: { territory_id: Territory.where(force_2fa_for_agents: true).select(:id) })
+    end
+
+    def territorial_roles_in_territories_forcing_2fa
+      AgentTerritorialRole.where(territory_id: Territory.where(force_2fa_for_agents: true).select(:id))
     end
   end
 end
