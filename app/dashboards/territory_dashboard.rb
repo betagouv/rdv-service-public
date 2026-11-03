@@ -21,6 +21,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     work_on_sunday: Field::Boolean,
+    force_2fa_for_agents: Field::Boolean,
     siret: SiretField,
   }.freeze
 
@@ -44,6 +45,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     name
     departement_number
     work_on_sunday
+    force_2fa_for_agents
     roles
     organisations
     category
@@ -65,6 +67,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     operator
     departement_number
     work_on_sunday
+    force_2fa_for_agents
     siret
   ].freeze
 

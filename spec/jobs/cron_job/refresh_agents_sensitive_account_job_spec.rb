@@ -132,5 +132,14 @@ RSpec.describe CronJob::RefreshAgentsSensitiveAccountJob, type: :job do
 
       expect(agent.reload.sensitive_account).to be true
     end
+
+    it "met sensitive_account à true pour un agent basic d'un espace qui impose la double authentification" do
+      organisation = create(:organisation, territory: create(:territory, force_2fa_for_agents: true))
+      agent = create(:agent, basic_role_in_organisations: [organisation], sensitive_account: false)
+
+      described_class.perform_now
+
+      expect(agent.reload.sensitive_account).to be true
+    end
   end
 end

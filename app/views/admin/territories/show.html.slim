@@ -85,6 +85,19 @@ h1.fr-h2.fr-my-2w.fr-pb-2w =  t("admin.territories.show.title", territory: curre
           .fr-tile__header
             .fr-tile__pictogram
               = dsfr_svg "artwork/pictograms/digital/calendar"
+    - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
+      .fr-col-12.fr-col-md-6.fr-col-lg-4.fr-mb-2w
+        .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
+          .fr-tile__body
+            .fr-tile__content
+              h2.fr-tile__title
+                = link_to edit_admin_territory_security_settings_path(current_territory) do
+                  | Sécurité
+              .fr-tile__desc
+                | Double authentification des agents
+          .fr-tile__header
+            .fr-tile__pictogram
+              = dsfr_svg "artwork/pictograms/system/padlock"
 
 h1.fr-h3.fr-pt-4w.fr-pb-2w Paramètres avancés
 
