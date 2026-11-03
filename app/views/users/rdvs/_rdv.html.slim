@@ -1,47 +1,43 @@
-ul.list-group.list-group-flush.fr-mb-3w.fr-mt-0
-  li.list-group-item.fr-pl-0.fr-pb-2w
-    .fr-mb-1w
-      span.fr-icon.fr-icon-calendar-fill.fr-mr-1w[aria-hidden="true"]
-      = rdv_title(rdv)
-    .fr-ml-3w
-      = rdv_tag(rdv)
+ul.fr-raw-list.fr-mb-3w.fr-mt-0
+  li.fr-mb-3w
+    span.fr-icon.fr-icon-calendar-fill.fr-mr-1w[aria-hidden="true"]
+    = rdv_title(rdv)
+    = rdv_tag(rdv)
 
   - if rdv.motif.restriction_for_rdv.present?
-    li.list-group-item.fr-pl-0.fr-py-2w
+    li.fr-mb-3w
       span.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
       = auto_link_text(rdv.motif.restriction_for_rdv)
 
   - if rdv.home?
-    li.list-group-item.fr-pl-0.fr-py-2w
+    li.fr-mb-3w
       span.fr-icon-home-4-fill.fr-mr-1w[aria-hidden="true"]
       | Ce RDV se déroulera à domicile
 
   - elsif rdv.public_office?
-    li.list-group-item.fr-pl-0.fr-py-2w
+    li.fr-mb-3w
       span.fr-icon-building-fill.fr-mr-1w[aria-hidden="true"]
       = human_location(rdv)
       - if rdv.lieu&.phone_number.present?
-        br
-        span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
-        = link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"
+        .fr-ml-4w.fr-mt-1w
+          span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
+          = link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"
 
   - elsif rdv.phone?
-    li.list-group-item.fr-pl-0.fr-py-2w
-      .fr-mb-1w
-        span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
-        | RDV Téléphonique
-      .fr-ml-4w
+    li.fr-mb-3w
+      span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
+      | RDV Téléphonique
+      .fr-ml-4w.fr-mt-1w
         - if current_user.signed_in_with_restricted_auth_token?
           | L'agent vous appellera au numéro que vous lui avez indiqué.
         - else
           | L'agent vous appellera au #{current_user.phone_number}.
 
   - elsif rdv.motif.visio?
-    li.list-group-item.fr-pl-0.fr-py-2w
-      .fr-mb-1w
-        = visio_icon(class: "fr-mr-1w")
-        = "RDV par visioconférence "
-      .fr-ml-4w
+    li.fr-mb-3w
+      = visio_icon(class: "fr-mr-1w")
+      | RDV par visioconférence
+      .fr-ml-4w.fr-mt-1w
         - if rdv.starts_at.to_date > Time.zone.today
           = t("rdvs.visio_link_available_on_rdv_day")
         - elsif rdv.visio_url.present?
@@ -49,43 +45,40 @@ ul.list-group.list-group-flush.fr-mb-3w.fr-mt-0
         - else
           = t("rdvs.visio_link_not_yet_available")
 
-  li.list-group-item.fr-pl-0.fr-py-2w
-    .fr-mb-1w
-      span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
-      = users_to_sentence(rdv.users)
+  li.fr-mb-3w
+    span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
+    = users_to_sentence(rdv.users)
     - if policy(rdv, policy_class: User::RdvPolicy).can_change_participants?
-      .fr-ml-4w
+      .fr-ml-4w.fr-mt-1w
         = link_to "modifier", users_rdv_participations_path(rdv)
 
   - if @can_see_rdv_motif
-    li.list-group-item.fr-pl-0.fr-py-2w
+    li.fr-mb-3w
       span.fr-icon-draft-fill.fr-mr-1w[aria-hidden="true"]
       = rdv.motif_name
 
   - if rdv.motif.instruction_for_rdv.present?
-    li.list-group-item.fr-pl-0.fr-py-2w
-      .fr-mb-1w
-        span.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
-        strong Informations supplémentaires&nbsp;:
-      .fr-ml-4w
+    li.fr-mb-3w
+      span.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
+      strong Informations supplémentaires&nbsp;:
+      .fr-ml-4w.fr-mt-1w
         = auto_link_text(rdv.motif.instruction_for_rdv)
 
   = render "/users/rdvs/file_attente", rdv: rdv
 
+  / Check for authorizations and already cancelled rdv/participation
+  - unless policy(rdv, policy_class: User::RdvPolicy).cancel? || \
+      policy(current_user.participation_for(rdv), policy_class: User::ParticipationPolicy).cancel? || \
+      rdv.cancelled? || \
+      current_user.participation_for(rdv).cancelled? || \
+      rdv.in_the_past?
+    li.fr-mb-3w
+      span.fr-icon-close-circle-fill.fr-mr-1w[aria-hidden="true"]
+      | Ce rendez-vous n'est pas annulable en ligne. Prenez contact avec le secrétariat.
+
 = render "/users/organisations/contact_info", phone_number: rdv.phone_number, organisation: rdv.organisation
 
-/ Check for authorizations and already cancelled rdv/participation
-- unless policy(rdv, policy_class: User::RdvPolicy).cancel? || \
-    policy(current_user.participation_for(rdv), policy_class: User::ParticipationPolicy).cancel? || \
-    rdv.cancelled? || \
-    current_user.participation_for(rdv).cancelled? || \
-    rdv.in_the_past?
-
-  li.list-group-item.font-italic
-    span.fr-icon-close-circle-fill.fr-mr-1w[aria-hidden="true"]
-    | Ce rendez-vous n'est pas annulable en ligne. Prenez contact avec le secrétariat.
-
-ul.fr-btns-group.fr-btns-group--inline.fr-btns-group--icon-left.fr-mb-0
+ul.fr-btns-group.fr-btns-group--inline.fr-mb-0
   - if policy(rdv, policy_class: User::RdvPolicy).edit?
     li
       = link_to "Déplacer le RDV", creneaux_users_rdv_path(rdv), class: "fr-btn fr-btn--tertiary"
