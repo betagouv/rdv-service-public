@@ -71,8 +71,9 @@ class OffDays
   FULL_CALENDAR_ARRAY = JOURS_FERIES.map do |jour_ferie|
     {
       title: jour_ferie.label,
-      start: jour_ferie.date.beginning_of_day.as_json,
-      end: jour_ferie.date.end_of_day.as_json,
+      start: jour_ferie.date.as_json,
+      end: jour_ferie.date.next_day.as_json,
+      allDay: true,
       color: AbsencesHelper::CALENDAR_BACKGROUND_COLOR,
       contrastColor: "white",
     }

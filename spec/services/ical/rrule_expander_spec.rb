@@ -362,4 +362,37 @@ RSpec.describe Ical::RruleExpander do
       expect(actual_recurrences[3].starts_at.to_json).to eq('"2026-04-28T17:00:00.000+02:00"')
     end
   end
+
+  describe "événement récurrent toute la journée" do
+    let(:all_day_every_day) do
+      <<~ICALENDAR
+        BEGIN:VCALENDAR
+        VERSION:2.0
+        BEGIN:VEVENT
+        DTSTAMP:20261102T090000Z
+        DTSTART;VALUE=DATE:20261102
+        DTEND;VALUE=DATE:20261103
+        RRULE:FREQ=DAILY
+        SUMMARY:Télétravail
+        TRANSP:OPAQUE
+        UID:5b3c1a8e-3f4e-4d0c-9a8f-2d6f0c1b7e42
+        END:VEVENT
+        END:VCALENDAR
+      ICALENDAR
+    end
+
+    it "renvoie des occurrences de minuit à minuit à Paris, même si le serveur est en UTC" do
+      ClimateControl.modify(TZ: "UTC") do
+        from = Time.zone.parse("2026-11-02 00:00")
+        to = Time.zone.parse("2026-11-03 23:59")
+        actual_recurrences = described_class.new(all_day_every_day).compute_occurrences_within(from..to)
+        expect(actual_recurrences.map(&:to_a)).to eq(
+          [
+            [Time.zone.parse("2026-11-02 00:00"), Time.zone.parse("2026-11-03 00:00")],
+            [Time.zone.parse("2026-11-03 00:00"), Time.zone.parse("2026-11-04 00:00")],
+          ]
+        )
+      end
+    end
+  end
 end

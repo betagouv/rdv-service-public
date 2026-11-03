@@ -7,6 +7,7 @@ import {
   defaultFullCalendarConfig,
   eventRenderer,
   setupRealtimeRefresh,
+  setupAllDaySlotToggle,
   handleAjaxError,
   dayHeaderContent,
   weekTitleFormat,
@@ -25,6 +26,7 @@ class AgendaMultiAgent {
     this.data = this.calendarEl.dataset
     this.resources = JSON.parse(this.data.resourcesJson);
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
+    setupAllDaySlotToggle(this.fullCalendarInstance);
     this.fullCalendarInstance.render();
     setupRealtimeRefresh(this.fullCalendarInstance, this.resources.map(resource => resource.id));
   }

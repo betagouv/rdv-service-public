@@ -282,4 +282,44 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       end
     end
   end
+
+  describe "ligne des événements toute la journée" do
+    let(:organisation) { create(:organisation) }
+    let(:agent) { create(:agent, :with_caldav_config, basic_role_in_organisations: [organisation]) }
+
+    before { login_as(agent, scope: :agent) }
+
+    it "n'est affichée que si la semaine contient des événements toute la journée", js: true do
+      # Semaine du 8 mars 2027, sans jour férié
+      monday = Time.zone.parse("2027-03-08")
+      ExternalCalendarEvent.create!(agent:, url: "avec-horaires", starts_at: monday.change(hour: 10), ends_at: monday.change(hour: 11))
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id, date: "2027-03-08")
+      expect(page).to have_content("Indisponibilité")
+      expect(page).to have_no_content(/Toute la\s+journée/)
+
+      tuesday = monday + 1.day
+      ExternalCalendarEvent.create!(agent:, url: "toute-la-journee", starts_at: tuesday, ends_at: tuesday + 1.day)
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id, date: "2027-03-08")
+      expect(page).to have_content(/Toute la\s+journée/)
+
+      find("button[aria-label='Semaine suivante']").click
+      expect(page).to have_content("mar. 16")
+      expect(page).to have_no_content(/Toute la\s+journée/)
+    end
+
+    it "affiche les jours fériés sur cette ligne", js: true do
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id, date: "2027-07-14")
+      expect(page).to have_content("Fête nationale")
+      expect(page).to have_content(/Toute la\s+journée/)
+    end
+
+    it "n'est pas affichée pour un jour férié tombant un jour masqué", js: true do
+      agent_affichant_les_samedis = create(:agent, basic_role_in_organisations: [organisation], display_saturdays: true)
+      login_as(agent_affichant_les_samedis, scope: :agent)
+      # La Toussaint 2026 tombe un dimanche
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent_affichant_les_samedis.id, date: "2026-10-28")
+      expect(page).to have_content("sam. 31")
+      expect(page).to have_no_content(/Toute la\s+journée/)
+    end
+  end
 end
