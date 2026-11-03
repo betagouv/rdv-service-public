@@ -6,7 +6,7 @@ Rails.application.configure do
 
   config.good_job.on_thread_error = ->(exception) { Sentry.capture_exception(exception) } # this is never called !
   config.good_job.execution_mode = :external
-  config.good_job.queues = "latency_30s:1; latency_5m,latency_30s:2; *:2"
+  config.good_job.queues = "latency_30s:1; latency_5m,latency_30s:2; *:2" # syntax: queue_name -> dedicated threads count
   config.good_job.shutdown_timeout = 25 # seconds
 
   # See https://github.com/bensheldon/good_job/pull/883
