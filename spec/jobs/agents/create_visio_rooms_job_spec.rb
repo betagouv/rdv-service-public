@@ -52,6 +52,8 @@ RSpec.describe Agents::CreateVisioRoomsJob do
 
     expect(WebMock).to have_requested(:post, rooms_api_url).once
     expect(rdvs.map { _1.reload.visio_url_custom }).to all(be_nil)
+    expect(sentry_events.last.exception.values.first.type).to eq("VisioNumerique::CreateRoom::ApiError")
+    expect(sentry_events.last.user).to eq({ email: agent.email, id: agent.id, role: "Agent" })
   end
 
   context "quand l'agent a un jeton Menshen valide" do
