@@ -3,7 +3,7 @@ FactoryBot.define do
     agent { association(:agent) }
     calendar_url { "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/" }
     started_at { Time.zone.now }
-    ended_at { started_at + 1.second }
+    ended_at { started_at + 1.second if started_at }
 
     trait :with_logs do
       after(:create) do |external_calendar_sync_execution, _|
