@@ -30,8 +30,7 @@ class Admin::Api::Agenda::ExternalCalendarEventsController < Admin::Api::BaseCon
 
   # Les événements "toute la journée" (DTSTART;VALUE=DATE en iCal) sont stockés de minuit à minuit
   def all_day?(occurrence)
-    occurrence.ends_at > occurrence.starts_at &&
-      occurrence.starts_at == occurrence.starts_at.beginning_of_day &&
+    occurrence.starts_at == occurrence.starts_at.beginning_of_day &&
       occurrence.ends_at == occurrence.ends_at.beginning_of_day
   end
 
