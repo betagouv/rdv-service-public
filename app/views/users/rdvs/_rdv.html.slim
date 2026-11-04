@@ -64,9 +64,10 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
     h2.fr-h6.fr-mb-1w
       - if rdv.users.count > 1
         span.fr-icon-group-fill.fr-mr-1w[aria-hidden="true"]
+        | Participants
       - else
         span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
-      = t("rdvs.participants_title", count: rdv.users.count)
+        | Participant
     = users_to_sentence(rdv.users)
     - if policy(rdv, policy_class: User::RdvPolicy).can_change_participants?
       .fr-mt-1w

@@ -13,9 +13,6 @@ fr:
     seats:
       one: 1 place
       other: "%{count} places"
-    participants_title:
-      one: Participant
-      other: Participants
     participants:
       one: 1 participant
       other: "%{count} participants"
