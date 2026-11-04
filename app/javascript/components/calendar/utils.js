@@ -82,6 +82,8 @@ const defaultFullCalendarConfig = () => ({
   locale: frLocale,
   buttons: buttonHintsButtons,
   allDaySlot: false,
+  // Le libellé "Toute la journée" est masqué visuellement mais conservé pour les lecteurs d'écran
+  allDayHeaderContent: ({ text }) => ({ html: `<span class="fr-sr-only">${text}</span>` }),
   height: "auto",
   selectable: true,
   nowIndicator: true,

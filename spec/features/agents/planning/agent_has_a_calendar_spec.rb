@@ -287,6 +287,8 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     let(:organisation) { create(:organisation) }
     let(:agent) { create(:agent, :with_caldav_config, basic_role_in_organisations: [organisation]) }
 
+    let(:all_day_row_header) { "[role='rowheader'] .fr-sr-only" }
+
     before { login_as(agent, scope: :agent) }
 
     it "n'est affichée que si la semaine contient des événements toute la journée", js: true do
@@ -295,22 +297,22 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       ExternalCalendarEvent.create!(agent:, url: "avec-horaires", starts_at: monday.change(hour: 10), ends_at: monday.change(hour: 11))
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id, date: "2027-03-08")
       expect(page).to have_content("Indisponibilité")
-      expect(page).to have_no_content(/Toute la\s+journée/)
+      expect(page).to have_no_css(all_day_row_header, text: "Toute la journée", visible: :all)
 
       tuesday = monday + 1.day
       ExternalCalendarEvent.create!(agent:, url: "toute-la-journee", starts_at: tuesday, ends_at: tuesday + 1.day)
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id, date: "2027-03-08")
-      expect(page).to have_content(/Toute la\s+journée/)
+      expect(page).to have_css(all_day_row_header, text: "Toute la journée", visible: :all)
 
       find("button[aria-label='Semaine suivante']").click
       expect(page).to have_content("mar. 16")
-      expect(page).to have_no_content(/Toute la\s+journée/)
+      expect(page).to have_no_css(all_day_row_header, text: "Toute la journée", visible: :all)
     end
 
     it "affiche les jours fériés sur cette ligne", js: true do
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id, date: "2027-07-14")
       expect(page).to have_content("Fête nationale")
-      expect(page).to have_content(/Toute la\s+journée/)
+      expect(page).to have_css(all_day_row_header, text: "Toute la journée", visible: :all)
     end
 
     it "n'est pas affichée pour un jour férié tombant un jour masqué", js: true do
@@ -319,7 +321,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       # La Toussaint 2026 tombe un dimanche
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent_affichant_les_samedis.id, date: "2026-10-28")
       expect(page).to have_content("sam. 31")
-      expect(page).to have_no_content(/Toute la\s+journée/)
+      expect(page).to have_no_css(all_day_row_header, text: "Toute la journée", visible: :all)
     end
   end
 end
