@@ -138,15 +138,15 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
       let(:rdv) { create(:rdv, users: [user], agents: [agent]) }
 
       it "n'affiche pas les usagers sans données sensibles" do
-        expect(rdv.payload(recipient: agent)[:description]).not_to include("Usagers :")
+        expect(rdv.payload(recipient: agent)[:description]).not_to include("Participants :")
       end
 
       it "n'affiche pas les usagers dans l'ICS envoyé à l'usager" do
-        expect(rdv.payload(recipient: user, sensitive_data: true)[:description]).not_to include("Usagers :")
+        expect(rdv.payload(recipient: user, sensitive_data: true)[:description]).not_to include("Participants :")
       end
 
       it "affiche le nom et l'email de l'usager avec les données sensibles" do
-        expect(rdv.payload(recipient: agent, sensitive_data: true)[:description]).to end_with("\nUsagers :\n- Ethan DUVAL : ethan@example.com")
+        expect(rdv.payload(recipient: agent, sensitive_data: true)[:description]).to end_with("\nParticipants :\n- Ethan DUVAL : ethan@example.com")
       end
 
       context "avec plusieurs usagers, dont un proche et un usager sans email" do
@@ -157,7 +157,7 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
 
         it "affiche une ligne par usager, avec l'email du responsable pour le proche" do
           description = rdv.payload(recipient: agent, sensitive_data: true)[:description]
-          expect(description).to include("\nUsagers :\n")
+          expect(description).to include("\nParticipants :\n")
           expect(description.lines.map(&:chomp)).to include(
             "- Ethan DUVAL : ethan@example.com",
             "- Léo DUVAL : marie@example.com",
@@ -181,7 +181,7 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
           let(:rdv) { create(:rdv, organisation:, users: [user, create(:user), create(:user)], motif: build(:motif, name: "Consultation", organisation:)) }
 
           it "affiche le nombre d'usagers" do
-            expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:summary]).to eq("Consultation avec 3 usagers")
+            expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:summary]).to eq("Consultation avec 3 participants")
           end
         end
 
