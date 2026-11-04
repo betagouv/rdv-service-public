@@ -1,8 +1,9 @@
 ul.fr-raw-list.fr-mb-3w.fr-mt-0
   li.fr-mb-4w
     .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
-      span.fr-icon.fr-icon-calendar-fill[aria-hidden="true"]
+      span.fr-icon-calendar-event-fill[aria-hidden="true"]
       div
+        p.fr-text--sm.rdv-color-text-default-grey.fr-mb-0 Date et heure
         = rdv_title(rdv)
         = rdv_tag(rdv)
 
@@ -18,13 +19,15 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
       .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
         span.fr-icon-home-4-fill[aria-hidden="true"]
         div
-          | Ce RDV se déroulera à domicile
+          p.fr-text--sm.rdv-color-text-default-grey.fr-mb-0 Lieu
+          | À domicile
 
   - elsif rdv.public_office?
     li.fr-mb-4w
       .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
-        span.fr-icon-building-fill[aria-hidden="true"]
+        span.fr-icon-map-pin-2-fill[aria-hidden="true"]
         div
+          p.fr-text--sm.rdv-color-text-default-grey.fr-mb-0 Lieu
           = human_location(rdv)
           - if rdv.lieu&.phone_number.present?
             .fr-mt-1w
@@ -36,7 +39,8 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
       .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
         span.fr-icon-phone-fill[aria-hidden="true"]
         div
-          | RDV Téléphonique
+          p.fr-text--sm.rdv-color-text-default-grey.fr-mb-0 Téléphone
+          | RDV téléphonique
           .fr-mt-1w
             - if current_user.signed_in_with_restricted_auth_token?
               | L'agent vous appellera au numéro que vous lui avez indiqué.
@@ -46,9 +50,9 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
   - elsif rdv.motif.visio?
     li.fr-mb-4w
       .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
-        = visio_icon
+        span.fr-icon-video-chat-fill[aria-hidden="true"]
         div
-          | RDV par visioconférence
+          p.fr-text--sm.rdv-color-text-default-grey.fr-mb-0 Visioconférence
           .fr-mt-1w
             - if rdv.starts_at.to_date > Time.zone.today
               = t("rdvs.visio_link_available_on_rdv_day")
@@ -59,8 +63,12 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
 
   li.fr-mb-4w
     .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
-      span.fr-icon-user-fill[aria-hidden="true"]
+      - if rdv.users.count > 1
+        span.fr-icon-group-fill[aria-hidden="true"]
+      - else
+        span.fr-icon-user-fill[aria-hidden="true"]
       div
+        p.fr-text--sm.rdv-color-text-default-grey.fr-mb-0 Participants
         = users_to_sentence(rdv.users)
         - if policy(rdv, policy_class: User::RdvPolicy).can_change_participants?
           .fr-mt-1w
@@ -69,18 +77,18 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
   - if @can_see_rdv_motif
     li.fr-mb-4w
       .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
-        span.fr-icon-draft-fill[aria-hidden="true"]
+        span.fr-icon-booklet-fill[aria-hidden="true"]
         div
+          p.fr-text--sm.rdv-color-text-default-grey.fr-mb-0 Motif
           = rdv.motif_name
 
   - if rdv.motif.instruction_for_rdv.present?
     li.fr-mb-4w
       .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
-        span.fr-icon-warning-fill[aria-hidden="true"]
+        span.fr-icon-information-fill[aria-hidden="true"]
         div
-          strong Informations supplémentaires&nbsp;:
-          .fr-mt-1w
-            = auto_link_text(rdv.motif.instruction_for_rdv)
+          p.fr-text--sm.rdv-color-text-default-grey.fr-mb-0 Informations
+          = auto_link_text(rdv.motif.instruction_for_rdv)
 
   = render "/users/rdvs/file_attente", rdv: rdv
 
