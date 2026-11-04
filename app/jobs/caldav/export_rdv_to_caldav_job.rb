@@ -2,9 +2,10 @@ module Caldav
   class ExportRdvToCaldavJob < Caldav::BaseJob
     include GoodJob::ActiveJobExtensions::Concurrency
 
-    good_job_control_concurrency_with(
-      perform_limit: 1,
-      key: -> { "Caldav::ExportRdvToCaldavJob-#{arguments.first}" }
+    good_job_concurrency_rule(
+      label: -> { "Caldav::ExportRdvToCaldavJob-#{arguments.first}" },
+      apply_label: true,
+      perform_limit: 1
     )
 
     def perform(agents_rdv_id, agent_id, caldav_event_url: nil)

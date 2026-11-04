@@ -1,7 +1,7 @@
 class SynchronizeCrmPageJob < ApplicationJob
   include GoodJob::ActiveJobExtensions::Concurrency
 
-  good_job_control_concurrency_with(perform_limit: 1) # NOTE: le rate limit 3 req/s est partagé avec le cron parent
+  good_job_concurrency_rule(label: "SynchronizeCrmPageJob", apply_label: true, perform_limit: 1) # NOTE: le rate limit 3 req/s est partagé avec le cron parent
 
   # Le 429 est transitoire : on attend 5 minutes entre chaque tentative,
   # sans épuiser les 13 tentatives du retry_on StandardError du DefaultJobBehaviour

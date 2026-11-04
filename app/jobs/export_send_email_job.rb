@@ -1,9 +1,10 @@
 class ExportSendEmailJob < ExportJob
   include GoodJob::ActiveJobExtensions::Concurrency
 
-  good_job_control_concurrency_with(
-    perform_limit: 1,
-    key: -> { "high_ram_usage_export" }
+  good_job_concurrency_rule(
+    label: "high_ram_usage_export",
+    apply_label: true,
+    perform_limit: 1
   )
 
   def perform(batch, _params)

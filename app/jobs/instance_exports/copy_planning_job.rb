@@ -88,10 +88,11 @@ class InstanceExports::CopyPlanningJob < ApplicationJob
   class CopyRdvJob < ApplicationJob
     include GoodJob::ActiveJobExtensions::Concurrency
 
-    good_job_control_concurrency_with(
-      perform_limit: 3,
+    good_job_concurrency_rule(
       # Pour éviter de spammer notre API, on limite le nombre de jobs
-      key: -> { "InstanceExports::CopyPlanningJob::CopyRdvJob" }
+      label: "InstanceExports::CopyPlanningJob::CopyRdvJob",
+      apply_label: true,
+      perform_limit: 3
     )
 
     queue_as :latency_5m
