@@ -1,6 +1,4 @@
-RSpec.describe "Admin::Api::Agenda::ExternalCalendarEvents", type: :request do
-  include Rails.application.routes.url_helpers
-
+RSpec.describe "Admin::Api::Agenda::ExternalCalendarEventsController" do
   let(:agent) { create(:agent, :with_caldav_config) }
 
   before do
