@@ -100,7 +100,7 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
 
 = render "/users/organisations/contact_info", phone_number: rdv.phone_number, organisation: rdv.organisation
 
-ul.fr-btns-group.fr-btns-group--inline.fr-mb-0
+ul.fr-btns-group.fr-btns-group--inline.fr-btns-group--icon-left.fr-mb-0
   - if policy(rdv, policy_class: User::RdvPolicy).edit?
     li
       = link_to "Déplacer le RDV", creneaux_users_rdv_path(rdv), class: "fr-btn fr-btn--tertiary"
