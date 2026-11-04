@@ -1,21 +1,21 @@
 ul.fr-raw-list.fr-mb-3w.fr-mt-0
-  li.fr-mb-3w
+  li.fr-mb-4w
     span.fr-icon.fr-icon-calendar-fill.fr-mr-1w[aria-hidden="true"]
     = rdv_title(rdv)
     = rdv_tag(rdv)
 
   - if rdv.motif.restriction_for_rdv.present?
-    li.fr-mb-3w
+    li.fr-mb-4w
       span.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
       = auto_link_text(rdv.motif.restriction_for_rdv)
 
   - if rdv.home?
-    li.fr-mb-3w
+    li.fr-mb-4w
       span.fr-icon-home-4-fill.fr-mr-1w[aria-hidden="true"]
       | Ce RDV se déroulera à domicile
 
   - elsif rdv.public_office?
-    li.fr-mb-3w
+    li.fr-mb-4w
       span.fr-icon-building-fill.fr-mr-1w[aria-hidden="true"]
       = human_location(rdv)
       - if rdv.lieu&.phone_number.present?
@@ -24,7 +24,7 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
           = link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"
 
   - elsif rdv.phone?
-    li.fr-mb-3w
+    li.fr-mb-4w
       span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
       | RDV Téléphonique
       .fr-ml-4w.fr-mt-1w
@@ -34,7 +34,7 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
           | L'agent vous appellera au #{current_user.phone_number}.
 
   - elsif rdv.motif.visio?
-    li.fr-mb-3w
+    li.fr-mb-4w
       = visio_icon(class: "fr-mr-1w")
       | RDV par visioconférence
       .fr-ml-4w.fr-mt-1w
@@ -45,7 +45,7 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
         - else
           = t("rdvs.visio_link_not_yet_available")
 
-  li.fr-mb-3w
+  li.fr-mb-4w
     span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
     = users_to_sentence(rdv.users)
     - if policy(rdv, policy_class: User::RdvPolicy).can_change_participants?
@@ -53,12 +53,12 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
         = link_to "modifier", users_rdv_participations_path(rdv)
 
   - if @can_see_rdv_motif
-    li.fr-mb-3w
+    li.fr-mb-4w
       span.fr-icon-draft-fill.fr-mr-1w[aria-hidden="true"]
       = rdv.motif_name
 
   - if rdv.motif.instruction_for_rdv.present?
-    li.fr-mb-3w
+    li.fr-mb-4w
       span.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
       strong Informations supplémentaires&nbsp;:
       .fr-ml-4w.fr-mt-1w
@@ -72,7 +72,7 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
       rdv.cancelled? || \
       current_user.participation_for(rdv).cancelled? || \
       rdv.in_the_past?
-    li.fr-mb-3w
+    li.fr-mb-4w
       span.fr-icon-close-circle-fill.fr-mr-1w[aria-hidden="true"]
       | Ce rendez-vous n'est pas annulable en ligne. Prenez contact avec le secrétariat.
 
