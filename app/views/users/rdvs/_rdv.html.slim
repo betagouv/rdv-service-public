@@ -1,68 +1,86 @@
 ul.fr-raw-list.fr-mb-3w.fr-mt-0
   li.fr-mb-4w
-    span.fr-icon.fr-icon-calendar-fill.fr-mr-1w[aria-hidden="true"]
-    = rdv_title(rdv)
-    = rdv_tag(rdv)
+    .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
+      span.fr-icon.fr-icon-calendar-fill[aria-hidden="true"]
+      div
+        = rdv_title(rdv)
+        = rdv_tag(rdv)
 
   - if rdv.motif.restriction_for_rdv.present?
     li.fr-mb-4w
-      span.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
-      = auto_link_text(rdv.motif.restriction_for_rdv)
+      .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
+        span.fr-icon-warning-fill[aria-hidden="true"]
+        div
+          = auto_link_text(rdv.motif.restriction_for_rdv)
 
   - if rdv.home?
     li.fr-mb-4w
-      span.fr-icon-home-4-fill.fr-mr-1w[aria-hidden="true"]
-      | Ce RDV se déroulera à domicile
+      .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
+        span.fr-icon-home-4-fill[aria-hidden="true"]
+        div
+          | Ce RDV se déroulera à domicile
 
   - elsif rdv.public_office?
     li.fr-mb-4w
-      span.fr-icon-building-fill.fr-mr-1w[aria-hidden="true"]
-      = human_location(rdv)
-      - if rdv.lieu&.phone_number.present?
-        .fr-ml-4w.fr-mt-1w
-          span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
-          = link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"
+      .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
+        span.fr-icon-building-fill[aria-hidden="true"]
+        div
+          = human_location(rdv)
+          - if rdv.lieu&.phone_number.present?
+            .fr-mt-1w
+              span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
+              = link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"
 
   - elsif rdv.phone?
     li.fr-mb-4w
-      span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
-      | RDV Téléphonique
-      .fr-ml-4w.fr-mt-1w
-        - if current_user.signed_in_with_restricted_auth_token?
-          | L'agent vous appellera au numéro que vous lui avez indiqué.
-        - else
-          | L'agent vous appellera au #{current_user.phone_number}.
+      .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
+        span.fr-icon-phone-fill[aria-hidden="true"]
+        div
+          | RDV Téléphonique
+          .fr-mt-1w
+            - if current_user.signed_in_with_restricted_auth_token?
+              | L'agent vous appellera au numéro que vous lui avez indiqué.
+            - else
+              | L'agent vous appellera au #{current_user.phone_number}.
 
   - elsif rdv.motif.visio?
     li.fr-mb-4w
-      = visio_icon(class: "fr-mr-1w")
-      | RDV par visioconférence
-      .fr-ml-4w.fr-mt-1w
-        - if rdv.starts_at.to_date > Time.zone.today
-          = t("rdvs.visio_link_available_on_rdv_day")
-        - elsif rdv.visio_url.present?
-          = link_to("rejoindre la visioconférence", rdv.visio_url, target: :_blank)
-        - else
-          = t("rdvs.visio_link_not_yet_available")
+      .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
+        = visio_icon
+        div
+          | RDV par visioconférence
+          .fr-mt-1w
+            - if rdv.starts_at.to_date > Time.zone.today
+              = t("rdvs.visio_link_available_on_rdv_day")
+            - elsif rdv.visio_url.present?
+              = link_to("rejoindre la visioconférence", rdv.visio_url, target: :_blank)
+            - else
+              = t("rdvs.visio_link_not_yet_available")
 
   li.fr-mb-4w
-    span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
-    = users_to_sentence(rdv.users)
-    - if policy(rdv, policy_class: User::RdvPolicy).can_change_participants?
-      .fr-ml-4w.fr-mt-1w
-        = link_to "modifier", users_rdv_participations_path(rdv)
+    .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
+      span.fr-icon-user-fill[aria-hidden="true"]
+      div
+        = users_to_sentence(rdv.users)
+        - if policy(rdv, policy_class: User::RdvPolicy).can_change_participants?
+          .fr-mt-1w
+            = link_to "modifier", users_rdv_participations_path(rdv)
 
   - if @can_see_rdv_motif
     li.fr-mb-4w
-      span.fr-icon-draft-fill.fr-mr-1w[aria-hidden="true"]
-      = rdv.motif_name
+      .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
+        span.fr-icon-draft-fill[aria-hidden="true"]
+        div
+          = rdv.motif_name
 
   - if rdv.motif.instruction_for_rdv.present?
     li.fr-mb-4w
-      span.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
-      strong Informations supplémentaires&nbsp;:
-      .fr-ml-4w.fr-mt-1w
-        = auto_link_text(rdv.motif.instruction_for_rdv)
+      .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
+        span.fr-icon-warning-fill[aria-hidden="true"]
+        div
+          strong Informations supplémentaires&nbsp;:
+          .fr-mt-1w
+            = auto_link_text(rdv.motif.instruction_for_rdv)
 
   = render "/users/rdvs/file_attente", rdv: rdv
 
@@ -73,8 +91,10 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
       current_user.participation_for(rdv).cancelled? || \
       rdv.in_the_past?
     li.fr-mb-4w
-      span.fr-icon-close-circle-fill.fr-mr-1w[aria-hidden="true"]
-      | Ce rendez-vous n'est pas annulable en ligne. Prenez contact avec le secrétariat.
+      .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
+        span.fr-icon-close-circle-fill[aria-hidden="true"]
+        div
+          | Ce rendez-vous n'est pas annulable en ligne. Prenez contact avec le secrétariat.
 
 = render "/users/organisations/contact_info", phone_number: rdv.phone_number, organisation: rdv.organisation
 

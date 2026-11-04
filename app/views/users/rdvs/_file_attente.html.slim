@@ -1,15 +1,16 @@
 - if rdv.available_to_file_attente?
   li.fr-mb-4w
-    .fr-mb-1w
-      span.fr-icon-notification-3-fill.fr-mr-1w[aria-hidden="true"]
-      | Vous souhaitez prendre RDV plus tôt ?
-    .fr-ml-4w
-      - fa = rdv.file_attentes.where(user: current_user).first || FileAttente.new(user: current_user, rdv: rdv)
-      = simple_form_for fa, url: users_file_attente_path, html: { method: :post }, wrapper: :inline_form, remote: false, data: { controller: "form" }  do |f|
-        = f.input :id, as: :hidden
-        = f.input :rdv_id, as: :hidden
-        = f.input :user_id, as: :hidden
-        .fr-checkbox-group
-          = check_box "active", "0", { checked: (fa.id.nil? ? false : true), data: { action: "change->form#submit" } }
-          = label_tag "active[0]", class: "fr-label" do
-            | Je souhaite être prévenu·e si un créneau se libère.
+    .rdv-display-flex.rdv-align-items-flex-start.rdv-gap-05rem
+      span.fr-icon-notification-3-fill[aria-hidden="true"]
+      div
+        | Vous souhaitez prendre RDV plus tôt ?
+        .fr-mt-1w
+          - fa = rdv.file_attentes.where(user: current_user).first || FileAttente.new(user: current_user, rdv: rdv)
+          = simple_form_for fa, url: users_file_attente_path, html: { method: :post }, wrapper: :inline_form, remote: false, data: { controller: "form" }  do |f|
+            = f.input :id, as: :hidden
+            = f.input :rdv_id, as: :hidden
+            = f.input :user_id, as: :hidden
+            .fr-checkbox-group
+              = check_box "active", "0", { checked: (fa.id.nil? ? false : true), data: { action: "change->form#submit" } }
+              = label_tag "active[0]", class: "fr-label" do
+                | Je souhaite être prévenu·e si un créneau se libère.
