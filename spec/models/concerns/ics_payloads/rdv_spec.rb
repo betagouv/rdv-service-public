@@ -132,6 +132,41 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
       it { expect(rdv.payload[:ical_uid]).to eq(rdv.uuid) }
     end
 
+    describe "liste des usagers dans la description" do
+      let(:agent) { create(:agent) }
+      let(:user) { create(:user, first_name: "Ethan", last_name: "DUVAL", email: "ethan@example.com") }
+      let(:rdv) { create(:rdv, users: [user], agents: [agent]) }
+
+      it "n'affiche pas les usagers sans données sensibles" do
+        expect(rdv.payload(recipient: agent)[:description]).not_to include("Participants :")
+      end
+
+      it "n'affiche pas les usagers dans l'ICS envoyé à l'usager" do
+        expect(rdv.payload(recipient: user, sensitive_data: true)[:description]).not_to include("Participants :")
+      end
+
+      it "affiche le nom et l'email de l'usager avec les données sensibles" do
+        expect(rdv.payload(recipient: agent, sensitive_data: true)[:description]).to end_with("\nParticipants :\n- Ethan DUVAL : ethan@example.com")
+      end
+
+      context "avec plusieurs usagers, dont un proche et un usager sans email" do
+        let(:responsible) { create(:user, first_name: "Marie", last_name: "DUVAL", email: "marie@example.com") }
+        let(:relative) { create(:user, first_name: "Léo", last_name: "DUVAL", responsible:, email: nil) }
+        let(:without_email) { create(:user, first_name: "Paul", last_name: "MARTIN", email: nil) }
+        let(:rdv) { create(:rdv, users: [user, relative, without_email], agents: [agent]) }
+
+        it "affiche une ligne par usager, avec l'email du responsable pour le proche" do
+          description = rdv.payload(recipient: agent, sensitive_data: true)[:description]
+          expect(description).to include("\nParticipants :\n")
+          expect(description.lines.map(&:chomp)).to include(
+            "- Ethan DUVAL : ethan@example.com",
+            "- Léo DUVAL : marie@example.com",
+            "- Paul MARTIN"
+          )
+        end
+      end
+    end
+
     describe ":summary" do
       let(:user) { create(:user, first_name: "Ethan", last_name: "DUVAL") }
       let(:organisation) { create(:organisation) }
@@ -140,6 +175,14 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
       context "with sensitive data enabled" do
         it "includes the user's name in the summary" do
           expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:summary]).to eq("Ethan DUVAL - Consultation")
+        end
+
+        context "avec plusieurs usagers" do
+          let(:rdv) { create(:rdv, organisation:, users: [user, create(:user), create(:user)], motif: build(:motif, name: "Consultation", organisation:)) }
+
+          it "affiche le nombre d'usagers" do
+            expect(rdv.payload(recipient: rdv.users.first, sensitive_data: true)[:summary]).to eq("Consultation avec 3 participants")
+          end
         end
 
         context "when RDV is collectif" do

@@ -39,6 +39,7 @@ module IcsPayloads
       description += ics_description_link(recipient)
       description += ics_description_dossier_link(recipient)
       description += ics_description_context(recipient, sensitive_data)
+      description += ics_description_users(recipient, sensitive_data)
       description
     end
 
@@ -75,9 +76,21 @@ module IcsPayloads
       "\nContexte : #{context}"
     end
 
+    def ics_description_users(recipient, sensitive_data)
+      return "" unless sensitive_data && recipient.is_a?(Agent) && users.any?
+
+      lines = users.map do |user|
+        email = user.user_to_notify&.email
+        email.present? ? "- #{user.full_name} : #{email}" : "- #{user.full_name}"
+      end
+      "\nParticipants :\n#{lines.join("\n")}"
+    end
+
     def ics_summary(sensitive_data:)
       if motif.collectif?
         motif&.name
+      elsif sensitive_data && users.many?
+        "#{motif&.name} avec #{users.size} participants"
       elsif sensitive_data
         "#{users.first.full_name} - #{motif&.name}"
       else

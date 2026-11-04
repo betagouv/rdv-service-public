@@ -50,10 +50,10 @@
       .fr-col-8
         - if config.caldav_include_sensitive_data
           .fr-badge Non
-          .fr-mt-2v.fr-text-mention--grey.font-14 Le nom de l'usager, du motif et du lieu sont transmis au calendrier externe
+          .fr-mt-2v.fr-text-mention--grey.font-14 Le nom et l’email des usagers, leur téléphone ou leur adresse (pour les rendez-vous téléphoniques ou à domicile) et le contexte du rendez-vous sont transmis au calendrier externe
         - else
           .fr-badge Oui
-          .fr-mt-2v.fr-text-mention--grey.font-14 Le nom de l'usager, du motif et du lieu sont anonymisés
+          .fr-mt-2v.fr-text-mention--grey.font-14 Seuls le motif, le lieu et le lien vers le rendez-vous sont transmis au calendrier externe
 
     .fr-grid-row.fr-grid-row--gutters.fr-mt-2w
       .fr-col-4 URL de l'agenda

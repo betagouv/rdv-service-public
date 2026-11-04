@@ -29,14 +29,14 @@
             label.fr-label for="caldav_include_sensitive_data_false"
               | Anonymiser les informations du rendez-vous
               span.fr-hint-text
-                | Cette option vous permet de ne pas transmettre de données personnelles liées aux rendez-vous à votre agenda externe.
+                | Seuls le motif, le lieu et le lien vers le rendez-vous sont transmis à votre agenda externe. Aucune donnée personnelle des usagers n’est transmise.
         .fr-fieldset__element
           .fr-radio-group
             input#caldav_include_sensitive_data_true type="radio" name="caldav_include_sensitive_data" value="true"
             label.fr-label for="caldav_include_sensitive_data_true"
               | Inclure les données personnelles liées au rendez-vous dans mon agenda externe
               span.fr-hint-text
-                | Cette option est plus pratique, mais les autres personnes qui ont accès à votre agenda externe auront accès aux données personnelles liées au rendez-vous.
+                | Le nom et l’email des usagers, leur téléphone ou leur adresse (pour les rendez-vous téléphoniques ou à domicile) et le contexte du rendez-vous sont transmis à votre agenda externe. Cette option est plus pratique, mais les autres personnes qui ont accès à votre agenda externe auront accès à ces données.
   .card.fr-mb-3w
     .card-body
       h5.card-title Personnalisation (optionnelle)
