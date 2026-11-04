@@ -13,7 +13,7 @@ class ExportSendEmailJob < ExportJob
     rows_enum = Enumerator.new do |yielder|
       # On a pas besoin du cache ActiveRecord ici, on évite donc
       # d'y stocker un gros volume de donnée pour économiser de la RAM.
-      ExportFileBlob.uncached do
+      ActiveRecord::Base.uncached do
         page_blobs.in_batches(of: 10) do |page_blobs_batch|
           page_blobs_batch.pluck(:data).each do |json_rows|
             JSON.parse(json_rows).each do |row|
