@@ -5,6 +5,9 @@ class Agents::RdvsController < AgentAuthController
     redirect_to admin_organisation_rdv_path(@rdv.organisation, @rdv)
   end
 
+  # << REMOVE AFTER 03/02/2027
+  # Remplacée par VisiosController, on la garde pour les notifications déjà envoyées.
+  # Penser à retirer :visio du before_action ci-dessus.
   def visio
     if @rdv.visio_url.present?
       redirect_to @rdv.visio_url, allow_other_host: true
@@ -13,6 +16,7 @@ class Agents::RdvsController < AgentAuthController
       redirect_to admin_organisation_rdv_path(@rdv.organisation, @rdv)
     end
   end
+  # >> REMOVE AFTER 03/02/2027
 
   # Une partie de la logique est dupliquée avec app/controllers/admin/rdv_wizard_steps_controller.rb#assign_visio_numerique_room_if_applicable
   # TODO: factoriser dans une prochaine PR

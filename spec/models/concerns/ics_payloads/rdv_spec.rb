@@ -118,9 +118,9 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
       context "with a visio motif" do
         let(:rdv) { create(:rdv, organisation:, users: [user], motif: build(:motif, location_type: :visio, organisation:), uuid: 123) }
 
-        it "shows the link to the visio, with the user's restricted auth token" do
-          token = user.participation_for(rdv).restricted_auth_token
-          expect(rdv.payload[:location]).to eq "http://www.rdv-solidarites-test.localhost/users/rdvs/#{rdv.id}/visio?invitation_token=#{token}"
+        it "shows the link to the visio, with a token giving access to the visio only" do
+          token = rdv.signed_id(purpose: :visio)
+          expect(rdv.payload[:location]).to eq "http://www.rdv-solidarites-test.localhost/v/#{token}"
         end
       end
     end

@@ -30,7 +30,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/users/rdvs_controller.rb",
-      "line": 65,
+      "line": 68,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Rdv.find(params[:id]).visio_url, :allow_other_host => true)",
       "render_path": null,
@@ -53,7 +53,7 @@
       "check_name": "LinkToHref",
       "message": "Potentially unsafe model attribute in `link_to` href",
       "file": "app/views/agents/rdv_plans/rdv_invitation.html.slim",
-      "line": 29,
+      "line": 13,
       "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
       "code": "link_to(\"Retour sur #{RdvPlan.find(params[:id]).oauth_application.name}\", RdvPlan.find(params[:id]).return_url, :class => \"float-right fr-btn\")",
       "render_path": [
@@ -61,7 +61,7 @@
           "type": "controller",
           "class": "Agents::RdvPlansController",
           "method": "rdv_invitation",
-          "line": 141,
+          "line": 149,
           "file": "app/controllers/agents/rdv_plans_controller.rb",
           "rendered": {
             "name": "agents/rdv_plans/rdv_invitation",
@@ -81,6 +81,29 @@
       "note": ""
     },
     {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "9d6c78fda2c70edc49fa4bb91505f431f9bf44ea9d9fd4444133ea2c0f14576a",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/visios_controller.rb",
+      "line": 10,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Rdv.find_signed(params[:token], :purpose => :visio).visio_url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "VisiosController",
+        "method": "show"
+      },
+      "user_input": "Rdv.find_signed(params[:token], :purpose => :visio).visio_url",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": "visio_url vient de la base et est limitée aux domaines de Rdv::VisioConcern::VALID_DOMAINS ; le token signé ne sert qu'à retrouver le RDV"
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 4,
       "fingerprint": "d93227729f1a070feb92d7048272b7c5b0535fc7505c7ba5ab3c6c9c6e510fca",
@@ -95,7 +118,7 @@
           "type": "controller",
           "class": "Agents::RdvPlansController",
           "method": "rdv",
-          "line": 138,
+          "line": 146,
           "file": "app/controllers/agents/rdv_plans_controller.rb",
           "rendered": {
             "name": "agents/rdv_plans/rdv",
@@ -121,7 +144,7 @@
       "check_name": "LinkToHref",
       "message": "Potentially unsafe model attribute in `link_to` href",
       "file": "app/views/agents/rdv_plans/edit_motif.html.slim",
-      "line": 32,
+      "line": 28,
       "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
       "code": "link_to(\"Retour sur #{RdvPlan.find(params[:id]).oauth_application.name}\", RdvPlan.find(params[:id]).return_url, :class => \"fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-left-line\")",
       "render_path": [
@@ -142,40 +165,6 @@
         "template": "agents/rdv_plans/edit_motif"
       },
       "user_input": "RdvPlan.find(params[:id]).return_url",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": ""
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 4,
-      "fingerprint": "fd3d0da78475714fd8f20075072ba463b0a697f3662db636d19bff117b424659",
-      "check_name": "LinkToHref",
-      "message": "Potentially unsafe model attribute in `link_to` href",
-      "file": "app/views/admin/rdvs_collectifs/edit.html.slim",
-      "line": 40,
-      "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
-      "code": "link_to(\"Visioconf\\u00E9rence\", Rdv.find(params[:id]).visio_url, :target => :_blank)",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Admin::RdvsCollectifsController",
-          "method": "edit",
-          "line": 50,
-          "file": "app/controllers/admin/rdvs_collectifs_controller.rb",
-          "rendered": {
-            "name": "admin/rdvs_collectifs/edit",
-            "file": "app/views/admin/rdvs_collectifs/edit.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "admin/rdvs_collectifs/edit"
-      },
-      "user_input": "Rdv.find(params[:id]).visio_url",
       "confidence": "Weak",
       "cwe_id": [
         79

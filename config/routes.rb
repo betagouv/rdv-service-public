@@ -90,7 +90,10 @@ Rails.application.routes.draw do
         get :creneaux
         get :ics
         put :cancel
+        # << REMOVE AFTER 03/02/2027
+        # Remplacée par visio_from_token, on la garde pour les notifications déjà envoyées
         get :visio
+        # >> REMOVE AFTER 03/02/2027
       end
     end
 
@@ -172,7 +175,10 @@ Rails.application.routes.draw do
 
       resources :rdvs, only: %i[show] do
         member do
+          # << REMOVE AFTER 03/02/2027
+          # Remplacée par visio_from_token, on la garde pour les notifications déjà envoyées
           get :visio
+          # >> REMOVE AFTER 03/02/2027
           post :create_visio_room
         end
       end
@@ -498,6 +504,8 @@ Rails.application.routes.draw do
   # Rate limité par IP (voir config/initializers/rack_attack.rb)
   get "r/:id/:tkn" => "redirect#rdv_short", as: "rdv_short"
   # >> REMOVE AFTER 01/01/2027
+
+  get "v/:token" => "visios#show", as: "visio_from_token"
 
   # Rate limité par IP (voir config/initializers/rack_attack.rb)
   get "prdv", to: "redirect#reprendre_rdv_from_participation_invitation_token", as: "reprendre_rdv_from_participation_invitation_token_short"
