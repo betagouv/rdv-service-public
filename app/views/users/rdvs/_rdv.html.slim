@@ -1,6 +1,6 @@
 ul.fr-raw-list.fr-mb-3w.fr-mt-0
   li.fr-mb-4w
-    p.fr-mb-0
+    p.fr-mb-1w
       span.fr-icon-calendar-event-fill.fr-mr-1w[aria-hidden="true"]
       strong Date et heure
     = rdv_title(rdv)
@@ -13,14 +13,14 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
 
   - if rdv.home?
     li.fr-mb-4w
-      p.fr-mb-0
+      p.fr-mb-1w
         span.fr-icon-home-4-fill.fr-mr-1w[aria-hidden="true"]
         strong Lieu
       | À domicile
 
   - elsif rdv.public_office?
     li.fr-mb-4w
-      p.fr-mb-0
+      p.fr-mb-1w
         span.fr-icon-map-pin-2-fill.fr-mr-1w[aria-hidden="true"]
         strong Lieu
       = human_location(rdv)
@@ -30,7 +30,7 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
 
   - elsif rdv.phone?
     li.fr-mb-4w
-      p.fr-mb-0
+      p.fr-mb-1w
         span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
         strong Téléphone
       | RDV téléphonique
@@ -42,7 +42,7 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
 
   - elsif rdv.motif.visio?
     li.fr-mb-4w
-      p.fr-mb-0
+      p.fr-mb-1w
         span.fr-icon-video-chat-fill.fr-mr-1w[aria-hidden="true"]
         strong Visioconférence
       - if rdv.starts_at.to_date > Time.zone.today
@@ -53,7 +53,7 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
         = t("rdvs.visio_link_not_yet_available")
 
   li.fr-mb-4w
-    p.fr-mb-0
+    p.fr-mb-1w
       - if rdv.users.count > 1
         span.fr-icon-group-fill.fr-mr-1w[aria-hidden="true"]
       - else
@@ -66,14 +66,14 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
 
   - if @can_see_rdv_motif
     li.fr-mb-4w
-      p.fr-mb-0
+      p.fr-mb-1w
         span.fr-icon-booklet-fill.fr-mr-1w[aria-hidden="true"]
         strong Motif
       = rdv.motif_name
 
   - if rdv.motif.instruction_for_rdv.present?
     li.fr-mb-4w
-      p.fr-mb-0
+      p.fr-mb-1w
         span.fr-icon-information-fill.fr-mr-1w[aria-hidden="true"]
         strong Informations
       = auto_link_text(rdv.motif.instruction_for_rdv)

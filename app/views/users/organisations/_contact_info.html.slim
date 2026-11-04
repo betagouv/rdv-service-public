@@ -1,13 +1,13 @@
 /# locals: (phone_number:, organisation:)
 - if phone_number.present? || organisation.website.present?
   .fr-mb-4w
-    p.fr-mb-0
+    p.fr-mb-1w
       span.fr-icon-customer-service-fill.fr-mr-1w[aria-hidden="true"]
       strong Contact de #{organisation.name}
-    .rdv-display-flex.rdv-flex-wrap-wrap.rdv-gap-1rem.fr-mt-1w
+    .rdv-display-flex.rdv-flex-wrap-wrap.rdv-gap-2rem.fr-mt-1w
       - if phone_number.present?
-        p.fr-mb-0
+        p.fr-mb-1w
           = phone_to(phone_number, title: "Numéro de téléphone")
       - if organisation.website_url.present?
-        p.fr-mb-0
+        p.fr-mb-1w
           = link_to "Site web", organisation.website_url, target: "_blank"
