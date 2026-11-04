@@ -26,6 +26,38 @@ RSpec.describe "Admin::Api::Agenda::ExternalCalendarEventsController" do
       end
     end
 
+    context "quand l'événement récurrent dure toute la journée" do
+      it "renvoie chaque occurrence comme un événement all day, même si le serveur est en UTC" do
+        ExternalCalendarEvent.create!(
+          agent:,
+          url: "recurrent-toute-la-journee",
+          starts_at: Time.zone.parse("2026-11-04 00:00"),
+          ends_at: Time.zone.parse("2026-11-05 00:00"),
+          raw_ical: <<~ICALENDAR
+            BEGIN:VCALENDAR
+            VERSION:2.0
+            BEGIN:VEVENT
+            DTSTAMP:20261102T090000Z
+            DTSTART;VALUE=DATE:20261104
+            DTEND;VALUE=DATE:20261105
+            RRULE:FREQ=DAILY;COUNT=2
+            UID:5b3c1a8e-3f4e-4d0c-9a8f-2d6f0c1b7e42
+            END:VEVENT
+            END:VCALENDAR
+          ICALENDAR
+        )
+
+        ClimateControl.modify(TZ: "UTC") do
+          get admin_api_agenda_external_calendar_events_path, params: week_params
+        end
+
+        expect(response.parsed_body).to contain_exactly(
+          hash_including("allDay" => true, "start" => "2026-11-04", "end" => "2026-11-05"),
+          hash_including("allDay" => true, "start" => "2026-11-05", "end" => "2026-11-06")
+        )
+      end
+    end
+
     context "quand l'événement a des horaires" do
       it "le renvoie avec ses horaires" do
         event = ExternalCalendarEvent.create!(
