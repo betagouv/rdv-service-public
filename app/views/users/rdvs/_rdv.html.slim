@@ -52,7 +52,7 @@ ul.fr-raw-list.fr-mb-3w.fr-mt-0
     li.fr-mb-4w
       h2.fr-h6.fr-mb-1w
         span.fr-icon-video-chat-fill.fr-mr-1w[aria-hidden="true"]
-        | Visioconférence
+        | RDV par visioconférence
       - if rdv.starts_at.to_date > Time.zone.today
         = t("rdvs.visio_link_available_on_rdv_day")
       - elsif rdv.visio_url.present?
