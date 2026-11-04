@@ -198,7 +198,7 @@ class CronJob < ApplicationJob
     RETENTION_PERIOD = 3.days
 
     def perform
-      ExternalCalendarSyncExecution.uncached do
+      ActiveRecord::Base.uncached do
         ExternalCalendarSyncExecution.where(ended_at: ..RETENTION_PERIOD.ago).in_batches do |executions|
           ActiveRecord::Base.transaction do
             ExternalCalendarSyncExecutionLog.where(external_calendar_sync_execution_id: executions.ids).delete_all
