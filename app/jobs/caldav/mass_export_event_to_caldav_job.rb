@@ -7,7 +7,7 @@ module Caldav
 
       return unless agent.caldav_configured?
 
-      agent.agents_rdvs.joins(:rdv).where(rdv: { starts_at: Time.zone.today.. }).find_each do |agents_rdv|
+      agent.agents_rdvs.joins(:rdv).where(rdv: { starts_at: 2.weeks.ago.. }).find_each do |agents_rdv|
         Caldav::ExportRdvToCaldavJob.perform_later(agents_rdv.id, agent.id)
       end
     end

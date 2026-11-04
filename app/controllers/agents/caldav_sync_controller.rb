@@ -49,6 +49,7 @@ class Agents::CaldavSyncController < AgentAuthController
     if error.nil?
       flash[:success] = "La synchronisation avec votre agenda CalDAV #{caldav_config.caldav_username} est activée."
       caldav_config.save!
+      Caldav::ImportAbsencesFromCaldavJob.perform_later(current_agent)
       Caldav::MassExportEventToCaldavJob.perform_later(current_agent)
     else
       flash[:alert] = error
