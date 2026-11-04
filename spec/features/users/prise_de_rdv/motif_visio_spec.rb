@@ -23,6 +23,6 @@ RSpec.describe "Prise de RDV pour un motif en visioconférence" do
     click_button("Confirmer mon RDV")
 
     expect(page).to have_content("Votre RDV")
-    expect(page).to have_content("RDV par visioconférence")
+    expect(page).to have_content("Visioconférence")
   end
 end
