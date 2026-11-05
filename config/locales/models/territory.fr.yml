@@ -6,3 +6,4 @@ fr:
       territory:
         base: "" # weird hack for nested base error
         departement_number: Département
+        force_2fa_for_agents: Imposer la double authentification à tous les agents de l'espace

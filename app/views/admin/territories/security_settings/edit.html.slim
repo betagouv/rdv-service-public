@@ -1,0 +1,22 @@
+= territory_navigation("Sécurité")
+
+.fr-grid-row.justify-content-center
+  .fr-col-md-6
+    .card
+      .card-body
+        = form_for current_territory, url: admin_territory_security_settings_path(current_territory), builder: Dsfr::FormBuilder do |f|
+          = render "model_errors", model: current_territory
+
+          h1.fr-h2.card-title Sécurité
+          p.fr-text-mention--grey.fr-hint-text
+            | Par défaut, la double authentification n'est demandée qu'aux agents qui ont accès à un volume important de rendez-vous.
+          p.fr-text-mention--grey.fr-hint-text
+            | Si vous activez cette option, tous les agents de votre espace devront valider un second facteur à la connexion :
+              la double authentification ProConnect lorsque leur fournisseur d'identité le permet, ou à défaut un code envoyé par email.
+              Ils pourront faire confiance à leur navigateur pendant 7 jours.
+          p.fr-text-mention--grey.fr-hint-text
+            | L'obligation s'applique à la prochaine connexion de chaque agent.
+
+          = f.dsfr_check_box :force_2fa_for_agents, label: Territory.human_attribute_name(:force_2fa_for_agents)
+          .text-right
+            = f.submit "Enregistrer", class: "fr-btn"

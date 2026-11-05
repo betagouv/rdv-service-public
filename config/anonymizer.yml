@@ -295,6 +295,7 @@ tables:
   - table_name: territories
     anonymized_column_names:
       - sms_configuration
+      - force_2fa_for_agents
     non_anonymized_column_names:
       - departement_number
       - name
