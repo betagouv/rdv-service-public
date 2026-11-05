@@ -41,7 +41,7 @@ RSpec.describe OffDays, type: :service do
   describe ".to_full_calendar_array" do
     it "returns the proper format for full calendar" do
       array = described_class.to_full_calendar_array
-      expect(array[0].keys).to match_array(%i[title start end color contrastColor])
+      expect(array[0].keys).to match_array(%i[title start end allDay color contrastColor])
       expect(array[0][:color]).to eq "rgba(52, 57, 58, 0.7)"
     end
 

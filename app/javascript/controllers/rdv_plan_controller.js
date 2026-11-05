@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 import { Calendar } from 'fullcalendar';
 import timeGridPlugin from 'fullcalendar/timegrid';
 import interactionPlugin from 'fullcalendar/interaction';
-import { classicTheme, defaultFullCalendarConfig, eventRenderer } from '../components/calendar/utils'
+import { classicTheme, defaultFullCalendarConfig, eventRenderer, setupAllDaySlotToggle } from '../components/calendar/utils'
 
 export default class extends Controller {
   connect() {
@@ -12,6 +12,7 @@ export default class extends Controller {
       return
 
     this.calendar = new Calendar(calendarEl, this.calendarConfig(calendarEl.dataset))
+    setupAllDaySlotToggle(this.calendar);
     this.calendar.render();
   }
 

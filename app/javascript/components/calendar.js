@@ -9,6 +9,7 @@ import {
   defaultFullCalendarConfig,
   eventRenderer,
   setupRealtimeRefresh,
+  setupAllDaySlotToggle,
   handleAjaxError,
   headerToolbarLayout,
   weekTitleFormat,
@@ -30,6 +31,7 @@ export class AgendaMonoAgent {
 
     this.data = this.calendarEl.dataset
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
+    setupAllDaySlotToggle(this.fullCalendarInstance);
     this.fullCalendarInstance.render();
     // Les icônes prev/next ont role="img" sans aria-label, ce qui pose un problème d'accessibilité.
     // Ces icônes sont purement décoratives, on peut donc retirer le rôle d'image pour qu'elles soient ignorées par les lecteurs d'écran.

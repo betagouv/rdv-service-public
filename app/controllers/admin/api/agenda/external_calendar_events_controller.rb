@@ -11,10 +11,12 @@ class Admin::Api::Agenda::ExternalCalendarEventsController < Admin::Api::BaseCon
     external_calendar_events.each do |event|
       caldav_config = caldav_configs_by_agent_id[event.agent_id]
       event.all_occurrences_within(time_range_params).each do |occurrence|
+        all_day = all_day?(occurrence)
         external_calendar_occurrences << {
           title: external_event_title(caldav_config.caldav_calendar_name),
-          start: occurrence.starts_at.as_json,
-          end: occurrence.ends_at.as_json,
+          start: all_day ? occurrence.starts_at.to_date.as_json : occurrence.starts_at.as_json,
+          end: all_day ? occurrence.ends_at.to_date.as_json : occurrence.ends_at.as_json,
+          allDay: all_day,
           color: caldav_config.caldav_calendar_color.presence || AbsencesHelper::CALENDAR_BACKGROUND_COLOR,
           resourceIds: [event.agent_id], # https://fullcalendar.io/docs/resources-and-events
         }
@@ -25,6 +27,12 @@ class Admin::Api::Agenda::ExternalCalendarEventsController < Admin::Api::BaseCon
   end
 
   private
+
+  # Les événements "toute la journée" (DTSTART;VALUE=DATE en iCal) sont stockés de minuit à minuit
+  def all_day?(occurrence)
+    occurrence.starts_at == occurrence.starts_at.beginning_of_day &&
+      occurrence.ends_at == occurrence.ends_at.beginning_of_day
+  end
 
   def external_event_title(calendar_name)
     return "Indisponibilité provenant d’un agenda externe" if calendar_name.blank?

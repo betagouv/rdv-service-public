@@ -28,8 +28,13 @@ class Ical::RruleExpander
           parent.occurrences_between(time_range.min, time_range.max).each do |occurrence|
             next if exception_dates.include?(occurrence.start_time.to_date)
 
-            starts_at = occurrence.start_time.in_time_zone
-            ends_at = occurrence.end_time.in_time_zone
+            if parent.dtstart.is_a?(Icalendar::Values::Date)
+              starts_at = occurrence.start_time.to_date.in_time_zone
+              ends_at = occurrence.end_time.to_date.in_time_zone
+            else
+              starts_at = occurrence.start_time.in_time_zone
+              ends_at = occurrence.end_time.in_time_zone
+            end
             all_occurrences << Recurrence::Occurrence.new(starts_at:, ends_at:)
           end
         end

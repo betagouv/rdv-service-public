@@ -82,6 +82,8 @@ const defaultFullCalendarConfig = () => ({
   locale: frLocale,
   buttons: buttonHintsButtons,
   allDaySlot: false,
+  // Le libellé "Toute la journée" est masqué visuellement mais conservé pour les lecteurs d'écran
+  allDayHeaderContent: ({ text }) => ({ html: `<span class="fr-sr-only">${text}</span>` }),
   height: "auto",
   selectable: true,
   nowIndicator: true,
@@ -223,7 +225,9 @@ function eventRenderer(selectedEventId) {
 
     let title = ``;
 
-    if (info.isStart && info.isEnd) {
+    if (info.event.allDay) {
+      title += `Toute la journée`;
+    } else if (info.isStart && info.isEnd) {
       title += `${start} - ${end}`;
     } else if (info.isStart) {
       title += `À partir de ${start}`;
@@ -310,6 +314,21 @@ const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
   setInterval(refreshDisconnectedWarning, 500);
 };
 
+const setupAllDaySlotToggle = (fullCalendarInstance) => {
+  const refreshAllDaySlot = () => {
+    const { activeStart, activeEnd } = fullCalendarInstance.view;
+    const hasAllDayEvents = fullCalendarInstance.getEvents().some(event =>
+      event.allDay && event.start < activeEnd && (event.end || event.start) > activeStart
+    );
+    if (fullCalendarInstance.getOption("allDaySlot") !== hasAllDayEvents) {
+      fullCalendarInstance.setOption("allDaySlot", hasAllDayEvents);
+    }
+  };
+
+  fullCalendarInstance.on("eventsSet", refreshAllDaySlot);
+  fullCalendarInstance.on("datesSet", refreshAllDaySlot);
+};
+
 const handleAjaxError = (error) => {
   if (window.ajaxErrorHandledAt) {
     const secondsSinceLast = (Date.now() - window.ajaxErrorHandledAt) / 1000;
@@ -347,4 +366,4 @@ export const calendarTimeRange = ({ displayExtendedHours }) => {
   return { slotMinTime: '07:00:00', slotMaxTime: '20:00:00' };
 };
 
-export { classicTheme, buttonHintsButtons, defaultFullCalendarConfig, eventRenderer, setupRealtimeRefresh, handleAjaxError }
+export { classicTheme, buttonHintsButtons, defaultFullCalendarConfig, eventRenderer, setupRealtimeRefresh, setupAllDaySlotToggle, handleAjaxError }

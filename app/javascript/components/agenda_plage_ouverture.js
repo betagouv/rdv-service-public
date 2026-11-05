@@ -6,6 +6,7 @@ import {
   classicTheme,
   buttonHintsButtons,
   defaultFullCalendarConfig,
+  setupAllDaySlotToggle,
   preferencesModalToggle,
   hiddenDays,
   calendarTimeRange,
@@ -20,6 +21,7 @@ export class AgendaPlageOuverture {
 
     this.data = this.calendarEl.dataset
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
+    setupAllDaySlotToggle(this.fullCalendarInstance);
     this.fullCalendarInstance.render();
   }
 

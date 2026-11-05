@@ -23,6 +23,7 @@ RSpec.describe Admin::Api::Agenda::ExternalCalendarEventsController, type: :cont
         "title" => "Indisponibilité provenant d’un agenda externe",
         "start" => event_within_time_range.starts_at.as_json,
         "end" => event_within_time_range.ends_at.as_json,
+        "allDay" => false,
         "resourceIds" => [event_within_time_range.agent.id],
         "color" => "rgba(52, 57, 58, 0.7)",
       },
