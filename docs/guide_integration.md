@@ -97,3 +97,4 @@ Vous pouvez faire des requêtes sur le RDV Plan pour savoir si le rendez-vous as
 Vous pouvez utiliser l'endpoint `/api/v1/rdvs` pour obtenir une liste de rendez-vous. Il est possible de filtrer cette liste par agent et ou par usager.
 [La documentation Swagger](https://rdv.numerique.gouv.fr/api-docs/index.html) donne plus d'informations sur cet endpoint.
 L'api renvoie sur chaque rendez-vous un attribut `url_for_agents`, qui indique l'url de ce rendez-vous pour les agents (les usagers ne peuvent pas y accéder via cette url).
+Pour les rendez-vous en visio, l'attribut `visio_url` donne un lien stable vers la visioconférence, utilisable par les usagers comme par les agents, y compris avant que le salon ait été généré.

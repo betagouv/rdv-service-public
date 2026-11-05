@@ -56,6 +56,28 @@ RSpec.describe RdvBlueprint do
     end
   end
 
+  describe "visio_url" do
+    context "pour un RDV en visio" do
+      let(:motif) { create(:motif, location_type: :visio) }
+      let(:rdv) { create(:rdv, motif:, organisation: motif.organisation, lieu: nil, visio_url_custom:) }
+      let(:visio_url_custom) { "https://visio.numerique.gouv.fr/salon" }
+
+      it "renvoie le lien stable vers la visio plutôt que l'URL du salon" do
+        expect(json.dig("rdv", "visio_url")).to eq rdv.visio_join_url
+      end
+
+      context "quand le salon n'a pas encore été généré" do
+        let(:visio_url_custom) { nil }
+
+        it { expect(json.dig("rdv", "visio_url")).to eq rdv.visio_join_url }
+      end
+    end
+
+    context "pour un RDV qui n'est pas en visio" do
+      it { expect(json.dig("rdv", "visio_url")).to be_nil }
+    end
+  end
+
   context "for a rdv that doesn't have a lieu" do
     let(:motif) { create(:motif, :phone) }
     let(:rdv) { create(:rdv, organisation: motif.organisation, motif:, lieu: nil) }
