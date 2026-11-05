@@ -25,7 +25,7 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
       }
 
       parameter(
-        name: :_params,
+        name: :params,
         in: :body,
         schema: {
           type: :object,
