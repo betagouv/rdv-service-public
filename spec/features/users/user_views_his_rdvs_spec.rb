@@ -20,7 +20,8 @@ RSpec.describe "User views his rdv" do
 
     it do
       click_link "Vos rendez-vous"
-      expect(page).to have_content("Le #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)")
+      expect(page).to have_content(I18n.l(rdv.starts_at, format: :human))
+      expect(page).to have_content("Durée : #{rdv.duration_in_min} minutes")
       expect(page).not_to have_content("Voir vos RDV passés")
     end
   end
@@ -34,6 +35,7 @@ RSpec.describe "User views his rdv" do
     click_link "Vos rendez-vous"
     expect(page).to have_content("Vous n'avez pas de RDV à venir")
     click_link "Voir vos RDV passés"
-    expect(page).to have_content("Le #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)")
+    expect(page).to have_content(I18n.l(rdv.starts_at, format: :human))
+    expect(page).to have_content("Durée : #{rdv.duration_in_min} minutes")
   end
 end
