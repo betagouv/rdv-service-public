@@ -51,6 +51,17 @@ class Agents::RdvMailer < ApplicationMailer
     mail(subject: subject)
   end
 
+  # Le RDV est déjà supprimé quand le mail est préparé : on reçoit donc des valeurs simples, pas le RDV lui-même.
+  # Les fiches usagers sont référencées par lien pour ne pas faire figurer de données personnelles dans l'email.
+  def rdv_destroyed(motif_name:, starts_at:, organisation_id:, user_ids:)
+    @motif_name = motif_name
+    @starts_at = starts_at
+    @organisation_id = organisation_id
+    @user_ids = user_ids
+    subject = "RDV #{relative_date_with_preposition(@starts_at)} supprimé"
+    mail(subject: subject)
+  end
+
   private
 
   def domain
