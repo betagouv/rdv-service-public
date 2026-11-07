@@ -36,8 +36,9 @@ class Agents::RdvMailerPreview < ActionMailer::Preview
   def rdv_destroyed
     rdv = Rdv.joins(:users).sample
     agent = rdv.agents.first
+    author = rdv.organisation.agents.sample
 
-    Agents::RdvMailer.with(agent: agent, author: rdv.agents.last).rdv_destroyed(
+    Agents::RdvMailer.with(agent:, author:).rdv_destroyed(
       motif_name: rdv.motif_name,
       starts_at: rdv.starts_at,
       organisation_id: rdv.organisation_id,
