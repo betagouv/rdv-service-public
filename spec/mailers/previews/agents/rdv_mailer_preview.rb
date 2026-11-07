@@ -33,6 +33,19 @@ class Agents::RdvMailerPreview < ActionMailer::Preview
     rdv_mailer(rdv).rdv_updated(old_starts_at: 2.hours.from_now, lieu_id: nil)
   end
 
+  def rdv_destroyed
+    rdv = Rdv.joins(:users).sample
+    agent = rdv.agents.first
+    author = rdv.organisation.agents.sample
+
+    Agents::RdvMailer.with(agent:, author:).rdv_destroyed(
+      motif_name: rdv.motif_name,
+      starts_at: rdv.starts_at,
+      organisation_id: rdv.organisation_id,
+      user_ids: rdv.user_ids
+    )
+  end
+
   def participation_cancelled
     organisation = Organisation.new(id: 10).tap(&:readonly!)
     user = User.new(first_name: "Mihaela", last_name: "MIRTU").tap(&:readonly!)

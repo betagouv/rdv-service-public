@@ -126,7 +126,18 @@ class Admin::RdvsController < AgentAuthController
 
   def destroy
     authorize(@rdv, policy_class: Agent::RdvPolicy)
+    agents_to_notify = @rdv.agents.select { Notifiers::AgentsConcern.should_notify_agent?(@rdv, _1, current_agent) }
+    mail_params = {
+      motif_name: @rdv.motif_name,
+      starts_at: @rdv.starts_at,
+      organisation_id: @rdv.organisation_id,
+      user_ids: @rdv.user_ids,
+    }
+
     if @rdv.destroy
+      agents_to_notify.each do |agent|
+        Agents::RdvMailer.with(agent: agent, author: current_agent).rdv_destroyed(**mail_params).deliver_later
+      end
       flash[:notice] = "Le rendez-vous a été supprimé."
       redirect_to admin_organisation_rdvs_path(current_organisation)
     else

@@ -1,0 +1,19 @@
+div
+  p= t("mailers.common.hello")
+  p
+    - if @author == @agent
+      | Vous venez de supprimer le RDV « #{@motif_name} » prévu le #{l(@starts_at, format: :human)}.
+    - else
+      | Le RDV « #{@motif_name} » prévu le #{l(@starts_at, format: :human)} vient d’être supprimé par #{@author.full_name}.
+
+  - if @user_ids.size == 1
+    p
+      = link_to "Voir la fiche de l’usager", admin_organisation_user_url(@organisation_id, @user_ids.first)
+  - elsif @user_ids.size > 1
+    p Fiches des usagers concernés :
+    ul
+      - @user_ids.each do |user_id|
+        li= link_to "Usager n° #{user_id}", admin_organisation_user_url(@organisation_id, user_id)
+
+  br
+  = t("mailers.common.farewell_html", domain_name: domain.name)
