@@ -13,6 +13,16 @@
     - if @motif_policy.duplicate?
       = link_to t("admin.motifs.actions.duplicate"), new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: @motif.id), class: "fr-btn fr-btn--secondary"
 
+    - more_actions = []
+    - more_actions << { label: t("admin.motifs.actions.duplicate"), icon: "fr-icon-clipboard-fill", url: new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: @motif.id) } if @motif_policy.duplicate?
+    - if @motif.archived?
+      - more_actions << { label: t("admin.motifs.actions.unarchive"), icon: "fr-icon-upload-fill", url: unarchive_admin_organisation_motif_path(current_organisation, @motif), html_options: { method: :post } } if @motif_policy.unarchive?
+    - elsif @motif_policy.archive?
+      - more_actions << { label: t("admin.motifs.actions.archive"), icon: "fr-icon-archive-fill", url: archive_admin_organisation_motif_path(current_organisation, @motif), html_options: { method: :post, data: { confirm: t("admin.motifs.actions.archive_confirm") } } }
+    - more_actions << { label: t("admin.motifs.actions.destroy"), icon: "fr-icon-delete-fill", url: admin_organisation_motif_path(current_organisation, @motif), html_options: { method: :delete, data: { confirm: t("admin.motifs.actions.destroy_confirm") } } } if @motif_policy.destroy?
+    - if more_actions.any?
+      = render "common/dropdown_button", label: t("admin.motifs.actions.more"), items: more_actions
+
 .fr-grid-row.rdv-max-width-1024
   .fr-col-12
     .card.mt-2

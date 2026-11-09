@@ -1,0 +1,30 @@
+/# Bouton déroulant (pattern ARIA "disclosure") basé sur le DSFR.
+/# Le bouton ouvre/ferme une liste d'actions (liens ou boutons de formulaire).
+/#
+/# locals:
+/#   label:   texte du bouton
+/#   items:   tableau de hashes { label:, url:, icon: (optionnel, défaut "fr-icon-settings-5-line"), html_options: {} (optionnel) }
+/#            html_options est transmis à link_to : method:, data:, class:, target: ...
+/#   id:      (optionnel) préfixe d'id, à fournir si le composant est rendu plusieurs fois avec un contenu stable
+/#   align:   (optionnel) :right (défaut) ou :left, côté sur lequel la liste s'aligne
+/#   kind:    (optionnel) variante de bouton DSFR : "secondary" (défaut), "tertiary", ...
+/#
+/# Exemple :
+/#   = render "common/dropdown_button", label: "Plus d’actions", items: [
+/#     { label: "Dupliquer", url: new_admin_...path },
+/#     { label: "Supprimer", url: admin_...path(x), html_options: { method: :delete, data: { confirm: "Sûr ?" } } },
+/#   ]
+ruby:
+  dropdown_id = local_assigns[:id] || "dropdown-button-#{SecureRandom.hex(4)}"
+  align = local_assigns.fetch(:align, :right)
+  kind = local_assigns.fetch(:kind, "secondary")
+.dropdown-button class=("dropdown-button--align-#{align}") data-controller="dropdown-button"
+  button.dropdown-button__trigger.fr-btn class="fr-btn--#{kind}" type="button" aria-expanded="false" aria-controls="#{dropdown_id}" data-dropdown-button-target="trigger" data-action="dropdown-button#toggle keydown->dropdown-button#triggerKeydown"
+    = label
+    = icon("fr-icon-arrow-down-s-line fr-icon--sm", class: "dropdown-button__chevron fr-ml-1w")
+  ul.dropdown-button__list id=dropdown_id hidden=true data-dropdown-button-target="list" data-action="keydown->dropdown-button#listKeydown"
+    - items.each do |item|
+      li.dropdown-button__item
+        = link_to item[:url], (item[:html_options] || {}).merge(class: ["dropdown-button__link", item.dig(:html_options, :class)].compact.join(" ")) do
+          = icon("#{item[:icon] || 'fr-icon-settings-5-line'} fr-icon--sm", class: "fr-mr-1w")
+          = item[:label]

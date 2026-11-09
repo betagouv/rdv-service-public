@@ -1,0 +1,82 @@
+// Bouton déroulant : voir app/views/common/_dropdown_button.html.slim
+// Le bouton est un .fr-btn du DSFR ; seuls la liste et l'état ouvert sont spécifiques.
+.dropdown-button {
+  position: relative;
+  display: inline-block;
+
+  // Le chevron est un <span> et non une classe fr-icon-* sur le bouton : dans un .fr-btns-group,
+  // le DSFR transformerait sinon le bouton en bouton "icône seule" (2,5rem de large, texte masqué).
+  // Il pivote quand la liste est ouverte (le DSFR n'a pas d'icône dédiée "ouvert").
+  &__trigger.fr-btn[aria-expanded="true"] {
+    background-color: var(--background-open-blue-france);
+
+    .dropdown-button__chevron {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__list {
+    position: absolute;
+    z-index: 1000; // au-dessus du contenu, sous les modales Bootstrap (1050)
+    top: 100%;
+    min-width: 100%;
+    width: max-content;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background-color: var(--background-raised-grey);
+    box-shadow: 0 6px 18px 0 rgba(0, 0, 18, 0.16);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  &--align-right &__list {
+    right: 0;
+  }
+
+  &--align-left &__list {
+    left: 0;
+  }
+
+  &__item {
+    margin: 0;
+    padding: 0;
+    // le premier élément ne porte pas de trait de séparation haut
+    & + & {
+      border-top: 1px solid var(--border-default-grey);
+    }
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: var(--text-action-high-blue-france);
+    font-weight: 500;
+    background-image: none; // retire le soulignement par défaut des liens DSFR
+    white-space: nowrap;
+
+    &:hover {
+      background-color: var(--background-raised-grey-hover);
+    }
+
+    &:active {
+      background-color: var(--background-raised-grey-active);
+    }
+  }
+}
+
+// Dans un groupe de boutons DSFR, le composant se comporte comme un .fr-btn :
+// le DSFR impose width:100% aux <div> enfants (d'où un bouton écrasé) et des marges aux .fr-btn.
+.fr-btns-group--inline > .dropdown-button {
+  width: auto;
+  flex: none;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+
+  .fr-btn {
+    margin: 0;
+  }
+}
