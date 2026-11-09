@@ -43,6 +43,22 @@ RSpec.describe Outlook::ApiClient do
     allow(ENV).to receive(:fetch).with("AZURE_APPLICATION_CLIENT_SECRET", nil).and_return("fake_client_secret")
   end
 
+  context "when Outlook responds with a 5xx" do
+    [
+      [:post, "me/Events", ->(client) { client.create_event!(expected_body) }],
+      [:patch, "me/Events/abc", ->(client) { client.update_event!("abc", expected_body) }],
+      [:delete, "me/Events/abc", ->(client) { client.delete_event!("abc") }],
+    ].each do |http_method, path, call|
+      it "raises a ServerError for #{http_method.upcase}, even with a non-JSON body" do
+        stub_request(http_method, "https://graph.microsoft.com/v1.0/#{path}")
+          .to_return(status: 503, body: "")
+
+        expect { instance_exec(described_class.new(agent), &call) }
+          .to raise_error(Outlook::ApiClient::ServerError, /HTTP 503/)
+      end
+    end
+  end
+
   context "when a call fails" do
     before do
       stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
