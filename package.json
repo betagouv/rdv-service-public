@@ -5,7 +5,7 @@
     "build": "node esbuild.config.mjs"
   },
   "engines": {
-    "node": "24.22.1"
+    "node": "26.13.0"
   },
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
