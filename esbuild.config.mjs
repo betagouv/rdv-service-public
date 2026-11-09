@@ -23,6 +23,7 @@ const config = {
     super_admin: "./app/javascript/super_admin",
   },
   bundle: true,
+  target: ["chrome90", "firefox90", "safari15", "edge90"],
   outdir: "app/assets/builds",
   sourcemap: true,
   minify: !isDev,
