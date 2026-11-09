@@ -1,5 +1,4 @@
 import 'autocomplete.js/dist/autocomplete.jquery.js'
-import 'custom-event-polyfill'
 import 'whatwg-fetch'
 
 class PlacesInput {

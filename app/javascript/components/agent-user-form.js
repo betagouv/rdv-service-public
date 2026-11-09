@@ -1,5 +1,4 @@
 import { initializeSelect2 } from "./select2-inputs"
-import 'custom-event-polyfill'
 
 class AgentUserForm {
   constructor() {

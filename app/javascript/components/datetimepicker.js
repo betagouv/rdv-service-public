@@ -1,5 +1,4 @@
 import 'jquery-datetimepicker/build/jquery.datetimepicker.full.min';
-import 'custom-event-polyfill'
 $.datetimepicker.setLocale('fr');
 
 class Datetimepicker {

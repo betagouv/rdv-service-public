@@ -20,7 +20,6 @@
     "chart.js": "^4.2.1",
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartkick": "^5.0.1",
-    "custom-event-polyfill": "^1.0.7",
     "date-fns": "^4.1.0",
     "fullcalendar": "7.0.0",
     "fullcalendar-scheduler": "7.0.0",
