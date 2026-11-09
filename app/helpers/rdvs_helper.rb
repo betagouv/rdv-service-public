@@ -146,7 +146,7 @@ module RdvsHelper
     verb = if current_agent.in?(rdv.agents)
              "vous pouvez appeler"
            else
-             "l'agent peut appeler"
+             "l’agent peut appeler"
            end
 
     sanitize("RDV téléphonique : #{verb} #{user_numbers}.")
