@@ -5,6 +5,7 @@ module Outlook
     class AlreadyExistsError < ApiError; end
     class RefreshTokenError < ApiError; end
     class RateLimitingError < ApiError; end
+    class ServerError < ApiError; end # réponse HTTP 5xx
 
     USER_AGENT = "RDVSolidarites".freeze
     BASE_URL = "https://graph.microsoft.com/v1.0".freeze
@@ -20,7 +21,7 @@ module Outlook
 
       # Ce logging permet d'enquêter sur https://github.com/betagouv/rdv-service-public/issues/3539
       if id.to_s.size < 10
-        Sentry.capture_message("ID outlook suspicieux: #{id}", extra: { outlook_response: outlook_event })
+        Sentry.capture_message("ID outlook suspect: #{id.inspect}", extra: { outlook_response: outlook_event })
       end
 
       id
@@ -69,6 +70,12 @@ module Outlook
                  when "DELETE"
                    Typhoeus.delete(request_url, headers: headers)
                  end
+
+      # Les erreurs 5xx sont transitoires : on lève une exception pour que le job soit retenté.
+      # On le fait avant de parser le body, qui n'est pas forcément du JSON dans ce cas.
+      if response.response_code.between?(500, 599)
+        raise ServerError, "HTTP #{response.response_code} #{method.upcase} #{path}: #{response.body.to_s.truncate(500)}"
+      end
 
       body_response = response.body == "" ? {} : JSON.parse(response.body)
       if body_response["error"].present?
