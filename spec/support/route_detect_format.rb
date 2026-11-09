@@ -4,9 +4,9 @@
 # "/admin/organisations/4/planning/absences/new.2?duplicate_absence_id=1"
 #
 if Rails.env.test?
-  # Il faut copier la méthode `handle_positional_args` depuis `action_dispatch/routing/route_set.rb:292`
+  # Il faut copier la méthode `handle_positional_args` depuis `action_dispatch/routing/route_set.rb:360`
   # puis ajouter le `raise` dans le block `args.each_with_index` comme ci-dessous.
-  raise "Il faut recopier ce code quand on change de version de Rails" if Rails.version != "8.1.4"
+  raise "Il faut recopier ce code quand on change de version de Rails" if Rails.version != "8.1.4.1"
 
   class ActionDispatch::Routing::RouteSet::NamedRouteCollection::UrlHelper
     def handle_positional_args(controller_options, inner_options, args, result, path_params)
