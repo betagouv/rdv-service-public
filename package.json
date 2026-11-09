@@ -28,8 +28,7 @@
     "popper.js": "^1.15.0",
     "select2": "^4.0.8",
     "select2-bootstrap4-theme": "^1.0.0",
-    "temporal-polyfill": "1.0.1",
-    "whatwg-fetch": "^3.0.0"
+    "temporal-polyfill": "1.0.1"
   },
   "devDependencies": {
     "axe-core": "4.11.0",

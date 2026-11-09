@@ -1036,7 +1036,6 @@ __metadata:
     select2: "npm:^4.0.8"
     select2-bootstrap4-theme: "npm:^1.0.0"
     temporal-polyfill: "npm:1.0.1"
-    whatwg-fetch: "npm:^3.0.0"
   languageName: unknown
   linkType: soft
 
@@ -1776,13 +1775,6 @@ __metadata:
   version: 6.0.0
   resolution: "varint@npm:6.0.0"
   checksum: 10c0/737fc37088a62ed3bd21466e318d21ca7ac4991d0f25546f518f017703be4ed0f9df1c5559f1dd533dddba4435a1b758fd9230e4772c1a930ef72b42f5c750fd
-  languageName: node
-  linkType: hard
-
-"whatwg-fetch@npm:^3.0.0":
-  version: 3.6.2
-  resolution: "whatwg-fetch@npm:3.6.2"
-  checksum: 10c0/cc10f6893fe71839250b6e2fa9bc293bcf0ca5b93129712a7d1097fb7528b3ff617eb065098dc972e74d1455378e514aa34c0901ded41584be16508db63477c8
   languageName: node
   linkType: hard
 

@@ -1,5 +1,4 @@
 import 'autocomplete.js/dist/autocomplete.jquery.js'
-import 'whatwg-fetch'
 
 class PlacesInput {
   constructor(container) {
