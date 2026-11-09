@@ -515,6 +515,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bowser@npm:^2.15.0":
+  version: 2.15.0
+  resolution: "bowser@npm:2.15.0"
+  checksum: 10c0/f412e2650baac8c6ac5cc7fc249dcba994278e94916cfe0243d970d1bcae57e2ca1fae2ea01bdd71e0b932565b840ba230520c6f437f229a9433b359d9f96744
+  languageName: node
+  linkType: hard
+
 "brace-expansion@npm:^5.0.12":
   version: 5.0.12
   resolution: "brace-expansion@npm:5.0.12"
@@ -1011,6 +1018,7 @@ __metadata:
     autocomplete.js: "npm:^0.37.1"
     axe-core: "npm:4.11.0"
     bootstrap: "npm:^4.3.1"
+    bowser: "npm:^2.15.0"
     chart.js: "npm:^4.2.1"
     chartjs-adapter-date-fns: "npm:^3.0.0"
     chartkick: "npm:^5.0.1"

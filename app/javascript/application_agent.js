@@ -36,6 +36,7 @@ import RdvInvitationUserSelect from './components/rdv-invitation-user-select'
 import { PlageOuvertureLieuSelection, PlageOuvertureSecondaryTimes } from './components/plage_ouverture.js'
 import { CheckAll, UnCheckAll } from './components/check-all'
 import './components/motifs_table'
+import './components/browser-detection'
 import './components/clear-field-on-focus.js'
 import './components/lagaufre.js'
 
