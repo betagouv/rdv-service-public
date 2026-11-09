@@ -69,8 +69,6 @@ new Modal()
 initializeSelect2()
 new ServiceFilterForMotifsSelects()
 
-global.$ = require('jquery')
-
 $(document).on('shown.bs.modal', '.modal', function(e) {
   new Datetimepicker()
   new AgentUserForm()
