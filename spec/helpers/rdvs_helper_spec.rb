@@ -240,7 +240,7 @@ RSpec.describe RdvsHelper do
 
     context "when the current_agent doesn't participate in the rdv" do
       it "displays the proper text" do
-        expect(strip_tags(display_user_phone_number_for_rdv(rdv, build(:agent)))).to eq "RDV téléphonique : l'agent peut appeler Francis FACTICE au 06 11 22 33 44."
+        expect(strip_tags(display_user_phone_number_for_rdv(rdv, build(:agent)))).to eq "RDV téléphonique : l’agent peut appeler Francis FACTICE au 06 11 22 33 44."
       end
     end
   end
