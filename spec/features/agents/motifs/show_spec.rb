@@ -83,23 +83,12 @@ RSpec.describe "Page d’un motif" do
       expect(page).to have_no_css(list_css, visible: :visible)
       expect(trigger[:"aria-expanded"]).to eq("false")
 
-      # Clavier : flèche bas ouvre et focalise la 1re action, Échap ferme et rend le focus au bouton
-      trigger.send_keys(:down)
+      # Clavier : Échap ferme et rend le focus au bouton
+      trigger.send_keys(:enter)
       expect(trigger[:"aria-expanded"]).to eq("true")
-      expect(focused_text).to eq("Dupliquer")
-      page.send_keys(:down)
-      expect(focused_text).to eq("Archiver")
-      page.send_keys(:end)
-      expect(focused_text).to eq("Supprimer")
-      page.send_keys(:down) # boucle sur la première action
-      expect(focused_text).to eq("Dupliquer")
-      page.send_keys(:up)
-      expect(focused_text).to eq("Supprimer")
-      page.send_keys(:home)
-      expect(focused_text).to eq("Dupliquer")
       page.send_keys(:escape)
       expect(page).to have_no_css(list_css, visible: :visible)
-      expect(page.evaluate_script("document.activeElement.textContent")).to include("Plus d’actions")
+      expect(focused_text).to include("Plus d’actions")
 
       # Clavier : Tab hors du composant ferme la liste
       trigger.click

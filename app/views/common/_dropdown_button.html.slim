@@ -1,30 +1,27 @@
-/# Bouton déroulant (pattern ARIA "disclosure") basé sur le DSFR.
-/# Le bouton ouvre/ferme une liste d'actions (liens ou boutons de formulaire).
+/# locals: (label:, items:)
+/# Bouton déroulant (pattern ARIA "disclosure") basé sur le DSFR : un bouton qui affiche
+/# ou masque une liste d'actions. Le comportement est dans dropdown_button_controller.js.
 /#
-/# locals:
-/#   label:   texte du bouton
-/#   items:   tableau de hashes { label:, url:, icon: (optionnel, défaut "fr-icon-settings-5-line"), html_options: {} (optionnel) }
-/#            html_options est transmis à link_to : method:, data:, class:, target: ...
-/#   id:      (optionnel) préfixe d'id, à fournir si le composant est rendu plusieurs fois avec un contenu stable
-/#   align:   (optionnel) :right (défaut) ou :left, côté sur lequel la liste s'aligne
-/#   kind:    (optionnel) variante de bouton DSFR : "secondary" (défaut), "tertiary", ...
+/# label: texte du bouton
+/# items: tableau de hashes décrivant les actions
+/#   - label:        texte de l'action
+/#   - url:          cible du lien
+/#   - icon:         (optionnel) classe d'icône DSFR, "fr-icon-settings-5-line" par défaut
+/#   - html_options: (optionnel) transmis à link_to (method:, data: { confirm: }, ...)
 /#
 /# Exemple :
-/#   = render "common/dropdown_button", label: "Plus d’actions", items: [
-/#     { label: "Dupliquer", url: new_admin_...path },
-/#     { label: "Supprimer", url: admin_...path(x), html_options: { method: :delete, data: { confirm: "Sûr ?" } } },
+/#   = render "common/dropdown_button", label: "Plus d’actions", items: [ \
+/#     { label: "Dupliquer", url: new_thing_path },
+/#     { label: "Supprimer", url: thing_path(thing), icon: "fr-icon-delete-fill", html_options: { method: :delete } },
 /#   ]
-ruby:
-  dropdown_id = local_assigns[:id] || "dropdown-button-#{SecureRandom.hex(4)}"
-  align = local_assigns.fetch(:align, :right)
-  kind = local_assigns.fetch(:kind, "secondary")
-.dropdown-button class=("dropdown-button--align-#{align}") data-controller="dropdown-button"
-  button.dropdown-button__trigger.fr-btn class="fr-btn--#{kind}" type="button" aria-expanded="false" aria-controls="#{dropdown_id}" data-dropdown-button-target="trigger" data-action="dropdown-button#toggle keydown->dropdown-button#triggerKeydown"
+- list_id = "dropdown-button-#{SecureRandom.hex(4)}"
+.dropdown-button data-controller="dropdown-button" data-action="keydown.esc->dropdown-button#close click@window->dropdown-button#closeOnOutsideClick focusout->dropdown-button#closeOnFocusOut"
+  button.dropdown-button__trigger.fr-btn.fr-btn--secondary type="button" aria-expanded="false" aria-controls=list_id data-dropdown-button-target="trigger" data-action="dropdown-button#toggle"
     = label
     = icon("fr-icon-arrow-down-s-line fr-icon--sm", class: "dropdown-button__chevron fr-ml-1w")
-  ul.dropdown-button__list id=dropdown_id hidden=true data-dropdown-button-target="list" data-action="keydown->dropdown-button#listKeydown"
+  ul.dropdown-button__list id=list_id hidden=true data-dropdown-button-target="list"
     - items.each do |item|
-      li.dropdown-button__item
-        = link_to item[:url], (item[:html_options] || {}).merge(class: ["dropdown-button__link", item.dig(:html_options, :class)].compact.join(" ")) do
+      li
+        = link_to item[:url], (item[:html_options] || {}).merge(class: "dropdown-button__link") do
           = icon("#{item[:icon] || 'fr-icon-settings-5-line'} fr-icon--sm", class: "fr-mr-1w")
           = item[:label]

@@ -1,88 +1,37 @@
 import { Controller } from "@hotwired/stimulus"
 
 // Bouton déroulant accessible (pattern ARIA "disclosure").
-// Voir app/views/common/_dropdown_button.html.slim
+// Markup : app/views/common/_dropdown_button.html.slim
 //
-// Clavier :
-//  - Entrée / Espace (natif) : ouvre ou ferme
-//  - Flèche bas sur le bouton : ouvre et place le focus sur la première action
-//  - Flèches haut / bas, Début, Fin dans la liste : naviguent entre les actions
-//  - Échap : ferme et rend le focus au bouton
-//  - Tab hors du composant, ou clic à l'extérieur : ferme
+// Le bouton ouvre/ferme la liste. Elle se ferme aussi avec Échap (le focus revient au bouton),
+// par un clic à l'extérieur, ou quand le focus sort du composant (Tab).
 export default class extends Controller {
   static targets = ["trigger", "list"]
 
-  connect() {
-    this.onOutsideClick = this.onOutsideClick.bind(this)
-    this.onFocusOut = this.onFocusOut.bind(this)
-    document.addEventListener("click", this.onOutsideClick)
-    this.element.addEventListener("focusout", this.onFocusOut)
-  }
-
-  disconnect() {
-    document.removeEventListener("click", this.onOutsideClick)
-    this.element.removeEventListener("focusout", this.onFocusOut)
-  }
-
-  get isOpen() {
-    return this.triggerTarget.getAttribute("aria-expanded") === "true"
-  }
-
-  get links() {
-    return Array.from(this.listTarget.querySelectorAll("a, button"))
-  }
-
   toggle() {
-    this.isOpen ? this.close() : this.open()
+    this.#isOpen ? this.close() : this.#setOpen(true)
   }
 
-  open({ focusFirst = false } = {}) {
-    this.triggerTarget.setAttribute("aria-expanded", "true")
-    this.listTarget.hidden = false
-    if (focusFirst) this.links[0]?.focus()
+  close(event) {
+    if (!this.#isOpen) return
+    this.#setOpen(false)
+    if (event?.type === "keydown") this.triggerTarget.focus()
   }
 
-  close({ returnFocus = false } = {}) {
-    this.triggerTarget.setAttribute("aria-expanded", "false")
-    this.listTarget.hidden = true
-    if (returnFocus) this.triggerTarget.focus()
+  closeOnOutsideClick(event) {
+    if (!this.element.contains(event.target)) this.close()
   }
 
-  triggerKeydown(event) {
-    if (event.key === "ArrowDown") {
-      event.preventDefault()
-      this.open({ focusFirst: true })
-    } else if (event.key === "Escape" && this.isOpen) {
-      event.preventDefault()
-      this.close({ returnFocus: true })
-    }
+  closeOnFocusOut(event) {
+    if (event.relatedTarget && !this.element.contains(event.relatedTarget)) this.close()
   }
 
-  listKeydown(event) {
-    const links = this.links
-    const index = links.indexOf(document.activeElement)
-    const moves = {
-      ArrowDown: (index + 1) % links.length,
-      ArrowUp: (index - 1 + links.length) % links.length,
-      Home: 0,
-      End: links.length - 1,
-    }
-
-    if (event.key === "Escape") {
-      event.preventDefault()
-      this.close({ returnFocus: true })
-    } else if (event.key in moves) {
-      event.preventDefault()
-      links[moves[event.key]].focus()
-    }
+  get #isOpen() {
+    return !this.listTarget.hidden
   }
 
-  onOutsideClick(event) {
-    if (this.isOpen && !this.element.contains(event.target)) this.close()
-  }
-
-  // Ferme la liste quand le focus quitte complètement le composant (Tab / Maj+Tab).
-  onFocusOut(event) {
-    if (this.isOpen && event.relatedTarget && !this.element.contains(event.relatedTarget)) this.close()
+  #setOpen(open) {
+    this.listTarget.hidden = !open
+    this.triggerTarget.setAttribute("aria-expanded", open)
   }
 }
