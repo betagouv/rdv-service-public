@@ -17,7 +17,7 @@ RSpec.describe "Page d’un motif" do
 
     expect(page).to have_css("h1", text: "Suivi bonjour (PMI)")
     expect(page).to have_link("Modifier")
-    expect(page).to have_link("Dupliquer")
+    expect(page).to have_no_css(".dropdown-button__list", visible: :visible)
   end
 
   context "motif actif" do

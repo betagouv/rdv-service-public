@@ -25,9 +25,9 @@ RSpec.describe "Agent can CRUD motifs" do
 
       click_on "Suivi bonsoir"
       expect(page).to have_content("Suivi bonsoir (PMI)")
-      click_link("Archiver")
+      click_link("Archiver", visible: :all)
       expect(page).to have_content("Suivi bonsoir (PMI) (archivé)")
-      click_link("Supprimer")
+      click_link("Supprimer", visible: :all)
 
       expect_page_title("Motifs de rendez-vous")
       expect(page).to have_content("Vous n'avez pas encore de motif de rendez-vous")
@@ -77,9 +77,9 @@ RSpec.describe "Agent can CRUD motifs" do
 
       click_on "Renouvellement de permis de construire"
       expect(page).to have_content("Renouvellement de permis de construire")
-      click_link("Archiver")
+      click_link("Archiver", visible: :all)
       expect(page).to have_content("Renouvellement de permis de construire (archivé)")
-      click_link("Supprimer")
+      click_link("Supprimer", visible: :all)
     end
 
     context "when the territory doesn't have any services" do
@@ -178,7 +178,7 @@ RSpec.describe "Agent can CRUD motifs" do
 
     it "can be done from the show page" do
       visit admin_organisation_motif_path(motif.organisation, motif)
-      expect { click_on "Archiver" }.to change { motif.reload.archived? }.from(false).to(true)
+      expect { click_on "Archiver", visible: :all }.to change { motif.reload.archived? }.from(false).to(true)
       expect(page).to have_content("Le motif Suivi bonjour a été archivé")
     end
 
@@ -189,7 +189,7 @@ RSpec.describe "Agent can CRUD motifs" do
         expect(motif).to be_invalid
 
         visit admin_organisation_motif_path(motif.organisation, motif)
-        expect { click_on "Archiver" }.to change { motif.reload.archived? }.from(false).to(true)
+        expect { click_on "Archiver", visible: :all }.to change { motif.reload.archived? }.from(false).to(true)
         expect(page).to have_content("Le motif Suivi bonjour a été archivé")
       end
     end
@@ -202,13 +202,13 @@ RSpec.describe "Agent can CRUD motifs" do
 
     it "can be done from the index page in the dedicated tab" do
       visit admin_organisation_motifs_path(motif.organisation, current_tab: "archived")
-      expect { click_on "Réactiver" }.to change { motif.reload.archived? }.from(true).to(false)
+      expect { click_on "Réactiver", visible: :all }.to change { motif.reload.archived? }.from(true).to(false)
       expect(page).to have_content("Le motif Suivi bonjour a été réactivé")
     end
 
     it "can be done from the show page" do
       visit admin_organisation_motif_path(motif.organisation, motif)
-      expect { click_on "Réactiver" }.to change { motif.reload.archived? }.from(true).to(false)
+      expect { click_on "Réactiver", visible: :all }.to change { motif.reload.archived? }.from(true).to(false)
       expect(page).to have_content("Le motif Suivi bonjour a été réactivé")
     end
 
@@ -222,7 +222,7 @@ RSpec.describe "Agent can CRUD motifs" do
 
       it "explains why the motif can't be un-archived" do
         visit admin_organisation_motif_path(motif.organisation, motif)
-        expect { click_on "Réactiver" }.not_to change { motif.reload.archived? }.from(true)
+        expect { click_on "Réactiver", visible: :all }.not_to change { motif.reload.archived? }.from(true)
         expect(page).to have_content("Il existe déjà dans #{motif.organisation.name} un motif")
       end
     end
@@ -234,7 +234,7 @@ RSpec.describe "Agent can CRUD motifs" do
         motif.archive
 
         visit admin_organisation_motif_path(motif.organisation, motif)
-        expect { click_on "Supprimer" }.to change { Motif.exists?(motif.id) }.from(true).to(false)
+        expect { click_on "Supprimer", visible: :all }.to change { Motif.exists?(motif.id) }.from(true).to(false)
         expect(page).to have_content("Le motif Suivi bonjour a été supprimé")
       end
     end
@@ -244,7 +244,7 @@ RSpec.describe "Agent can CRUD motifs" do
         create_list(:rdv, 2, organisation: motif.organisation, motif: motif)
 
         visit admin_organisation_motif_path(motif.organisation, motif)
-        expect { click_on "Supprimer" }.not_to change { Motif.exists?(motif.id) }.from(true)
+        expect { click_on "Supprimer", visible: :all }.not_to change { Motif.exists?(motif.id) }.from(true)
         expect(page).to have_content("Impossible de supprimer le motif : il est lié à 2 rendez-vous.")
       end
     end
