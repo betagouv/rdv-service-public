@@ -1005,13 +1005,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kind-of@npm:>=6.0.3":
-  version: 6.0.3
-  resolution: "kind-of@npm:6.0.3"
-  checksum: 10c0/61cdff9623dabf3568b6445e93e31376bee1cdb93f8ba7033d86022c2a9b1791a1d9510e026e6465ebd701a6dd2f7b0808483ad8838341ac52f003f512e0b4c4
-  languageName: node
-  linkType: hard
-
 "lapin@workspace:.":
   version: 0.0.0-use.local
   resolution: "lapin@workspace:."
@@ -1036,7 +1029,6 @@ __metadata:
     fullcalendar-scheduler: "npm:7.0.0"
     jquery: "npm:^3.4.0"
     jquery-datetimepicker: "npm:^2.5.21"
-    kind-of: "npm:>=6.0.3"
     minimist: "npm:^1.2.6"
     playwright: "npm:1.56.1"
     popper.js: "npm:^1.15.0"
