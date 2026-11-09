@@ -51,7 +51,7 @@ RSpec.describe Outlook::ApiClient do
     ].each do |http_method, path, call|
       it "raises a ServerError for #{http_method.upcase}, even with a non-JSON body" do
         stub_request(http_method, "https://graph.microsoft.com/v1.0/#{path}")
-          .to_return(status: 503, body: "<html>Service Unavailable</html>")
+          .to_return(status: 503, body: "")
 
         expect { instance_exec(described_class.new(agent), &call) }
           .to raise_error(Outlook::ApiClient::ServerError, /HTTP 503/)
