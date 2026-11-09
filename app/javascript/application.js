@@ -11,7 +11,6 @@ import DsfrNewPassword from "./components/dsfr-new-password";
 import DsfrAlertClose from "./components/dsfr-alert-close";
 import PreventDefault from "./components/prevent-default";
 import setupCopyToClipBoardButtons from './components/copy_to_clipboard_button.js'
-import './components/browser-detection';
 import 'bootstrap';
 
 import './stylesheets/application';

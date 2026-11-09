@@ -19,9 +19,6 @@ import {
   calendarTimeRange,
 } from './calendar/utils'
 
-import Bowser from "bowser";
-const browser = Bowser.getParser(window.navigator.userAgent);
-
 export class AgendaMonoAgent {
 
   constructor() {
@@ -75,7 +72,8 @@ export class AgendaMonoAgent {
 
   getDefaultView = () => {
     let defaultView = "timeGridOneDay";
-    if (!browser.is("mobile")) {
+    const isMobile = /Mobi|Android/i.test(window.navigator.userAgent);
+    if (!isMobile) {
       let viewFromLocalStorage = localStorage.getItem("calendarDefaultView");
 
       defaultView = ['dayGridMonth', 'timeGridWeek', 'timeGridOneDay', 'listWeek'].includes(viewFromLocalStorage) ? viewFromLocalStorage : "timeGridWeek";
