@@ -39,6 +39,7 @@ rswag: ## Re-generate swagger/v1/api.json by running API specs
 	SWAGGER_DRY_RUN=0 RAILS_ENV=test FAKER_SEED=1 rake rswag:specs:swaggerize PATTERN="spec/requests/api/**/*_spec.rb"
 
 rswag_api_v1: ## Re-generate swagger/v1/api.json by running API specs
+	RAILS_ENV=test rails db:drop db:create db:schema:load
 	SWAGGER_DRY_RUN=0 RAILS_ENV=test FAKER_SEED=1 rake rswag:specs:swaggerize PATTERN="spec/requests/api/v1/swagger_doc/**/*_spec.rb"
 	git checkout swagger/visioplainte/api.json
 
