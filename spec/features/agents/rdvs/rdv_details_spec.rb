@@ -32,6 +32,7 @@ RSpec.describe "Agent can see RDV details correctly" do
         expect(page).to have_content("Afficher plus de détails usagers")
         expect(page).to have_no_content("Participants")
         expect(page).to have_no_content("10 rue des Lilas")
+        expect(page).to have_css("table")
       end
 
       it "renders users details when show_details=true" do
@@ -39,6 +40,7 @@ RSpec.describe "Agent can see RDV details correctly" do
         expect(page).to have_field("show-users-details-switch", checked: true)
         expect(page).to have_content("Participants")
         expect(page).to have_content("10 rue des Lilas")
+        expect(page).to have_no_css("table")
       end
 
       it "reloads the page with show_details param when toggled", js: true do

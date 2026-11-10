@@ -57,12 +57,14 @@ turbo-frame.card.rdv-item[id= "rdv-#{rdv.id}" target="_top"]
 
   div class="fr-m-0"
     .card-footer.border-white.fr-pb-0
+      / Quand les détails sont affichés ci-dessus, on n'affiche pas le tableau
       - if rdv.users.any?
-        .d-none.d-sm-block
-          = render "admin/rdvs/users_table", rdv:, contextual_agents:
-        .d-md-none.d-print-none
-          - rdv.participations.sort_by { _1.user.last_name.downcase }.each do |participation|
-            = render "admin/participations/user_card", participation: participation, contextual_agents:
+        - unless show_details
+          .d-none.d-sm-block
+            = render "admin/rdvs/users_table", rdv:, contextual_agents:
+          .d-md-none.d-print-none
+            - rdv.participations.sort_by { _1.user.last_name.downcase }.each do |participation|
+              = render "admin/participations/user_card", participation: participation, contextual_agents:
       - else
         p Il n'y a pas encore de participant pour ce RDV
 
