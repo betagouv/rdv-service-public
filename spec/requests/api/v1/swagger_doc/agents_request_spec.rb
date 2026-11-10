@@ -51,6 +51,47 @@ RSpec.describe "Agents API", swagger_doc: "v1/api.json" do
     end
 
     post "Inviter un agent" do
+      with_oauth_token_authentication
+
+      tags "Agents"
+      operationId "inviteAgent"
+      description "Invite un agent dans une ou plusieurs organisations. Si l'agent invité n'a pas encore de compte, il sera créé à la volée."
+
+      parameter(
+        name: :params,
+        in: :body,
+        schema: {
+          type: :object,
+          properties: {
+            organisation_ids: { type: :array,
+                                description: <<~DESCRIPTION,
+                                  Un tableau d'ids des organisations dans lesquelles l'agent sera invité.
+                                  L'agent qui envoie l'invitation doit avoir les droits d'administatrion de toutes ces organisations pour que l'appel fonctionne.", example: [1234, 1235],
+                                DESCRIPTION
+            },
+            email: { type: :string, description: "L'adresse email de l'agent à inviter.", example: "francis.factice@exemple.gouv.fr" },
+            access_level: { type: :string, description: "Le nouveau de permission de l'agent à inviter. Les valeurs autorisées sont #{AgentRole::ACCESS_LEVELS.join(' ou ')}." },
+          },
+        }
+      )
+
+      response 201, "Invite et renvoie un agent" do
+        let!(:organisation) { create(:organisation) }
+        let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+
+        let(:params) do
+          {
+            email: "francis.factice@exemple.gouv.fr",
+            organisation_ids: [organisation.id],
+            access_level: "basic",
+          }
+        end
+
+        run_test!
+        specify do
+          expect(Agent.last).to have_attributes(email: "francis.factice@exemple.gouv.fr")
+        end
+      end
     end
   end
 end

@@ -55,7 +55,7 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
       let!(:organisation) { create(:organisation) }
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
-      response 200, "Crée et renvoie un lieu" do
+      response 201, "Crée et renvoie un lieu" do
         let(:params) do
           {
             organisation_id: organisation.id,
