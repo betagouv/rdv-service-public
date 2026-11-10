@@ -11,12 +11,12 @@
     - if !@motif.archived? && @motif_policy.edit?
       = link_to t("admin.motifs.actions.edit"), edit_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn"
     - more_actions = []
-    - more_actions << { label: t("admin.motifs.actions.duplicate"), icon: "fr-icon-clipboard-fill", url: new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: @motif.id) } if @motif_policy.duplicate?
+    - more_actions << { label: t("admin.motifs.actions.duplicate"), icon: "fr-icon-clipboard-line", url: new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: @motif.id) } if @motif_policy.duplicate?
     - if @motif.archived?
-      - more_actions << { label: t("admin.motifs.actions.unarchive"), icon: "fr-icon-upload-fill", url: unarchive_admin_organisation_motif_path(current_organisation, @motif), html_options: { method: :post } } if @motif_policy.unarchive?
+      - more_actions << { label: t("admin.motifs.actions.unarchive"), icon: "fr-icon-upload-line", url: unarchive_admin_organisation_motif_path(current_organisation, @motif), html_options: { method: :post } } if @motif_policy.unarchive?
     - elsif @motif_policy.archive?
-      - more_actions << { label: t("admin.motifs.actions.archive"), icon: "fr-icon-archive-fill", url: archive_admin_organisation_motif_path(current_organisation, @motif), html_options: { method: :post, data: { confirm: t("admin.motifs.actions.archive_confirm") } } }
-    - more_actions << { label: t("admin.motifs.actions.destroy"), icon: "fr-icon-delete-fill", url: admin_organisation_motif_path(current_organisation, @motif), html_options: { method: :delete, data: { confirm: t("admin.motifs.actions.destroy_confirm") } } } if @motif_policy.destroy?
+      - more_actions << { label: t("admin.motifs.actions.archive"), icon: "fr-icon-archive-line", url: archive_admin_organisation_motif_path(current_organisation, @motif), html_options: { method: :post, data: { confirm: t("admin.motifs.actions.archive_confirm") } } }
+    - more_actions << { label: t("admin.motifs.actions.destroy"), icon: "fr-icon-delete-line", url: admin_organisation_motif_path(current_organisation, @motif), html_options: { method: :delete, data: { confirm: t("admin.motifs.actions.destroy_confirm") } } } if @motif_policy.destroy?
     - if more_actions.any?
       = render "common/dropdown_button", label: t("admin.motifs.actions.more"), items: more_actions
 
