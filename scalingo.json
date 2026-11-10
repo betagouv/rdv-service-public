@@ -48,7 +48,7 @@
     },
     "RAILS_MAX_THREADS": {
       "description": "Moins de threads Puma (et donc de connexions DB/Redis) pour tenir dans les 512 MB d'une review app",
-      "value": "2"
+      "value": "3"
     },
     "DISPLAY_LOGIN_CODES": {
       "description": "Mettre à 'true' pour afficher le code de connexion sur la page de saisie du code (review app uniquement, sans effet si IS_REVIEW_APP != true)"
