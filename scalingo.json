@@ -47,7 +47,7 @@
       "value": "0"
     },
     "RAILS_MAX_THREADS": {
-      "description": "Moins de threads Puma (et donc de connexions DB/Redis) pour tenir dans les 512 MB d'une review app",
+      "description": "Moins de threads Puma pour tenir dans les 512 MB d'une review app",
       "value": "3"
     },
     "DISPLAY_LOGIN_CODES": {
