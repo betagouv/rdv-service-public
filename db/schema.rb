@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_28_180000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_02_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -881,6 +881,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_180000) do
     t.bigint "operator_id"
     t.boolean "public_stats", default: true, null: false
     t.string "siret"
+    t.boolean "force_2fa_for_agents", default: false, null: false, comment: "Impose la double authentification à la connexion pour tous les agents de l'espace (cf. AgentSensitiveAccountCalculator)"
     t.index ["departement_number"], name: "index_territories_on_departement_number", where: "((departement_number)::text <> ''::text)"
     t.index ["operator_id"], name: "index_territories_on_operator_id"
   end
