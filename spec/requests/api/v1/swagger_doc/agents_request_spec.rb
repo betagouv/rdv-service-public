@@ -49,5 +49,8 @@ RSpec.describe "Agents API", swagger_doc: "v1/api.json" do
 
       it_behaves_like "an endpoint that returns 401 - unauthorized"
     end
+
+    post "Inviter un agent" do
+    end
   end
 end
