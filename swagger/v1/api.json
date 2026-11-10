@@ -1874,7 +1874,7 @@
           }
         ],
         "tags": [
-          "Agents"
+          "Agent"
         ],
         "operationId": "inviteAgent",
         "description": "Invite un agent dans une ou plusieurs organisations. Si l'agent invité n'a pas encore de compte, il sera créé à la volée.",

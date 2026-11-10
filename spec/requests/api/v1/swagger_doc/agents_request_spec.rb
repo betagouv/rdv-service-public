@@ -53,7 +53,7 @@ RSpec.describe "Agents API", swagger_doc: "v1/api.json" do
     post "Inviter un agent" do
       with_oauth_token_authentication
 
-      tags "Agents"
+      tags "Agent"
       operationId "inviteAgent"
       description "Invite un agent dans une ou plusieurs organisations. Si l'agent invité n'a pas encore de compte, il sera créé à la volée."
 
