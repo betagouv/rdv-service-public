@@ -1,4 +1,4 @@
-/# locals: (rdv:, contextual_agents:, success_message: nil, link_in_header: true)
+/# locals: (rdv:, contextual_agents:, success_message: nil, link_in_header: true, show_details: false)
 
 turbo-frame.card.rdv-item[id= "rdv-#{rdv.id}" target="_top"]
   div[id= "rdv-error-message-#{rdv.id}"]
@@ -43,8 +43,8 @@ turbo-frame.card.rdv-item[id= "rdv-#{rdv.id}" target="_top"]
           = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "fr-btn fr-btn--secondary fr-btn--sm", data: { turbo: false }
 
   .mx-3
-  - if rdv.users.any?
-    div class=("users-details collapse fr-mx-3w fr-mb-0")
+  - if show_details && rdv.users.any?
+    div class="fr-mx-3w fr-mb-0"
       h5.fr-mb-2w
         = icon("fr-icon-team-fill", class: "rdv-color-active-blue fr-mr-1w")
         |> Participants&nbsp;:
@@ -55,7 +55,7 @@ turbo-frame.card.rdv-item[id= "rdv-#{rdv.id}" target="_top"]
               .card-body.p-2
                 = render "admin/participations/user_details", user: user
 
-  div class=("users-details collapse show fr-m-0")
+  div class="fr-m-0"
     .card-footer.border-white.fr-pb-0
       - if rdv.users.any?
         .d-none.d-sm-block

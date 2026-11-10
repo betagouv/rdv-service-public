@@ -40,15 +40,15 @@
   - if @rdvs.total_count > 0
     .mb-2
       h4>= "#{@rdvs.total_count} rendez-vous"
-      .custom-control.custom-switch
-        input.custom-control-input[type="checkbox" id="show-users-details-switch" data-toggle="collapse" data-target=".users-details"]
+      .custom-control.custom-switch data-controller="navigate-on-change" data-navigate-on-change-checked-url-value="#{request.path}?#{request.query_parameters.except("page").merge("show_details" => "true").to_query}" data-navigate-on-change-unchecked-url-value="#{request.path}?#{request.query_parameters.except("show_details", "page").to_query}"
+        input.custom-control-input[type="checkbox" id="show-users-details-switch" checked=show_details? data-action="change->navigate-on-change#go"]
         label.custom-control-label for="show-users-details-switch" Afficher plus de détails usagers
 
     .fr-grid-row.fr-pb-3w
       .fr-col-12
-        .d-flex.justify-content-center= paginate @rdvs, params: { per: params[:per] }.compact
-        = render(partial: "rdv", collection: @rdvs_in_page, locals: { contextual_agents: nil })
-        .d-flex.justify-content-center= paginate @rdvs, params: { per: params[:per] }.compact
+        .d-flex.justify-content-center= paginate @rdvs, params: { per: params[:per], show_details: (true if show_details?) }.compact
+        = render(partial: "rdv", collection: @rdvs_in_page, locals: { contextual_agents: nil, show_details: show_details? })
+        .d-flex.justify-content-center= paginate @rdvs, params: { per: params[:per], show_details: (true if show_details?) }.compact
 
     .fr-grid-row
       .fr-col-12
@@ -56,7 +56,7 @@
           span.mr-2.fr-pt-1v Nombre de RDV par page :
           .fr-pagination__list.rdv-per-page-list
             - Admin::RdvsController::PERMITTED_PER_PAGE.each do |per|
-              - path = admin_organisation_rdvs_path(@form.to_query.merge(per:, page: 1, organisation_id: current_organisation.id))
+              - path = admin_organisation_rdvs_path(@form.to_query.merge(per:, page: 1, organisation_id: current_organisation.id, show_details: (true if show_details?)).compact)
               - if per == params.fetch(:per, 10).to_i
                 = link_to per, path, class: "fr-pagination__link fr-pagination__link--current", "aria-current": "page"
               - else
@@ -111,5 +111,5 @@
     .fr-pt-2w[style="break-inside: avoid;"]
       h3.fr-mb-4w
         = format_date(date.to_s)
-      = render "admin/rdvs/print/rdv", rdv: first_rdv
-    = render partial: "admin/rdvs/print/rdv", collection: rdvs
+      = render "admin/rdvs/print/rdv", rdv: first_rdv, show_details: show_details?
+    = render partial: "admin/rdvs/print/rdv", collection: rdvs, locals: { show_details: show_details? }

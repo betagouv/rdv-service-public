@@ -8,6 +8,8 @@ class Admin::RdvsController < AgentAuthController
 
   PERMITTED_PER_PAGE = [10, 25, 50].freeze
 
+  helper_method :show_details?
+
   def index
     set_scoped_organisations
     @breadcrumb_page = params[:breadcrumb_page]
@@ -190,6 +192,10 @@ class Admin::RdvsController < AgentAuthController
     end
 
     allowed_params
+  end
+
+  def show_details?
+    params[:show_details] == "true"
   end
 
   def parsed_params

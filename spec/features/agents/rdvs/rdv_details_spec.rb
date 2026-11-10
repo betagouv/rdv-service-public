@@ -24,6 +24,35 @@ RSpec.describe "Agent can see RDV details correctly" do
       expect(page).to have_text("Bruce WAYNE")
     end
 
+    describe "users details toggle" do
+      before { user.update!(address: "10 rue des Lilas 75001 Paris") }
+
+      it "does not render users details by default" do
+        visit admin_organisation_rdvs_path(organisation)
+        expect(page).to have_content("Afficher plus de détails usagers")
+        expect(page).to have_no_content("Participants")
+        expect(page).to have_no_content("10 rue des Lilas")
+      end
+
+      it "renders users details when show_details=true" do
+        visit admin_organisation_rdvs_path(organisation, show_details: true)
+        expect(page).to have_field("show-users-details-switch", checked: true)
+        expect(page).to have_content("Participants")
+        expect(page).to have_content("10 rue des Lilas")
+      end
+
+      it "reloads the page with show_details param when toggled", js: true do
+        visit admin_organisation_rdvs_path(organisation)
+        find("label[for=show-users-details-switch]").click
+        expect(page).to have_content("Participants")
+        expect(page).to have_current_path(/show_details=true/)
+
+        find("label[for=show-users-details-switch]").click
+        expect(page).to have_no_content("Participants")
+        expect(page).to have_no_current_path(/show_details/)
+      end
+    end
+
     it "displays the prescripteur when present" do
       rdv.participations.last.update!(created_by: prescripteur)
       visit admin_organisation_rdvs_path(organisation)
