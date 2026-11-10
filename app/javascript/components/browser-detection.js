@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   if (oldBrowser){
-    let html = "<div id='browser-upgrade' class='text-center bg-warning py-1'><b>Votre navigateur n'est pas optimal pour utiliser RDV Solidarités.</b> <a href='http://browsehappy.com/' target='_blank'>Télécharger un navigateur récent</a>  (Chrome, Firefox, Edge) </div>"
+    let html = "<div id='browser-upgrade' class='text-center bg-warning py-1'><b>Vous semblez utiliser un navigateur obsolète incompatible avec cette plateforme.</b> <a href='https://browsehappy.com/' target='_blank'>Télécharger un navigateur récent</a></div>"
     if ($('#browser-upgrade').length == 0){
       $('body').prepend(html)
     }
