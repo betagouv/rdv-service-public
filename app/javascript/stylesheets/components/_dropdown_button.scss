@@ -2,7 +2,7 @@
 // Le bouton est un .fr-btn du DSFR ; seuls la liste et l'état ouvert sont spécifiques.
 .dropdown-button {
   position: relative;
-  display: inline-block;
+  display: inline-flex; // pas de ligne de texte autour du bouton : la liste se colle à lui
 
   // Le chevron est un <span> et non une classe fr-icon-* sur le bouton : dans un .fr-btns-group,
   // le DSFR transformerait sinon le bouton en bouton "icône seule" (texte masqué).
@@ -59,6 +59,7 @@
 .fr-btns-group--inline > .dropdown-button {
   width: auto;
   margin: 0 0.5rem;
+  align-self: flex-start; // sinon le groupe étire le composant (et le bouton) à la hauteur des marges des autres .fr-btn
 
   .fr-btn {
     margin: 0;
