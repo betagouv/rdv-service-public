@@ -49,7 +49,9 @@
 
     // a[href]:hover impose un fond au DSFR : on double la classe pour passer devant
     &.dropdown-button__link:hover {
-      background-color: var(--background-alt-grey); // gris clair, comme .dropdown-item-dsfr du header
+      background-color: var(
+        --background-alt-grey
+      ); // gris clair, comme .dropdown-item-dsfr du header
     }
   }
 }
