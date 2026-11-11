@@ -1,13 +1,6 @@
 class Agent < ApplicationRecord
   class SoftDeleteError < StandardError; end
 
-  # Ces colonnes ont été déplacées vers la table caldav_configs.
-  # Elles seront supprimées dans une migration ultérieure.
-  self.ignored_columns += %w[
-    caldav_agenda_url caldav_username caldav_password caldav_sync_token
-    caldav_disconnect_started_at caldav_include_sensitive_data
-  ]
-
   # Ces colonnes ont été déplacées vers la table outlook_configs.
   # Elles seront supprimées dans une migration ultérieure.
   self.ignored_columns += %w[
