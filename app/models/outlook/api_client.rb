@@ -79,7 +79,7 @@ module Outlook
 
       body_response = response.body == "" ? {} : JSON.parse(response.body)
       if body_response["error"].present?
-        if @outlook_config.connected? && response.response_code == 401 # token expired
+        if @outlook_config.microsoft_graph_token && response.response_code == 401 # token expired
           refresh_outlook_token!
           body_response = call_events_api(method, path, event_payload)
         else

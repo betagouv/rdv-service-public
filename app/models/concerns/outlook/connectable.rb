@@ -3,7 +3,7 @@ module Outlook
     extend ActiveSupport::Concern
 
     def connected_to_outlook?
-      outlook_config&.connected? || false
+      outlook_config&.microsoft_graph_token || false
     end
 
     included do
