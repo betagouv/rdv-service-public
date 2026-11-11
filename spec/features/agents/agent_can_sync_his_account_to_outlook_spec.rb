@@ -7,7 +7,7 @@ RSpec.describe "Agent can sync his account to outlook" do
   let(:client_double) { instance_double(Outlook::ApiClient) }
 
   before do
-    allow(Outlook::ApiClient).to receive(:new).with(agent).and_return(client_double)
+    allow(Outlook::ApiClient).to receive(:new).with(an_instance_of(OutlookConfig)).and_return(client_double)
   end
 
   before do

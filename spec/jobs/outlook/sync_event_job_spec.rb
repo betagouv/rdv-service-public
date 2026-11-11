@@ -8,7 +8,7 @@ RSpec.describe Outlook::SyncEventJob do
   let(:organisation) { create(:organisation) }
 
   before do
-    allow(Outlook::ApiClient).to receive(:new).with(agent).and_return(client_double)
+    allow(Outlook::ApiClient).to receive(:new).with(an_instance_of(OutlookConfig)).and_return(client_double)
   end
 
   context "when the event needs to be created" do

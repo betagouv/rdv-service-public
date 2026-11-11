@@ -91,7 +91,7 @@ module Outlook
     delegate :rdv, to: :agents_rdv
 
     def api_client
-      @api_client ||= Outlook::ApiClient.new(@agent)
+      @api_client ||= Outlook::ApiClient.new(@agent.outlook_config)
     end
   end
 end

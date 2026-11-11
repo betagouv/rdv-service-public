@@ -53,7 +53,7 @@ RSpec.describe Outlook::ApiClient do
         stub_request(http_method, "https://graph.microsoft.com/v1.0/#{path}")
           .to_return(status: 503, body: "")
 
-        expect { instance_exec(described_class.new(agent), &call) }
+        expect { instance_exec(described_class.new(agent.outlook_config), &call) }
           .to raise_error(Outlook::ApiClient::ServerError, /HTTP 503/)
       end
     end
@@ -76,7 +76,7 @@ RSpec.describe Outlook::ApiClient do
 
     it "raises an error so that the job around it is retried later" do
       expect do
-        described_class.new(agent).create_event!(expected_body)
+        described_class.new(agent.outlook_config).create_event!(expected_body)
       end.to raise_error(Outlook::ApiClient::ApiError, "Account suspended. Follow the instructions in your Inbox to verify your account.")
     end
 
@@ -98,7 +98,7 @@ RSpec.describe Outlook::ApiClient do
 
         it "logs the error but does not warn Sentry" do
           allow(Rails.logger).to receive(:error)
-          described_class.new(agent).delete_event!("abc")
+          described_class.new(agent.outlook_config).delete_event!("abc")
 
           expect(Rails.logger).to have_received(:error).with("Outlook error while deleting event: The specified object was not found in the store")
           expect(sentry_events).to be_empty
@@ -122,7 +122,7 @@ RSpec.describe Outlook::ApiClient do
 
         it "logs the error but does not warn Sentry" do
           allow(Rails.logger).to receive(:error)
-          described_class.new(agent).update_event!("abc", expected_body)
+          described_class.new(agent.outlook_config).update_event!("abc", expected_body)
 
           expect(Rails.logger).to have_received(:error).with("Outlook error while updating event: The specified object was not found in the store")
           expect(sentry_events).to be_empty
@@ -137,7 +137,7 @@ RSpec.describe Outlook::ApiClient do
 
       it "raises an exception" do
         expect do
-          described_class.new(agent).create_event!(expected_body)
+          described_class.new(agent.outlook_config).create_event!(expected_body)
         end.to raise_error(Typhoeus::Errors::TimeoutError)
       end
     end
@@ -194,7 +194,7 @@ RSpec.describe Outlook::ApiClient do
       end
 
       it "refreshes it and retries, and saves the refresh token on the agent" do
-        expect(described_class.new(agent).create_event!(expected_body)).to eq("event_id")
+        expect(described_class.new(agent.outlook_config).create_event!(expected_body)).to eq("event_id")
 
         expect(a_request(:post,
                          "https://graph.microsoft.com/v1.0/me/Events").with(body: expected_body)).to have_been_made.twice
@@ -214,7 +214,7 @@ RSpec.describe Outlook::ApiClient do
       end
 
       it "raises an error" do
-        expect { described_class.new(agent).create_event!(expected_body) }.to raise_error(Outlook::ApiClient::RefreshTokenError, "Unknwon error")
+        expect { described_class.new(agent.outlook_config).create_event!(expected_body) }.to raise_error(Outlook::ApiClient::RefreshTokenError, "Unknwon error")
       end
     end
   end
