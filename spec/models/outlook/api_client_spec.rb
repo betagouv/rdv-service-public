@@ -200,7 +200,7 @@ RSpec.describe Outlook::ApiClient do
                          "https://graph.microsoft.com/v1.0/me/Events").with(body: expected_body)).to have_been_made.twice
 
         expect(agent.reload.outlook_config.microsoft_graph_token).to eq("abc")
-        expect(agent.reload.outlook_config.refresh_microsoft_graph_token).to eq("123")
+        expect(agent.reload.outlook_config.microsoft_graph_refresh_token).to eq("123")
       end
     end
 

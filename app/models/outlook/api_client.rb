@@ -98,7 +98,7 @@ module Outlook
           body: {
             client_id: ENV.fetch("AZURE_APPLICATION_CLIENT_ID", nil),
             client_secret: ENV.fetch("AZURE_APPLICATION_CLIENT_SECRET", nil),
-            refresh_token: @agent.outlook_config&.refresh_microsoft_graph_token, grant_type: "refresh_token",
+            refresh_token: @agent.outlook_config&.microsoft_graph_refresh_token, grant_type: "refresh_token",
           }
         )
       refresh_token_response = JSON.parse(refresh_token_query.response_body)
@@ -106,7 +106,7 @@ module Outlook
       if refresh_token_response["error"].present?
         raise RefreshTokenError, refresh_token_response["error"]
       elsif refresh_token_response["access_token"].present? && refresh_token_response["refresh_token"].present?
-        @agent.outlook_config.update!(microsoft_graph_token: refresh_token_response["access_token"], refresh_microsoft_graph_token: refresh_token_response["refresh_token"])
+        @agent.outlook_config.update!(microsoft_graph_token: refresh_token_response["access_token"], microsoft_graph_refresh_token: refresh_token_response["refresh_token"])
       else
         raise RefreshTokenError, "Could not refresh token, invalid response (does not contain access_token and refresh_token)"
       end

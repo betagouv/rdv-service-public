@@ -627,8 +627,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_11_100000) do
   create_table "outlook_configs", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.text "microsoft_graph_token"
-    t.text "refresh_microsoft_graph_token"
-    t.boolean "outlook_disconnect_in_progress", default: false, null: false
+    t.text "microsoft_graph_refresh_token"
+    t.boolean "disconnect_in_progress", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["agent_id"], name: "index_outlook_configs_on_agent_id", unique: true

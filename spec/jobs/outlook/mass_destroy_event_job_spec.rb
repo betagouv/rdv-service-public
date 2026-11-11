@@ -93,7 +93,7 @@ RSpec.describe Outlook::MassDestroyEventJob, type: :job do
       end.to change(enqueued_jobs, :size).by(1) # job is re-enqueued
 
       expect(agent.reload.outlook_config.microsoft_graph_token).not_to be_nil
-      expect(agent.reload.outlook_config.refresh_microsoft_graph_token).not_to be_nil
+      expect(agent.reload.outlook_config.microsoft_graph_refresh_token).not_to be_nil
       expect(agents_rdv2.reload.outlook_id).not_to be_nil
     end
   end
