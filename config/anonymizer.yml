@@ -94,6 +94,8 @@ tables:
       - confirmation_token
       - invitation_token
       - tokens
+      - microsoft_graph_token
+      - refresh_microsoft_graph_token
       - pro_connect_openid_sub
       - pro_connect_2fa_active
       - pro_connect_idp_id
@@ -120,6 +122,7 @@ tables:
       - display_extended_hours
       - plage_ouverture_notification_level
       - absence_notification_level
+      - outlook_disconnect_in_progress
       - account_deletion_warning_sent_at
       - deleted_at
       - created_at
