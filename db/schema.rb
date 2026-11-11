@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_28_180000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_11_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -624,6 +624,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_180000) do
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
   end
 
+  create_table "outlook_configs", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.text "microsoft_graph_token"
+    t.text "refresh_microsoft_graph_token"
+    t.boolean "outlook_disconnect_in_progress", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_outlook_configs_on_agent_id", unique: true
+  end
+
   create_table "participations", force: :cascade do |t|
     t.bigint "rdv_id", null: false
     t.bigint "user_id", null: false
@@ -1056,6 +1066,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_180000) do
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "operator_managers", "operators"
   add_foreign_key "organisations", "territories"
+  add_foreign_key "outlook_configs", "agents"
   add_foreign_key "participations", "rdvs"
   add_foreign_key "participations", "users"
   add_foreign_key "plage_ouvertures", "agents"

@@ -8,6 +8,12 @@ class Agent < ApplicationRecord
     caldav_disconnect_started_at caldav_include_sensitive_data
   ]
 
+  # Ces colonnes ont été déplacées vers la table outlook_configs.
+  # Elles seront supprimées dans une migration ultérieure.
+  self.ignored_columns += %w[
+    microsoft_graph_token refresh_microsoft_graph_token outlook_disconnect_in_progress
+  ]
+
   include Agent::FeatureFlags
   include Agent::PreloadRoles
 

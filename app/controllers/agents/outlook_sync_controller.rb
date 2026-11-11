@@ -8,7 +8,7 @@ class Agents::OutlookSyncController < AgentAuthController
 
   def destroy
     authorize(current_agent, :current_agent_or_admin_in_record_organisation?, policy_class: Agent::AgentPolicy)
-    current_agent.update!(outlook_disconnect_in_progress: true)
+    current_agent.outlook_config.update!(outlook_disconnect_in_progress: true)
     Outlook::MassDestroyEventJob.perform_later(current_agent)
     flash[:success] = "Votre compte Outlook est bien en cours de déconnexion. " \
                       "Cette action peut prendre plusieurs minutes, nécessaires à la suppression de vos événements dans votre agenda. " \

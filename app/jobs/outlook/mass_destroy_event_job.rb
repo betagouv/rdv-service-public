@@ -15,7 +15,7 @@ module Outlook
         agents_rdv.update_columns(outlook_id: nil) # rubocop:disable Rails/SkipsModelValidations
       end
 
-      agent.update!(microsoft_graph_token: nil, refresh_microsoft_graph_token: nil, outlook_disconnect_in_progress: false)
+      agent.outlook_config.destroy!
     end
   end
 end

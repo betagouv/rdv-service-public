@@ -1,7 +1,7 @@
 # Ce fichier teste que le bon nombre de jobs est envoyé pour différentes transactions
 RSpec.describe Outlook::EventSerializerAndListener do
   context "when the agent is not connected to outlook" do
-    let(:agent) { create(:agent, microsoft_graph_token: nil) }
+    let(:agent) { create(:agent) }
 
     describe "when a rdv is created, updated and deleted" do
       it "doesn't enqueue a sync job" do
@@ -15,7 +15,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
   end
 
   context "when the agent is connected to outlook" do
-    let(:agent) { create(:agent, microsoft_graph_token: "token") }
+    let(:agent) { create(:agent, :with_outlook_config) }
 
     describe "when a rdv is created, updated and deleted" do
       it "queues a sync job for each change" do

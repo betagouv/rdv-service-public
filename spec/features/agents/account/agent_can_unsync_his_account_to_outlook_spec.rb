@@ -1,6 +1,6 @@
 RSpec.describe "Agent can unsync his account to outlook" do
   let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, microsoft_graph_token: "super_token", refresh_microsoft_graph_token: "super_refresh_token", basic_role_in_organisations: [organisation]) }
+  let!(:agent) { create(:agent, :with_outlook_config, basic_role_in_organisations: [organisation]) }
   # Organisation needs at least one admin
   let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 

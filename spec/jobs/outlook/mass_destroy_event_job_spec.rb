@@ -5,7 +5,7 @@ RSpec.describe Outlook::MassDestroyEventJob, type: :job do
   let(:motif) { create(:motif, name: "Super Motif", location_type: :phone, organisation:) }
   # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
   let(:fake_agent) { create(:agent) }
-  let(:agent) { create(:agent, microsoft_graph_token: "token", refresh_microsoft_graph_token: "refresh_token") }
+  let(:agent) { create(:agent, :with_outlook_config) }
   let(:rdv) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), agents: [fake_agent]) }
   let(:rdv2) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 13h00"), agents: [fake_agent]) }
   let(:rdv3) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 15h00"), agents: [fake_agent]) }
@@ -46,8 +46,7 @@ RSpec.describe Outlook::MassDestroyEventJob, type: :job do
     it "unsyncs the agent" do
       expect do
         described_class.perform_now(agent)
-      end.to change { agent.reload.microsoft_graph_token }.to(nil)
-        .and change { agent.reload.refresh_microsoft_graph_token }.to(nil)
+      end.to change { agent.reload.outlook_config }.to(nil)
     end
   end
 
@@ -68,8 +67,7 @@ RSpec.describe Outlook::MassDestroyEventJob, type: :job do
     it "unsyncs the agent and clears the agents_rdvs.outlook_id column" do
       expect do
         described_class.perform_now(agent)
-      end.to change { agent.reload.microsoft_graph_token }.to(nil)
-        .and change { agent.reload.refresh_microsoft_graph_token }.to(nil)
+      end.to change { agent.reload.outlook_config }.to(nil)
         .and change { agents_rdv.reload.outlook_id }.to(nil)
         .and change { agents_rdv2.reload.outlook_id }.to(nil)
     end
@@ -94,8 +92,8 @@ RSpec.describe Outlook::MassDestroyEventJob, type: :job do
         described_class.perform_now(agent)
       end.to change(enqueued_jobs, :size).by(1) # job is re-enqueued
 
-      expect(agent.reload.microsoft_graph_token).not_to be_nil
-      expect(agent.reload.refresh_microsoft_graph_token).not_to be_nil
+      expect(agent.reload.outlook_config.microsoft_graph_token).not_to be_nil
+      expect(agent.reload.outlook_config.refresh_microsoft_graph_token).not_to be_nil
       expect(agents_rdv2.reload.outlook_id).not_to be_nil
     end
   end

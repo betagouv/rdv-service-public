@@ -33,7 +33,7 @@ RSpec.describe Outlook::ApiClient do
     }
   end
   let(:motif) { create(:motif, name: "Super Motif", location_type: :phone, organisation:) }
-  let(:agent) { create(:agent, microsoft_graph_token: "token", refresh_microsoft_graph_token: "refresh_token") }
+  let(:agent) { create(:agent, :with_outlook_config) }
   let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
   let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [agent]) }
   let(:agents_rdv) { rdv.agents_rdvs.first }
@@ -199,8 +199,8 @@ RSpec.describe Outlook::ApiClient do
         expect(a_request(:post,
                          "https://graph.microsoft.com/v1.0/me/Events").with(body: expected_body)).to have_been_made.twice
 
-        expect(agent.reload.microsoft_graph_token).to eq("abc")
-        expect(agent.reload.refresh_microsoft_graph_token).to eq("123")
+        expect(agent.reload.outlook_config.microsoft_graph_token).to eq("abc")
+        expect(agent.reload.outlook_config.refresh_microsoft_graph_token).to eq("123")
       end
     end
 
