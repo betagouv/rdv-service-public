@@ -33,7 +33,7 @@ class Users::GeoSearch
   end
 
   def matching_sectors
-    @matching_sectors ||= Sector.where(id: matching_zones&.pluck(:sector_id))
+    @matching_sectors ||= Sector.where(id: matching_zones&.select(:sector_id))
   end
 
   def available_motifs
@@ -86,13 +86,13 @@ class Users::GeoSearch
   def available_motifs_from_departement_organisations_arel
     @available_motifs_from_departement_organisations_arel ||= available_motifs_base
       .sectorisation_level_departement
-      .where(organisations: { id: departement_organisations.pluck(:id) })
+      .where(organisation_id: departement_organisations.select(:id))
   end
 
   def available_motifs_from_attributed_organisations_arel
     @available_motifs_from_attributed_organisations_arel ||= available_motifs_base
       .sectorisation_level_organisation
-      .where(organisations: { id: attributed_organisations.pluck(:id) })
+      .where(organisation_id: attributed_organisations.select(:id))
   end
 
   def available_motifs_from_attributed_agents_arel
