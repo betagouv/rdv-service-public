@@ -43,6 +43,13 @@ RSpec.describe "Un agent peut supprimer un RDV" do
     expect(ActionMailer::Base.deliveries.flat_map(&:to)).to eq(["collegue@example.com"])
   end
 
+  it "ne notifie pas un collègue qui a désactivé les notifications de RDV" do
+    other_agent.update!(rdv_notifications_level: "none")
+    supprimer_le_rdv
+
+    expect(ActionMailer::Base.deliveries).to be_empty
+  end
+
   context "quand le RDV a plusieurs usagers" do
     let(:other_user) { create(:user) }
     let(:users) { [user, other_user] }
