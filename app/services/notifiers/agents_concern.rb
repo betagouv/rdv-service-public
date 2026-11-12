@@ -18,13 +18,17 @@ module Notifiers::AgentsConcern
   end
 
   def self.should_notify_agent?(rdv, agent, author)
-    level = agent.rdv_notifications_level
-    return true if level == "all"
-    return false if level == "none"
-    return false if author == agent
-    return false if level == "soon" && !soon_date?(rdv.starts_at) && !soon_date?(rdv.attribute_before_last_save(:starts_at))
-
-    true
+    case agent.rdv_notifications_level.to_sym
+    when :all
+      true
+    when :others
+      author != agent
+    when :soon # soon means "soon and by others"
+      soon = soon_date?(rdv.starts_at) || soon_date?(rdv.attribute_before_last_save(:starts_at))
+      soon && author != agent
+    when :none
+      false
+    end
   end
 
   # true if the passed date (or time) is today or tomorrow
