@@ -350,6 +350,7 @@ Rails.application.routes.draw do
           get :download_participants
           post :send_reminder_manually
           put :update_status
+          get :versions
         end
         collection do
           post :participations_export

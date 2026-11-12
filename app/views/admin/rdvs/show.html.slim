@@ -23,4 +23,7 @@
 
 .fr-grid-row
   .fr-col-12
-    = render "admin/versions/resource_versions_row", resource_policy: policy(@rdv, policy_class: Agent::RdvPolicy), resource: @rdv
+    - if policy(@rdv, policy_class: Agent::RdvPolicy).versions?
+      = render layout: "admin/versions/accordion_layout" do
+        turbo-frame[id="versions_for_#{dom_id(@rdv)}" loading="lazy" src=versions_admin_organisation_rdv_path(organisation_id: current_organisation.id, id: @rdv.id)]
+          .fr-m-2v Chargement...
