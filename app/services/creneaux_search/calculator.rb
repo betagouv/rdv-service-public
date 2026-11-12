@@ -50,8 +50,9 @@ class CreneauxSearch::Calculator
     scope = PlageOuverture.not_expired
       .merge(@motif.plage_ouvertures)
       .in_range(@datetime_range)
-      .includes(:agent)
-      .where(agent: Agent.excluding_pending_invitation)
+      .joins(:agent)
+      .includes(agent: :caldav_config)
+      .merge(Agent.excluding_pending_invitation)
 
     scope = scope.where(agent: @agents) if @agents.present?
     scope = scope.where(lieu: @lieu) if @lieu.present?
