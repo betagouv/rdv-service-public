@@ -537,7 +537,7 @@ RSpec.describe "Prise de RDV pour un motif ANTS" do
       end
       click_on "Confirmer mon RDV"
       expect(page).to have_content("Votre rendez vous a été confirmé")
-      expect(page).to have_content("durée : 50 minutes")
+      expect(page).to have_content("Durée : 50 minutes")
     end
 
     context "l'usager tente de passer un nombre invalide à l'étape de séléction du nombre de pré-demandes" do
