@@ -36,13 +36,11 @@ RSpec.describe "Un agent peut supprimer un RDV" do
     expect(current_email.body).not_to include(user.full_name)
   end
 
-  it "indique « vous-même » à l'agent qui a supprimé le RDV s'il a choisi de recevoir toutes les notifications" do
+  it "ne notifie pas l'agent qui supprime le RDV, même avec toutes les notifications activées, mais seulement son collègue" do
     agent.update!(rdv_notifications_level: "all")
     supprimer_le_rdv
 
-    open_email agent.email
-    expect(current_email.body).to include("Vous venez de supprimer")
-    expect(current_email.body).not_to include(agent.full_name)
+    expect(ActionMailer::Base.deliveries.flat_map(&:to)).to eq(["collegue@example.com"])
   end
 
   context "quand le RDV a plusieurs usagers" do

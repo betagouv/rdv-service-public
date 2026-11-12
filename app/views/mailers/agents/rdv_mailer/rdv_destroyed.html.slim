@@ -1,10 +1,7 @@
 div
   p= t("mailers.common.hello")
   p
-    - if @author == @agent
-      | Vous venez de supprimer le RDV « #{@motif_name} » prévu le #{l(@starts_at, format: :human)}.
-    - else
-      | Le RDV « #{@motif_name} » prévu le #{l(@starts_at, format: :human)} vient d’être supprimé par #{@author.full_name}.
+    | Le RDV « #{@motif_name} » prévu le #{l(@starts_at, format: :human)} vient d’être supprimé par #{@author.full_name}.
 
   - if @user_ids.size == 1
     p
