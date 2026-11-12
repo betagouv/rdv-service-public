@@ -5,7 +5,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
     perform_enqueued_jobs { example.run }
   end
 
-  let(:agent) { create(:agent, microsoft_graph_token: "token") }
+  let(:agent) { create(:agent, :with_outlook_config) }
   let(:organisation) { create(:organisation) }
   let(:motif) { create(:motif, name: "Super Motif", location_type: :phone, organisation:) }
   let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
@@ -68,7 +68,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
 
   describe "Update callback" do
     context "exists in outlook and agent is synced" do
-      let(:agent) { create(:agent, microsoft_graph_token: nil) }
+      let(:agent) { create(:agent) }
       let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
       let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [agent]) }
 
@@ -97,7 +97,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
 
       before do
         rdv.agents_rdvs.first.update!(outlook_id: "event_id")
-        agent.update!(microsoft_graph_token: "token")
+        create(:outlook_config, agent:)
         stub_request(:patch, "https://graph.microsoft.com/v1.0/me/Events/event_id")
           .with(body: expected_body, headers: expected_headers)
           .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
@@ -125,7 +125,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
     end
 
     context "does not exists in outlook" do
-      let(:agent) { create(:agent, microsoft_graph_token: nil) }
+      let(:agent) { create(:agent) }
       let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
       let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [agent]) }
       let(:agents_rdv) { rdv.agents_rdvs.first }
@@ -154,7 +154,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
       end
 
       before do
-        agent.update!(microsoft_graph_token: "token")
+        create(:outlook_config, agent:)
 
         stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
           .with(body: expected_updated_body, headers: expected_headers)
@@ -172,12 +172,12 @@ RSpec.describe Outlook::EventSerializerAndListener do
     end
 
     context "is cancelled and exists in outlook" do
-      let(:agent) { create(:agent, microsoft_graph_token: nil) }
+      let(:agent) { create(:agent) }
       let(:rdv) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30) }
       let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "abc") }
 
       before do
-        agent.update!(microsoft_graph_token: :token)
+        create(:outlook_config, agent:)
         stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc").to_return(status: 204, body: "", headers: {})
       end
 
@@ -200,7 +200,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
       end
 
       before do
-        agent.update!(microsoft_graph_token: "token")
+        create(:outlook_config, agent:)
       end
 
       it "does not call a sync job when cancelling the rdv" do
@@ -213,13 +213,13 @@ RSpec.describe Outlook::EventSerializerAndListener do
 
   describe "Destroy callback" do
     context "agent synced with outlook and exists in outlook" do
-      let(:agent) { create(:agent, microsoft_graph_token: nil) }
+      let(:agent) { create(:agent) }
       let(:rdv) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30) }
       let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "abc") }
 
       before do
         stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc").to_return(status: 204, body: "", headers: {})
-        agent.update!(microsoft_graph_token: :token)
+        create(:outlook_config, agent:)
       end
 
       it "destroys the Outlook Event" do
@@ -231,7 +231,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
     end
 
     context "agent not synced with outlook" do
-      let(:agent) { create(:agent, microsoft_graph_token: nil) }
+      let(:agent) { create(:agent) }
       let(:rdv) { create(:rdv, agents: [agent], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30) }
 
       it "does not call Outlook::DestroyEventJob" do
@@ -249,7 +249,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
       # We add the token after creating the rdv to avoid sending the rdv to Outlook
       before do
         # We skip the validations to simplify the spec
-        rdv.agents.first.update_columns(microsoft_graph_token: "token") # rubocop:disable Rails/SkipsModelValidations
+        create(:outlook_config, agent: rdv.agents.first)
       end
 
       it "does not call an outlook sync job" do
@@ -264,7 +264,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
     it "sends datetime without UTC offset so Outlook respects the timeZone field" do
       organisation_guadeloupe = create(:organisation, time_zone: "America/Guadeloupe")
       motif_guadeloupe = create(:motif, organisation: organisation_guadeloupe)
-      agent_guadeloupe = create(:agent, microsoft_graph_token: "token", organisations: [organisation_guadeloupe])
+      agent_guadeloupe = create(:agent, :with_outlook_config, organisations: [organisation_guadeloupe])
 
       create_request_stub = stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
         .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})

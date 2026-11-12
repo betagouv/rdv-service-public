@@ -120,5 +120,11 @@ FactoryBot.define do
         create(:caldav_config, agent_id: agent.id)
       end
     end
+
+    trait :with_outlook_config do
+      after(:create) do |agent|
+        create(:outlook_config, agent: agent)
+      end
+    end
   end
 end

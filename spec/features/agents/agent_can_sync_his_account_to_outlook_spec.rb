@@ -7,7 +7,7 @@ RSpec.describe "Agent can sync his account to outlook" do
   let(:client_double) { instance_double(Outlook::ApiClient) }
 
   before do
-    allow(Outlook::ApiClient).to receive(:new).with(agent).and_return(client_double)
+    allow(Outlook::ApiClient).to receive(:new).with(an_instance_of(OutlookConfig)).and_return(client_double)
   end
 
   before do
@@ -29,8 +29,8 @@ RSpec.describe "Agent can sync his account to outlook" do
     perform_enqueued_jobs do
       find(:xpath, "//a/img[@alt=\"S'identifier avec Microsoft\"]").find(:xpath, "..").click
 
-      expect(agent.reload.microsoft_graph_token).to eq("super_token")
-      expect(agent.reload.refresh_microsoft_graph_token).to eq("super_refresh_token")
+      expect(agent.reload.outlook_config.microsoft_graph_token).to eq("super_token")
+      expect(agent.reload.outlook_config.microsoft_graph_refresh_token).to eq("super_refresh_token")
       expect(page).to have_content("Votre compte Outlook a bien été connecté")
     end
   end

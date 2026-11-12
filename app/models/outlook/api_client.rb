@@ -10,8 +10,8 @@ module Outlook
     USER_AGENT = "RDVSolidarites".freeze
     BASE_URL = "https://graph.microsoft.com/v1.0".freeze
 
-    def initialize(agent)
-      @agent = agent
+    def initialize(outlook_config)
+      @outlook_config = outlook_config
     end
 
     # @return [String] the outlook_id of the created event
@@ -52,7 +52,7 @@ module Outlook
 
     def call_events_api(method, path, event_payload = {})
       headers = {
-        "Authorization" => "Bearer #{@agent.microsoft_graph_token}",
+        "Authorization" => "Bearer #{@outlook_config.microsoft_graph_token}",
         "Content-Type" => "application/json",
         "Accept" => "application/json",
         "User-Agent" => USER_AGENT,
@@ -79,7 +79,7 @@ module Outlook
 
       body_response = response.body == "" ? {} : JSON.parse(response.body)
       if body_response["error"].present?
-        if @agent.connected_to_outlook? && response.response_code == 401 # token expired
+        if @outlook_config.microsoft_graph_token && response.response_code == 401 # token expired
           refresh_outlook_token!
           body_response = call_events_api(method, path, event_payload)
         else
@@ -98,7 +98,7 @@ module Outlook
           body: {
             client_id: ENV.fetch("AZURE_APPLICATION_CLIENT_ID", nil),
             client_secret: ENV.fetch("AZURE_APPLICATION_CLIENT_SECRET", nil),
-            refresh_token: @agent.refresh_microsoft_graph_token, grant_type: "refresh_token",
+            refresh_token: @outlook_config.microsoft_graph_refresh_token, grant_type: "refresh_token",
           }
         )
       refresh_token_response = JSON.parse(refresh_token_query.response_body)
@@ -106,7 +106,7 @@ module Outlook
       if refresh_token_response["error"].present?
         raise RefreshTokenError, refresh_token_response["error"]
       elsif refresh_token_response["access_token"].present? && refresh_token_response["refresh_token"].present?
-        @agent.update!(microsoft_graph_token: refresh_token_response["access_token"], refresh_microsoft_graph_token: refresh_token_response["refresh_token"])
+        @outlook_config.update!(microsoft_graph_token: refresh_token_response["access_token"], microsoft_graph_refresh_token: refresh_token_response["refresh_token"])
       else
         raise RefreshTokenError, "Could not refresh token, invalid response (does not contain access_token and refresh_token)"
       end

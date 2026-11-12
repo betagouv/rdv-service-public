@@ -8,13 +8,13 @@ RSpec.describe Outlook::SyncEventJob do
   let(:organisation) { create(:organisation) }
 
   before do
-    allow(Outlook::ApiClient).to receive(:new).with(agent).and_return(client_double)
+    allow(Outlook::ApiClient).to receive(:new).with(an_instance_of(OutlookConfig)).and_return(client_double)
   end
 
   context "when the event needs to be created" do
     before do
       # On set le token ici pour éviter de déclencher les callbacks activerecord au moment de la création des agents_rdvs
-      agent.update!(microsoft_graph_token: "token")
+      create(:outlook_config, agent:)
     end
 
     it "creates the event and updates the outlook_id" do
@@ -42,7 +42,7 @@ RSpec.describe Outlook::SyncEventJob do
     before do
       agents_rdv.update(outlook_id: "stubbed_outlook_event_id")
       # On set le token ici pour éviter de déclencher les callbacks activerecord au moment de la création des agents_rdvs
-      agent.update!(microsoft_graph_token: "token")
+      create(:outlook_config, agent:)
     end
 
     it "creates the event and doesn't change the outlook_id" do
@@ -59,7 +59,7 @@ RSpec.describe Outlook::SyncEventJob do
         agents_rdv.update!(outlook_id: "stubbed_outlook_event_id")
         rdv.update!(status: Rdv::CANCELLED_STATUSES.first)
         # On set le token ici pour éviter de déclencher les callbacks activerecord au moment de la création des agents_rdvs
-        agent.update!(microsoft_graph_token: "token")
+        create(:outlook_config, agent:)
       end
 
       it "deletes it and removes the event_id" do
@@ -74,7 +74,7 @@ RSpec.describe Outlook::SyncEventJob do
       before do
         agents_rdv.update!(outlook_id: "stubbed_outlook_event_id")
         # On set le token ici pour éviter de déclencher les callbacks activerecord au moment de la création des agents_rdvs
-        agent.update!(microsoft_graph_token: "token")
+        create(:outlook_config, agent:)
       end
 
       it "deletes it in the api" do

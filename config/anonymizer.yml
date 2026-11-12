@@ -33,6 +33,8 @@ tables:
     truncated: true
   - table_name: caldav_configs
     truncated: true
+  - table_name: outlook_configs
+    truncated: true
   - table_name: schema_migrations
     truncated: true
   - table_name: oauth_access_grants

@@ -6,7 +6,7 @@ module Outlook
     def perform(agent)
       Sentry.set_user({ id: agent.id, role: "Agent", email: agent.email })
 
-      client = Outlook::ApiClient.new(agent)
+      client = Outlook::ApiClient.new(agent.outlook_config)
 
       agent.agents_rdvs.where.not(outlook_id: nil).each do |agents_rdv|
         client.delete_event!(agents_rdv.outlook_id)
@@ -15,7 +15,7 @@ module Outlook
         agents_rdv.update_columns(outlook_id: nil) # rubocop:disable Rails/SkipsModelValidations
       end
 
-      agent.update!(microsoft_graph_token: nil, refresh_microsoft_graph_token: nil, outlook_disconnect_in_progress: false)
+      agent.outlook_config.destroy!
     end
   end
 end

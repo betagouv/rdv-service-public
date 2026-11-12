@@ -1,6 +1,6 @@
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def microsoft_graph
-    if current_agent.update(microsoft_graph_token: microsoft_graph_token, refresh_microsoft_graph_token: refresh_microsoft_graph_token)
+    if outlook_config.update(microsoft_graph_token: microsoft_graph_token, microsoft_graph_refresh_token: microsoft_graph_refresh_token)
       Outlook::MassCreateEventJob.perform_later(current_agent)
       flash[:success] = "Votre compte Outlook a bien été connecté"
     else
@@ -12,11 +12,15 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   private
 
+  def outlook_config
+    current_agent.outlook_config || current_agent.build_outlook_config
+  end
+
   def microsoft_graph_email
     request.env.dig("omniauth.auth", "extra", "raw_info", "user_principal_name")
   end
 
-  def refresh_microsoft_graph_token
+  def microsoft_graph_refresh_token
     request.env.dig("omniauth.auth", "credentials", "refresh_token")
   end
 

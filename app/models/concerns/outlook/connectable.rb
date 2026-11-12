@@ -3,14 +3,13 @@ module Outlook
     extend ActiveSupport::Concern
 
     def connected_to_outlook?
-      microsoft_graph_token.present?
+      outlook_config&.microsoft_graph_token || false
     end
 
     included do
-      scope :connected_to_outlook, -> { where.not(microsoft_graph_token: nil) }
+      has_one :outlook_config, dependent: :destroy
 
-      encrypts :microsoft_graph_token
-      encrypts :refresh_microsoft_graph_token
+      scope :connected_to_outlook, -> { joins(:outlook_config).where.not(outlook_configs: { microsoft_graph_token: nil }) }
     end
   end
 end
