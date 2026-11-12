@@ -21,4 +21,8 @@ class RdvPlanBlueprint < Blueprinter::Base
       location_type: rdv.motif.location_type,
     }
   end
+
+  # Permet à l'appli partenaire de savoir qu'une invitation a été envoyée, ou annulée,
+  # avant que l'usager ait choisi son créneau.
+  association :rdv_invitation, blueprint: RdvInvitationBlueprint
 end

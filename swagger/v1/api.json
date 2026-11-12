@@ -2763,7 +2763,7 @@
             }
           }
         ],
-        "description": "Permet de savoir si un rendez-vous a été pris pour ce rdv plan",
+        "description": "Permet de savoir si une invitation a été envoyée ou si un rendez-vous a été pris pour ce rdv plan",
         "tags": [
           "RDV Plan"
         ],
@@ -2783,6 +2783,13 @@
                           "status": "unknown",
                           "starts_at": "2026-10-30 12:25:00 +0100",
                           "location_type": "public_office"
+                        },
+                        "rdv_invitation": {
+                          "id": 32,
+                          "cancelled": false,
+                          "created_at": "2026-10-27 12:25:03 +0100",
+                          "rdv_id": null,
+                          "updated_at": "2026-10-27 12:25:03 +0100"
                         },
                         "updated_at": "2026-10-27 12:25:03 +0100",
                         "url": "http://www.rdv-service-public-test.localhost/agents/rdv_plans/151",

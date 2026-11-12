@@ -27,7 +27,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
   end
 
   def show
-    rdv_plan = policy_scope(RdvPlan, policy_scope_class: Agent::RdvPlanPolicy::Scope).includes(rdv: :organisation).find(params[:id])
+    rdv_plan = policy_scope(RdvPlan, policy_scope_class: Agent::RdvPlanPolicy::Scope).includes(:rdv_invitation, rdv: :organisation).find(params[:id])
     authorize(rdv_plan, policy_class: Agent::RdvPlanPolicy)
 
     render_record rdv_plan

@@ -76,6 +76,7 @@ Vous obtiendrez une réponse à ce format :
     "rdv_plan": {
         "id": 23,
         "rdv": null,
+        "rdv_invitation": null,
         "user_id": 345,
         "url": "http://demo.anct.gouv.fr/agents/rdv_plans/23"
     }
@@ -89,7 +90,7 @@ Si vous avez utilisé le champs `user.external_id`, il n'est pas nécessaire de 
 Vous pourrez ensuite retrouver les rendez-vous et/ou les invitations à prendre rendez-vous en attente avec les endpoints de listes de rendez-vous et de liste des invitations à prendre rendez-vous.
 
 
-Vous pouvez faire des requêtes sur le RDV Plan pour savoir si le rendez-vous associé a été crée (`GET /api/v1/rdv_plans/23`), mais ce n'est pas forcément nécessaire.
+Vous pouvez faire des requêtes sur le RDV Plan pour savoir si une invitation a été envoyée ou si le rendez-vous associé a été crée (`GET /api/v1/rdv_plans/23`), mais ce n'est pas forcément nécessaire.
 
 ### Obtenir des informations sur les rendez-vous après leur création
 

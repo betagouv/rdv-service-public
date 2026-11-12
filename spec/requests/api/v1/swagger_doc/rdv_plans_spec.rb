@@ -89,7 +89,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
   path "/api/v1/rdv_plans/{rdv_plan_id}" do
     get "Consulter un rdv plan" do
       with_oauth_token_authentication
-      description "Permet de savoir si un rendez-vous a été pris pour ce rdv plan"
+      description "Permet de savoir si une invitation a été envoyée ou si un rendez-vous a été pris pour ce rdv plan"
 
       with_examples
       tags "RDV Plan"
@@ -117,6 +117,10 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
             location_type: rdv.motif.location_type
           )
           expect(Time.zone.parse(parsed_response_body.dig("rdv_plan", "rdv", "starts_at"))).to be_within(1.second).of(rdv.reload.starts_at)
+          expect(parsed_response_body.dig("rdv_plan", "rdv_invitation").symbolize_keys).to include(
+            id: rdv_invitation.id,
+            cancelled: false
+          )
         end
       end
     end

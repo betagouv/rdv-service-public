@@ -292,6 +292,31 @@ RSpec.describe "API RDV Plan" do
       end
     end
 
+    describe "invitation" do
+      context "quand aucune invitation n'a été envoyée" do
+        let(:rdv_plan) { create(:rdv_plan, planning_agent: agent) }
+
+        it "renvoie une invitation vide" do
+          get "/api/v1/rdv_plans/#{rdv_plan.id}", headers: headers, params: {}, as: :json
+          expect(parsed_response_body["rdv_plan"]).to include("rdv_invitation" => nil)
+        end
+      end
+
+      context "quand une invitation a été envoyée" do
+        let(:rdv_invitation) { create(:rdv_invitation, cancelled: true) }
+        let(:rdv_plan) { create(:rdv_plan, planning_agent: agent, rdv_invitation:) }
+
+        it "renvoie l'invitation" do
+          get "/api/v1/rdv_plans/#{rdv_plan.id}", headers: headers, params: {}, as: :json
+          expect(parsed_response_body.dig("rdv_plan", "rdv_invitation")).to include(
+            "id" => rdv_invitation.id,
+            "cancelled" => true,
+            "rdv_id" => nil
+          )
+        end
+      end
+    end
+
     describe "utilise la bonne timezone" do
       let(:organisation) { create(:organisation, time_zone: "America/Guadeloupe") }
       let(:rdv) { create(:rdv, organisation: organisation) }
