@@ -47,6 +47,7 @@ import DestroyableController from './controllers/destroyable_controller'
 import DependentInputController from './controllers/dependent_input_controller'
 import FormController from "./controllers/form_controller"
 import PrintController from "./controllers/print_controller"
+import NavigateOnChangeController from "./controllers/navigate_on_change_controller"
 import LagaufreController from "./controllers/lagaufre"
 import BlogPostsModalController from "./controllers/blog_posts_modal_controller"
 
@@ -57,6 +58,7 @@ Stimulus.register('destroyable', DestroyableController)
 Stimulus.register('dependent-input', DependentInputController)
 Stimulus.register('form', FormController)
 Stimulus.register('print', PrintController)
+Stimulus.register('navigate-on-change', NavigateOnChangeController)
 Stimulus.register('lagaufre', LagaufreController)
 Stimulus.register('blog-posts-modal', BlogPostsModalController)
 
