@@ -25,7 +25,7 @@ class Api::V1::LieuxController < Api::V1::AgentAuthBaseController
     end
 
     if lieu.persisted?
-      render json: LieuBlueprint.render(lieu)
+      render json: LieuBlueprint.render(lieu), status: :created
     else
       render status: :unprocessable_entity, json: { error_messages: lieu.errors.full_messages }
     end

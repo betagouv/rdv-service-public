@@ -20,7 +20,7 @@ class Api::V1::AgentsController < Api::V1::AgentAuthBaseController
     @agent = create_agent.call
 
     if @agent.valid?
-      render_record @agent
+      render_record @agent, status: :created
     else
       render status: :unprocessable_entity, json: { error_messages: @agent.errors.full_messages }
     end

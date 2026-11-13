@@ -1,8 +1,6 @@
 L'API de RDV Service Public permet à nos partenaires, comme par exemple Démarche Numérique et RDV Insertion, d'ajouter de la gestion de rendez-vous dans leurs applications métier.
 Elle peut aussi être utilisée pour synchroniser les calendriers des agents de votre administration avec ceux qu'ils ont sur leur compte RDV Service Public.
 
-L'API est disponible pour nos trois marques : RDV Service Public, RDV Solidarités, et RDV Aide Numérique.
-
 Toutes les fonctionnalités de l'application ne sont pas encore disponibles via l’API. Contactez-nous si vous avez besoin de fonctionnalités qui ne sont pas encore présentes.
 
 # Requêtes
@@ -21,12 +19,6 @@ Les paramètres des requêtes `POST` doivent être transmis dans le corps de la 
 Les paramètres doivent respecter les formats suivants :
 - `DATE` : "YYYY-MM-DD" par exemple : "2021-10-21"
 - `TIME` : H:m[:s], par exemple : "10:30"
-
-# Routes
-
-Pour la version production, les requêtes doivent être adressées à https://www.rdv-solidarites.fr et non à https://rdv-solidarites.fr.
-
-Pour la version démo, les requêtes doivent être adressées à https://demo.rdv-solidarites.fr.
 
 # Authentification par OAuth
 

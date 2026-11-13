@@ -101,7 +101,7 @@ RSpec.describe "Lieux API" do
       it "creates the lieu" do
         expect { post "/api/v1/lieux", headers:, params:, as: :json }.to change(Lieu, :count)
 
-        expect(response.status).to eq 200
+        expect(response.status).to eq 201
         expect(parsed_response_body["name"]).to eq "Maison France Service de Montreuil"
       end
     end
@@ -118,7 +118,7 @@ RSpec.describe "Lieux API" do
 
       it "crée le lieu sans coordonnées" do
         expect { post "/api/v1/lieux", headers:, params:, as: :json }.to change(Lieu, :count).by(1)
-        expect(response.status).to eq 200
+        expect(response.status).to eq 201
         expect(Lieu.last.address_without_geocoding).to be true
         expect(Lieu.last.latitude).to be_nil
         expect(Lieu.last.longitude).to be_nil

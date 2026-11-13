@@ -62,7 +62,10 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   def record_not_found(exception)
     render(
       status: :not_found,
-      json: { errors: [exception.to_s] }
+      # Le message par défaut de ces exceptions donne le détail du SQL de la requête qui n'a pas abouti,
+      # et on ne veut pas partager cette information avec le client.
+      # On met donc un message d'erreur plus bref, qui indique uniquement le modèle de l'objet qu'on n'a pas trouvé.
+      json: { errors: ["#{exception.class}: Couldn't find #{exception.model}"] }
     )
   end
 
