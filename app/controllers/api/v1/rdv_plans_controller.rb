@@ -40,7 +40,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
   end
 
   def upsert_user(user_params)
-    external_reference = ExternalReference.where(item_type: "User", oauth_application: doorkeeper_token&.application).find_by(user_params.permit[:external_id])
+    external_reference = ExternalReference.where(item_type: "User", oauth_application: doorkeeper_token&.application).find_by(user_params.permit(:external_id))
 
     user = external_reference&.item
 
