@@ -1,0 +1,27 @@
+/# locals: (label:, items:)
+/# Bouton déroulant (pattern ARIA "disclosure") basé sur le DSFR : un bouton qui affiche
+/# ou masque une liste d'actions. Le comportement est dans dropdown_button_controller.js.
+/#
+/# label: texte du bouton
+/# items: tableau de hashes décrivant les actions
+/#   - label:        texte de l'action
+/#   - url:          cible du lien
+/#   - icon:         (optionnel) classe d'icône DSFR, "fr-icon-settings-5-line" par défaut
+/#   - html_options: (optionnel) transmis à link_to (method:, data: { confirm: }, ...)
+/#
+/# Exemple :
+/#   = render "common/dropdown_button", label: "Plus d’actions", items: [ \
+/#     { label: "Dupliquer", url: new_thing_path },
+/#     { label: "Supprimer", url: thing_path(thing), icon: "fr-icon-delete-fill", html_options: { method: :delete } },
+/#   ]
+- list_id = "dropdown-button-#{SecureRandom.hex(4)}"
+.dropdown-button data-controller="dropdown-button" data-action="keydown.esc->dropdown-button#close click@window->dropdown-button#closeOnOutsideClick focusout->dropdown-button#closeOnFocusOut"
+  button.dropdown-button__trigger.fr-btn.fr-btn--secondary type="button" aria-expanded="false" aria-controls=list_id data-dropdown-button-target="trigger" data-action="dropdown-button#toggle"
+    = label
+    = icon("fr-icon-arrow-down-s-line fr-icon--sm", class: "dropdown-button__chevron fr-ml-1w")
+  ul.dropdown-button__list id=list_id hidden=true data-dropdown-button-target="list"
+    - items.each do |item|
+      li
+        = link_to item[:url], (item[:html_options] || {}).merge(class: "dropdown-button__link") do
+          = icon("#{item[:icon] || 'fr-icon-settings-5-line'} fr-icon--sm", class: "fr-mr-1w")
+          = item[:label]

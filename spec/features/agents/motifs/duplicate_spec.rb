@@ -28,7 +28,7 @@ RSpec.describe "agent can duplicate motif" do
   it "works" do
     login_as(agent, scope: :agent)
     visit admin_organisation_motif_path(organisation, existing_motif)
-    click_on "Dupliquer"
+    click_on "Dupliquer", visible: :all
 
     expect(page).not_to have_content("Créer le motif dans cette organisation")
     choose :motif_location_type_home # Je veux créer le même motif mais en version à domicile
@@ -57,7 +57,7 @@ RSpec.describe "agent can duplicate motif" do
     it "allows duplicating in another organisation" do
       login_as(agent, scope: :agent)
       visit admin_organisation_motif_path(organisation, existing_motif)
-      click_on "Dupliquer"
+      click_on "Dupliquer", visible: :all
       select "Mon autre orga", from: :motif_organisation_id
 
       # En cas d'erreur de validation (ici parce qu'il existe déjà un motif avec le meme nom),
