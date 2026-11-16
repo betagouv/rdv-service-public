@@ -8,7 +8,7 @@ fr:
           confirm: Voulez-vous vraiment annuler ce rendez-vous ?
           user_will_be_notified: L’usager recevra une notification de cette annulation.
       delete:
-        details: En tant qu’administrateur, vous pouvez aussi complètement supprimer ce rendez-vous de la base de données. Aucune notification ne sera alors envoyée.
+        details: En tant qu’administrateur, vous pouvez aussi complètement supprimer ce rendez-vous de la base de données. Les autres agents du RDV recevront un email de notification, mais les usagers ne seront pas prévenus.
         confirm: Voulez-vous vraiment supprimer ce rendez-vous ?
     participations:
       notifications_summary:
