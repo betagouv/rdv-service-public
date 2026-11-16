@@ -63,6 +63,8 @@ class Agent < ApplicationRecord
 
   encrypts :menshen_access_token
 
+  MENSHEN_ACCESS_TOKEN_RENEWAL_DELAY = 1.month
+
   enum :rdv_notifications_level, {
     all: "all",       # notify of all rdv changes
     others: "others", # notify of changes made by other agents or users
@@ -148,6 +150,12 @@ class Agent < ApplicationRecord
   ## -
 
   delegate :name, to: :domain, prefix: true
+
+  def menshen_access_token_needs_renewal?
+    menshen_access_token.blank? ||
+      menshen_access_token_expires_at.nil? ||
+      menshen_access_token_expires_at < MENSHEN_ACCESS_TOKEN_RENEWAL_DELAY.from_now
+  end
 
   def confrere_of?(other_agent)
     services.to_set.intersect?(other_agent.services.to_set) || other_agent.services.none?
