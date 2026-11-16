@@ -40,8 +40,8 @@ RSpec.describe Outlook::SyncEventJob do
 
   context "when the refresh token is definitively invalid" do
     let(:error_description) do
-      "AADSTS700003: Device object was not found in the tenant '0b65c248-e621-40a4-a132-0e5cafdd1eb1' directory. " \
-        "Trace ID: a5164a78-a2b9-429c-9ee9-17e4c4d9ad00 Correlation ID: 572d3280-5c9c-40ba-a99a-b27b14820dc9 Timestamp: 2026-11-16 14:18:33Z"
+      "AADSTS700003: Device object was not found in the tenant 'ccf6a070-e1d8-11f1-b227-2e53240b5bb1' directory. " \
+        "Trace ID: a5164a78-a2b9-429c-9ee9-17e4c4d9ad00 Correlation ID: d198772a-e1d8-11f1-ae25-2e53240b5bb1 Timestamp: 2026-11-16 14:18:33Z"
     end
 
     before do
@@ -56,8 +56,8 @@ RSpec.describe Outlook::SyncEventJob do
             message: "Invalid token lifetime.",
             innerError: {
               date: "2026-11-16T14:18:33",
-              "request-id": "4015677d-1a46-4ee8-8b06-70c5f44f1a0c",
-              "client-request-id": "757d4e68-f9b9-4847-9d03-4b58a7493e8f",
+              "request-id": "d94e1164-e1d8-11f1-95bf-2e53240b5bb1",
+              "client-request-id": "dc3089ca-e1d8-11f1-a2e9-2e53240b5bb1",
             },
           },
         }.to_json
@@ -71,7 +71,7 @@ RSpec.describe Outlook::SyncEventJob do
           error_codes: [700_003],
           timestamp: "2026-11-16 14:18:33Z",
           trace_id: "a5164a78-a2b9-429c-9ee9-17e4c4d9ad00",
-          correlation_id: "572d3280-5c9c-40ba-a99a-b27b14820dc9",
+          correlation_id: "d198772a-e1d8-11f1-ae25-2e53240b5bb1",
           error_uri: "https://login.microsoftonline.com/error?code=700003",
           suberror: "device_authentication_failed",
         }.to_json
