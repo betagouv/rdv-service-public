@@ -4,6 +4,52 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
   with_examples
 
   path "/api/v1/organisations" do
+    post "Créer une organisation" do
+      with_oauth_token_authentication
+
+      tags "Organisation"
+      operationId "createOrganisation"
+      description <<~HTML
+        Ouvre une nouvelle organisation sur laquelle l'agent aura des droits d'administration.
+        <br />
+        Cet endpoint est uniquement destiné à la création d'une première organisation pour un agent qui
+        n'est dans aucune organisation. Il ne permet pas de créer de nouvelles organisations pour un agent qui est déjà
+        admin d'un espace.
+        <br />
+        Cette organisation sera dans un espace sans titre dont l'agent sera aussi admin.
+        <br />
+      HTML
+
+      example_params = {
+        name: "Maison France Service de Romainville",
+      }
+
+      parameter(
+        name: :params,
+        in: :body,
+        schema: {
+          type: :object,
+          properties: {
+            name: { type: :string, required: true, description: "Le nom de l'organisation. Il sera affiché aux agents et aux usagers." },
+            email: { type: :string, required: false,
+                     description: "L'email de contact de l'organisation, qui sera affiché aux usagers lors de la prise de rendez-vous en ligne si aucun créneau n'est disponible.", },
+          },
+        },
+        example: example_params
+      )
+
+      with_examples
+      let(:params) { example_params }
+      let!(:agent) { create(:agent) }
+      let(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application: oauth_application) }
+      let(:oauth_application) { create(:oauth_application, grants_autonomous_signup: true) } # Il faut une application oauth qui autorise la création de compte
+      let(:authorization) { "Bearer #{oauth_token.plaintext_token}" }
+
+      response 201, "Crée l'organisation" do
+        run_test!
+      end
+    end
+
     get "Lister les organisations" do
       with_oauth_token_authentication
       with_pagination
@@ -70,7 +116,7 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
     end
   end
 
-  path "api/v1/organisations/{organisation_id}" do
+  path "/api/v1/organisations/{organisation_id}" do
     get "Récupérer une organisation" do
       with_oauth_token_authentication
       with_pagination
@@ -93,9 +139,7 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body[:organisation]).to match(OrganisationBlueprint.render_as_hash(organisation)) }
       end
     end
-  end
 
-  path "api/v1/organisations/{organisation_id}" do
     patch "Mettre à jour une organisation" do
       with_oauth_token_authentication
 
@@ -112,7 +156,7 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
       let(:organisation_id) { organisation.id }
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
-      response 200, "Met à jour et renvoie un·e usager·ère" do
+      response 200, "Met à jour et renvoie un·e organisation" do
         let(:name) { "Pole parcours" }
         let(:email) { "pole@parcours.fr" }
         let(:phone_number) { "33100008012" }
@@ -121,11 +165,9 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(organisation.reload.name).to eq(name) }
-
-        it { expect(organisation.reload.email).to eq(email) }
-
-        it { expect(organisation.reload.phone_number).to eq(phone_number) }
+        specify do
+          expect(organisation.reload).to have_attributes(name:, email:, phone_number:)
+        end
       end
 
       response 200, "updates an organisation with a minimal set of params", document: false do

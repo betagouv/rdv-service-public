@@ -364,7 +364,7 @@ RSpec.configure do |config|
               location_type: { type: "string", enum: %w[public_office phone home] },
               name: { type: "string" },
               organisation_id: { type: "integer" },
-              motif_category: { "$ref" => "#/components/schemas/motif_category" },
+              motif_category: { "$ref" => "#/components/schemas/motif_category", nullable: true },
               bookable_publicly: { type: "boolean" },
               bookable_by: { type: "string", enum: %w[agents agents_and_prescripteurs agents_and_prescripteurs_and_invited_users everyone] },
               service_id: { type: "integer", nullable: true },

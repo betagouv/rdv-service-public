@@ -43,7 +43,7 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
       end
     end
 
-    render_record @organisation
+    render_record @organisation, status: :created
   end
 
   def show

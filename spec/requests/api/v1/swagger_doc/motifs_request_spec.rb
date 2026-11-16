@@ -149,4 +149,51 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       end
     end
   end
+
+  path "/api/v1/motifs" do
+    post "Créer un motif" do
+      with_oauth_token_authentication
+
+      tags "Motif"
+      operationId "createMotif"
+      description "Crée un motif"
+
+      parameter(
+        name: :params,
+        in: :body,
+        schema: {
+          type: :object,
+          properties: {
+            organisation_id: { type: :integer, description: "ID de l'organisation", example: 12 },
+            name: { type: :string, description: "Le nom de l'organisation", example: "Maison France Service de Montreuil" },
+            location_type: { type: :string },
+
+            external_reference: { type: :object, schema: {
+              type: :object,
+              properties: { external_reference: {
+                type: :object,
+                properties: { external_id: { type: :string } },
+              } },
+            }, description: "L'id du motif dans votre système pour éviter la création de doublons", required: false, },
+          },
+        }
+      )
+
+      let!(:organisation) { create(:organisation) }
+      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+
+      response 200, "Crée et renvoie un motif" do
+        let(:params) do
+          {
+            organisation_id: organisation.id,
+            name: "Suivi de dossier",
+            external_reference: { external_id: "123ABC" },
+          }
+        end
+        schema "$ref" => "#/components/schemas/motif"
+
+        run_test!
+      end
+    end
+  end
 end
