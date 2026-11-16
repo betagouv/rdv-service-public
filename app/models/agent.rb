@@ -142,6 +142,7 @@ class Agent < ApplicationRecord
     where("invitation_sent_at IS NULL OR invitation_accepted_at IS NOT NULL")
   }
   scope :active, -> { where(deleted_at: nil) }
+  scope :with_valid_menshen_access_token, -> { where.not(menshen_access_token: nil).where(menshen_access_token_expires_at: Time.zone.now..) }
   scope :excluding_pending_invitation, lambda {
     where(invitation_sent_at: nil) # permet de ne pas inclure les intervenants & les ProConnectés
       .or(where.not(confirmed_at: nil)) # plus générique que invitation_sent_at, évite les faux négatifs

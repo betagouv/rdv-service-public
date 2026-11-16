@@ -73,10 +73,9 @@ class Admin::RdvWizardStepsController < AgentAuthController
     @rdv_wizard.service_id = @services.first.id if @services.one?
   end
 
-  # Cette méthode est dans le controller plutôt que dans le visio_concern car la création du salon
-  # peut nécessiter l'access token ProConnect de session (à défaut de jeton Menshen), disponible uniquement
-  # quand c'est l'agent qui initie le RDV. Quand tous les agents auront un jeton Menshen, cette logique pourra être
-  # déplacée dans le visio_concern pour couvrir aussi les RDV initiés par un usager ou un autre agent.
+  # Création synchrone avec le jeton de l'agent connecté (Menshen, sinon access token ProConnect de session).
+  # À défaut, Rdv::VisioConcern crée le salon en asynchrone si un des agents du RDV a un jeton Menshen.
+  # Quand tous les agents auront un jeton Menshen, cette méthode pourra être supprimée.
   def assign_visio_numerique_room_if_applicable
     return unless current_step == "step4"
     return unless @rdv.motif&.visio?

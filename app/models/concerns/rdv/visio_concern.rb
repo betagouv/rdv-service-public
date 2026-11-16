@@ -20,6 +20,14 @@ module Rdv::VisioConcern
     validates :visio_url_type, inclusion: { in: VISIO_URL_TYPES }
     validates :visio_url_custom, presence: true, if: -> { visio_url_type == "custom" }
     validate :validate_visio_url_custom, if: -> { visio_url_custom.present? }
+
+    # Le jeton Menshen ne dépend pas de la session : le salon peut être créé quel que soit l'auteur du RDV (usager, autre agent, API…)
+    after_create_commit :enqueue_visio_room_creation, if: :visio_room_creation_needed?
+  end
+
+  def visio_room_creation_needed?
+    motif.visio? && visio_url_custom.blank? && not_cancelled? && !ENV["VISIO_NUMERIQUE_DISABLED"] &&
+      agents.with_valid_menshen_access_token.exists?
   end
 
   # Webconf a fermé : sans URL custom (générée via Visio ou fournie par l'agent), il n'y a pas encore de lien
@@ -34,6 +42,10 @@ module Rdv::VisioConcern
   # Le lien contient un token qui ne donne accès qu'à la visio : il fonctionne même si la notification est transférée.
   def visio_join_url
     Rails.application.routes.url_helpers.visio_from_token_url(signed_id(purpose: :visio), host: domain.host_name)
+  end
+
+  def enqueue_visio_room_creation
+    Rdvs::CreateVisioRoomJob.perform_later(self)
   end
 
   def validate_visio_url_custom
