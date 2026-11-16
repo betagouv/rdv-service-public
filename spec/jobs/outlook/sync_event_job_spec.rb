@@ -53,6 +53,7 @@ RSpec.describe Outlook::SyncEventJob do
       end.not_to have_enqueued_job(described_class)
 
       expect(agent.reload.outlook_config).to be_nil
+      expect(sentry_events.last.extra).to eq({ error_description: "AADSTS700082: expired" })
     end
   end
 

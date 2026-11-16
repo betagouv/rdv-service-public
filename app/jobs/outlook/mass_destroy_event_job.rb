@@ -21,6 +21,7 @@ module Outlook
       if agent.reload.outlook_config # On se sert de `outlook_config` comme sémaphore pour éviter que plusieurs jobs passent ici en même temps.
         agent.outlook_config.destroy!
         Agents::OutlookSyncMailer.with(agent: agent, error_description: e.error_description).sync_disabled.deliver_later
+        Sentry.capture_exception(e, extra: { error_description: e.error_description })
       end
     end
   end
