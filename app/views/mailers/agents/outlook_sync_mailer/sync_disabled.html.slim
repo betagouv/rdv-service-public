@@ -8,6 +8,12 @@ p
     | Message d'erreur retourné par Outlook&nbsp;:
   blockquote = @error_description
 
+- if @error_uri.present?
+  p
+    | Vous trouverez plus d'informations sur cette erreur sur la page d'aide de Microsoft&nbsp;:
+    br
+    = link_to @error_uri, @error_uri
+
 p
   | Les rendez-vous déjà présents dans votre agenda Outlook n'y ont pas été supprimés, mais ils ne seront plus mis à jour. Pour reprendre la synchronisation, vous pouvez reconnecter votre compte Outlook&nbsp;:
 

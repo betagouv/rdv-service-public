@@ -11,7 +11,11 @@ module Outlook
     def handle_invalid_grant(invalid_grant_error)
       if reload.outlook_config # On se sert de `outlook_config` comme sémaphore pour éviter une race condition.
         outlook_config.destroy!
-        Agents::OutlookSyncMailer.with(agent: self, error_description: invalid_grant_error.error_description).sync_disabled.deliver_later
+        Agents::OutlookSyncMailer.with(
+          agent: self,
+          error_description: invalid_grant_error.error_description,
+          error_uri: invalid_grant_error.error_uri
+        ).sync_disabled.deliver_later
         Sentry.capture_exception(invalid_grant_error, extra: { error_description: invalid_grant_error.error_description })
       end
     end
