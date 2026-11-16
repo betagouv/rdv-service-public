@@ -97,4 +97,23 @@ RSpec.describe Outlook::MassDestroyEventJob, type: :job do
       expect(agents_rdv2.reload.outlook_id).not_to be_nil
     end
   end
+
+  context "when the refresh token is definitively invalid" do
+    before do
+      stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")
+        .to_return(status: 401, body: { error: { code: "InvalidAuthenticationToken", message: "Access token has expired." } }.to_json)
+      stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token")
+        .to_return(status: 400, body: { error: "invalid_grant", error_description: "AADSTS700082: expired", error_codes: [700_082] }.to_json)
+    end
+
+    it "destroys the outlook config, warns the agent by email and does not retry" do
+      expect do
+        expect do
+          described_class.perform_now(agent)
+        end.to have_enqueued_mail(Agents::OutlookSyncMailer, :sync_disabled)
+      end.not_to have_enqueued_job(described_class)
+
+      expect(agent.reload.outlook_config).to be_nil
+    end
+  end
 end
