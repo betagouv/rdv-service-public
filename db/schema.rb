@@ -248,6 +248,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_100000) do
     t.string "status"
     t.string "created_by_type"
     t.bigint "created_by_id"
+    t.string "created_by_name"
     t.bigint "user_ids", default: [], null: false, array: true
     t.bigint "agent_ids", default: [], null: false, array: true
     t.datetime "created_at", null: false

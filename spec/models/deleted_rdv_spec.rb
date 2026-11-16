@@ -19,6 +19,7 @@ RSpec.describe DeletedRdv do
         status: "unknown",
         created_by_type: "Agent",
         created_by_id: agent.id,
+        created_by_name: agent.full_name,
         user_ids: [user.id],
         agent_ids: [agent.id]
       )

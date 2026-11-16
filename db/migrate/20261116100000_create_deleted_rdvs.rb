@@ -12,6 +12,7 @@ class CreateDeletedRdvs < ActiveRecord::Migration[8.1]
       t.string :status
       t.string :created_by_type
       t.bigint :created_by_id
+      t.string :created_by_name # copie du nom, au cas où created_by_id pointe vers un agent supprimé
       t.bigint :user_ids, array: true, default: [], null: false
       t.bigint :agent_ids, array: true, default: [], null: false
 

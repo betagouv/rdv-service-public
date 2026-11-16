@@ -20,6 +20,7 @@ class DeletedRdv < ApplicationRecord
       status: rdv.status,
       created_by_type: rdv.created_by_type,
       created_by_id: rdv.created_by_id,
+      created_by_name: rdv.created_by.try(:full_name),
       user_ids: rdv.participations.map(&:user_id).uniq,
       agent_ids: rdv.agents_rdvs.map(&:agent_id).uniq
     )

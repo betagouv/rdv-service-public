@@ -6,7 +6,7 @@ class Admin::DeletedRdvsController < AgentAuthController
     @deleted_rdvs = policy_scope(DeletedRdv, policy_scope_class: Agent::DeletedRdvPolicy::Scope)
       .where(organisation_id: current_organisation.id)
       .ordered_by_deletion
-      .includes(:motif, :lieu, :created_by)
+      .includes(:motif, :lieu)
       .page(page_number).per(PER_PAGE)
 
     # Les usagers et agents sont stockés sous forme d'ids : on les charge en une requête chacun pour la page.
