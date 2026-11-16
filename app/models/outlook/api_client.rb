@@ -14,13 +14,6 @@ module Outlook
         @error_code = response_body["error_codes"].presence&.first.to_s
         super(@error_description)
       end
-
-      def self.from_response(response_body)
-        @error_description = response_body["error_description"]
-        @error_uri = response_body["error_uri"]
-        @error_codes = response_body["error_codes"].presence&.first
-        super(@error_description)
-      end
     end
 
     class RateLimitingError < ApiError; end
