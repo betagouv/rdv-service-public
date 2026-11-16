@@ -7,10 +7,11 @@ class DeletedRdv < ApplicationRecord
   belongs_to :lieu, optional: true
   belongs_to :created_by, polymorphic: true, optional: true
 
-  scope :ordered_by_deletion, -> { order(created_at: :desc, id: :desc) }
+  scope :ordered_by_deletion, -> { order(deleted_at: :desc, id: :desc) }
 
   def self.create_from_rdv!(rdv)
     create!(
+      id: rdv.id, # même id que le RDV : voir DeletedRdvsBackfill
       starts_at: rdv.starts_at,
       ends_at: rdv.ends_at,
       organisation_id: rdv.organisation_id,
@@ -22,12 +23,9 @@ class DeletedRdv < ApplicationRecord
       created_by_id: rdv.created_by_id,
       created_by_name: rdv.created_by.try(:full_name),
       user_ids: rdv.participations.map(&:user_id).uniq,
-      agent_ids: rdv.agents_rdvs.map(&:agent_id).uniq
+      agent_ids: rdv.agents_rdvs.map(&:agent_id).uniq,
+      deleted_at: Time.zone.now
     )
-  end
-
-  def deleted_at
-    created_at
   end
 
   def users

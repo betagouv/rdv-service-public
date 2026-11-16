@@ -11,8 +11,8 @@ RSpec.describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
 
   it "supprime les DeletedRdv de plus de 2 ans, y compris ceux créés par la suppression des vieux RDV" do
     travel_to(25.months.ago) { create(:rdv, starts_at: Time.zone.now.change(hour: 16)) } # sera détruit par le job
-    recent_deleted_rdv = DeletedRdv.create!(starts_at: 23.months.ago, ends_at: 23.months.ago + 30.minutes, organisation_id: organisation.id)
-    DeletedRdv.create!(starts_at: 25.months.ago, ends_at: 25.months.ago + 30.minutes, organisation_id: organisation.id)
+    recent_deleted_rdv = DeletedRdv.create!(id: 1, starts_at: 23.months.ago, ends_at: 23.months.ago + 30.minutes, organisation_id: organisation.id, deleted_at: Time.zone.now)
+    DeletedRdv.create!(id: 2, starts_at: 25.months.ago, ends_at: 25.months.ago + 30.minutes, organisation_id: organisation.id, deleted_at: Time.zone.now)
 
     described_class.new.perform
 

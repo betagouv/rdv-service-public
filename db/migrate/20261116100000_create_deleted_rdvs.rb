@@ -2,7 +2,9 @@ class CreateDeletedRdvs < ActiveRecord::Migration[8.1]
   # Pas de foreign keys volontairement : on veut conserver ces données même si les
   # organisations, motifs, lieux, usagers ou agents référencés sont supprimés par la suite.
   def change
-    create_table :deleted_rdvs do |t|
+    # L'id est celui du RDV supprimé (pas de séquence) : cela permet de rejouer le backfill sans doublons.
+    create_table :deleted_rdvs, id: false do |t|
+      t.bigint :id, primary_key: true # rubocop:disable Rails/DangerousColumnNames
       t.datetime :starts_at, null: false
       t.datetime :ends_at, null: false
       t.bigint :organisation_id, null: false
@@ -16,10 +18,10 @@ class CreateDeletedRdvs < ActiveRecord::Migration[8.1]
       t.bigint :user_ids, array: true, default: [], null: false
       t.bigint :agent_ids, array: true, default: [], null: false
 
-      t.timestamps # created_at correspond à la date de suppression du RDV
+      t.datetime :deleted_at, null: false
     end
 
-    add_index :deleted_rdvs, %i[organisation_id created_at]
+    add_index :deleted_rdvs, %i[organisation_id deleted_at]
     add_index :deleted_rdvs, :agent_ids, using: :gin
   end
 end

@@ -10,6 +10,7 @@ RSpec.describe DeletedRdv do
 
       deleted_rdv = described_class.last
       expect(deleted_rdv).to have_attributes(
+        id: rdv.id,
         starts_at: rdv.starts_at,
         ends_at: rdv.ends_at,
         organisation_id: organisation.id,
