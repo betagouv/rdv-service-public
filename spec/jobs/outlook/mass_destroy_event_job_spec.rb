@@ -105,11 +105,9 @@ RSpec.describe Outlook::MassDestroyEventJob, type: :job do
     end
 
     it "destroys the outlook config, warns the agent by email and does not retry" do
-      expect do
-        expect do
-          described_class.perform_now(agent)
-        end.to have_enqueued_mail(Agents::OutlookSyncMailer, :sync_disabled)
-      end.not_to have_enqueued_job(described_class)
+      expect { described_class.perform_now(agent) }
+        .to have_enqueued_mail(Agents::OutlookSyncMailer, :sync_disabled)
+        .and have_enqueued_job(described_class).exactly(0).times
 
       expect(agent.reload.outlook_config).to be_nil
     end

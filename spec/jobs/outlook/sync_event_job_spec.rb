@@ -81,14 +81,11 @@ RSpec.describe Outlook::SyncEventJob do
     it "destroys the outlook config, warns the agent by email and does not retry" do
       agents_rdv.update_columns(outlook_create_in_progress: true) # rubocop:disable Rails/SkipsModelValidations
 
-      expect do
-        expect do
-          described_class.perform_now(agents_rdv.id, nil, agent)
-        end.to have_enqueued_mail(Agents::OutlookSyncMailer, :sync_disabled).with(
-          params: { agent:, error_description:, error_uri: "https://login.microsoftonline.com/error?code=700003" },
-          args: []
+      expect { described_class.perform_now(agents_rdv.id, nil, agent) }
+        .to have_enqueued_mail(Agents::OutlookSyncMailer, :sync_disabled).with(
+          params: { agent:, error_description:, error_uri: "https://login.microsoftonline.com/error?code=700003" }, args: []
         )
-      end.not_to have_enqueued_job(described_class)
+        .and have_enqueued_job(described_class).exactly(0).times
 
       expect(agent.reload.outlook_config).to be_nil
       expect(sentry_events.last.extra).to eq({ error_description: })
