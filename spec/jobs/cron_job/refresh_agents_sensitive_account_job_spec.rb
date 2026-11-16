@@ -59,14 +59,13 @@ RSpec.describe CronJob::RefreshAgentsSensitiveAccountJob, type: :job do
       expect(agent.reload.sensitive_account).to be false
     end
 
-    it "ne modifie pas sensitive_account des agents sans rôle admin, accueil ou territorial" do
-      agent_with_sensitive = create(:agent, sensitive_account: true)
-      agent_without_sensitive = create(:agent, sensitive_account: false)
+    it "met sensitive_account à false pour un agent basic qui ne remplit plus aucun critère" do
+      organisation = create(:organisation)
+      agent = create(:agent, basic_role_in_organisations: [organisation], sensitive_account: true)
 
       described_class.perform_now
 
-      expect(agent_with_sensitive.reload.sensitive_account).to be true
-      expect(agent_without_sensitive.reload.sensitive_account).to be false
+      expect(agent.reload.sensitive_account).to be false
     end
 
     it "met sensitive_account à true pour les admins de territoire dont une organisation a beaucoup de RDVs" do
@@ -140,6 +139,18 @@ RSpec.describe CronJob::RefreshAgentsSensitiveAccountJob, type: :job do
       described_class.perform_now
 
       expect(agent.reload.sensitive_account).to be true
+    end
+
+    it "met sensitive_account à false pour un agent basic retiré de son organisation dans un espace qui impose la double authentification" do
+      territory = create(:territory, force_2fa_for_agents: true)
+      organisation = create(:organisation, territory:)
+      other_organisation = create(:organisation)
+      agent = create(:agent, basic_role_in_organisations: [organisation, other_organisation], sensitive_account: true)
+      agent.roles.find_by(organisation:).destroy!
+
+      described_class.perform_now
+
+      expect(agent.reload.sensitive_account).to be false
     end
   end
 end

@@ -51,6 +51,16 @@ RSpec.describe "Paramètres de sécurité d'un espace", type: :request do
 
       expect(basic_agent.reload.sensitive_account).to be false
     end
+
+    it "n'affiche pas de message de succès si l'enregistrement échoue" do
+      territory.update_column(:siret, "invalide") # rubocop:disable Rails/SkipsModelValidations
+
+      patch admin_territory_security_settings_path(territory), params: { territory: { force_2fa_for_agents: "1" } }
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(flash[:success]).to be_nil
+      expect(territory.reload.force_2fa_for_agents).to be false
+    end
   end
 
   context "quand l'agent n'est pas admin de l'espace" do

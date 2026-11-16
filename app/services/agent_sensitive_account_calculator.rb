@@ -19,7 +19,9 @@ class AgentSensitiveAccountCalculator
 
       # rubocop:disable Rails/SkipsModelValidations
       Agent.where(id: sensitive_ids).in_batches.update_all(sensitive_account: true)
-      Agent.where(id: evaluated_agent_ids).where.not(id: sensitive_ids).in_batches.update_all(sensitive_account: false)
+      # On réévalue tous les agents actuellement sensibles, quel que soit leur rôle, pour repasser à false
+      # ceux qui ne remplissent plus aucun critère (retrait d'une organisation, option désactivée sur l'espace, etc.)
+      Agent.where(sensitive_account: true).where.not(id: sensitive_ids).in_batches.update_all(sensitive_account: false)
       # rubocop:enable Rails/SkipsModelValidations
     end
 
@@ -37,16 +39,6 @@ class AgentSensitiveAccountCalculator
     end
 
     private
-
-    # Tous les agents susceptibles d'être concernés par l'un des critères ci-dessous,
-    # pour pouvoir repasser sensitive_account à false s'ils ne les remplissent plus.
-    def evaluated_agent_ids
-      (admin_or_agent_accueil_agent_ids + AgentTerritorialRole.distinct.pluck(:agent_id)).uniq
-    end
-
-    def admin_or_agent_accueil_agent_ids
-      AgentRole.where("access_level = 'admin' OR agent_accueil = true").distinct.pluck(:agent_id)
-    end
 
     # Un agent a accès à l'ensemble des RDVs d'une organisation (et non uniquement aux siens)
     # dès lors qu'il y a un rôle admin ou agent_accueil (cf. Agent::RdvPolicy::Scope). Le volume
