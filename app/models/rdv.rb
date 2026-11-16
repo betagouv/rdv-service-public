@@ -94,6 +94,9 @@ class Rdv < ApplicationRecord
   end
 
   before_destroy(prepend: true) { @agent_ids_before_change = agent_ids }
+  # Doit être fait avant la suppression des participations et des agents_rdvs.
+  # Dans la même transaction que le destroy : si la suppression échoue, la trace est annulée aussi.
+  before_destroy(prepend: true) { DeletedRdv.create_from_rdv!(self) }
   before_save { @agent_ids_before_change = agent_ids }
   after_commit do
     refresh_periods = [[starts_at, ends_at]]

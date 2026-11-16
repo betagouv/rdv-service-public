@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_11_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_16_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -236,6 +236,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_11_100000) do
     t.string "caldav_calendar_color", limit: 7
     t.string "caldav_ctag"
     t.index ["agent_id"], name: "index_caldav_configs_on_agent_id", unique: true
+  end
+
+  create_table "deleted_rdvs", force: :cascade do |t|
+    t.datetime "starts_at", null: false
+    t.datetime "ends_at", null: false
+    t.bigint "organisation_id", null: false
+    t.bigint "motif_id"
+    t.string "motif_name"
+    t.bigint "lieu_id"
+    t.string "status"
+    t.string "created_by_type"
+    t.bigint "created_by_id"
+    t.bigint "user_ids", default: [], null: false, array: true
+    t.bigint "agent_ids", default: [], null: false, array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_ids"], name: "index_deleted_rdvs_on_agent_ids", using: :gin
+    t.index ["organisation_id", "created_at"], name: "index_deleted_rdvs_on_organisation_id_and_created_at"
   end
 
   create_table "export_file_blobs", force: :cascade do |t|

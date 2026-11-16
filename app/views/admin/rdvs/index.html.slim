@@ -13,6 +13,8 @@
   .card
     .card-body
       = render "rdv_search_form", form: @form
+      .fr-mt-2w.d-print-none
+        = link_to "Voir les RDV supprimés", admin_organisation_deleted_rdvs_path(current_organisation), class: "fr-link"
 
     - if @rdvs.total_count > 0
       .card-footer

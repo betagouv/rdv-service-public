@@ -38,7 +38,7 @@ module AgentsHelper
       :menu_online_booking
     when "users", "merge_users", "referent_assignations"
       :menu_users
-    when "rdvs"
+    when "rdvs", "deleted_rdvs"
       :menu_liste_rdvs
     end
   end
