@@ -4,6 +4,18 @@ module Outlook
     class NotFoundError < ApiError; end
     class AlreadyExistsError < ApiError; end
     class RefreshTokenError < ApiError; end
+
+    class InvalidGrantError < RefreshTokenError
+      attr_reader :error_description, :error_uri, :error_code
+
+      def initialize(response_body)
+        @error_description = response_body["error_description"]
+        @error_uri = response_body["error_uri"]
+        @error_code = response_body["error_codes"].presence&.first.to_s
+        super(@error_description)
+      end
+    end
+
     class RateLimitingError < ApiError; end
     class ServerError < ApiError; end # réponse HTTP 5xx
 
@@ -103,7 +115,9 @@ module Outlook
         )
       refresh_token_response = JSON.parse(refresh_token_query.response_body)
 
-      if refresh_token_response["error"].present?
+      if refresh_token_response["error"] == "invalid_grant"
+        raise InvalidGrantError, refresh_token_response
+      elsif refresh_token_response["error"].present?
         raise RefreshTokenError, refresh_token_response["error"]
       elsif refresh_token_response["access_token"].present? && refresh_token_response["refresh_token"].present?
         @outlook_config.update!(microsoft_graph_token: refresh_token_response["access_token"], microsoft_graph_refresh_token: refresh_token_response["refresh_token"])
