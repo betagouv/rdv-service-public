@@ -1,7 +1,7 @@
 RSpec.describe Admin::CreneauxSearchController do
   let(:organisation) { create(:organisation) }
 
-  context "with a secretaire signed_in" do
+  context "avec un agent connecté" do
     let(:agent) { create(:agent, :with_territory_access_rights, basic_role_in_organisations: [organisation]) }
 
     before { sign_in agent }

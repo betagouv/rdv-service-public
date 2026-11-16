@@ -31,7 +31,7 @@ RSpec.describe Agent::LieuPolicy do
     end
   end
 
-  context "for an agent d’accueil" do
+  context "pour un agent d’accueil" do
     let(:agent) { create(:agent, agent_accueil_role_in_organisations: [lieu.organisation]) }
 
     it "does not allow any write operation on lieu" do

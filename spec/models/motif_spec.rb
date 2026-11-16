@@ -133,17 +133,11 @@ RSpec.describe Motif, type: :model do
     let!(:service_pmi) { create(:service, name: "PMI") }
     let!(:agent_pmi1) { create(:agent, basic_role_in_organisations: [org1], service: service_pmi) }
     let!(:agent_pmi2) { create(:agent, basic_role_in_organisations: [org1], service: service_pmi) }
-    let!(:agent_accueil1) { create(:agent, agent_accueil_role_in_organisations: [org1]) }
     let!(:intervenant_pmi) { create(:agent, :intervenant, organisations: [org1], service: service_pmi) }
+    let!(:agent_autre_service) { create(:agent, basic_role_in_organisations: [org1], service: create(:service, name: "Social")) }
     let!(:motif) { create(:motif, service: service_pmi, organisation: org1) }
 
-    it { is_expected.to contain_exactly(agent_pmi1, agent_pmi2, intervenant_pmi, agent_accueil1) }
-
-    context "motif is available for secretariat" do
-      let!(:motif) { create(:motif, service: service_pmi, organisation: org1, for_secretariat: true) }
-
-      it { is_expected.to contain_exactly(agent_pmi1, agent_pmi2, intervenant_pmi, agent_accueil1) }
-    end
+    it { is_expected.to contain_exactly(agent_pmi1, agent_pmi2, intervenant_pmi, agent_autre_service) }
 
     context "agent from same service but different orga" do
       let(:org2) { create(:organisation) }
@@ -155,7 +149,7 @@ RSpec.describe Motif, type: :model do
     context "for motif without service" do
       let!(:motif) { create(:motif, service: nil, organisation: org1) }
 
-      it { is_expected.to contain_exactly(agent_pmi1, agent_pmi2, intervenant_pmi, agent_accueil1) }
+      it { is_expected.to contain_exactly(agent_pmi1, agent_pmi2, intervenant_pmi, agent_autre_service) }
     end
   end
 

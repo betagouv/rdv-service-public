@@ -40,16 +40,13 @@ RSpec.describe Admin::AgentsController, type: :controller do
   end
 
   describe "GET #new" do
-    context "for a cnfs" do
-      let!(:agent) do
-        create(:agent, admin_role_in_organisations: [organisation],
-                       invitation_accepted_at: nil, service: create(:service, :conseiller_numerique))
-      end
+    it "propose tous les services activés sur l’espace" do
+      service = create(:service, name: "Service PMI")
+      organisation.territory.services << service
 
-      it "only allows inviting agents for the secretariat" do
-        get :new, params: { organisation_id: organisation.id }
-        expect(response).not_to have_content("Admin")
-      end
+      get :new, params: { organisation_id: organisation.id }
+
+      expect(response.body).to include("Service PMI")
     end
   end
 
