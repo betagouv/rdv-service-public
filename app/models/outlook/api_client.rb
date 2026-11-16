@@ -10,7 +10,7 @@ module Outlook
     class InvalidGrantError < RefreshTokenError
       attr_reader :error_description
 
-      def initialize(message = nil, error_description: nil)
+      def initialize(message, error_description:)
         super(message)
         @error_description = error_description
       end
