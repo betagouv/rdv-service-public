@@ -1,0 +1,69 @@
+// Bouton déroulant : voir app/views/common/_dropdown_button.html.slim
+// Le bouton est un .fr-btn du DSFR ; seuls la liste et l'état ouvert sont spécifiques.
+.dropdown-button {
+  position: relative;
+  display: inline-flex; // pas de ligne de texte autour du bouton : la liste se colle à lui
+
+  // Le chevron est un <span> et non une classe fr-icon-* sur le bouton : dans un .fr-btns-group,
+  // le DSFR transformerait sinon le bouton en bouton "icône seule" (texte masqué).
+  // .fr-btn dans le sélecteur : nécessaire pour l'emporter sur le fond de .fr-btn--secondary
+  &__trigger.fr-btn[aria-expanded="true"] {
+    background-color: var(--background-open-blue-france);
+
+    .dropdown-button__chevron {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__list {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000; // sous les modales Bootstrap (1050)
+    min-width: 100%;
+    width: max-content;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background-color: var(--background-raised-grey);
+    box-shadow: 0 6px 18px rgba(0, 0, 18, 0.16);
+
+    li {
+      margin: 0;
+      padding: 0;
+    }
+
+    li + li {
+      border-top: 1px solid var(--border-default-grey);
+    }
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: var(--text-action-high-blue-france);
+    font-weight: 500;
+    background-image: none; // retire le soulignement des liens DSFR
+    white-space: nowrap;
+
+    // a[href]:hover impose un fond au DSFR : on double la classe pour passer devant
+    &.dropdown-button__link:hover {
+      background-color: var(
+        --background-alt-grey
+      ); // gris clair, comme .dropdown-item-dsfr du header
+    }
+  }
+}
+
+// Dans un groupe de boutons DSFR, on se comporte comme un .fr-btn :
+// le DSFR impose width:100% aux <div> enfants et des marges aux .fr-btn.
+.fr-btns-group--inline > .dropdown-button {
+  width: auto;
+  margin: 0 0.5rem;
+  align-self: flex-start; // sinon le groupe étire le composant (et le bouton) à la hauteur des marges des autres .fr-btn
+
+  .fr-btn {
+    margin: 0;
+  }
+}
