@@ -1,0 +1,23 @@
+- content_for :title do
+  | Modifier l’affichage de l’agenda CalDAV
+
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Synchronisation d'agenda", href: agents_calendar_sync_path
+    = b.with_breadcrumb label: "Configuration de la synchronisation CalDAV", href: agents_calendar_sync_caldav_sync_path
+    = b.with_breadcrumb label: "Modifier l’affichage"
+
+= form_with model: @caldav_config, url: update_display_agents_calendar_sync_caldav_sync_path, method: :patch, builder: Dsfr::FormBuilder do |f|
+  .card.fr-mb-3w
+    .card-body
+      = f.dsfr_text_field :caldav_calendar_name,
+        label: "Nom d’affichage de l’agenda",
+        hint: "Optionnel. Ce nom sera utilisé dans le planning pour vous indiquer les indisponibilités provenant de votre agenda externe."
+      // Le DSFR ne propose pas d’input color, on utilise donc le champ classique avec le style DSFR.
+      = f.dsfr_input_field :caldav_calendar_color, :color_field,
+        label: "Couleur d’affichage de l’agenda",
+        hint: "Cette couleur sera utilisée dans le planning pour vous indiquer les indisponibilités provenant de votre agenda externe.",
+        value: @caldav_config.caldav_calendar_color.presence || AbsencesHelper::CALENDAR_BACKGROUND_COLOR_HEX
+  .fr-btns-group.fr-btns-group--inline
+    = f.dsfr_submit "Enregistrer"
+    = link_to "Annuler", agents_calendar_sync_caldav_sync_path, class: "fr-btn fr-btn--secondary"
