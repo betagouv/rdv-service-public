@@ -11,7 +11,7 @@
     - if !@motif.archived? && @motif_policy.edit?
       = link_to t("admin.motifs.actions.edit"), edit_admin_organisation_motif_path(current_organisation, @motif), class: "fr-btn"
     - more_actions = []
-    - more_actions << { label: t("admin.motifs.actions.duplicate"), icon: "fr-icon-clipboard-line", url: new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: @motif.id) } if @motif_policy.duplicate?
+    - more_actions << { label: t("admin.motifs.actions.duplicate"), icon: "fr-icon-ri-file-copy-2-fill", url: new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: @motif.id) } if @motif_policy.duplicate?
     - if @motif.archived?
       - more_actions << { label: t("admin.motifs.actions.unarchive"), icon: "fr-icon-upload-line", url: unarchive_admin_organisation_motif_path(current_organisation, @motif), html_options: { method: :post } } if @motif_policy.unarchive?
     - elsif @motif_policy.archive?
