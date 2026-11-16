@@ -131,6 +131,25 @@ RSpec.describe "API RDV Plan" do
         end
       end
 
+      context "quand un autre usager a un autre external_id pour cette application" do
+        let(:other_user) { create(:user, first_name: "Françoise") }
+
+        before do
+          create(:external_reference, item: other_user, external_id: "999", oauth_application: application)
+          create(:user_profile, user: other_user, organisation: agent.organisations.first)
+        end
+
+        it "crée un nouvel usager sans modifier l'autre" do
+          expect do
+            post "/api/v1/rdv_plans", headers:, params:, as: :json
+          end.to change(User, :count).by(1)
+
+          expect(other_user.reload.first_name).to eq("Françoise")
+          expect(RdvPlan.last.user).to have_attributes(first_name: "Francis", last_name: "Factice")
+          expect(RdvPlan.last.user.external_references.pluck(:external_id)).to eq(["123456AB"])
+        end
+      end
+
       # TODO: affiner cette logique avec les territory ids
     end
 
