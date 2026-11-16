@@ -16,7 +16,11 @@ module Outlook
           error_description: invalid_grant_error.error_description,
           error_uri: invalid_grant_error.error_uri
         ).sync_disabled.deliver_later
-        Sentry.capture_exception(invalid_grant_error, extra: { error_description: invalid_grant_error.error_description })
+        Sentry.capture_exception(
+          invalid_grant_error,
+          extra: { error_description: invalid_grant_error.error_description },
+          tags: { error_url: invalid_grant_error.error_uri }
+        )
       end
     end
 

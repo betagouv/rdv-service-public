@@ -92,6 +92,7 @@ RSpec.describe Outlook::SyncEventJob do
 
       expect(agent.reload.outlook_config).to be_nil
       expect(sentry_events.last.extra).to eq({ error_description: })
+      expect(sentry_events.last.tags).to include(error_url: "https://login.microsoftonline.com/error?code=700003")
     end
   end
 
