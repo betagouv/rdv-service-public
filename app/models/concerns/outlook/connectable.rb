@@ -6,6 +6,15 @@ module Outlook
       outlook_config&.microsoft_graph_token || false
     end
 
+    # Le refresh token est définitivement invalide : inutile de retenter, on désactive la synchro et on prévient l'agent.
+    def handle_invalid_grant(invalid_grant_error)
+      if reload.outlook_config # On se sert de `outlook_config` comme sémaphore pour éviter une race condition.
+        outlook_config.destroy!
+        Agents::OutlookSyncMailer.with(agent:, error_description: invalid_grant_error.error_description).sync_disabled.deliver_later
+        Sentry.capture_exception(invalid_grant_error, extra: { error_description: invalid_grant_error.error_description })
+      end
+    end
+
     included do
       has_one :outlook_config, dependent: :destroy
 
