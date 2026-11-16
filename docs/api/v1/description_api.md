@@ -35,8 +35,7 @@ Nous proposons uniquement l'authentification via le [protocole standard OAuth 2.
 
 Pour utiliser l’API via OAuth 2.0, voici les grandes étapes :
 - [Nous contacter](https://rdv.anct.gouv.fr/aide/demande_support/new?role=agent&sujet=OAuth) en nous fournissant l'URI de redirection (`redirect_uri`) de votre application, c'est-à-dire l'URL vers laquelle l'agent sera renvoyé après son consentement
-- Nous créons alors pour vous une application OAuth (appelée *client* dans la spécification OAuth 2.0) et nous vous envoyons ses identifiants : le `client_id` et le `client_secret`
-  Attention, le `client_secret` ne vous est communiqué qu'une seule fois : conservez-le dans un gestionnaire de secrets
+- Nous créons alors pour vous une application OAuth (appelée *client* dans la spécification OAuth 2.0) et nous vous envoyons ses identifiants : le `client_id` et le `client_secret`.
 - Vous implémentez le flux *Authorization Code* (`grant_type=authorization_code`), le seul flux activé chez nous :
     - `GET/POST /oauth/authorize` — page d'autorisation : après consentement de l'agent, il est renvoyé vers votre `redirect_uri` avec un code d'autorisation (`code`)
     - `POST /oauth/token` — échange du code d'autorisation contre un jeton d'accès (`access_token`) et un `refresh_token`
