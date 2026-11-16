@@ -191,7 +191,7 @@ class Agent < ApplicationRecord
       access_grants.destroy_all
       access_tokens.destroy_all
       exports.destroy_all
-      outlook_config.destroy!
+      outlook_config&.destroy!
 
       assign_attributes(
         deleted_at: Time.zone.now,
