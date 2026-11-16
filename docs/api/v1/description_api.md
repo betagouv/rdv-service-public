@@ -28,25 +28,28 @@ Pour la version production, les requêtes doivent être adressées à https://ww
 
 Pour la version démo, les requêtes doivent être adressées à https://demo.rdv-solidarites.fr.
 
-# Authentification par OAuth
+# Authentification par OAuth 2.0
 
-Presque toutes les URL de l’API (ci-dessous appelés *endpoints*) sont réservés aux agents authentifiés, dans la limite de leur rôle au sein de l'application.
-Nous proposons uniquement l'authentification via le protocole standard OAuth 2.0.
+Presque tous les points de terminaison de l'API sont réservés aux agents authentifiés, dans la limite de leur rôle au sein de l'application.
+Nous proposons uniquement l'authentification via le [protocole standard OAuth 2.0 (documentation en anglais)](https://oauth.net/2/).
 
-Pour utiliser l’API via OAuth 2.0 voici les grandes étapes :
-- Préparer un client OAuth 2.0 prêt à recevoir les requêtes de votre côté
-- [Nous contacter](https://rdv.anct.gouv.fr/aide/demande_support/new?role=agent&sujet=OAuth) pour nous demander de créer une appli OAuth en nous fournissant l’URL de redirection de votre client (*callback url*)
-- Nous vous envoyons les identifiants de l’applications OAuth
-- Vous pouvez implémenter la cinétique OAuth complète via les différents endpoints que nous proposons :
-    - `GET/POST /oauth/authorize` — écran d'autorisation
-    - `POST /oauth/token` — échange du code contre un access token
-    - `POST https://rdv-solidarites.fr/oauth/revoke` — révocation de token
-    - `GET https://rdv-solidarites.fr/oauth/token/info` — infos sur le token
-    - Utiliser ce token pour requêter l’API
+Pour utiliser l’API via OAuth 2.0, voici les grandes étapes :
+- [Nous contacter](https://rdv.anct.gouv.fr/aide/demande_support/new?role=agent&sujet=OAuth) en nous fournissant l'URI de redirection (`redirect_uri`) de votre application, c'est-à-dire l'URL vers laquelle l'agent sera renvoyé après son consentement
+- Nous créons alors pour vous une application OAuth (appelée *client* dans la spécification OAuth 2.0) et nous vous envoyons ses identifiants : le `client_id` et le `client_secret`
+  Attention, le `client_secret` ne vous est communiqué qu'une seule fois : conservez-le dans un gestionnaire de secrets
+- Vous implémentez le flux *Authorization Code* (`grant_type=authorization_code`), le seul flux activé chez nous :
+    - `GET/POST /oauth/authorize` — page d'autorisation : après consentement de l'agent, il est renvoyé vers votre `redirect_uri` avec un code d'autorisation (`code`)
+    - `POST /oauth/token` — échange du code d'autorisation contre un jeton d'accès (`access_token`) et un `refresh_token`
+      La requête doit être envoyée en `application/x-www-form-urlencoded` avec `grant_type=authorization_code`, `code`, `redirect_uri`, `client_id` et `client_secret`
+    - `POST /oauth/revoke` — révocation d'un jeton
+    - `GET /oauth/token/info` — informations sur le jeton présenté
+- Vous appelez ensuite l'API en passant le jeton dans le header `Authorization: Bearer <access_token>`
 
-**Note importante :**
-Il existe aussi un système de webhooks plus léger à mettre en place.
-Les webhooks sont très adaptés pour la récupération de données et la synchronisation depuis RDV Service Public vers un service externe.
+Tous les jetons sont délivrés avec le scope `write`.
+
+**À noter :**
+Si vous avez surtout besoin d'être notifié des changements (création, modification, suppression de RDV, plages d'ouvertures, absences ou usagers), notre système de webhooks est plus adapté qu'un appel régulier à l'API : nous envoyons une notification HTTP POST vers votre service à chaque événement.
+Voir la [documentation dédiée aux webhooks](https://github.com/betagouv/rdv-service-public/blob/production/docs/api/webhooks/api-notifications-webhooks.md).
 
 ## Permissions
 
