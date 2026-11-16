@@ -1,5 +1,3 @@
-require "rails_helper"
-
 RSpec.describe Outlook::MassDestroyEventJob, type: :job do
   let(:organisation) { create(:organisation) }
   let(:motif) { create(:motif, name: "Super Motif", location_type: :phone, organisation:) }
