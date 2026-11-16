@@ -6,12 +6,20 @@ module Outlook
     class RefreshTokenError < ApiError; end
 
     class InvalidGrantError < RefreshTokenError
-      attr_reader :error_description, :error_uri
+      attr_reader :error_description, :error_uri, :error_code
 
-      def initialize(message, error_description:, error_uri:)
-        super(message)
-        @error_description = error_description
-        @error_uri = error_uri
+      def initialize(response_body)
+        @error_description = response_body["error_description"]
+        @error_uri = response_body["error_uri"]
+        @error_code = response_body["error_codes"].presence&.first.to_s
+        super(@error_description)
+      end
+
+      def self.from_response(response_body)
+        @error_description = response_body["error_description"]
+        @error_uri = response_body["error_uri"]
+        @error_codes = response_body["error_codes"].presence&.first
+        super(@error_description)
       end
     end
 
@@ -115,11 +123,7 @@ module Outlook
       refresh_token_response = JSON.parse(refresh_token_query.response_body)
 
       if refresh_token_response["error"] == "invalid_grant"
-        raise InvalidGrantError.new(
-          refresh_token_response["error"],
-          error_description: refresh_token_response["error_description"],
-          error_uri: refresh_token_response["error_uri"]
-        )
+        raise InvalidGrantError, refresh_token_response
       elsif refresh_token_response["error"].present?
         raise RefreshTokenError, refresh_token_response["error"]
       elsif refresh_token_response["access_token"].present? && refresh_token_response["refresh_token"].present?
