@@ -74,6 +74,9 @@ class CronJob < ApplicationJob
         Sentry.capture_exception(e)
       end
 
+      # À faire après la boucle ci-dessus : la suppression des vieux RDV crée elle-même des DeletedRdv
+      DeletedRdv.where(starts_at: ..two_years_ago).delete_all
+
       # La suppression d'utilisateurs inactifs a besoin que les vieux rdv soient supprimés
       # On utilise la même date limite pour éviter une race condition liée au temps d'exécution du premier job
       DestroyInactiveUsers.perform_later(two_years_ago)
