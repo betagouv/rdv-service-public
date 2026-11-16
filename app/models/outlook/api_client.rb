@@ -5,8 +5,6 @@ module Outlook
     class AlreadyExistsError < ApiError; end
     class RefreshTokenError < ApiError; end
 
-    # Le refresh token est définitivement inutilisable (expiré, révoqué, MFA requis...) :
-    # l'agent doit se reconnecter à Outlook.
     class InvalidGrantError < RefreshTokenError
       attr_reader :error_description
 
