@@ -30,8 +30,23 @@ Pour la version démo, les requêtes doivent être adressées à https://demo.rd
 
 # Authentification par OAuth
 
-Presque tous les points de terminaison sont réservés aux agents authentifiés, dans la limite de leur rôle au sein de l'application.
-Le mode d'authentification recommandé est via le protocole d'OAuth 2.0. Vous pouvez contacter notre équipe technique via le formulaire de contact de l'application pour demander la création d'une application OAuth.
+Presque toutes les URL de l’API (ci-dessous appelés *endpoints*) sont réservés aux agents authentifiés, dans la limite de leur rôle au sein de l'application.
+Nous proposons uniquement l'authentification via le protocole standard OAuth 2.0.
+
+Pour utiliser l’API via OAuth 2.0 voici les grandes étapes :
+- Préparer un client OAuth 2.0 prêt à recevoir les requêtes de votre côté
+- [Nous contacter](https://rdv.anct.gouv.fr/aide/demande_support/new?role=agent&sujet=OAuth) pour nous demander de créer une appli OAuth en nous fournissant l’URL de redirection de votre client (*callback url*)
+- Nous vous envoyons les identifiants de l’applications OAuth
+- Vous pouvez implémenter la cinétique OAuth complète via les différents endpoints que nous proposons :
+    - `GET/POST /oauth/authorize` — écran d'autorisation
+    - `POST /oauth/token` — échange du code contre un access token
+    - `POST https://rdv-solidarites.fr/oauth/revoke` — révocation de token
+    - `GET https://rdv-solidarites.fr/oauth/token/info` — infos sur le token
+    - Utiliser ce token pour requêter l’API
+
+**Note importante :**
+Il existe aussi un système de webhooks plus léger à mettre en place.
+Les webhooks sont très adaptés pour la récupération de données et la synchronisation depuis RDV Service Public vers un service externe.
 
 ## Permissions
 
