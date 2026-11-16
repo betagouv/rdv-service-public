@@ -1,0 +1,50 @@
+# Comptes de démo exposés sur les pages de connexion en dev et en review app
+# cf app/lib/seed_accounts.rb
+#
+# L'email de chaque compte listé ici est unique, les seeds charge ce YAML
+# Le label sert d'aperçu sur la page de connexion.
+#
+# Pas d'exhaustivité visée : un seul compte par profil utile.
+
+agents:
+  martine:
+    email: martine@demo.rdv-solidarites.fr
+    label: Admin MDS Paris Nord (PMI) — quelques centaines de RDV
+  marco:
+    email: marco@demo.rdv-solidarites.fr
+    label: Agent PMI, MDS Paris Nord
+  polo:
+    email: polo@demo.rdv-solidarites.fr
+    label: Agent Service social, MDS Paris Nord
+  maya:
+    email: maya@demo.rdv-solidarites.fr
+    label: Admin territoire Pas-de-Calais (toutes les MDS du 62)
+  bruno:
+    email: bruno@demo.rdv-solidarites.fr
+    label: Admin MDS Bapaume
+  cecile_astier:
+    email: cecile.astier@demo-rdv-service-public.fr
+    label: Agent CCAS de Montélimar
+  cdad1_admin:
+    email: cdad1_admin@cdad.fr
+    label: Admin CDAD 1 (Gironde)
+  camille_clavier:
+    email: camille-clavier@demo.rdv-solidarites.fr
+    label: Conseillère numérique, médiathèque Paris Nord (seed dev uniquement)
+users:
+  patricia_duroy:
+    email: patricia_duroy@demo.rdv-solidarites.fr
+    label: Usagère avec plusieurs RDV, MDS Paris Nord
+  lea_dupont:
+    email: lea_dupont@demo.rdv-solidarites.fr
+    label: Usagère, MDS Paris Nord
+  jean_moustache:
+    email: jean_moustache@demo.rdv-solidarites.fr
+    label: Usager, MDS Paris Nord
+  patricia_ccas:
+    email: patricia@demo.rdv-solidarites.fr
+    label: Usagère CCAS de Montélimar
+  # correspond au compte i=1 de la boucle de génération des 10 000 usagers de medico_social.rb
+  email_1:
+    email: email_1@test.com
+    label: Usager générique (10 000 comptes similaires générés dans les seeds)

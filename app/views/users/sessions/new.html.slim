@@ -45,3 +45,20 @@
         .rdv-text-align-center.fr-text-mention--grey
           = link_to prescripteur_start_path(@rdv_wizard.to_query) do
             b Je suis un prescripteur qui oriente un bénéficiaire
+
+- if display_seed_accounts?
+  section.fr-accordion.fr-mt-4w
+    h2.fr-accordion__title
+      button.fr-accordion__btn type="button" aria-expanded="false"
+        | [DEV] Utiliser un des comptes par défaut…
+    .fr-collapse
+      p.fr-text--sm.fr-text-mention--grey
+        |> Comptes issus des seeds (db/seeds/seed_accounts.yml).
+        | Un clic poste directement la demande de code de connexion. Visible uniquement en dev et en review app.
+      ul.fr-raw-list
+        - SeedAccounts.users.each do |account|
+          li.fr-mb-1w
+            = form_with url: users_login_codes_path, method: :post do
+              = hidden_field_tag "login_code_request_form[email]", account.email
+              button.fr-btn.fr-btn--tertiary.fr-btn--sm type="submit"
+                = account.label

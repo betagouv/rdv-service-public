@@ -116,6 +116,10 @@ module ApplicationHelper
     tag.a(id: identifier, href: "##{identifier}", &block)
   end
 
+  def display_seed_accounts?
+    SeedAccounts.displayed?
+  end
+
   def display_pro_connect_button?
     return false unless current_domain.pro_connect_client_id
 

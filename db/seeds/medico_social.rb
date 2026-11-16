@@ -273,7 +273,7 @@ end
 user_org_paris_nord_patricia = User.new(
   first_name: "Patricia",
   last_name: "Duroy",
-  email: "patricia_duroy@demo.rdv-solidarites.fr",
+  email: SEED_ACCOUNTS.dig(:users, :patricia_duroy, :email),
   birth_date: Date.parse("20/06/1975"),
   phone_number: "0101010101",
   organisation_ids: [org_paris_nord.id, org_arques.id],
@@ -297,7 +297,7 @@ user_org_paris_nord_josephine.save!
 user_org_paris_nord_lea = User.new(
   first_name: "Léa",
   last_name: "Dupont",
-  email: "lea_dupont@demo.rdv-solidarites.fr",
+  email: SEED_ACCOUNTS.dig(:users, :lea_dupont, :email),
   birth_date: Date.parse("01/12/1982"),
   phone_number: "0101010102",
   organisation_ids: [org_paris_nord.id],
@@ -311,7 +311,7 @@ user_org_paris_nord_lea.update!(logement: 2)
 user_org_paris_nord_jean = User.new(
   first_name: "Jean",
   last_name: "Moustache",
-  email: "jean_moustache@demo.rdv-solidarites.fr",
+  email: SEED_ACCOUNTS.dig(:users, :jean_moustache, :email),
   birth_date: Date.parse("10/01/1973"),
   phone_number: "0101010103",
   organisation_ids: [org_paris_nord.id, org_bapaume.id, org_arques.id],
@@ -382,8 +382,8 @@ UserProfile.insert_all!(user_organisation_attributes)
 # AGENTS
 
 agent_org_paris_nord_pmi_martine = Agent.new(
-  email: "martine@demo.rdv-solidarites.fr",
-  uid: "martine@demo.rdv-solidarites.fr",
+  email: SEED_ACCOUNTS.dig(:agents, :martine, :email),
+  uid: SEED_ACCOUNTS.dig(:agents, :martine, :email),
   first_name: "Martine",
   last_name: "Validay",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -402,8 +402,8 @@ agent_org_paris_nord_pmi_martine.save!
 agent_org_paris_nord_pmi_martine.territorial_roles.create!(territory: territory75)
 
 agent_org_paris_nord_pmi_marco = Agent.new(
-  email: "marco@demo.rdv-solidarites.fr",
-  uid: "marco@demo.rdv-solidarites.fr",
+  email: SEED_ACCOUNTS.dig(:agents, :marco, :email),
+  uid: SEED_ACCOUNTS.dig(:agents, :marco, :email),
   first_name: "Marco",
   last_name: "Durand",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -442,8 +442,8 @@ agent_org_paris_nord_pmi_elsa.skip_confirmation!
 agent_org_paris_nord_pmi_elsa.save!
 
 agent_org_paris_nord_social_polo = Agent.new(
-  email: "polo@demo.rdv-solidarites.fr",
-  uid: "polo@demo.rdv-solidarites.fr",
+  email: SEED_ACCOUNTS.dig(:agents, :polo, :email),
+  uid: SEED_ACCOUNTS.dig(:agents, :polo, :email),
   first_name: "Polo",
   last_name: "Durant",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -461,8 +461,8 @@ agent_org_paris_nord_social_polo.skip_confirmation!
 agent_org_paris_nord_social_polo.save!
 
 org_arques_pmi_maya = Agent.new(
-  email: "maya@demo.rdv-solidarites.fr",
-  uid: "maya@demo.rdv-solidarites.fr",
+  email: SEED_ACCOUNTS.dig(:agents, :maya, :email),
+  uid: SEED_ACCOUNTS.dig(:agents, :maya, :email),
   first_name: "Maya",
   last_name: "Patrick",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -481,8 +481,8 @@ org_arques_pmi_maya.save!
 org_arques_pmi_maya.territorial_roles.create!(territory: territory62)
 
 agent_org_bapaume_pmi_bruno = Agent.new(
-  email: "bruno@demo.rdv-solidarites.fr",
-  uid: "bruno@demo.rdv-solidarites.fr",
+  email: SEED_ACCOUNTS.dig(:agents, :bruno, :email),
+  uid: SEED_ACCOUNTS.dig(:agents, :bruno, :email),
   first_name: "Bruno",
   last_name: "Frangi",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
