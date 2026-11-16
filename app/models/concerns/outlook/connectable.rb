@@ -6,7 +6,8 @@ module Outlook
       outlook_config&.microsoft_graph_token || false
     end
 
-    # Le refresh token est définitivement invalide : inutile de retenter, on désactive la synchro et on prévient l'agent.
+    # En cas d'erreur "invalid_grant", le refresh token est définitivement invalide.
+    # L'erreur est fatale, inutile de retenter : on supprime la config Outlook et on prévient l'agent.
     def handle_invalid_grant(invalid_grant_error)
       if reload.outlook_config # On se sert de `outlook_config` comme sémaphore pour éviter une race condition.
         outlook_config.destroy!
