@@ -26,6 +26,7 @@ RSpec.describe Admin::Api::Agenda::ExternalCalendarEventsController, type: :cont
         "allDay" => false,
         "resourceIds" => [event_within_time_range.agent.id],
         "color" => "rgba(52, 57, 58, 0.7)",
+        "contrastColor" => "white",
       },
     ]
     expect(response.parsed_body).to match_array(expected_response)
@@ -54,7 +55,20 @@ RSpec.describe Admin::Api::Agenda::ExternalCalendarEventsController, type: :cont
     current_week = Time.zone.now.beginning_of_week.beginning_of_day..Time.zone.now.end_of_week.end_of_day
     get :index, params: { agent_id: agent.id, start: current_week.begin, end: current_week.end, format: :json }
 
-    expect(response.parsed_body).to contain_exactly(hash_including("color" => "#3388FF"))
+    expect(response.parsed_body).to contain_exactly(hash_including("color" => "#3388FF", "contrastColor" => "#FFFFFF"))
+  end
+
+  it "affiche le texte en noir quand la couleur du calendrier est claire" do
+    agent = create(:agent, :with_caldav_config)
+    agent.caldav_config.update!(caldav_calendar_color: "#FBE9FB")
+    sign_in agent
+
+    ExternalCalendarEvent.create!(agent:, url: "1234", starts_at: today_at(10, 30), ends_at: today_at(12))
+
+    current_week = Time.zone.now.beginning_of_week.beginning_of_day..Time.zone.now.end_of_week.end_of_day
+    get :index, params: { agent_id: agent.id, start: current_week.begin, end: current_week.end, format: :json }
+
+    expect(response.parsed_body).to contain_exactly(hash_including("color" => "#FBE9FB", "contrastColor" => "#000000"))
   end
 
   it "returns unauthorized if agent is not logged in" do
