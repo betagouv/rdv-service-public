@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_16_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_11_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -631,8 +631,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_100000) do
     t.boolean "disconnect_in_progress", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "token_expired", default: false, null: false
-    t.text "token_refresh_error_description"
     t.index ["agent_id"], name: "index_outlook_configs_on_agent_id", unique: true
   end
 

@@ -36,6 +36,11 @@ module Outlook
       elsif @outlook_id
         delete_event
       end
+    rescue Outlook::ApiClient::InvalidGrantError => e
+      # Le refresh token est définitivement invalide : inutile de retenter, on désactive la synchro
+      # et on prévient l'agent.
+      @agent.outlook_config&.destroy!
+      Agents::OutlookSyncMailer.with(agent: @agent, error_description: e.error_description).sync_disabled.deliver_later
     end
 
     def capture_sentry_warning_for_retry?(exception)

@@ -216,11 +216,10 @@ RSpec.describe Outlook::ApiClient do
 
       it "raises an error" do
         expect { described_class.new(outlook_config).create_event!(expected_body) }.to raise_error(Outlook::ApiClient::RefreshTokenError, "Unknwon error")
-        expect(outlook_config.reload.token_expired).to be(false)
       end
     end
 
-    context "when the token refresh fails with a fatal invalid_grant error" do
+    context "when the token refresh fails with an invalid_grant error" do
       before do
         stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token")
           .to_return(status: 400, body: {
@@ -230,29 +229,9 @@ RSpec.describe Outlook::ApiClient do
           }.to_json)
       end
 
-      it "marks the outlook config as expired and stores the error description" do
-        expect { described_class.new(outlook_config).create_event!(expected_body) }.to raise_error(Outlook::ApiClient::RefreshTokenError)
-
-        outlook_config.reload
-        expect(outlook_config.token_expired).to be(true)
-        expect(outlook_config.token_refresh_error_description).to eq("AADSTS700082: The refresh token has expired due to inactivity.")
-      end
-    end
-
-    context "when the token refresh fails with a non-fatal invalid_grant error" do
-      before do
-        stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token")
-          .to_return(status: 400, body: {
-            error: "invalid_grant",
-            error_description: "AADSTS50076: MFA required.",
-            error_codes: [50_076],
-          }.to_json)
-      end
-
-      it "does not mark the outlook config as expired" do
-        expect { described_class.new(outlook_config).create_event!(expected_body) }.to raise_error(Outlook::ApiClient::RefreshTokenError)
-
-        expect(outlook_config.reload.token_expired).to be(false)
+      it "raises an InvalidGrantError carrying the error description" do
+        expect { described_class.new(outlook_config).create_event!(expected_body) }
+          .to raise_error(Outlook::ApiClient::InvalidGrantError) { |e| expect(e.error_description).to eq("AADSTS700082: The refresh token has expired due to inactivity.") }
       end
     end
   end

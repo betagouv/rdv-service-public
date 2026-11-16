@@ -4,19 +4,20 @@ module Outlook
     class NotFoundError < ApiError; end
     class AlreadyExistsError < ApiError; end
     class RefreshTokenError < ApiError; end
+
+    # Le refresh token est définitivement inutilisable (expiré, révoqué, MFA requis...) :
+    # l'agent doit se reconnecter à Outlook.
+    class InvalidGrantError < RefreshTokenError
+      attr_reader :error_description
+
+      def initialize(message = nil, error_description: nil)
+        super(message)
+        @error_description = error_description
+      end
+    end
+
     class RateLimitingError < ApiError; end
     class ServerError < ApiError; end # réponse HTTP 5xx
-
-    # Codes d'erreur AADSTS (champ "error_codes" de la réponse) accompagnant un `invalid_grant`
-    # pour lesquels le refresh token ne pourra plus jamais fonctionner : l'agent doit se reconnecter.
-    # https://learn.microsoft.com/en-us/entra/identity-platform/reference-error-codes
-    FATAL_INVALID_GRANT_ERROR_CODES = [
-      50173,  # le grant a expiré ou a été révoqué (ex. changement de mot de passe)
-      70000,  # grant invalide, expiré ou révoqué
-      70008,  # refresh token expiré après une période d'inactivité
-      70043,  # refresh token expiré (fréquence de connexion) ou révoqué
-      700082, # refresh token expiré après une période d'inactivité
-    ].freeze
 
     USER_AGENT = "RDVSolidarites".freeze
     BASE_URL = "https://graph.microsoft.com/v1.0".freeze
@@ -114,23 +115,15 @@ module Outlook
         )
       refresh_token_response = JSON.parse(refresh_token_query.response_body)
 
-      if refresh_token_response["error"].present?
-        mark_token_as_expired!(refresh_token_response) if fatal_invalid_grant?(refresh_token_response)
+      if refresh_token_response["error"] == "invalid_grant"
+        raise InvalidGrantError.new(refresh_token_response["error"], error_description: refresh_token_response["error_description"])
+      elsif refresh_token_response["error"].present?
         raise RefreshTokenError, refresh_token_response["error"]
       elsif refresh_token_response["access_token"].present? && refresh_token_response["refresh_token"].present?
         @outlook_config.update!(microsoft_graph_token: refresh_token_response["access_token"], microsoft_graph_refresh_token: refresh_token_response["refresh_token"])
       else
         raise RefreshTokenError, "Could not refresh token, invalid response (does not contain access_token and refresh_token)"
       end
-    end
-
-    def fatal_invalid_grant?(refresh_token_response)
-      refresh_token_response["error"] == "invalid_grant" &&
-        Array(refresh_token_response["error_codes"]).intersect?(FATAL_INVALID_GRANT_ERROR_CODES)
-    end
-
-    def mark_token_as_expired!(refresh_token_response)
-      @outlook_config.update!(token_expired: true, token_refresh_error_description: refresh_token_response["error_description"])
     end
 
     def raise_exception(error_code:, error_message:)

@@ -1,0 +1,16 @@
+p = t("mailers.common.hello")
+
+p
+  | La synchronisation de vos rendez-vous #{domain.name} avec votre agenda Outlook ne fonctionne plus : nous n'avons plus l'autorisation d'accéder à votre compte Microsoft. Nous l'avons donc désactivée.
+
+- if @error_description.present?
+  p
+    | Message d'erreur retourné par Outlook&nbsp;:
+  blockquote = @error_description
+
+p
+  | Les rendez-vous déjà présents dans votre agenda Outlook n'y ont pas été supprimés, mais ils ne seront plus mis à jour. Pour reprendre la synchronisation, vous pouvez reconnecter votre compte Outlook&nbsp;:
+
+.btn-wrapper= link_to "Reconnecter mon compte Outlook", agents_calendar_sync_outlook_sync_url, class: "btn btn-primary"
+
+= t("mailers.common.farewell_html", domain_name: domain.name)

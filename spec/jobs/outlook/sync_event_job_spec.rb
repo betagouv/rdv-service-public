@@ -38,6 +38,24 @@ RSpec.describe Outlook::SyncEventJob do
     end
   end
 
+  context "when the refresh token is definitively invalid" do
+    before { create(:outlook_config, agent:) }
+
+    it "destroys the outlook config, warns the agent by email and does not retry" do
+      agents_rdv.update_columns(outlook_create_in_progress: true) # rubocop:disable Rails/SkipsModelValidations
+      allow(client_double).to receive(:create_event!)
+        .and_raise(Outlook::ApiClient::InvalidGrantError.new("invalid_grant", error_description: "AADSTS700082: expired"))
+
+      expect do
+        expect do
+          described_class.perform_now(agents_rdv.id, nil, agent)
+        end.to have_enqueued_mail(Agents::OutlookSyncMailer, :sync_disabled)
+      end.not_to have_enqueued_job(described_class)
+
+      expect(agent.reload.outlook_config).to be_nil
+    end
+  end
+
   context "when the event is already in outlook and only needs to be updated" do
     before do
       agents_rdv.update(outlook_id: "stubbed_outlook_event_id")
