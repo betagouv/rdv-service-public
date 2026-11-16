@@ -182,6 +182,20 @@ RSpec.describe ProConnectController do
               get :callback, params: { state:, code: }
             end.to have_enqueued_job(MenshenExchangeTokenJob).with(agent.id, "fake proconnect access token", Domain::RDV_SERVICE_PUBLIC.id)
           end
+
+          it "enqueue un job d'échange quand le jeton Menshen précédent expire dans moins d'un mois" do
+            agent = create(:agent, email: user_info["email"], menshen_access_token: "ancien jeton", menshen_access_token_expires_at: 29.days.from_now)
+            expect do
+              get :callback, params: { state:, code: }
+            end.to have_enqueued_job(MenshenExchangeTokenJob).with(agent.id, "fake proconnect access token", Domain::RDV_SERVICE_PUBLIC.id)
+          end
+
+          it "n'enqueue pas de job d'échange quand le jeton Menshen précédent expire dans plus d'un mois" do
+            create(:agent, email: user_info["email"], menshen_access_token: "jeton récent", menshen_access_token_expires_at: 2.months.from_now)
+            expect do
+              get :callback, params: { state:, code: }
+            end.not_to have_enqueued_job(MenshenExchangeTokenJob)
+          end
         end
 
         context "quand Menshen n'est pas configuré" do
