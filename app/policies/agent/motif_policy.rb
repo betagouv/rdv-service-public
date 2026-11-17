@@ -4,7 +4,7 @@ class Agent::MotifPolicy < ApplicationPolicy
   end
 
   def self.agent_can_use_motif?(motif, agent)
-    return false unless motif.organisation.in?(agent.organisations)
+    return false unless agent.organisation_ids.include?(motif.organisation_id) # organisation_ids utilise les rôles préchargés (Agent::PreloadRoles)
     return true if motif.service.blank?
 
     agent.agent_accueil_in_organisation?(motif.organisation) ||

@@ -9,11 +9,6 @@ class Admin::DeletedRdvsController < AgentAuthController
       .includes(motif: :organisation, lieu: :organisation)
       .page(page_number).per(PER_PAGE)
 
-    # Les policies utilisées dans la vue (une par lien) lisent les rôles et organisations de l'agent connecté :
-    # on les charge une fois pour éviter une requête par ligne.
-    current_agent.roles.load
-    current_agent.organisations.load
-
     # Les usagers et agents sont stockés sous forme d'ids : on les charge en une requête chacun pour la page.
     @users_by_id = User.where(id: @deleted_rdvs.flat_map(&:user_ids)).includes(:user_profiles).index_by(&:id)
     @agents_by_id = Agent.where(id: @deleted_rdvs.flat_map { _1.agent_ids + [_1.deleted_by_agent_id] }.compact).includes(:organisations).index_by(&:id)
