@@ -127,8 +127,8 @@ motif_yonne_telephone = Motif.create!(
 
 # Agent
 agent_orgs_rdv_insertion = Agent.new(
-  email: "alain.sertion@rdv-insertion-demo.fr",
-  uid: "alain.sertion@rdv-insertion-demo.fr",
+  email: SEED_ACCOUNTS.dig(:agents, :alain_sertion, :email),
+  uid: SEED_ACCOUNTS.dig(:agents, :alain_sertion, :email),
   first_name: "Alain",
   last_name: "Sertion",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -238,7 +238,7 @@ _plage_ouverture_org_yonne_alain_classique = PlageOuverture.create!(
 
 # Users
 user1 = User.create!(
-  email: "jean.rsavalence@testinvitation.fr",
+  email: SEED_ACCOUNTS.dig(:users, :jean_rsa_valence, :email),
   address: "60 avenue de Chabeuil 26000 Valence",
   first_name: "Jean",
   last_name: "RSAValence",

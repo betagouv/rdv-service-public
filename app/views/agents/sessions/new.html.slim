@@ -23,7 +23,8 @@
     .form-group.mb-0.rdv-text-align-center
       = f.submit "Se connecter", class: "fr-btn"
 
-- if display_seed_accounts?
+- seed_accounts = SeedAccounts.filter(kind: :agents, domain: current_domain)
+- if seed_accounts.any?
   hr.fr-mt-8w
   h3
     | Connexion avec un compte de démo
@@ -36,12 +37,12 @@
               th Connexion
               th Infos
             tbody
-              - SeedAccounts.agents.each do |account|
+              - seed_accounts.each do |account|
                 tr
                   td
                     = form_with url: agent_session_path, method: :post do
                       = hidden_field_tag "agent[email]", account.email
-                      = hidden_field_tag "agent[password]", SeedAccounts.password
+                      = hidden_field_tag "agent[password]", ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"]
                       button.fr-btn.fr-btn--tertiary.fr-btn--sm.rdv-text-align-left type="submit"
                         = account.email.split("@").first
                   td

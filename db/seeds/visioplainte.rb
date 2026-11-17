@@ -24,8 +24,8 @@ Motif.create!(
 superviseur_gendarmerie = Agent.new(
   first_name: "Superviseur",
   last_name: "Fictif",
-  email: "superviseur.fictif@staging.rdv-service-public.fr",
-  uid: "superviseur.fictif@staging.rdv-service-public.fr",
+  email: SEED_ACCOUNTS.dig(:agents, :superviseur_visioplainte, :email),
+  uid: SEED_ACCOUNTS.dig(:agents, :superviseur_visioplainte, :email),
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   display_saturdays: true,
   services: [service_gendarmerie],

@@ -1,4 +1,35 @@
 RSpec.describe SeedAccounts do
+  describe ".filter" do
+    it "retourne [] hors dev et review app" do
+      expect(described_class.filter(kind: :agents, domain: Domain::RDV_SOLIDARITES)).to eq([])
+    end
+
+    it "ne retourne que les comptes du domaine demandé et ceux sans domaine" do
+      with_modified_env(IS_REVIEW_APP: "true") do
+        rdvsp_agents = described_class.filter(kind: :agents, domain: Domain::RDV_SERVICE_PUBLIC).map(&:email)
+        expect(rdvsp_agents).to include("alain.mairie@rdv-mairie-demo.fr", "superviseur.fictif@staging.rdv-service-public.fr", "camille-clavier@demo.rdv-solidarites.fr")
+        expect(rdvsp_agents).not_to include("martine@demo.rdv-solidarites.fr")
+
+        rdvs_users = described_class.filter(kind: :users, domain: Domain::RDV_SOLIDARITES).map(&:email)
+        expect(rdvs_users).to include("patricia_duroy@demo.rdv-solidarites.fr", "email_1@test.com")
+        expect(rdvs_users).not_to include("loulou@exemple.fr")
+      end
+    end
+  end
+
+  describe "Account#displayed_on?" do
+    it "compare l'id du domaine (String)" do
+      account = described_class::Account.new(email: "a@b.fr", label: "A", domain: "RDV_SOLIDARITES")
+      expect(account.displayed_on?("RDV_SOLIDARITES")).to be(true)
+      expect(account.displayed_on?("RDV_SERVICE_PUBLIC")).to be(false)
+    end
+
+    it "est affiché sur tous les domaines quand le YAML ne précise pas de domain" do
+      account = described_class::Account.new(email: "a@b.fr", label: "A", domain: nil)
+      expect(account.displayed_on?("RDV_SERVICE_PUBLIC")).to be(true)
+    end
+  end
+
   describe ".displayed?" do
     it "est faux en dehors du dev et des review apps" do
       expect(described_class.displayed?).to be(false)
@@ -7,30 +38,6 @@ RSpec.describe SeedAccounts do
     it "est vrai sur une review app" do
       with_modified_env(IS_REVIEW_APP: "true") do
         expect(described_class.displayed?).to be(true)
-      end
-    end
-  end
-
-  describe ".agents et .users" do
-    it "retourne les comptes listés dans db/seeds/seed_accounts.yml" do
-      martine = described_class.agents.find { _1.slug == :martine }
-      expect(martine.email).to eq("martine@demo.rdv-solidarites.fr")
-      expect(martine.label).to be_present
-      expect(described_class.users.map(&:slug)).to include(:patricia_duroy, :email_1)
-    end
-
-    it "a un email et un label pour chaque compte" do
-      (described_class.agents + described_class.users).each do |account|
-        expect(account.email).to match(/@/)
-        expect(account.label).to be_present
-      end
-    end
-  end
-
-  describe ".password" do
-    it "lit la variable d'environnement définie à l'exécution des seeds" do
-      with_modified_env(DB_SEEDS_USERS_AND_AGENTS_PASSWORD: "Rdvservicepublictest1!") do
-        expect(described_class.password).to eq("Rdvservicepublictest1!")
       end
     end
   end
