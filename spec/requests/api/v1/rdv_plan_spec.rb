@@ -131,6 +131,63 @@ RSpec.describe "API RDV Plan" do
         end
       end
 
+      context "quand un collègue a déjà créé un rdv_plan pour cet usager, sans le finaliser" do
+        # L'usager n'est alors dans aucune organisation : il n'y est ajouté qu'à la fin du parcours
+        let(:user) { create(:user, first_name: "Françoise", organisations: []) }
+
+        before do
+          create(:external_reference, item: user, external_id: "123456AB", oauth_application: application)
+          create(:rdv_plan, planning_agent: planning_agent, user: user, oauth_application: application)
+        end
+
+        context "et que ce collègue est dans une organisation de l'agent" do
+          let(:planning_agent) { create(:agent, basic_role_in_organisations: [agent.organisations.first]) }
+
+          it "réutilise l'usager au lieu d'en créer un nouveau sans external_id" do
+            expect do
+              post "/api/v1/rdv_plans", headers:, params:, as: :json
+            end.not_to change(User, :count)
+
+            expect(response.status).to eq 201
+            expect(RdvPlan.last.user).to eq user
+            expect(user.reload.first_name).to eq("Francis")
+          end
+        end
+
+        context "et que cet agent est dans une autre organisation" do
+          let(:planning_agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
+
+          it "crée un nouvel usager" do
+            expect do
+              post "/api/v1/rdv_plans", headers:, params:, as: :json
+            end.to change(User, :count).by(1)
+
+            expect(RdvPlan.last.user).not_to eq user
+            expect(user.reload.first_name).to eq("Françoise")
+          end
+        end
+      end
+
+      context "quand un collègue a créé un rdv_plan pour un usager d'une organisation dont l'agent n'est pas membre" do
+        let(:other_organisation) { create(:organisation) }
+        let(:user) { create(:user, first_name: "Françoise", organisations: [other_organisation]) }
+        let(:colleague) { create(:agent, basic_role_in_organisations: [agent.organisations.first, other_organisation]) }
+
+        before do
+          create(:external_reference, item: user, external_id: "123456AB", oauth_application: application)
+          create(:rdv_plan, planning_agent: colleague, user: user, oauth_application: application)
+        end
+
+        it "crée un nouvel usager sans donner accès à l'usager de l'autre organisation" do
+          expect do
+            post "/api/v1/rdv_plans", headers:, params:, as: :json
+          end.to change(User, :count).by(1)
+
+          expect(RdvPlan.last.user).not_to eq user
+          expect(user.reload.first_name).to eq("Françoise")
+        end
+      end
+
       context "quand un autre usager a un autre external_id pour cette application" do
         let(:other_user) { create(:user, first_name: "Françoise") }
 

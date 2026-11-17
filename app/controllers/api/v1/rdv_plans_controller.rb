@@ -44,7 +44,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
 
     user = external_reference&.item
 
-    if user && agent_has_access_to_user?(user)
+    if user && (agent_has_access_to_user?(user) || orphan_user_planned_by_colleague?(user))
       user.assign_attributes(permitted_user_params(user_params))
 
     else
@@ -92,5 +92,15 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
   # La présence de current_organisation dans Agent::UserPolicy nous empêche de réutiliser la policy directement ici
   def agent_has_access_to_user?(user)
     user.organisation_ids.intersect?(current_agent.organisation_ids) || RdvPlan.where(planning_agent: current_agent, user: user).any?
+  end
+
+  # Un collègue a pu créer un rdv_plan pour cet usager sans aller au bout du parcours : l'usager n'est alors
+  # dans aucune organisation. Sans cette règle, chaque nouveau rdv_plan d'un autre collègue créerait un nouvel
+  # usager, sans external_id puisque la référence existe déjà sur le premier.
+  def orphan_user_planned_by_colleague?(user)
+    user.organisation_ids.empty? &&
+      RdvPlan.joins(planning_agent: :roles).exists?(
+        user:, oauth_application: doorkeeper_token&.application, agent_roles: { organisation_id: current_agent.organisation_ids }
+      )
   end
 end
