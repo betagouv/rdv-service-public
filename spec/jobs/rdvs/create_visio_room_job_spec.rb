@@ -19,7 +19,7 @@ RSpec.describe Rdvs::CreateVisioRoomJob do
   it "crée le salon avec le jeton Menshen d'un des agents du RDV, sans notification" do
     rdv = create_visio_rdv(agents: [agent_without_token, agent_with_token])
 
-    expect { described_class.perform_now(rdv) }.not_to have_enqueued_job(ActionMailer::MailDeliveryJob)
+    expect { described_class.perform_now(rdv_id: rdv.id) }.not_to have_enqueued_job(ActionMailer::MailDeliveryJob)
 
     expect(rdv.reload.visio_url_custom).to eq("https://visio.numerique.gouv.fr/salon")
     expect(WebMock).to have_requested(:post, rooms_api_url).with(headers: { "Authorization" => "Bearer un-jeton-menshen" }).once
@@ -29,7 +29,7 @@ RSpec.describe Rdvs::CreateVisioRoomJob do
     expired_agent = create(:agent, basic_role_in_organisations: [organisation], menshen_access_token: "expire", menshen_access_token_expires_at: 1.minute.ago)
     rdv = create_visio_rdv(agents: [agent_without_token, expired_agent])
 
-    described_class.perform_now(rdv)
+    described_class.perform_now(rdv_id: rdv.id)
 
     expect(WebMock).not_to have_requested(:post, rooms_api_url)
   end
@@ -38,8 +38,18 @@ RSpec.describe Rdvs::CreateVisioRoomJob do
     rdv_with_room = create_visio_rdv(agents: [agent_with_token], visio_url_custom: "https://visio.numerique.gouv.fr/existant")
     cancelled_rdv = create_visio_rdv(agents: [agent_with_token], status: "excused", cancelled_at: Time.zone.now)
 
-    described_class.perform_now(rdv_with_room)
-    described_class.perform_now(cancelled_rdv)
+    described_class.perform_now(rdv_id: rdv_with_room.id)
+    described_class.perform_now(rdv_id: cancelled_rdv.id)
+
+    expect(WebMock).not_to have_requested(:post, rooms_api_url)
+  end
+
+  it "ne fait rien si le RDV a été supprimé entre-temps" do
+    rdv = create_visio_rdv(agents: [agent_with_token])
+    rdv_id = rdv.id
+    rdv.destroy!
+
+    expect { described_class.perform_now(rdv_id:) }.not_to raise_error
 
     expect(WebMock).not_to have_requested(:post, rooms_api_url)
   end
@@ -48,7 +58,7 @@ RSpec.describe Rdvs::CreateVisioRoomJob do
     stub_request(:post, rooms_api_url).to_return(status: 401, body: {}.to_json, headers: { "Content-Type" => "application/json" })
     rdv = create_visio_rdv(agents: [agent_with_token])
 
-    described_class.perform_now(rdv)
+    described_class.perform_now(rdv_id: rdv.id)
 
     expect(rdv.reload.visio_url_custom).to be_nil
   end

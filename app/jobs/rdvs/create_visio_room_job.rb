@@ -2,9 +2,9 @@ module Rdvs
   # Crée le salon Visio (visio.numerique.gouv.fr) d'un RDV qui vient d'être créé,
   # avec le jeton Menshen d'un des agents du RDV.
   class CreateVisioRoomJob < ApplicationJob
-    discard_on ActiveJob::DeserializationError # RDV supprimé entre-temps
-
-    def perform(rdv)
+    def perform(rdv_id:)
+      rdv = Rdv.find_by(id: rdv_id)
+      return if rdv.nil?
       return unless rdv.visio_room_creation_needed?
 
       agent = rdv.agents.with_valid_menshen_access_token.order(:id).first

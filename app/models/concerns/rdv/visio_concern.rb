@@ -45,7 +45,7 @@ module Rdv::VisioConcern
   end
 
   def enqueue_visio_room_creation
-    Rdvs::CreateVisioRoomJob.perform_later(self)
+    Rdvs::CreateVisioRoomJob.perform_later(rdv_id: id)
   end
 
   def validate_visio_url_custom
