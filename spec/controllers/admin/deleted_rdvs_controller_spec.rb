@@ -26,6 +26,38 @@ RSpec.describe Admin::DeletedRdvsController, type: :controller do
       expect(response.body).to match(/martin/i)
     end
 
+    it "affiche l'id et des liens vers motif, lieu, usagers et agents quand ils existent" do
+      rdv = create(:rdv, organisation:, users: [user], agents: [admin])
+      rdv.destroy!
+
+      sign_in admin
+      get :index, params: { organisation_id: organisation.id }
+
+      expect(response.body).to include("deleted_rdv_#{rdv.id}")
+      expect(response.body).to include(admin_organisation_motif_path(organisation, rdv.motif))
+      expect(response.body).to include(edit_admin_organisation_lieu_path(organisation, rdv.lieu))
+      expect(response.body).to include(admin_organisation_user_path(organisation, user))
+      expect(response.body).to include(edit_admin_organisation_agent_path(organisation, admin))
+      expect(response.body).to include(admin_organisation_rdvs_path(organisation)) # bouton de retour
+    end
+
+    it "affiche du texte sans lien quand les références n'existent plus" do
+      rdv = create(:rdv, organisation:, users: [user], agents: [admin])
+      rdv.destroy!
+      motif = rdv.motif
+      Lieu.where(id: rdv.lieu_id).delete_all
+      user.update_columns(deleted_at: Time.zone.now) # rubocop:disable Rails/SkipsModelValidations
+      Motif.where(id: motif.id).delete_all # le RDV est supprimé : plus de contrainte
+
+      sign_in admin
+      get :index, params: { organisation_id: organisation.id }
+
+      expect(response.body).to include(motif.name)
+      expect(response.body).not_to include(admin_organisation_motif_path(organisation, motif))
+      expect(response.body).to include("##{rdv.lieu_id} (supprimé)")
+      expect(response.body).to include("##{user.id} (supprimé)")
+    end
+
     it "masque les RDV d'autres services aux agents basiques qui n'y participaient pas" do
       other_service_agent = create(:agent, basic_role_in_organisations: [organisation], service: create(:service))
       delete_rdv(agents: [other_service_agent], motif: create(:motif, organisation:, service: other_service_agent.services.first))

@@ -4,7 +4,10 @@
 - content_for :fil_ariane do
   = render "common/fil_ariane", titles_and_paths: [["Liste des RDV", admin_organisation_rdvs_path(current_organisation)]], current_page_title: "RDV supprimés"
 
-p Cette page liste les RDV supprimés de l'organisation #{current_organisation.name}, du plus récent au plus ancien. Les informations qui n'existent plus (motif, lieu, usager ou agent supprimé) sont laissées vides.
+.fr-mb-2w
+  = link_to "Retour à la liste des RDV", admin_organisation_rdvs_path(current_organisation), class: "fr-btn fr-btn--tertiary fr-icon-arrow-left-line fr-btn--icon-left"
+
+p Cette page liste les RDV supprimés de l'organisation #{current_organisation.name}, du plus récent au plus ancien. Quand un motif, un lieu, un usager ou un agent a été supprimé (ou n'est pas accessible), il est affiché sans lien.
 
 - if @deleted_rdvs.total_count > 0
   .card
@@ -13,6 +16,7 @@ p Cette page liste les RDV supprimés de l'organisation #{current_organisation.n
         table.table
           thead
             tr
+              th ID
               th Supprimé le
               th Date du RDV
               th Motif
@@ -24,16 +28,17 @@ p Cette page liste les RDV supprimés de l'organisation #{current_organisation.n
           tbody
             - @deleted_rdvs.each do |deleted_rdv|
               tr id="deleted_rdv_#{deleted_rdv.id}"
+                td = deleted_rdv.id
                 td = l(deleted_rdv.deleted_at, format: :human)
                 td
                   = l(deleted_rdv.starts_at, format: :human)
                   br
                   span.fr-text--xs.fr-mb-0 jusqu'à #{l(deleted_rdv.ends_at, format: :time_only)}
-                td = deleted_rdv.motif_name
-                td = deleted_rdv.lieu&.name
+                td = deleted_rdv_motif_link(deleted_rdv)
+                td = deleted_rdv_lieu_link(deleted_rdv)
                 td = Rdv.human_attribute_value(:status, deleted_rdv.status, disable_cast: true)
-                td = safe_join(deleted_rdv.user_ids.filter_map { @users_by_id[_1]&.full_name }, tag.br)
-                td = safe_join(deleted_rdv.agent_ids.filter_map { @agents_by_id[_1]&.full_name }, tag.br)
+                td = deleted_rdv_user_links(deleted_rdv, @users_by_id)
+                td = deleted_rdv_agent_links(deleted_rdv, @agents_by_id)
                 td
                   - if deleted_rdv.created_by_type.present?
                     = Rdv.human_attribute_value(:created_by_type, deleted_rdv.created_by_type, disable_cast: true)
