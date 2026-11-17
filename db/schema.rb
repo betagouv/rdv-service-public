@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_11_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_17_150000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -567,7 +567,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_11_100000) do
     t.string "name", null: false
     t.string "uid", null: false, comment: "Un identifiant unique de l'appication OAuth. Contrairement à la colonne `secret`, cette information est publique.\n"
     t.string "secret", null: false, comment: "Le secret de cette application, stocké de manière chiffrée comme les mots de passe.\n"
-    t.text "redirect_uri", null: false, comment: "La liste des url de callback de cette application, séparés par des retours à la ligne. Attention à ne pas oublier de mettre ou d'enlever les slash de fin d'adresse en fonction du comportement de l'application cliente.\n"
+    t.text "redirect_uri", comment: "La liste des url de callback de cette application, séparés par des retours à la ligne. Attention à ne pas oublier de mettre ou d'enlever les slash de fin d'adresse en fonction du comportement de l'application cliente.\n"
     t.string "scopes", default: "", null: false, comment: "Pour le moment, on utilise uniquement le scope par défaut `write` pour toutes les applications, donc cette colonne sera toujours vide. Quand on commencera à affiner les permissions, on pourra commencer à utiliser cette colonne.\n"
     t.boolean "confidential", default: true, null: false, comment: "Cette colonne n'est pas utilisée, et sa valeur doit toujours être à true. Elle est prévue par la gem Doorkeeper pour être à false pour les applications dont le secret est public (SPA et applis mobiles). Ce n'est pas encore un cas d'usage qui nous concerne.\n"
     t.datetime "created_at", null: false
@@ -576,6 +576,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_11_100000) do
     t.text "post_logout_redirect_uri"
     t.boolean "grants_autonomous_signup", default: false, null: false
     t.text "internal_documentation"
+    t.bigint "agent_id"
+    t.string "grant_type", default: "authorization_code", null: false
+    t.index ["agent_id"], name: "index_oauth_applications_on_agent_id"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
@@ -1064,6 +1067,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_11_100000) do
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "agents", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
+  add_foreign_key "oauth_applications", "agents", on_delete: :nullify
   add_foreign_key "operator_managers", "operators"
   add_foreign_key "organisations", "territories"
   add_foreign_key "outlook_configs", "agents"
