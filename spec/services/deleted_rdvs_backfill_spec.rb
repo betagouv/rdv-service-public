@@ -1,6 +1,7 @@
 RSpec.describe DeletedRdvsBackfill do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+  let!(:deleting_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:user) { create(:user) }
   let!(:motif) { create(:motif, organisation: organisation) }
   let(:starts_at) { 3.months.ago.change(hour: 9) }
@@ -8,7 +9,7 @@ RSpec.describe DeletedRdvsBackfill do
 
   def create_version(created_at: deleted_at, **object_overrides)
     PaperTrail::Version.create!(
-      item_type: "Rdv", item_id: (PaperTrail::Version.maximum(:item_id) || 0) + 1, event: "destroy", whodunnit: "[Agent] Test (id=#{agent.id})", created_at:,
+      item_type: "Rdv", item_id: (PaperTrail::Version.maximum(:item_id) || 0) + 1, event: "destroy", whodunnit: "[Agent] Test (id=#{deleting_agent.id})", created_at:,
       virtual_attributes: { "user_ids" => [user.id], "agent_ids" => [agent.id], "participations" => [] },
       object: {
         "id" => 1, "status" => "unknown", "starts_at" => starts_at.iso8601, "ends_at" => (starts_at + 30.minutes).iso8601,
@@ -37,7 +38,7 @@ RSpec.describe DeletedRdvsBackfill do
       created_by_name: agent.full_name,
       user_ids: [user.id],
       agent_ids: [agent.id],
-      deleted_by_agent_id: agent.id, # extrait du whodunnit
+      deleted_by_agent_id: deleting_agent.id, # extrait du whodunnit
       deleted_at: be_within(1.second).of(deleted_at)
     )
   end
