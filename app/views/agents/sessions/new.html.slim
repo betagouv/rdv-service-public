@@ -42,7 +42,7 @@
                     = form_with url: agent_session_path, method: :post do
                       = hidden_field_tag "agent[email]", account.email
                       = hidden_field_tag "agent[password]", ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"]
-                      button.fr-btn.fr-btn--tertiary.fr-btn--sm.rdv-text-align-left type="submit"
+                      button.fr-btn.fr-btn--tertiary.fr-btn--sm type="submit"
                         = account.email.split("@").first
                   td
                     span.fr-text-mention--grey

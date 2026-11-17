@@ -64,7 +64,7 @@
                   td
                     = form_with url: users_login_codes_path, method: :post do
                       = hidden_field_tag "login_code_request_form[email]", account.email
-                      button.fr-btn.fr-btn--tertiary.fr-btn--sm.rdv-text-align-left type="submit"
+                      button.fr-btn.fr-btn--tertiary.fr-btn--sm type="submit"
                         = account.email.split("@").first
                   td
                     span.fr-text-mention--grey

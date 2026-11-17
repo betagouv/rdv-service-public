@@ -1,6 +1,4 @@
-# Comptes de démo exposés sur les pages de connexion en dev/review app (voir SeedAccounts).
-# Les fichiers de seeds ci-dessous y piochent l'email des comptes listés via
-# SEED_ACCOUNTS.dig(...) pour que l'email ne soit écrit qu'une seule fois (dans le YAML).
+# Comptes agents et users exposés sur les pages de connexion en dev et review app - cf app/lib/seed_accounts.rb
 SEED_ACCOUNTS = SeedAccounts.yaml_config
 
 # Keep rdv_insertion seed loading in first as rdv-insertion need specific ids for linking rdv-s and rdv-i models
