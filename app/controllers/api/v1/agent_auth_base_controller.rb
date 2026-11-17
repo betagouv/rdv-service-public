@@ -87,7 +87,12 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       doorkeeper_authorize!
       if doorkeeper_token
         @authentication_type = "OAuth"
-        @current_agent = Agent.active.find(doorkeeper_token.resource_owner_id)
+        # Les tokens émis en client_credentials n'ont pas de resource_owner :
+        # ils héritent de l'agent associé à l'application OAuth
+        agent_id = doorkeeper_token.resource_owner_id || doorkeeper_token.application&.agent_id
+        @current_agent = agent_id.present? ? Agent.active.find_by(id: agent_id) : nil
+        # 401 et pas 404 : ne pas révéler si l'agent existe ou non
+        render_error :unauthorized, { error: "aucun agent actif associé à ce token" } if @current_agent.nil?
       end
     end
   end

@@ -36,13 +36,20 @@ Nous proposons uniquement l'authentification via le [protocole standard OAuth 2.
 Pour utiliser l’API via OAuth 2.0, voici les grandes étapes :
 - [Nous contacter](https://rdv.anct.gouv.fr/aide/demande_support/new?role=agent&sujet=OAuth) en nous fournissant l'URI de redirection (`redirect_uri`) de votre application, c'est-à-dire l'URL vers laquelle l'agent sera renvoyé après son consentement. Vous pouvez aussi nous fournir un nom à afficher aux agents et un logo.
 - Nous créons alors pour vous une application OAuth (appelée *client* dans la spécification OAuth 2.0) et nous vous envoyons ses identifiants : le `client_id` et le `client_secret`.
-- Vous implémentez le flux *Authorization Code* (`grant_type=authorization_code`), le seul flux activé chez nous :
-    - `GET/POST /oauth/authorize` — page d'autorisation : après consentement de l'agent, il est renvoyé vers votre `redirect_uri` avec un code d'autorisation (`code`)
-    - `POST /oauth/token` — échange du code d'autorisation contre un jeton d'accès (`access_token`) et un `refresh_token`
-      La requête doit être envoyée en `application/x-www-form-urlencoded` avec `grant_type=authorization_code`, `code`, `redirect_uri`, `client_id` et `client_secret`
+- Vous implémentez le flux adapté à votre cas d'usage (chaque application OAuth créée chez nous n'en autorise qu'un seul) :
+    - **Flux *Authorization Code*** (`grant_type=authorization_code`) pour une application utilisée par des agents humains :
+        - `GET/POST /oauth/authorize` — page d'autorisation : après consentement de l'agent, il est renvoyé vers votre `redirect_uri` avec un code d'autorisation (`code`)
+        - `POST /oauth/token` — échange du code d'autorisation contre un jeton d'accès (`access_token`) et un `refresh_token`
+          La requête doit être envoyée en `application/x-www-form-urlencoded` avec `grant_type=authorization_code`, `code`, `redirect_uri`, `client_id` et `client_secret`
+    - **Flux *Client Credentials*** (`grant_type=client_credentials`) pour une intégration machine-à-machine (script cron, batch, etc.), sans intervention humaine :
+        - `POST /oauth/token` avec `grant_type=client_credentials`, `client_id` et `client_secret` (en `application/x-www-form-urlencoded`) renvoie directement un `access_token`
+        - le jeton est valable 2 heures : à renouveler à chaque exécution du script
+        - le jeton hérite des droits de l'agent associé à l'application lors de sa création : nous vous indiquons lequel, et recommandons de dédier un agent à cet usage avec des droits limités à ce dont le script a besoin
     - `POST /oauth/revoke` — révocation d'un jeton
     - `GET /oauth/token/info` — informations sur le jeton présenté
 - Vous appelez ensuite l'API en passant le jeton dans le header `Authorization: Bearer <access_token>`
+
+**Sécurité du `client_secret` :** traitez-le comme un mot de passe — stockage dans un gestionnaire de secrets, jamais dans un dépôt de code. En cas de fuite suspectée, contactez-nous : nous pouvons révoquer l'application et tous ses jetons. Pensez aussi à faire tourner le secret régulièrement.
 
 Tous les jetons sont délivrés avec le scope `write`.
 

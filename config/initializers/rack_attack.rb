@@ -76,6 +76,12 @@ class Rack::Attack
                   (path.match?(%r{\A/users/rdvs/[^/]+/visio\z}) && request.params["invitation_token"].present?) # REMOVE AFTER 03/02/2027 (users/rdvs#visio)
   end
 
+  throttle("token endpoint OAuth - throttling par client_id puis par IP", limit: Rails.env.test? ? 20 : 30, period: 1.minute) do |request|
+    if request.path_without_format == "/oauth/token" && request.post?
+      request.params["client_id"].presence || request.ip
+    end
+  end
+
   Rack::Attack.throttled_responder = lambda do |request|
     exception = ThrottleError.new(request.env["rack.attack.matched"])
     Sentry.set_context("rack_attack_match_data", request.env["rack.attack.match_data"])

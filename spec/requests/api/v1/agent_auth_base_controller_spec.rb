@@ -35,6 +35,29 @@ RSpec.describe Api::V1::AgentAuthBaseController, type: :request do
     end
   end
 
+  describe "token client_credentials (sans resource_owner)" do
+    let(:associated_agent) { create(:agent) }
+    let(:m2m_application) { create(:oauth_application, grant_type: "client_credentials", agent: associated_agent, redirect_uri: nil) }
+    let!(:m2m_token) { create(:access_token, resource_owner_id: nil, application: m2m_application, refresh_token: nil) }
+
+    it "utilise l'agent associé à l'application OAuth" do
+      get "/api/v1/test/fake_action", headers: oauth_client_headers(m2m_token), as: :json
+      expect(response.body).to eq("current agent id is #{associated_agent.id}")
+    end
+
+    it "retourne 401 quand l'application n'a pas d'agent associé" do
+      m2m_application.update_column(:agent_id, nil) # rubocop:disable Rails/SkipsModelValidations -- on teste justement le cas d'une app sans agent malgré la validation
+      get "/api/v1/test/fake_action", headers: oauth_client_headers(m2m_token), as: :json
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it "retourne 401 quand l'agent associé est soft deleted" do
+      associated_agent.soft_delete
+      get "/api/v1/test/fake_action", headers: oauth_client_headers(m2m_token), as: :json
+      expect(response).to have_http_status(:unauthorized)
+    end
+  end
+
   describe "#detect_param_injection" do
     let!(:agent_org) { create(:agent_role).organisation }
     let!(:agent_territory) { create(:agent_territorial_access_right, agent:, territory: agent_org.territory).territory }

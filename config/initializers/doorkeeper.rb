@@ -199,7 +199,9 @@ Doorkeeper.configure do
   # Check out https://github.com/doorkeeper-gem/doorkeeper/wiki/Changing-how-clients-are-authenticated
   # for more information on customization
   #
-  # client_credentials :from_basic, :from_params
+  # from_basic reste autorisé globalement (les clients OAuth2 standards l'utilisent par défaut, y compris en authorization_code) ;
+  # il est refusé pour le grant client_credentials dans Oauth::TokensController
+  client_credentials :from_basic, :from_params
 
   # Change the way access token is authenticated from the request object.
   # By default it retrieves first from the `HTTP_AUTHORIZATION` header, then
@@ -248,6 +250,10 @@ Doorkeeper.configure do
   # allow_blank_redirect_uri do |grant_flows, client|
   #   client.superapp?
   # end
+  # Les applications en client_credentials (machine-à-machine) n'ont pas de redirect_uri
+  allow_blank_redirect_uri do |_grant_flows, client|
+    client.respond_to?(:client_credentials?) && client.client_credentials?
+  end
 
   # Specify how authorization errors should be handled.
   # By default, doorkeeper renders json errors when access token
@@ -284,8 +290,10 @@ Doorkeeper.configure do
   #   https://datatracker.ietf.org/doc/html/rfc6819#section-4.4.2
   #   https://datatracker.ietf.org/doc/html/rfc6819#section-4.4.3
   #
-  # On pourrait peut-être utiliser le client_credentials flow à la place des clés d'api dans certains cas
-  grant_flows %w[authorization_code]
+  # Le grant client_credentials sert aux intégrations machine-à-machine (scripts cron).
+  # Chaque application n'a qu'un seul grant_type (colonne oauth_applications.grant_type) :
+  # le contrôle du grant demandé est fait dans Oauth::TokensController.
+  grant_flows %w[authorization_code client_credentials]
 
   # If you need arbitrary Resource Owner-Client authorization you can enable this option
   # and implement the check your need. Config option must respond to #call and return
