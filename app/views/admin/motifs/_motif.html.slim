@@ -31,28 +31,28 @@ tr
       - if @current_tab != :archived
         - if motif_policy.edit?
           = icon_link_to t("admin.motifs.actions.edit"), edit_admin_organisation_motif_path(current_organisation, motif),
-                  class: "fr-btn fr-btn--tertiary fr-icon-edit-fill"
+                  class: "fr-btn fr-btn--tertiary fr-icon-edit-line"
         - if motif_policy.duplicate?
           = icon_link_to t("admin.motifs.actions.duplicate"), new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id),
-                  class: "fr-btn fr-btn--tertiary fr-icon-ri-file-copy-2-fill"
+                  class: "fr-btn fr-btn--tertiary fr-icon-ri-file-copy-2-line"
 
       - if motif.archived?
         - if motif_policy.unarchive?
           = icon_link_to t("admin.motifs.actions.unarchive"), unarchive_admin_organisation_motif_path(current_organisation, motif),
-                  class: "fr-btn fr-btn--tertiary fr-icon-upload-fill",
+                  class: "fr-btn fr-btn--tertiary fr-icon-upload-line",
                   method: :post
         - if motif_policy.destroy?
           - if motif.destroyable?
             = icon_link_to t("admin.motifs.actions.destroy"), admin_organisation_motif_path(current_organisation, motif),
-                    class: "fr-btn fr-btn--tertiary fr-icon-delete-fill",
+                    class: "fr-btn fr-btn--tertiary fr-icon-delete-line",
                     method: :delete,
                     data: { confirm: t("admin.motifs.actions.destroy_confirm") }
           - else
-            button.fr-btn.fr-btn--tertiary.fr-icon-delete-fill [disabled="disabled" title=t("admin.motifs.actions.not_destroyable_explanation")]
+            button.fr-btn.fr-btn--tertiary.fr-icon-delete-line [disabled="disabled" title=t("admin.motifs.actions.not_destroyable_explanation")]
               span.fr-sr-only= t("admin.motifs.actions.not_destroyable_explanation")
       - else
         - if motif_policy.archive?
           = icon_link_to t("admin.motifs.actions.archive"), archive_admin_organisation_motif_path(current_organisation, motif),
-                  class: "fr-btn fr-btn--tertiary fr-icon-archive-fill",
+                  class: "fr-btn fr-btn--tertiary fr-icon-archive-line",
                   method: :post,
                   data: { confirm: t("admin.motifs.actions.archive_confirm") }

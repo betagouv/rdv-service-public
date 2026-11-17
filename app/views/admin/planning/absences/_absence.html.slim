@@ -14,10 +14,10 @@ tr
   td
     .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.rdv-gap-05rem
       = icon_link_to t("helpers.edit"), edit_admin_organisation_planning_absence_path(current_organisation, absence),
-              class: "fr-btn fr-btn--tertiary fr-icon-edit-fill"
+              class: "fr-btn fr-btn--tertiary fr-icon-edit-line"
       = icon_link_to t("helpers.clone"), new_admin_organisation_planning_absence_path(current_organisation, agent_id: absence.agent, duplicate_absence_id: absence),
-              class: "fr-btn fr-btn--tertiary fr-icon-ri-file-copy-2-fill"
+              class: "fr-btn fr-btn--tertiary fr-icon-ri-file-copy-2-line"
       = icon_link_to t("helpers.delete"), admin_organisation_planning_absence_path(current_organisation, absence),
               method: :delete,
               data: { confirm: t(".confirm_delete_absence")},
-              class: "fr-btn fr-btn--tertiary fr-icon-delete-bin-fill"
+              class: "fr-btn fr-btn--tertiary fr-icon-delete-bin-line"
