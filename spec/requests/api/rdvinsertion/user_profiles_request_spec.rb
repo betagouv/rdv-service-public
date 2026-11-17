@@ -3,7 +3,7 @@ require "swagger_helper"
 RSpec.describe "User Profile authentified API" do
   path "/api/rdvinsertion/user_profiles/create_many" do
     post "Ajouter un utilisateur à une ou plusieurs organisations" do
-      with_shared_secret_authentication
+      with_rdv_insertion_oauth_authentication
 
       tags "UserProfiles"
       produces "application/json"
@@ -20,17 +20,6 @@ RSpec.describe "User Profile authentified API" do
       let!(:user_organisation) { create(:organisation, territory: territory, verticale: "rdv_insertion") }
       let!(:user) { create(:user, organisations: [user_organisation]) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation1, organisation2]) }
-      let!(:shared_secret) { "S3cr3T" }
-      let!(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }
-      let!(:uid) { auth_headers["uid"].to_s }
-      let!(:"X-Agent-Auth-Signature") { auth_headers["X-Agent-Auth-Signature"].to_s }
-
-      before do
-        allow(Agent).to receive(:find_by).and_return(agent)
-        allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return(shared_secret)
-        allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(true)
-      end
-
       response 200, "Ajouter un utilisateur à une ou plusieurs organisations" do
         let(:"organisation_ids[]") { [organisation1.id, organisation2.id, organisation3.id] }
         let(:user_id) { user.id }
@@ -57,12 +46,8 @@ RSpec.describe "User Profile authentified API" do
         let(:"organisation_ids[]") { [organisation1.id, organisation2.id, organisation3.id] }
         let(:user_id) { user.id }
 
-        before do
-          allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(false)
-        end
-
         it "returns a 401 unauthorized response" do
-          post "/api/rdvinsertion/user_profiles/create_many", params: { "organisation_ids[]": [organisation1.id, organisation2.id, organisation3.id], user_id: user.id }, headers: auth_headers
+          post "/api/rdvinsertion/user_profiles/create_many", params: { "organisation_ids[]": [organisation1.id, organisation2.id, organisation3.id], user_id: user.id }
 
           expect(response).to have_http_status(:unauthorized)
         end

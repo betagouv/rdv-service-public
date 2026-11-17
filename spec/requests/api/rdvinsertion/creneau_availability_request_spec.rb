@@ -10,7 +10,7 @@ RSpec.describe "Available Creneaux Count for Invitation" do
 
   path "/api/rdvinsertion/invitations/creneau_availability" do
     get "Renvoi true si au moins un créneau est disponible pour une invitation" do
-      with_shared_secret_authentication
+      with_rdv_insertion_oauth_authentication
 
       tags "CreneauxCount"
       produces "application/json"
@@ -31,17 +31,6 @@ RSpec.describe "Available Creneaux Count for Invitation" do
       parameter name: "total_count", in: :query, type: :string, description: "Est-ce que l'endpoint doit renvoyer le total ou un booléen", example: "true", required: false
 
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation1]) }
-      let!(:shared_secret) { "S3cr3T" }
-      let!(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }
-      let!(:uid) { auth_headers["uid"].to_s }
-      let!(:"X-Agent-Auth-Signature") { auth_headers["X-Agent-Auth-Signature"].to_s }
-
-      before do
-        allow(Agent).to receive(:find_by).and_return(agent)
-        allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return(shared_secret)
-        allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(true)
-      end
-
       let!(:user) { create(:user, organisations: [organisation1], rdv_invitation_token: "user_token") }
       let!(:user_with_referent) { create(:user, referent_agents: [agent], organisations: [organisation1], rdv_invitation_token: "user_with_referent_token") }
       let!(:territory33) { create(:territory, departement_number: "33") }
@@ -141,11 +130,6 @@ RSpec.describe "Available Creneaux Count for Invitation" do
       let!(:lieu2) { create(:lieu, name: "Bruges", address: "3 Rue Gabriel Fauré, Bruges, 33520", organisation: organisation1) }
       let!(:lieu3) { create(:lieu, name: "Loin de Bordeaux", address: "7 Av. du Commandant l'Herminier, Arès, 33740", organisation: other_org_without_po) }
 
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
-
       response 200, "Retourne false quand il n'y a pas de créneau disponible" do
         run_test!
 
@@ -160,7 +144,7 @@ RSpec.describe "Available Creneaux Count for Invitation" do
             action_name: "creneau_availability",
             agent_id: agent.id,
             received_at: now,
-            authentication_type: "SharedSecret"
+            authentication_type: "OAuth"
           )
           expect(api_call.raw_http["method"]).to eq("GET")
           expect(api_call.raw_http["headers"]).to be_blank

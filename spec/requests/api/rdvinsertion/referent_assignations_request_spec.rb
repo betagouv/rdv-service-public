@@ -3,7 +3,7 @@ require "swagger_helper"
 RSpec.describe "Referent Assignation authentified API" do
   path "/api/rdvinsertion/referent_assignations/create_many" do
     post "Ajouter un ou plusieurs référents à un utilisateur" do
-      with_shared_secret_authentication
+      with_rdv_insertion_oauth_authentication
 
       tags "ReferentAssignations"
       produces "application/json"
@@ -19,17 +19,7 @@ RSpec.describe "Referent Assignation authentified API" do
       let!(:user) { create(:user, organisations: [organisation]) }
       let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:agent2) { create(:agent, basic_role_in_organisations: [other_organisation]) }
-      let!(:shared_secret) { "S3cr3T" }
-      let(:auth_headers) { api_auth_headers_with_shared_secret(agent1, shared_secret) }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:"X-Agent-Auth-Signature") { auth_headers["X-Agent-Auth-Signature"].to_s }
-
-      before do
-        allow(Agent).to receive(:find_by).and_return(agent1)
-        allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return(shared_secret)
-        allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(true)
-      end
-
+      let(:agent) { agent1 }
       response 200, "Ajouter un utilisateur à une ou plusieurs organisations" do
         let(:"agent_ids[]") { [agent1.id, agent2.id] }
         let(:user_id) { user.id }
@@ -47,7 +37,7 @@ RSpec.describe "Referent Assignation authentified API" do
             controller_name: "referent_assignations",
             action_name: "create_many",
             agent_id: agent1.id,
-            authentication_type: "SharedSecret"
+            authentication_type: "OAuth"
           )
         end
       end
@@ -56,12 +46,8 @@ RSpec.describe "Referent Assignation authentified API" do
         let(:"agent_ids[]") { [agent1.id, agent2.id] }
         let(:user_id) { user.id }
 
-        before do
-          allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(false)
-        end
-
         it "returns a 401 unauthorized response" do
-          post "/api/rdvinsertion/referent_assignations/create_many", params: { "agent_ids[]": [agent1.id, agent2.id], user_id: user.id }, headers: auth_headers
+          post "/api/rdvinsertion/referent_assignations/create_many", params: { "agent_ids[]": [agent1.id, agent2.id], user_id: user.id }
 
           expect(response).to have_http_status(:unauthorized)
         end
@@ -99,12 +85,8 @@ RSpec.describe "Referent Assignation authentified API" do
     let(:other_agent) { create(:agent, basic_role_in_organisations: [organisation_rdv_solidarites]) }
     let(:organisation_rdv_insertion) { create(:organisation, verticale: "rdv_insertion") }
     let(:organisation_rdv_solidarites) { create(:organisation, verticale: "rdv_solidarites") }
-    let(:shared_secret) { "S3cr3T" }
-    let(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }
 
-    before do
-      allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return(shared_secret)
-    end
+    include_context "with rdv-insertion OAuth authentication"
 
     it "returns the referent assignations" do
       get api_rdvinsertion_user_referent_assignations_path(user.id), headers: auth_headers
