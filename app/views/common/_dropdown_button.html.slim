@@ -23,5 +23,5 @@
     - items.each do |item|
       li
         = link_to item[:url], (item[:html_options] || {}).merge(class: "dropdown-button__link") do
-          = icon("#{item[:icon] || 'fr-icon-settings-5-line'} fr-icon--sm", class: "fr-mr-1w")
+          = icon("#{item[:icon] || 'fr-icon-settings-5-line'} fr-icon--sm")
           = item[:label]
