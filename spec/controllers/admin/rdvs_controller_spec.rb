@@ -201,6 +201,7 @@ RSpec.describe Admin::RdvsController, type: :controller do
         expect do
           delete :destroy, params: { organisation_id: organisation.id, id: rdv.id }
         end.to change(Rdv, :count).by(-1)
+        expect(DeletedRdv.find(rdv.id).deleted_by_agent_id).to eq(agent.id)
       end
     end
 

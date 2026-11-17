@@ -76,6 +76,9 @@ class Rdv < ApplicationRecord
   validates :status, inclusion: { in: COLLECTIVE_RDV_STATUSES }, if: :collectif?
   validate :validate_motif_organisation
 
+  # Agent à l'origine de la suppression, à renseigner avant destroy (voir DeletedRdv)
+  attr_accessor :deleted_by_agent
+
   # Hooks
   after_save :associate_users_with_organisation
   after_commit :update_agents_unknown_past_rdv_count, if: -> { past? }

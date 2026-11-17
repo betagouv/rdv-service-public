@@ -25,6 +25,7 @@ p Cette page liste les RDV supprimés de l'organisation #{current_organisation.n
               th Usagers
               th Agents
               th Créé par
+              th Supprimé par
           tbody
             - @deleted_rdvs.each do |deleted_rdv|
               tr id="deleted_rdv_#{deleted_rdv.id}"
@@ -38,13 +39,14 @@ p Cette page liste les RDV supprimés de l'organisation #{current_organisation.n
                 td = deleted_rdv_lieu_link(deleted_rdv)
                 td = Rdv.human_attribute_value(:status, deleted_rdv.status, disable_cast: true)
                 td = deleted_rdv_user_links(deleted_rdv, @users_by_id)
-                td = deleted_rdv_agent_links(deleted_rdv, @agents_by_id)
+                td = deleted_rdv_agent_links(deleted_rdv.agent_ids, @agents_by_id)
                 td
                   - if deleted_rdv.created_by_type.present?
                     = Rdv.human_attribute_value(:created_by_type, deleted_rdv.created_by_type, disable_cast: true)
                     - if deleted_rdv.created_by_name.present?
                       br
                       span.fr-text--xs.fr-mb-0 = deleted_rdv.created_by_name
+                td = deleted_rdv_agent_links([deleted_rdv.deleted_by_agent_id].compact, @agents_by_id)
   .d-flex.justify-content-center.fr-mt-2w
     = paginate @deleted_rdvs
 - else

@@ -37,6 +37,7 @@ RSpec.describe DeletedRdvsBackfill do
       created_by_name: agent.full_name,
       user_ids: [user.id],
       agent_ids: [agent.id],
+      deleted_by_agent_id: agent.id, # extrait du whodunnit
       deleted_at: be_within(1.second).of(deleted_at)
     )
   end
@@ -47,6 +48,16 @@ RSpec.describe DeletedRdvsBackfill do
     described_class.new.call
 
     expect(DeletedRdv.last).to have_attributes(motif_id: 999_999, motif_name: nil, created_by_name: nil)
+  end
+
+  it "laisse deleted_by_agent_id vide quand le whodunnit est absent, n'est pas un agent, ou que l'agent n'est pas de l'organisation" do
+    create_version.update!(whodunnit: nil)
+    create_version.update!(whodunnit: "[User] Jean (id=#{user.id})")
+    create_version.update!(whodunnit: "[Agent] Autre (id=#{create(:agent).id})") # agent d'une autre organisation
+
+    described_class.new.call
+
+    expect(DeletedRdv.pluck(:deleted_by_agent_id)).to eq([nil, nil, nil])
   end
 
   it "gère une version sans virtual_attributes" do

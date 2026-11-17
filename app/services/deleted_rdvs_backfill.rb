@@ -35,6 +35,7 @@ class DeletedRdvsBackfill
   def rows_for(versions)
     motif_names = Motif.where(id: versions.filter_map { _1.object["motif_id"] }).pluck(:id, :name).to_h
     names = creator_names(versions)
+    deleter_ids = deleter_agent_ids(versions)
     retention_limit = 2.years.ago
 
     versions.filter_map do |version|
@@ -56,9 +57,23 @@ class DeletedRdvsBackfill
         created_by_name: names[[rdv["created_by_type"], rdv["created_by_id"]]],
         user_ids: Array(virtual["user_ids"]).uniq,
         agent_ids: Array(virtual["agent_ids"]).uniq,
+        deleted_by_agent_id: deleter_ids[version.item_id],
         deleted_at: version.created_at,
       }
     end
+  end
+
+  # whodunnit ressemble à "[Agent] MARIE CLAIN (id=25901)" ; il est vidé après 1 an (RGPD)
+  # whodunnit ressemble à "[Agent] MARIE CLAIN (id=25901)" ; il est vidé après 1 an (RGPD).
+  # On ne garde l'id que si l'agent appartient (ou appartenait encore) à l'organisation du RDV,
+  # pour ne pas rattacher une suppression à un agent qui n'a rien à voir.
+  # Retourne { id de la version du RDV => agent_id }
+  def deleter_agent_ids(versions)
+    candidates = versions.to_h do |version|
+      [version.item_id, [version.object["organisation_id"], version.whodunnit.to_s[/\A\[Agent\] .*\(id=(\d+)\)\z/, 1]&.to_i]]
+    end
+    members = AgentRole.where(agent_id: candidates.values.filter_map(&:last)).pluck(:organisation_id, :agent_id).to_set
+    candidates.filter_map { |rdv_id, (organisation_id, agent_id)| [rdv_id, agent_id] if members.include?([organisation_id, agent_id]) }.to_h
   end
 
   def creator_names(versions)

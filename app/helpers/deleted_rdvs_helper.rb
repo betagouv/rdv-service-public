@@ -31,8 +31,8 @@ module DeletedRdvsHelper
     end, tag.br)
   end
 
-  def deleted_rdv_agent_links(deleted_rdv, agents_by_id)
-    safe_join(deleted_rdv.agent_ids.map do |id|
+  def deleted_rdv_agent_links(agent_ids, agents_by_id)
+    safe_join(agent_ids.map do |id|
       agent = agents_by_id[id]
       next deleted_rdv_missing_reference(id) unless agent
 

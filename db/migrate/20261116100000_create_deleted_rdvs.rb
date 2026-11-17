@@ -18,6 +18,7 @@ class CreateDeletedRdvs < ActiveRecord::Migration[8.1]
       t.bigint :user_ids, array: true, default: [], null: false
       t.bigint :agent_ids, array: true, default: [], null: false
 
+      t.bigint :deleted_by_agent_id # nil si la suppression ne vient pas d'un agent (purge RGPD, API...)
       t.datetime :deleted_at, null: false
     end
 

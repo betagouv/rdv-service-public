@@ -11,6 +11,6 @@ class Admin::DeletedRdvsController < AgentAuthController
 
     # Les usagers et agents sont stockés sous forme d'ids : on les charge en une requête chacun pour la page.
     @users_by_id = User.where(id: @deleted_rdvs.flat_map(&:user_ids)).includes(:user_profiles).index_by(&:id)
-    @agents_by_id = Agent.where(id: @deleted_rdvs.flat_map(&:agent_ids)).includes(:organisations).index_by(&:id)
+    @agents_by_id = Agent.where(id: @deleted_rdvs.flat_map { _1.agent_ids + [_1.deleted_by_agent_id] }.compact).includes(:organisations).index_by(&:id)
   end
 end

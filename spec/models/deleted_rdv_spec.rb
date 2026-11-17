@@ -6,6 +6,7 @@ RSpec.describe DeletedRdv do
     let!(:rdv) { create(:rdv, organisation: organisation, agents: [agent], users: [user], created_by: agent) }
 
     it "copie les informations du RDV" do
+      rdv.deleted_by_agent = agent
       expect { rdv.destroy! }.to change(described_class, :count).by(1)
 
       deleted_rdv = described_class.last
@@ -22,7 +23,8 @@ RSpec.describe DeletedRdv do
         created_by_id: agent.id,
         created_by_name: agent.full_name,
         user_ids: [user.id],
-        agent_ids: [agent.id]
+        agent_ids: [agent.id],
+        deleted_by_agent_id: agent.id
       )
     end
 

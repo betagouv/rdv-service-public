@@ -126,6 +126,7 @@ class Admin::RdvsController < AgentAuthController
 
   def destroy
     authorize(@rdv, policy_class: Agent::RdvPolicy)
+    @rdv.deleted_by_agent = current_agent
     if @rdv.destroy
       flash[:notice] = "Le rendez-vous a été supprimé."
       redirect_to admin_organisation_rdvs_path(current_organisation)

@@ -251,6 +251,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_100000) do
     t.string "created_by_name"
     t.bigint "user_ids", default: [], null: false, array: true
     t.bigint "agent_ids", default: [], null: false, array: true
+    t.bigint "deleted_by_agent_id"
     t.datetime "deleted_at", null: false
     t.index ["agent_ids"], name: "index_deleted_rdvs_on_agent_ids", using: :gin
     t.index ["organisation_id", "deleted_at"], name: "index_deleted_rdvs_on_organisation_id_and_deleted_at"

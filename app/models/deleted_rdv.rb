@@ -24,6 +24,7 @@ class DeletedRdv < ApplicationRecord
       created_by_name: rdv.created_by.try(:full_name),
       user_ids: rdv.participations.map(&:user_id).uniq,
       agent_ids: rdv.agents_rdvs.map(&:agent_id).uniq,
+      deleted_by_agent_id: rdv.deleted_by_agent&.id,
       deleted_at: Time.zone.now
     )
   end
