@@ -19,6 +19,50 @@ RSpec.describe Rdv::VisioConcern, type: :concern do
     end
   end
 
+  describe "création du salon à la création du RDV" do
+    let(:organisation) { create(:organisation) }
+    let(:visio_motif) { create(:motif, organisation:, location_type: :visio) }
+    let(:agent_with_token) do
+      create(:agent, basic_role_in_organisations: [organisation], menshen_access_token: "un-jeton-menshen", menshen_access_token_expires_at: 1.hour.from_now)
+    end
+
+    it "programme la création du salon si un des agents a un jeton Menshen valide" do
+      expect do
+        create(:rdv, organisation:, motif: visio_motif, lieu: nil, agents: [create(:agent, basic_role_in_organisations: [organisation]), agent_with_token])
+      end.to have_enqueued_job(Rdvs::CreateVisioRoomJob)
+    end
+
+    it "ne programme rien si aucun agent n'a de jeton Menshen valide" do
+      expect do
+        create(:rdv, organisation:, motif: visio_motif, lieu: nil, agents: [create(:agent, basic_role_in_organisations: [organisation])])
+      end.not_to have_enqueued_job(Rdvs::CreateVisioRoomJob)
+    end
+
+    it "ne programme rien si le RDV a déjà un salon ou n'est pas en visio" do
+      expect do
+        create(:rdv, organisation:, motif: visio_motif, lieu: nil, agents: [agent_with_token], visio_url_custom: "https://visio.numerique.gouv.fr/existant")
+        create(:rdv, organisation:, agents: [agent_with_token])
+      end.not_to have_enqueued_job(Rdvs::CreateVisioRoomJob)
+    end
+
+    it "ne programme rien lors d'une mise à jour du RDV" do
+      rdv = create(:rdv, organisation:, motif: visio_motif, lieu: nil)
+      rdv.agents << agent_with_token
+
+      expect { rdv.update!(context: "nouveau contexte") }.not_to have_enqueued_job(Rdvs::CreateVisioRoomJob)
+    end
+
+    context "quand la Visio est désactivée" do
+      stub_env_with(VISIO_NUMERIQUE_DISABLED: "true")
+
+      it "ne programme rien" do
+        expect do
+          create(:rdv, organisation:, motif: visio_motif, lieu: nil, agents: [agent_with_token])
+        end.not_to have_enqueued_job(Rdvs::CreateVisioRoomJob)
+      end
+    end
+  end
+
   describe "#visio_join_url" do
     it "retourne un lien public avec un token permettant de retrouver le RDV" do
       motif = create(:motif, location_type: :visio)

@@ -18,6 +18,7 @@ class Admin::Api::Agenda::ExternalCalendarEventsController < Admin::Api::BaseCon
           end: all_day ? occurrence.ends_at.to_date.as_json : occurrence.ends_at.as_json,
           allDay: all_day,
           color: caldav_config.caldav_calendar_color.presence || AbsencesHelper::CALENDAR_BACKGROUND_COLOR,
+          contrastColor: helpers.text_color(caldav_config.caldav_calendar_color),
           resourceIds: [event.agent_id], # https://fullcalendar.io/docs/resources-and-events
         }
       end

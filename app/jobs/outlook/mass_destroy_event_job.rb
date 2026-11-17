@@ -16,6 +16,8 @@ module Outlook
       end
 
       agent.outlook_config.destroy!
+    rescue Outlook::ApiClient::InvalidGrantError => e
+      agent.handle_invalid_grant(e)
     end
   end
 end

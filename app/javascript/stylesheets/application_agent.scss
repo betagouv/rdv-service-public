@@ -94,6 +94,7 @@
 @import "./components/rdv_solidarites_instance_name";
 @import "./components/callout";
 @import "./components/accordion";
+@import "./components/dropdown_button";
 
 @import "./structure/bootstrap_overrides";
 
@@ -155,4 +156,16 @@ table,
 .fr-icon-ri-user-unfollow-fill::after {
   -webkit-mask-image: url("../../assets/images/custom-icons/ri-user-unfollow-fill.svg");
   mask-image: url("../../assets/images/custom-icons/ri-user-unfollow-fill.svg");
+}
+
+.fr-icon-ri-file-copy-2-line::before,
+.fr-icon-ri-file-copy-2-line::after {
+  -webkit-mask-image: url("../../assets/images/custom-icons/ri-file-copy-2-line.svg");
+  mask-image: url("../../assets/images/custom-icons/ri-file-copy-2-line.svg");
+}
+
+.fr-icon-ri-file-copy-2-fill::before,
+.fr-icon-ri-file-copy-2-fill::after {
+  -webkit-mask-image: url("../../assets/images/custom-icons/ri-file-copy-2-fill.svg");
+  mask-image: url("../../assets/images/custom-icons/ri-file-copy-2-fill.svg");
 }

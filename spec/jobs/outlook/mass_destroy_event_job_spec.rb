@@ -1,5 +1,3 @@
-require "rails_helper"
-
 RSpec.describe Outlook::MassDestroyEventJob, type: :job do
   let(:organisation) { create(:organisation) }
   let(:motif) { create(:motif, name: "Super Motif", location_type: :phone, organisation:) }
@@ -95,6 +93,23 @@ RSpec.describe Outlook::MassDestroyEventJob, type: :job do
       expect(agent.reload.outlook_config.microsoft_graph_token).not_to be_nil
       expect(agent.reload.outlook_config.microsoft_graph_refresh_token).not_to be_nil
       expect(agents_rdv2.reload.outlook_id).not_to be_nil
+    end
+  end
+
+  context "when the refresh token is definitively invalid" do
+    before do
+      stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")
+        .to_return(status: 401, body: { error: { code: "InvalidAuthenticationToken", message: "Access token has expired." } }.to_json)
+      stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token")
+        .to_return(status: 400, body: { error: "invalid_grant", error_description: "AADSTS700082: expired", error_codes: [700_082] }.to_json)
+    end
+
+    it "destroys the outlook config, warns the agent by email and does not retry" do
+      expect { described_class.perform_now(agent) }
+        .to have_enqueued_mail(Agents::OutlookSyncMailer, :sync_disabled)
+        .and have_enqueued_job(described_class).exactly(0).times
+
+      expect(agent.reload.outlook_config).to be_nil
     end
   end
 end

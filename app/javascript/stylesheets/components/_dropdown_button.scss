@@ -1,0 +1,74 @@
+// Bouton déroulant : voir app/views/common/_dropdown_button.html.slim
+// Le bouton est un .fr-btn du DSFR ; seuls la liste et l'état ouvert sont spécifiques.
+.dropdown-button {
+  position: relative;
+  display: inline-flex; // pas de ligne de texte autour du bouton : la liste se colle à lui
+
+  // Le chevron est un <span> et non une classe fr-icon-* sur le bouton : dans un .fr-btns-group,
+  // le DSFR transformerait sinon le bouton en bouton "icône seule" (texte masqué).
+  // .fr-btn dans le sélecteur : nécessaire pour l'emporter sur le fond de .fr-btn--secondary
+  &__trigger.fr-btn[aria-expanded="true"] {
+    background-color: var(--background-open-blue-france);
+
+    .dropdown-button__chevron {
+      transform: rotate(180deg);
+    }
+  }
+
+  // Mêmes styles que le menu utilisateur du header (#rdv-account-dropdown)
+  &__list {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000; // sous les modales Bootstrap (1050)
+    min-width: 10rem;
+    width: max-content;
+    max-width: 30rem;
+    margin: 0.125rem 0 0;
+    padding: 0.25rem 0;
+    list-style: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+    box-shadow: $shadow;
+
+    li {
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    color: black;
+    font-weight: 400;
+    font-size: 0.875rem;
+    background-image: none; // retire le soulignement des liens DSFR
+    white-space: nowrap;
+
+    .fr-icon--sm {
+      margin-right: 0.5rem;
+    }
+
+    // a[href]:hover impose un fond au DSFR : on double la classe pour passer devant
+    &.dropdown-button__link:hover {
+      color: black; // la couleur du texte ne change pas au survol
+      background-color: rgb(246, 246, 246);
+    }
+  }
+}
+
+// Dans un groupe de boutons DSFR, on se comporte comme un .fr-btn :
+// le DSFR impose width:100% aux <div> enfants et des marges aux .fr-btn.
+.fr-btns-group--inline > .dropdown-button {
+  width: auto;
+  margin: 0 0.5rem;
+  align-self: flex-start; // sinon le groupe étire le composant (et le bouton) à la hauteur des marges des autres .fr-btn
+
+  .fr-btn {
+    margin: 0;
+  }
+}

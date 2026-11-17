@@ -36,6 +36,8 @@ module Outlook
       elsif @outlook_id
         delete_event
       end
+    rescue Outlook::ApiClient::InvalidGrantError => e
+      @agent.handle_invalid_grant(e)
     end
 
     def capture_sentry_warning_for_retry?(exception)

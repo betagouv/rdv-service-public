@@ -38,6 +38,61 @@ RSpec.describe Outlook::SyncEventJob do
     end
   end
 
+  context "when the refresh token is definitively invalid" do
+    let(:error_description) do
+      "AADSTS700003: Device object was not found in the tenant 'ccf6a070-e1d8-11f1-b227-2e53240b5bb1' directory. " \
+        "Trace ID: a5164a78-a2b9-429c-9ee9-17e4c4d9ad00 Correlation ID: d198772a-e1d8-11f1-ae25-2e53240b5bb1 Timestamp: 2026-11-16 14:18:33Z"
+    end
+
+    before do
+      create(:outlook_config, agent:)
+      allow(Outlook::ApiClient).to receive(:new).and_call_original
+
+      stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events").to_return(
+        status: 401,
+        body: {
+          error: {
+            code: "InvalidAuthenticationToken",
+            message: "Invalid token lifetime.",
+            innerError: {
+              date: "2026-11-16T14:18:33",
+              "request-id": "d94e1164-e1d8-11f1-95bf-2e53240b5bb1",
+              "client-request-id": "dc3089ca-e1d8-11f1-a2e9-2e53240b5bb1",
+            },
+          },
+        }.to_json
+      )
+
+      stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token").to_return(
+        status: 400,
+        body: {
+          error: "invalid_grant",
+          error_description: error_description,
+          error_codes: [700_003],
+          timestamp: "2026-11-16 14:18:33Z",
+          trace_id: "a5164a78-a2b9-429c-9ee9-17e4c4d9ad00",
+          correlation_id: "d198772a-e1d8-11f1-ae25-2e53240b5bb1",
+          error_uri: "https://login.microsoftonline.com/error?code=700003",
+          suberror: "device_authentication_failed",
+        }.to_json
+      )
+    end
+
+    it "destroys the outlook config, warns the agent by email and does not retry" do
+      agents_rdv.update_columns(outlook_create_in_progress: true) # rubocop:disable Rails/SkipsModelValidations
+
+      expect { described_class.perform_now(agents_rdv.id, nil, agent) }
+        .to have_enqueued_mail(Agents::OutlookSyncMailer, :sync_disabled).with(
+          params: { agent:, error_description:, error_uri: "https://login.microsoftonline.com/error?code=700003" }, args: []
+        )
+        .and have_enqueued_job(described_class).exactly(0).times
+
+      expect(agent.reload.outlook_config).to be_nil
+      expect(sentry_events.last.extra).to eq({ error_description: })
+      expect(sentry_events.last.tags).to include(error_uri: "https://login.microsoftonline.com/error?code=700003")
+    end
+  end
+
   context "when the event is already in outlook and only needs to be updated" do
     before do
       agents_rdv.update(outlook_id: "stubbed_outlook_event_id")

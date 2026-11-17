@@ -218,5 +218,26 @@ RSpec.describe Outlook::ApiClient do
         expect { described_class.new(outlook_config).create_event!(expected_body) }.to raise_error(Outlook::ApiClient::RefreshTokenError, "Unknwon error")
       end
     end
+
+    context "when the token refresh fails with an invalid_grant error" do
+      before do
+        stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token")
+          .to_return(status: 400, body: {
+            error: "invalid_grant",
+            error_description: "AADSTS700082: The refresh token has expired due to inactivity.",
+            error_uri: "https://login.microsoftonline.com/error?code=700082",
+            error_codes: [700_082],
+          }.to_json)
+      end
+
+      it "raises an InvalidGrantError carrying the error description" do
+        expect { described_class.new(outlook_config).create_event!(expected_body) }
+          .to raise_error(Outlook::ApiClient::InvalidGrantError) do |e|
+            expect(e.error_description).to eq("AADSTS700082: The refresh token has expired due to inactivity.")
+            expect(e.error_uri).to eq("https://login.microsoftonline.com/error?code=700082")
+            expect(e.error_code).to eq("700082")
+          end
+      end
+    end
   end
 end

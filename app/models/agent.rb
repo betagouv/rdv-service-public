@@ -63,6 +63,8 @@ class Agent < ApplicationRecord
 
   encrypts :menshen_access_token
 
+  MENSHEN_ACCESS_TOKEN_RENEWAL_DELAY = 1.month
+
   enum :rdv_notifications_level, {
     all: "all",       # notify of all rdv changes
     others: "others", # notify of changes made by other agents or users
@@ -140,6 +142,7 @@ class Agent < ApplicationRecord
     where("invitation_sent_at IS NULL OR invitation_accepted_at IS NOT NULL")
   }
   scope :active, -> { where(deleted_at: nil) }
+  scope :with_valid_menshen_access_token, -> { where.not(menshen_access_token: nil).where(menshen_access_token_expires_at: Time.zone.now..) }
   scope :excluding_pending_invitation, lambda {
     where(invitation_sent_at: nil) # permet de ne pas inclure les intervenants & les ProConnectés
       .or(where.not(confirmed_at: nil)) # plus générique que invitation_sent_at, évite les faux négatifs
@@ -148,6 +151,12 @@ class Agent < ApplicationRecord
   ## -
 
   delegate :name, to: :domain, prefix: true
+
+  def menshen_access_token_needs_renewal?
+    menshen_access_token.blank? ||
+      menshen_access_token_expires_at.nil? ||
+      menshen_access_token_expires_at < MENSHEN_ACCESS_TOKEN_RENEWAL_DELAY.from_now
+  end
 
   def confrere_of?(other_agent)
     services.to_set.intersect?(other_agent.services.to_set) || other_agent.services.none?
@@ -191,6 +200,7 @@ class Agent < ApplicationRecord
       access_grants.destroy_all
       access_tokens.destroy_all
       exports.destroy_all
+      outlook_config&.destroy!
 
       assign_attributes(
         deleted_at: Time.zone.now,

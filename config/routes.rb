@@ -165,8 +165,9 @@ Rails.application.routes.draw do
       end
       resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
-        resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync do
+        resource :caldav_sync, only: %i[show edit update destroy], controller: :caldav_sync do
           post :calendar_selection
+          patch :update_display
         end
         resources :logs, only: %i[index], controller: :external_calendar_sync_executions
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
@@ -351,6 +352,7 @@ Rails.application.routes.draw do
           get :download_participants
           post :send_reminder_manually
           put :update_status
+          get :versions
         end
         collection do
           post :participations_export
