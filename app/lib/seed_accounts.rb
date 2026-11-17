@@ -21,7 +21,11 @@ class SeedAccounts
   end
 
   def self.yaml_config
-    # pas de mémoïsation : en dev, on veut voir les changements du YAML sans redémarrer
-    YAML.load_file(PATH, symbolize_names: true)
+    if Rails.env.development?
+      # Pas de mémoïsation en dev : on veut voir les changements du YAML sans redémarrer le serveur
+      YAML.load_file(PATH, symbolize_names: true)
+    else
+      @yaml_config ||= YAML.load_file(PATH, symbolize_names: true)
+    end
   end
 end

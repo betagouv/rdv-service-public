@@ -17,13 +17,13 @@ Compte.new(
     agent: {
       first_name: "Cécile",
       last_name: "Astier",
-      email: SEED_ACCOUNTS.dig(:agents, :cecile_astier, :email),
+      email: SeedAccounts.yaml_config.dig(:agents, :cecile_astier, :email),
       service_ids: [service.id],
     },
   }, current_domain: Domain::RDV_SERVICE_PUBLIC
 ).save!
 
-agent = Agent.find_by(email: SEED_ACCOUNTS.dig(:agents, :cecile_astier, :email))
+agent = Agent.find_by(email: SeedAccounts.yaml_config.dig(:agents, :cecile_astier, :email))
 
 agent.update!(
   invitation_token: nil,
@@ -39,7 +39,7 @@ orga_ccas = agent.organisations.first
 user = User.new(
   first_name: "Patricia",
   last_name: "Duroy",
-  email: SEED_ACCOUNTS.dig(:users, :patricia_ccas, :email),
+  email: SeedAccounts.yaml_config.dig(:users, :patricia_ccas, :email),
   birth_date: Date.parse("20/06/1975"),
   phone_number: "0101010101",
   organisation_ids: [orga_ccas.id],
