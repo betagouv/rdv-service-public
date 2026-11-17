@@ -1,6 +1,7 @@
 class Agents::CaldavSyncController < AgentAuthController
   layout "application_agent_config"
   before_action { @active_agent_preferences_menu_item = :synchronisation }
+  before_action :set_editable_caldav_config, only: %i[edit update_display]
 
   def show
     skip_authorization
@@ -58,6 +59,19 @@ class Agents::CaldavSyncController < AgentAuthController
     redirect_to agents_calendar_sync_caldav_sync_path
   end
 
+  def edit
+    skip_authorization
+  end
+
+  # Le nom et la couleur ne sont utilisés que pour l’affichage dans le planning : pas besoin de revérifier la connexion ni de relancer de synchro.
+  def update_display
+    skip_authorization
+
+    @caldav_config.update!(display_params)
+    flash[:success] = "Les paramètres d’affichage de votre agenda CalDAV ont été mis à jour."
+    redirect_to agents_calendar_sync_caldav_sync_path
+  end
+
   def destroy
     skip_authorization
     caldav_config.update!(caldav_disconnect_started_at: Time.current)
@@ -69,6 +83,15 @@ class Agents::CaldavSyncController < AgentAuthController
 
   def permitted_params
     params.permit(:caldav_agenda_url, :caldav_username, :caldav_password, :caldav_include_sensitive_data, :caldav_calendar_name, :caldav_calendar_color)
+  end
+
+  def display_params
+    params.expect(caldav_config: %i[caldav_calendar_name caldav_calendar_color])
+  end
+
+  def set_editable_caldav_config
+    @caldav_config = current_agent.caldav_config
+    redirect_to agents_calendar_sync_caldav_sync_path if @caldav_config.nil? || @caldav_config.disconnect_in_progress?
   end
 
   # Vérifie la configuration CalDAV en 3 étapes : authentification, lecture, écriture.
