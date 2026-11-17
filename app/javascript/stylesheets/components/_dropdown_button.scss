@@ -15,48 +15,43 @@
     }
   }
 
-  // Mêmes styles que le menu utilisateur du header (#rdv-account-dropdown)
   &__list {
     position: absolute;
     top: 100%;
     right: 0;
     z-index: 1000; // sous les modales Bootstrap (1050)
-    min-width: 10rem;
+    min-width: 100%;
     width: max-content;
-    max-width: 30rem;
-    margin: 0.125rem 0 0;
-    padding: 0.25rem 0;
+    margin: 0;
+    padding: 0;
     list-style: none;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 0.25rem;
-    box-shadow: $shadow;
+    background-color: var(--background-raised-grey);
+    box-shadow: 0 6px 18px rgba(0, 0, 18, 0.16);
 
     li {
       margin: 0;
       padding: 0;
+    }
+
+    li + li {
+      border-top: 1px solid var(--border-default-grey);
     }
   }
 
   &__link {
     display: flex;
     align-items: center;
-    padding: 0.75rem;
-    color: black;
-    font-weight: 400;
-    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+    color: var(--text-action-high-blue-france);
+    font-weight: 500;
     background-image: none; // retire le soulignement des liens DSFR
     white-space: nowrap;
 
-    .fr-icon--sm {
-      margin-right: 0.5rem;
-    }
-
     // a[href]:hover impose un fond au DSFR : on double la classe pour passer devant
     &.dropdown-button__link:hover {
-      color: black; // la couleur du texte ne change pas au survol
-      background-color: rgb(246, 246, 246);
+      background-color: var(
+        --background-alt-grey
+      ); // gris clair, comme .dropdown-item-dsfr du header
     }
   }
 }
