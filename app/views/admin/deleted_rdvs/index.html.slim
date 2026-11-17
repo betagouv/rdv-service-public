@@ -18,6 +18,7 @@ p Cette page liste les RDV supprimés de l'organisation #{current_organisation.n
             tr
               th ID
               th Supprimé le
+              th Supprimé par
               th Date du RDV
               th Motif
               th Lieu
@@ -25,12 +26,12 @@ p Cette page liste les RDV supprimés de l'organisation #{current_organisation.n
               th Usagers
               th Agents
               th Créé par
-              th Supprimé par
           tbody
             - @deleted_rdvs.each do |deleted_rdv|
               tr id="deleted_rdv_#{deleted_rdv.id}"
                 td = deleted_rdv.id
                 td = l(deleted_rdv.deleted_at, format: :human)
+                td = deleted_rdv_agent_links([deleted_rdv.deleted_by_agent_id].compact, @agents_by_id)
                 td
                   = l(deleted_rdv.starts_at, format: :human)
                   br
@@ -46,7 +47,6 @@ p Cette page liste les RDV supprimés de l'organisation #{current_organisation.n
                     - if deleted_rdv.created_by_name.present?
                       br
                       span.fr-text--xs.fr-mb-0 = deleted_rdv.created_by_name
-                td = deleted_rdv_agent_links([deleted_rdv.deleted_by_agent_id].compact, @agents_by_id)
   .d-flex.justify-content-center.fr-mt-2w
     = paginate @deleted_rdvs
 - else
