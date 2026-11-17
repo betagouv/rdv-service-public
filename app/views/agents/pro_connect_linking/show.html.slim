@@ -11,9 +11,4 @@ p
   |> En cliquant sur le bouton ci-dessous, vous allez être déconnecté·e puis invité·e à vous reconnecter avec ProConnect, avec l’adresse #{current_agent.email}.
   | Une fois connecté·e, ProConnect sera votre unique moyen de connexion à votre compte agent sur #{current_domain.name}.
 
-= form_tag agents_pro_connect_linking_path, method: :post, class: "fr-connect-group" do
-  button.fr-connect.fr-proconnect
-    span.fr-connect__login
-      |> S’identifier avec
-    span.fr-connect__brand
-      | ProConnect
+= dsfr_proconnect_button(target: agents_pro_connect_linking_path)

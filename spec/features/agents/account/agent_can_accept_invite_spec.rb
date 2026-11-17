@@ -14,7 +14,7 @@ RSpec.describe "Agent can accept invitation" do
       expect(page).to have_content "connectez-vous avec ProConnect"
       find(".fr-connect__brand").click
       begin
-        click_button("S’identifier avec ProConnect")
+        click_button("S'identifier avec ProConnect")
       rescue ActionController::RoutingError
         # Capybara essaye de suivre une redirection vers "https://fca.integ01.dev-agentconnect.fr/api/v2/authorize
         # ce qui n'est pas possible dans l'env de test (il ignore le host et il cherche /api/v2/authorize dans nos routes).

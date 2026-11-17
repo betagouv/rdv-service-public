@@ -1,14 +1,2 @@
 /# locals: (login_hint: nil, user_type: "agent")
-form.fr-connect-group[action="#{pro_connect_auth_path}" method="get"]
-
-  - if login_hint
-    input[type="hidden" value="#{login_hint}" name="login_hint"]
-  input[type="hidden" value="#{user_type}" name="user_type"]
-  button.fr-connect.fr-proconnect
-    span.fr-connect__login
-      |> S’identifier avec
-    span.fr-connect__brand
-      | ProConnect
-  p
-    a[href="https://www.proconnect.gouv.fr/" target="_blank" rel="noopener noreferrer" title="Qu’est-ce que ProConnect ? - nouvelle fenêtre"]
-      |  Qu’est-ce que ProConnect ?
+= dsfr_proconnect_button(target: pro_connect_auth_path, button_overrides: { method: :get, params: { login_hint:, user_type: }.compact })
