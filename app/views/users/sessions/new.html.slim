@@ -46,8 +46,7 @@
           = link_to prescripteur_start_path(@rdv_wizard.to_query) do
             b Je suis un prescripteur qui oriente un bénéficiaire
 
-- seed_accounts = SeedAccounts.filter(kind: :users, domain: current_domain)
-- if seed_accounts.any?
+- if SeedAccounts.displayed?
   hr.fr-mt-8w
   h3
     | Connexion avec un compte de démo
@@ -60,7 +59,7 @@
               th Connexion
               th Infos
             tbody
-              - seed_accounts.each do |account|
+              - SeedAccounts.filter(kind: :users, domain: current_domain).each do |account|
                 tr
                   td
                     = form_with url: users_login_codes_path, method: :post do

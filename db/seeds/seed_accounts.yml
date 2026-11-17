@@ -40,7 +40,7 @@ agents:
     domain: RDV_SOLIDARITES
   camille_clavier:
     email: camille-clavier@demo.rdv-solidarites.fr
-    label: Conseillère numérique, médiathèque Paris Nord (seed dev uniquement)
+    label: Conseillère numérique, médiathèque Paris Nord
   alain_mairie:
     email: alain.mairie@rdv-mairie-demo.fr
     label: Admin mairie de Sannois (titres, ANTS)

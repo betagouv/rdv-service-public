@@ -1,6 +1,7 @@
 # Comptes de démo listés dans db/seeds/seed_accounts.yml.
 #
 # Ils sont proposés sur les pages de connexion agent et usagers, en dev et en review app.
+
 class SeedAccounts
   PATH = Rails.root.join("db/seeds/seed_accounts.yml").freeze
 
@@ -10,13 +11,13 @@ class SeedAccounts
     Rails.env.development? || ENV["IS_REVIEW_APP"] == "true"
   end
 
-  # Retourne [] hors dev/review app : les vues n'ont qu'à tester le .any? du résultat
   def self.filter(kind:, domain:)
     return [] unless displayed?
 
-    yaml_config.fetch(kind, {}).values
-      .select { _1["domain"].blank? || _1["domain"] == domain.id }
-      .map { Account.new(**attrs) }
+    yaml_config[kind]
+      .values
+      .select { _1[:domain].blank? || _1[:domain] == domain.id }
+      .map { Account.new(**_1.slice(:email, :label)) }
   end
 
   def self.yaml_config

@@ -17,19 +17,6 @@ RSpec.describe SeedAccounts do
     end
   end
 
-  describe "Account#displayed_on?" do
-    it "compare l'id du domaine (String)" do
-      account = described_class::Account.new(email: "a@b.fr", label: "A", domain: "RDV_SOLIDARITES")
-      expect(account.displayed_on?("RDV_SOLIDARITES")).to be(true)
-      expect(account.displayed_on?("RDV_SERVICE_PUBLIC")).to be(false)
-    end
-
-    it "est affiché sur tous les domaines quand le YAML ne précise pas de domain" do
-      account = described_class::Account.new(email: "a@b.fr", label: "A", domain: nil)
-      expect(account.displayed_on?("RDV_SERVICE_PUBLIC")).to be(true)
-    end
-  end
-
   describe ".displayed?" do
     it "est faux en dehors du dev et des review apps" do
       expect(described_class.displayed?).to be(false)
