@@ -89,6 +89,10 @@ RSpec.configure do |config|
       ActiveRecord::Base.connection.tables.each do |table|
         ActiveRecord::Base.connection.reset_pk_sequence!(table)
       end
+      # On coupe les logs et PaperTrail pour accélérer la génération
+      ActiveRecord::Base.logger = nil
+      Rails.logger.level = Logger::FATAL
+      PaperTrail.enabled = false
     end
     Rack::Attack.enabled = false
 
