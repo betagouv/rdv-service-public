@@ -2583,6 +2583,16 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "user_external_id",
+            "in": "query",
+            "description": "Filtre pour obtenir uniquement les invitations de l'usager qui a cet id dans votre système.",
+            "example": "123AB",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "tags": [
@@ -2603,6 +2613,43 @@
                           "id": 32,
                           "cancelled": false,
                           "created_at": "2026-10-27 12:25:03 +0100",
+                          "inviting_agent": {
+                            "id": 870,
+                            "email": "agent_1@lapin.fr",
+                            "first_name": "Isaac",
+                            "last_name": "Berger"
+                          },
+                          "lieu": {
+                            "id": 258,
+                            "address": "1 rue de l'adresse, Ville, 12345",
+                            "latitude": 38.8951,
+                            "longitude": -77.0364,
+                            "name": "Lieu n°1",
+                            "organisation_id": 801,
+                            "phone_number": null,
+                            "single_use": false
+                          },
+                          "motif": {
+                            "id": 270,
+                            "bookable_by": "everyone",
+                            "bookable_publicly": true,
+                            "collectif": false,
+                            "default_duration_in_min": 45,
+                            "deleted_at": null,
+                            "follow_up": false,
+                            "instruction_for_rdv": null,
+                            "location_type": "public_office",
+                            "max_public_booking_delay": 15778476,
+                            "min_public_booking_delay": 1800,
+                            "motif_category": {
+                              "id": 268,
+                              "name": "Catégorie de motif n°1",
+                              "short_name": "1_motif_cat"
+                            },
+                            "name": "Motif 1",
+                            "organisation_id": 801,
+                            "service_id": null
+                          },
                           "rdv_id": null,
                           "updated_at": "2026-10-27 12:25:03 +0100"
                         }

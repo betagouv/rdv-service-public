@@ -86,7 +86,7 @@ Vous pouvez ensuite rediriger votre agent à l'url indiquée pour qu'il prenne l
 
 Si vous avez utilisé le champs `user.external_id`, il n'est pas nécessaire de sauvegarder les données de cette réponse.
 
-Vous pourrez ensuite retrouver les rendez-vous et/ou les invitations à prendre rendez-vous en attente avec les endpoints de listes de rendez-vous et de liste des invitations à prendre rendez-vous.
+Vous pourrez ensuite retrouver les rendez-vous et/ou les invitations à prendre rendez-vous en attente avec les endpoints de listes de rendez-vous et de liste des invitations à prendre rendez-vous, en les filtrant avec le paramètre `user_external_id`.
 
 
 Vous pouvez faire des requêtes sur le RDV Plan pour savoir si le rendez-vous associé a été crée (`GET /api/v1/rdv_plans/23`), mais ce n'est pas forcément nécessaire.
