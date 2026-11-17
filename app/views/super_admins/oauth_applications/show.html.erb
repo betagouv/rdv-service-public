@@ -1,0 +1,11 @@
+<% content_for(:after_main) do %>
+  <% if accessible_action?(page.resource, :regenerate_secret) %>
+    <%= button_to "Régénérer le client_secret (révoque tous les jetons actifs)",
+                  regenerate_secret_super_admins_oauth_application_path(page.resource),
+                  method: :post,
+                  class: "button button--danger",
+                  data: { turbo_confirm: "Régénérer le client_secret ? Tous les jetons actifs de cette application seront révoqués." } %>
+  <% end %>
+<% end %>
+
+<%= render template: "administrate/application/show", locals: local_assigns %>

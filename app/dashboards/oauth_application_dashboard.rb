@@ -11,6 +11,9 @@ class OauthApplicationDashboard < Administrate::BaseDashboard
     id: Field::Number,
     name: Field::String,
     logo_base64: LogoField,
+    redirect_uri: Field::Text,
+    grant_type: Field::Select.with_options(collection: OauthApplication.grant_types.keys),
+    agent: Field::BelongsTo,
     post_logout_redirect_uri: Field::String,
     grants_autonomous_signup: Field::Boolean,
     internal_documentation: Field::Text.with_options(
@@ -27,6 +30,8 @@ class OauthApplicationDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = %i[
     id
     name
+    grant_type
+    agent
     logo_base64
     created_at
   ].freeze
@@ -36,6 +41,9 @@ class OauthApplicationDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     id
     name
+    grant_type
+    agent
+    redirect_uri
     logo_base64
     post_logout_redirect_uri
     grants_autonomous_signup
@@ -46,7 +54,16 @@ class OauthApplicationDashboard < Administrate::BaseDashboard
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = %i[internal_documentation].freeze
+  FORM_ATTRIBUTES = %i[
+    name
+    grant_type
+    agent
+    redirect_uri
+    logo_base64
+    post_logout_redirect_uri
+    grants_autonomous_signup
+    internal_documentation
+  ].freeze
 
   def display_resource(oauth_application)
     oauth_application.name

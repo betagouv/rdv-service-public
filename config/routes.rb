@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   ## OAUTH PROVIDER ##
   use_doorkeeper do
     skip_controllers :applications # Ces routes permettraient aux partenaires de créer eux-mêmes des applications OAuth : on préfère les fermer
-    # La création des applications se fait via le back-office super admin (super_admins/oauth_applications) ou en console (scripts/create_oauth_application.rb)
+    # La création des applications se fait via le back-office super admin (super_admins/oauth_applications)
     controllers tokens: "oauth/tokens" # pour restreindre chaque application à son propre grant_type (voir Oauth::TokensController)
   end
 
@@ -58,7 +58,11 @@ Rails.application.routes.draw do
     resources :rdvs, only: %i[show]
     resources :prescripteurs, only: %i[show]
     resources :tags
-    resources :oauth_applications, only: %i[index show edit update]
+    resources :oauth_applications do
+      member do
+        post :regenerate_secret
+      end
+    end
     root to: "agents#index"
 
     authenticate :super_admin do
