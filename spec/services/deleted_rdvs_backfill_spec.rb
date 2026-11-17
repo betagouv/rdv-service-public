@@ -51,14 +51,21 @@ RSpec.describe DeletedRdvsBackfill do
     expect(DeletedRdv.last).to have_attributes(motif_id: 999_999, motif_name: nil, created_by_name: nil)
   end
 
-  it "laisse deleted_by_agent_id vide quand le whodunnit est absent, n'est pas un agent, ou que l'agent n'est pas de l'organisation" do
+  it "laisse deleted_by_agent_id vide quand le whodunnit est absent ou n'est pas un agent" do
     create_version.update!(whodunnit: nil)
-    create_version.update!(whodunnit: "[User] Jean (id=#{user.id})")
-    create_version.update!(whodunnit: "[Agent] Autre (id=#{create(:agent).id})") # agent d'une autre organisation
+    create_version.update!(whodunnit: "[User] Jean (id=#{agent.id})") # même id, mais c'est un usager
 
     described_class.new.call
 
-    expect(DeletedRdv.pluck(:deleted_by_agent_id)).to eq([nil, nil, nil])
+    expect(DeletedRdv.pluck(:deleted_by_agent_id)).to eq([nil, nil])
+  end
+
+  it "garde l'id de l'agent du whodunnit même s'il a été supprimé depuis" do
+    create_version.update!(whodunnit: "[Agent] ANCIEN AGENT (id=999999)")
+
+    described_class.new.call
+
+    expect(DeletedRdv.last.deleted_by_agent_id).to eq(999_999)
   end
 
   it "gère une version sans virtual_attributes" do
