@@ -10,50 +10,51 @@
 p Cette page liste les RDV supprimés de l'organisation #{current_organisation.name}, du plus récent au plus ancien. Quand un motif, un lieu, un usager ou un agent a été supprimé (ou n'est pas accessible), il est affiché sans lien.
 
 - if @deleted_rdvs.total_count > 0
-  .card
-    .card-body
-      .table-responsive
-        table.table
-          thead
-            tr
-              th ID
-              th Supprimé le / par
-              th Date du RDV
-              th Motif
-              th Lieu
-              th Statut
-              th Usagers
-              th Agents
-              th Créé par
-          tbody
-            - @deleted_rdvs.each do |deleted_rdv|
-              tr id="deleted_rdv_#{deleted_rdv.id}"
-                td = deleted_rdv.id
-                td
-                  = l(deleted_rdv.deleted_at, format: :human)
-                  - if deleted_rdv.deleted_by_agent_id
-                    br
-                    span.fr-text--xs.fr-mb-0
-                      | par&nbsp;
-                      = deleted_rdv_agent_links([deleted_rdv.deleted_by_agent_id], @agents_by_id)
-                td
-                  = l(deleted_rdv.starts_at, format: :human)
-                  br
-                  span.fr-text--xs.fr-mb-0 jusqu'à #{l(deleted_rdv.ends_at, format: :time_only)}
-                td = deleted_rdv_motif_link(deleted_rdv)
-                td = deleted_rdv_lieu_link(deleted_rdv)
-                td = Rdv.human_attribute_value(:status, deleted_rdv.status, disable_cast: true)
-                td = deleted_rdv_user_links(deleted_rdv, @users_by_id)
-                td = deleted_rdv_agent_links(deleted_rdv.agent_ids, @agents_by_id)
-                td
-                  - if deleted_rdv.created_by_type.present?
-                    = Rdv.human_attribute_value(:created_by_type, deleted_rdv.created_by_type, disable_cast: true)
-                    - if deleted_rdv.created_by_name.present?
+  .fr-table.fr-table--no-caption
+    .fr-table__wrapper
+      .fr-table__container
+        .fr-table__content
+          table
+            caption RDV supprimés
+            thead
+              tr
+                th ID
+                th Supprimé le / par
+                th Date du RDV
+                th Motif
+                th Lieu
+                th Statut
+                th Usagers
+                th Agents
+                th Créé par
+            tbody
+              - @deleted_rdvs.each do |deleted_rdv|
+                tr id="deleted_rdv_#{deleted_rdv.id}"
+                  td = deleted_rdv.id
+                  td
+                    = l(deleted_rdv.deleted_at, format: :human)
+                    - if deleted_rdv.deleted_by_agent_id
                       br
-                      span.fr-text--xs.fr-mb-0 = deleted_rdv.created_by_name
-  .d-flex.justify-content-center.fr-mt-2w
+                      span.fr-text--xs.fr-mb-0
+                        | par&nbsp;
+                        = deleted_rdv_agent_links([deleted_rdv.deleted_by_agent_id], @agents_by_id)
+                  td
+                    = l(deleted_rdv.starts_at, format: :human)
+                    br
+                    span.fr-text--xs.fr-mb-0 jusqu'à #{l(deleted_rdv.ends_at, format: :time_only)}
+                  td = deleted_rdv_motif_link(deleted_rdv)
+                  td = deleted_rdv_lieu_link(deleted_rdv)
+                  td = Rdv.human_attribute_value(:status, deleted_rdv.status, disable_cast: true)
+                  td = deleted_rdv_user_links(deleted_rdv, @users_by_id)
+                  td = deleted_rdv_agent_links(deleted_rdv.agent_ids, @agents_by_id)
+                  td
+                    - if deleted_rdv.created_by_type.present?
+                      = Rdv.human_attribute_value(:created_by_type, deleted_rdv.created_by_type, disable_cast: true)
+                      - if deleted_rdv.created_by_name.present?
+                        br
+                        span.fr-text--xs.fr-mb-0 = deleted_rdv.created_by_name
+  .fr-grid-row.fr-grid-row--center.fr-mt-2w
     = paginate @deleted_rdvs
 - else
-  .card
-    .card-body.rdv-text-align-center.my-5
-      p.mb-0 Aucun RDV supprimé.
+  .fr-callout
+    p.fr-callout__text Aucun RDV supprimé.
