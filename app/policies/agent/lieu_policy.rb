@@ -20,7 +20,7 @@ class Agent::LieuPolicy < ApplicationPolicy
   private
 
   def admin_of_record_organisation?
-    current_agent.admin_orgs.include?(@record.organisation)
+    current_agent.admin_in_organisation?(@record.organisation)
   end
 
   class Scope < Scope

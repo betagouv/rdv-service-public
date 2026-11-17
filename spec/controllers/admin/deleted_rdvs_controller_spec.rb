@@ -58,17 +58,60 @@ RSpec.describe Admin::DeletedRdvsController, type: :controller do
       expect(response.body).to include("##{user.id} (supprimé)")
     end
 
-    it "masque les RDV d'autres services aux agents basiques qui n'y participaient pas" do
-      other_service_agent = create(:agent, basic_role_in_organisations: [organisation], service: create(:service))
-      delete_rdv(agents: [other_service_agent], motif: create(:motif, organisation:, service: other_service_agent.services.first))
+    it "est réservé aux admins de l'organisation" do
+      delete_rdv(agents: [other_agent])
 
       sign_in other_agent
       get :index, params: { organisation_id: organisation.id }
-      expect(assigns(:deleted_rdvs)).to be_empty
+
+      expect(response).not_to be_successful
+      expect(response.body).not_to include("deleted_rdv_")
+    end
+
+    it "n'affiche pas les RDV supprimés d'une organisation dont l'agent n'est pas admin" do
+      other_orga = create(:organisation)
+      create(:rdv, organisation: other_orga).destroy!
+      create(:agent_role, agent: admin, organisation: other_orga, access_level: AgentRole::ACCESS_LEVEL_BASIC)
 
       sign_in admin
-      get :index, params: { organisation_id: organisation.id }
-      expect(assigns(:deleted_rdvs).size).to eq(1)
+      get :index, params: { organisation_id: other_orga.id }
+
+      expect(response).not_to be_successful
+    end
+
+    describe "requêtes SQL" do
+      def count_queries
+        queries = []
+        subscriber = ActiveSupport::Notifications.subscribe("sql.active_record") do |*, payload|
+          queries << payload[:sql] unless payload[:name] == "SCHEMA"
+        end
+        yield
+        queries.size
+      ensure
+        ActiveSupport::Notifications.unsubscribe(subscriber)
+      end
+
+      def delete_rdvs(count, agent)
+        count.times do
+          rdv = create(:rdv, organisation:, users: [create(:user, organisations: [organisation])], agents: [agent, create(:agent, basic_role_in_organisations: [organisation])], created_by: agent)
+          rdv.deleted_by_agent = agent
+          rdv.destroy!
+        end
+      end
+
+      it "ne dépend pas du nombre de RDV affichés" do
+        sign_in admin
+
+        delete_rdvs(2, admin)
+        get :index, params: { organisation_id: organisation.id } # appel à blanc : exclut les coûts uniques (session, caches)
+        queries_for_2_rdvs = count_queries { get :index, params: { organisation_id: organisation.id } }
+
+        delete_rdvs(8, admin)
+        queries_for_10_rdvs = count_queries { get :index, params: { organisation_id: organisation.id } }
+
+        expect(assigns(:deleted_rdvs).size).to eq(10)
+        expect(queries_for_10_rdvs).to eq(queries_for_2_rdvs)
+      end
     end
 
     it "pagine" do

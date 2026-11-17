@@ -2,12 +2,17 @@ class Admin::DeletedRdvsController < AgentAuthController
   PER_PAGE = 20
 
   def index
-    skip_authorization
+    authorize(DeletedRdv, :index?, policy_class: Agent::DeletedRdvPolicy)
     @deleted_rdvs = policy_scope(DeletedRdv, policy_scope_class: Agent::DeletedRdvPolicy::Scope)
       .where(organisation_id: current_organisation.id)
       .ordered_by_deletion
       .includes(motif: :organisation, lieu: :organisation)
       .page(page_number).per(PER_PAGE)
+
+    # Les policies utilisées dans la vue (une par lien) lisent les rôles et organisations de l'agent connecté :
+    # on les charge une fois pour éviter une requête par ligne.
+    current_agent.roles.load
+    current_agent.organisations.load
 
     # Les usagers et agents sont stockés sous forme d'ids : on les charge en une requête chacun pour la page.
     @users_by_id = User.where(id: @deleted_rdvs.flat_map(&:user_ids)).includes(:user_profiles).index_by(&:id)

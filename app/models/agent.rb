@@ -249,7 +249,11 @@ class Agent < ApplicationRecord
   end
 
   def role_in_organisation(organisation)
-    roles.find_by(organisation: organisation)
+    if roles.loaded?
+      roles.find { _1.organisation_id == organisation.id }
+    else
+      roles.find_by(organisation: organisation)
+    end
   end
 
   def admin_orgs
