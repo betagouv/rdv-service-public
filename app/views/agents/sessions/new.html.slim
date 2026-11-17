@@ -26,17 +26,19 @@
 - if display_seed_accounts?
   section.fr-accordion.fr-mt-6w
     h2.fr-accordion__title
-      button.fr-accordion__btn type="button" aria-expanded="false"
-        | [DEV] Utiliser un des comptes par défaut…
-    .fr-collapse
-      p.fr-text--sm.fr-text-mention--grey
-        |> Comptes issus des seeds (db/seeds/seed_accounts.yml).
-        | Un clic poste directement le formulaire avec l'email et le mot de passe. Visible uniquement en dev et en review app.
+      button.fr-accordion__btn type="button" aria-expanded="false" aria-controls="seed-accounts-collapse-agent"
+        | Utiliser un des comptes de démo…
+    .fr-collapse#seed-accounts-collapse-agent
       ul.fr-raw-list
         - SeedAccounts.agents.each do |account|
           li.fr-mb-1w
             = form_with url: agent_session_path, method: :post do
               = hidden_field_tag "agent[email]", account.email
               = hidden_field_tag "agent[password]", SeedAccounts.password
-              button.fr-btn.fr-btn--tertiary.fr-btn--sm type="submit"
+              button.fr-btn.fr-btn--tertiary.fr-btn--sm.rdv-text-align-left type="submit"
+                = account.email
+              span.fr-text-mention--grey
                 = account.label
+      p.fr-text--sm.fr-text-mention--grey
+        |> Comptes issus des seeds (db/seeds/seed_accounts.yml).
+        | Un clic poste directement le formulaire avec l'email et le mot de passe. Visible uniquement en dev et en review app.

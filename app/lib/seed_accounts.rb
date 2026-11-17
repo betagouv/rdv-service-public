@@ -14,11 +14,11 @@ class SeedAccounts
   end
 
   def self.agents
-    yaml_config[:agents].transform_values { Account.new(slug:, **it) }
+    yaml_config[:agents].map { |slug, attrs| Account.new(slug:, **attrs) }
   end
 
   def self.users
-    yaml_config[:users].transform_values { Account.new(slug:, **it) }
+    yaml_config[:users].map { |slug, attrs| Account.new(slug:, **attrs) }
   end
 
   def self.yaml_config

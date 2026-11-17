@@ -49,9 +49,9 @@
 - if display_seed_accounts?
   section.fr-accordion.fr-mt-4w
     h2.fr-accordion__title
-      button.fr-accordion__btn type="button" aria-expanded="false"
-        | [DEV] Utiliser un des comptes par défaut…
-    .fr-collapse
+      button.fr-accordion__btn type="button" aria-expanded="false" aria-controls="seed-accounts-collapse-user"
+        | Utiliser un des comptes de démo…
+    .fr-collapse#seed-accounts-collapse-user
       p.fr-text--sm.fr-text-mention--grey
         |> Comptes issus des seeds (db/seeds/seed_accounts.yml).
         | Un clic poste directement la demande de code de connexion. Visible uniquement en dev et en review app.
