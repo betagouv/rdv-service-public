@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_11_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -880,7 +880,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_11_100000) do
     t.boolean "enable_logement_field", default: false
     t.boolean "enable_case_number", default: false
     t.boolean "enable_address_details", default: false
-    t.boolean "enable_context_field", default: false
+    t.boolean "enable_context_field", default: true
     t.boolean "enable_waiting_room_mail_field", default: false
     t.boolean "enable_waiting_room_color_field", default: false
     t.boolean "visible_users_throughout_the_territory", default: false
