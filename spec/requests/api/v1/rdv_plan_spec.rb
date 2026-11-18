@@ -131,7 +131,7 @@ RSpec.describe "API RDV Plan" do
         end
       end
 
-      context "quand un collègue a déjà créé un rdv_plan pour cet usager, sans le finaliser" do
+      context "quand un autre agent a déjà créé un rdv_plan pour cet usager, sans le finaliser" do
         # L'usager n'est alors dans aucune organisation : il n'y est ajouté qu'à la fin du parcours
         let(:user) { create(:user, first_name: "Françoise", organisations: []) }
 
@@ -140,9 +140,7 @@ RSpec.describe "API RDV Plan" do
           create(:rdv_plan, planning_agent: planning_agent, user: user, oauth_application: application)
         end
 
-        context "et que ce collègue est dans une organisation de l'agent" do
-          let(:planning_agent) { create(:agent, basic_role_in_organisations: [agent.organisations.first]) }
-
+        shared_examples "réutilise l'usager" do
           it "réutilise l'usager au lieu d'en créer un nouveau sans external_id" do
             expect do
               post "/api/v1/rdv_plans", headers:, params:, as: :json
@@ -154,9 +152,7 @@ RSpec.describe "API RDV Plan" do
           end
         end
 
-        context "et que cet agent est dans une autre organisation" do
-          let(:planning_agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
-
+        shared_examples "crée un nouvel usager" do
           it "crée un nouvel usager" do
             expect do
               post "/api/v1/rdv_plans", headers:, params:, as: :json
@@ -166,19 +162,47 @@ RSpec.describe "API RDV Plan" do
             expect(user.reload.first_name).to eq("Françoise")
           end
         end
+
+        context "et qu'il est dans la même organisation" do
+          let(:planning_agent) { create(:agent, basic_role_in_organisations: [agent.organisations.first]) }
+
+          it_behaves_like "réutilise l'usager"
+        end
+
+        context "et qu'il est dans une autre organisation du même espace" do
+          let(:planning_agent) do
+            create(:agent, basic_role_in_organisations: [create(:organisation, territory: agent.organisations.first.territory)])
+          end
+
+          it_behaves_like "réutilise l'usager"
+        end
+
+        context "et qu'il est dans un autre espace" do
+          let(:planning_agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
+
+          it_behaves_like "crée un nouvel usager"
+        end
+
+        context "et que les deux agents sont dans des organisations différentes de l'espace des conseillers numériques" do
+          let(:cnfs_territory) { create(:territory, :conseillers_numeriques) }
+          let(:agent) { create(:agent, basic_role_in_organisations: [create(:organisation, territory: cnfs_territory)]) }
+          let(:planning_agent) { create(:agent, basic_role_in_organisations: [create(:organisation, territory: cnfs_territory)]) }
+
+          it_behaves_like "crée un nouvel usager"
+        end
       end
 
-      context "quand un collègue a créé un rdv_plan pour un usager d'une organisation dont l'agent n'est pas membre" do
+      context "quand l'usager est déjà dans une organisation d'un autre espace, même si un agent du même espace a créé un rdv_plan pour lui" do
         let(:other_organisation) { create(:organisation) }
         let(:user) { create(:user, first_name: "Françoise", organisations: [other_organisation]) }
-        let(:colleague) { create(:agent, basic_role_in_organisations: [agent.organisations.first, other_organisation]) }
+        let(:planning_agent) { create(:agent, basic_role_in_organisations: [agent.organisations.first, other_organisation]) }
 
         before do
           create(:external_reference, item: user, external_id: "123456AB", oauth_application: application)
-          create(:rdv_plan, planning_agent: colleague, user: user, oauth_application: application)
+          create(:rdv_plan, planning_agent: planning_agent, user: user, oauth_application: application)
         end
 
-        it "crée un nouvel usager sans donner accès à l'usager de l'autre organisation" do
+        it "crée un nouvel usager sans donner accès à l'usager de l'autre espace" do
           expect do
             post "/api/v1/rdv_plans", headers:, params:, as: :json
           end.to change(User, :count).by(1)
