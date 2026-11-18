@@ -227,4 +227,36 @@ RSpec.describe ParticipationExporter, type: :service do
       it { is_expected.to eq("") }
     end
   end
+
+  describe "prise de rdv pour un rdv collectif" do
+    subject(:row) { described_class.row_array_from(participation) }
+
+    let(:header) { described_class::HEADER }
+    let(:agent) { create(:agent) }
+    let!(:rdv) { create(:rdv, :collectif, :without_users, created_by: agent, created_at: Time.zone.parse("2023-01-01 09:00")) }
+
+    context "quand l'usager s'est inscrit lui-même" do
+      let(:usager) { create(:user, first_name: "Josephine", last_name: "Duroy") }
+      let!(:participation) { create(:participation, rdv:, created_by: usager, created_at: Time.zone.parse("2023-02-15 17:42")) }
+
+      it "utilise la date, l'origine et l'auteur de l'inscription plutôt que ceux de la création du rdv" do
+        expect(row[header.index("année")]).to eq(2023)
+        expect(row[header.index("date prise rdv")]).to eq("15/02/2023")
+        expect(row[header.index("heure prise rdv")]).to eq("17h42")
+        expect(row[header.index("origine")]).to eq("RDV Pris sur internet")
+        expect(row[header.index("créé par")]).to eq("Josephine DUROY")
+      end
+    end
+
+    context "quand l'auteur de l'inscription n'est pas connu" do
+      let!(:participation) { create(:participation, rdv:, created_by_type: "User", created_by_id: nil, created_at: Time.zone.parse("2023-02-15 17:42")) }
+
+      it "n'affiche pas l'auteur du rdv à la place de celui de l'inscription" do
+        rdv.versions.first.update!(whodunnit: "agent 008")
+        expect(row[header.index("date prise rdv")]).to eq("15/02/2023")
+        expect(row[header.index("origine")]).to eq("RDV Pris sur internet")
+        expect(row[header.index("créé par")]).to eq("")
+      end
+    end
+  end
 end
