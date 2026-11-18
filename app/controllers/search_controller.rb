@@ -97,6 +97,7 @@ class SearchController < ApplicationController
   end
 
   def resin
+    Sentry.capture_message("Lien Resin utilisé (!)")
     redirect_to prendre_rdv_path(
       departement: Territory::CN_DEPARTEMENT_NUMBER,
       service_id: Service.find_by(name: Service::CONSEILLER_NUMERIQUE)&.id,
