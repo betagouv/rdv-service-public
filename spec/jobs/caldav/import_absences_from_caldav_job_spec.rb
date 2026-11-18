@@ -34,6 +34,20 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
       expect(daily_event.raw_ical).not_to include("SUMMARY:Weekly") # scrubbed with Ical::Scrubber
     end
 
+    # EGroupware renvoie plusieurs événements distincts (les occurrences d'une série) sous le même href
+    it "fusionne en une seule ligne les événements renvoyés avec la même url" do
+      VCR.use_cassette("caldav/event_list_with_duplicate_urls") do
+        expect { described_class.new.perform(agent.id) }.to change(ExternalCalendarEvent, :count).by(2)
+      end
+
+      merged_event = ExternalCalendarEvent.find_by!(url: "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/11226.ics")
+      expect(merged_event).to be_recurring
+
+      occurrences = merged_event.all_occurrences_within(Time.zone.parse("2026-01-01")..Time.zone.parse("2026-12-31"))
+      expect(occurrences.size).to eq(4)
+      expect(occurrences.map(&:starts_at)).to eq(occurrences.map(&:starts_at).sort.uniq)
+    end
+
     describe "gestion de TRANSP" do
       it "ignore un événement s'il est non récurrent et marqué TRANSP:TRANSPARENT" do
         VCR.use_cassette("caldav/transparent_event") do
