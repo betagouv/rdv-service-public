@@ -56,7 +56,6 @@ module Caldav
       sync_logger.log("Error: plusieurs événements ont la même URL, serveur incompatible. Synchro supprimée.")
       sync_logger.finalize!(successful: false)
 
-      caldav_config.update!(caldav_disconnect_started_at: Time.current)
       Caldav::MassDestroyEventsAndAbsencesJob.perform_later(@agent)
       Agents::CaldavSyncMailer.with(agent: @agent).sync_disabled_incompatible_server.deliver_later
       Sentry.capture_message("Serveur CalDAV incompatible : URLs en doublon", extra: { agent_id: @agent.id })

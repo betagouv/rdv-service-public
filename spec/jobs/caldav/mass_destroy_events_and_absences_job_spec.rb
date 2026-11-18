@@ -47,4 +47,18 @@ RSpec.describe Caldav::MassDestroyEventsAndAbsencesJob do
     expect(AgendaChannel).to receive(:broadcast_to).with(agent.id, model: "ExternalCalendarEvent").and_call_original
     described_class.new.perform(agent)
   end
+
+  describe "à l'enqueue" do
+    it "enregistre le début de la déconnexion sur la config caldav de l'agent" do
+      travel_to(Time.zone.parse("2026-03-10 10:00")) do
+        expect { described_class.perform_later(agent) }
+          .to change { agent.caldav_config.reload.caldav_disconnect_started_at }
+          .from(nil).to(Time.zone.parse("2026-03-10 10:00"))
+      end
+    end
+
+    it "ne plante pas quand l'agent n'a pas de config caldav" do
+      expect { described_class.perform_later(create(:agent)) }.not_to raise_error
+    end
+  end
 end

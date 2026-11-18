@@ -3,6 +3,10 @@ module Caldav
     queue_as :latency_5m
     include ExtendedRetryStrategyConcern
 
+    after_enqueue do |job|
+      job.arguments.first.caldav_config&.update!(caldav_disconnect_started_at: Time.zone.now)
+    end
+
     def perform(agent)
       Sentry.set_user({ id: agent.id, role: "Agent", email: agent.email })
 
