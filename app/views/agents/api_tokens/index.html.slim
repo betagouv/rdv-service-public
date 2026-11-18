@@ -1,0 +1,52 @@
+- content_for :title, "Clés d'API"
+
+h1.fr-mb-1w Clés d'API
+
+p.fr-text--sm
+  | Les clés d'API permettent d'appeler l'
+  a href="https://rdv.anct.gouv.fr/api" API de RDV Service Public
+  |  avec vos droits d'agent, par exemple depuis un script.
+p.fr-text--sm
+  | Envoyez la clé dans le header « Authorization: Bearer rdvsp_pat_... ».
+
+- if flash[:raw_api_token]
+  .fr-alert.fr-alert--info.fr-mb-2w
+    h2.fr-alert__title Clé « #{flash[:raw_api_token]["name"]} » créée
+    p
+      | Copiez cette clé maintenant : elle ne sera plus jamais affichée.
+    p
+      code.fr-text--sm = flash[:raw_api_token]["token"]
+
+= link_to "Créer une clé d'API", new_agents_api_token_path, class: "fr-btn fr-mb-3w"
+
+- if @api_tokens.any?
+  .fr-table
+    table
+      caption Liste de vos clés d'API
+      thead
+        tr
+          th Nom
+          th Créée le
+          th Expire le
+          th Dernière utilisation
+          th Statut
+          th
+      tbody
+        - @api_tokens.each do |api_token|
+          tr
+            td = api_token.name
+            td = l(api_token.created_at, format: :short)
+            td = l(api_token.expires_at, format: :short)
+            td = api_token.last_used_at ? l(api_token.last_used_at, format: :short) : "Jamais"
+            td
+              - if api_token.revoked_at
+                span.fr-badge.fr-badge--sm.fr-badge--error Révoquée
+              - elsif api_token.expires_at.past?
+                span.fr-badge.fr-badge--sm.fr-badge--warning Expirée
+              - else
+                span.fr-badge.fr-badge--sm.fr-badge--success Active
+            td
+              - if api_token.accessible?
+                = button_to "Révoquer", agents_api_token_path(api_token), method: :delete, class: "fr-btn fr-btn--sm fr-btn--secondary", data: { turbo_confirm: "Révoquer cette clé ? Les appels API avec cette clé seront immédiatement refusés." }
+- else
+  p.fr-text--sm Vous n'avez pas encore de clé d'API.

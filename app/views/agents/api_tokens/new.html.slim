@@ -1,0 +1,25 @@
+- content_for :title, "Nouvelle clé d'API"
+
+h1.fr-mb-1w Nouvelle clé d'API
+
+p.fr-text--sm
+  |> La clé créée aura vos droits d'agent sur l'API. Choisissez une durée d'expiration :
+  | elle sera automatiquement refusée après cette date.
+
+= form_for @api_token, url: agents_api_tokens_path, builder: Dsfr::FormBuilder do |f|
+  - if @api_token.errors.any?
+    .fr-alert.fr-alert--error.fr-mb-2w
+      - @api_token.errors.full_messages.each do |message|
+        p = message
+
+  = f.dsfr_text_field :name, label: "Nom de la clé", hint: "ex. « Script cron prod »", required: true
+
+  .fr-select-group.fr-mb-2w
+    label.fr-label for="api_token_duration"
+      | Durée avant expiration
+    select.fr-select#api_token_duration name="api_token[duration]" required="required"
+      - ApiToken::DURATIONS.each do |pair|
+        - label, seconds = pair
+        option value=seconds.to_i = label
+
+  = f.submit "Créer la clé d'API", class: "fr-btn"

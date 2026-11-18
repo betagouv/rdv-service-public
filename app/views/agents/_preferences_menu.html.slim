@@ -6,6 +6,7 @@ ruby:
       [:organisations, "Vos organisations", admin_organisations_path],
       [:exports, "Vos exports", agents_exports_path],
     ]
+  menu_items << [:api_tokens, "Clés d'API", agents_api_tokens_path] if current_agent.feature_enabled?("api_tokens")
 
 .d-flex.flex-row.justify-content-center
   div.text-left.left-side-menu

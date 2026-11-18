@@ -79,7 +79,9 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   private
 
   def authenticate_agent
-    if request.headers["HTTP_ACCESS_TOKEN"] && request.headers["HTTP_UID"] && ENV["AUTHORIZE_DEPRECATED_API_AUTH_FOR_EMAILS"].present?
+    if bearer_api_token.present?
+      authenticate_with_api_token!
+    elsif request.headers["HTTP_ACCESS_TOKEN"] && request.headers["HTTP_UID"] && ENV["AUTHORIZE_DEPRECATED_API_AUTH_FOR_EMAILS"].present?
       # Ce mode d'authentification est déprécié, et n'est autorisé que sur l'instance historique, pour quelques agents
       authenticate_api_v1_agent_with_token_auth!
       @authentication_type = "DeviseTokenAuth"
@@ -90,6 +92,22 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
         @current_agent = Agent.active.find(doorkeeper_token.resource_owner_id)
       end
     end
+  end
+
+  def bearer_api_token
+    token = request.headers["Authorization"].to_s.delete_prefix("Bearer ").presence
+    token if token&.start_with?(ApiToken::TOKEN_PREFIX)
+  end
+
+  def authenticate_with_api_token!
+    api_token = ApiToken.authenticate(bearer_api_token)
+    if api_token
+      @authentication_type = "ApiToken"
+      @current_agent = Agent.active.find_by(id: api_token.agent_id)
+      api_token.touch_last_used!
+    end
+    # 401 et pas 404 : ne pas révéler si le token existe
+    render_error :unauthorized, { error: "clé d'API invalide, révoquée ou expirée" } if @current_agent.nil?
   end
 
   def user_for_paper_trail
@@ -136,7 +154,8 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   def log_api_call_in_database
     raw_http = {
       method: request.method,
-      path: request.fullpath,
+      # filtre défensif : une clé d'API passée par erreur en query string ne doit pas être loggée en clair
+      path: request.fullpath.gsub(/#{Regexp.escape(ApiToken::TOKEN_PREFIX)}[A-Za-z0-9_-]+/, "#{ApiToken::TOKEN_PREFIX}[FILTRE]"),
       host: request.host,
     }
 

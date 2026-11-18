@@ -164,6 +164,7 @@ Rails.application.routes.draw do
         post :resend
       end
       resource :preferences, only: %i[show update]
+      resources :api_tokens, only: %i[index new create destroy]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
         resource :caldav_sync, only: %i[show edit update destroy], controller: :caldav_sync do
           post :calendar_selection
