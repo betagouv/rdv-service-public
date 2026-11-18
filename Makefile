@@ -35,12 +35,8 @@ clean: ## Clean temporary files (including weppacks) and logs
 generate_db_diagram: ## Generate docs/domain_model.svg from Rails models
 	bundle exec erd
 
-rswag: ## Re-generate swagger/v1/api.json by running API specs
-	SWAGGER_DRY_RUN=0 RAILS_ENV=test FAKER_SEED=1 rake rswag:specs:swaggerize PATTERN="spec/requests/api/**/*_spec.rb"
-
-rswag_api_v1: ## Re-generate swagger/v1/api.json by running API specs
-	SWAGGER_DRY_RUN=0 RAILS_ENV=test FAKER_SEED=1 rake rswag:specs:swaggerize PATTERN="spec/requests/api/v1/swagger_doc/**/*_spec.rb"
-	git checkout swagger/visioplainte/api.json
+rswag: ## Re-generate swagger JSON files by running API swagger specs
+	SWAGGER_DRY_RUN=0 RAILS_ENV=test FAKER_SEED=1 ADDITIONAL_RSPEC_OPTS="--seed 1234" rake rswag:specs:swaggerize PATTERN="spec/requests/api/**/swagger_doc/**/*_spec.rb"
 
 .PHONY: install run run_single_instance lint lint_rubocop lint_brakeman test test_unit test_features autocorrect clean generate_db_diagram help
 .DEFAULT_GOAL := help
