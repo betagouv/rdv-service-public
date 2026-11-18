@@ -35,17 +35,15 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
     end
 
     # EGroupware renvoie plusieurs événements distincts (les occurrences d'une série) sous le même href
-    it "fusionne en une seule ligne les événements renvoyés avec la même url" do
+    it "supprime la synchro et prévient l'agent si plusieurs événements ont la même url" do
       VCR.use_cassette("caldav/event_list_with_duplicate_urls") do
-        expect { described_class.new.perform(agent.id) }.to change(ExternalCalendarEvent, :count).by(2)
+        expect { described_class.new.perform(agent.id) }
+          .to have_enqueued_job(Caldav::MassDestroyEventsAndAbsencesJob).with(agent)
+          .and have_enqueued_mail(Agents::CaldavSyncMailer, :sync_disabled_incompatible_server)
       end
 
-      merged_event = ExternalCalendarEvent.find_by!(url: "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/11226.ics")
-      expect(merged_event).to be_recurring
-
-      occurrences = merged_event.all_occurrences_within(Time.zone.parse("2026-01-01")..Time.zone.parse("2026-12-31"))
-      expect(occurrences.size).to eq(4)
-      expect(occurrences.map(&:starts_at)).to eq(occurrences.map(&:starts_at).sort.uniq)
+      expect(ExternalCalendarEvent.count).to eq(0)
+      expect(agent.caldav_config.reload.caldav_disconnect_started_at).to be_present
     end
 
     describe "gestion de TRANSP" do

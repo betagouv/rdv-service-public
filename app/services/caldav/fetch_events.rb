@@ -1,30 +1,4 @@
 class Caldav::FetchEvents
-  def self.to_external_calendar_event_hashes(events, agent_id)
-    if events.map(&:url).uniq.size == events.size
-      events.map { _1.to_external_calendar_event_hash(agent_id) }
-    else # URLs en doublon : cas particulier Egroupware
-      merge_events_with_same_url(events, agent_id)
-    end
-  end
-
-  # EGroupware peut renvoyer plusieurs événements distincts sous le même href (ex : les occurrences d'une série).
-  # Comme l'url est notre clé d'unicité, on les fusionne en une seule ligne : un raw_ical contenant
-  # tous les VCALENDAR, que Ical::RruleExpander sait expanser.
-  def self.merge_events_with_same_url(events, agent_id)
-    events.group_by(&:url).map do |_url, same_url_events|
-      hashes = same_url_events.map { _1.to_external_calendar_event_hash(agent_id) }
-      next hashes.first if hashes.one?
-
-      hashes.first.merge(
-        starts_at: hashes.map { _1[:starts_at] }.min,
-        ends_at: hashes.map { _1[:ends_at] }.max,
-        raw_ical: same_url_events.map { Ical::Scrubber.new(_1.calendar_data).scrubbed }.join("\n"),
-        etag: hashes.map { _1[:etag] }.sort.join("|")
-      )
-    end
-  end
-  private_class_method :merge_events_with_same_url
-
   def initialize(agent, sync_logger)
     @agent = agent
     @sync_logger = sync_logger
@@ -62,6 +36,13 @@ class Caldav::FetchEvents
 
   def deleted_event_urls
     @deleted_event_urls || []
+  end
+
+  # Certains serveurs (EGroupware) renvoient plusieurs événements distincts sous le même href.
+  # L'url est notre clé d'unicité : on ne sait pas gérer ces serveurs.
+  def duplicate_urls?
+    urls = updated_events.map(&:url)
+    urls.uniq.size != urls.size
   end
 
   def any_changes?
