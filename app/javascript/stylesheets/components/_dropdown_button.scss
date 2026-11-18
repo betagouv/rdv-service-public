@@ -15,44 +15,50 @@
     }
   }
 
+  // Design du menu DSFR (.fr-menu__list) : fond "overlap", ombre portée, filet bleu en haut
   &__list {
     position: absolute;
     top: 100%;
-    right: 0;
+    left: 0;
     z-index: 1000; // sous les modales Bootstrap (1050)
     min-width: 100%;
     width: max-content;
     margin: 0;
     padding: 0;
     list-style: none;
-    background-color: var(--background-raised-grey);
-    box-shadow: 0 6px 18px rgba(0, 0, 18, 0.16);
+    background-color: var(--background-overlap-grey);
+    border-top: 1px solid var(--border-open-blue-france);
+    filter: drop-shadow(var(--overlap-shadow));
 
     li {
       margin: 0;
       padding: 0;
     }
-
-    li + li {
-      border-top: 1px solid var(--border-default-grey);
-    }
   }
 
+  // Même hauteur que le bouton déclencheur (.fr-btn : 2.5rem)
   &__link {
     display: flex;
     align-items: center;
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 1rem;
     color: var(--text-action-high-blue-france);
-    font-weight: 500;
-    background-image: none; // retire le soulignement des liens DSFR
     white-space: nowrap;
+    background-image: none; // retire le soulignement des liens DSFR
 
     // a[href]:hover impose un fond au DSFR : on double la classe pour passer devant
     &.dropdown-button__link:hover {
-      background-color: var(
-        --background-alt-grey
-      ); // gris clair, comme .dropdown-item-dsfr du header
+      background-color: var(--background-overlap-grey-hover);
     }
+
+    &.dropdown-button__link:active {
+      background-color: var(--background-overlap-grey-active);
+    }
+  }
+
+  // Séparateur optionnel : <li role="separator">
+  &__separator {
+    height: 1px;
+    background-color: var(--border-default-grey);
   }
 }
 
