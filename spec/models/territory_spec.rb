@@ -3,6 +3,12 @@ RSpec.describe Territory, type: :model do
     expect(build(:territory)).to be_valid
   end
 
+  describe "champ contexte" do
+    it "est activé par défaut à la création d'un espace" do
+      expect(create(:territory).enable_context_field).to be(true)
+    end
+  end
+
   describe "recalcul des comptes sensibles" do
     let(:territory) { create(:territory) }
 
