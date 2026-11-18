@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_11_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_18_094239) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -211,6 +211,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_11_100000) do
     t.bigint "agent_id", null: false
     t.string "authentication_type"
     t.string "param_names", default: [], array: true
+  end
+
+  create_table "api_tokens", force: :cascade do |t|
+    t.string "token_digest", null: false
+    t.string "name", null: false
+    t.bigint "agent_id", null: false
+    t.datetime "expires_at", null: false
+    t.datetime "revoked_at"
+    t.datetime "last_used_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_api_tokens_on_agent_id"
+    t.index ["token_digest"], name: "index_api_tokens_on_token_digest", unique: true
   end
 
   create_table "blog_posts", id: :uuid, default: nil, force: :cascade do |t|
@@ -880,7 +893,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_11_100000) do
     t.boolean "enable_logement_field", default: false
     t.boolean "enable_case_number", default: false
     t.boolean "enable_address_details", default: false
-    t.boolean "enable_context_field", default: false
+    t.boolean "enable_context_field", default: true
     t.boolean "enable_waiting_room_mail_field", default: false
     t.boolean "enable_waiting_room_color_field", default: false
     t.boolean "visible_users_throughout_the_territory", default: false
@@ -1042,6 +1055,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_11_100000) do
   add_foreign_key "annotations", "territories"
   add_foreign_key "annotations", "users"
   add_foreign_key "api_calls", "agents"
+  add_foreign_key "api_tokens", "agents", on_delete: :cascade
   add_foreign_key "caldav_configs", "agents"
   add_foreign_key "export_file_blobs", "exports"
   add_foreign_key "exports", "agents"
