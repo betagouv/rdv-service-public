@@ -73,13 +73,17 @@ module ParticipationExporter
     rdv = participation.rdv
     user = participation.user
     created_by = participation.created_by
+    # Pour un RDV collectif, la "prise de rdv" correspond à l'inscription de l'usager, pas à la création du RDV
+    taken_at = rdv.collectif? ? participation.created_at : rdv.created_at
+    taken_by_type = rdv.collectif? ? participation.created_by_type : rdv.created_by_type
+    taken_by = rdv.collectif? ? created_by&.full_name_or_email.to_s : rdv.author
     [
       user.full_name,
       rdv.id,
-      rdv.created_at.year,
-      I18n.l(rdv.created_at.to_date, format: "%d/%m/%Y"),
-      I18n.l(rdv.created_at, format: :time_only),
-      Rdv.human_attribute_value(:created_by_type, rdv.created_by_type),
+      taken_at.year,
+      I18n.l(taken_at.to_date, format: "%d/%m/%Y"),
+      I18n.l(taken_at, format: :time_only),
+      Rdv.human_attribute_value(:created_by_type, taken_by_type),
       I18n.l(rdv.starts_at.to_date, format: "%d/%m/%Y"),
       I18n.l(rdv.starts_at, format: :time_only),
       rdv.service_name,
@@ -94,7 +98,7 @@ module ParticipationExporter
       rdv.organisation.name,
       user.birth_date.present? ? I18n.l(user.birth_date, format: "%d/%m/%Y") : "",
       extract_postal_code_from(user.user_to_notify.address),
-      rdv.author,
+      taken_by,
       rdv.agents.map(&:email).join(", "),
       rdv.motif.collectif ? "oui" : "non",
       rdv.collectif? && created_by ? "[#{participation.created_by_type}] #{created_by.full_name_or_email} (id=#{created_by.id}) (email=#{created_by.email})" : "",
