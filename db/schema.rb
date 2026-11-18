@@ -894,6 +894,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_17_150000) do
     t.bigint "operator_id"
     t.boolean "public_stats", default: true, null: false
     t.string "siret"
+    t.boolean "force_2fa_for_agents", default: false, null: false, comment: "Impose la double authentification à la connexion pour tous les agents de l'espace (cf. AgentSensitiveAccountCalculator)"
     t.index ["departement_number"], name: "index_territories_on_departement_number", where: "((departement_number)::text <> ''::text)"
     t.index ["operator_id"], name: "index_territories_on_operator_id"
   end

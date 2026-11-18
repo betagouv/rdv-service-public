@@ -84,10 +84,29 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     ActiveRecord::Tasks::DatabaseTasks.truncate_all
+    # En génération swagger, on repart de séquences vides pour des id déterministes dans les exemples
+    if ENV["SWAGGER_DRY_RUN"] == "0"
+      ActiveRecord::Base.connection.tables.each do |table|
+        ActiveRecord::Base.connection.reset_pk_sequence!(table)
+      end
+      # On coupe les logs et PaperTrail pour accélérer la génération
+      ActiveRecord::Base.logger = nil
+      Rails.logger.level = Logger::FATAL
+      PaperTrail.enabled = false
+    end
     Rack::Attack.enabled = false
 
     Faker::Config.locale = :fr
-    Faker::Config.random = Random.new(config.seed)
+    Faker::Config.random = Random.new(ENV["FAKER_SEED"] ? ENV["FAKER_SEED"].to_i : config.seed)
+  end
+
+  # En génération swagger, on fige l'horloge et le hasard pour un swagger/v1/api.json reproductible
+  if ENV["SWAGGER_DRY_RUN"] == "0"
+    config.before do
+      travel_to(Time.zone.parse("2024-01-01 10:00:00"))
+      random = Random.new(1234)
+      allow(SecureRandom).to receive(:random_bytes) { |length| random.bytes(length || 16) }
+    end
   end
 
   config.after(:suite) { Autodoc.render }
