@@ -52,7 +52,7 @@ module Caldav
       urls_of_rdvs = AgentsRdv.where(caldav_url: updated_events.map(&:url)).pluck(:caldav_url).to_set
       updated_events = updated_events.reject { _1.url.in?(urls_of_rdvs) }
 
-      hashes_to_upsert = updated_events.map { _1.to_external_calendar_event_hash(@agent.id) }
+      hashes_to_upsert = Caldav::FetchEvents.to_external_calendar_event_hashes(updated_events, @agent.id)
 
       deleted_event_urls = fetch_events_service.deleted_event_urls
 
