@@ -74,7 +74,6 @@ class Agents::CaldavSyncController < AgentAuthController
 
   def destroy
     skip_authorization
-    caldav_config.update!(caldav_disconnect_started_at: Time.current)
     Caldav::MassDestroyEventsAndAbsencesJob.perform_later(current_agent)
     redirect_to agents_calendar_sync_caldav_sync_path
   end

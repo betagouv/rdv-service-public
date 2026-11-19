@@ -152,9 +152,7 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
     let(:agent) { create(:agent, :with_caldav_config) }
 
     it "active le flag de déconnexion et lance le job de nettoyage" do
-      expect(Caldav::MassDestroyEventsAndAbsencesJob).to receive(:perform_later).with(agent)
-
-      delete :destroy
+      expect { delete :destroy }.to have_enqueued_job(Caldav::MassDestroyEventsAndAbsencesJob).with(agent)
 
       expect(response).to redirect_to(agents_calendar_sync_caldav_sync_path)
       expect(agent.caldav_config.reload.caldav_disconnect_started_at.present?).to be(true)

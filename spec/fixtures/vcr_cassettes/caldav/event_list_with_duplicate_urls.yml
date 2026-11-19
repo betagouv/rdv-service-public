@@ -1,0 +1,278 @@
+---
+http_interactions:
+- request:
+    method: report
+    uri: https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <caldav:calendar-query xmlns:dav="DAV:" xmlns:caldav="urn:ietf:params:xml:ns:caldav" xmlns:cs="http://calendarserver.org/ns/" xmlns:apple="http://apple.com/ns/ical/">
+          <dav:prop>
+            <dav:getetag/>
+            <caldav:calendar-data/>
+          </dav:prop>
+          <caldav:filter>
+            <caldav:comp-filter name="VCALENDAR">
+              <caldav:comp-filter name="VEVENT"/>
+            </caldav:comp-filter>
+          </caldav:filter>
+        </caldav:calendar-query>
+    headers:
+      Authorization: "[Filtered in vcr.rb -> before_record]"
+      Depth:
+      - '1'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Connection:
+      - close
+      Host:
+      - ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr
+      User-Agent:
+      - http.rb/5.3.1
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Wed, 21 Jan 2026 10:08:08 GMT
+      Content-Type:
+      - text/xml; charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - close
+      Set-Cookie: "[Filtered in vcr.rb -> before_record]"
+      X-Robots-Tag:
+      - none
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <D:multistatus xmlns:D="DAV:" xmlns:ns2="urn:ietf:params:xml:ns:caldav">
+         <D:response>
+          <D:href>/dav/caldav/1234_calendar_id/11226.ics</D:href>
+           <D:propstat>
+            <D:prop>
+             <D:getetag>"13580:1:1700000000"</D:getetag>
+             <ns2:calendar-data>BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//EGroupware//NONSGML EGroupware Calendar 17.1.001//FR
+        BEGIN:VTIMEZONE
+        TZID:Europe/Paris
+        BEGIN:DAYLIGHT
+        TZOFFSETFROM:+0100
+        TZOFFSETTO:+0200
+        TZNAME:CEST
+        DTSTART:19700329T020000
+        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+        END:DAYLIGHT
+        BEGIN:STANDARD
+        TZOFFSETFROM:+0200
+        TZOFFSETTO:+0100
+        TZNAME:CET
+        DTSTART:19701025T030000
+        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+        END:STANDARD
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        DTSTART;VALUE=DATE:20260812
+        DTEND;VALUE=DATE:20260813
+        X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+        SUMMARY:Absence
+        PRIORITY:5
+        UID:calendar-13580-00000000000000000000000000000001
+        SEQUENCE:1
+        STATUS:CONFIRMED
+        CREATED:20250101T080000Z
+        LAST-MODIFIED:20260101T080000Z
+        DTSTAMP:20260301T120000Z
+        END:VEVENT
+        END:VCALENDAR
+        </ns2:calendar-data>
+            </D:prop>
+           <D:status>HTTP/1.1 200 OK</D:status>
+          </D:propstat>
+         </D:response>
+         <D:response>
+          <D:href>/dav/caldav/1234_calendar_id/11226.ics</D:href>
+           <D:propstat>
+            <D:prop>
+             <D:getetag>"13585:1:1700000000"</D:getetag>
+             <ns2:calendar-data>BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//EGroupware//NONSGML EGroupware Calendar 17.1.001//FR
+        BEGIN:VTIMEZONE
+        TZID:Europe/Paris
+        BEGIN:DAYLIGHT
+        TZOFFSETFROM:+0100
+        TZOFFSETTO:+0200
+        TZNAME:CEST
+        DTSTART:19700329T020000
+        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+        END:DAYLIGHT
+        BEGIN:STANDARD
+        TZOFFSETFROM:+0200
+        TZOFFSETTO:+0100
+        TZNAME:CET
+        DTSTART:19701025T030000
+        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+        END:STANDARD
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        DTSTART;VALUE=DATE:20260819
+        DTEND;VALUE=DATE:20260820
+        X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+        SUMMARY:Absence
+        PRIORITY:5
+        UID:calendar-13585-00000000000000000000000000000001
+        SEQUENCE:1
+        STATUS:CONFIRMED
+        CREATED:20250101T080000Z
+        LAST-MODIFIED:20260101T080000Z
+        DTSTAMP:20260301T120000Z
+        END:VEVENT
+        END:VCALENDAR
+        </ns2:calendar-data>
+            </D:prop>
+           <D:status>HTTP/1.1 200 OK</D:status>
+          </D:propstat>
+         </D:response>
+         <D:response>
+          <D:href>/dav/caldav/1234_calendar_id/11226.ics</D:href>
+           <D:propstat>
+            <D:prop>
+             <D:getetag>"13590:1:1700000000"</D:getetag>
+             <ns2:calendar-data>BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//EGroupware//NONSGML EGroupware Calendar 17.1.001//FR
+        BEGIN:VTIMEZONE
+        TZID:Europe/Paris
+        BEGIN:DAYLIGHT
+        TZOFFSETFROM:+0100
+        TZOFFSETTO:+0200
+        TZNAME:CEST
+        DTSTART:19700329T020000
+        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+        END:DAYLIGHT
+        BEGIN:STANDARD
+        TZOFFSETFROM:+0200
+        TZOFFSETTO:+0100
+        TZNAME:CET
+        DTSTART:19701025T030000
+        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+        END:STANDARD
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        DTSTART;VALUE=DATE:20260826
+        DTEND;VALUE=DATE:20260827
+        X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+        SUMMARY:Absence
+        PRIORITY:5
+        UID:calendar-13590-00000000000000000000000000000001
+        SEQUENCE:1
+        STATUS:CONFIRMED
+        CREATED:20250101T080000Z
+        LAST-MODIFIED:20260101T080000Z
+        DTSTAMP:20260301T120000Z
+        END:VEVENT
+        END:VCALENDAR
+        </ns2:calendar-data>
+            </D:prop>
+           <D:status>HTTP/1.1 200 OK</D:status>
+          </D:propstat>
+         </D:response>
+         <D:response>
+          <D:href>/dav/caldav/1234_calendar_id/11226.ics</D:href>
+           <D:propstat>
+            <D:prop>
+             <D:getetag>"13567:1:1700000000"</D:getetag>
+             <ns2:calendar-data>BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//EGroupware//NONSGML EGroupware Calendar 17.1.001//FR
+        BEGIN:VTIMEZONE
+        TZID:Europe/Paris
+        BEGIN:DAYLIGHT
+        TZOFFSETFROM:+0100
+        TZOFFSETTO:+0200
+        TZNAME:CEST
+        DTSTART:19700329T020000
+        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+        END:DAYLIGHT
+        BEGIN:STANDARD
+        TZOFFSETFROM:+0200
+        TZOFFSETTO:+0100
+        TZNAME:CET
+        DTSTART:19701025T030000
+        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+        END:STANDARD
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        DTSTART;VALUE=DATE:20261111
+        DTEND;VALUE=DATE:20261112
+        X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+        SUMMARY:Ferie
+        PRIORITY:5
+        UID:calendar-13567-00000000000000000000000000000001
+        SEQUENCE:1
+        STATUS:CONFIRMED
+        CREATED:20250101T080000Z
+        LAST-MODIFIED:20260101T080000Z
+        DTSTAMP:20260301T120000Z
+        END:VEVENT
+        END:VCALENDAR
+        </ns2:calendar-data>
+            </D:prop>
+           <D:status>HTTP/1.1 200 OK</D:status>
+          </D:propstat>
+         </D:response>
+         <D:response>
+          <D:href>/dav/caldav/1234_calendar_id/13581.ics</D:href>
+           <D:propstat>
+            <D:prop>
+             <D:getetag>"13581:0:1700000000"</D:getetag>
+             <ns2:calendar-data>BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//EGroupware//NONSGML EGroupware Calendar 17.1.001//FR
+        BEGIN:VTIMEZONE
+        TZID:Europe/Paris
+        BEGIN:DAYLIGHT
+        TZOFFSETFROM:+0100
+        TZOFFSETTO:+0200
+        TZNAME:CEST
+        DTSTART:19700329T020000
+        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+        END:DAYLIGHT
+        BEGIN:STANDARD
+        TZOFFSETFROM:+0200
+        TZOFFSETTO:+0100
+        TZNAME:CET
+        DTSTART:19701025T030000
+        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+        END:STANDARD
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        DTSTART;VALUE=DATE:20260901
+        DTEND;VALUE=DATE:20260902
+        X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+        SUMMARY:Autre
+        PRIORITY:5
+        UID:calendar-13581-00000000000000000000000000000001
+        SEQUENCE:1
+        STATUS:CONFIRMED
+        CREATED:20250101T080000Z
+        LAST-MODIFIED:20260101T080000Z
+        DTSTAMP:20260301T120000Z
+        END:VEVENT
+        END:VCALENDAR
+        </ns2:calendar-data>
+            </D:prop>
+           <D:status>HTTP/1.1 200 OK</D:status>
+          </D:propstat>
+         </D:response>
+        </D:multistatus>
+  recorded_at: Wed, 21 Jan 2026 10:08:08 GMT
+recorded_with: VCR 6.4.0
