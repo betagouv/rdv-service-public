@@ -72,7 +72,9 @@ ruby:
                 data: { modal: true }, class: "fr-btn"
 
     - if current_organisation.territory.enable_context_field
-      .mt-3= f.input :context, as: :text, label: Rdv.human_attribute_name(:context), input_html: { rows: 4 }
+      .mt-3
+        = f.input :context, as: :text, label: Rdv.human_attribute_name(:context), input_html: { rows: 4 }, \
+          hint: "Les informations renseignées ici seront visibles par les agents ayant accès à votre agenda, veuillez limiter les informations sensibles autant que possible"
 
     .row.align-items-center.mt-3
       .col.text-left

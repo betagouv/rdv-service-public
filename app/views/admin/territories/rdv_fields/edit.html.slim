@@ -1,4 +1,4 @@
-= territory_navigation(t(".title"))
+= territory_navigation("Champs de la fiche RDV")
 
 .fr-grid-row.justify-content-center
   .fr-col-md-8
@@ -7,12 +7,16 @@
         = form_for current_territory, url: admin_territory_rdv_fields_path(current_territory), builder: Dsfr::FormBuilder do |f|
           = render "model_errors", model: current_territory
 
-          h1.fr-h2= t(".card_title")
-          p.fr-text-mention--grey.font-14= t(".hint_1")
-          p.fr-text-mention--grey.font-14= t(".hint_2")
-
-          - Territory::OPTIONAL_RDV_FIELD_TOGGLES.each do |toggle, field_name|
-            = f.dsfr_check_box toggle, label: Rdv.human_attribute_name(field_name)
+          h1.fr-h2
+            | Champ contexte
+          p
+            |> Le champ contexte permet aux agents de noter des informations pour préciser le cadre du rendez-vous.
+          p
+            |> Il est activé par défaut mais vous pouvez le désactiver ici.
+            |> Les données déjà saisies seront conservées si vous désactivez le champ, elles réapparaitront si vous le réactivez.
+          .fr-callout.fr-callout--yellow-moutarde
+            |> Ce champ libre est à manipuler avec précaution, on invite les agents à éviter d’y saisir des informations sensibles.
+          = f.dsfr_check_box :enable_context_field, label: "Afficher le champ contexte sur les rendez-vous"
           .text-right
             = f.submit t("helpers.submit.update"), class: "fr-btn"
 
@@ -21,9 +25,10 @@
         = form_for current_territory, url: admin_territory_rdv_fields_path(current_territory), builder: Dsfr::FormBuilder do |f|
           = render "model_errors", model: current_territory
 
-          h1.fr-h2= t(".waiting_room_title")
-          p.fr-text-mention--grey.font-14= t(".waiting_room_config_hint")
-
+          h1.fr-h2
+            | Salle d’attente
+          p
+            | Vous pouvez choisir le mode de notification de l'agent lorsqu'un usager est en salle d'attente
           - Territory::OPTIONAL_RDV_WAITING_ROOM_FIELD_TOGGLES.each do |toggle, field_name|
             = f.dsfr_check_box toggle, label: Rdv.human_attribute_name(field_name)
           .text-right
