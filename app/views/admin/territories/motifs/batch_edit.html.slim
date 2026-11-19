@@ -40,7 +40,7 @@ h1 Modification en masse de #{@motifs.size} motifs
       - else
         small.form-text.fr-text-mention--grey.mb-2 Ces #{@motifs.size} motifs sont associés au même service
       .input-group
-        = f.select :service_id, current_territory.services.reject(&:secretariat?).map { [_1.name, _1.id] } + [["Pas de service", nil]], { selected: (unique_values.size > 1 ? "" : unique_values.keys.first&.id || ""), include_blank: true, required: true }, { class: "custom-select" }
+        = f.select :service_id, current_territory.services.map { [_1.name, _1.id] } + [["Pas de service", nil]], { selected: (unique_values.size > 1 ? "" : unique_values.keys.first&.id || ""), include_blank: true, required: true }, { class: "custom-select" }
         .input-group-append
           = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "fr-btn"
 

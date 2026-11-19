@@ -26,9 +26,7 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
     displayed_services = @filter ? Service.filter_by_name(@filter) : Service.all
 
     # Display activated services first
-    displayed_services = displayed_services.sort_by { |service| [service.id.in?(activated_service_ids) ? -1 : 1, service.name] }
-
-    @displayed_services = displayed_services.reject(&:secretariat?)
+    @displayed_services = displayed_services.sort_by { |service| [service.id.in?(activated_service_ids) ? -1 : 1, service.name] }
   end
 
   def toggle
