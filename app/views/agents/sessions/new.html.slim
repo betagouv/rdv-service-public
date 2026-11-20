@@ -22,3 +22,33 @@
 
     .form-group.mb-0.rdv-text-align-center
       = f.submit "Se connecter", class: "fr-btn"
+
+- if SeedAccounts.displayed?
+  hr.fr-mt-8w
+  h3
+    | Connexion avec un compte de démo
+  .fr-table.fr-table--no-scroll
+    .fr-table__wrapper
+      .fr-table__container
+        .fr-table__content
+          table
+            thead
+              th Connexion
+              th Infos
+            tbody
+              - SeedAccounts.filter(kind: :agents, domain: current_domain).each do |account|
+                tr
+                  td
+                    = form_with url: agent_session_path, method: :post do
+                      = hidden_field_tag "agent[email]", account.email
+                      = hidden_field_tag "agent[password]", ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"]
+                      button.fr-btn.fr-btn--tertiary.fr-btn--sm type="submit"
+                        = account.email.split("@").first
+                  td
+                    span.fr-text-mention--grey
+                    = account.label
+                    br
+                    = account.email
+  p.fr-text--sm.fr-text-mention--grey
+    |> Comptes issus des seeds (db/seeds/seed_accounts.yml).
+    | Un clic poste directement le formulaire avec l'email et le mot de passe. Visible uniquement en dev et en review app.

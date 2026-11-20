@@ -50,8 +50,8 @@ if ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "RDV_SOLIDARITES_DEV"
   )
 
   agent_cnfs = Agent.new(
-    email: "camille-clavier@demo.rdv-solidarites.fr",
-    uid: "camille-clavier@demo.rdv-solidarites.fr",
+    email: SeedAccounts.yaml_config.dig(:agents, :camille_clavier, :email),
+    uid: SeedAccounts.yaml_config.dig(:agents, :camille_clavier, :email),
     first_name: "Camille",
     last_name: "Clavier",
     password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],

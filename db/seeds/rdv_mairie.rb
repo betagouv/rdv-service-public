@@ -43,8 +43,8 @@ motif_passeport = Motif.create!(
 
 # Agent
 agent_mairie_de_sannois = Agent.new(
-  email: "alain.mairie@rdv-mairie-demo.fr",
-  uid: "alain.mairie@rdv-mairie-demo.fr",
+  email: SeedAccounts.yaml_config.dig(:agents, :alain_mairie, :email),
+  uid: SeedAccounts.yaml_config.dig(:agents, :alain_mairie, :email),
   first_name: "Alain",
   last_name: "Mairie",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -93,7 +93,7 @@ user_mairie_sannois = User.create!(
   organisations: [org_mairie_de_sannois],
   first_name: "Louis-Ken",
   last_name: "de PENTECOTE",
-  email: "loulou@exemple.fr",
+  email: SeedAccounts.yaml_config.dig(:users, :loulou, :email),
   ants_pre_demande_number: "ABCDE12345"
 )
 

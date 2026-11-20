@@ -1,0 +1,81 @@
+# Comptes de démo exposés sur les pages de connexion en dev et en review app
+# cf app/lib/seed_accounts.rb
+#
+# L'email de chaque compte listé ici est unique, les seeds chargent ce YAML
+# Pas d'exhaustivité visée : un seul compte par profil utile.
+# Pas de clé domain → affiché sur tous les domaines.
+
+agents:
+  martine:
+    email: martine@demo.rdv-solidarites.fr
+    label: Admin MDS Paris Nord (PMI) — quelques centaines de RDV
+    domain: RDV_SOLIDARITES
+  marco:
+    email: marco@demo.rdv-solidarites.fr
+    label: Agent PMI, MDS Paris Nord
+    domain: RDV_SOLIDARITES
+  polo:
+    email: polo@demo.rdv-solidarites.fr
+    label: Agent Service social, MDS Paris Nord
+    domain: RDV_SOLIDARITES
+  maya:
+    email: maya@demo.rdv-solidarites.fr
+    label: Admin territoire Pas-de-Calais (toutes les MDS du 62)
+    domain: RDV_SOLIDARITES
+  bruno:
+    email: bruno@demo.rdv-solidarites.fr
+    label: Admin MDS Bapaume
+    domain: RDV_SOLIDARITES
+  cdad1_admin:
+    email: cdad1_admin@cdad.fr
+    label: Admin CDAD 1 (Gironde)
+    domain: RDV_SOLIDARITES
+  cecile_astier:
+    email: cecile.astier@demo-rdv-service-public.fr
+    label: Agent CCAS de Montélimar
+    domain: RDV_SOLIDARITES
+  alain_sertion:
+    email: alain.sertion@rdv-insertion-demo.fr
+    label: Admin RDV Insertion (Drôme + Yonne)
+    domain: RDV_SOLIDARITES
+  camille_clavier:
+    email: camille-clavier@demo.rdv-solidarites.fr
+    label: Conseillère numérique, médiathèque Paris Nord
+  alain_mairie:
+    email: alain.mairie@rdv-mairie-demo.fr
+    label: Admin mairie de Sannois (titres, ANTS)
+    domain: RDV_SERVICE_PUBLIC
+  superviseur_visioplainte:
+    email: superviseur.fictif@staging.rdv-service-public.fr
+    label: Superviseur visioplainte Gendarmerie
+    domain: RDV_SERVICE_PUBLIC
+users:
+  patricia_duroy:
+    email: patricia_duroy@demo.rdv-solidarites.fr
+    label: Usagère avec plusieurs RDV, MDS Paris Nord
+    domain: RDV_SOLIDARITES
+  lea_dupont:
+    email: lea_dupont@demo.rdv-solidarites.fr
+    label: Usagère, MDS Paris Nord
+    domain: RDV_SOLIDARITES
+  jean_moustache:
+    email: jean_moustache@demo.rdv-solidarites.fr
+    label: Usager, MDS Paris Nord
+    domain: RDV_SOLIDARITES
+  patricia_ccas:
+    email: patricia@demo.rdv-solidarites.fr
+    label: Usagère CCAS de Montélimar
+    domain: RDV_SOLIDARITES
+  jean_rsa_valence:
+    email: jean.rsavalence@testinvitation.fr
+    label: Usager RDV Insertion (invitation externe, Drôme)
+    domain: RDV_SOLIDARITES
+  # correspond au compte i=1 de la boucle de génération des 10 000 usagers de medico_social.rb
+  email_1:
+    email: email_1@test.com
+    label: Usager générique (10 000 comptes similaires générés dans les seeds)
+    domain: RDV_SOLIDARITES
+  loulou:
+    email: loulou@exemple.fr
+    label: Usager mairie de Sannois (pré-demande ANTS)
+    domain: RDV_SERVICE_PUBLIC

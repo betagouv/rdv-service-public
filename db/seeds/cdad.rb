@@ -76,8 +76,8 @@ cdad1_agent.save!
 cdad1_agent.territorial_roles.create!(territory: territory_gironde)
 
 cdad1_admin = Agent.new(
-  email: "cdad1_admin@cdad.fr",
-  uid: "cdad1_admin@cdad.fr",
+  email: SeedAccounts.yaml_config.dig(:agents, :cdad1_admin, :email),
+  uid: SeedAccounts.yaml_config.dig(:agents, :cdad1_admin, :email),
   first_name: "Admin",
   last_name: "CDAD1",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
