@@ -43,7 +43,7 @@
           span.fr-mx-1w
             = "N° de pré-demande ANTS : #{user.ants_pre_demande_number}"
 
-        .users-details.collapse
+        - if local_assigns[:show_details]
           - if user.responsible.present?
             div
               = "proche de #{user.responsible}"
