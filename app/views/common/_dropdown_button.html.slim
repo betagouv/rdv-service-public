@@ -4,6 +4,7 @@
 /#
 /# label: texte du bouton
 /# items: tableau de hashes décrivant les actions
+/#   - separator:    (optionnel) true pour insérer un séparateur à cette position (les autres clés sont ignorées)
 /#   - label:        texte de l'action
 /#   - url:          cible du lien
 /#   - icon:         (optionnel) classe d'icône DSFR, "fr-icon-settings-5-line" par défaut
@@ -21,7 +22,10 @@
     = icon("fr-icon-arrow-down-s-line fr-icon--sm", class: "dropdown-button__chevron fr-ml-1w")
   ul.dropdown-button__list id=list_id hidden=true data-dropdown-button-target="list"
     - items.each do |item|
-      li
-        = link_to item[:url], (item[:html_options] || {}).merge(class: "dropdown-button__link") do
-          = icon("#{item[:icon] || 'fr-icon-settings-5-line'} fr-icon--sm")
-          = item[:label]
+      - if item[:separator]
+        li.dropdown-button__separator role="separator"
+      - else
+        li
+          = link_to item[:url], (item[:html_options] || {}).merge(class: "dropdown-button__link") do
+            = icon("#{item[:icon] || 'fr-icon-settings-5-line'} fr-icon--sm", class: "fr-mr-1w")
+            = item[:label]
