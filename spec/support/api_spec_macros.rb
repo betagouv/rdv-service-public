@@ -38,11 +38,11 @@ module ApiSpecMacros
     parameter name: "X-VISIOPLAINTE-API-KEY", in: :header, type: :string, description: "Clé d'API", example: "visioplainte-api-test-key-123456", required: true
   end
 
-  def with_shared_secret_authentication
-    security [{ uid: [], "X-Agent-Auth-Signature": [] }]
+  def with_rdv_insertion_oauth_authentication
+    include_context "with rdv-insertion OAuth authentication"
 
-    parameter name: "uid", in: :header, type: :string, description: "Identifiant d'accès (authentification)", example: "martine@demo.rdv-solidarites.fr"
-    parameter name: "X-Agent-Auth-Signature", in: :header, type: :string, description: "payload crypté par le SHARED_SECRET_FOR_AGENTS_AUTH", example: "SFYBngO55ImjD1HOcv"
+    parameter name: "authorization", in: :header, type: :string, description: "Token d'accès OAuth de l'application rdv-insertion", example: "Bearer 123456"
+    let(:authorization) { auth_headers[:Authorization] }
   end
 
   def with_pagination

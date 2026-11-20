@@ -3,7 +3,7 @@ require "swagger_helper"
 RSpec.describe "Motif Category API" do
   path "/api/rdvinsertion/motif_categories/" do
     post "Créer une catégorie de motifs" do
-      with_shared_secret_authentication
+      with_rdv_insertion_oauth_authentication
 
       tags "MotifCategory"
       produces "application/json"
@@ -15,17 +15,6 @@ RSpec.describe "Motif Category API" do
 
       let!(:agent) { create(:agent) }
       let!(:super_admin) { create(:super_admin, email: agent.email) }
-      let!(:shared_secret) { "S3cr3T" }
-      let!(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }
-      let!(:uid) { auth_headers["uid"].to_s }
-      let!(:"X-Agent-Auth-Signature") { auth_headers["X-Agent-Auth-Signature"].to_s }
-
-      before do
-        allow(Agent).to receive(:find_by).and_return(agent)
-        allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return(shared_secret)
-        allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(true)
-      end
-
       response 200, "Crée une catégorie de motifs" do
         let(:name) { "RSA Orientation" }
         let(:short_name) { "rsa_orientation" }
@@ -53,12 +42,8 @@ RSpec.describe "Motif Category API" do
         let(:name) { "RSA Orientation" }
         let(:short_name) { "rsa_orientation" }
 
-        before do
-          allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(false)
-        end
-
         it "returns a 401 unauthorized response" do
-          post "/api/rdvinsertion/motif_categories/", params: { name: name, short_name: short_name }, headers: auth_headers
+          post "/api/rdvinsertion/motif_categories/", params: { name: name, short_name: short_name }
 
           expect(response).to have_http_status(:unauthorized)
         end

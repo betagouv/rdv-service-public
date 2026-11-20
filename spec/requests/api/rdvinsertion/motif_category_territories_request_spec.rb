@@ -3,7 +3,7 @@ require "swagger_helper"
 RSpec.describe "Motif Category Territory API" do
   path "/api/rdvinsertion/motif_category_territories/" do
     post "Activer une catégorie de motifs sur un espace" do
-      with_shared_secret_authentication
+      with_rdv_insertion_oauth_authentication
 
       tags "MotifCategoryTerritory"
       produces "application/json"
@@ -16,17 +16,6 @@ RSpec.describe "Motif Category Territory API" do
       let!(:territory) { create(:territory) }
       let!(:organisation) { create(:organisation, territory: territory) }
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let!(:shared_secret) { "S3cr3T" }
-      let!(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }
-      let!(:uid) { auth_headers["uid"].to_s }
-      let!(:"X-Agent-Auth-Signature") { auth_headers["X-Agent-Auth-Signature"].to_s }
-
-      before do
-        allow(Agent).to receive(:find_by).and_return(agent)
-        allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return(shared_secret)
-        allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(true)
-      end
-
       response 200, "Active une catégorie de motifs sur un espace" do
         let!(:organisation_id) { organisation.id }
         let!(:motif_category) { create(:motif_category) }
@@ -55,12 +44,8 @@ RSpec.describe "Motif Category Territory API" do
         let!(:motif_category) { create(:motif_category) }
         let!(:motif_category_short_name) { motif_category.short_name }
 
-        before do
-          allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(false)
-        end
-
         it "returns a 401 unauthorized response" do
-          post "/api/rdvinsertion/motif_category_territories/", params: { organisation_id: organisation_id, motif_category_short_name: motif_category_short_name }, headers: auth_headers
+          post "/api/rdvinsertion/motif_category_territories/", params: { organisation_id: organisation_id, motif_category_short_name: motif_category_short_name }
 
           expect(response).to have_http_status(:unauthorized)
         end
