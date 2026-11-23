@@ -58,7 +58,20 @@ C'est à dire que les agents classiques ont accès à leur service uniquement, l
 
 Par défaut, les requêtes en lecture n'appliquent aucun filtre et retourneront toutes les ressources auxquelles a accès l'agent connecté. Par exemple si un agent admin fait une requête pour accéder à la liste des absences sans filtre, l'API retournera toutes les absences de tous les agents appartenant aux organisations dont fait partie cet agent admin, ce qui peut faire beaucoup.
 
+# Authentification par clé d'API
 
+Pour les appels automatisés sans interaction humaine (script cron, synchronisation nocturne, etc.), chaque agent peut créer lui-même une ou plusieurs clés d'API depuis son interface :
+menu « Préférences » puis « Clés d'API » (rubrique disponible si votre organisation l'a activée pour votre compte).
+
+À la création, l'agent choisit un nom et une durée de validité (de 24 heures à 1 an).
+La clé complète, au format `rdvsp_pat_...`, n'est affichée qu'une seule fois : il faut la copier immédiatement.
+Elle peut être révoquée à tout moment depuis la même page.
+
+Les appels se font ensuite comme avec OAuth, en passant la clé dans le header :
+`Authorization: Bearer rdvsp_pat_...`
+
+La clé donne exactement les mêmes droits que le compte de l'agent qui l'a créée.
+Elle expire automatiquement à la date choisie et un nombre limité de requêtes par minute est autorisé par clé.
 
 # Sérialisation
 

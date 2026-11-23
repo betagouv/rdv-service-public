@@ -43,6 +43,8 @@ Sentry.init do |config|
     # on retire les cookies et l’IP qui viennent de send_default_pii mais qu’on ne veut pas conserver
     # les IP sont aussi filtrées côté serveur Sentry, c’est une protection supplémentaire ici
     Sentry::RequestInterface::IP_HEADERS.each { event.request&.headers&.delete(_1) }
+    # on retire aussi les credentials (bearer tokens OAuth, clés d'API rdvsp_pat_...) qui viennent de send_default_pii
+    event.request&.headers&.delete("Authorization")
     event.request&.cookies = []
 
     event

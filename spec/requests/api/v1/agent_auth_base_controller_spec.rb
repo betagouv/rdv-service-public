@@ -35,6 +35,45 @@ RSpec.describe Api::V1::AgentAuthBaseController, type: :request do
     end
   end
 
+  describe "clé d'API (préfixe rdvsp_pat_)" do
+    let!(:api_token) { create(:api_token, agent:) }
+
+    def get_with_api_token(token_value)
+      get "/api/v1/test/fake_action", headers: { "Authorization" => "Bearer #{token_value}" }, as: :json
+    end
+
+    it "authentifie l'agent propriétaire de la clé" do
+      get_with_api_token(api_token.raw_token)
+      expect(response.body).to eq("current agent id is #{agent.id}")
+    end
+
+    it "met à jour last_used_at" do
+      expect { get_with_api_token(api_token.raw_token) }.to change { api_token.reload.last_used_at }.from(nil)
+    end
+
+    it "retourne 401 si la clé est révoquée" do
+      api_token.revoke!
+      get_with_api_token(api_token.raw_token)
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it "retourne 401 si la clé est expirée" do
+      api_token.update_column(:expires_at, 1.hour.ago) # rubocop:disable Rails/SkipsModelValidations
+      get_with_api_token(api_token.raw_token)
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it "retourne 401 si la clé est inconnue" do
+      get_with_api_token("rdvsp_pat_inconnu")
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it "ne confond pas avec un token OAuth (préfixe différent)" do
+      get "/api/v1/test/fake_action", headers: { "Authorization" => "Bearer autrechose" }, as: :json
+      expect(response).to have_http_status(:unauthorized)
+    end
+  end
+
   describe "#detect_param_injection" do
     let!(:agent_org) { create(:agent_role).organisation }
     let!(:agent_territory) { create(:agent_territorial_access_right, agent:, territory: agent_org.territory).territory }

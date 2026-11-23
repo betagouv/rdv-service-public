@@ -76,6 +76,20 @@ class Rack::Attack
                   (path.match?(%r{\A/users/rdvs/[^/]+/visio\z}) && request.params["invitation_token"].present?) # REMOVE AFTER 03/02/2027 (users/rdvs#visio)
   end
 
+  # filet de sécurité par IP sur toute l'API v1 : sans ça, un attaquant pourrait envoyer
+  # des milliards de faux tokens rdvsp_pat_ (chacun son propre bucket "par clé") sans être limité
+  throttle("API v1 par IP", limit: Rails.env.test? ? 2 : 600, period: 1.minute) do |request|
+    request.ip if request.path.start_with?("/api/v1")
+  end
+
+  # limite plus basse par clé d'API valide (préfixe rdvsp_pat_)
+  throttle("API v1 par clé d'API", limit: Rails.env.test? ? 2 : 120, period: 1.minute) do |request|
+    if request.path.start_with?("/api/v1")
+      token = request.env["HTTP_AUTHORIZATION"].to_s.delete_prefix("Bearer ").presence
+      ApiToken.digest(token) if token&.start_with?(ApiToken::TOKEN_PREFIX)
+    end
+  end
+
   Rack::Attack.throttled_responder = lambda do |request|
     exception = ThrottleError.new(request.env["rack.attack.matched"])
     Sentry.set_context("rack_attack_match_data", request.env["rack.attack.match_data"])

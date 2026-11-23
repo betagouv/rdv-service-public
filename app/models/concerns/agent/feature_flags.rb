@@ -1,7 +1,7 @@
 module Agent::FeatureFlags
   extend ActiveSupport::Concern
 
-  AVAILABLE_FEATURES = ["rdv_invitations"].freeze
+  AVAILABLE_FEATURES = %w[rdv_invitations api_tokens].freeze
 
   def feature_enabled?(feature)
     feature_flags[feature] == true
