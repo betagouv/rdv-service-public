@@ -22,7 +22,8 @@
           = collapsible_form_fields_for_warnings(@rdv_form) do
             = f.dsfr_select :motif_id, [[@rdv_form.motif.name, @rdv_form.motif.id]], label: Rdv.human_attribute_name(:motif), disabled: true
             - if @rdv_form.organisation.territory.enable_context_field
-              = f.dsfr_text_area :context, label: Rdv.human_attribute_name(:context), rows: 3
+              = f.dsfr_text_area :context, label: Rdv.human_attribute_name(:context), rows: 3, \
+                hint: "Les informations renseignées ici seront visibles par les agents ayant accès à votre agenda, veuillez limiter les informations sensibles autant que possible"
             .fr-grid-row.fr-grid-row--gutters.fr-mb-4v
               .fr-col-md-6 data={ "controller": "past-date-alert" }
                 = dsfr_datetime_input(f, :starts_at, label: Rdv.human_attribute_name(:starts_at), data: { "past-date-alert-target": "date-input" })
