@@ -2570,6 +2570,16 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "user_external_id",
+            "in": "query",
+            "description": "Filtre pour obtenir uniquement les invitations de l'usager qui a cet id dans votre système.",
+            "example": "123AB",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "tags": [
@@ -2590,6 +2600,43 @@
                           "id": 2,
                           "cancelled": false,
                           "created_at": "2024-01-01 10:00:00 +0100",
+                          "inviting_agent": {
+                            "id": 135,
+                            "email": "agent_1@lapin.fr",
+                            "first_name": "Aimée",
+                            "last_name": "Moreau"
+                          },
+                          "lieu": {
+                            "id": 7,
+                            "address": "1 rue de l'adresse, Ville, 12345",
+                            "latitude": 38.8951,
+                            "longitude": -77.0364,
+                            "name": "Lieu n°1",
+                            "organisation_id": 165,
+                            "phone_number": null,
+                            "single_use": false
+                          },
+                          "motif": {
+                            "id": 49,
+                            "bookable_by": "everyone",
+                            "bookable_publicly": true,
+                            "collectif": false,
+                            "default_duration_in_min": 45,
+                            "deleted_at": null,
+                            "follow_up": false,
+                            "instruction_for_rdv": null,
+                            "location_type": "public_office",
+                            "max_public_booking_delay": 15778476,
+                            "min_public_booking_delay": 1800,
+                            "motif_category": {
+                              "id": 49,
+                              "name": "Catégorie de motif n°1",
+                              "short_name": "1_motif_cat"
+                            },
+                            "name": "Motif 1",
+                            "organisation_id": 165,
+                            "service_id": null
+                          },
                           "rdv_id": null,
                           "updated_at": "2024-01-01 10:00:00 +0100"
                         }
@@ -2915,7 +2962,7 @@
                           "duration_in_min": 45,
                           "ends_at": "2022-01-01 08:45:00 +0100",
                           "lieu": {
-                            "id": 8,
+                            "id": 10,
                             "address": "1 rue de l'adresse, Ville, 12345",
                             "latitude": 38.8951,
                             "longitude": -77.0364,
@@ -3148,7 +3195,7 @@
                           "duration_in_min": 45,
                           "ends_at": "2022-01-01 08:45:00 +0100",
                           "lieu": {
-                            "id": 13,
+                            "id": 15,
                             "address": "1 rue de l'adresse, Ville, 12345",
                             "latitude": 38.8951,
                             "longitude": -77.0364,
@@ -3275,7 +3322,7 @@
                           "duration_in_min": 45,
                           "ends_at": "2024-01-01 08:45:00 +0100",
                           "lieu": {
-                            "id": 16,
+                            "id": 18,
                             "address": "4 rue de l'adresse, Ville, 12345",
                             "latitude": 38.8951,
                             "longitude": -77.0364,
