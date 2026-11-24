@@ -3,6 +3,18 @@ RSpec.describe Territory, type: :model do
     expect(build(:territory)).to be_valid
   end
 
+  describe "recalcul des comptes sensibles" do
+    let(:territory) { create(:territory) }
+
+    it "recalcule les agents de l'espace quand l'obligation de double authentification change" do
+      expect { territory.update!(force_2fa_for_agents: true) }.to have_enqueued_job(Territories::RefreshAgentsSensitiveAccountJob).with(territory)
+    end
+
+    it "ne recalcule pas les agents quand un autre attribut change" do
+      expect { territory.update!(name: "Autre nom") }.not_to have_enqueued_job(Territories::RefreshAgentsSensitiveAccountJob)
+    end
+  end
+
   describe "#organisations_agents request don't include duplicates" do
     context "when an agent is attached to 2 organisations" do
       let(:territory) { create(:territory) }

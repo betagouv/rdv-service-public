@@ -1,0 +1,14 @@
+p = t("mailers.common.hello")
+
+p
+  | Nous avons détecté que votre serveur CalDAV n'est pas compatible avec la synchronisation de #{domain.name}. Nous avons donc supprimé la synchronisation de votre agenda CalDAV.
+
+p
+  | Les événements de votre agenda CalDAV qui apparaissaient dans votre agenda #{domain.name}, ainsi que les rendez-vous que nous y avions ajoutés, ont été supprimés de #{domain.name}.
+
+p
+  | Si vous pensez qu'il s'agit d'une erreur, vous pouvez nous contacter pour que nous étudions votre cas. Vous pouvez aussi reconfigurer votre synchronisation&nbsp;:
+
+.btn-wrapper= link_to "Configurer ma synchronisation CalDAV", agents_calendar_sync_caldav_sync_url, class: "btn btn-primary"
+
+= t("mailers.common.farewell_html", domain_name: domain.name)

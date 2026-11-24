@@ -33,6 +33,10 @@ module Caldav
       fetch_events_service = Caldav::FetchEvents.new(@agent, sync_logger)
       fetch_events_service.fetch_changes
 
+      if fetch_events_service.duplicate_urls?
+        disable_sync_because_of_incompatible_server and return
+      end
+
       update_local_events!(fetch_events_service)
 
       sync_logger.finalize!(successful: true)
@@ -45,6 +49,17 @@ module Caldav
     end
 
     private
+
+    # Plusieurs événements distincts partagent la même url : ce serveur est incompatible avec notre modèle.
+    # On supprime la synchro (comme le fait l'agent depuis les paramètres) et on le prévient.
+    def disable_sync_because_of_incompatible_server
+      sync_logger.log("Error: plusieurs événements ont la même URL, serveur incompatible. Synchro supprimée.")
+      sync_logger.finalize!(successful: false)
+
+      Caldav::MassDestroyEventsAndAbsencesJob.perform_later(@agent)
+      Agents::CaldavSyncMailer.with(agent: @agent).sync_disabled_incompatible_server.deliver_later
+      Sentry.capture_message("Serveur CalDAV incompatible : URLs en doublon", extra: { agent_id: @agent.id })
+    end
 
     def update_local_events!(fetch_events_service)
       updated_events = fetch_events_service.updated_events

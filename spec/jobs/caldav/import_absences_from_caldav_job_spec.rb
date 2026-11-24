@@ -34,6 +34,18 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
       expect(daily_event.raw_ical).not_to include("SUMMARY:Weekly") # scrubbed with Ical::Scrubber
     end
 
+    # EGroupware renvoie plusieurs événements distincts (les occurrences d'une série) sous le même href
+    it "supprime la synchro et prévient l'agent si plusieurs événements ont la même url" do
+      VCR.use_cassette("caldav/event_list_with_duplicate_urls") do
+        expect { described_class.new.perform(agent.id) }
+          .to have_enqueued_job(Caldav::MassDestroyEventsAndAbsencesJob).with(agent)
+          .and have_enqueued_mail(Agents::CaldavSyncMailer, :sync_disabled_incompatible_server)
+      end
+
+      expect(ExternalCalendarEvent.count).to eq(0)
+      expect(agent.caldav_config.reload.caldav_disconnect_started_at).to be_present
+    end
+
     describe "gestion de TRANSP" do
       it "ignore un événement s'il est non récurrent et marqué TRANSP:TRANSPARENT" do
         VCR.use_cassette("caldav/transparent_event") do

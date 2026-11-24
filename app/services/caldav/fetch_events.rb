@@ -38,6 +38,13 @@ class Caldav::FetchEvents
     @deleted_event_urls || []
   end
 
+  # Certains serveurs (EGroupware) renvoient plusieurs événements distincts sous le même href.
+  # L'url est notre clé d'unicité : on ne sait pas gérer ces serveurs.
+  def duplicate_urls?
+    urls = updated_events.map(&:url)
+    urls.uniq.size != urls.size
+  end
+
   def any_changes?
     updated_events.any? || deleted_event_urls.any?
   end

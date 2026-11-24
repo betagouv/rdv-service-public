@@ -63,6 +63,7 @@ class Territory < ApplicationRecord
   # Hooks
   before_create :fill_name_for_departements
   before_save { self.departement_number ||= "" }
+  after_update_commit :refresh_agents_sensitive_account, if: :saved_change_to_force_2fa_for_agents?
 
   # Scopes
   scope :with_upcoming_rdvs, lambda {
@@ -161,5 +162,9 @@ class Territory < ApplicationRecord
     return if name.present? || departement_number.blank?
 
     self.name = DEPARTEMENTS_NAMES[departement_number]
+  end
+
+  def refresh_agents_sensitive_account
+    Territories::RefreshAgentsSensitiveAccountJob.perform_later(self)
   end
 end

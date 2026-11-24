@@ -20,9 +20,13 @@ class Caldav::EtagClient
       end
     end
 
-    @endpoint.propfind(request.to_xml, url: calendar_url, depth: 1)
+    etags = @endpoint.propfind(request.to_xml, url: calendar_url, depth: 1)
       .reject { |node| node.xpath(".//dav:resourcetype/dav:collection").any? }
-      .to_h { |node| [Calendav::ContextualURL.call(calendar_url, node.xpath("./dav:href").text), node.xpath(".//dav:getetag").text] }
+      .map { |node| [Calendav::ContextualURL.call(calendar_url, node.xpath("./dav:href").text), node.xpath(".//dav:getetag").text] }
+
+    warn_about_duplicate_urls(etags)
+
+    etags.to_h
   end
 
   def events(calendar_url, event_urls)
@@ -34,6 +38,15 @@ class Caldav::EtagClient
   end
 
   private
+
+  # Certains serveurs (EGroupware) renvoient plusieurs événements sous le même href, et le Hash ci-dessus les écrase.
+  # On se contente de prévenir Sentry pour savoir si ce cas arrive aussi dans ce mode de synchro.
+  def warn_about_duplicate_urls(etags)
+    urls = etags.map(&:first)
+    return if urls.uniq.size == urls.size
+
+    Sentry.capture_message("Serveur CalDAV incompatible : URLs en doublon dans la liste des etags", extra: { duplicate_count: urls.size - urls.uniq.size })
+  end
 
   def multiget_request(event_urls)
     Nokogiri::XML::Builder.new do |xml|
