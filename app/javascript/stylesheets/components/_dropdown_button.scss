@@ -15,23 +15,20 @@
     }
   }
 
-  // Mêmes styles que le menu utilisateur du header (#rdv-account-dropdown)
+  // Design du menu DSFR (.fr-menu__list) : fond "overlap", ombre portée, filet bleu en haut
   &__list {
     position: absolute;
     top: 100%;
-    right: 0;
+    left: 0;
     z-index: 1000; // sous les modales Bootstrap (1050)
-    min-width: 10rem;
+    min-width: 100%;
     width: max-content;
-    max-width: 30rem;
-    margin: 0.125rem 0 0;
-    padding: 0.25rem 0;
+    margin: 0;
+    padding: 0;
     list-style: none;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 0.25rem;
-    box-shadow: $shadow;
+    background-color: var(--background-overlap-grey);
+    border-top: 1px solid var(--border-open-blue-france);
+    filter: drop-shadow(var(--overlap-shadow));
 
     li {
       margin: 0;
@@ -39,25 +36,29 @@
     }
   }
 
+  // Même hauteur que le bouton déclencheur (.fr-btn : 2.5rem)
   &__link {
     display: flex;
     align-items: center;
-    padding: 0.75rem;
-    color: black;
-    font-weight: 400;
-    font-size: 0.875rem;
-    background-image: none; // retire le soulignement des liens DSFR
+    padding: 0.5rem 1rem;
+    color: var(--text-action-high-blue-france);
     white-space: nowrap;
-
-    .fr-icon--sm {
-      margin-right: 0.5rem;
-    }
+    background-image: none; // retire le soulignement des liens DSFR
 
     // a[href]:hover impose un fond au DSFR : on double la classe pour passer devant
     &.dropdown-button__link:hover {
-      color: black; // la couleur du texte ne change pas au survol
-      background-color: rgb(246, 246, 246);
+      background-color: var(--background-overlap-grey-hover);
     }
+
+    &.dropdown-button__link:active {
+      background-color: var(--background-overlap-grey-active);
+    }
+  }
+
+  // Séparateur optionnel : <li role="separator">
+  &__separator {
+    height: 1px;
+    background-color: var(--border-default-grey);
   }
 }
 
